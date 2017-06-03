@@ -685,6 +685,7 @@ namespace OpenNos.Handler
                         foreach (MapInstance instance in ServerManager.Instance.GetMapInstances())
                         {
                             instance.InstanceMusic = isRevert ? instance.Map.Music : instanceMusicPacket.Music;
+                            instance.Broadcast($"bgm {instance.InstanceMusic}");
                         }
                     }
                     catch (Exception ex)
@@ -703,10 +704,10 @@ namespace OpenNos.Handler
                 }
                 else
                 {
-                    Session.CurrentMapInstance?.Broadcast($"bgm {instanceMusicPacket.Music}");
                     if (Session.CurrentMapInstance != null)
                     {
                         Session.CurrentMapInstance.InstanceMusic = instanceMusicPacket.Music;
+                        Session.CurrentMapInstance.Broadcast($"bgm {instanceMusicPacket.Music}");
                     }
                 }
             }
