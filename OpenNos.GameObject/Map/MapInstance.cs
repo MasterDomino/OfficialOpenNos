@@ -58,6 +58,7 @@ namespace OpenNos.GameObject
             Buttons = new List<MapButton>();
             XpRate = 1;
             DropRate = 1;
+            InstanceMusic = map.Music;
             ShopAllowed = shopAllowed;
             MapInstanceType = type;
             _isSleeping = true;
@@ -128,6 +129,8 @@ namespace OpenNos.GameObject
         public long LastUserShopId { get; set; }
 
         public Map Map { get; set; }
+
+        public int InstanceMusic { get; set; }
 
         public byte MapIndexX { get; set; }
 

@@ -137,7 +137,7 @@ namespace OpenNos.Handler
         /// mkraid packet
         /// </summary>
         /// <param name="packet"></param>
-        public void GenerateRaid(MkraidPacket packet)
+        public void GenerateRaid(MkRaidPacket packet)
         {
             if (Session.Character.Group?.Raid != null && Session.Character.Group.IsLeader(Session))
             {

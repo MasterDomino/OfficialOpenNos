@@ -884,9 +884,7 @@ namespace OpenNos.GameObject
         public string GenerateAt()
         {
             MapInstance mapForMusic = MapInstance;
-
-            //at 698495 20001 5 8 2 0 {SecondaryMusic} {SecondaryMusicType} -1
-            return $"at {CharacterId} {MapInstance.Map.MapId} {PositionX} {PositionY} 2 0 {mapForMusic?.Map.Music ?? 0} -1";
+            return $"at {CharacterId} {MapInstance.Map.MapId} {PositionX} {PositionY} 2 0 {mapForMusic?.InstanceMusic ?? 0} -1";
         }
 
         public string GenerateBlinit()

@@ -593,6 +593,11 @@ namespace OpenNos.GameObject
             return _mapinstances.FirstOrDefault(s => s.Value?.Map.MapId == MapId && s.Value.MapInstanceType == MapInstanceType.BaseMapInstance).Key;
         }
 
+        public List<MapInstance> GetMapInstances()
+        {
+            return _mapinstances.Values.ToList();
+        }
+
         public List<DropDTO> GetDropsByMonsterVNum(short monsterVNum)
         {
             return _monsterDrops.ContainsKey(monsterVNum) ? _generalDrops.Concat(_monsterDrops[monsterVNum]).ToList() : new List<DropDTO>();
