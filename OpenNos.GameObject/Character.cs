@@ -59,8 +59,6 @@ namespace OpenNos.GameObject
 
         #region Properties
 
-        public List<BCard> EquipmentBCards { get; set; }
-
         public AuthorityType Authority { get; set; }
 
         public Node[,] BrushFire { get; set; }
@@ -105,6 +103,8 @@ namespace OpenNos.GameObject
         public int ElementRate { get; set; }
 
         public int ElementRateSP { get; private set; }
+
+        public List<BCard> EquipmentBCards { get; set; }
 
         public ExchangeInfo ExchangeInfo { get; set; }
 
@@ -398,6 +398,33 @@ namespace OpenNos.GameObject
 
         #region Methods
 
+        public void AddBuff(Buff indicator)
+        {
+            Buff.RemoveAll(s => s.Card.CardId.Equals(indicator.Card.CardId));
+            Buff.Add(indicator);
+            indicator.RemainingTime = indicator.Card.Duration;
+            indicator.Start = DateTime.Now;
+
+            Session.SendPacket(
+                $"bf 1 {Session.Character.CharacterId} 0.{indicator.Card.CardId}.{indicator.RemainingTime} {Level}");
+            Session.SendPacket(
+                Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), Name),
+                    20));
+
+            indicator.Card.BCards.ForEach(c => c.ApplyBCards(Session.Character));
+            Observable.Timer(TimeSpan.FromMilliseconds(indicator.Card.Duration * 100))
+                .Subscribe(
+                    o =>
+                    {
+                        RemoveBuff(indicator.Card.CardId);
+                        if (indicator.Card.TimeoutBuff != 0 && ServerManager.Instance.RandomNumber() <
+                            indicator.Card.TimeoutBuffChance)
+                        {
+                            AddBuff(new Buff(indicator.Card.TimeoutBuff, Level));
+                        }
+                    });
+        }
+
         public bool AddPet(Mate mate)
         {
             if (mate.MateType == MateType.Pet ? MaxMateCount > Mates.Count() : 3 > Mates.Count(s => s.MateType == MateType.Partner))
@@ -427,6 +454,50 @@ namespace OpenNos.GameObject
             Session.SendPacket(GenerateFinit());
             ClientSession target = ServerManager.Instance.Sessions.FirstOrDefault(s => s.Character?.CharacterId == characterId);
             target?.SendPacket(target?.Character.GenerateFinit());
+        }
+
+        public void AddStaticBuff(StaticBuffDTO staticBuff)
+        {
+            Buff bf = new Buff(staticBuff.CardId, Session.Character.Level)
+            {
+                Start = DateTime.Now,
+                StaticBuff = true
+            };
+            Buff oldbuff = Buff.FirstOrDefault(s => s.Card.CardId == staticBuff.CardId);
+            if (staticBuff.RemainingTime > 0)
+            {
+                bf.RemainingTime = staticBuff.RemainingTime;
+                Buff.Add(bf);
+            }
+            else if (oldbuff != null)
+            {
+                Buff.RemoveAll(s => s.Card.CardId.Equals(bf.Card.CardId));
+
+                bf.RemainingTime = bf.Card.Duration * 6 / 10 + oldbuff.RemainingTime;
+                Buff.Add(bf);
+            }
+            else
+            {
+                bf.RemainingTime = bf.Card.Duration * 6 / 10;
+                Buff.Add(bf);
+            }
+            bf.Card.BCards.ForEach(c => c.ApplyBCards(Session.Character));
+            Observable.Timer(TimeSpan.FromSeconds(bf.RemainingTime))
+                .Subscribe(
+                    o =>
+                    {
+                        RemoveBuff(bf.Card.CardId);
+                        if (bf.Card.TimeoutBuff != 0 && ServerManager.Instance.RandomNumber() <
+                            bf.Card.TimeoutBuffChance)
+                        {
+                            AddBuff(new Buff(bf.Card.TimeoutBuff, Level));
+                        }
+                    });
+
+            Session.SendPacket($"vb {bf.Card.CardId} 1 {bf.RemainingTime * 10}");
+            Session.SendPacket(
+                Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), Name),
+                    12));
         }
 
         public void ChangeClass(ClassType characterClass)
@@ -534,7 +605,7 @@ namespace OpenNos.GameObject
                     MapInstance.Broadcast(GenerateEff(CurrentMinigame));
                     LastEffect = DateTime.Now;
                 }
-              
+
                 if (LastEffect.AddSeconds(5) <= DateTime.Now)
                 {
                     if (Session.CurrentMapInstance?.MapInstanceType == MapInstanceType.RaidInstance)
@@ -864,6 +935,15 @@ namespace OpenNos.GameObject
             }
         }
 
+        public void DisableBuffs(List<BuffType> types, int level = 100)
+        {
+            lock (Buff)
+            {
+                Buff.Where(s => types.Contains(s.Card.BuffType) && !s.StaticBuff && s.Card.Level < level).ToList()
+                    .ForEach(s => RemoveBuff(s.Card.CardId));
+            }
+        }
+
         /// <summary>
         /// Make the character moveable also from Teleport, ..
         /// </summary>
@@ -1188,6 +1268,7 @@ namespace OpenNos.GameObject
             #region Base Damage
 
             int baseDamage = ServerManager.Instance.RandomNumber(mainMinDmg, mainMaxDmg + 1);
+
             // baseDamage += skill.Damage / 4; it's a bcard need a skillbcardload
             baseDamage += morale - monsterToAttack.Monster.Level; //Morale
             if (Class == ClassType.Adventurer)
@@ -1196,7 +1277,8 @@ namespace OpenNos.GameObject
                 baseDamage += 20;
             }
             int elementalDamage = GetBuff(CardType.Damage, (byte)AdditionalTypes.Damage.DamageIncreased, false)[0];
-            //   elementalDamage += skill.ElementalDamage / 4; it's a bcard need a skillbcardload
+
+            // elementalDamage += skill.ElementalDamage / 4; it's a bcard need a skillbcardload
             switch (mainUpgrade)
             {
                 case -10:
@@ -2687,6 +2769,7 @@ namespace OpenNos.GameObject
             #region Base Damage
 
             int baseDamage = ServerManager.Instance.RandomNumber(mainMinDmg, mainMaxDmg + 1);
+
             //baseDamage += skill.Damage / 4;  it's a bcard need a skillbcardload
             baseDamage += Level - target.Level; //Morale
             if (Class == ClassType.Adventurer)
@@ -2695,7 +2778,8 @@ namespace OpenNos.GameObject
                 baseDamage += 20;
             }
             int elementalDamage = GetBuff(CardType.Damage, (byte)AdditionalTypes.Damage.DamageIncreased, true)[0];
-            //  elementalDamage += skill.ElementalDamage / 4;  it's a bcard need a skillbcardload
+
+            // elementalDamage += skill.ElementalDamage / 4; it's a bcard need a skillbcardload
             switch (mainUpgrade)
             {
                 case -10:
@@ -3023,6 +3107,40 @@ namespace OpenNos.GameObject
             return pktQs;
         }
 
+        public string GenerateRaid(int Type, bool Exit)
+        {
+            string result = string.Empty;
+            switch (Type)
+            {
+                case 0:
+                    result = $"raid 0";
+                    Group?.Characters?.ForEach(s => { result += $" {s.Character?.CharacterId}"; });
+                    break;
+
+                case 2:
+                    result = $"raid 2 {(Exit ? "-1" : $"{CharacterId}")}";
+                    break;
+
+                case 1:
+                    result = $"raid 1 {(Exit ? 0 : 1)}";
+                    break;
+
+                case 3:
+                    result = $"raid 3";
+                    Group?.Characters?.ForEach(s => { result += $" {s.Character?.CharacterId}.{Math.Ceiling(Hp / HPLoad() * 100)}.{Math.Ceiling(Mp / MPLoad() * 100)}"; });
+                    break;
+
+                case 4:
+                    result = $"raid 4";
+                    break;
+
+                case 5:
+                    result = $"raid 5 1";
+                    break;
+            }
+            return result;
+        }
+
         public string GenerateRc(int characterHealth)
         {
             return $"rc 1 {CharacterId} {characterHealth} 0";
@@ -3196,7 +3314,6 @@ namespace OpenNos.GameObject
         {
             return $"sp {SpAdditionPoint} 1000000 {SpPoint} 10000";
         }
-
 
         [Obsolete("GenerateStartupInventory should be used only on startup, for refreshing an inventory slot please use GenerateInventoryAdd instead.")]
         public void GenerateStartupInventory()
@@ -3544,6 +3661,31 @@ namespace OpenNos.GameObject
             Act4Points += point;
         }
 
+        public int[] GetBuff(CardType type, byte subtype, bool pvp, bool affectingOpposite = false)
+        {
+            int value1 = 0;
+            int value2 = 0;
+
+            lock (Buff)
+            {
+                foreach (Buff buff in Buff)
+                {
+                    // THIS ONE DOES NOT FOR STUFFS
+                    foreach (BCard entry in buff.Card.BCards.Concat(EquipmentBCards).Where(
+                        s => s.Type.Equals((byte)type)
+                             && s.SubType.Equals((byte)(subtype / 10)) &&
+                             (!s.IsDelayed || (s.IsDelayed &&
+                                               buff.Start.AddMilliseconds(buff.Card.Delay * 100) < DateTime.Now))))
+                    {
+                        value1 += entry.FirstData;
+                        value2 += entry.SecondData;
+                    }
+                }
+            }
+
+            return new[] { value1, value2 };
+        }
+
         public int GetCP()
         {
             int cpmax = (Class > 0 ? 40 : 0) + JobLevel * 2;
@@ -3709,6 +3851,28 @@ namespace OpenNos.GameObject
             if (Reput <= 2500000) return 24;
             if (Reput <= 3750000) return 25;
             return Reput <= 5000000 ? 26 : 27;
+        }
+
+        /// <summary>
+        /// Get Stuff Buffs Useful for Stats for example
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="subtype"></param>
+        /// <param name="pvp"></param>
+        /// <param name="affectingOpposite"></param>
+        /// <returns></returns>
+        public int[] GetStuffBuff(CardType type, byte subtype, bool pvp, bool affectingOpposite = false)
+        {
+            int value1 = 0;
+            int value2 = 0;
+            foreach (BCard entry in EquipmentBCards.Where(
+                s => s.Type.Equals((byte)type) && s.SubType.Equals((byte)(subtype / 10))))
+            {
+                value1 += entry.FirstData;
+                value2 += entry.SecondData;
+            }
+
+            return new[] { value1, value2 };
         }
 
         public void GiftAdd(short itemVNum, byte amount, byte rare = 0)
@@ -4900,121 +5064,6 @@ namespace OpenNos.GameObject
             return Class == (byte)ClassType.Adventurer ? CharacterHelper.FirstJobXPData[JobLevel - 1] : CharacterHelper.SecondJobXPData[JobLevel - 1];
         }
 
-        private double SPXPLoad()
-        {
-            SpecialistInstance specialist = null;
-            if (Inventory != null)
-            {
-                specialist = Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear);
-            }
-            return specialist != null ? CharacterHelper.SPXPData[specialist.SpLevel - 1] : 0;
-        }
-
-        private double XPLoad()
-        {
-            return CharacterHelper.XPData[Level - 1];
-        }
-
-        public string GenerateRaid(int Type, bool Exit)
-        {
-            string result = string.Empty;
-            switch (Type)
-            {
-                case 0:
-                    result = $"raid 0";
-                    Group?.Characters?.ForEach(s=> { result += $" {s.Character?.CharacterId}"; });
-                    break;
-                case 2:
-                    result = $"raid 2 {(Exit ? "-1" : $"{CharacterId}")}";
-                    break;
-                case 1:
-                    result = $"raid 1 {(Exit ? 0 : 1)}";
-                    break;
-                case 3:
-                    result = $"raid 3";
-                    Group?.Characters?.ForEach(s => { result += $" {s.Character?.CharacterId}.{Math.Ceiling(Hp / HPLoad() * 100)}.{Math.Ceiling(Mp / MPLoad() * 100)}"; });
-                    break;
-                case 4:
-                    result = $"raid 4";
-                    break;
-                case 5:
-                    result = $"raid 5 1";
-                    break;
-            }
-            return result;
-        }
-
-        public void AddStaticBuff(StaticBuffDTO staticBuff)
-        {
-            Buff bf = new Buff(staticBuff.CardId, Session.Character.Level)
-            {
-                Start = DateTime.Now,
-                StaticBuff = true
-            };
-            Buff oldbuff = Buff.FirstOrDefault(s => s.Card.CardId == staticBuff.CardId);
-            if (staticBuff.RemainingTime > 0)
-            {
-                bf.RemainingTime = staticBuff.RemainingTime;
-                Buff.Add(bf);
-            }
-            else if (oldbuff != null)
-            {
-                Buff.RemoveAll(s => s.Card.CardId.Equals(bf.Card.CardId));
-
-                bf.RemainingTime = bf.Card.Duration * 6 / 10 + oldbuff.RemainingTime;
-                Buff.Add(bf);
-            }
-            else
-            {
-                bf.RemainingTime = bf.Card.Duration * 6 / 10;
-                Buff.Add(bf);
-            }
-            bf.Card.BCards.ForEach(c => c.ApplyBCards(Session.Character));
-            Observable.Timer(TimeSpan.FromSeconds(bf.RemainingTime))
-                .Subscribe(
-                    o =>
-                    {
-                        RemoveBuff(bf.Card.CardId);
-                        if (bf.Card.TimeoutBuff != 0 && ServerManager.Instance.RandomNumber() <
-                            bf.Card.TimeoutBuffChance)
-                        {
-                            AddBuff(new Buff(bf.Card.TimeoutBuff, Level));
-                        }
-                    });
-
-            Session.SendPacket($"vb {bf.Card.CardId} 1 {bf.RemainingTime * 10}");
-            Session.SendPacket(
-                Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), Name),
-                    12));
-        }
-
-        public void AddBuff(Buff indicator)
-        {
-            Buff.RemoveAll(s => s.Card.CardId.Equals(indicator.Card.CardId));
-            Buff.Add(indicator);
-            indicator.RemainingTime = indicator.Card.Duration;
-            indicator.Start = DateTime.Now;
-
-            Session.SendPacket(
-                $"bf 1 {Session.Character.CharacterId} 0.{indicator.Card.CardId}.{indicator.RemainingTime} {Level}");
-            Session.SendPacket(
-                Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), Name),
-                    20));
-
-            indicator.Card.BCards.ForEach(c => c.ApplyBCards(Session.Character));
-            Observable.Timer(TimeSpan.FromMilliseconds(indicator.Card.Duration * 100))
-                .Subscribe(
-                    o =>
-                    {
-                        RemoveBuff(indicator.Card.CardId);
-                        if (indicator.Card.TimeoutBuff != 0 && ServerManager.Instance.RandomNumber() <
-                            indicator.Card.TimeoutBuffChance)
-                        {
-                            AddBuff(new Buff(indicator.Card.TimeoutBuff, Level));
-                        }
-                    });
-        }
-
         private void RemoveBuff(int id)
         {
             Buff indicator = Buff.FirstOrDefault(s => s.Card.CardId == id);
@@ -5043,64 +5092,21 @@ namespace OpenNos.GameObject
             }
         }
 
-        public void DisableBuffs(List<BuffType> types, int level = 100)
+        private double SPXPLoad()
         {
-            lock (Buff)
+            SpecialistInstance specialist = null;
+            if (Inventory != null)
             {
-                Buff.Where(s => types.Contains(s.Card.BuffType) && !s.StaticBuff && s.Card.Level < level).ToList()
-                    .ForEach(s => RemoveBuff(s.Card.CardId));
+                specialist = Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear);
             }
+            return specialist != null ? CharacterHelper.SPXPData[specialist.SpLevel - 1] : 0;
         }
 
-        /// <summary>
-        /// Get Stuff Buffs
-        /// Useful for Stats for example
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="subtype"></param>
-        /// <param name="pvp"></param>
-        /// <param name="affectingOpposite"></param>
-        /// <returns></returns>
-        public int[] GetStuffBuff(CardType type, byte subtype, bool pvp, bool affectingOpposite = false)
+        private double XPLoad()
         {
-            int value1 = 0;
-            int value2 = 0;
-            foreach (BCard entry in EquipmentBCards.Where(
-                s => s.Type.Equals((byte)type) && s.SubType.Equals((byte)(subtype / 10))))
-            {
-                value1 += entry.FirstData;
-                value2 += entry.SecondData;
-            }
-
-            return new[] { value1, value2 };
-        }
-
-        public int[] GetBuff(CardType type, byte subtype, bool pvp, bool affectingOpposite = false)
-        {
-            int value1 = 0;
-            int value2 = 0;
-
-            lock (Buff)
-            {
-                foreach (Buff buff in Buff)
-                {
-                    // THIS ONE DOES NOT FOR STUFFS
-                    foreach (BCard entry in buff.Card.BCards.Concat(EquipmentBCards).Where(
-                        s => s.Type.Equals((byte)type)
-                             && s.SubType.Equals((byte)(subtype / 10)) &&
-                             (!s.IsDelayed || (s.IsDelayed &&
-                                               buff.Start.AddMilliseconds(buff.Card.Delay * 100) < DateTime.Now))))
-                    {
-                        value1 += entry.FirstData;
-                        value2 += entry.SecondData;
-                    }
-                }
-            }
-
-            return new[] { value1, value2 };
+            return CharacterHelper.XPData[Level - 1];
         }
 
         #endregion
-
     }
 }

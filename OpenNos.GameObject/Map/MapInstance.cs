@@ -96,6 +96,8 @@ namespace OpenNos.GameObject
 
         public InstanceBag InstanceBag { get; set; }
 
+        public int InstanceMusic { get; set; }
+
         public bool IsDancing { get; set; }
 
         public bool IsPVP { get; set; }
@@ -130,8 +132,6 @@ namespace OpenNos.GameObject
 
         public Map Map { get; set; }
 
-        public int InstanceMusic { get; set; }
-
         public byte MapIndexX { get; set; }
 
         public byte MapIndexY { get; set; }
@@ -152,9 +152,9 @@ namespace OpenNos.GameObject
 
         public List<Portal> Portals => _portals;
 
-        public bool ShopAllowed { get; set; }
-
         public List<ScriptedInstance> ScriptedInstances { get; set; }
+
+        public bool ShopAllowed { get; set; }
 
         public Dictionary<long, MapShop> UserShops { get; }
 
@@ -172,6 +172,19 @@ namespace OpenNos.GameObject
         public void AddNPC(MapNpc monster)
         {
             _npcs[monster.MapNpcId] = monster;
+        }
+
+        public void DespawnMonster(int monsterVnum)
+        {
+            Parallel.ForEach(_monsters.GetAllItems().Where(s => s.MonsterVNum == monsterVnum), monster =>
+            {
+                monster.IsAlive = false;
+                monster.LastMove = DateTime.Now;
+                monster.CurrentHp = 0;
+                monster.CurrentMp = 0;
+                monster.Death = DateTime.Now;
+                Broadcast(monster.GenerateOut());
+            });
         }
 
         public override sealed void Dispose()
@@ -268,10 +281,11 @@ namespace OpenNos.GameObject
             {
                 s.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m => packets.Add(m.GenerateIn()));
             });
+
             // TODO: Parallelize getting of items of mapinstance
             Portals.ForEach(s => packets.Add(s.GenerateGp()));
             ScriptedInstances.Where(s => s.Type == ScriptedInstanceType.TimeSpace).ToList().ForEach(s => packets.Add(s.GenerateWp()));
-           
+
             Monsters.ForEach(s => packets.Add(s.GenerateIn()));
             Npcs.ForEach(s => packets.Add(s.GenerateIn()));
             packets.AddRange(GenerateNPCShopOnMap());
@@ -422,19 +436,6 @@ namespace OpenNos.GameObject
         {
             Buttons.Add(parameter);
             Broadcast(parameter.GenerateIn());
-        }
-
-        public void DespawnMonster(int monsterVnum)
-        {
-            Parallel.ForEach(_monsters.GetAllItems().Where(s => s.MonsterVNum == monsterVnum), monster =>
-            {
-                monster.IsAlive = false;
-                monster.LastMove = DateTime.Now;
-                monster.CurrentHp = 0;
-                monster.CurrentMp = 0;
-                monster.Death = DateTime.Now;
-                Broadcast(monster.GenerateOut());
-            });
         }
 
         internal void CreatePortal(Portal portal)
