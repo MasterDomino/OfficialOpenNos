@@ -236,7 +236,7 @@ namespace OpenNos.Handler
 
                 // calculate damage
                 //int damage = hitRequest.Session.Character.GenerateDamage(this, hitRequest.Skill, ref hitmode);
-                int damage = hitRequest.Session.Character.GeneratePVPDamage(target.Character, hitRequest.Skill, ref hitmode);
+                int damage = DamageHelper.Instance.CalculateDamage(new BattleEntity(hitRequest.Session.Character, hitRequest.Skill), new BattleEntity(target.Character, null), hitRequest.Skill, ref hitmode);
                 if (target.Character.HasGodMode)
                 {
                     damage = 0;

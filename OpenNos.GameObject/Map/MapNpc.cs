@@ -234,8 +234,8 @@ namespace OpenNos.GameObject
                 {
                     npcMonsterSkill = Npc.Skills.Where(s => (DateTime.Now - s.LastSkillUse).TotalMilliseconds >= 100 * s.Skill.Cooldown).OrderBy(rnd => _random.Next()).FirstOrDefault();
                 }
-
-                const short damage = 100;
+                int hitmode = 0;
+                int damage = DamageHelper.Instance.CalculateDamage(new BattleEntity(this), new BattleEntity(monster), npcMonsterSkill?.Skill, ref hitmode); ;
                 int distance = Map.GetDistance(new MapCell { X = MapX, Y = MapY }, new MapCell { X = monster.MapX, Y = monster.MapY });
                 if (monster.CurrentHp > 0 && (npcMonsterSkill != null && distance < npcMonsterSkill.Skill.Range || distance <= Npc.BasicRange))
                 {
@@ -255,8 +255,8 @@ namespace OpenNos.GameObject
                         monster.CurrentHp -= damage;
 
                         MapInstance.Broadcast(npcMonsterSkill != null
-                            ? $"su 2 {MapNpcId} 3 {Target} {npcMonsterSkill.SkillVNum} {npcMonsterSkill.Skill.Cooldown} {npcMonsterSkill.Skill.AttackAnimation} {npcMonsterSkill.Skill.Effect} 0 0 {(monster.CurrentHp > 0 ? 1 : 0)} {monster.CurrentHp / monster.Monster.MaxHP * 100} {damage} 0 0"
-                            : $"su 2 {MapNpcId} 3 {Target} 0 {Npc.BasicCooldown} 11 {Npc.BasicSkill} 0 0 {(monster.CurrentHp > 0 ? 1 : 0)} {monster.CurrentHp / monster.Monster.MaxHP * 100} {damage} 0 0");
+                            ? $"su 2 {MapNpcId} 3 {Target} {npcMonsterSkill.SkillVNum} {npcMonsterSkill.Skill.Cooldown} {npcMonsterSkill.Skill.AttackAnimation} {npcMonsterSkill.Skill.Effect} 0 0 {(monster.CurrentHp > 0 ? 1 : 0)} {monster.CurrentHp / monster.Monster.MaxHP * 100} {damage} {hitmode} 0"
+                            : $"su 2 {MapNpcId} 3 {Target} 0 {Npc.BasicCooldown} 11 {Npc.BasicSkill} 0 0 {(monster.CurrentHp > 0 ? 1 : 0)} {monster.CurrentHp / monster.Monster.MaxHP * 100} {damage} {hitmode} 0");
 
                         LastEffect = DateTime.Now;
                         if (monster.CurrentHp < 1)

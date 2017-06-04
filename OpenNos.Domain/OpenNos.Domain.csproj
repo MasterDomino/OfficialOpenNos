@@ -67,8 +67,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AttackType.cs" />
     <Compile Include="BazaarListType.cs" />
     <Compile Include="BuffType.cs" />
+    <Compile Include="EntityType.cs" />
     <Compile Include="EventActionType.cs" />
     <Compile Include="EventType.cs" />
     <Compile Include="GroupType.cs" />

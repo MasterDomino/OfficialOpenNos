@@ -105,6 +105,8 @@
     <Compile Include="Buff\Buff.cs" />
     <Compile Include="Buff\BCard.cs" />
     <Compile Include="Buff\Card.cs" />
+    <Compile Include="BattleEntity.cs" />
+    <Compile Include="Helpers\DamageHelper.cs" />
     <Compile Include="Event\EventContainer.cs" />
     <Compile Include="Event\Schedule.cs" />
     <Compile Include="Helpers\EventHelper.cs" />
@@ -423,6 +425,8 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Damage\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

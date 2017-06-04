@@ -72,8 +72,8 @@ namespace OpenNos.GameObject
                         List<MonsterToSummon> summonParameters = new List<MonsterToSummon>();
                         for (int i = 0; i < FirstData; i++)
                         {
-                            short x = (short)(ServerManager.Instance.RandomNumber(-3, 3) + (session as MapMonster).MapX);
-                            short y = (short)(ServerManager.Instance.RandomNumber(-3, 3) + (session as MapMonster).MapY);
+                            short x = (short)(ServerManager.Instance.RandomNumber(-1, 2) + (session as MapMonster).MapX);
+                            short y = (short)(ServerManager.Instance.RandomNumber(-1, 2) + (session as MapMonster).MapY);
                             summonParameters.Add(new MonsterToSummon((short)SecondData, new MapCell() { X = x, Y = y }, -1, true, new List<EventContainer>()));
                         }
                         (session as MapMonster).OnDeathEvents.Add(new EventContainer((session as MapMonster).MapInstance, EventActionType.SPAWNMONSTERS, summonParameters));

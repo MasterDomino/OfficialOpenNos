@@ -1715,6 +1715,7 @@ namespace OpenNos.Handler
                 bufftodisable.Add(BuffType.Good);
                 bufftodisable.Add(BuffType.Neutral);
                 Session.Character.DisableBuffs(bufftodisable);
+                Session.Character.EquipmentBCards.AddRange(sp.Item.BCards);
                 Session.Character.LastTransform = DateTime.Now;
                 Session.Character.UseSp = true;
                 Session.Character.Morph = sp.Item.Morph;
@@ -1827,6 +1828,7 @@ namespace OpenNos.Handler
                 bufftodisable.Add(BuffType.Good);
                 bufftodisable.Add(BuffType.Neutral);
                 Session.Character.DisableBuffs(bufftodisable);
+                Session.Character.EquipmentBCards.RemoveAll(s=>s.ItemVnum.Equals(vnum));
                 Logger.Debug(Session.Character.GenerateIdentity(), vnum.ToString());
                 Session.Character.UseSp = false;
                 Session.Character.LoadSpeed();

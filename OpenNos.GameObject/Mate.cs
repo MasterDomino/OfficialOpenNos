@@ -68,6 +68,24 @@ namespace OpenNos.GameObject
 
         public int MaxMp => Monster.MaxMP;
 
+        public int MinHit
+        {
+            get
+            {
+                int dmg = 100; //TODO: get proper Damage
+                return Monster.DamageMinimum + dmg;
+            }
+        }
+
+        public int MaxHit
+        {
+            get
+            {
+                int dmg = 100; //TODO: get proper Damage
+                return Monster.DamageMaximum + dmg;
+            }
+        }
+
         public NpcMonster Monster
         {
             get
@@ -105,6 +123,41 @@ namespace OpenNos.GameObject
         public short PositionX { get; set; }
 
         public short PositionY { get; set; }
+        public int MeleeDefense
+        {
+            get
+            {
+                return Monster.CloseDefence; //TODO: get proper Defense
+            }
+        }
+        public int MeleeDefenseRate
+        {
+            get
+            {
+                return Monster.DefenceDodge; //TODO: get proper Defense
+            }
+        }
+        public int RangeDefense
+        {
+            get
+            {
+                return Monster.DistanceDefence; //TODO: get proper Defense
+            }
+        }
+        public int RangeDefenseRate
+        {
+            get
+            {
+                return Monster.DistanceDefenceDodge; //TODO: get proper Defense
+            }
+        }
+        public int MagicalDefense
+        {
+            get
+            {
+                return Monster.MagicDefence; //TODO: get proper Defense
+            }
+        }
 
         #endregion
 

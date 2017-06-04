@@ -310,462 +310,6 @@ namespace OpenNos.GameObject
             }
         }
 
-        /// <summary>
-        /// Generate the Monster -&gt; Character Damage
-        /// </summary>
-        /// <param name="targetCharacter"></param>
-        /// <param name="skill"></param>
-        /// <param name="hitmode"></param>
-        /// <returns></returns>
-        private int GenerateDamage(Character targetCharacter, Skill skill, ref int hitmode)
-        {
-            //Warning: This code contains a huge amount of copypasta!
-
-            #region Definitions
-
-            if (targetCharacter == null)
-            {
-                return 0;
-            }
-
-            int playerDefense = targetCharacter.GetBuff(CardType.Defence,(byte)AdditionalTypes.Defence.DefenceLevelDecreased, false)[0];
-            byte playerDefenseUpgrade = (byte)targetCharacter.GetBuff(CardType.Defence,(byte)AdditionalTypes.Defence.DefenceLevelIncreased, false)[0];
-            int playerDodge = targetCharacter.GetBuff(CardType.Defence,(byte)AdditionalTypes.Defence.DefenceLevelIncreased, false)[0];
-
-            WearableInstance playerArmor = targetCharacter.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.Armor, InventoryType.Wear);
-            if (playerArmor != null)
-            {
-                playerDefenseUpgrade += playerArmor.Upgrade;
-            }
-
-            short mainUpgrade = Monster.AttackUpgrade;
-            int mainCritChance = Monster.CriticalChance;
-            int mainCritHit = Monster.CriticalRate - 30;
-            int mainMinDmg = Monster.DamageMinimum;
-            int mainMaxDmg = Monster.DamageMaximum;
-            int mainHitRate = Monster.Concentrate; //probably missnamed, check later
-            if (mainMaxDmg == 0)
-            {
-                mainMinDmg = Monster.Level * 8;
-                mainMaxDmg = Monster.Level * 12;
-                mainCritChance = 10;
-                mainCritHit = 120;
-                mainHitRate = Monster.Level / 2 + 1;
-            }
-
-            #endregion
-
-            #region Get Player defense
-
-            int boostpercentage;
-            switch (Monster.AttackClass)
-            {
-                case 0:
-                    playerDefense += targetCharacter.Defence
-                        + targetCharacter.GetBuff(CardType.Defence,(byte)AdditionalTypes.Defence.MeleeDecreased, false)[0];
-                    playerDodge += targetCharacter.DefenceRate
-                        + targetCharacter.GetBuff(CardType.Defence,(byte)AdditionalTypes.Defence.RangedDecreased, false)[0];
-                    boostpercentage = targetCharacter.GetBuff(CardType.Defence,(byte)AdditionalTypes.Defence.MeleeDecreased, false)[0];
-                    playerDefense = (int)(playerDefense * (1 + boostpercentage / 100D));
-                    boostpercentage = targetCharacter.GetBuff(CardType.Defence,(byte)AdditionalTypes.Defence.MagicalDecreased, false)[0];
-                    playerDodge = (int)(playerDodge * (1 + boostpercentage / 100D));
-                    break;
-
-                case 1:
-                    playerDefense += targetCharacter.DistanceDefence
-                        + targetCharacter.GetBuff(CardType.Defence,(byte)AdditionalTypes.Defence.RangedIncreased, false)[0];
-                    playerDodge += targetCharacter.DistanceDefenceRate
-                        + targetCharacter.GetBuff(CardType.Defence,(byte)AdditionalTypes.Defence.RangedIncreased, false)[0];
-                    boostpercentage = targetCharacter.GetBuff(CardType.Defence,(byte)AdditionalTypes.Defence.RangedIncreased, false)[0];
-                    playerDefense = (int)(playerDefense * (1 + boostpercentage / 100D));
-                    boostpercentage = targetCharacter.GetBuff(CardType.Defence,(byte)AdditionalTypes.Defence.RangedIncreased, false)[0];
-                    playerDodge = (int)(playerDodge * (1 + boostpercentage / 100D));
-                    break;
-
-                case 2:
-                    playerDefense += targetCharacter.MagicalDefence
-                        + targetCharacter.GetBuff(CardType.Defence,(byte)AdditionalTypes.Defence.MagicalDecreased, false)[0];
-                    boostpercentage = targetCharacter.GetBuff(CardType.Defence,(byte)AdditionalTypes.Defence.MagicalDecreased, false)[0];
-                    playerDefense = (int)(playerDefense * (1 + boostpercentage / 100D));
-                    break;
-
-                default:
-                    throw new Exception($"Monster.AttackClass {Monster.AttackClass} not implemented");
-            }
-
-            #endregion
-
-            #region Basic Damage Data Calculation
-
-            mainCritChance += targetCharacter.GetBuff(CardType.Critical,(byte)AdditionalTypes.Critical.ReceivingIncreased, false)[0];
-            mainCritChance -= targetCharacter.GetBuff(CardType.Critical,(byte)AdditionalTypes.Critical.ReceivingDecreased, false)[0];
-            mainCritHit += targetCharacter.GetBuff(CardType.Critical,(byte)AdditionalTypes.Critical.DamageFromCriticalIncreased, false)[0];
-            mainCritHit -= targetCharacter.GetBuff(CardType.Critical,(byte)AdditionalTypes.Critical.DamageFromCriticalDecreased, false)[0];
-            mainUpgrade -= playerDefenseUpgrade;
-            if (mainUpgrade < -10)
-            {
-                mainUpgrade = -10;
-            }
-            else if (mainUpgrade > 10)
-            {
-                mainUpgrade = 10;
-            }
-
-            #endregion
-
-            #region Detailed Calculation
-
-            #region Dodge
-
-            double multiplier = playerDodge / (double)mainHitRate;
-            if (multiplier > 5)
-            {
-                multiplier = 5;
-            }
-            double chance = -0.25 * Math.Pow(multiplier, 3) - 0.57 * Math.Pow(multiplier, 2) + 25.3 * multiplier - 1.41;
-            if (chance <= 1)
-            {
-                chance = 1;
-            }
-            if (Monster.AttackClass == 0 || Monster.AttackClass == 1)
-            {
-                if (ServerManager.Instance.RandomNumber() <= chance)
-                {
-                    hitmode = 1;
-                    return 0;
-                }
-            }
-
-            #endregion
-
-            #region Base Damage
-
-            int baseDamage = ServerManager.Instance.RandomNumber(mainMinDmg, mainMaxDmg + 1);
-            baseDamage += Monster.Level - targetCharacter.Level;
-            int elementalDamage = 0; // placeholder for BCard etc...
-
-            if (skill != null)
-            {
-                // baseDamage += skill.Damage / 4;  it's a bcard need a skillbcardload
-                // elementalDamage += skill.ElementalDamage / 4;  it's a bcard need a skillbcardload
-            }
-
-            switch (mainUpgrade)
-            {
-                case -10:
-                    playerDefense += playerDefense * 2;
-                    break;
-
-                case -9:
-                    playerDefense += (int)(playerDefense * 1.2);
-                    break;
-
-                case -8:
-                    playerDefense += (int)(playerDefense * 0.9);
-                    break;
-
-                case -7:
-                    playerDefense += (int)(playerDefense * 0.65);
-                    break;
-
-                case -6:
-                    playerDefense += (int)(playerDefense * 0.54);
-                    break;
-
-                case -5:
-                    playerDefense += (int)(playerDefense * 0.43);
-                    break;
-
-                case -4:
-                    playerDefense += (int)(playerDefense * 0.32);
-                    break;
-
-                case -3:
-                    playerDefense += (int)(playerDefense * 0.22);
-                    break;
-
-                case -2:
-                    playerDefense += (int)(playerDefense * 0.15);
-                    break;
-
-                case -1:
-                    playerDefense += (int)(playerDefense * 0.1);
-                    break;
-
-                case 0:
-                    break;
-
-                case 1:
-                    baseDamage += (int)(baseDamage * 0.1);
-                    break;
-
-                case 2:
-                    baseDamage += (int)(baseDamage * 0.15);
-                    break;
-
-                case 3:
-                    baseDamage += (int)(baseDamage * 0.22);
-                    break;
-
-                case 4:
-                    baseDamage += (int)(baseDamage * 0.32);
-                    break;
-
-                case 5:
-                    baseDamage += (int)(baseDamage * 0.43);
-                    break;
-
-                case 6:
-                    baseDamage += (int)(baseDamage * 0.54);
-                    break;
-
-                case 7:
-                    baseDamage += (int)(baseDamage * 0.65);
-                    break;
-
-                case 8:
-                    baseDamage += (int)(baseDamage * 0.9);
-                    break;
-
-                case 9:
-                    baseDamage += (int)(baseDamage * 1.2);
-                    break;
-
-                case 10:
-                    baseDamage += baseDamage * 2;
-                    break;
-
-                // sush don't tell ciapa
-                default:
-                    if (mainUpgrade > 10)
-                    {
-                        baseDamage += baseDamage * (mainUpgrade / 5);
-                    }
-                    break;
-            }
-
-            #endregion
-
-            #region Elementary Damage
-
-            int bonusrez = targetCharacter.GetBuff(CardType.ElementResistance,(byte)AdditionalTypes.ElementResistance.AllIncreased, false)[0];
-
-            #region Calculate Elemental Boost + Rate
-
-            double elementalBoost = 0;
-            int playerRessistance = 0;
-            switch (Monster.Element)
-            {
-                case 0:
-                    break;
-
-                case 1:
-                    bonusrez += targetCharacter.GetBuff(CardType.ElementResistance,(byte)AdditionalTypes.ElementResistance.FireIncreased, false)[0];
-                    playerRessistance = targetCharacter.FireResistance;
-                    switch (targetCharacter.Element)
-                    {
-                        case 0:
-                            elementalBoost = 1.3; // Damage vs no element
-                            break;
-
-                        case 1:
-                            elementalBoost = 1; // Damage vs fire
-                            break;
-
-                        case 2:
-                            elementalBoost = 2; // Damage vs water
-                            break;
-
-                        case 3:
-                            elementalBoost = 1; // Damage vs light
-                            break;
-
-                        case 4:
-                            elementalBoost = 1.5; // Damage vs darkness
-                            break;
-                    }
-                    break;
-
-                case 2:
-                    bonusrez += targetCharacter.GetBuff(CardType.ElementResistance,(byte)AdditionalTypes.ElementResistance.WaterIncreased, false)[0];
-                    playerRessistance = targetCharacter.WaterResistance;
-                    switch (targetCharacter.Element)
-                    {
-                        case 0:
-                            elementalBoost = 1.3;
-                            break;
-
-                        case 1:
-                            elementalBoost = 2;
-                            break;
-
-                        case 2:
-                            elementalBoost = 1;
-                            break;
-
-                        case 3:
-                            elementalBoost = 1.5;
-                            break;
-
-                        case 4:
-                            elementalBoost = 1;
-                            break;
-                    }
-                    break;
-
-                case 3:
-                    bonusrez += targetCharacter.GetBuff(CardType.ElementResistance,(byte)AdditionalTypes.ElementResistance.LightIncreased, false)[0];
-                    playerRessistance = targetCharacter.LightResistance;
-                    switch (targetCharacter.Element)
-                    {
-                        case 0:
-                            elementalBoost = 1.3;
-                            break;
-
-                        case 1:
-                            elementalBoost = 1.5;
-                            break;
-
-                        case 2:
-                            elementalBoost = 1;
-                            break;
-
-                        case 3:
-                            elementalBoost = 1;
-                            break;
-
-                        case 4:
-                            elementalBoost = 3;
-                            break;
-                    }
-                    break;
-
-                case 4:
-                    bonusrez += targetCharacter.GetBuff(CardType.ElementResistance,(byte)AdditionalTypes.ElementResistance.DarkIncreased, false)[0];
-                    playerRessistance = targetCharacter.DarkResistance;
-                    switch (targetCharacter.Element)
-                    {
-                        case 0:
-                            elementalBoost = 1.3;
-                            break;
-
-                        case 1:
-                            elementalBoost = 1;
-                            break;
-
-                        case 2:
-                            elementalBoost = 1.5;
-                            break;
-
-                        case 3:
-                            elementalBoost = 3;
-                            break;
-
-                        case 4:
-                            elementalBoost = 1;
-                            break;
-                    }
-                    break;
-            }
-
-            #endregion;
-
-            if (Monster.Element == 0)
-            {
-                if (elementalBoost == 0.5)
-                {
-                    elementalBoost = 0;
-                }
-                else if (elementalBoost == 1)
-                {
-                    elementalBoost = 0.05;
-                }
-                else if (elementalBoost == 1.3)
-                {
-                    elementalBoost = 0;
-                }
-                else if (elementalBoost == 1.5)
-                {
-                    elementalBoost = 0.15;
-                }
-                else if (elementalBoost == 2)
-                {
-                    elementalBoost = 0.2;
-                }
-                else if (elementalBoost == 3)
-                {
-                    elementalBoost = 0.2;
-                }
-            }
-            elementalDamage = (int)((elementalDamage + (elementalDamage + baseDamage) * (Monster.ElementRate / 100D)) * elementalBoost);
-            elementalDamage = elementalDamage / 100 * (100 - playerRessistance - bonusrez);
-            if (elementalDamage < 0)
-            {
-                elementalDamage = 0;
-            }
-
-            #endregion
-
-            #region Critical Damage
-
-            if (ServerManager.Instance.RandomNumber() <= mainCritChance)
-            {
-                if (Monster.AttackClass == 2)
-                {
-                }
-                else
-                {
-                    baseDamage += (int)(baseDamage * (mainCritHit / 100D));
-                    hitmode = 3;
-                }
-            }
-
-            #endregion
-
-            #region Total Damage
-
-            int totalDamage = baseDamage + elementalDamage - playerDefense;
-            if (totalDamage < 5)
-            {
-                totalDamage = ServerManager.Instance.RandomNumber(1, 6);
-            }
-
-            #endregion
-
-            #endregion
-
-            #region Minimum damage
-
-            if (Monster.Level < 45)
-            {
-                //no minimum damage
-            }
-            else if (Monster.Level < 55)
-            {
-                totalDamage += Monster.Level;
-            }
-            else if (Monster.Level < 60)
-            {
-                totalDamage += Monster.Level * 2;
-            }
-            else if (Monster.Level < 65)
-            {
-                totalDamage += Monster.Level * 3;
-            }
-            else if (Monster.Level < 70)
-            {
-                totalDamage += Monster.Level * 4;
-            }
-            else
-            {
-                totalDamage += Monster.Level * 5;
-            }
-
-            #endregion
-
-            return totalDamage;
-        }
-
         private string GenerateMv3()
         {
             return $"mv 3 {MapMonsterId} {MapX} {MapY} {Monster.Speed}";
@@ -801,7 +345,57 @@ namespace OpenNos.GameObject
                     int hitmode = 0;
 
                     // calculate damage
-                    int damage = hitRequest.Session.Character.GenerateDamage(this, hitRequest.Skill, ref hitmode);
+                    int damage = DamageHelper.Instance.CalculateDamage(new BattleEntity(hitRequest.Session.Character, hitRequest.Skill), new BattleEntity(this), hitRequest.Skill, ref hitmode);
+
+                    if (DamageList.ContainsKey(hitRequest.Session.Character.CharacterId))
+                    {
+                        DamageList[hitRequest.Session.Character.CharacterId] += damage;
+                    }
+                    else
+                    {
+                        DamageList.Add(hitRequest.Session.Character.CharacterId, damage);
+                    }
+                    if (CurrentHp <= damage)
+                    {
+                        IsAlive = false;
+                        CurrentHp = 0;
+                        CurrentMp = 0;
+                        Death = DateTime.Now;
+                        LastMove = DateTime.Now;
+                    }
+                    else
+                    {
+                        CurrentHp -= damage;
+                    }
+
+                    // only set the hit delay if we become the monsters target with this hit
+                    if (Target == -1)
+                    {
+                        LastSkill = DateTime.Now;
+                    }
+
+                    int nearestDistance = 100;
+                    foreach (KeyValuePair<long, long> kvp in DamageList)
+                    {
+                        ClientSession session = MapInstance.GetSessionByCharacterId(kvp.Key);
+                        if (session != null)
+                        {
+                            int distance = Map.GetDistance(new MapCell
+                            {
+                                X = MapX,
+                                Y = MapY
+                            }, new MapCell
+                            {
+                                X = session.Character.PositionX,
+                                Y = session.Character.PositionY
+                            });
+                            if (distance < nearestDistance)
+                            {
+                                nearestDistance = distance;
+                                Target = session.Character.CharacterId;
+                            }
+                        }
+                    }
 
                     switch (hitRequest.TargetHitType)
                     {
@@ -1045,7 +639,7 @@ namespace OpenNos.GameObject
             if (Monster != null && ((DateTime.Now - LastSkill).TotalMilliseconds >= 1000 + Monster.BasicCooldown * 200 || npcMonsterSkill != null))
             {
                 int hitmode = 0;
-                int damage = npcMonsterSkill != null ? GenerateDamage(targetSession.Character, npcMonsterSkill.Skill, ref hitmode) : GenerateDamage(targetSession.Character, null, ref hitmode);
+                int damage = DamageHelper.Instance.CalculateDamage(new BattleEntity(this), new BattleEntity(targetSession.Character, null), npcMonsterSkill?.Skill, ref hitmode);
 
                 if (npcMonsterSkill != null)
                 {
