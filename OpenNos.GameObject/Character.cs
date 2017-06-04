@@ -850,7 +850,7 @@ namespace OpenNos.GameObject
                 if (item.IsBound && item.ItemDeleteTime != null && item.ItemDeleteTime < DateTime.Now)
                 {
                     Inventory.DeleteById(item.Id);
-                    Session.Character.EquipmentBCards.RemoveAll(o => o.ItemVnum == item.ItemVNum);
+                    Session.Character.EquipmentBCards.RemoveAll(o => o.ItemVNum == item.ItemVNum);
                     if (item.Type == InventoryType.Wear)
                     {
                         Session.SendPacket(GenerateEquipment());
@@ -1814,6 +1814,11 @@ namespace OpenNos.GameObject
         public string GenerateRest()
         {
             return $"rest 1 {CharacterId} {(IsSitting ? 1 : 0)}";
+        }
+
+        public string GenerateRaidBf(byte type)
+        {
+            return $"raidbf 0 {type} 25 ";
         }
 
         public string GenerateRevive()
@@ -3638,7 +3643,7 @@ namespace OpenNos.GameObject
                     break;
                 case 3:
                     result = $"raid 3";
-                    Group?.Characters?.ForEach(s => { result += $" {s.Character?.CharacterId}.{Math.Ceiling(Hp / HPLoad() * 100)}.{Math.Ceiling(Mp / MPLoad() * 100)}"; });
+                    Group?.Characters?.ForEach(s => { result += $" {s.Character?.CharacterId}.{Math.Ceiling(s.Character.Hp / s.Character.HPLoad() * 100)}.{Math.Ceiling(s.Character.Mp / s.Character.MPLoad() * 100)}"; });
                     break;
                 case 4:
                     result = $"raid 4";

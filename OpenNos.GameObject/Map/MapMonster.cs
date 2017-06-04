@@ -62,6 +62,8 @@ namespace OpenNos.GameObject
 
         public bool IsBonus { get; set; }
 
+        public bool IsBoss { get; set; }
+
         public bool IsHostile { get; set; }
 
         public bool IsTarget { get; set; }
@@ -464,6 +466,10 @@ namespace OpenNos.GameObject
                     // monster already has been killed, send cancel
                     hitRequest.Session.SendPacket($"cancel 2 {MapMonsterId}");
                 }
+                if (IsBoss)
+                {
+                    MapInstance.Broadcast(GenerateBoss());
+                }
             }
 
             // Respawn
@@ -546,6 +552,11 @@ namespace OpenNos.GameObject
                     }
                 }
             }
+        }
+
+        public string GenerateBoss()
+        {
+            return $"rboss 3 {MapMonsterId} {CurrentHp} {Monster.MaxHP}";
         }
 
         private void Move()
