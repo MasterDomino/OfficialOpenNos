@@ -50,6 +50,8 @@ namespace OpenNos.DAL.EF
 
         public bool IsDelayed { get; set; }
 
+        public bool IsLevelScaled { get; set; }
+
         public short Delay { get; set; }
 
         #endregion

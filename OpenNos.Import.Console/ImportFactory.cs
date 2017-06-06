@@ -146,7 +146,7 @@ namespace OpenNos.Import.Console
                                     Type = Convert.ToByte(currentLine[2 + i * 6]),
                                     SubType = Convert.ToByte(currentLine[3 + i * 6]),
                                   
-                                    Delay = Convert.ToByte(currentLine[5 + i * 6]),
+                                    Delay = 0,
                                     FirstData = Convert.ToInt32(currentLine[6 + i * 6]) / 4,
                                     SecondData = Convert.ToInt32(currentLine[7 + i * 6]) / 4
 
@@ -159,17 +159,21 @@ namespace OpenNos.Import.Console
                     {
                         for (int i = 0; i < 2; i++)
                         {
-                            if (currentLine[2 + i * 6] != "0" && currentLine[2 + i * 6] != "-1")
+                            int first = Convert.ToInt32(currentLine[6 + i * 6]);
+                            if (currentLine[2 + i * 6] != "-1" && currentLine[2 + i * 6] != "0")
                             {
                                 bcard = new BCardDTO()
                                 {
                                     IsDelayed = true,
                                     CardId = card.CardId,
-                                    Type = byte.Parse(currentLine[2+i * 6]),
-                                    SubType = (byte)((int.Parse(currentLine[4]) + 1) * 10),
-                                    FirstData = (short)(int.Parse(currentLine[5]) / 4),
-                                    SecondData = (short)(int.Parse(currentLine[6]) / 4),
-                                    Delay = (short)(int.Parse(currentLine[7]) / 4),
+                                    Type = Convert.ToByte(currentLine[2 + i * 6]),
+                                    SubType = Convert.ToByte(currentLine[3 + i * 6]),
+
+                                    Delay = (short)card.Delay,
+                                    IsLevelScaled = Convert.ToBoolean(first % 4),
+                                    FirstData = first / 4,
+                                    SecondData = Convert.ToInt32(currentLine[7 + i * 6]) / 4
+
                                 };
                                 bcards.Add(bcard);
                             }
@@ -1160,14 +1164,16 @@ namespace OpenNos.Import.Console
                         for (int i = 0; i < 4; i++)
                         {
                             byte type = (byte)(Int32.Parse(currentLine[2 + 5 * i]));
-                            if (type != 0)
+                            if (type != 0 && type != 255)
                             {
+                                int first = int.Parse(currentLine[3 + 5 * i]);
                                 BCardDTO itemCard = new BCardDTO
                                 {
                                     NpcMonsterVNum = npc.NpcMonsterVNum,
                                     Type = type,
                                     SubType = (byte)((int.Parse(currentLine[5 + 5 * i]) + 1) * 10),
-                                    FirstData = (short)(int.Parse(currentLine[3 + 5 * i]) / 4),
+                                    IsLevelScaled = Convert.ToBoolean(first % 4),
+                                    FirstData = (short)(first / 4),
                                     SecondData = (short)(int.Parse(currentLine[4 + 5 * i]) / 4),
                                     Delay = (short)(int.Parse(currentLine[6 + 5 * i]) / 4),
                                 };
@@ -2187,14 +2193,16 @@ namespace OpenNos.Import.Console
                     else if (currentLine.Length > 2 && currentLine[1] == "BASIC")
                     {
                         byte type = (byte)(Int32.Parse(currentLine[3]));
-                        if (type != 0)
+                        if (type != 0 && type != 255)
                         {
+                            int first = int.Parse(currentLine[5]);
                             BCardDTO itemCard = new BCardDTO
                             {
                                 SkillVNum = skill.SkillVNum,
                                 Type = type,
                                 SubType = (byte)((int.Parse(currentLine[4]) + 1) * 10),
-                                FirstData = (short)(int.Parse(currentLine[5]) / 4),
+                                IsLevelScaled = Convert.ToBoolean(first % 4),
+                                FirstData = (short)(first / 4),
                                 SecondData = (short)(int.Parse(currentLine[6]) / 4),
                                 Delay = (short)(int.Parse(currentLine[7]) / 4),
                             };
@@ -3444,14 +3452,16 @@ namespace OpenNos.Import.Console
                         for (int i = 0; i < 5; i++)
                         {
                             byte type = (byte)(Int32.Parse(currentLine[2 + 5 * i]));
-                            if (type != 0)
+                            if (type != 0 && type != 255)
                             {
+                                int first = int.Parse(currentLine[3 + 5 * i]);
                                 BCardDTO itemCard = new BCardDTO
                                 {
                                     ItemVNum = item.VNum,
                                     Type = type,
-                                    SubType = (byte)((int.Parse(currentLine[5 + 5 * i]) + 1)),
-                                    FirstData = (short)(int.Parse(currentLine[3 + 5 * i]) / 4),
+                                    SubType = (byte)((int.Parse(currentLine[5 + 5 * i]) + 1)*10),
+                                    IsLevelScaled = Convert.ToBoolean(first % 4),
+                                    FirstData = (short)(first / 4),
                                     SecondData = (short)(int.Parse(currentLine[4 + 5 * i]) / 4),
                                     Delay = (short)(int.Parse(currentLine[6 + 5 * i]) / 4),
                                 };
