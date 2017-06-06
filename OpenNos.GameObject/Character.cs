@@ -3783,7 +3783,14 @@ namespace OpenNos.GameObject
             foreach (BCard entry in EquipmentBCards.Where(
                 s => s.Type.Equals((byte)type) && s.SubType.Equals((byte)(subtype / 10))))
             {
-                value1 += entry.FirstData;
+                if (entry.IsLevelScaled)
+                {
+                    value1 += entry.FirstData * Level;
+                }
+                else
+                {
+                    value1 += entry.FirstData;
+                }
                 value2 += entry.SecondData;
             }
 
@@ -3797,7 +3804,14 @@ namespace OpenNos.GameObject
             
             foreach (BCard entry in EquipmentBCards.Where(s => s.Type.Equals((byte)type) && s.SubType.Equals((byte)(subtype / 10))))
             {
-                value1 += entry.FirstData;
+                if (entry.IsLevelScaled)
+                {
+                    value1 += entry.FirstData * Level;
+                }
+                else
+                {
+                    value1 += entry.FirstData;
+                }
                 value2 += entry.SecondData;
             }
 
