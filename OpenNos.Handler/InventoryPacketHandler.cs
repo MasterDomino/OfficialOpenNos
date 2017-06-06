@@ -1828,7 +1828,7 @@ namespace OpenNos.Handler
                 bufftodisable.Add(BuffType.Good);
                 bufftodisable.Add(BuffType.Neutral);
                 Session.Character.DisableBuffs(bufftodisable);
-                Session.Character.EquipmentBCards.RemoveAll(s=>s.ItemVnum.Equals(vnum));
+                Session.Character.EquipmentBCards.RemoveAll(s=>s.ItemVNum.Equals(vnum));
                 Logger.Debug(Session.Character.GenerateIdentity(), vnum.ToString());
                 Session.Character.UseSp = false;
                 Session.Character.LoadSpeed();
