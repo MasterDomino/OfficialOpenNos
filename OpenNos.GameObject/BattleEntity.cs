@@ -324,7 +324,7 @@ namespace OpenNos.GameObject
 
         public AttackType AttackType { get; set; }
 
-        public byte DefenseUpgrade { get; set; }
+        public short DefenseUpgrade { get; set; }
 
         public int Defense { get; set; }
 
