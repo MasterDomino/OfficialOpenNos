@@ -140,14 +140,17 @@ namespace OpenNos.Import.Console
                         {
                             if (currentLine[2 + i * 6] != "-1" && currentLine[2 + i * 6] != "0")
                             {
+                                int first = Convert.ToInt32(currentLine[6 + i * 6]);
+
                                 bcard = new BCardDTO()
                                 {
                                     CardId = card.CardId,
                                     Type = Convert.ToByte(currentLine[2 + i * 6]),
-                                    SubType = Convert.ToByte(currentLine[3 + i * 6]),
-                                  
+                                    SubType = (byte)((Convert.ToByte(currentLine[3 + i * 6]) + 1) * 10),
+
                                     Delay = 0,
-                                    FirstData = Convert.ToInt32(currentLine[6 + i * 6]) / 4,
+                                    IsLevelScaled = Convert.ToBoolean(first % 4),
+                                    FirstData = first / 4,
                                     SecondData = Convert.ToInt32(currentLine[7 + i * 6]) / 4
 
                                 };
@@ -167,7 +170,7 @@ namespace OpenNos.Import.Console
                                     IsDelayed = true,
                                     CardId = card.CardId,
                                     Type = Convert.ToByte(currentLine[2 + i * 6]),
-                                    SubType = Convert.ToByte(currentLine[3 + i * 6]),
+                                    SubType = (byte)((Convert.ToByte(currentLine[3 + i * 6]) + 1) * 10),
 
                                     Delay = (short)card.Delay,
                                     IsLevelScaled = Convert.ToBoolean(first % 4),
