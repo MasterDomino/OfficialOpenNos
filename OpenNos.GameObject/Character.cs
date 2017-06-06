@@ -3745,7 +3745,11 @@ namespace OpenNos.GameObject
                         Session.Character.GenerateSay(
                             string.Format(Language.Instance.GetMessageFromKey("EFFECT_TERMINATED"), Name), 20));
                 }
-                Buff.Remove(indicator);
+
+                if (Buff.Contains(indicator))
+                {
+                    Buff.RemoveAll(s=>s.Card.CardId == id);
+                }
                 if (indicator.Card.BCards.Any(s => s.Type == (byte)BCardType.CardType.Move))
                 {
                     LastSpeedChange = DateTime.Now;
