@@ -24,7 +24,6 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
@@ -37,6 +36,7 @@ namespace OpenNos.GameObject
     {
         #region Members
 
+        public ThreadSafeSortedList<long, Group> GroupsThreadSafe;
         public bool ShutdownStop;
 
         private static readonly List<Item> _items = new List<Item>();
@@ -58,9 +58,6 @@ namespace OpenNos.GameObject
         private bool _disposed;
 
         private List<DropDTO> _generalDrops;
-
-        public ThreadSafeSortedList<long, Group> GroupsThreadSafe;
-
         private long _lastGroupId;
 
         private ThreadSafeSortedList<short, List<MapNpc>> _mapNpcs;
@@ -100,6 +97,8 @@ namespace OpenNos.GameObject
 
         public List<BazaarItemLink> BazaarList { get; set; }
 
+        public List<Card> Cards { get; set; }
+
         public int ChannelId { get; set; }
 
         public List<CharacterRelationDTO> CharacterRelations { get; set; }
@@ -117,6 +116,8 @@ namespace OpenNos.GameObject
         public int GoldDropRate { get; set; }
 
         public int GoldRate { get; set; }
+
+        public List<Group> GroupList { get; set; } = new List<Group>();
 
         public List<Group> Groups => GroupsThreadSafe.GetAllItems();
 
@@ -144,6 +145,8 @@ namespace OpenNos.GameObject
 
         public List<PenaltyLogDTO> PenaltyLogs { get; set; }
 
+        public List<ScriptedInstance> Raids { get; set; }
+
         public List<Schedule> Schedules { get; set; }
 
         public string ServerGroup { get; set; }
@@ -161,12 +164,6 @@ namespace OpenNos.GameObject
         public Guid WorldId { get; private set; }
 
         public int XPRate { get; set; }
-
-        public List<Card> Cards { get; set; }
-
-        public List<ScriptedInstance> Raids { get; set; }
-
-        public List<Group> GroupList { get; set; } = new List<Group>();
 
         #endregion
 
@@ -465,7 +462,6 @@ namespace OpenNos.GameObject
                         });
                     });
 
-
                     session.SendPackets(session.CurrentMapInstance.GetMapItems());
                     MapInstancePortalHandler.GenerateMinilandEntryPortals(session.CurrentMapInstance.Map.MapId, session.Character.Miniland.MapInstanceId).ForEach(p => session.SendPacket(p.GenerateGp()));
 
@@ -621,12 +617,16 @@ namespace OpenNos.GameObject
             return _mapinstances.ContainsKey(id) ? _mapinstances[id] : null;
         }
 
+        public List<MapInstance> GetMapInstances()
+        {
+            return _mapinstances.Values.ToList();
+        }
+
         public long GetNextGroupId()
         {
             _lastGroupId++;
             return _lastGroupId;
         }
-
 
         public NpcMonster GetNpc(short npcVNum)
         {
@@ -728,7 +728,6 @@ namespace OpenNos.GameObject
                             }
                             session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("RAID_LEFT"), 0));
                         }
-
                     }
                     else
                     {
@@ -978,7 +977,6 @@ namespace OpenNos.GameObject
                 Cards.Add(card);
             }
 
-
             Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("CARDS_LOADED"), _skills.Count));
 
             // intialize mapnpcs
@@ -1112,7 +1110,6 @@ namespace OpenNos.GameObject
             session.Character.Mates.Where(s => s.IsTeamMember).ToList().ForEach(s => session.CurrentMapInstance?.Broadcast(session, s.GenerateOut(), ReceiverType.AllExceptMe));
             session.CurrentMapInstance?.Broadcast(session, session.Character.GenerateOut(), ReceiverType.AllExceptMe);
         }
-
 
         public int RandomNumber(int min = 0, int max = 100)
         {
@@ -1508,7 +1505,6 @@ namespace OpenNos.GameObject
                 }
             });
         }
-
 
         private void MailProcess()
         {
