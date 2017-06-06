@@ -146,7 +146,7 @@ namespace OpenNos.Import.Console
                                 {
                                     CardId = card.CardId,
                                     Type = Convert.ToByte(currentLine[2 + i * 6]),
-                                    SubType = (byte)((Convert.ToByte(currentLine[3 + i * 6]) + 1) * 10),
+                                    SubType = (byte)(Convert.ToByte(currentLine[3 + i * 6]) + 1),
 
                                     Delay = 0,
                                     IsLevelScaled = Convert.ToBoolean(first % 4),
@@ -170,7 +170,7 @@ namespace OpenNos.Import.Console
                                     IsDelayed = true,
                                     CardId = card.CardId,
                                     Type = Convert.ToByte(currentLine[2 + i * 6]),
-                                    SubType = (byte)((Convert.ToByte(currentLine[3 + i * 6]) + 1) * 10),
+                                    SubType = (byte)(Convert.ToByte(currentLine[3 + i * 6]) + 1),
 
                                     Delay = (short)card.Delay,
                                     IsLevelScaled = Convert.ToBoolean(first % 4),
@@ -1174,7 +1174,7 @@ namespace OpenNos.Import.Console
                                 {
                                     NpcMonsterVNum = npc.NpcMonsterVNum,
                                     Type = type,
-                                    SubType = (byte)((int.Parse(currentLine[5 + 5 * i]) + 1) * 10),
+                                    SubType = (byte)(int.Parse(currentLine[5 + 5 * i]) + 1),
                                     IsLevelScaled = Convert.ToBoolean(first % 4),
                                     FirstData = (short)(first / 4),
                                     SecondData = (short)(int.Parse(currentLine[4 + 5 * i]) / 4),
@@ -2203,7 +2203,7 @@ namespace OpenNos.Import.Console
                             {
                                 SkillVNum = skill.SkillVNum,
                                 Type = type,
-                                SubType = (byte)((int.Parse(currentLine[4]) + 1) * 10),
+                                SubType = (byte)(int.Parse(currentLine[4]) + 1),
                                 IsLevelScaled = Convert.ToBoolean(first % 4),
                                 FirstData = (short)(first / 4),
                                 SecondData = (short)(int.Parse(currentLine[6]) / 4),
@@ -3462,7 +3462,7 @@ namespace OpenNos.Import.Console
                                 {
                                     ItemVNum = item.VNum,
                                     Type = type,
-                                    SubType = (byte)((int.Parse(currentLine[5 + 5 * i]) + 1)*10),
+                                    SubType = (byte)(int.Parse(currentLine[5 + 5 * i]) + 1),
                                     IsLevelScaled = Convert.ToBoolean(first % 4),
                                     FirstData = (short)(first / 4),
                                     SecondData = (short)(int.Parse(currentLine[4 + 5 * i]) / 4),
