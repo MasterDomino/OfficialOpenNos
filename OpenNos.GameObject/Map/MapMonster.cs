@@ -339,6 +339,11 @@ namespace OpenNos.GameObject
                 }
             }
 
+            if (IsBoss)
+            {
+                MapInstance.Broadcast(GenerateBoss());
+            }
+
             // handle hit queue
             while (HitQueue.TryDequeue(out HitRequest hitRequest))
             {
