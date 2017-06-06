@@ -3806,10 +3806,18 @@ namespace OpenNos.GameObject
                 foreach (Buff buff in Buff)
                 {
                     // THIS ONE DOES NOT FOR STUFFS
+
                     foreach (BCard entry in buff.Card.BCards
                         .Where(s => s.Type.Equals((byte)type) && s.SubType.Equals((byte)(subtype / 10)) && (!s.IsDelayed || (s.IsDelayed && buff.Start.AddMilliseconds(buff.Card.Delay * 100) < DateTime.Now))))
                     {
-                        value1 += entry.FirstData;
+                        if (entry.IsLevelScaled)
+                        {
+                            value1 += entry.FirstData * buff.Level;
+                        }
+                        else
+                        {
+                            value1 += entry.FirstData;
+                        }
                         value2 += entry.SecondData;
                     }
                 }
