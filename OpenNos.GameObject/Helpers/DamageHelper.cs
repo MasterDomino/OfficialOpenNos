@@ -32,11 +32,18 @@ namespace OpenNos.GameObject
         /// <returns>Damage</returns>
         public int CalculateDamage(BattleEntity attacker, BattleEntity defender, Skill skill, ref int hitMode)
         {
-
+            if (skill != null)
+            {
+                attacker.BCards.AddRange(skill.BCards);
+            }
             #region Basic Buff Initialisation
 
-            attacker.Morale += GetBuff(attacker.Buffs, attacker.BCards, CardType.Morale, (byte)AdditionalTypes.Morale.MoraleIncreased)[0];
-            defender.Morale += GetBuff(defender.Buffs, defender.BCards, CardType.Morale, (byte)AdditionalTypes.Morale.MoraleIncreased)[0];
+            attacker.Morale += GetBuff(attacker.Level, attacker.Buffs, attacker.BCards, CardType.Morale, (byte)AdditionalTypes.Morale.MoraleIncreased)[0];
+            defender.Morale += GetBuff(defender.Level, defender.Buffs, defender.BCards, CardType.Morale, (byte)AdditionalTypes.Morale.MoraleIncreased)[0];
+
+            attacker.AttackUpgrade += (short)GetBuff(attacker.Level, attacker.Buffs, attacker.BCards, CardType.AttackPower, (byte)AdditionalTypes.AttackPower.AttackLevelIncreased)[0];
+            defender.DefenseUpgrade += (short)GetBuff(defender.Level, defender.Buffs, defender.BCards, CardType.Defence, (byte)AdditionalTypes.Defence.DefenceLevelIncreased)[0];
+
 
             /*
              * 
@@ -87,6 +94,9 @@ namespace OpenNos.GameObject
             int staticBoostCategory3 = 0;
             int staticBoostCategory4 = 0;
             int staticBoostCategory5 = 0;
+
+            staticBoostCategory3 += (short)GetBuff(attacker.Level, attacker.Buffs, attacker.BCards, CardType.AttackPower, (byte)AdditionalTypes.AttackPower.AllAttacksIncreased)[0];
+            staticBoostCategory3 += (short)GetBuff(defender.Level, defender.Buffs, defender.BCards, CardType.AttackPower, (byte)AdditionalTypes.AttackPower.AllAttacksIncreased)[0];
 
             #endregion
 
@@ -502,14 +512,21 @@ namespace OpenNos.GameObject
             }
         }
 
-        private int[] GetBuff(List<Buff> buffs, List<BCard> bcards, CardType type, byte subtype)
+        private int[] GetBuff(byte Level, List<Buff> buffs, List<BCard> bcards, CardType type, byte subtype)
         {
             int value1 = 0;
             int value2 = 0;
 
             foreach (BCard entry in bcards.Where(s => s.Type.Equals((byte)type) && s.SubType.Equals((byte)(subtype / 10))))
             {
-                value1 += entry.FirstData;
+                if (entry.IsLevelScaled)
+                {
+                    value1 += entry.FirstData * Level;
+                }
+                else
+                {
+                    value1 += entry.FirstData;
+                }
                 value2 += entry.SecondData;
             }
 
