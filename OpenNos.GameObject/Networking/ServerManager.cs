@@ -409,12 +409,13 @@ namespace OpenNos.GameObject
                     {
                         session.Character.CloseShop();
                     }
-                    LeaveMap(session.Character.CharacterId);
-
-                    session.Character.IsChangingMapInstance = true;
 
                     session.CurrentMapInstance.RemoveMonstersTarget(session.Character.CharacterId);
                     session.CurrentMapInstance.UnregisterSession(session.Character.CharacterId);
+
+                    LeaveMap(session.Character.CharacterId);
+
+                    session.Character.IsChangingMapInstance = true;
 
                     // cleanup sending queue to avoid sending uneccessary packets to it
                     session.ClearLowPriorityQueue();
