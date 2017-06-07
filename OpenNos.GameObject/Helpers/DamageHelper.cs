@@ -32,17 +32,60 @@ namespace OpenNos.GameObject
         /// <returns>Damage</returns>
         public int CalculateDamage(BattleEntity attacker, BattleEntity defender, Skill skill, ref int hitMode)
         {
+            int[] GetAttackerBenefitingBuffs(CardType type, byte subtype)
+            {
+                int value1 = 0;
+                int value2 = 0;
+                int[] tmp;
+
+                tmp = GetBuff(attacker.Level, attacker.Buffs, attacker.BCards, type, subtype, BuffType.Good);
+                value1 += tmp[0];
+                value2 += tmp[1];
+                tmp = GetBuff(attacker.Level, attacker.Buffs, attacker.BCards, type, subtype, BuffType.Neutral);
+                value1 += tmp[0];
+                value2 += tmp[1];
+                tmp = GetBuff(defender.Level, defender.Buffs, defender.BCards, type, subtype, BuffType.Bad);
+                value1 += tmp[0];
+                value2 += tmp[1];
+
+                return new int[] { value1, value2 };
+            }
+
+            int[] GetDefenderBenefitingBuffs(CardType type, byte subtype)
+            {
+                int value1 = 0;
+                int value2 = 0;
+                int[] tmp;
+
+                tmp = GetBuff(defender.Level, defender.Buffs, defender.BCards, type, subtype, BuffType.Good);
+                value1 += tmp[0];
+                value2 += tmp[1];
+                tmp = GetBuff(defender.Level, defender.Buffs, defender.BCards, type, subtype, BuffType.Neutral);
+                value1 += tmp[0];
+                value2 += tmp[1];
+                tmp = GetBuff(attacker.Level, attacker.Buffs, attacker.BCards, type, subtype, BuffType.Bad);
+                value1 += tmp[0];
+                value2 += tmp[1];
+
+                return new int[] { value1, value2 };
+            }
+
             if (skill != null)
             {
                 attacker.BCards.AddRange(skill.BCards);
             }
+
             #region Basic Buff Initialisation
 
-            attacker.Morale += GetBuff(attacker.Level, attacker.Buffs, attacker.BCards, CardType.Morale, (byte)AdditionalTypes.Morale.MoraleIncreased)[0];
-            defender.Morale += GetBuff(defender.Level, defender.Buffs, defender.BCards, CardType.Morale, (byte)AdditionalTypes.Morale.MoraleIncreased)[0];
+            attacker.Morale += GetAttackerBenefitingBuffs(CardType.Morale, (byte)AdditionalTypes.Morale.MoraleIncreased)[0];
+            attacker.Morale += GetDefenderBenefitingBuffs(CardType.Morale, (byte)AdditionalTypes.Morale.MoraleDecreased)[0];
+            defender.Morale += GetDefenderBenefitingBuffs(CardType.Morale, (byte)AdditionalTypes.Morale.MoraleIncreased)[0];
+            defender.Morale += GetAttackerBenefitingBuffs(CardType.Morale, (byte)AdditionalTypes.Morale.MoraleDecreased)[0];
 
-            attacker.AttackUpgrade += (short)GetBuff(attacker.Level, attacker.Buffs, attacker.BCards, CardType.AttackPower, (byte)AdditionalTypes.AttackPower.AttackLevelIncreased)[0];
-            defender.DefenseUpgrade += (short)GetBuff(defender.Level, defender.Buffs, defender.BCards, CardType.Defence, (byte)AdditionalTypes.Defence.DefenceLevelIncreased)[0];
+            attacker.AttackUpgrade += (short)GetAttackerBenefitingBuffs(CardType.AttackPower, (byte)AdditionalTypes.AttackPower.AttackLevelIncreased)[0];
+            attacker.AttackUpgrade += (short)GetDefenderBenefitingBuffs(CardType.AttackPower, (byte)AdditionalTypes.AttackPower.AttackLevelDecreased)[0];
+            defender.DefenseUpgrade += (short)GetDefenderBenefitingBuffs(CardType.Defence, (byte)AdditionalTypes.Defence.DefenceLevelIncreased)[0];
+            defender.DefenseUpgrade += (short)GetAttackerBenefitingBuffs(CardType.Defence, (byte)AdditionalTypes.Defence.DefenceLevelDecreased)[0];
 
 
             /*
@@ -79,6 +122,8 @@ namespace OpenNos.GameObject
              *  
              */
 
+            #region Definitions
+
             double boostCategory1 = 1;
             double boostCategory2 = 1;
             double boostCategory3 = 1;
@@ -95,8 +140,232 @@ namespace OpenNos.GameObject
             int staticBoostCategory4 = 0;
             int staticBoostCategory5 = 0;
 
-            staticBoostCategory3 += (short)GetBuff(attacker.Level, attacker.Buffs, attacker.BCards, CardType.AttackPower, (byte)AdditionalTypes.AttackPower.AllAttacksIncreased)[0];
-            staticBoostCategory3 += (short)GetBuff(defender.Level, defender.Buffs, defender.BCards, CardType.AttackPower, (byte)AdditionalTypes.AttackPower.AllAttacksIncreased)[0];
+            #endregion
+
+            #region Type 1
+
+            #region Static
+
+            // None for now
+
+            #endregion
+
+            #region Boost
+
+            boostCategory1 += GetAttackerBenefitingBuffs(CardType.Damage, (byte)AdditionalTypes.Damage.DamageIncreased)[0];
+            boostCategory1 += GetDefenderBenefitingBuffs(CardType.Damage, (byte)AdditionalTypes.Damage.DamageDecreased)[0];
+
+            if ((attacker.EntityType == EntityType.Player || attacker.EntityType == EntityType.Mate) && (defender.EntityType == EntityType.Player || defender.EntityType == EntityType.Mate))
+            {
+                boostCategory1 += GetAttackerBenefitingBuffs(CardType.SpecialisationBuffResistance, (byte)AdditionalTypes.SpecialisationBuffResistance.IncreaseDamageInPVP)[0];
+                boostCategory1 += GetAttackerBenefitingBuffs(CardType.LeonaPassiveSkill, (byte)AdditionalTypes.LeonaPassiveSkill.AttackIncreasedInPVP)[0];
+
+            }
+
+            #endregion
+
+            #endregion
+
+            #region Type 2
+
+            #region Static
+
+            // None for now
+
+            #endregion
+
+            #region Boost
+
+            boostCategory2 += GetDefenderBenefitingBuffs(CardType.Damage, (byte)AdditionalTypes.Damage.DamageDecreased)[0];
+
+            if ((attacker.EntityType == EntityType.Player || attacker.EntityType == EntityType.Mate) && (defender.EntityType == EntityType.Player || defender.EntityType == EntityType.Mate))
+            {
+                boostCategory2 += GetDefenderBenefitingBuffs(CardType.SpecialisationBuffResistance, (byte)AdditionalTypes.SpecialisationBuffResistance.DecreaseDamageInPVP)[0];
+                boostCategory2 += GetDefenderBenefitingBuffs(CardType.LeonaPassiveSkill, (byte)AdditionalTypes.LeonaPassiveSkill.AttackDecreasedInPVP)[0];
+            }
+
+            #endregion
+
+            #endregion
+
+            #region Type 3
+
+            #region Static
+
+            staticBoostCategory3 += GetAttackerBenefitingBuffs(CardType.AttackPower, (byte)AdditionalTypes.AttackPower.AllAttacksIncreased)[0];
+            staticBoostCategory3 += GetDefenderBenefitingBuffs(CardType.AttackPower, (byte)AdditionalTypes.AttackPower.AllAttacksDecreased)[0];
+
+            #endregion
+
+            #region Soft-Damage
+
+            int[] soft = GetAttackerBenefitingBuffs(CardType.IncreaseDamage, (byte)AdditionalTypes.IncreaseDamage.IncreasingPropability);
+            if (ServerManager.Instance.RandomNumber() < soft[0])
+            {
+                boostCategory3 += soft[1] / 100D;
+                if (attacker.EntityType.Equals(EntityType.Player) && attacker.Session != null)
+                {
+                    attacker.Session.CurrentMapInstance.Broadcast(attacker.Session.Character.GenerateEff(15));
+                }
+            }
+
+            #endregion
+
+            #endregion
+
+            #region Type 4
+
+            #region Static
+
+            staticBoostCategory4 += GetDefenderBenefitingBuffs(CardType.Defence, (byte)AdditionalTypes.Defence.AllIncreased)[0];
+            staticBoostCategory4 += GetAttackerBenefitingBuffs(CardType.Defence, (byte)AdditionalTypes.Defence.AllDecreased)[0];
+
+            #endregion
+
+            #region Boost
+
+            boostCategory4 += GetDefenderBenefitingBuffs(CardType.DodgeAndDefencePercent, (byte)AdditionalTypes.DodgeAndDefencePercent.DefenceIncreased)[0];
+            boostCategory4 += GetAttackerBenefitingBuffs(CardType.DodgeAndDefencePercent, (byte)AdditionalTypes.DodgeAndDefencePercent.DefenceReduced)[0];
+
+            if ((attacker.EntityType == EntityType.Player || attacker.EntityType == EntityType.Mate) && (defender.EntityType == EntityType.Player || defender.EntityType == EntityType.Mate))
+            {
+                boostCategory4 += GetDefenderBenefitingBuffs(CardType.LeonaPassiveSkill, (byte)AdditionalTypes.LeonaPassiveSkill.DefenceIncreasedInPVP)[0];
+                boostCategory4 += GetAttackerBenefitingBuffs(CardType.LeonaPassiveSkill, (byte)AdditionalTypes.LeonaPassiveSkill.DefenceDecreasedInPVP)[0];
+            }
+
+            int[] def = GetAttackerBenefitingBuffs(CardType.Block, (byte)AdditionalTypes.Block.ChanceAllIncreased);
+            if (ServerManager.Instance.RandomNumber() < soft[0])
+            {
+                boostCategory3 += soft[1] / 100D;
+                if (attacker.EntityType.Equals(EntityType.Player) && attacker.Session != null)
+                {
+                    attacker.Session.CurrentMapInstance.Broadcast(attacker.Session.Character.GenerateEff(15));
+                }
+            }
+
+            #endregion
+
+            #endregion
+
+            #region Type 5
+
+            #region Static
+
+            staticBoostCategory5 += GetAttackerBenefitingBuffs(CardType.Element, (byte)AdditionalTypes.Element.AllIncreased)[0];
+            staticBoostCategory5 += GetDefenderBenefitingBuffs(CardType.Element, (byte)AdditionalTypes.Element.AllDecreased)[0];
+
+            #endregion
+
+            #region Boost
+
+            // Nothing for now
+
+            #endregion
+
+            #endregion
+
+            #region All Type Class Dependant
+
+            int[] def2 = null;
+
+            switch (attacker.AttackType)
+            {
+                case AttackType.Melee:
+                    def2 = GetAttackerBenefitingBuffs(CardType.Block, (byte)AdditionalTypes.Block.ChanceMeleeIncreased);
+                    boostCategory1 += GetAttackerBenefitingBuffs(CardType.Damage, (byte)AdditionalTypes.Damage.MeleeIncreased)[0];
+                    boostCategory1 += GetDefenderBenefitingBuffs(CardType.Damage, (byte)AdditionalTypes.Damage.MeleeDecreased)[0];
+                    staticBoostCategory3 += GetAttackerBenefitingBuffs(CardType.AttackPower, (byte)AdditionalTypes.AttackPower.MeleeAttacksIncreased)[0];
+                    staticBoostCategory3 += GetDefenderBenefitingBuffs(CardType.AttackPower, (byte)AdditionalTypes.AttackPower.MeleeAttacksDecreased)[0];
+                    break;
+                case AttackType.Range:
+                    def2 = GetAttackerBenefitingBuffs(CardType.Block, (byte)AdditionalTypes.Block.ChanceRangedIncreased);
+                    boostCategory1 += GetAttackerBenefitingBuffs(CardType.Damage, (byte)AdditionalTypes.Damage.MeleeIncreased)[0];
+                    boostCategory1 += GetDefenderBenefitingBuffs(CardType.Damage, (byte)AdditionalTypes.Damage.MeleeDecreased)[0];
+                    staticBoostCategory3 += GetAttackerBenefitingBuffs(CardType.AttackPower, (byte)AdditionalTypes.AttackPower.MeleeAttacksIncreased)[0];
+                    staticBoostCategory3 += GetDefenderBenefitingBuffs(CardType.AttackPower, (byte)AdditionalTypes.AttackPower.MeleeAttacksDecreased)[0];
+                    break;
+                case AttackType.Magical:
+                    def2 = GetAttackerBenefitingBuffs(CardType.Block, (byte)AdditionalTypes.Block.ChanceRangedIncreased);
+                    boostCategory1 += GetAttackerBenefitingBuffs(CardType.Damage, (byte)AdditionalTypes.Damage.MeleeIncreased)[0];
+                    boostCategory1 += GetDefenderBenefitingBuffs(CardType.Damage, (byte)AdditionalTypes.Damage.MeleeDecreased)[0];
+                    staticBoostCategory3 += GetAttackerBenefitingBuffs(CardType.AttackPower, (byte)AdditionalTypes.AttackPower.MeleeAttacksIncreased)[0];
+                    staticBoostCategory3 += GetDefenderBenefitingBuffs(CardType.AttackPower, (byte)AdditionalTypes.AttackPower.MeleeAttacksDecreased)[0];
+                    break;
+            }
+
+            def[0] += def2[0];
+            def[1] += def2[1];
+
+            #endregion
+
+            #region Softdef finishing
+
+            if (ServerManager.Instance.RandomNumber() < def[0])
+            {
+                boostCategory3 += def[1] / 100D;
+            }
+
+            #endregion
+
+            #region Element Dependant
+
+            switch (attacker.Element)
+            {
+                case 1:
+                    defender.FireResistance += GetDefenderBenefitingBuffs(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
+                    defender.FireResistance += GetAttackerBenefitingBuffs(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllDecreased)[0];
+                    defender.FireResistance += GetDefenderBenefitingBuffs(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.FireIncreased)[0];
+                    defender.FireResistance += GetAttackerBenefitingBuffs(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.FireDecreased)[0];
+                    defender.FireResistance += GetDefenderBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.AllIncreased)[0];
+                    defender.FireResistance += GetAttackerBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.AllDecreased)[0];
+                    defender.FireResistance += GetDefenderBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.FireIncreased)[0];
+                    defender.FireResistance += GetAttackerBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.FireDecreased)[0];
+                    boostCategory5 += GetAttackerBenefitingBuffs(CardType.IncreaseDamage, (byte)AdditionalTypes.IncreaseDamage.FireIncreased)[0];
+                    staticBoostCategory5 += GetAttackerBenefitingBuffs(CardType.Element, (byte)AdditionalTypes.Element.FireIncreased)[0];
+                    staticBoostCategory5 += GetDefenderBenefitingBuffs(CardType.Element, (byte)AdditionalTypes.Element.FireDecreased)[0];
+                    break;
+                case 2:
+                    defender.WaterResistance += GetDefenderBenefitingBuffs(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
+                    defender.WaterResistance += GetAttackerBenefitingBuffs(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllDecreased)[0];
+                    defender.WaterResistance += GetDefenderBenefitingBuffs(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.WaterIncreased)[0];
+                    defender.WaterResistance += GetAttackerBenefitingBuffs(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.WaterDecreased)[0];
+                    defender.WaterResistance += GetDefenderBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.AllIncreased)[0];
+                    defender.WaterResistance += GetAttackerBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.AllDecreased)[0];
+                    defender.WaterResistance += GetDefenderBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.WaterIncreased)[0];
+                    defender.WaterResistance += GetAttackerBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.WaterDecreased)[0];
+                    boostCategory5 += GetAttackerBenefitingBuffs(CardType.IncreaseDamage, (byte)AdditionalTypes.IncreaseDamage.WaterIncreased)[0];
+                    staticBoostCategory5 += GetAttackerBenefitingBuffs(CardType.Element, (byte)AdditionalTypes.Element.WaterIncreased)[0];
+                    staticBoostCategory5 += GetDefenderBenefitingBuffs(CardType.Element, (byte)AdditionalTypes.Element.WaterDecreased)[0];
+                    break;
+                case 3:
+                    defender.LightResistance += GetDefenderBenefitingBuffs(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
+                    defender.LightResistance += GetAttackerBenefitingBuffs(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllDecreased)[0];
+                    defender.LightResistance += GetDefenderBenefitingBuffs(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.LightIncreased)[0];
+                    defender.LightResistance += GetAttackerBenefitingBuffs(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.LightDecreased)[0];
+                    defender.LightResistance += GetDefenderBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.AllIncreased)[0];
+                    defender.LightResistance += GetAttackerBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.AllDecreased)[0];
+                    defender.LightResistance += GetDefenderBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.LightIncreased)[0];
+                    defender.LightResistance += GetAttackerBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.LightDecreased)[0];
+                    boostCategory5 += GetAttackerBenefitingBuffs(CardType.IncreaseDamage, (byte)AdditionalTypes.IncreaseDamage.LightIncreased)[0];
+                    staticBoostCategory5 += GetAttackerBenefitingBuffs(CardType.Element, (byte)AdditionalTypes.Element.LightIncreased)[0];
+                    staticBoostCategory5 += GetDefenderBenefitingBuffs(CardType.Element, (byte)AdditionalTypes.Element.Light5Decreased)[0];
+                    break;
+                case 4:
+                    defender.ShadowResistance += GetDefenderBenefitingBuffs(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
+                    defender.ShadowResistance += GetAttackerBenefitingBuffs(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllDecreased)[0];
+                    defender.ShadowResistance += GetDefenderBenefitingBuffs(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.DarkIncreased)[0];
+                    defender.ShadowResistance += GetAttackerBenefitingBuffs(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.DarkDecreased)[0];
+                    defender.ShadowResistance += GetDefenderBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.AllIncreased)[0];
+                    defender.ShadowResistance += GetAttackerBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.AllDecreased)[0];
+                    defender.ShadowResistance += GetDefenderBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.DarkIncreased)[0];
+                    defender.ShadowResistance += GetAttackerBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.DarkDecreased)[0];
+                    boostCategory5 += GetAttackerBenefitingBuffs(CardType.IncreaseDamage, (byte)AdditionalTypes.IncreaseDamage.DarkIncreased)[0];
+                    staticBoostCategory5 += GetAttackerBenefitingBuffs(CardType.Element, (byte)AdditionalTypes.Element.DarkIncreased)[0];
+                    staticBoostCategory5 += GetDefenderBenefitingBuffs(CardType.Element, (byte)AdditionalTypes.Element.DarkDecreased)[0];
+                    break;
+            }
+
+            #endregion
 
             #endregion
 
@@ -170,7 +439,7 @@ namespace OpenNos.GameObject
 
             int baseDamage = ServerManager.Instance.RandomNumber(attacker.DamageMinimum, attacker.DamageMaximum + 1);
             int weaponDamage = ServerManager.Instance.RandomNumber(attacker.WeaponDamageMinimum, attacker.WeaponDamageMaximum + 1);
-            
+
             #region Attack Level Calculation
 
             attacker.AttackUpgrade -= defender.DefenseUpgrade;
@@ -446,9 +715,9 @@ namespace OpenNos.GameObject
             #region Elemental Damage 
 
 
-            int elementalDamage = (int)((int)((int)((int)((staticBoostCategory5 + fairyDamage) * elementalBoost) * (1 - defender.Resistance / 100D))*boostCategory5)*shellBoostCategory5);
-        
-            if(elementalDamage < 0)
+            int elementalDamage = (int)((int)((int)((int)((staticBoostCategory5 + fairyDamage) * elementalBoost) * (1 - defender.Resistance / 100D)) * boostCategory5) * shellBoostCategory5);
+
+            if (elementalDamage < 0)
             {
                 elementalDamage = 0;
             }
@@ -474,7 +743,7 @@ namespace OpenNos.GameObject
                 totalDamage = ServerManager.Instance.RandomNumber(1, 6);
             }
 
-            if(attacker.EntityType == EntityType.Monster || attacker.EntityType == EntityType.NPC)
+            if (attacker.EntityType == EntityType.Monster || attacker.EntityType == EntityType.NPC)
             {
                 totalDamage += GetMonsterDamageBonus(attacker.Level);
             }
@@ -512,31 +781,52 @@ namespace OpenNos.GameObject
             }
         }
 
-        private int[] GetBuff(byte Level, List<Buff> buffs, List<BCard> bcards, CardType type, byte subtype)
+        private int[] GetBuff(byte Level, List<Buff> buffs, List<BCard> bcards, CardType type, byte subtype, BuffType btype)
         {
             int value1 = 0;
             int value2 = 0;
 
-            foreach (BCard entry in bcards.Where(s => s.Type.Equals((byte)type) && s.SubType.Equals((byte)(subtype / 10))))
+            IEnumerable<BCard> cards = null;
+
+            if (bcards != null && btype.Equals(BuffType.Good))
             {
-                if (entry.IsLevelScaled)
+                if (subtype % 10 == 1)
                 {
-                    value1 += entry.FirstData * Level;
+                    cards = bcards.Where(s => s.Type.Equals((byte)type) && s.SubType.Equals((byte)(subtype / 10)) && s.FirstData >= 0);
                 }
                 else
                 {
-                    value1 += entry.FirstData;
+                    cards = bcards.Where(s => s.Type.Equals((byte)type) && s.SubType.Equals((byte)(subtype / 10)) && s.FirstData <= 0);
                 }
-                value2 += entry.SecondData;
+
+                foreach (BCard entry in cards)
+                {
+                    if (entry.IsLevelScaled)
+                    {
+                        value1 += entry.FirstData * Level;
+                    }
+                    else
+                    {
+                        value1 += entry.FirstData;
+                    }
+                    value2 += entry.SecondData;
+                }
             }
 
             if (buffs != null)
             {
-                foreach (Buff buff in buffs)
+                foreach (Buff buff in buffs.Where(b=>b.Card.BuffType.Equals(btype)))
                 {
-                    // THIS ONE DOES NOT FOR STUFFS
-                    foreach (BCard entry in buff.Card.BCards
-                        .Where(s => s.Type.Equals((byte)type) && s.SubType.Equals((byte)(subtype / 10)) && (!s.IsDelayed || (s.IsDelayed && buff.Start.AddMilliseconds(buff.Card.Delay * 100) < DateTime.Now))))
+                    if (subtype % 10 == 1)
+                    {
+                        cards = buff.Card.BCards.Where(s => s.Type.Equals((byte)type) && s.SubType.Equals((byte)(subtype / 10)) && (!s.IsDelayed || (s.IsDelayed && buff.Start.AddMilliseconds(buff.Card.Delay * 100) < DateTime.Now)) && s.FirstData >= 0);
+                    }
+                    else
+                    {
+                        cards = buff.Card.BCards.Where(s => s.Type.Equals((byte)type) && s.SubType.Equals((byte)(subtype / 10)) && (!s.IsDelayed || (s.IsDelayed && buff.Start.AddMilliseconds(buff.Card.Delay * 100) < DateTime.Now)) && s.FirstData <= 0);
+                    }
+
+                    foreach (BCard entry in cards)
                     {
                         if (entry.IsLevelScaled)
                         {
