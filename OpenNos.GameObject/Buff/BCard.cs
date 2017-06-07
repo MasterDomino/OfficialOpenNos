@@ -214,6 +214,17 @@ namespace OpenNos.GameObject
                 case BCardType.CardType.DamageConvertingSkill:
                     break;
                 case BCardType.CardType.MeditationSkill:
+                    if (session.GetType() == typeof(Character))
+                    {
+                        if (SubType.Equals((byte)AdditionalTypes.MeditationSkill.CausingChance))
+                        {
+                            if (ServerManager.Instance.RandomNumber() < FirstData)
+                            {
+                                //ToDo: Add Skills
+                                (session as Character).AddBuff(new Buff(SecondData, (session as Character).Level));
+                            }
+                        }
+                    }
                     break;
                 case BCardType.CardType.FalconSkill:
                     break;
