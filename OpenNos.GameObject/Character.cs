@@ -878,14 +878,12 @@ namespace OpenNos.GameObject
 
         public string GenerateAct()
         {
-            return $"act 6"; // act6 1 0 14 0 0 0 14 0 0 0
+            return $"act 6";
         }
 
         public string GenerateAt()
         {
             MapInstance mapForMusic = MapInstance;
-
-            //at 698495 20001 5 8 2 0 {SecondaryMusic} {SecondaryMusicType} -1
             return $"at {CharacterId} {MapInstance.Map.MapId} {PositionX} {PositionY} 2 0 {mapForMusic?.InstanceMusic ?? 0} -1";
         }
 
@@ -1201,7 +1199,6 @@ namespace OpenNos.GameObject
         public string GenerateFinfo(long? relatedCharacterLoggedId, bool isConnected)
         {
             string result = "finfo";
-
             foreach (CharacterRelationDTO relation in CharacterRelations.Where(c => c.RelationType == CharacterRelationType.Friend))
             {
                 if (relatedCharacterLoggedId.HasValue && (relatedCharacterLoggedId.Value == relation.RelatedCharacterId || relatedCharacterLoggedId.Value == relation.CharacterId))
@@ -1209,7 +1206,6 @@ namespace OpenNos.GameObject
                     result += $" {relation.RelatedCharacterId}.{(isConnected ? 1 : 0)}";
                 }
             }
-
             return result;
         }
 
@@ -1649,11 +1645,11 @@ namespace OpenNos.GameObject
             {
                 string str = $"pidx {Group.GroupId}";
                 string result = str;
-                foreach (ClientSession s in Group.Characters)
+                foreach (ClientSession session in Group.Characters)
                 {
-                    if (s.Character != null)
+                    if (session.Character != null)
                     {
-                        result = result + $" {(Group.IsMemberOfGroup(CharacterId) ? 1 : 0)}.{s.Character.CharacterId} ";
+                        result = result + $" {(Group.IsMemberOfGroup(CharacterId) ? 1 : 0)}.{session.Character.CharacterId} ";
                     }
                 }
                 return result;
@@ -2757,14 +2753,10 @@ namespace OpenNos.GameObject
         public List<string> OpenFamilyWarehouseHist()
         {
             List<string> packetList = new List<string>();
-            if (Family == null ||
-            !
-         (FamilyCharacter.Authority == FamilyAuthority.Head
-         || FamilyCharacter.Authority == FamilyAuthority.Assistant
-         || FamilyCharacter.Authority == FamilyAuthority.Member && Family.MemberCanGetHistory
-         || FamilyCharacter.Authority == FamilyAuthority.Manager && Family.ManagerCanGetHistory
-         )
-        )
+            if (Family == null || !(FamilyCharacter.Authority == FamilyAuthority.Head
+                || FamilyCharacter.Authority == FamilyAuthority.Assistant
+                || FamilyCharacter.Authority == FamilyAuthority.Member && Family.MemberCanGetHistory
+                || FamilyCharacter.Authority == FamilyAuthority.Manager && Family.ManagerCanGetHistory))
             {
                 packetList.Add(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("NO_FAMILY_RIGHT")));
                 return packetList;
@@ -3324,12 +3316,12 @@ namespace OpenNos.GameObject
                         (GetHXP(monsterinfo, grp) *
                          (1 + GetBuff(CardType.Item, (byte)AdditionalTypes.Item.EXPIncreased)[0] / 100D));
                 }
-                double t = XPLoad();
-                while (LevelXp >= t)
+                double experience = XPLoad();
+                while (LevelXp >= experience)
                 {
-                    LevelXp -= (long)t;
+                    LevelXp -= (long)experience;
                     Level++;
-                    t = XPLoad();
+                    experience = XPLoad();
                     if (Level >= ServerManager.Instance.MaxLevel)
                     {
                         Level = ServerManager.Instance.MaxLevel;
@@ -3383,10 +3375,10 @@ namespace OpenNos.GameObject
                     {
                         fairy.XP += ServerManager.Instance.FairyXpRate;
                     }
-                    t = CharacterHelper.LoadFairyXPData(fairy.ElementRate + fairy.Item.ElementRate);
-                    while (fairy.XP >= t)
+                    experience = CharacterHelper.LoadFairyXPData(fairy.ElementRate + fairy.Item.ElementRate);
+                    while (fairy.XP >= experience)
                     {
-                        fairy.XP -= (int)t;
+                        fairy.XP -= (int)experience;
                         fairy.ElementRate++;
                         if (fairy.ElementRate + fairy.Item.ElementRate == fairy.Item.MaxElementRate)
                         {
@@ -3401,12 +3393,12 @@ namespace OpenNos.GameObject
                     }
                 }
 
-                t = JobXPLoad();
-                while (JobLevelXp >= t)
+                experience = JobXPLoad();
+                while (JobLevelXp >= experience)
                 {
-                    JobLevelXp -= (long)t;
+                    JobLevelXp -= (long)experience;
                     JobLevel++;
-                    t = JobXPLoad();
+                    experience = JobXPLoad();
                     if (JobLevel >= 20 && Class == 0)
                     {
                         JobLevel = 20;
@@ -3428,13 +3420,13 @@ namespace OpenNos.GameObject
                 }
                 if (specialist != null)
                 {
-                    t = SPXPLoad();
+                    experience = SPXPLoad();
 
-                    while (UseSp && specialist.XP >= t)
+                    while (UseSp && specialist.XP >= experience)
                     {
-                        specialist.XP -= (long)t;
+                        specialist.XP -= (long)experience;
                         specialist.SpLevel++;
-                        t = SPXPLoad();
+                        experience = SPXPLoad();
                         Session.SendPacket(GenerateStat());
                         Session.SendPacket(GenerateLevelUp());
                         if (specialist.SpLevel >= ServerManager.Instance.MaxSPLevel)
@@ -3452,12 +3444,12 @@ namespace OpenNos.GameObject
                         Session.CurrentMapInstance?.Broadcast(GenerateEff(198), PositionX, PositionY);
                     }
                 }
-                t = HeroXPLoad();
-                while (HeroXp >= t)
+                experience = HeroXPLoad();
+                while (HeroXp >= experience)
                 {
-                    HeroXp -= (long)t;
+                    HeroXp -= (long)experience;
                     HeroLevel++;
-                    t = HeroXPLoad();
+                    experience = HeroXPLoad();
                     if (HeroLevel >= ServerManager.Instance.MaxHeroLevel)
                     {
                         HeroLevel = ServerManager.Instance.MaxHeroLevel;
@@ -3478,7 +3470,9 @@ namespace OpenNos.GameObject
         private int GetGold(MapMonster mapMonster)
         {
             if (MapId == 2006 || MapId == 150)
+            {
                 return 0;
+            }
             int lowBaseGold = ServerManager.Instance.RandomNumber(6 * mapMonster.Monster?.Level ?? 1, 12 * mapMonster.Monster?.Level ?? 1);
             int actMultiplier = Session?.CurrentMapInstance?.Map.MapTypes?.Any(s => s.MapTypeId == (short)MapTypeEnum.Act52) ?? false ? 10 : 1;
             if (Session?.CurrentMapInstance?.Map.MapTypes?.Any(s => s.MapTypeId == (short)MapTypeEnum.Act61 || s.MapTypeId == (short)MapTypeEnum.Act61a || s.MapTypeId == (short)MapTypeEnum.Act61d) == true)
@@ -3681,22 +3675,17 @@ namespace OpenNos.GameObject
                 Buff.Add(bf);
             }
             bf.Card.BCards.ForEach(c => c.ApplyBCards(Session.Character));
-            Observable.Timer(TimeSpan.FromSeconds(bf.RemainingTime))
-                .Subscribe(
-                    o =>
-                    {
-                        RemoveBuff(bf.Card.CardId);
-                        if (bf.Card.TimeoutBuff != 0 && ServerManager.Instance.RandomNumber() <
-                            bf.Card.TimeoutBuffChance)
-                        {
-                            AddBuff(new Buff(bf.Card.TimeoutBuff, Level));
-                        }
-                    });
+            Observable.Timer(TimeSpan.FromSeconds(bf.RemainingTime)).Subscribe(o =>
+            {
+                RemoveBuff(bf.Card.CardId);
+                if (bf.Card.TimeoutBuff != 0 && ServerManager.Instance.RandomNumber() < bf.Card.TimeoutBuffChance)
+                {
+                    AddBuff(new Buff(bf.Card.TimeoutBuff, Level));
+                }
+            });
 
             Session.SendPacket($"vb {bf.Card.CardId} 1 {bf.RemainingTime * 10}");
-            Session.SendPacket(
-                Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), Name),
-                    12));
+            Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), Name), 12));
         }
 
         public void AddBuff(Buff indicator)
@@ -3706,11 +3695,8 @@ namespace OpenNos.GameObject
             indicator.RemainingTime = indicator.Card.Duration;
             indicator.Start = DateTime.Now;
 
-            Session.SendPacket(
-                $"bf 1 {Session.Character.CharacterId} 0.{indicator.Card.CardId}.{indicator.RemainingTime} {Level}");
-            Session.SendPacket(
-                Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), Name),
-                    20));
+            Session.SendPacket($"bf 1 {Session.Character.CharacterId} 0.{indicator.Card.CardId}.{indicator.RemainingTime} {Level}");
+            Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), Name), 20));
 
             indicator.Card.BCards.ForEach(c => c.ApplyBCards(Session.Character));
             Observable.Timer(TimeSpan.FromMilliseconds(indicator.Card.Duration * 100))
@@ -3734,16 +3720,12 @@ namespace OpenNos.GameObject
                 if (indicator.StaticBuff)
                 {
                     Session.SendPacket($"vb {indicator.Card.CardId} 0 {indicator.Card.Duration}");
-                    Session.SendPacket(
-                        Session.Character.GenerateSay(
-                            string.Format(Language.Instance.GetMessageFromKey("EFFECT_TERMINATED"), Name), 11));
+                    Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("EFFECT_TERMINATED"), Name), 11));
                 }
                 else
                 {
                     Session.SendPacket($"bf 1 {Session.Character.CharacterId} 0.{indicator.Card.CardId}.0 {Level}");
-                    Session.SendPacket(
-                        Session.Character.GenerateSay(
-                            string.Format(Language.Instance.GetMessageFromKey("EFFECT_TERMINATED"), Name), 20));
+                    Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("EFFECT_TERMINATED"), Name), 20));
                 }
 
                 if (Buff.Contains(indicator))

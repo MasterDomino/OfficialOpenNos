@@ -789,12 +789,9 @@ namespace OpenNos.Handler
         public void Command(HelpPacket helpPacket)
         {
             Logger.Debug("Help Command", Session.Character.GenerateIdentity());
-
-            // TODO: Command displaying detailed informations about commands
-            Session.SendPacket(Session.Character.GenerateSay("-------------Commands Info-------------", 11));
-
-            // TODO: OPTIMIZE!
+            // get commands
             List<Type> classes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(t => t.GetTypes()).Where(t => t.IsClass && t.Namespace == "OpenNos.GameObject.CommandPackets").ToList();
+            List<string> messages = new List<string>();
             foreach (Type type in classes)
             {
                 object classInstance = Activator.CreateInstance(type);
@@ -802,15 +799,28 @@ namespace OpenNos.Handler
                 MethodInfo method = classType.GetMethod("ReturnHelp");
                 if (method != null)
                 {
-                    string message = method.Invoke(classInstance, null).ToString();
-                    if (!string.IsNullOrEmpty(message))
+                    messages.Add(method.Invoke(classInstance, null).ToString());
+                }
+            }
+            // send messages
+            if (messages != null)
+            {
+                if (helpPacket.Contents == "*" || string.IsNullOrEmpty(helpPacket.Contents))
+                {
+                    Session.SendPacket(Session.Character.GenerateSay("-------------Commands Info-------------", 11));
+                    messages.Sort();
+                    foreach (string message in messages)
                     {
                         Session.SendPacket(Session.Character.GenerateSay(message, 12));
                     }
                 }
+                else
+                {
+                    Session.SendPacket(Session.Character.GenerateSay("-------------Command Info-------------", 11));
+                    Session.SendPacket(Session.Character.GenerateSay(messages.FirstOrDefault(s => s.ToLower().Contains(helpPacket.Contents.ToLower())), 12));
+                }
+                Session.SendPacket(Session.Character.GenerateSay("-----------------------------------------------", 11));
             }
-
-            Session.SendPacket(Session.Character.GenerateSay("-----------------------------------------------", 11));
         }
 
         /// <summary>

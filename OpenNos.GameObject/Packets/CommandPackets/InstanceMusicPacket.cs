@@ -2,7 +2,7 @@
 using OpenNos.Core;
 using OpenNos.Domain;
 
-namespace OpenNos.GameObject
+namespace OpenNos.GameObject.CommandPackets
 {
     [PacketHeader("$InstanceMusic", PassNonParseablePacket = true, Authority = AuthorityType.GameMaster)]
     public class InstanceMusicPacket : PacketDefinition
