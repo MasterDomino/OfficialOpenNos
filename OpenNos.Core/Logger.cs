@@ -20,25 +20,11 @@ namespace OpenNos.Core
 {
     public class Logger
     {
-        #region Members
-
-        private static ILog _log;
-
-        #endregion
-
         #region Properties
 
         public static ILog Log
         {
-            get
-            {
-                return _log;
-            }
-
-            set
-            {
-                _log = value;
-            }
+            get; set;
         }
 
         #endregion
