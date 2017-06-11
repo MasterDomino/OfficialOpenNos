@@ -16,14 +16,12 @@ using OpenNos.Core;
 using OpenNos.DAL;
 using OpenNos.Data;
 using OpenNos.Domain;
-using OpenNos.GameObject;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace OpenNos.Import.Console
 {
@@ -215,7 +213,7 @@ namespace OpenNos.Import.Console
 
             foreach (string[] currentPacket in _packetList.Where(o => o[0].Equals("mv") && o[1].Equals("2")))
             {
-                if (long.Parse(currentPacket[2]) >= 20000)
+                if (long.Parse(currentPacket[2]) > 20000)
                 {
                     continue;
                 }
@@ -227,7 +225,7 @@ namespace OpenNos.Import.Console
 
             foreach (string[] currentPacket in _packetList.Where(o => o[0].Equals("eff") && o[1].Equals("2")))
             {
-                if (long.Parse(currentPacket[2]) >= 20000)
+                if (long.Parse(currentPacket[2]) > 20000)
                 {
                     continue;
                 }
@@ -257,7 +255,7 @@ namespace OpenNos.Import.Console
                     {
                         continue;
                     }
-                    npctest.MapNpcId = short.Parse(currentPacket[3]);
+                    npctest.MapNpcId = int.Parse(currentPacket[3]);
                     if (effPacketsDictionary.ContainsKey(npctest.MapNpcId))
                     {
                         npctest.Effect = effPacketsDictionary[npctest.MapNpcId];
@@ -331,11 +329,7 @@ namespace OpenNos.Import.Console
 
             foreach (string[] linesave in _packetList.Where(o => o[0].Equals("at")))
             {
-                if (linesave.Length <= 7 || linesave[0] != "at")
-                {
-                    continue;
-                }
-                if (dictionaryMusic.ContainsKey(int.Parse(linesave[2])))
+                if (linesave.Length <= 7 || dictionaryMusic.ContainsKey(int.Parse(linesave[2])))
                 {
                     continue;
                 }
@@ -2330,7 +2324,7 @@ namespace OpenNos.Import.Console
                 }
                 else if (currentPacket[0] == "gp")
                 {
-                    if (sbyte.Parse(currentPacket[4])==(byte)PortalType.Raid)
+                    if (sbyte.Parse(currentPacket[4]) == (byte)PortalType.Raid)
                     {
                         ScriptedInstanceDTO ts = new ScriptedInstanceDTO()
                         {

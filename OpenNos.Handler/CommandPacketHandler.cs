@@ -815,11 +815,9 @@ namespace OpenNos.Handler
         {
             Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), "[Help]");
 
-            // TODO: Command displaying detailed informations about commands
-            Session.SendPacket(Session.Character.GenerateSay("-------------Commands Info-------------", 11));
-
-            // TODO: OPTIMIZE!
+            // get commands
             List<Type> classes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(t => t.GetTypes()).Where(t => t.IsClass && t.Namespace == "OpenNos.GameObject.CommandPackets").ToList();
+            List<string> messages = new List<string>();
             foreach (Type type in classes)
             {
                 object classInstance = Activator.CreateInstance(type);
@@ -827,15 +825,29 @@ namespace OpenNos.Handler
                 MethodInfo method = classType.GetMethod("ReturnHelp");
                 if (method != null)
                 {
-                    string message = method.Invoke(classInstance, null).ToString();
-                    if (!string.IsNullOrEmpty(message))
+                    messages.Add(method.Invoke(classInstance, null).ToString());
+                }
+            }
+
+            // send messages
+            if (messages != null)
+            {
+                if (helpPacket.Contents == "*" || string.IsNullOrEmpty(helpPacket.Contents))
+                {
+                    Session.SendPacket(Session.Character.GenerateSay("-------------Commands Info-------------", 11));
+                    messages.Sort();
+                    foreach (string message in messages)
                     {
                         Session.SendPacket(Session.Character.GenerateSay(message, 12));
                     }
                 }
+                else
+                {
+                    Session.SendPacket(Session.Character.GenerateSay("-------------Command Info-------------", 11));
+                    Session.SendPacket(Session.Character.GenerateSay(messages.FirstOrDefault(s => s.ToLower().Contains(helpPacket.Contents.ToLower())), 12));
+                }
+                Session.SendPacket(Session.Character.GenerateSay("-----------------------------------------------", 11));
             }
-
-            Session.SendPacket(Session.Character.GenerateSay("-----------------------------------------------", 11));
         }
 
         /// <summary>
@@ -2003,9 +2015,6 @@ namespace OpenNos.Handler
                                 possibilities.Add(new MapCell { X = x, Y = y });
                             }
                         }
-
-                        // TODO: Find a fancy way to parallelize as we dont care about order it needs
-                        //       to be randomized
                         foreach (MapCell possibilitie in possibilities.OrderBy(s => random.Next()))
                         {
                             short mapx = (short)(Session.Character.PositionX + possibilitie.X);
@@ -2590,7 +2599,13 @@ namespace OpenNos.Handler
             if (session != null)
             {
                 Session.SendPacket(Session.Character.GenerateSay("----- SESSION -----", 13));
-                Session.SendPacket(Session.Character.GenerateSay($"Current IP: {session.IpAddress}", 13));
+                string ipAddress = session.IpAddress;
+                Session.SendPacket(Session.Character.GenerateSay($"Current IP: {ipAddress}", 13));
+                foreach (int sessionId in CommunicationServiceClient.Instance.RetrieveSessionListWithIp(ipAddress.Substring(6, ipAddress.LastIndexOf(':') - 6)))
+                {
+                    ClientSession sessionWithIp = ServerManager.Instance.GetSessionBySessionId(sessionId);
+                    Session.SendPacket(Session.Character.GenerateSay($"SessionId: {sessionWithIp.SessionId} AccountName: {sessionWithIp.Account.Name} CharacterName: {sessionWithIp.Character.Name}", 13));
+                }
                 Session.SendPacket(Session.Character.GenerateSay("----- ------------ -----", 13));
             }
         }

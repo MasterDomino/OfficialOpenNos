@@ -35,12 +35,11 @@ namespace OpenNos.GameObject
 
         #region Instantiation
 
-        public Group(GroupType type)
+        public Group()
         {
             Characters = new ThreadSafeGenericList<ClientSession>();
             GroupId = ServerManager.Instance.GetNextGroupId();
             _order = 0;
-            GroupType = type;
         }
 
         #endregion

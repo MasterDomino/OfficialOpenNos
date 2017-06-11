@@ -25,7 +25,6 @@ namespace OpenNos.Master.Server
 
         private static MSManager _instance;
 
-
         #endregion
 
         #region Instantiation
@@ -46,7 +45,6 @@ namespace OpenNos.Master.Server
 
         public List<long> AuthentificatedClients { get; set; }
 
-        //public List<AccountConnection> ConnectedAccounts { get; set; }
         public ThreadSafeGenericList<AccountConnection> ConnectedAccounts { get; set; }
 
         public List<IScsServiceClient> LoginServers { get; set; }

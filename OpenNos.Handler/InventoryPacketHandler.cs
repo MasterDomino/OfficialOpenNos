@@ -1715,10 +1715,12 @@ namespace OpenNos.Handler
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("BAD_FAIRY"), 0));
                     return;
                 }
-                List<BuffType> bufftodisable = new List<BuffType>();
-                bufftodisable.Add(BuffType.Bad);
-                bufftodisable.Add(BuffType.Good);
-                bufftodisable.Add(BuffType.Neutral);
+                List<BuffType> bufftodisable = new List<BuffType>
+                {
+                    BuffType.Bad,
+                    BuffType.Good,
+                    BuffType.Neutral
+                };
                 Session.Character.DisableBuffs(bufftodisable);
                 Session.Character.EquipmentBCards.AddRange(sp.Item.BCards);
                 Session.Character.LastTransform = DateTime.Now;
@@ -1829,10 +1831,12 @@ namespace OpenNos.Handler
                 {
                     return;
                 }
-                List<BuffType> bufftodisable = new List<BuffType>();
-                bufftodisable.Add(BuffType.Bad);
-                bufftodisable.Add(BuffType.Good);
-                bufftodisable.Add(BuffType.Neutral);
+                List<BuffType> bufftodisable = new List<BuffType>
+                {
+                    BuffType.Bad,
+                    BuffType.Good,
+                    BuffType.Neutral
+                };
                 Session.Character.DisableBuffs(bufftodisable);
                 Session.Character.EquipmentBCards.RemoveAll(s=>s.ItemVNum.Equals(vnum));
                 Session.Character.UseSp = false;

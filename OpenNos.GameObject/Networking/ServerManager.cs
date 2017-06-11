@@ -37,6 +37,7 @@ namespace OpenNos.GameObject
         #region Members
 
         public ThreadSafeSortedList<long, Group> GroupsThreadSafe;
+
         public bool ShutdownStop;
 
         private static readonly List<Item> _items = new List<Item>();
@@ -58,6 +59,7 @@ namespace OpenNos.GameObject
         private bool _disposed;
 
         private List<DropDTO> _generalDrops;
+
         private long _lastGroupId;
 
         private ThreadSafeSortedList<short, List<MapNpc>> _mapNpcs;
@@ -183,10 +185,12 @@ namespace OpenNos.GameObject
                 {
                     Session.Character.RemoveVehicle();
                 }
-                List<BuffType> bufftodisable = new List<BuffType>();
-                bufftodisable.Add(BuffType.Bad);
-                bufftodisable.Add(BuffType.Good);
-                bufftodisable.Add(BuffType.Neutral);
+                List<BuffType> bufftodisable = new List<BuffType>
+                {
+                    BuffType.Bad,
+                    BuffType.Good,
+                    BuffType.Neutral
+                };
                 Session.Character.DisableBuffs(bufftodisable);
                 Session.SendPacket(Session.Character.GenerateStat());
                 Session.SendPacket(Session.Character.GenerateCond());
@@ -224,10 +228,12 @@ namespace OpenNos.GameObject
                 {
                     Session.Character.RemoveVehicle();
                 }
-                List<BuffType> bufftodisable = new List<BuffType>();
-                bufftodisable.Add(BuffType.Bad);
-                bufftodisable.Add(BuffType.Good);
-                bufftodisable.Add(BuffType.Neutral);
+                List<BuffType> bufftodisable = new List<BuffType>
+                {
+                    BuffType.Bad,
+                    BuffType.Good,
+                    BuffType.Neutral
+                };
                 Session.Character.DisableBuffs(bufftodisable);
                 Session.SendPacket(Session.Character.GenerateStat());
                 Session.SendPacket(Session.Character.GenerateCond());
@@ -296,7 +302,6 @@ namespace OpenNos.GameObject
                                 Instance.ReviveFirstPosition(Session.Character.CharacterId);
                             }
                         });
-
                         break;
 
                     case MapInstanceType.RaidInstance:
@@ -312,8 +317,7 @@ namespace OpenNos.GameObject
                             Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("RAID_MEMBER_DEAD"), Session.Character.Name)));
 
                             Session.CurrentMapInstance.InstanceBag.DeadList.Add(Session.Character.CharacterId);
-                            Session.Character.Group?.Characters.ForEach(
-                            session =>
+                            Session.Character.Group?.Characters.ForEach(session =>
                             {
                                 session.SendPacket(session.Character.Group.GeneraterRaidmbf());
                                 session.SendPacket(session.Character.Group.GenerateRdlst());
@@ -509,8 +513,8 @@ namespace OpenNos.GameObject
                         {
                             foreach (ClientSession groupSession in group.Characters)
                             {
-                                ClientSession chara = Sessions.FirstOrDefault(s => s.Character != null && s.Character.CharacterId == groupSession.Character.CharacterId && s.CurrentMapInstance == groupSession.CurrentMapInstance);
-                                if (chara == null)
+                                ClientSession groupCharacterSession = Sessions.FirstOrDefault(s => s.Character != null && s.Character.CharacterId == groupSession.Character.CharacterId && s.CurrentMapInstance == groupSession.CurrentMapInstance);
+                                if (groupCharacterSession == null)
                                 {
                                     continue;
                                 }
@@ -725,7 +729,7 @@ namespace OpenNos.GameObject
                             }
                             if (session?.CurrentMapInstance?.MapInstanceType == MapInstanceType.RaidInstance)
                             {
-                                ServerManager.Instance.ChangeMap(session.Character.CharacterId, session.Character.MapId, session.Character.MapX, session.Character.MapY);
+                                ChangeMap(session.Character.CharacterId, session.Character.MapId, session.Character.MapX, session.Character.MapY);
                             }
                             session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("RAID_LEFT"), 0));
                         }

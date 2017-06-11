@@ -93,7 +93,7 @@ namespace OpenNos.Master.Library.Client
             _client.ServiceProxy.Cleanup();
         }
 
-        public bool ConnectAccount(Guid worldId, long accountId, long sessionId)
+        public bool ConnectAccount(Guid worldId, long accountId, int sessionId)
         {
             return _client.ServiceProxy.ConnectAccount(worldId, accountId, sessionId);
         }
@@ -128,12 +128,12 @@ namespace OpenNos.Master.Library.Client
             return _client.ServiceProxy.IsCharacterConnected(worldGroup, characterId);
         }
 
-        public bool IsLoginPermitted(long accountId, long sessionId)
+        public bool IsLoginPermitted(long accountId, int sessionId)
         {
             return _client.ServiceProxy.IsLoginPermitted(accountId, sessionId);
         }
 
-        public void KickSession(long? accountId, long? sessionId)
+        public void KickSession(long? accountId, int? sessionId)
         {
             _client.ServiceProxy.KickSession(accountId, sessionId);
         }
@@ -148,9 +148,9 @@ namespace OpenNos.Master.Library.Client
             _client.ServiceProxy.RefreshPenalty(penaltyId);
         }
 
-        public void RegisterAccountLogin(long accountId, long sessionId)
+        public void RegisterAccountLogin(long accountId, int sessionId, string ipAddress)
         {
-            _client.ServiceProxy.RegisterAccountLogin(accountId, sessionId);
+            _client.ServiceProxy.RegisterAccountLogin(accountId, sessionId, ipAddress);
         }
 
         public int? RegisterWorldServer(SerializableWorldServer worldServer)
@@ -158,7 +158,7 @@ namespace OpenNos.Master.Library.Client
             return _client.ServiceProxy.RegisterWorldServer(worldServer);
         }
 
-        public string RetrieveRegisteredWorldServers(long sessionId)
+        public string RetrieveRegisteredWorldServers(int sessionId)
         {
             return _client.ServiceProxy.RetrieveRegisteredWorldServers(sessionId);
         }
@@ -166,6 +166,11 @@ namespace OpenNos.Master.Library.Client
         public IEnumerable<string> RetrieveServerStatistics()
         {
             return _client.ServiceProxy.RetrieveServerStatistics();
+        }
+
+        public int[] RetrieveSessionListWithIp(string ipAddress)
+        {
+            return _client.ServiceProxy.RetrieveSessionListWithIp(ipAddress);
         }
 
         public int? SendMessageToCharacter(SCSCharacterMessage message)
@@ -210,7 +215,7 @@ namespace OpenNos.Master.Library.Client
             CharacterDisconnectedEvent?.Invoke(new Tuple<long, string>(characterId, characterName), null);
         }
 
-        internal void OnKickSession(long? accountId, long? sessionId)
+        internal void OnKickSession(long? accountId, int? sessionId)
         {
             SessionKickedEvent?.Invoke(new Tuple<long?, long?>(accountId, sessionId), null);
         }

@@ -4,24 +4,26 @@ namespace OpenNos.Master.Library.Interface
 {
     public interface ICommunicationClient
     {
-
-        void UpdateBazaar(long bazaarItemId);
+        #region Methods
 
         void CharacterConnected(long characterId);
 
         void CharacterDisconnected(long characterId);
 
-        void UpdateFamily(long familyId);
+        void KickSession(long? accountId, int? sessionId);
 
         void SendMessageToCharacter(SCSCharacterMessage message);
 
         void Shutdown();
 
+        void UpdateBazaar(long bazaarItemId);
+
+        void UpdateFamily(long familyId);
+
         void UpdatePenaltyLog(int penaltyLogId);
 
         void UpdateRelation(long relationId);
 
-        void KickSession(long? accountId, long? sessionId);
-
+        #endregion
     }
 }

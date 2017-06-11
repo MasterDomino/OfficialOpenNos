@@ -14,7 +14,7 @@ namespace OpenNos.GameObject.CommandPackets
         public string AccountName { get; set; }
 
         [PacketIndex(1)]
-        public long? SessionId { get; set; }
+        public int? SessionId { get; set; }
 
         public static string ReturnHelp()
         {
