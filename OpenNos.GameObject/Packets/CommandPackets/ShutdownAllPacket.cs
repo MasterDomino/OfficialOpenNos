@@ -17,10 +17,5 @@ namespace OpenNos.GameObject.CommandPackets
             return "$ShutdownAll WORLDGROUP(*)";
         }
 
-        public override string ToString()
-        {
-            return $"ShutdownAll Command WorldGroup: {WorldGroup}";
-        }
-
     }
 }

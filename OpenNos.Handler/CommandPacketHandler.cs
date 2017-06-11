@@ -249,7 +249,6 @@ namespace OpenNos.Handler
 
             if (blockExpPacket != null)
             {
-                Logger.Debug(blockExpPacket.ToString(), Session.Character.GenerateIdentity());
                 if (blockExpPacket.Duration == 0)
                 {
                     blockExpPacket.Duration = 60;
@@ -294,7 +293,6 @@ namespace OpenNos.Handler
 
             if (blockFExpPacket != null)
             {
-                Logger.Debug(blockFExpPacket.ToString(), Session.Character.GenerateIdentity());
                 if (blockFExpPacket.Duration == 0)
                 {
                     blockFExpPacket.Duration = 60;
@@ -358,7 +356,6 @@ namespace OpenNos.Handler
 
             if (blockRepPacket != null)
             {
-                Logger.Debug(blockRepPacket.ToString(), Session.Character.GenerateIdentity());
                 if (blockRepPacket.Duration == 0)
                 {
                     blockRepPacket.Duration = 60;
@@ -860,7 +857,6 @@ namespace OpenNos.Handler
 
             if (createItemPacket != null)
             {
-                Logger.Debug(createItemPacket.ToString(), Session.Character.GenerateIdentity());
                 short vnum = createItemPacket.VNum;
                 sbyte rare = 0;
                 byte upgrade = 0, amount = 1, design = 0;
@@ -1566,7 +1562,6 @@ namespace OpenNos.Handler
 
             if (mutePacket != null)
             {
-                Logger.Debug(mutePacket.ToString(), Session.Character.GenerateIdentity());
                 if (mutePacket.Duration == 0)
                 {
                     mutePacket.Duration = 60;
@@ -2453,6 +2448,7 @@ namespace OpenNos.Handler
         public void XpRate(XpRatePacket xpRatePacket)
         {
             Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[XpRate]Value: {xpRatePacket.Value}");
+
             if (xpRatePacket != null)
             {
                 if (xpRatePacket.Value <= 1000)

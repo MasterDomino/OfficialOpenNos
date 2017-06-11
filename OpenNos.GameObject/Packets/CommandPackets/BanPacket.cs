@@ -24,11 +24,6 @@ namespace OpenNos.GameObject.CommandPackets
             return "$Ban CHARACTERNAME DURATION(DAYS) REASON";
         }
 
-        public override string ToString()
-        {
-            return $"Ban Command CharacterName: {CharacterName} Duration: {Duration} Reason: {Reason}";
-        }
-
         #endregion
     }
 }

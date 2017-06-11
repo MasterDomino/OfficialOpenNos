@@ -24,11 +24,6 @@ namespace OpenNos.GameObject.CommandPackets
             return "$BlockFExp CHARACTERNAME DURATION REASON";
         }
 
-        public override string ToString()
-        {
-            return $"BlockFExp Command CharacterName: {CharacterName} Duration: {Duration} Reason: {Reason}";
-        }
-
         #endregion
     }
 }

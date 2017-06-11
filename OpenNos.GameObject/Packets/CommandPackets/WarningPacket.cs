@@ -22,14 +22,5 @@ namespace OpenNos.GameObject.CommandPackets
         }
 
         #endregion
-
-        #region Methods
-
-        public override string ToString()
-        {
-            return $"Warning Command CharacterName: {CharacterName} Message: {Reason}";
-        }
-
-        #endregion
     }
 }

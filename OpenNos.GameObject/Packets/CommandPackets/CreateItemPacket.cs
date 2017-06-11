@@ -26,13 +26,5 @@ namespace OpenNos.GameObject.CommandPackets
 
         #endregion
 
-        #region Methods
-
-        public override string ToString()
-        {
-            return $"CreateItem Command VNum: {VNum}" + Design != null ? $" Design: {Design}" : "" + Upgrade != null ? $" Upgrade: {Upgrade}" : "";
-        }
-
-        #endregion
     }
 }
