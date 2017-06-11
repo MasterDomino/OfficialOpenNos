@@ -76,7 +76,8 @@ namespace OpenNos.Handler
             AccountDTO loadedAccount = DAOFactory.AccountDAO.LoadByName(user.Name);
             if (loadedAccount != null && loadedAccount.Password.ToUpper().Equals(user.Password))
             {
-                DAOFactory.AccountDAO.WriteGeneralLog(loadedAccount.AccountId, _session.IpAddress, null, GeneralLogType.Connection, "LoginServer");
+                string ipAddress = _session.IpAddress;
+                DAOFactory.AccountDAO.WriteGeneralLog(loadedAccount.AccountId, ipAddress, null, GeneralLogType.Connection, "LoginServer");
 
                 //check if the account is connected
                 if (!CommunicationServiceClient.Instance.IsAccountConnected(loadedAccount.AccountId))
@@ -117,7 +118,8 @@ namespace OpenNos.Handler
                                     // inform communication service about new player from login server
                                     try
                                     {
-                                        CommunicationServiceClient.Instance.RegisterAccountLogin(loadedAccount.AccountId, newSessionId);
+                                        ipAddress = ipAddress.Substring(6, ipAddress.LastIndexOf(':') - 6);
+                                        CommunicationServiceClient.Instance.RegisterAccountLogin(loadedAccount.AccountId, newSessionId, ipAddress);
                                     }
                                     catch (Exception ex)
                                     {

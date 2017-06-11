@@ -1,5 +1,4 @@
-﻿using System;
-using OpenNos.Master.Library.Data;
+﻿using OpenNos.Master.Library.Data;
 using OpenNos.Master.Library.Interface;
 using System.Threading.Tasks;
 
@@ -19,7 +18,7 @@ namespace OpenNos.Master.Library.Client
             Task.Run(() => CommunicationServiceClient.Instance.OnCharacterDisconnected(characterId));
         }
 
-        public void KickSession(long? accountId, long? sessionId)
+        public void KickSession(long? accountId, int? sessionId)
         {
             Task.Run(() => CommunicationServiceClient.Instance.OnKickSession(accountId, sessionId));
         }

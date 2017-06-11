@@ -37,6 +37,7 @@ namespace OpenNos.GameObject
         #region Members
 
         public ThreadSafeSortedList<long, Group> GroupsThreadSafe;
+
         public bool ShutdownStop;
 
         private static readonly List<Item> _items = new List<Item>();
@@ -58,6 +59,7 @@ namespace OpenNos.GameObject
         private bool _disposed;
 
         private List<DropDTO> _generalDrops;
+
         private long _lastGroupId;
 
         private ThreadSafeSortedList<short, List<MapNpc>> _mapNpcs;

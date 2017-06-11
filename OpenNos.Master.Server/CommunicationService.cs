@@ -30,10 +30,11 @@ namespace OpenNos.Master.Server
     internal class CommunicationService : ScsService, ICommunicationService
     {
         #region Instantiation
+
         public CommunicationService()
         {
-
         }
+
         #endregion
 
         #region Methods
@@ -65,7 +66,7 @@ namespace OpenNos.Master.Server
             MSManager.Instance.WorldServers.Clear();
         }
 
-        public bool ConnectAccount(Guid worldId, long accountId, long sessionId)
+        public bool ConnectAccount(Guid worldId, long accountId, int sessionId)
         {
             if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
             {
@@ -156,7 +157,7 @@ namespace OpenNos.Master.Server
             return MSManager.Instance.ConnectedAccounts.Any(c => c.ConnectedWorld != null && c.ConnectedWorld.WorldGroup == worldGroup && c.CharacterId == characterId);
         }
 
-        public bool IsLoginPermitted(long accountId, long sessionId)
+        public bool IsLoginPermitted(long accountId, int sessionId)
         {
             if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
             {
@@ -166,7 +167,7 @@ namespace OpenNos.Master.Server
             return MSManager.Instance.ConnectedAccounts.Any(s => s.AccountId.Equals(accountId) && s.SessionId.Equals(sessionId) && s.ConnectedWorld == null);
         }
 
-        public void KickSession(long? accountId, long? sessionId)
+        public void KickSession(long? accountId, int? sessionId)
         {
             if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
             {
@@ -204,14 +205,19 @@ namespace OpenNos.Master.Server
             }
         }
 
-        public void RegisterAccountLogin(long accountId, long sessionId)
+        public void RegisterAccountLogin(long accountId, int sessionId, string ipAddress)
         {
             if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
             {
                 return;
             }
             MSManager.Instance.ConnectedAccounts.RemoveAll(a => a.AccountId.Equals(accountId));
-            MSManager.Instance.ConnectedAccounts.Add(new AccountConnection(accountId, sessionId));
+            MSManager.Instance.ConnectedAccounts.Add(new AccountConnection(accountId, sessionId, ipAddress));
+        }
+
+        public int[] RetrieveSessionListWithIp(string ipAddress)
+        {
+            return MSManager.Instance.ConnectedAccounts.Where(s => s.IpAddress == ipAddress).Select(s => s.SessionId).ToArray();
         }
 
         public int? RegisterWorldServer(SerializableWorldServer worldServer)
@@ -229,7 +235,7 @@ namespace OpenNos.Master.Server
             return ws.ChannelId;
         }
 
-        public string RetrieveRegisteredWorldServers(long sessionId)
+        public string RetrieveRegisteredWorldServers(int sessionId)
         {
             string lastGroup = string.Empty;
             byte worldCount = 0;
@@ -242,7 +248,7 @@ namespace OpenNos.Master.Server
                     worldCount++;
                 }
                 lastGroup = world.WorldGroup;
-                
+
                 int currentlyConnectedAccounts = MSManager.Instance.ConnectedAccounts.CountLinq(a => a.ConnectedWorld?.WorldGroup == world.WorldGroup);
                 int channelcolor = (int)Math.Round(((double)currentlyConnectedAccounts / world.AccountLimit) * 20) + 1;
 
@@ -271,11 +277,11 @@ namespace OpenNos.Master.Server
                     }
                 }
                 int totalsessions = 0;
-                foreach (string s in groups)
+                foreach (string message in groups)
                 {
-                    result.Add($"==={s}===");
+                    result.Add($"==={message}===");
                     int groupsessions = 0;
-                    foreach (WorldServer world in MSManager.Instance.WorldServers.Where(w => w.WorldGroup.Equals(s)))
+                    foreach (WorldServer world in MSManager.Instance.WorldServers.Where(w => w.WorldGroup.Equals(message)))
                     {
                         int sessions = MSManager.Instance.ConnectedAccounts.CountLinq(a => a.ConnectedWorld?.Id.Equals(world.Id) == true);
                         result.Add($"Channel {world.ChannelId}: {sessions} Sessions");

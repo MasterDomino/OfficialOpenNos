@@ -1939,9 +1939,6 @@ namespace OpenNos.Handler
                                 possibilities.Add(new MapCell { X = x, Y = y });
                             }
                         }
-
-                        // TODO: Find a fancy way to parallelize as we dont care about order it needs
-                        //       to be randomized
                         foreach (MapCell possibilitie in possibilities.OrderBy(s => random.Next()))
                         {
                             short mapx = (short)(Session.Character.PositionX + possibilitie.X);
@@ -2427,17 +2424,6 @@ namespace OpenNos.Handler
             }
         }
 
-        private List<ClientSession> AllConnections(string ipAddress)
-        {
-            string ip = ipAddress.Split(':')[1].Substring(2);
-            List<ClientSession> sessions = new List<ClientSession>();
-            foreach (ClientSession characterSession in ServerManager.Instance.Sessions.Where(s => s.IpAddress.Contains(ip)))
-            {
-                sessions.Add(characterSession);
-            }
-            return sessions;
-        }
-
         /// <summary>
         /// private mute method
         /// </summary>
@@ -2530,9 +2516,10 @@ namespace OpenNos.Handler
                 Session.SendPacket(Session.Character.GenerateSay("----- SESSION -----", 13));
                 string ipAddress = session.IpAddress;
                 Session.SendPacket(Session.Character.GenerateSay($"Current IP: {ipAddress}", 13));
-                foreach (ClientSession characterSession in AllConnections(ipAddress))
+                foreach (int sessionId in CommunicationServiceClient.Instance.RetrieveSessionListWithIp(ipAddress.Substring(6, ipAddress.LastIndexOf(':') - 6)))
                 {
-                    Session.SendPacket(Session.Character.GenerateSay($"SessionId: {characterSession.SessionId} AccountName: {characterSession.Account.Name} CharacterName: {characterSession.Character.Name}", 13));
+                    ClientSession sessionWithIp = ServerManager.Instance.GetSessionBySessionId(sessionId);
+                    Session.SendPacket(Session.Character.GenerateSay($"SessionId: {sessionWithIp.SessionId} AccountName: {sessionWithIp.Account.Name} CharacterName: {sessionWithIp.Character.Name}", 13));
                 }
                 Session.SendPacket(Session.Character.GenerateSay("----- ------------ -----", 13));
             }
