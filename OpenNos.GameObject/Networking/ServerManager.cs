@@ -524,6 +524,7 @@ namespace OpenNos.GameObject
                     {
                         session.CurrentMapInstance?.Broadcast(session, session.Character.GeneratePidx(), ReceiverType.AllExceptMe);
                     }
+
                     session.Character.IsChangingMapInstance = false;
                     session.SendPacket(session.Character.GenerateMinimapPosition());
                     session.CurrentMapInstance.OnCharacterDiscoveringMapEvents.ForEach(e =>
@@ -1068,7 +1069,7 @@ namespace OpenNos.GameObject
 
         public bool IsCharactersGroupFull(long characterId)
         {
-            return Groups != null && Groups.Any(g => g.IsMemberOfGroup(characterId) && g.CharacterCount  == (byte)g.GroupType);
+            return Groups != null && Groups.Any(g => g.IsMemberOfGroup(characterId) && g.CharacterCount == (byte)g.GroupType);
         }
 
         public void JoinMiniland(ClientSession Session, ClientSession MinilandOwner)

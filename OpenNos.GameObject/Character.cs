@@ -34,8 +34,7 @@ namespace OpenNos.GameObject
     public class Character : CharacterDTO
     {
         #region Members
-
-        private byte _cmapcount;
+        
         private Random _random;
         private byte _speed;
 
@@ -911,8 +910,7 @@ namespace OpenNos.GameObject
 
         public string GenerateCMap()
         {
-            _cmapcount = _cmapcount == 1 ? (byte)0 : (byte)1;
-            return $"c_map 0 {MapInstance.Map.MapId} {_cmapcount}";
+            return $"c_map 0 {MapInstance.Map.MapId} {(MapInstance.MapInstanceType!=MapInstanceType.BaseMapInstance?1:0)}";
         }
 
         public string GenerateCMode()
@@ -1576,7 +1574,7 @@ namespace OpenNos.GameObject
 
         public string GenerateMinimapPosition()
         {
-            if (MapInstance.MapInstanceType == MapInstanceType.TimeSpaceInstance)
+            if (MapInstance.MapInstanceType == MapInstanceType.TimeSpaceInstance || MapInstance.MapInstanceType == MapInstanceType.RaidInstance)
             {
                 return $"rsfp {MapInstance.MapIndexX} {MapInstance.MapIndexY}";
             }
