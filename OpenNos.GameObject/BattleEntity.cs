@@ -9,7 +9,7 @@ namespace OpenNos.GameObject
         public BattleEntity(Character character, Skill skill)
         {
             Session = character.Session;
-            Buffs = character.Buff.ToList();
+            Buffs = character.Buff.GetAllItems();
             BCards = character.EquipmentBCards.ToList();
             Level = character.Level;
             EntityType = EntityType.Player;
@@ -147,7 +147,7 @@ namespace OpenNos.GameObject
 
         public BattleEntity(Mate mate)
         {
-            //mate.Buff.CopyTo(Buffs);
+            //Buffs = mate.Monster.Buff.ToList();
             BCards = mate.Monster.BCards.ToList();
             Level = mate.Level;
             EntityType = EntityType.Mate;
@@ -196,7 +196,7 @@ namespace OpenNos.GameObject
 
         public BattleEntity(MapMonster monster)
         {
-            //monster.Buff.CopyTo(Buffs);
+            Buffs = monster.Buff.GetAllItems();
             BCards = monster.Monster.BCards.ToList();
             Level = monster.Monster.Level;
             EntityType = EntityType.Monster;

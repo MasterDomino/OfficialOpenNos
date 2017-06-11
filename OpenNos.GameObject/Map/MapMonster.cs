@@ -40,6 +40,7 @@ namespace OpenNos.GameObject
 
         public MapMonster()
         {
+            Buff = new ThreadSafeSortedList<short, Buff>();
             HitQueue = new ConcurrentQueue<HitRequest>();
             OnDeathEvents = new List<EventContainer>();
         }
@@ -47,6 +48,8 @@ namespace OpenNos.GameObject
         #endregion
 
         #region Properties
+
+        public ThreadSafeSortedList<short, Buff> Buff { get; set; }
 
         public int CurrentHp { get; set; }
 
@@ -99,6 +102,31 @@ namespace OpenNos.GameObject
         #endregion
 
         #region Methods
+
+        public void AddBuff(Buff indicator)
+        {
+            Buff[indicator.Card.CardId] = indicator;
+            indicator.RemainingTime = indicator.Card.Duration;
+            indicator.Start = DateTime.Now;
+
+            indicator.Card.BCards.ForEach(c => c.ApplyBCards(this));
+            Observable.Timer(TimeSpan.FromMilliseconds(indicator.Card.Duration * 100))
+                .Subscribe(
+                    o =>
+                    {
+                        RemoveBuff(indicator.Card.CardId);
+                        if (indicator.Card.TimeoutBuff != 0 && ServerManager.Instance.RandomNumber() <
+                            indicator.Card.TimeoutBuffChance)
+                        {
+                            AddBuff(new Buff(indicator.Card.TimeoutBuff, Monster.Level));
+                        }
+                    });
+        }
+
+        private void RemoveBuff(short id)
+        {
+            Buff.Remove(id);
+        }
 
         public EffectPacket GenerateEff(int effectid)
         {
@@ -178,6 +206,7 @@ namespace OpenNos.GameObject
 
         public void RunDeathEvent()
         {
+            Buff.ClearAll();
             if (IsBonus)
             {
                 MapInstance.InstanceBag.Combo++;
@@ -358,7 +387,7 @@ namespace OpenNos.GameObject
 
                     // calculate damage
                     int damage = DamageHelper.Instance.CalculateDamage(new BattleEntity(hitRequest.Session.Character, hitRequest.Skill), new BattleEntity(this), hitRequest.Skill, ref hitmode);
-
+                    hitRequest.Skill.BCards.Where(s => s.Type.Equals((byte)CardType.Buff)).ToList().ForEach(s => s.ApplyBCards(this));
                     if (DamageList.ContainsKey(hitRequest.Session.Character.CharacterId))
                     {
                         DamageList[hitRequest.Session.Character.CharacterId] += damage;

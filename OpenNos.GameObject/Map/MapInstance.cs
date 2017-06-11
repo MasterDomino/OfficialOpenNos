@@ -562,8 +562,9 @@ namespace OpenNos.GameObject
                 {
                     ServerManager.Instance.ChangeMap(session.Character.CharacterId, session.Character.MapId, session.Character.MapX, session.Character.MapY);
                 }
-                _monsters.Dispose();
+                DroppedList.Dispose();
                 _npcs.Dispose();
+                _monsters.Dispose();
             }
         }
 

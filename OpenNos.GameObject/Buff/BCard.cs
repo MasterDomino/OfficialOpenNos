@@ -18,6 +18,8 @@ using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Linq;
 
 namespace OpenNos.GameObject
 {
@@ -42,7 +44,10 @@ namespace OpenNos.GameObject
                     }
                     else if (session.GetType() == typeof(MapMonster))
                     {
-
+                        if (ServerManager.Instance.RandomNumber() < FirstData)
+                        {
+                            (session as MapMonster).AddBuff(new Buff(SecondData, (session as MapMonster).Monster.Level));
+                        }
                     }
                     else if (session.GetType() == typeof(MapNpc))
                     {
@@ -216,12 +221,35 @@ namespace OpenNos.GameObject
                 case BCardType.CardType.MeditationSkill:
                     if (session.GetType() == typeof(Character))
                     {
-                        if (SubType.Equals((byte)AdditionalTypes.MeditationSkill.CausingChance))
+                        if (SubType.Equals((byte)AdditionalTypes.MeditationSkill.CausingChance / 10))
                         {
                             if (ServerManager.Instance.RandomNumber() < FirstData)
                             {
-                                //ToDo: Add Skills
-                                (session as Character).AddBuff(new Buff(SecondData, (session as Character).Level));
+                                Character character = (session as Character);
+
+                                if (SkillVNum.HasValue)
+                                {
+                                    character.LastSkillCombo = DateTime.Now;
+                                    Skill skill = ServerManager.Instance.GetSkill(SkillVNum.Value);
+                                    Skill newSkill = ServerManager.Instance.GetSkill((short)SecondData);
+                                    Observable.Timer(TimeSpan.FromMilliseconds(100)).Subscribe(observer =>
+                                    {
+                                        foreach (QuicklistEntryDTO qe in character.QuicklistEntries.Where(s => s.Pos.Equals(skill.CastId)))
+                                        {
+                                            character.Session.SendPacket($"qset {qe.Q1} {qe.Q2} {qe.Type}.{qe.Slot}.{newSkill.CastId}.0");
+                                        }
+                                        character.Session.SendPacket($"mslot {newSkill.CastId} -1");
+                                    });
+
+                                    if (skill.CastId > 10)
+                                    {
+                                        // HACK this way
+                                        Observable.Timer(TimeSpan.FromMilliseconds(skill.Cooldown * 100 + 500)).Subscribe(observer =>
+                                          {
+                                              character.Session.SendPacket($"sr {skill.CastId}");
+                                          });
+                                    }
+                                }
                             }
                         }
                     }

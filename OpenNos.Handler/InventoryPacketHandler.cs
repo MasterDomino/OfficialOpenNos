@@ -1666,6 +1666,7 @@ namespace OpenNos.Handler
                 if (inv?.Item != null)
                 {
                     inv.Item.Use(Session, ref inv, wearPacket.Type);
+                    Session.Character.LoadSpeed();
                     Session.SendPacket(Session.Character.GenerateEff(123));
                 }
             }

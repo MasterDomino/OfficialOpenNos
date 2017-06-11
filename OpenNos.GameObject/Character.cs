@@ -59,13 +59,19 @@ namespace OpenNos.GameObject
 
         #region Properties
 
+        public bool NoAttack { get; set; }
+
+        public bool NoMove { get; set; }
+
+        public DateTime LastSkillCombo { get; set; }
+
         public List<BCard> EquipmentBCards { get; set; }
 
         public AuthorityType Authority { get; set; }
 
         public Node[,] BrushFire { get; set; }
 
-        public List<Buff> Buff { get; internal set; }
+        public ThreadSafeSortedList<short, Buff> Buff { get; internal set; }
 
         public bool CanFight => !IsSitting && ExchangeInfo == null;
 
@@ -363,12 +369,11 @@ namespace OpenNos.GameObject
         {
             get
             {
-                byte bonusSpeed = (byte)GetBuff(CardType.Move, (byte)AdditionalTypes.Move.SetMovementNegated)[0];
-                if (_speed + bonusSpeed > 59)
+                if (_speed > 59)
                 {
                     return 59;
                 }
-                return (byte)(_speed + bonusSpeed);
+                return _speed;
             }
 
             set
@@ -917,7 +922,7 @@ namespace OpenNos.GameObject
 
         public string GenerateCond()
         {
-            return $"cond 1 {CharacterId} 0 0 {Speed}";
+            return $"cond 1 {CharacterId} {(NoAttack ? 1 : 0)} {(NoMove ? 1 : 0)} {Speed}";
         }
 
         public void GenerateDignity(NpcMonster monsterinfo)
@@ -2227,7 +2232,7 @@ namespace OpenNos.GameObject
 
         public string GenerateStatInfo()
         {
-            return $"st 1 {CharacterId} {Level} {HeroLevel} {(int)(Hp / (float)HPLoad() * 100)} {(int)(Mp / (float)MPLoad() * 100)} {Hp} {Mp}{(Buff.Aggregate(string.Empty, (current, buff) => current + $" {buff.Card.CardId}"))}";
+            return $"st 1 {CharacterId} {Level} {HeroLevel} {(int)(Hp / (float)HPLoad() * 100)} {(int)(Mp / (float)MPLoad() * 100)} {Hp} {Mp}{(Buff.GetAllItems().Aggregate(string.Empty, (current, buff) => current + $" {buff.Card.CardId}"))}";
         }
 
         public TalkPacket GenerateTalk(string message)
@@ -2482,7 +2487,10 @@ namespace OpenNos.GameObject
                     hp = specialist.HP + specialist.SpHP * 100;
                 }
             }
-            return (int)((CharacterHelper.HPData[(byte)Class, Level] + hp + GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumHPIncreased)[0]) * multiplicator);
+            multiplicator += GetBuff(CardType.BearSpirit, (byte)AdditionalTypes.BearSpirit.IncreaseMaximumHP)[0] / 100D;
+            multiplicator += GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.IncreasesMaximumHP)[0] / 100D;
+
+            return (int)((CharacterHelper.HPData[(byte)Class, Level] + hp + GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumHPIncreased)[0] + GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumHPMPIncreased)[0]) * multiplicator);
         }
 
         public override void Initialize()
@@ -2696,6 +2704,17 @@ namespace OpenNos.GameObject
                         Speed += specialist.Item.Speed;
                     }
                 }
+
+                byte fixSpeed = (byte)GetBuff(CardType.Move, (byte)AdditionalTypes.Move.SetMovement)[0];
+                if(fixSpeed != 0)
+                {
+                    Speed = fixSpeed;
+                }
+                else
+                {
+                    Speed += (byte)GetBuff(CardType.Move, (byte)AdditionalTypes.Move.MovementSpeedIncreased)[0];
+                    Speed *= (byte)(1 + GetBuff(CardType.Move, (byte)AdditionalTypes.Move.MoveSpeedIncreased)[0] / 100D);
+                }
             }
 
             if (IsShopping)
@@ -2734,7 +2753,10 @@ namespace OpenNos.GameObject
                     mp = specialist.MP + specialist.SpHP * 100;
                 }
             }
-            return (int)((CharacterHelper.MPData[(byte)Class, Level] + mp + GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.IncreasesMaximumMP)[0]) * multiplicator);
+            multiplicator += GetBuff(CardType.BearSpirit, (byte)AdditionalTypes.BearSpirit.IncreaseMaximumMP)[0] / 100D;
+            multiplicator += GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.IncreasesMaximumMP)[0] / 100D;
+
+            return (int)((CharacterHelper.MPData[(byte)Class, Level] + mp + GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumMPIncreased)[0] + GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumHPMPIncreased)[0]) * multiplicator);
         }
 
         public void NotifyRarifyResult(sbyte rare)
@@ -2956,7 +2978,7 @@ namespace OpenNos.GameObject
                 }
 
                 IEnumerable<short> currentlySavedBonus = DAOFactory.StaticBonusDAO.LoadTypeByCharacterId(CharacterId);
-                foreach (short bonusToDelete in currentlySavedBonus.Except(Buff.Select(s => s.Card.CardId)))
+                foreach (short bonusToDelete in currentlySavedBonus.Except(Buff.GetAllItems().Select(s => s.Card.CardId)))
                 {
                     DAOFactory.StaticBonusDAO.Delete(bonusToDelete, CharacterId);
                 }
@@ -2967,12 +2989,12 @@ namespace OpenNos.GameObject
                 }
 
                 IEnumerable<short> currentlySavedBuff = DAOFactory.StaticBuffDAO.LoadByTypeCharacterId(CharacterId);
-                foreach (short bonusToDelete in currentlySavedBuff.Except(Buff.Select(s => s.Card.CardId)))
+                foreach (short bonusToDelete in currentlySavedBuff.Except(Buff.GetAllItems().Select(s => s.Card.CardId)))
                 {
                     DAOFactory.StaticBuffDAO.Delete(bonusToDelete, CharacterId);
                 }
 
-                foreach (Buff buff in Buff.Where(s => s.StaticBuff).ToArray())
+                foreach (Buff buff in Buff.GetAllItems().Where(s => s.StaticBuff).ToArray())
                 {
                     StaticBuffDTO bf = new StaticBuffDTO()
                     {
@@ -3662,23 +3684,23 @@ namespace OpenNos.GameObject
                 Start = DateTime.Now,
                 StaticBuff = true
             };
-            Buff oldbuff = Buff.FirstOrDefault(s => s.Card.CardId == staticBuff.CardId);
+            Buff oldbuff = Buff[staticBuff.CardId];
             if (staticBuff.RemainingTime > 0)
             {
                 bf.RemainingTime = staticBuff.RemainingTime;
-                Buff.Add(bf);
+                Buff[staticBuff.CardId] = bf;
             }
             else if (oldbuff != null)
             {
-                Buff.RemoveAll(s => s.Card.CardId.Equals(bf.Card.CardId));
+                Buff.Remove(bf.Card.CardId);
 
                 bf.RemainingTime = bf.Card.Duration * 6 / 10 + oldbuff.RemainingTime;
-                Buff.Add(bf);
+                Buff[bf.Card.CardId] = bf;
             }
             else
             {
                 bf.RemainingTime = bf.Card.Duration * 6 / 10;
-                Buff.Add(bf);
+                Buff[bf.Card.CardId] = bf;
             }
             bf.Card.BCards.ForEach(c => c.ApplyBCards(Session.Character));
             Observable.Timer(TimeSpan.FromSeconds(bf.RemainingTime))
@@ -3701,8 +3723,8 @@ namespace OpenNos.GameObject
 
         public void AddBuff(Buff indicator)
         {
-            Buff.RemoveAll(s => s.Card.CardId.Equals(indicator.Card.CardId));
-            Buff.Add(indicator);
+            Buff.Remove(indicator.Card.CardId);
+            Buff[indicator.Card.CardId] = indicator;
             indicator.RemainingTime = indicator.Card.Duration;
             indicator.Start = DateTime.Now;
 
@@ -3724,11 +3746,27 @@ namespace OpenNos.GameObject
                             AddBuff(new Buff(indicator.Card.TimeoutBuff, Level));
                         }
                     });
+            if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.Move && !s.SubType.Equals((byte)AdditionalTypes.Move.MovementImpossible / 10)))
+            {
+                LastSpeedChange = DateTime.Now;
+                LoadSpeed();
+                Session.SendPacket(GenerateCond());
+            }
+            if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.SpecialAttack && s.SubType.Equals((byte)AdditionalTypes.SpecialAttack.NoAttack / 10)))
+            {
+                NoAttack = true;
+                Session.SendPacket(GenerateCond());
+            }
+            if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.Move && s.SubType.Equals((byte)AdditionalTypes.Move.MovementImpossible / 10)))
+            {
+                NoMove = true;
+                Session.SendPacket(GenerateCond());
+            }
         }
 
-        private void RemoveBuff(int id)
+        private void RemoveBuff(short id)
         {
-            Buff indicator = Buff.FirstOrDefault(s => s.Card.CardId == id);
+            Buff indicator = Buff[id];
             if (indicator != null)
             {
                 if (indicator.StaticBuff)
@@ -3746,13 +3784,24 @@ namespace OpenNos.GameObject
                             string.Format(Language.Instance.GetMessageFromKey("EFFECT_TERMINATED"), Name), 20));
                 }
 
-                if (Buff.Contains(indicator))
+                if (Buff[indicator.Card.CardId] != null)
                 {
-                    Buff.RemoveAll(s => s.Card.CardId == id);
+                    Buff.Remove(id);
                 }
-                if (indicator.Card.BCards.Any(s => s.Type == (byte)BCardType.CardType.Move))
+                if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.Move && !s.SubType.Equals((byte)AdditionalTypes.Move.MovementImpossible / 10)))
                 {
                     LastSpeedChange = DateTime.Now;
+                    LoadSpeed();
+                    Session.SendPacket(GenerateCond());
+                }
+                if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.SpecialAttack && s.SubType.Equals((byte)AdditionalTypes.SpecialAttack.NoAttack / 10)))
+                {
+                    NoAttack = false;
+                    Session.SendPacket(GenerateCond());
+                }
+                if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.Move && s.SubType.Equals((byte)AdditionalTypes.Move.MovementImpossible / 10)))
+                {
+                    NoMove = false;
                     Session.SendPacket(GenerateCond());
                 }
             }
@@ -3762,7 +3811,7 @@ namespace OpenNos.GameObject
         {
             lock (Buff)
             {
-                Buff.Where(s => types.Contains(s.Card.BuffType) && !s.StaticBuff && s.Card.Level < level).ToList()
+                Buff.GetAllItems().Where(s => types.Contains(s.Card.BuffType) && !s.StaticBuff && s.Card.Level < level).ToList()
                     .ForEach(s => RemoveBuff(s.Card.CardId));
             }
         }
@@ -3817,7 +3866,7 @@ namespace OpenNos.GameObject
 
             lock (Buff)
             {
-                foreach (Buff buff in Buff)
+                foreach (Buff buff in Buff.GetAllItems())
                 {
                     // THIS ONE DOES NOT FOR STUFFS
 
