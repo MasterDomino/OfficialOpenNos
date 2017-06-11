@@ -789,6 +789,7 @@ namespace OpenNos.Handler
         public void Command(HelpPacket helpPacket)
         {
             Logger.Debug("Help Command", Session.Character.GenerateIdentity());
+
             // get commands
             List<Type> classes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(t => t.GetTypes()).Where(t => t.IsClass && t.Namespace == "OpenNos.GameObject.CommandPackets").ToList();
             List<string> messages = new List<string>();
@@ -802,6 +803,7 @@ namespace OpenNos.Handler
                     messages.Add(method.Invoke(classInstance, null).ToString());
                 }
             }
+
             // send messages
             if (messages != null)
             {
@@ -2425,6 +2427,17 @@ namespace OpenNos.Handler
             }
         }
 
+        private List<ClientSession> AllConnections(string ipAddress)
+        {
+            string ip = ipAddress.Split(':')[1].Substring(2);
+            List<ClientSession> sessions = new List<ClientSession>();
+            foreach (ClientSession characterSession in ServerManager.Instance.Sessions.Where(s => s.IpAddress.Contains(ip)))
+            {
+                sessions.Add(characterSession);
+            }
+            return sessions;
+        }
+
         /// <summary>
         /// private mute method
         /// </summary>
@@ -2515,7 +2528,12 @@ namespace OpenNos.Handler
             if (session != null)
             {
                 Session.SendPacket(Session.Character.GenerateSay("----- SESSION -----", 13));
-                Session.SendPacket(Session.Character.GenerateSay($"Current IP: {session.IpAddress}", 13));
+                string ipAddress = session.IpAddress;
+                Session.SendPacket(Session.Character.GenerateSay($"Current IP: {ipAddress}", 13));
+                foreach (ClientSession characterSession in AllConnections(ipAddress))
+                {
+                    Session.SendPacket(Session.Character.GenerateSay($"SessionId: {characterSession.SessionId} AccountName: {characterSession.Account.Name} CharacterName: {characterSession.Character.Name}", 13));
+                }
                 Session.SendPacket(Session.Character.GenerateSay("----- ------------ -----", 13));
             }
         }

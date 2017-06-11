@@ -664,6 +664,15 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} cards loaded!.
+        /// </summary>
+        internal static string CARDS_LOADED {
+            get {
+                return ResourceManager.GetString("CARDS_LOADED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You have changed the common point of return of the members of the group..
         /// </summary>
         internal static string CHANGED_SHARE {

@@ -1426,4 +1426,7 @@
   <data name="WARNING_INFO" xml:space="preserve">
     <value>You've been warned: {0} times.</value>
   </data>
+  <data name="CARDS_LOADED" xml:space="preserve">
+    <value>{0} cards loaded!</value>
+  </data>
 </root>
