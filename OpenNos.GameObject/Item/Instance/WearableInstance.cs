@@ -346,12 +346,11 @@ namespace OpenNos.GameObject
             {
                 if (rnd < rare8 && !(protection == RarifyProtection.Scroll && Rare >= 8))
                 {
+                    Rare = 8;
                     if (mode != RarifyMode.Drop)
                     {
-                        session?.Character.NotifyRarifyResult(8);
+                        session?.Character.NotifyRarifyResult(this);
                     }
-
-                    Rare = 8;
                     SetRarityPoint();
                     ItemInstance inventory = session?.Character.Inventory.GetItemInstanceById(Id);
                     if (inventory != null)
@@ -363,93 +362,92 @@ namespace OpenNos.GameObject
             }
             if (rnd < rare7 && !(protection == RarifyProtection.Scroll && Rare >= 7))
             {
+                Rare = 7;
                 if (mode != RarifyMode.Drop)
                 {
-                    session?.Character.NotifyRarifyResult(7);
+                    session?.Character.NotifyRarifyResult(this);
                 }
-
-                Rare = 7;
                 SetRarityPoint();
             }
             else if (rnd < rare6 && !(protection == RarifyProtection.Scroll && Rare >= 6))
             {
+                Rare = 6;
                 if (mode != RarifyMode.Drop)
                 {
-                    session?.Character.NotifyRarifyResult(6);
+                    session?.Character.NotifyRarifyResult(this);
                 }
-                Rare = 6;
                 SetRarityPoint();
             }
             else if (rnd < rare5 && !(protection == RarifyProtection.Scroll && Rare >= 5))
             {
+                Rare = 5;
                 if (mode != RarifyMode.Drop)
                 {
-                    session?.Character.NotifyRarifyResult(5);
+                    session?.Character.NotifyRarifyResult(this);
                 }
-                Rare = 5;
                 SetRarityPoint();
             }
             else if (rnd < rare4 && !(protection == RarifyProtection.Scroll && Rare >= 4))
             {
+                Rare = 4;
                 if (mode != RarifyMode.Drop)
                 {
-                    session?.Character.NotifyRarifyResult(4);
+                    session?.Character.NotifyRarifyResult(this);
                 }
-                Rare = 4;
                 SetRarityPoint();
             }
             else if (rnd < rare3 && !(protection == RarifyProtection.Scroll && Rare >= 3))
             {
+                Rare = 3;
                 if (mode != RarifyMode.Drop)
                 {
-                    session?.Character.NotifyRarifyResult(3);
+                    session?.Character.NotifyRarifyResult(this);
                 }
-                Rare = 3;
                 SetRarityPoint();
             }
             else if (rnd < rare2 && !(protection == RarifyProtection.Scroll && Rare >= 2))
             {
+                Rare = 2;
                 if (mode != RarifyMode.Drop)
                 {
-                    session?.Character.NotifyRarifyResult(2);
+                    session?.Character.NotifyRarifyResult(this);
                 }
-                Rare = 2;
                 SetRarityPoint();
             }
             else if (rnd < rare1 && !(protection == RarifyProtection.Scroll && Rare >= 1))
             {
+                Rare = 1;
                 if (mode != RarifyMode.Drop)
                 {
-                    session?.Character.NotifyRarifyResult(1);
+                    session?.Character.NotifyRarifyResult(this);
                 }
-                Rare = 1;
                 SetRarityPoint();
             }
             else if (rnd < rare0 && !(protection == RarifyProtection.Scroll && Rare >= 0))
             {
+                Rare = 0;
                 if (mode != RarifyMode.Drop)
                 {
-                    session?.Character.NotifyRarifyResult(0);
+                    session?.Character.NotifyRarifyResult(this);
                 }
-                Rare = 0;
                 SetRarityPoint();
             }
             else if (rnd < raren1 && !(protection == RarifyProtection.Scroll && Rare >= -1))
             {
+                Rare = -1;
                 if (mode != RarifyMode.Drop)
                 {
-                    session?.Character.NotifyRarifyResult(-1);
+                    session?.Character.NotifyRarifyResult(this);
                 }
-                Rare = -1;
                 SetRarityPoint();
             }
             else if (rnd < raren2 && !(protection == RarifyProtection.Scroll && Rare >= -2))
             {
+                Rare = -2;
                 if (mode != RarifyMode.Drop)
                 {
-                    session?.Character.NotifyRarifyResult(-2);
+                    session?.Character.NotifyRarifyResult(this);
                 }
-                Rare = -2;
                 SetRarityPoint();
             }
             else
@@ -458,12 +456,16 @@ namespace OpenNos.GameObject
                 {
                     if (protection == RarifyProtection.None)
                     {
+                        Logger.LogEvent("GAMBLE", session.GenerateIdentity(), $"Type: DESTROY IIId: {Id} ItemVnum: {ItemVNum}");
+
                         session.Character.DeleteItemByItemInstanceId(Id);
                         session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("RARIFY_FAILED"), 11));
                         session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("RARIFY_FAILED"), 0));
                     }
                     else
                     {
+                        Logger.LogEvent("GAMBLE", session.GenerateIdentity(), $"Type: FAIL IIId: {Id} ItemVnum: {ItemVNum}");
+
                         session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("RARIFY_FAILED_ITEM_SAVED"), 11));
                         session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("RARIFY_FAILED_ITEM_SAVED"), 0));
                         session.CurrentMapInstance.Broadcast(session.Character.GenerateEff(3004), session.Character.MapX, session.Character.MapY);

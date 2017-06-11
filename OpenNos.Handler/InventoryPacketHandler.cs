@@ -536,7 +536,6 @@ namespace OpenNos.Handler
         /// <param name="getPacket"></param>
         public void GetItem(GetPacket getPacket)
         {
-            Logger.Debug(Session.Character.GenerateIdentity(), getPacket.ToString());
             if (Session.Character.LastSkillUse.AddSeconds(1) > DateTime.Now || Session.Character.IsVehicled || !Session.HasCurrentMapInstance)
             {
                 return;
@@ -632,6 +631,8 @@ namespace OpenNos.Handler
                                         {
                                             Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateSay($"{string.Format(Language.Instance.GetMessageFromKey("ITEM_ACQUIRED_LOD"), Session.Character.Name)}: {inv.Item.Name} x {mapItem.Amount}", 10));
                                         }
+                                        Logger.LogEvent("CHARACTER_ITEM_GET", Session.GenerateIdentity(), $"IIId: {inv.Id} ItemVNum: {inv.ItemVNum} Amount: {amount}");
+
                                     }
                                     else
                                     {
@@ -651,11 +652,13 @@ namespace OpenNos.Handler
                                     Session.SendPacket(Session.Character.GenerateIcon(1, 1, 1046));
                                 }
                                 Session.Character.Gold += droppedGold.GoldAmount;
+                                Logger.LogEvent("CHARACTER_ITEM_GET", Session.GenerateIdentity(), $"Gold: {droppedGold.GoldAmount}");
                                 Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {mapItem.GetItemInstance().Item.Name} x {droppedGold.GoldAmount}", 12));
                             }
                             else
                             {
                                 Session.Character.Gold = maxGold;
+                                Logger.LogEvent("CHARACTER_ITEM_GET", Session.GenerateIdentity(), $"MaxGold");
                                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("MAX_GOLD"), 0));
                             }
                             Session.SendPacket(Session.Character.GenerateGold());
@@ -760,6 +763,7 @@ namespace OpenNos.Handler
                             {
                                 Session.Character.DeleteItem(invitem.Type, invitem.Slot);
                             }
+                            Logger.LogEvent("CHARACTER_ITEM_DROP", Session.GenerateIdentity(), $"IIId: {invitem.Id} ItemVNum: {droppedItem.ItemVNum} Amount: {droppedItem.Amount} MapId: {Session.CurrentMapInstance.Map.MapId} MapX: {droppedItem.PositionX} MapY: {droppedItem.PositionY}");
                             Session.CurrentMapInstance?.Broadcast($"drop {droppedItem.ItemVNum} {droppedItem.TransportId} {droppedItem.PositionX} {droppedItem.PositionY} {droppedItem.Amount} 0 -1");
                         }
                         else
@@ -1741,6 +1745,7 @@ namespace OpenNos.Handler
                 });
                 Session.SendPacket(Session.Character.GenerateSki());
                 Session.SendPackets(Session.Character.GenerateQuicklist());
+                Logger.LogEvent("CHARACTER_SPECIALIST_CHANGE", Session.GenerateIdentity(), $"Specialist: {sp.Item.Morph}");
             }
         }
 
@@ -1830,7 +1835,6 @@ namespace OpenNos.Handler
                 bufftodisable.Add(BuffType.Neutral);
                 Session.Character.DisableBuffs(bufftodisable);
                 Session.Character.EquipmentBCards.RemoveAll(s=>s.ItemVNum.Equals(vnum));
-                Logger.Debug(Session.Character.GenerateIdentity(), vnum.ToString());
                 Session.Character.UseSp = false;
                 Session.Character.LoadSpeed();
                 Session.SendPacket(Session.Character.GenerateCond());
@@ -1856,6 +1860,9 @@ namespace OpenNos.Handler
                 Session.SendPackets(Session.Character.GenerateQuicklist());
                 Session.SendPacket(Session.Character.GenerateStat());
                 Session.SendPacket(Session.Character.GenerateStatChar());
+
+                Logger.LogEvent("CHARACTER_SPECIALIST_RETURN", Session.GenerateIdentity(), $"SpCooldown: {Session.Character.SpCooldown}");
+
                 Observable.Timer(TimeSpan.FromMilliseconds(Session.Character.SpCooldown * 1000)).Subscribe(o =>
                 {
                     Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("TRANSFORM_DISAPPEAR"), 11));

@@ -706,6 +706,9 @@ namespace OpenNos.GameObject
                                     Session.SendPackets(GenerateQuicklist());
                                     Session.SendPacket(GenerateStat());
                                     Session.SendPacket(GenerateStatChar());
+
+                                    Logger.LogEvent("CHARACTER_SPECIALIST_RETURN", Session.GenerateIdentity(), $"SpCooldown: {Session.Character.SpCooldown}");
+
                                     Observable.Timer(TimeSpan.FromMilliseconds(SpCooldown * 1000)).Subscribe(o =>
                                     {
                                         Session.SendPacket(GenerateSay(Language.Instance.GetMessageFromKey("TRANSFORM_DISAPPEAR"), 11));
@@ -2757,10 +2760,11 @@ namespace OpenNos.GameObject
             return (int)((CharacterHelper.MPData[(byte)Class, Level] + mp + GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumMPIncreased)[0] + GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumHPMPIncreased)[0]) * multiplicator);
         }
 
-        public void NotifyRarifyResult(sbyte rare)
+        public void NotifyRarifyResult(ItemInstance item)
         {
-            Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("RARIFY_SUCCESS"), rare), 12));
-            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("RARIFY_SUCCESS"), rare), 0));
+            Logger.LogEvent("GAMBLE", Session.GenerateIdentity(), $"Type: SUCCESS IIId: {item.Id} ItemVnum: {item.ItemVNum} Rare: {item.Rare}");
+            Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("RARIFY_SUCCESS"), item.Rare), 12));
+            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("RARIFY_SUCCESS"), item.Rare), 0));
             MapInstance.Broadcast(GenerateEff(3005), PositionX, PositionY);
             Session.SendPacket("shop_end 1");
         }
@@ -2877,6 +2881,7 @@ namespace OpenNos.GameObject
 
         public void Save()
         {
+            Logger.LogEvent("CHARACTER_DB_SAVE", Session.GenerateIdentity(), "START");
             try
             {
                 AccountDTO account = Session.Account;
@@ -3024,10 +3029,11 @@ namespace OpenNos.GameObject
                         DAOFactory.RespawnDAO.InsertOrUpdate(ref res);
                     }
                 }
+                Logger.LogEvent("CHARACTER_DB_SAVE", Session.GenerateIdentity(), "FINISH");
             }
             catch (Exception e)
             {
-                Logger.Log.Error("Save Character failed. SessionId: " + Session.SessionId, e);
+                Logger.LogEvent("CHARACTER_DB_SAVE", Session.GenerateIdentity(), "ERROR", e);
             }
         }
 

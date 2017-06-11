@@ -172,6 +172,7 @@ namespace OpenNos.GameObject
             // do everything necessary before removing client, DB save, Whatever
             if (HasSelectedCharacter)
             {
+                Logger.LogEvent("CHARACTER_LOGOUT", GenerateIdentity(), string.Empty);
                 Character.Dispose();
                 if (Character.MapInstance.MapInstanceType == MapInstanceType.TimeSpaceInstance || Character.MapInstance.MapInstanceType == MapInstanceType.RaidInstance)
                 {
@@ -290,7 +291,7 @@ namespace OpenNos.GameObject
         public void SetCharacter(Character character)
         {
             Character = character;
-
+            Logger.LogEvent("CHARACTER_LOGIN", GenerateIdentity(), string.Empty);
             // register WCF events
             CommunicationServiceClient.Instance.CharacterConnectedEvent += OnOtherCharacterConnected;
             CommunicationServiceClient.Instance.CharacterDisconnectedEvent += OnOtherCharacterDisconnected;
