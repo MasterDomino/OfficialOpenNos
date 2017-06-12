@@ -159,7 +159,6 @@ namespace OpenNos.GameObject
         {
             if (Owner != null)
             {
-                Logger.Debug(Owner.GenerateIdentity(), vnum.ToString());
                 ItemInstance newItem = InstantiateItemInstance(vnum, Owner.CharacterId, amount);
                 newItem.Rare = Rare;
                 newItem.Upgrade = Upgrade;
@@ -174,7 +173,6 @@ namespace OpenNos.GameObject
             List<ItemInstance> invlist = new List<ItemInstance>();
             if (Owner != null)
             {
-                Logger.Debug(Owner.GenerateIdentity(), newItem.ItemVNum.ToString());
                 ItemInstance inv = null;
 
                 // override type if necessary
@@ -196,6 +194,7 @@ namespace OpenNos.GameObject
                             max = max > MAX_ITEM_AMOUNT ? MAX_ITEM_AMOUNT : max;
                             newItem.Amount = (byte)(slot.Amount + newItem.Amount - max);
                             newItem.Amount = (byte)(newItem.Amount < 0 ? 0 : newItem.Amount);
+                            Logger.LogEvent("ITEM_CREATE", Owner.GenerateIdentity(), $"IIId: {slot.Id} ItemVNum: {slot.ItemVNum} Amount: {max - slot.Amount} MapId: {Owner.MapInstance?.Map.MapId} MapX: {Owner.PositionX} MapY: {Owner.PositionY}");
                             slot.Amount = (byte)max;
                             invlist.Add(slot);
                             Owner.Session?.SendPacket(slot.GenerateInventoryAdd());
@@ -217,6 +216,8 @@ namespace OpenNos.GameObject
                 }
             }
 
+
+
             return invlist;
         }
 
@@ -231,7 +232,8 @@ namespace OpenNos.GameObject
         {
             if (Owner != null)
             {
-                Logger.Debug(Owner.GenerateIdentity(), $"Slot: {slot} Type: {type} VNUM: {itemInstance.ItemVNum}");
+                Logger.LogEvent("ITEM_CREATE", Owner.GenerateIdentity(), $"IIId: {itemInstance.Id} ItemVNum: {itemInstance.ItemVNum} Amount: {itemInstance.Amount} MapId: {Owner.MapInstance?.Map.MapId} MapX: {Owner.PositionX} MapY: {Owner.PositionY}");
+
                 itemInstance.Slot = slot;
                 itemInstance.Type = type;
                 itemInstance.CharacterId = Owner.CharacterId;
@@ -279,7 +281,6 @@ namespace OpenNos.GameObject
         {
             if (Owner != null)
             {
-                Logger.Debug(Owner.Session.GenerateIdentity(), id.ToString());
                 Tuple<short, InventoryType> removedPlace;
                 ItemInstance inv = this[id];
 
@@ -303,7 +304,6 @@ namespace OpenNos.GameObject
         {
             if (Owner != null)
             {
-                Logger.Debug(Owner.Session.GenerateIdentity(), $"Slot: {slot} Type: {type}");
                 ItemInstance inv = GetAllItems().FirstOrDefault(i => i.Slot.Equals(slot) && i.Type.Equals(type));
 
                 if (inv != null)
@@ -530,7 +530,7 @@ namespace OpenNos.GameObject
 
         public void MoveItem(InventoryType sourcetype, InventoryType desttype, short sourceSlot, byte amount, short destinationSlot, out ItemInstance sourceInventory, out ItemInstance destinationInventory)
         {
-            Logger.Debug(Owner.Session.GenerateIdentity(), $"type: {sourcetype} sourceSlot: {sourceSlot} amount: {amount} destinationSlot: {destinationSlot}");
+            Logger.LogEvent("ITEM_MOVE", Owner.GenerateIdentity(), $"SourceType: {sourcetype.ToString()} DestType: {desttype.ToString()} SourceSlot: {sourceSlot} Amount: {amount} DestSlot: {destinationSlot}");
 
             // load source and destination slots
             sourceInventory = LoadBySlotAndType(sourceSlot, sourcetype);
@@ -600,14 +600,12 @@ namespace OpenNos.GameObject
         {
             if (Owner != null)
             {
-                Logger.Debug(Owner.Session.GenerateIdentity(), $"vnum: {vnum} amount: {amount}");
                 int remainingAmount = amount;
 
                 foreach (ItemInstance inventory in GetAllItems().Where(s => s.ItemVNum == vnum && s.Type != InventoryType.Wear && s.Type != InventoryType.Bazaar && s.Type != InventoryType.Warehouse && s.Type != InventoryType.PetWarehouse && s.Type != InventoryType.FamilyWareHouse).OrderBy(i => i.Slot))
                 {
                     if (remainingAmount > 0)
                     {
-                        Logger.Debug(Owner.Session.GenerateIdentity(), $"Remaining {remainingAmount}/{amount}, removing item {inventory.ItemVNum} from Slot {inventory.Slot} with amount {inventory.Amount}");
                         if (inventory.Amount > remainingAmount)
                         {
                             // amount completely removed
@@ -636,7 +634,6 @@ namespace OpenNos.GameObject
         {
             if (Owner != null)
             {
-                Logger.Debug(Owner.Session.GenerateIdentity(), $"InventoryId: {id} amount: {amount}");
                 ItemInstance inv = GetAllItems().FirstOrDefault(i => i.Id.Equals(id));
 
                 if (inv != null)

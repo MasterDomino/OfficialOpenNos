@@ -68,7 +68,11 @@ namespace OpenNos.Handler
                     {
                         return;
                     }
+                    ItemInstance delInstance = Session.Character.Inventory.LoadBySlotAndType(bIPacket.Slot, bIPacket.InventoryType);
                     Session.Character.DeleteItem(bIPacket.InventoryType, bIPacket.Slot);
+
+                    Logger.LogEvent("ITEM_DELETE", Session.GenerateIdentity(), $"IIId: {delInstance.Id} ItemVNum: {delInstance.ItemVNum} Amount: {delInstance.Amount} MapId: {Session.CurrentMapInstance?.Map.MapId} MapX: {Session.Character.PositionX} MapY: {Session.Character.PositionY}");
+
                     break;
             }
         }

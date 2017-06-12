@@ -1530,6 +1530,8 @@ namespace OpenNos.GameObject
 
         public string GenerateLevelUp()
         {
+            Logger.LogEvent("LEVELUP", Session.GenerateIdentity(), $"Level: {Level} JobLevel: {JobLevel} SPLevel: {Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear)?.SpLevel} HeroLevel: {HeroLevel} MapId: {Session.CurrentMapInstance?.Map.MapId} MapX: {Session.Character.PositionX} MapY: {Session.Character.PositionY}");
+
             return $"levelup {CharacterId}";
         }
 
