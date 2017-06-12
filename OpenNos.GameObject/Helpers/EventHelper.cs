@@ -239,6 +239,8 @@ namespace OpenNos.GameObject.Helpers
                                     }
                                     if (evt.MapInstance.InstanceBag.EndState == 1)
                                     {
+                                        Logger.LogEvent("RAID_SUCCESS", grp.Characters.ElementAt(0).Character.Name, $"RaidId: {grp.GroupId}");
+
                                         ServerManager.Instance.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("RAID_SUCCEED"), grp?.Raid?.Label, grp.Characters.ElementAt(0).Character.Name), 0));
                                     }
 

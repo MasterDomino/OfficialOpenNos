@@ -98,8 +98,10 @@ namespace OpenNos.Handler
                 return;
             }
 
+
             // actually move the item from source to destination
             Session.Character.Inventory.DepositItem(depositPacket.Inventory, depositPacket.Slot, depositPacket.Amount, depositPacket.NewSlot, ref item, ref itemdest, depositPacket.PartnerBackpack);
+            Logger.LogEvent("STASH_DEPOSIT", Session.GenerateIdentity(), $"OldIIId: {item.Id} NewIIId: {itemdest.Id} Amount: {depositPacket.Amount} PartnerBackpack: {depositPacket.PartnerBackpack}");
         }
 
         /// <summary>
@@ -277,7 +279,6 @@ namespace OpenNos.Handler
         /// <param name="exchangeRequestPacket"></param>
         public void ExchangeRequest(ExchangeRequestPacket exchangeRequestPacket)
         {
-            Logger.Debug(Session.Character.GenerateIdentity(), exchangeRequestPacket.ToString());
             if (exchangeRequestPacket.CharacterId != 0 && Session.Character.MapInstanceId != ServerManager.Instance.GetProperty<Guid>(exchangeRequestPacket.CharacterId, nameof(Character.MapInstanceId)))
             {
                 ServerManager.Instance.SetProperty(exchangeRequestPacket.CharacterId, nameof(Character.ExchangeInfo), null);
@@ -351,6 +352,9 @@ namespace OpenNos.Handler
                             else
                             {
                                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateModal(string.Format(Language.Instance.GetMessageFromKey("YOU_ASK_FOR_EXCHANGE"), targetSession.Character.Name), 0));
+
+                                Logger.LogEvent("TRADE_REQUEST", Session.GenerateIdentity(), $"[{targetSession.GenerateIdentity()}]");
+
                                 Session.Character.TradeRequests.Add(targetSession.Character.CharacterId);
                                 targetSession.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#req_exc^2^{Session.Character.CharacterId} #req_exc^5^{Session.Character.CharacterId} {string.Format(Language.Instance.GetMessageFromKey("INCOMING_EXCHANGE"), Session.Character.Name)}"));
                             }
@@ -406,6 +410,7 @@ namespace OpenNos.Handler
                                     }
                                     if (Session.Character.ExchangeInfo.Validate && targetExchange.Validate)
                                     {
+                                        Logger.LogEvent("TRADE_ACCEPT", Session.GenerateIdentity(), $"[{targetSession.GenerateIdentity()}]");
                                         Session.Character.ExchangeInfo.Confirm = true;
                                         if (targetExchange.Confirm && Session.Character.ExchangeInfo.Confirm)
                                         {
@@ -883,6 +888,7 @@ namespace OpenNos.Handler
         /// <param name="reposPacket"></param>
         public void Repos(ReposPacket reposPacket)
         {
+            Logger.LogEvent("STASH_REPOS", Session.GenerateIdentity(), $"OldSlot: {reposPacket.OldSlot} NewSlot: {reposPacket.NewSlot} Amount: {reposPacket.Amount} PartnerBackpack: {reposPacket.PartnerBackpack}");
             // check if the destination slot is out of range
             if (reposPacket.NewSlot >= (reposPacket.PartnerBackpack ? (Session.Character.StaticBonusList.Any(s => s.StaticBonusType == StaticBonusType.PetBackPack) ? 50 : 0) : Session.Character.WareHouseSize))
             {
@@ -1694,6 +1700,7 @@ namespace OpenNos.Handler
             ItemInstance item2 = previousInventory.DeepCopy();
             item2.Id = Guid.NewGuid();
             item2.Amount = withdrawPacket.Amount;
+            Logger.LogEvent("STASH_WITHDRAW", Session.GenerateIdentity(), $"OldIIId: {previousInventory.Id} NewIIId: {item2.Id} Amount: {withdrawPacket.Amount} PartnerBackpack: {withdrawPacket.PetBackpack}");
             Session.Character.Inventory.RemoveItemAmountFromInventory(withdrawPacket.Amount, previousInventory.Id);
             Session.Character.Inventory.AddToInventory(item2, item2.Item.Type);
             previousInventory = Session.Character.Inventory.LoadBySlotAndType(withdrawPacket.Slot, withdrawPacket.PetBackpack ? InventoryType.PetWarehouse : InventoryType.Warehouse);
@@ -1787,6 +1794,8 @@ namespace OpenNos.Handler
                 return;
             }
 
+            string data = string.Empty;
+
             // remove all items from source session
             foreach (ItemInstance item in sourceSession.Character.ExchangeInfo.ExchangeList)
             {
@@ -1806,12 +1815,15 @@ namespace OpenNos.Handler
             {
                 ItemInstance item2 = item.DeepCopy();
                 item2.Id = Guid.NewGuid();
+                data += $"[OldIIId: {item.Id} NewIIId: {item2.Id} ItemVNum: {item.ItemVNum} Amount: {item.Amount}]";
                 List<ItemInstance> inv = targetSession.Character.Inventory.AddToInventory(item2);
                 if (!inv.Any())
                 {
                     // do what?
                 }
             }
+
+            data += $"[Gold: {sourceSession.Character.ExchangeInfo.Gold}]";
 
             // handle gold
             sourceSession.Character.Gold -= sourceSession.Character.ExchangeInfo.Gold;
@@ -1820,6 +1832,9 @@ namespace OpenNos.Handler
             targetSession.SendPacket(targetSession.Character.GenerateGold());
 
             // all items and gold from sourceSession have been transferred, clean exchange info
+
+            Logger.LogEvent("TRADE_COMPLETE", sourceSession.GenerateIdentity(), $"[{targetSession.GenerateIdentity()}]Data: {data}");
+
             sourceSession.Character.ExchangeInfo = null;
         }
 

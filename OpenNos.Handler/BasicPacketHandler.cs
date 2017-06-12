@@ -245,6 +245,9 @@ namespace OpenNos.Handler
                                 WearableInstance wearable = newInv as WearableInstance;
                                 wearable?.SetRarityPoint();
                             }
+
+                            Logger.LogEvent("PARCEL_GET", Session.GenerateIdentity(), $"IIId: {newInv.Id} ItemVNum: {newInv.ItemVNum} Amount: {mail.AttachmentAmount} Sender: {mail.SenderId}");
+
                             Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_GIFTED")}: {newInv.Item.Name} x {mail.AttachmentAmount}", 12));
 
                             if (DAOFactory.MailDAO.LoadById(mail.MailId) != null)

@@ -767,6 +767,8 @@ namespace OpenNos.GameObject
                 {
                     if (rnd < upfail[Upgrade])
                     {
+                        Logger.LogEvent("UPGRADE_WEAPON", session.GenerateIdentity(), $"Protection: {protection.ToString()} IIId: {Id} Upgrade: {wearable.Upgrade} Result: Fail");
+
                         if (protection == UpgradeProtection.None)
                         {
                             session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("UPGRADE_FAILED"), 11));
@@ -782,6 +784,8 @@ namespace OpenNos.GameObject
                     }
                     else if (rnd < upfix[Upgrade])
                     {
+                        Logger.LogEvent("UPGRADE_WEAPON", session.GenerateIdentity(), $"Protection: {protection.ToString()} IIId: {Id} Upgrade: {wearable.Upgrade} Result: Fixed");
+
                         session.CurrentMapInstance.Broadcast(session.Character.GenerateEff(3004), session.Character.MapX, session.Character.MapY);
                         wearable.IsFixed = true;
                         session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("UPGRADE_FIXED"), 11));
@@ -789,6 +793,8 @@ namespace OpenNos.GameObject
                     }
                     else
                     {
+                        Logger.LogEvent("UPGRADE_WEAPON", session.GenerateIdentity(), $"Protection: {protection.ToString()} IIId: {Id} Upgrade: {wearable.Upgrade} Result: Success");
+
                         session.CurrentMapInstance.Broadcast(session.Character.GenerateEff(3005), session.Character.MapX, session.Character.MapY);
                         session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("UPGRADE_SUCCESS"), 12));
                         session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADE_SUCCESS"), 0));
@@ -804,6 +810,8 @@ namespace OpenNos.GameObject
                 {
                     if (rnd < upfix[Upgrade])
                     {
+                        Logger.LogEvent("UPGRADE_WEAPON", session.GenerateIdentity(), $"Protection: {protection.ToString()} IIId: {Id} Upgrade: {wearable.Upgrade} Result: Fixed");
+
                         session.CurrentMapInstance.Broadcast(session.Character.GenerateEff(3004), session.Character.MapX, session.Character.MapY);
                         wearable.IsFixed = true;
                         session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("UPGRADE_FIXED"), 11));
@@ -811,6 +819,8 @@ namespace OpenNos.GameObject
                     }
                     else if (rnd < upfail[Upgrade] + upfix[Upgrade])
                     {
+                        Logger.LogEvent("UPGRADE_WEAPON", session.GenerateIdentity(), $"Protection: {protection.ToString()} IIId: {Id} Upgrade: {wearable.Upgrade} Result: Fail");
+
                         if (protection == UpgradeProtection.None)
                         {
                             session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("UPGRADE_FAILED"), 11));
@@ -826,6 +836,8 @@ namespace OpenNos.GameObject
                     }
                     else
                     {
+                        Logger.LogEvent("UPGRADE_WEAPON", session.GenerateIdentity(), $"Protection: {protection.ToString()} IIId: {Id} Upgrade: {wearable.Upgrade} Result: Success");
+
                         session.CurrentMapInstance.Broadcast(session.Character.GenerateEff(3005), session.Character.MapX, session.Character.MapY);
                         session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("UPGRADE_SUCCESS"), 12));
                         session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADE_SUCCESS"), 0));

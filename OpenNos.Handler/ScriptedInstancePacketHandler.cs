@@ -181,6 +181,9 @@ namespace OpenNos.Handler
                         session.SendPacket(session.Character.GenerateRaid(4, false));
                         session.SendPacket(session.Character.GenerateRaid(3, false));
                     });
+
+                    Logger.LogEvent("RAID_START", Session.GenerateIdentity(), $"RaidId: {Session.Character.Group.GroupId}");
+
                 }
                 else
                 {
