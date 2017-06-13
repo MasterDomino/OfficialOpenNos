@@ -3720,7 +3720,7 @@ namespace OpenNos.GameObject
             if (group != null)
             {
                 int levelSum = group.Characters.Sum(g => g.Character.JobLevel);
-                partySize = group.CharacterCount - 1;
+                partySize = group.CharacterCount;
                 partyPenalty = (6f / partySize) / levelSum;
             }
 
@@ -3743,7 +3743,7 @@ namespace OpenNos.GameObject
             if (group != null)
             {
                 int levelSum = group.Characters.Sum(g => g.Character.Level);
-                partySize = group.CharacterCount - 1;
+                partySize = group.CharacterCount;
                 partyPenalty = (6f / partySize) / levelSum;
             }
 
