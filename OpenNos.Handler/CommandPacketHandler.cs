@@ -695,12 +695,12 @@ namespace OpenNos.Handler
         {
             Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), "[ChannelInfo]");
 
-            Session.SendPacket(Session.Character.GenerateSay("---------CHANNEL INFO---------", 11));
+            Session.SendPacket(Session.Character.GenerateSay($"-----------Channel Info-----------\n-------------Channel:{ServerManager.Instance.ChannelId}-------------", 11));
             foreach (ClientSession session in ServerManager.Instance.Sessions)
             {
                 Session.SendPacket(Session.Character.GenerateSay($"CharacterName: {session.Character.Name} SessionId: {session.SessionId}", 12));
             }
-            Session.SendPacket(Session.Character.GenerateSay("---------------------------------------", 11));
+            Session.SendPacket(Session.Character.GenerateSay("----------------------------------------", 11));
         }
 
         /// <summary>
@@ -1686,7 +1686,7 @@ namespace OpenNos.Handler
                 {
                     if (monst.IsAlive)
                     {
-                        Session.CurrentMapInstance.Broadcast($"su 1 {Session.Character.CharacterId} 3 {monst.MapMonsterId} 1114 4 11 4260 0 0 0 0 {6000} 3 0");
+                        Session.CurrentMapInstance.Broadcast($"su 1 {Session.Character.CharacterId} 3 {monst.MapMonsterId} 1114 4 11 4260 0 0 0 0 60000 3 0");
                         Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MONSTER_REMOVED"), monst.MapMonsterId, monst.Monster.Name, monst.MapId, monst.MapX, monst.MapY), 12));
                         Session.CurrentMapInstance.RemoveMonster(monst);
                         if (DAOFactory.MapMonsterDAO.LoadById(monst.MapMonsterId) != null)
@@ -1986,7 +1986,6 @@ namespace OpenNos.Handler
             Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("HERO_XPRATE_NOW")}: {ServerManager.Instance.HeroXpRate} ", 13));
             Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("FAIRYXP_RATE_NOW")}: {ServerManager.Instance.FairyXpRate} ", 13));
             Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("SERVER_WORKING_TIME")}: {(Process.GetCurrentProcess().StartTime - DateTime.Now).ToString(@"d\ hh\:mm\:ss")} ", 13));
-            Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("MEMORY")}: {GC.GetTotalMemory(true) / (1024 * 1024)}MB ", 13));
 
             foreach (string message in CommunicationServiceClient.Instance.RetrieveServerStatistics())
             {
@@ -2086,9 +2085,6 @@ namespace OpenNos.Handler
                                 possibilities.Add(new MapCell { X = x, Y = y });
                             }
                         }
-
-                        // TODO: Find a fancy way to parallelize as we dont care about order it needs
-                        //       to be randomized
                         foreach (MapCell possibilitie in possibilities.OrderBy(s => random.Next()))
                         {
                             short mapx = (short)(Session.Character.PositionX + possibilitie.X);
@@ -2194,12 +2190,9 @@ namespace OpenNos.Handler
                         if (!session.Character.IsChangingMapInstance && Session.HasCurrentMapInstance)
                         {
                             List<MapCell> possibilities = new List<MapCell>();
-                            for (short x = -6; x < 6; x++)
+                            for (short x = -6, y = -6; x < 6 && y < 6; x++, y++)
                             {
-                                for (short y = -6; y < 6; y++)
-                                {
-                                    possibilities.Add(new MapCell { X = x, Y = y });
-                                }
+                                possibilities.Add(new MapCell { X = x, Y = y });
                             }
 
                             short mapXPossibility = Session.Character.PositionX;
@@ -2227,10 +2220,8 @@ namespace OpenNos.Handler
                 else
                 {
                     ClientSession targetSession = ServerManager.Instance.GetSessionByCharacterName(teleportToMePacket.CharacterName);
-
                     if (targetSession != null && !targetSession.Character.IsChangingMapInstance)
                     {
-                        // clear any shop or trade on target character
                         targetSession.Character.Dispose();
                         targetSession.Character.IsSitting = false;
                         ServerManager.Instance.ChangeMapInstance(targetSession.Character.CharacterId, Session.Character.MapInstanceId, (short)(Session.Character.PositionX + 1), (short)(Session.Character.PositionY + 1));
@@ -2390,8 +2381,11 @@ namespace OpenNos.Handler
                     };
                     Session.Character.InsertOrUpdatePenalty(log);
                     int penaltyCount = DAOFactory.PenaltyLogDAO.LoadByAccount(character.AccountId).Count(p => p.Penalty == PenaltyType.Warning);
+
                     switch (penaltyCount)
                     {
+                        case 1: break;
+
                         case 2:
                             MuteMethod(characterName, "Auto-Warning mute: 2 strikes", 30);
                             break;
@@ -2408,7 +2402,7 @@ namespace OpenNos.Handler
                             MuteMethod(characterName, "Auto-Warning mute: 5 strikes", 1440);
                             break;
 
-                        case 6:
+                        default:
                             MuteMethod(characterName, "You've been THUNDERSTRUCK", 6969); // imagined number as for I = √(-1), complex z = a + bi
                             break;
                     }
@@ -2507,10 +2501,7 @@ namespace OpenNos.Handler
             NpcMonster mateNpc = ServerManager.Instance.GetNpc(vnum);
             if (Session.CurrentMapInstance == Session.Character.Miniland && mateNpc != null)
             {
-                if (level == 0)
-                {
-                    level = 1;
-                }
+                level = level == 0 ? (byte)1 : level;
                 Mate mate = new Mate(Session.Character, mateNpc, level, mateType);
                 Session.Character.AddPet(mate);
             }
