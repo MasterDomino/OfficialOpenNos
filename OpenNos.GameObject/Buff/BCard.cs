@@ -237,7 +237,7 @@ namespace OpenNos.GameObject
 
                                 if (SkillVNum.HasValue)
                                 {
-                                    character.LastSkillCombo = DateTime.Now;
+                                    character.InSkillCombo = true;
                                     Skill skill = ServerManager.Instance.GetSkill(SkillVNum.Value);
                                     Skill newSkill = ServerManager.Instance.GetSkill((short)SecondData);
                                     Observable.Timer(TimeSpan.FromMilliseconds(100)).Subscribe(observer =>

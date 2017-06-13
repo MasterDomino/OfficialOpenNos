@@ -969,7 +969,7 @@ namespace OpenNos.Handler
                 Session.SendPacket($"cancel 2 {targetId}");
             }
 
-            if (castingId < 11 && Session.Character.LastSkillUse.AddSeconds(1) < DateTime.Now && !noComboReset)
+            if (castingId < 11 && Session.Character.LastSkillUse.AddSeconds(1) < DateTime.Now && !noComboReset && Session.Character.InSkillCombo)
             {
                 Session.SendPackets(Session.Character.GenerateQuicklist());
                 Session.SendPacket("mslot 0 -1");

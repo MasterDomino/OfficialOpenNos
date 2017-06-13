@@ -62,7 +62,7 @@ namespace OpenNos.GameObject
 
         public bool NoMove { get; set; }
 
-        public DateTime LastSkillCombo { get; set; }
+        public bool InSkillCombo { get; set; }
 
         public List<BCard> EquipmentBCards { get; set; }
 
