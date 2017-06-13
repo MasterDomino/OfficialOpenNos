@@ -32,7 +32,7 @@ namespace OpenNos.DAL.EF
         {
             using (var context = DataAccessHelper.CreateContext())
             {
-                foreach (NpcMonster npcMonster in context.NpcMonster.Where(s => s.Name.Contains(name)))
+                foreach (NpcMonster npcMonster in context.NpcMonster.Where(s => string.IsNullOrEmpty(name) ? s.Name.Equals(string.Empty) : s.Name.Contains(name)))
                 {
                     yield return _mapper.Map<NpcMonsterDTO>(npcMonster);
                 }
