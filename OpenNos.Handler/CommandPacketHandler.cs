@@ -1240,8 +1240,9 @@ namespace OpenNos.Handler
 
                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateGuri(guriCommandPacket.Type, guriCommandPacket.Argument, Session.Character.CharacterId, guriCommandPacket.Value));
             }
+            Session.Character.GenerateSay(GuriCommandPacket.ReturnHelp(), 10);
         }
-        
+
         /// <summary>
         /// $HairColor Command
         /// </summary>
@@ -1758,19 +1759,23 @@ namespace OpenNos.Handler
         {
             if (searchItemPacket != null)
             {
-                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[SearchItem]Name: {searchItemPacket.Name} Page: {searchItemPacket.Page}");
+                string contents = searchItemPacket.Contents;
+                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[SearchItem]Contents: {(string.IsNullOrEmpty(contents) ? "none" : contents)}");
 
-                if (searchItemPacket.Page <= 0)
+                string name = string.Empty;
+                byte page = 0;
+                if (!string.IsNullOrEmpty(contents))
                 {
-                    searchItemPacket.Page = 1;
+                    string[] packetsplit = contents.Split(' ');
+                    bool withPage = byte.TryParse(packetsplit[0], out page);
+                    name = packetsplit.Length == 1 && withPage ? string.Empty : packetsplit.Skip(withPage ? 1 : 0).Aggregate((a, b) => a + ' ' + b);
                 }
-                searchItemPacket.Page--;
-                IEnumerable<ItemDTO> itemlist = DAOFactory.ItemDAO.FindByName(string.IsNullOrEmpty(searchItemPacket.Name) ? string.Empty : searchItemPacket.Name).OrderBy(s => s.VNum).Skip(searchItemPacket.Page * 200).Take(200).ToList();
+                IEnumerable<ItemDTO> itemlist = DAOFactory.ItemDAO.FindByName(name).OrderBy(s => s.VNum).Skip(page * 200).Take(200).ToList();
                 if (itemlist.Any())
                 {
                     foreach (ItemDTO item in itemlist)
                     {
-                        Session.SendPacket(Session.Character.GenerateSay($"Item: {(string.IsNullOrEmpty(item.Name) ? "none" : item.Name)} VNum: {item.VNum}", 12));
+                        Session.SendPacket(Session.Character.GenerateSay($"[SearchItem:{page}]Item: {(string.IsNullOrEmpty(item.Name) ? "none" : item.Name)} VNum: {item.VNum}", 12));
                     }
                 }
                 else
@@ -1792,19 +1797,23 @@ namespace OpenNos.Handler
         {
             if (searchMonsterPacket != null)
             {
-                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[SearchMonster]Name: {searchMonsterPacket.Name} Page: {searchMonsterPacket.Page}");
+                string contents = searchMonsterPacket.Contents;
+                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[SearchMonster]Contents: {(string.IsNullOrEmpty(contents) ? "none" : contents)}");
 
-                if (searchMonsterPacket.Page <= 0)
+                string name = string.Empty;
+                byte page = 0;
+                if (!string.IsNullOrEmpty(contents))
                 {
-                    searchMonsterPacket.Page = 1;
+                    string[] packetsplit = contents.Split(' ');
+                    bool withPage = byte.TryParse(packetsplit[0], out page);
+                    name = packetsplit.Length == 1 && withPage ? string.Empty : packetsplit.Skip(withPage ? 1 : 0).Aggregate((a, b) => a + ' ' + b);
                 }
-                searchMonsterPacket.Page--;
-                IEnumerable<NpcMonsterDTO> monsterlist = DAOFactory.NpcMonsterDAO.FindByName(string.IsNullOrEmpty(searchMonsterPacket.Name) ? string.Empty : searchMonsterPacket.Name).OrderBy(s => s.NpcMonsterVNum).Skip(searchMonsterPacket.Page * 200).Take(200).ToList();
+                IEnumerable<NpcMonsterDTO> monsterlist = DAOFactory.NpcMonsterDAO.FindByName(name).OrderBy(s => s.NpcMonsterVNum).Skip(page * 200).Take(200).ToList();
                 if (monsterlist.Any())
                 {
                     foreach (NpcMonsterDTO npcMonster in monsterlist)
                     {
-                        Session.SendPacket(Session.Character.GenerateSay($"Monster: {(string.IsNullOrEmpty(npcMonster.Name) ? "none" : npcMonster.Name)} VNum: {npcMonster.NpcMonsterVNum}", 12));
+                        Session.SendPacket(Session.Character.GenerateSay($"[SearchMonster:{page}]Monster: {(string.IsNullOrEmpty(npcMonster.Name) ? "none" : npcMonster.Name)} VNum: {npcMonster.NpcMonsterVNum}", 12));
                     }
                 }
                 else
@@ -2484,6 +2493,7 @@ namespace OpenNos.Handler
 
                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateGuri(15, zoomPacket.Value, Session.Character.CharacterId));
             }
+            Session.Character.GenerateSay(ZoomPacket.ReturnHelp(), 10);
         }
 
         /// <summary>
