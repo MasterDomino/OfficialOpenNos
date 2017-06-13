@@ -25,11 +25,6 @@ namespace OpenNos.GameObject.CommandPackets
             return "$AddPartner MONSTERVNUM LEVEL";
         }
 
-        public override string ToString()
-        {
-            return $"AddPartner Command MonsterVNum: {MonsterVNum} Level: {Level}";
-        }
-
         #endregion
     }
 }

@@ -357,7 +357,6 @@ namespace OpenNos.Handler
             {
                 Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[BlockRep]CharacterName: {blockRepPacket.CharacterName} Reason: {blockRepPacket.Reason} Until: {DateTime.Now.AddMinutes(blockRepPacket.Duration)}");
 
-                Logger.Debug(blockRepPacket.ToString(), Session.Character.GenerateIdentity());
                 if (blockRepPacket.Duration == 0)
                 {
                     blockRepPacket.Duration = 60;

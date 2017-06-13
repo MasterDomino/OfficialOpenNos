@@ -25,11 +25,6 @@ namespace OpenNos.GameObject.CommandPackets
             return "$AddPet MONSTERVNUM LEVEL";
         }
 
-        public override string ToString()
-        {
-            return $"AddPet Command MonsterVNum: {MonsterVNum} Level: {Level}";
-        }
-
         #endregion
     }
 }

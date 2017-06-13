@@ -25,14 +25,5 @@ namespace OpenNos.GameObject.CommandPackets
         }
 
         #endregion
-
-        #region Methods
-
-        public override string ToString()
-        {
-            return $"Mute Command CharacterName: {CharacterName} Duration: {Duration} Reason: {Reason}";
-        }
-
-        #endregion
     }
 }
