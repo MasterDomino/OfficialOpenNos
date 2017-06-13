@@ -51,24 +51,16 @@ namespace OpenNos.Handler
         /// <param name="mutliTargetListPacket"></param>
         public void MultiTargetListHit(MultiTargetListPacket mutliTargetListPacket)
         {
-            PenaltyLogDTO penalty = Session.Account.PenaltyLogs.OrderByDescending(s => s.DateEnd).FirstOrDefault();
-            if (Session.Character.IsMuted() && penalty != null)
+            bool isMuted = Session.Character.MuteMessage();
+            if (isMuted || Session.Character.IsVehicled)
             {
                 Session.SendPacket("cancel 0 0");
-                Session.CurrentMapInstance?.Broadcast(Session.Character.Gender == GenderType.Female ? Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("MUTED_FEMALE"), 1) : Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("MUTED_MALE"), 1));
-                Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MUTE_TIME"), (penalty.DateEnd - DateTime.Now).ToString("hh\\:mm\\:ss")), 11));
-                Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MUTE_TIME"), (penalty.DateEnd - DateTime.Now).ToString("hh\\:mm\\:ss")), 12));
                 return;
             }
             if ((DateTime.Now - Session.Character.LastTransform).TotalSeconds < 3)
             {
                 Session.SendPacket("cancel 0 0");
                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("CANT_ATTACKNOW"), 0));
-                return;
-            }
-            if (Session.Character.IsVehicled)
-            {
-                Session.SendPacket("cancel 0 0");
                 return;
             }
             Logger.Debug(Session.Character.GenerateIdentity(), mutliTargetListPacket.ToString());
@@ -108,26 +100,14 @@ namespace OpenNos.Handler
             }
             if (Session.Character.CanFight && useSkillPacket != null)
             {
-                PenaltyLogDTO penalty = Session.Account.PenaltyLogs.OrderByDescending(s => s.DateEnd).FirstOrDefault();
-                if (Session.Character.IsMuted() && penalty != null)
-                {
-                    if (Session.Character.Gender == GenderType.Female)
-                    {
-                        Session.SendPacket("cancel 0 0");
-                        Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("MUTED_FEMALE"), 1));
-                        Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MUTE_TIME"), (penalty.DateEnd - DateTime.Now).ToString("hh\\:mm\\:ss")), 11));
-                    }
-                    else
-                    {
-                        Session.SendPacket("cancel 0 0");
-                        Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("MUTED_MALE"), 1));
-                        Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MUTE_TIME"), (penalty.DateEnd - DateTime.Now).ToString("hh\\:mm\\:ss")), 11));
-                    }
-                    return;
-                }
-
                 Logger.Debug(Session.Character.GenerateIdentity(), useSkillPacket.ToString());
 
+                bool isMuted = Session.Character.MuteMessage();
+                if (isMuted || Session.Character.IsVehicled || Session.Character.InvisibleGm)
+                {
+                    Session.SendPacket("cancel 0 0");
+                    return;
+                }
                 if (useSkillPacket.MapX.HasValue && useSkillPacket.MapY.HasValue)
                 {
                     Session.Character.PositionX = useSkillPacket.MapX.Value;
@@ -136,11 +116,6 @@ namespace OpenNos.Handler
                 if (Session.Character.IsSitting)
                 {
                     Session.Character.Rest();
-                }
-                if (Session.Character.IsVehicled || Session.Character.InvisibleGm)
-                {
-                    Session.SendPacket("cancel 0 0");
-                    return;
                 }
                 switch (useSkillPacket.UserType)
                 {
@@ -186,23 +161,10 @@ namespace OpenNos.Handler
         /// <param name="useAOESkillPacket"></param>
         public void UseZonesSkill(UseAOESkillPacket useAOESkillPacket)
         {
-            PenaltyLogDTO penalty = Session.Account.PenaltyLogs.OrderByDescending(s => s.DateEnd).FirstOrDefault();
-            if (Session.Character.IsMuted() && penalty != null)
+            bool isMuted = Session.Character.MuteMessage();
+            if (isMuted || Session.Character.IsVehicled)
             {
-                if (Session.Character.Gender == GenderType.Female)
-                {
-                    Session.SendPacket("cancel 0 0");
-                    Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("MUTED_FEMALE"), 1));
-                    Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MUTE_TIME"), (penalty.DateEnd - DateTime.Now).ToString("hh\\:mm\\:ss")), 11));
-                    Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MUTE_TIME"), (penalty.DateEnd - DateTime.Now).ToString("hh\\:mm\\:ss")), 12));
-                }
-                else
-                {
-                    Session.SendPacket("cancel 0 0");
-                    Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("MUTED_MALE"), 1));
-                    Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MUTE_TIME"), (penalty.DateEnd - DateTime.Now).ToString("hh\\:mm\\:ss")), 11));
-                    Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MUTE_TIME"), (penalty.DateEnd - DateTime.Now).ToString("hh\\:mm\\:ss")), 12));
-                }
+                Session.SendPacket("cancel 0 0");
             }
             else
             {
@@ -210,11 +172,6 @@ namespace OpenNos.Handler
                 {
                     Session.SendPacket("cancel 0 0");
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("CANT_ATTACK"), 0));
-                    return;
-                }
-                if (Session.Character.IsVehicled)
-                {
-                    Session.SendPacket("cancel 0 0");
                     return;
                 }
                 Logger.Debug(Session.Character.GenerateIdentity(), useAOESkillPacket.ToString());
@@ -312,7 +269,7 @@ namespace OpenNos.Handler
                     }
                 }
 
-                hitRequest.Skill.BCards.Where(s=>s.Type.Equals((byte)BCardType.CardType.Buff)).ToList().ForEach(s => s.ApplyBCards(target.Character));
+                hitRequest.Skill.BCards.Where(s => s.Type.Equals((byte)BCardType.CardType.Buff)).ToList().ForEach(s => s.ApplyBCards(target.Character));
 
                 switch (hitRequest.TargetHitType)
                 {
@@ -500,7 +457,7 @@ namespace OpenNos.Handler
                         Session.CurrentMapInstance?.Broadcast($"ct 1 {Session.Character.CharacterId} 1 {Session.Character.CharacterId} {ski.Skill.CastAnimation} {ski.Skill.CastEffect} {ski.Skill.SkillVNum}");
                         Session.CurrentMapInstance?.Broadcast($"su 1 {Session.Character.CharacterId} 1 {targetId} {ski.Skill.SkillVNum} {ski.Skill.Cooldown} {ski.Skill.AttackAnimation} {ski.Skill.Effect} {Session.Character.PositionX} {Session.Character.PositionY} 1 {(int)((double)Session.Character.Hp / Session.Character.HPLoad()) * 100} 0 -1 {ski.Skill.SkillType - 1}");
                         ClientSession target = ServerManager.Instance.GetSessionByCharacterId(targetId) ?? Session;
-                        ski.Skill.BCards.ForEach(s=>s.ApplyBCards(target.Character));
+                        ski.Skill.BCards.ForEach(s => s.ApplyBCards(target.Character));
                     }
                     else if (ski.Skill.TargetType == 1 && ski.Skill.HitType != 1)
                     {
@@ -528,8 +485,8 @@ namespace OpenNos.Handler
                                     ski.Skill.BCards.ForEach(s => s.ApplyBCards(Session.Character));
                                 });
                                 break;
-                                
-                                
+
+
                         }
                     }
                     else if (ski.Skill.TargetType == 0 && Session.HasCurrentMapInstance) // monster target

@@ -15,29 +15,37 @@
 using System;
 using System.Linq;
 using System.Reactive.Linq;
-using OpenNos.Data;
-using System.Collections.Generic;
 
 namespace OpenNos.GameObject
 {
     public class Buff
     {
         #region Members
-        
+
         public int Level;
-        public Card Card { get; set; }
-        public bool StaticBuff { get; set; }
-        public int RemainingTime { get; set; }
-        public DateTime Start { get; set; }
+
+        #endregion
+
+        #region Instantiation
 
         public Buff(int id, byte level)
         {
             Card = ServerManager.Instance.Cards.FirstOrDefault(s => s.CardId == id);
             Level = level;
         }
-        
 
         #endregion
 
+        #region Properties
+
+        public Card Card { get; set; }
+
+        public int RemainingTime { get; set; }
+
+        public DateTime Start { get; set; }
+
+        public bool StaticBuff { get; set; }
+
+        #endregion
     }
 }

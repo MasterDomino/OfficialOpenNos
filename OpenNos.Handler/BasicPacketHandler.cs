@@ -1135,6 +1135,11 @@ namespace OpenNos.Handler
                 {
                     if (Session.Character.Inventory.CountItem(speakerVNum) > 0)
                     {
+                        if (Session.Character.IsMuted())
+                        {
+                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("SPEAKER_CANT_BE_USED"), 10));
+                            return;
+                        }
                         string message = $"<{Language.Instance.GetMessageFromKey("SPEAKER")}> [{Session.Character.Name}]:";
                         for (int i = 6; i < guriPacket.Length; i++)
                         {
@@ -1144,14 +1149,8 @@ namespace OpenNos.Handler
                         {
                             message = message.Substring(0, 120);
                         }
-
                         message = message.Trim();
 
-                        if (Session.Character.IsMuted())
-                        {
-                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("SPEAKER_CANT_BE_USED"), 10));
-                            return;
-                        }
                         Session.Character.Inventory.RemoveItemAmount(speakerVNum);
                         ServerManager.Instance.Broadcast(Session.Character.GenerateSay(message, 13));
                     }
@@ -1344,12 +1343,12 @@ namespace OpenNos.Handler
                                 }
                                 else
                                 {
-                                    Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("ONLY_TEAM_LEADER_CAN_START"),10));
+                                    Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("ONLY_TEAM_LEADER_CAN_START"), 10));
                                 }
                             }
                             else
                             {
-                                Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NEED_TEAM"),10));
+                                Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NEED_TEAM"), 10));
                             }
                             return;
                         default:
@@ -1404,6 +1403,7 @@ namespace OpenNos.Handler
             {
                 Session.Disconnect();
             }
+            Session.Character.MuteMessage();
             Session.Character.DeleteTimeout();
             CommunicationServiceClient.Instance.PulseAccount(Session.Account.AccountId);
         }
@@ -1488,7 +1488,7 @@ namespace OpenNos.Handler
                                 Session.SendPacket(Session.Character.GenerateStat());
                             }
                             break;
-                        
+
                         default:
                             const int seed = 1012;
                             if (Session.Character.Inventory.CountItem(seed) < 10 && Session.Character.Level > 20)
@@ -1549,28 +1549,13 @@ namespace OpenNos.Handler
         /// <param name="sayPacket"></param>
         public void Say(SayPacket sayPacket)
         {
-            if (string.IsNullOrEmpty(sayPacket.Message))
+            if (string.IsNullOrWhiteSpace(sayPacket.Message))
             {
                 return;
             }
-            PenaltyLogDTO penalty = Session.Account.PenaltyLogs.OrderByDescending(s => s.DateEnd).FirstOrDefault();
+            bool isMuted = Session.Character.MuteMessage();
             string message = sayPacket.Message;
-            if (Session.Character.IsMuted() && penalty != null)
-            {
-                if (Session.Character.Gender == GenderType.Female)
-                {
-                    Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("MUTED_FEMALE"), 1));
-                    Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MUTE_TIME"), (penalty.DateEnd - DateTime.Now).ToString(@"hh\:mm\:ss")), 11));
-                    Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MUTE_TIME"), (penalty.DateEnd - DateTime.Now).ToString(@"hh\:mm\:ss")), 12));
-                }
-                else
-                {
-                    Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("MUTED_MALE"), 1));
-                    Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MUTE_TIME"), (penalty.DateEnd - DateTime.Now).ToString(@"hh\:mm\:ss")), 11));
-                    Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MUTE_TIME"), (penalty.DateEnd - DateTime.Now).ToString(@"hh\:mm\:ss")), 12));
-                }
-            }
-            else
+            if (!isMuted)
             {
                 byte type = 0;
                 if (Session.Character.Authority == AuthorityType.Moderator)

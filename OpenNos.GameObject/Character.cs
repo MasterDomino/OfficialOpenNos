@@ -34,7 +34,7 @@ namespace OpenNos.GameObject
     public class Character : CharacterDTO
     {
         #region Members
-        
+
         private Random _random;
         private byte _speed;
 
@@ -543,7 +543,7 @@ namespace OpenNos.GameObject
                 {
                     if (Session.CurrentMapInstance?.MapInstanceType == MapInstanceType.RaidInstance)
                     {
-                        Session.SendPacket(Session.Character.GenerateRaid(3, false));
+                        Session.SendPacket(GenerateRaid(3, false));
                     }
 
                     WearableInstance amulet = Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.Amulet, InventoryType.Wear);
@@ -613,9 +613,9 @@ namespace OpenNos.GameObject
                         }
                         if (change)
                         {
-                            if (Session.Character.Group != null)
+                            if (Group != null)
                             {
-                                Session.Character.Group.Characters.ForEach(s => ServerManager.Instance.GetSessionByCharacterId(s.Character.CharacterId)?.SendPacket(Session.Character.GenerateStat()));
+                                Group.Characters.ForEach(s => ServerManager.Instance.GetSessionByCharacterId(s.Character.CharacterId)?.SendPacket(GenerateStat()));
                             }
                             else
                             {
@@ -707,7 +707,7 @@ namespace OpenNos.GameObject
                                     Session.SendPacket(GenerateStat());
                                     Session.SendPacket(GenerateStatChar());
 
-                                    Logger.LogEvent("CHARACTER_SPECIALIST_RETURN", Session.GenerateIdentity(), $"SpCooldown: {Session.Character.SpCooldown}");
+                                    Logger.LogEvent("CHARACTER_SPECIALIST_RETURN", Session.GenerateIdentity(), $"SpCooldown: {SpCooldown}");
 
                                     Observable.Timer(TimeSpan.FromMilliseconds(SpCooldown * 1000)).Subscribe(o =>
                                     {
@@ -857,7 +857,7 @@ namespace OpenNos.GameObject
                 if (item.IsBound && item.ItemDeleteTime != null && item.ItemDeleteTime < DateTime.Now)
                 {
                     Inventory.DeleteById(item.Id);
-                    Session.Character.EquipmentBCards.RemoveAll(o => o.ItemVNum == item.ItemVNum);
+                    EquipmentBCards.RemoveAll(o => o.ItemVNum == item.ItemVNum);
                     if (item.Type == InventoryType.Wear)
                     {
                         Session.SendPacket(GenerateEquipment());
@@ -911,7 +911,7 @@ namespace OpenNos.GameObject
 
         public string GenerateCMap()
         {
-            return $"c_map 0 {MapInstance.Map.MapId} {(MapInstance.MapInstanceType!=MapInstanceType.BaseMapInstance?1:0)}";
+            return $"c_map 0 {MapInstance.Map.MapId} {(MapInstance.MapInstanceType != MapInstanceType.BaseMapInstance ? 1 : 0)}";
         }
 
         public string GenerateCMode()
@@ -1530,7 +1530,7 @@ namespace OpenNos.GameObject
 
         public string GenerateLevelUp()
         {
-            Logger.LogEvent("LEVELUP", Session.GenerateIdentity(), $"Level: {Level} JobLevel: {JobLevel} SPLevel: {Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear)?.SpLevel} HeroLevel: {HeroLevel} MapId: {Session.CurrentMapInstance?.Map.MapId} MapX: {Session.Character.PositionX} MapY: {Session.Character.PositionY}");
+            Logger.LogEvent("LEVELUP", Session.GenerateIdentity(), $"Level: {Level} JobLevel: {JobLevel} SPLevel: {Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear)?.SpLevel} HeroLevel: {HeroLevel} MapId: {Session.CurrentMapInstance?.Map.MapId} MapX: {PositionX} MapY: {PositionY}");
 
             return $"levelup {CharacterId}";
         }
@@ -2552,6 +2552,19 @@ namespace OpenNos.GameObject
             return Session.Account.PenaltyLogs.Any(s => s.Penalty == PenaltyType.Muted && s.DateEnd > DateTime.Now);
         }
 
+        public bool MuteMessage()
+        {
+            PenaltyLogDTO penalty = Session.Account.PenaltyLogs.OrderByDescending(s => s.DateEnd).FirstOrDefault();
+            if (IsMuted() && penalty != null)
+            {
+                Session.CurrentMapInstance?.Broadcast(Gender == GenderType.Female ? GenerateSay(Language.Instance.GetMessageFromKey("MUTED_FEMALE"), 1) : GenerateSay(Language.Instance.GetMessageFromKey("MUTED_MALE"), 1));
+                Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MUTE_TIME"), (penalty.DateEnd - DateTime.Now).ToString(@"hh\:mm\:ss")), 11));
+                Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MUTE_TIME"), (penalty.DateEnd - DateTime.Now).ToString(@"hh\:mm\:ss")), 12));
+                return true;
+            }
+            return false;
+        }
+
         public int IsReputHero()
         {
             int i = 0;
@@ -2705,7 +2718,7 @@ namespace OpenNos.GameObject
                 }
 
                 byte fixSpeed = (byte)GetBuff(CardType.Move, (byte)AdditionalTypes.Move.SetMovement)[0];
-                if(fixSpeed != 0)
+                if (fixSpeed != 0)
                 {
                     Speed = fixSpeed;
                 }
@@ -3679,7 +3692,7 @@ namespace OpenNos.GameObject
 
         public void AddStaticBuff(StaticBuffDTO staticBuff)
         {
-            Buff bf = new Buff(staticBuff.CardId, Session.Character.Level)
+            Buff bf = new Buff(staticBuff.CardId, Level)
             {
                 Start = DateTime.Now,
                 StaticBuff = true
@@ -3713,7 +3726,7 @@ namespace OpenNos.GameObject
             });
 
             Session.SendPacket($"vb {bf.Card.CardId} 1 {bf.RemainingTime * 10}");
-            Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), Name), 12));
+            Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), Name), 12));
         }
 
         public void AddBuff(Buff indicator)
@@ -3723,21 +3736,18 @@ namespace OpenNos.GameObject
             indicator.RemainingTime = indicator.Card.Duration;
             indicator.Start = DateTime.Now;
 
-            Session.SendPacket($"bf 1 {Session.Character.CharacterId} 0.{indicator.Card.CardId}.{indicator.RemainingTime} {Level}");
-            Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), Name), 20));
+            Session.SendPacket($"bf 1 {CharacterId} 0.{indicator.Card.CardId}.{indicator.RemainingTime} {Level}");
+            Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), Name), 20));
 
             indicator.Card.BCards.ForEach(c => c.ApplyBCards(Session.Character));
-            Observable.Timer(TimeSpan.FromMilliseconds(indicator.Card.Duration * 100))
-                .Subscribe(
-                    o =>
-                    {
-                        RemoveBuff(indicator.Card.CardId);
-                        if (indicator.Card.TimeoutBuff != 0 && ServerManager.Instance.RandomNumber() <
-                            indicator.Card.TimeoutBuffChance)
-                        {
-                            AddBuff(new Buff(indicator.Card.TimeoutBuff, Level));
-                        }
-                    });
+            Observable.Timer(TimeSpan.FromMilliseconds(indicator.Card.Duration * 100)).Subscribe(o =>
+            {
+                RemoveBuff(indicator.Card.CardId);
+                if (indicator.Card.TimeoutBuff != 0 && ServerManager.Instance.RandomNumber() < indicator.Card.TimeoutBuffChance)
+                {
+                    AddBuff(new Buff(indicator.Card.TimeoutBuff, Level));
+                }
+            });
             if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.Move && !s.SubType.Equals((byte)AdditionalTypes.Move.MovementImpossible / 10)))
             {
                 LastSpeedChange = DateTime.Now;
@@ -3764,12 +3774,12 @@ namespace OpenNos.GameObject
                 if (indicator.StaticBuff)
                 {
                     Session.SendPacket($"vb {indicator.Card.CardId} 0 {indicator.Card.Duration}");
-                    Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("EFFECT_TERMINATED"), Name), 11));
+                    Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("EFFECT_TERMINATED"), Name), 11));
                 }
                 else
                 {
-                    Session.SendPacket($"bf 1 {Session.Character.CharacterId} 0.{indicator.Card.CardId}.0 {Level}");
-                    Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("EFFECT_TERMINATED"), Name), 20));
+                    Session.SendPacket($"bf 1 {CharacterId} 0.{indicator.Card.CardId}.0 {Level}");
+                    Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("EFFECT_TERMINATED"), Name), 20));
                 }
 
                 if (Buff[indicator.Card.CardId] != null)
