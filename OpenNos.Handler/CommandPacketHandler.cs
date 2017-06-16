@@ -2248,6 +2248,8 @@ namespace OpenNos.Handler
         {
             if (sudoPacket != null)
             {
+                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Sudo]CharacterName: {sudoPacket.CharacterName} CommandContents:{sudoPacket.CommandContents}");
+
                 ClientSession session = ServerManager.Instance.GetSessionByCharacterName(sudoPacket.CharacterName);
                 if (session != null)
                 {
