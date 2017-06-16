@@ -13,6 +13,8 @@
  */
 
 using OpenNos.Core;
+using OpenNos.Core.Handling;
+using OpenNos.Core.Networking.Communication.Scs.Communication.Messages;
 using OpenNos.DAL;
 using OpenNos.Data;
 using OpenNos.Domain;
@@ -2235,6 +2237,30 @@ namespace OpenNos.Handler
             else
             {
                 Session.SendPacket(Session.Character.GenerateSay(TeleportToMePacket.ReturnHelp(), 10));
+            }
+        }
+
+        /// <summary>
+        /// $Sudo Command
+        /// </summary>
+        /// <param name="sudoPacket"></param>
+        public void CharacterChange(SudoPacket sudoPacket)
+        {
+            if (sudoPacket != null)
+            {
+                ClientSession session = ServerManager.Instance.GetSessionByCharacterName(sudoPacket.CharacterName);
+                if (session != null)
+                {
+                    string commandContents = sudoPacket.CommandContents;
+                    if (!string.IsNullOrWhiteSpace(commandContents))
+                    {
+                        session.ReceivePacket(commandContents);
+                    }
+                }
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay(SudoPacket.ReturnHelp(), 10));
             }
         }
 

@@ -25,6 +25,7 @@ using System.Configuration;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
+using System.Text;
 
 namespace OpenNos.GameObject
 {
@@ -177,7 +178,7 @@ namespace OpenNos.GameObject
                 if (Character.MapInstance.MapInstanceType == MapInstanceType.TimeSpaceInstance || Character.MapInstance.MapInstanceType == MapInstanceType.RaidInstance)
                 {
                     Character.MapInstance.InstanceBag.DeadList.Add(Character.CharacterId);
-                    if(Character.MapInstance.MapInstanceType == MapInstanceType.RaidInstance)
+                    if (Character.MapInstance.MapInstanceType == MapInstanceType.RaidInstance)
                     {
                         Character?.Group?.Characters.ForEach(s =>
                         {
@@ -233,6 +234,13 @@ namespace OpenNos.GameObject
             Account = account;
             CommunicationServiceClient.Instance.ConnectAccount(ServerManager.Instance.WorldId, account.AccountId, SessionId);
             IsAuthenticated = true;
+        }
+
+        public void ReceivePacket(string packet)
+        {
+            string header = packet.Split(' ')[0];
+            TriggerHandler(header, $"{LastKeepAliveIdentity} {packet}", false);
+            LastKeepAliveIdentity += 1;
         }
 
         //[Obsolete("Primitive string operations will be removed in future, use PacketDefinition SendPacket instead. SendPacket with string parameter should only be used for debugging.")]

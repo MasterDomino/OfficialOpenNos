@@ -1458,7 +1458,7 @@ namespace OpenNos.GameObject
         {
             // TODO: Parallelization of family load
             FamilyList = new List<Family>();
-            ThreadSafeSortedList<int, Family> _family = new ThreadSafeSortedList<int, Family>();
+            ThreadSafeSortedList<long, Family> _family = new ThreadSafeSortedList<long, Family>();
             Parallel.ForEach(DAOFactory.FamilyDAO.LoadAll(), familyDTO =>
             {
                 Family family = (Family)familyDTO;
@@ -1478,6 +1478,7 @@ namespace OpenNos.GameObject
                     }
                 }
                 family.FamilyLogs = DAOFactory.FamilyLogDAO.LoadByFamilyId(family.FamilyId).ToList();
+                _family[family.FamilyId] = family;
             });
             FamilyList.AddRange(_family.GetAllItems());
         }
@@ -1516,7 +1517,7 @@ namespace OpenNos.GameObject
             try
             {
                 Mails = DAOFactory.MailDAO.LoadAll().ToList();
-                Parallel.ForEach(Sessions.Where(c => c.IsConnected), session => session.Character?.RefreshMail()); // TODO: TEST!
+                Parallel.ForEach(Sessions.Where(c => c.IsConnected), session => session.Character?.RefreshMail());
             }
             catch (Exception e)
             {
@@ -1526,7 +1527,6 @@ namespace OpenNos.GameObject
 
         private void OnBazaarRefresh(object sender, EventArgs e)
         {
-            // TODO: Parallelization of bazaar.
             long BazaarId = (long)sender;
             BazaarItemDTO bzdto = DAOFactory.BazaarItemDAO.LoadById(BazaarId);
             BazaarItemLink bzlink = BazaarList.FirstOrDefault(s => s.BazaarItem.BazaarItemId == BazaarId);
