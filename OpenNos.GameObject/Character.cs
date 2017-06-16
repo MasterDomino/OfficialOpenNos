@@ -2587,6 +2587,7 @@ namespace OpenNos.GameObject
             return Reput <= 5000000 ? 26 : 27;
         }
 
+        public void GiftAdd(short itemVNum, byte amount, byte rare = 0, short design = 0)
         /// <summary>
         /// Get Stuff Buffs Useful for Stats for example
         /// </summary>
@@ -2616,8 +2617,9 @@ namespace OpenNos.GameObject
             return new[] { value1, value2 };
         }
 
-        public void GiftAdd(short itemVNum, byte amount, byte rare = 0)
+        public void GiftAdd(short itemVNum, byte amount, byte rare = 0, short design = 0)
         {
+            //TODO add the rare support
             if (Inventory != null)
             {
                 lock (Inventory)
@@ -2625,6 +2627,7 @@ namespace OpenNos.GameObject
                     ItemInstance newItem = Inventory.InstantiateItemInstance(itemVNum, CharacterId, amount);
                     if (newItem != null)
                     {
+                        newItem.Design = design;
                         if (newItem.Item.ItemType == ItemType.Armor || newItem.Item.ItemType == ItemType.Weapon || newItem.Item.ItemType == ItemType.Shell)
                         {
                             ((WearableInstance)newItem).RarifyItem(Session, RarifyMode.Drop, RarifyProtection.None);
