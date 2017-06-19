@@ -119,6 +119,8 @@ namespace OpenNos.GameObject
 
         public int GoldRate { get; set; }
 
+        public byte MaxUpgrade { get; set; }
+
         public List<Group> GroupList { get; set; } = new List<Group>();
 
         public List<Group> Groups => GroupsThreadSafe.GetAllItems();
@@ -353,7 +355,7 @@ namespace OpenNos.GameObject
                             bool revive = true;
                             for (int i = 1; i <= 30; i++)
                             {
-                                await Task.Delay(1000);
+                                await Task.Delay(1000).ConfigureAwait(false);
                                 if (Session.Character.Hp > 0)
                                 {
                                     revive = false;
@@ -460,10 +462,7 @@ namespace OpenNos.GameObject
                     {
                         session.SendPacket(visibleSession.Character.GenerateIn());
                         session.SendPacket(visibleSession.Character.GenerateGidx());
-                        visibleSession.Character.Mates.Where(m => m.IsTeamMember && m.CharacterId != session.Character.CharacterId).ToList().ForEach(mate =>
-                        {
-                            session.SendPacket(mate.GenerateIn());
-                        });
+                        visibleSession.Character.Mates.Where(m => m.IsTeamMember && m.CharacterId != session.Character.CharacterId).ToList().ForEach(mate => session.SendPacket(mate.GenerateIn()));
                     });
 
                     session.SendPackets(session.CurrentMapInstance.GetMapItems());
@@ -772,6 +771,7 @@ namespace OpenNos.GameObject
             MaxSPLevel = byte.Parse(ConfigurationManager.AppSettings["MaxSPLevel"]);
             MaxHeroLevel = byte.Parse(ConfigurationManager.AppSettings["MaxHeroLevel"]);
             HeroicStartLevel = byte.Parse(ConfigurationManager.AppSettings["HeroicStartLevel"]);
+            MaxUpgrade = byte.Parse(ConfigurationManager.AppSettings["MaxUpgrade"]);
             Schedules = ConfigurationManager.GetSection("eventScheduler") as List<Schedule>;
             Mails = DAOFactory.MailDAO.LoadAll().ToList();
 
