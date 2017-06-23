@@ -13,8 +13,6 @@
  */
 
 using OpenNos.Core;
-using OpenNos.Core.Handling;
-using OpenNos.Core.Networking.Communication.Scs.Communication.Messages;
 using OpenNos.DAL;
 using OpenNos.Data;
 using OpenNos.Domain;
@@ -1322,6 +1320,7 @@ namespace OpenNos.Handler
             if (instanceMusicPacket != null)
             {
                 Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[InstanceMusic]SongId: {instanceMusicPacket.Music} Mode: {instanceMusicPacket.Maps}");
+
                 // method in a method yay! \o/
                 void changeMusic(bool isRevert)
                 {
@@ -1996,6 +1995,32 @@ namespace OpenNos.Handler
         }
 
         /// <summary>
+        /// $Sudo Command
+        /// </summary>
+        /// <param name="sudoPacket"></param>
+        public void SudoCommand(SudoPacket sudoPacket)
+        {
+            if (sudoPacket != null)
+            {
+                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Sudo]CharacterName: {sudoPacket.CharacterName} CommandContents:{sudoPacket.CommandContents}");
+
+                ClientSession session = ServerManager.Instance.GetSessionByCharacterName(sudoPacket.CharacterName);
+                if (session != null)
+                {
+                    string commandContents = sudoPacket.CommandContents;
+                    if (!string.IsNullOrWhiteSpace(commandContents))
+                    {
+                        session.ReceivePacket(commandContents);
+                    }
+                }
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay(SudoPacket.ReturnHelp(), 10));
+            }
+        }
+
+        /// <summary>
         /// $Summon Command
         /// </summary>
         /// <param name="summonPacket"></param>
@@ -2237,32 +2262,6 @@ namespace OpenNos.Handler
             else
             {
                 Session.SendPacket(Session.Character.GenerateSay(TeleportToMePacket.ReturnHelp(), 10));
-            }
-        }
-
-        /// <summary>
-        /// $Sudo Command
-        /// </summary>
-        /// <param name="sudoPacket"></param>
-        public void CharacterChange(SudoPacket sudoPacket)
-        {
-            if (sudoPacket != null)
-            {
-                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Sudo]CharacterName: {sudoPacket.CharacterName} CommandContents:{sudoPacket.CommandContents}");
-
-                ClientSession session = ServerManager.Instance.GetSessionByCharacterName(sudoPacket.CharacterName);
-                if (session != null)
-                {
-                    string commandContents = sudoPacket.CommandContents;
-                    if (!string.IsNullOrWhiteSpace(commandContents))
-                    {
-                        session.ReceivePacket(commandContents);
-                    }
-                }
-            }
-            else
-            {
-                Session.SendPacket(Session.Character.GenerateSay(SudoPacket.ReturnHelp(), 10));
             }
         }
 
