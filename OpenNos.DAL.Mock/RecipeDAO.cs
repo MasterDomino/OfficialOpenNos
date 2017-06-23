@@ -28,12 +28,12 @@ namespace OpenNos.DAL.Mock
             throw new NotImplementedException();
         }
 
-        public RecipeDTO LoadById(short RecipeId)
+        public RecipeDTO LoadById(short recipeId)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<RecipeDTO> LoadByNpc(int npcId)
+        public IEnumerable<RecipeDTO> LoadByNpc(int mapNpcId)
         {
             throw new NotImplementedException();
         }

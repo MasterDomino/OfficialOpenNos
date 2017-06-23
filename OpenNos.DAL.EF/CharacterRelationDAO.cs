@@ -28,13 +28,13 @@ namespace OpenNos.DAL.EF
     {
         #region Methods
 
-        public DeleteResult Delete(long id)
+        public DeleteResult Delete(long characterRelationId)
         {
             try
             {
                 using (var context = DataAccessHelper.CreateContext())
                 {
-                    CharacterRelation relation = context.CharacterRelation.SingleOrDefault(c => c.CharacterRelationId.Equals(id));
+                    CharacterRelation relation = context.CharacterRelation.SingleOrDefault(c => c.CharacterRelationId.Equals(characterRelationId));
 
                     if (relation != null)
                     {
@@ -47,33 +47,33 @@ namespace OpenNos.DAL.EF
             }
             catch (Exception e)
             {
-                Logger.Log.Error(string.Format(Language.Instance.GetMessageFromKey("DELETE_CHARACTER_ERROR"), id, e.Message), e);
+                Logger.Log.Error(string.Format(Language.Instance.GetMessageFromKey("DELETE_CHARACTER_ERROR"), characterRelationId, e.Message), e);
                 return DeleteResult.Error;
             }
         }
 
-        public SaveResult InsertOrUpdate(ref CharacterRelationDTO relation)
+        public SaveResult InsertOrUpdate(ref CharacterRelationDTO characterRelation)
         {
             try
             {
                 using (var context = DataAccessHelper.CreateContext())
                 {
-                    long characterId = relation.CharacterId;
-                    long relatedCharacterId = relation.RelatedCharacterId;
+                    long characterId = characterRelation.CharacterId;
+                    long relatedCharacterId = characterRelation.RelatedCharacterId;
                     CharacterRelation entity = context.CharacterRelation.FirstOrDefault(c => c.CharacterId.Equals(characterId) && c.RelatedCharacterId.Equals(relatedCharacterId));
 
                     if (entity == null)
                     {
-                        relation = Insert(relation, context);
+                        characterRelation = Insert(characterRelation, context);
                         return SaveResult.Inserted;
                     }
-                    relation = Update(entity, relation, context);
+                    characterRelation = Update(entity, characterRelation, context);
                     return SaveResult.Updated;
                 }
             }
             catch (Exception e)
             {
-                Logger.Log.Error(string.Format(Language.Instance.GetMessageFromKey("UPDATE_CHARACTERRELATION_ERROR"), relation.CharacterRelationId, e.Message), e);
+                Logger.Log.Error(string.Format(Language.Instance.GetMessageFromKey("UPDATE_CHARACTERRELATION_ERROR"), characterRelation.CharacterRelationId, e.Message), e);
                 return SaveResult.Error;
             }
         }
@@ -89,13 +89,13 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        public CharacterRelationDTO LoadById(long relId)
+        public CharacterRelationDTO LoadById(long characterId)
         {
             try
             {
                 using (var context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<CharacterRelationDTO>(context.CharacterRelation.FirstOrDefault(s => s.CharacterRelationId.Equals(relId)));
+                    return _mapper.Map<CharacterRelationDTO>(context.CharacterRelation.FirstOrDefault(s => s.CharacterRelationId.Equals(characterId)));
                 }
             }
             catch (Exception e)

@@ -23,15 +23,15 @@ namespace OpenNos.DAL.Interface
 
         bool IdAlreadySet(long id);
 
-        GeneralLogDTO Insert(GeneralLogDTO generallog);
+        GeneralLogDTO Insert(GeneralLogDTO generalLog);
 
         IEnumerable<GeneralLogDTO> LoadAll();
 
         IEnumerable<GeneralLogDTO> LoadByAccount(long? accountId);
 
-        IEnumerable<GeneralLogDTO> LoadByLogType(string LogType, long? CharacterId);
+        IEnumerable<GeneralLogDTO> LoadByLogType(string logType, long? characterId);
 
-        void SetCharIdNull(long? CharacterId);
+        void SetCharIdNull(long? characterId);
 
         void WriteGeneralLog(long accountId, string ipAddress, long? characterId, string logType, string logData);
 

@@ -22,9 +22,9 @@ namespace OpenNos.DAL.Interface
     {
         #region Methods
 
-        DeleteResult Delete(long familyId);
+        DeleteResult Delete(long familyLogId);
 
-        SaveResult InsertOrUpdate(ref FamilyLogDTO famlog);
+        SaveResult InsertOrUpdate(ref FamilyLogDTO familyLog);
 
         IEnumerable<FamilyLogDTO> LoadByFamilyId(long familyId);
 

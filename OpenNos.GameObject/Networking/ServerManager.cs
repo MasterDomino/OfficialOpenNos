@@ -278,13 +278,13 @@ namespace OpenNos.GameObject
                         break;
 
                     case MapInstanceType.TimeSpaceInstance:
-                        if (!(Session.CurrentMapInstance.InstanceBag.Lives - Session.CurrentMapInstance.InstanceBag.DeadList.Count() <= 1))
+                        if (!(Session.CurrentMapInstance.InstanceBag.Lives - Session.CurrentMapInstance.InstanceBag.DeadList.Count <= 1))
                         {
                             Session.Character.Hp = 1;
                             Session.Character.Mp = 1;
                             return;
                         }
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("YOU_HAVE_LIFE"), Session.CurrentMapInstance.InstanceBag.Lives - Session.CurrentMapInstance.InstanceBag.DeadList.Count() + 1), 0));
+                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("YOU_HAVE_LIFE"), Session.CurrentMapInstance.InstanceBag.Lives - Session.CurrentMapInstance.InstanceBag.DeadList.Count + 1), 0));
                         Session.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#revival^1 #revival^1 {(Session.Character.Level > 10 ? Language.Instance.GetMessageFromKey("ASK_REVIVE_TS_LOW_LEVEL") : Language.Instance.GetMessageFromKey("ASK_REVIVE_TS"))}"));
                         Session.CurrentMapInstance.InstanceBag.DeadList.Add(Session.Character.CharacterId);
                         Task.Factory.StartNew(async () =>
@@ -308,7 +308,7 @@ namespace OpenNos.GameObject
 
                     case MapInstanceType.RaidInstance:
                         List<long> save = Session.CurrentMapInstance.InstanceBag.DeadList.ConvertAll(s => s);
-                        if (Session.CurrentMapInstance.InstanceBag.Lives - Session.CurrentMapInstance.InstanceBag.DeadList.Count() < 0)
+                        if (Session.CurrentMapInstance.InstanceBag.Lives - Session.CurrentMapInstance.InstanceBag.DeadList.Count < 0)
                         {
                             Session.Character.Hp = 1;
                             Session.Character.Mp = 1;

@@ -25,7 +25,7 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public DeleteResult Delete(long id)
+        public DeleteResult Delete(long characterRelationId)
         {
             //CharacterDTO dto = LoadBySlot(accountId, characterSlot);
             //Container.Remove(dto);
@@ -34,19 +34,19 @@ namespace OpenNos.DAL.Mock
 
         public override CharacterRelationDTO Insert(CharacterRelationDTO dto)
         {
-            dto.CharacterId = Container.Any() ? Container.Max(c => c.CharacterId) + 1 : 1;
+            dto.CharacterId = Container.Count > 0 ? Container.Max(c => c.CharacterId) + 1 : 1;
             return base.Insert(dto);
         }
 
-        public SaveResult InsertOrUpdate(ref CharacterRelationDTO character)
+        public SaveResult InsertOrUpdate(ref CharacterRelationDTO characterRelation)
         {
-            CharacterRelationDTO dto = LoadById(character.CharacterId);
+            CharacterRelationDTO dto = LoadById(characterRelation.CharacterId);
             if (dto != null)
             {
-                dto = character;
+                dto = characterRelation;
                 return SaveResult.Updated;
             }
-            Insert(character);
+            Insert(characterRelation);
             return SaveResult.Inserted;
         }
 

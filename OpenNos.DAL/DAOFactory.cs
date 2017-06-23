@@ -20,7 +20,7 @@ using System.Configuration;
 
 namespace OpenNos.DAL
 {
-    public class DAOFactory
+    public static class DAOFactory
     {
         #region Members
 

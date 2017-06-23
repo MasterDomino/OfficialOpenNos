@@ -72,11 +72,11 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        public IEnumerable<RecipeDTO> LoadByNpc(int npcId)
+        public IEnumerable<RecipeDTO> LoadByNpc(int mapNpcId)
         {
             using (var context = DataAccessHelper.CreateContext())
             {
-                foreach (Recipe Recipe in context.Recipe.Where(s => s.MapNpcId.Equals(npcId)))
+                foreach (Recipe Recipe in context.Recipe.Where(s => s.MapNpcId.Equals(mapNpcId)))
                 {
                     yield return _mapper.Map<RecipeDTO>(Recipe);
                 }

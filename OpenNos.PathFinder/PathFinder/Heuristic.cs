@@ -2,7 +2,7 @@
 
 namespace OpenNos.PathFinder
 {
-    public class Heuristic
+    public static class Heuristic
     {
         #region Members
 

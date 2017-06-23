@@ -21,7 +21,7 @@ namespace OpenNos.DAL.Interface
     {
         #region Methods
 
-        NpcMonsterSkillDTO Insert(ref NpcMonsterSkillDTO npcmonsterskill);
+        NpcMonsterSkillDTO Insert(ref NpcMonsterSkillDTO npcMonsterSkill);
 
         void Insert(List<NpcMonsterSkillDTO> skills);
 

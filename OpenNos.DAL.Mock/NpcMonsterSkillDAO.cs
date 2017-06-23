@@ -35,7 +35,7 @@ namespace OpenNos.DAL.Mock
             throw new NotImplementedException();
         }
 
-        public NpcMonsterSkillDTO Insert(ref NpcMonsterSkillDTO npcmonsterskill)
+        public NpcMonsterSkillDTO Insert(ref NpcMonsterSkillDTO npcMonsterSkill)
         {
             throw new NotImplementedException();
         }

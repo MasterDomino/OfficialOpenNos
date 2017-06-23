@@ -233,18 +233,17 @@ namespace OpenNos.GameObject
                 }
 
                 FirstMap = _mapinstancedictionary.Values.FirstOrDefault();
-                Observable.Timer(TimeSpan.FromMinutes(3)).Subscribe(
-                   x =>
-                   {
-                       if (!InstanceBag.Lock)
-                       {
-                           _mapinstancedictionary.Values.ToList().ForEach(m => EventHelper.Instance.RunEvent(new EventContainer(m, EventActionType.SCRIPTEND, (byte)1)));
-                           Dispose();
-                       }
-                   });
+                Observable.Timer(TimeSpan.FromMinutes(3)).Subscribe(x =>
+                {
+                    if (!InstanceBag.Lock)
+                    {
+                        _mapinstancedictionary.Values.ToList().ForEach(m => EventHelper.Instance.RunEvent(new EventContainer(m, EventActionType.SCRIPTEND, (byte)1)));
+                        Dispose();
+                    }
+                });
                 obs = Observable.Interval(TimeSpan.FromMilliseconds(100)).Subscribe(x =>
                 {
-                    if (_instancebag.Lives - _instancebag.DeadList.Count() < 0)
+                    if (_instancebag.Lives - _instancebag.DeadList.Count < 0)
                     {
                         _mapinstancedictionary.Values.ToList().ForEach(m => EventHelper.Instance.RunEvent(new EventContainer(m, EventActionType.SCRIPTEND, (byte)3)));
                         Dispose();

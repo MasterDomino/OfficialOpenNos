@@ -42,16 +42,16 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        public GeneralLogDTO Insert(GeneralLogDTO generallog)
+        public GeneralLogDTO Insert(GeneralLogDTO generalLog)
         {
             try
             {
                 using (var context = DataAccessHelper.CreateContext())
                 {
-                    GeneralLog entity = _mapper.Map<GeneralLog>(generallog);
+                    GeneralLog entity = _mapper.Map<GeneralLog>(generalLog);
                     context.GeneralLog.Add(entity);
                     context.SaveChanges();
-                    return _mapper.Map<GeneralLogDTO>(generallog);
+                    return _mapper.Map<GeneralLogDTO>(generalLog);
                 }
             }
             catch (Exception e)

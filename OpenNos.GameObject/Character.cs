@@ -443,7 +443,7 @@ namespace OpenNos.GameObject
 
         public bool AddPet(Mate mate)
         {
-            if (mate.MateType == MateType.Pet ? MaxMateCount > Mates.Count() : 3 > Mates.Count(s => s.MateType == MateType.Partner))
+            if (mate.MateType == MateType.Pet ? MaxMateCount > Mates.Count : 3 > Mates.Count(s => s.MateType == MateType.Partner))
             {
                 Mates.Add(mate);
                 MapInstance.Broadcast(mate.GenerateIn());
@@ -1889,14 +1889,10 @@ namespace OpenNos.GameObject
                         minutesLeft = (long)(bz.BazaarItem.DateStart.AddHours(bz.BazaarItem.Duration).AddDays(isNosbazar ? 30 : 7) - DateTime.Now).TotalMinutes;
                     }
                     string info = string.Empty;
-                    if (bz.Item.Item.Type == InventoryType.Equipment)
+                    if (bz.Item.Item.Type == InventoryType.Equipment && bz.Item is WearableInstance)
                     {
-                        if ((bz.Item as WearableInstance) != null)
-                        {
-                            info = (bz.Item as WearableInstance).GenerateEInfo().Replace(' ', '^').Replace("e_info^", "");
-                        }
+                        info = (bz.Item as WearableInstance).GenerateEInfo().Replace(' ', '^').Replace("e_info^", "");
                     }
-
                     if (packet.Filter == 0 || packet.Filter == Status)
                     {
                         list += $"{bz.BazaarItem.BazaarItemId}|{bz.BazaarItem.SellerId}|{bz.Item.ItemVNum}|{soldedAmount}|{amount}|{(package ? 1 : 0)}|{price}|{Status}|{minutesLeft}|{(isNosbazar ? 1 : 0)}|0|{bz.Item.Rare}|{bz.Item.Upgrade}|{info} ";
@@ -1951,7 +1947,7 @@ namespace OpenNos.GameObject
 
         public string GenerateRevive()
         {
-            int lives = MapInstance.InstanceBag.Lives - MapInstance.InstanceBag.DeadList.Count() + 1;
+            int lives = MapInstance.InstanceBag.Lives - MapInstance.InstanceBag.DeadList.Count + 1;
             return $"revive 1 {CharacterId} {(lives > 0 ? lives : 0)}";
         }
 

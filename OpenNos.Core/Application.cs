@@ -17,7 +17,7 @@ using System.Reflection;
 
 namespace OpenNos.Core
 {
-    public class Application
+    public static class Application
     {
         #region Methods
 

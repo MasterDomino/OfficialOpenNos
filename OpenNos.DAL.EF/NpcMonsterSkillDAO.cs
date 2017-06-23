@@ -26,13 +26,13 @@ namespace OpenNos.DAL.EF
     {
         #region Methods
 
-        public NpcMonsterSkillDTO Insert(ref NpcMonsterSkillDTO npcMonsterskill)
+        public NpcMonsterSkillDTO Insert(ref NpcMonsterSkillDTO npcMonsterSkill)
         {
             try
             {
                 using (var context = DataAccessHelper.CreateContext())
                 {
-                    NpcMonsterSkill entity = _mapper.Map<NpcMonsterSkill>(npcMonsterskill);
+                    NpcMonsterSkill entity = _mapper.Map<NpcMonsterSkill>(npcMonsterSkill);
                     context.NpcMonsterSkill.Add(entity);
                     context.SaveChanges();
                     return _mapper.Map<NpcMonsterSkillDTO>(entity);

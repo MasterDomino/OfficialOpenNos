@@ -30,7 +30,7 @@ using System.Threading;
 
 namespace OpenNos.Login
 {
-    public class Program
+    public static class Program
     {
         #region Methods
 

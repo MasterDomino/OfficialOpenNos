@@ -19,7 +19,7 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Client
     /// <summary>
     /// This class is used to build service clients to remotely invoke methods of a SCS service.
     /// </summary>
-    public class ScsServiceClientBuilder
+    public static class ScsServiceClientBuilder
     {
         #region Methods
 

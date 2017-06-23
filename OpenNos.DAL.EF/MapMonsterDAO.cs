@@ -59,14 +59,14 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        public void Insert(IEnumerable<MapMonsterDTO> monsters)
+        public void Insert(IEnumerable<MapMonsterDTO> mapMonsters)
         {
             try
             {
                 using (var context = DataAccessHelper.CreateContext())
                 {
                     context.Configuration.AutoDetectChangesEnabled = false;
-                    foreach (MapMonsterDTO monster in monsters)
+                    foreach (MapMonsterDTO monster in mapMonsters)
                     {
                         MapMonster entity = _mapper.Map<MapMonster>(monster);
                         context.MapMonster.Add(entity);

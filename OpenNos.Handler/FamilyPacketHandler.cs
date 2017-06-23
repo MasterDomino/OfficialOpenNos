@@ -835,7 +835,7 @@ namespace OpenNos.Handler
                 return;
             }
 
-            if (Session.Character.Family.FamilyCharacters.Count() + 1 > Session.Character.Family.MaxSize)
+            if (Session.Character.Family.FamilyCharacters.Count + 1 > Session.Character.Family.MaxSize)
             {
                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("FAMILY_FULL")));
                 return;
@@ -865,7 +865,7 @@ namespace OpenNos.Handler
                 ClientSession inviteSession = ServerManager.Instance.GetSessionByCharacterId(characterId);
                 if (inviteSession != null && inviteSession.Character.FamilyInviteCharacters.Contains(Session.Character.CharacterId) && inviteSession.Character.Family != null && inviteSession.Character.Family.FamilyCharacters != null)
                 {
-                    if (inviteSession.Character.Family.FamilyCharacters.Count() + 1 > inviteSession.Character.Family.MaxSize)
+                    if (inviteSession.Character.Family.FamilyCharacters.Count + 1 > inviteSession.Character.Family.MaxSize)
                     {
                         return;
                     }

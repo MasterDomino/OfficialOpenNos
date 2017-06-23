@@ -87,7 +87,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
             _clientSocket.NoDelay = true;
 
             // initialize lagging mode
-            bool isLagMode = ConfigurationManager.AppSettings["LagMode"].ToLower() == "true";
+            bool isLagMode = string.Equals(ConfigurationManager.AppSettings["LagMode"], "true", StringComparison.CurrentCultureIgnoreCase);
 
             IPEndPoint ipEndPoint = (IPEndPoint)_clientSocket.RemoteEndPoint;
             _remoteEndPoint = new ScsTcpEndPoint(ipEndPoint.Address.ToString(), ipEndPoint.Port);
@@ -196,7 +196,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
                     SendByPriority(_lowPriorityBuffer);
                 }
             }
-            catch (Exception)
+            catch
             {
                 // disconnect
             }
@@ -255,7 +255,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
                 // Complete sending the data to the remote device.
                 int bytesSent = client.EndSend(result);
             }
-            catch (Exception)
+            catch
             {
                 // disconnect
             }

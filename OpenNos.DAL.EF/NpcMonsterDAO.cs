@@ -39,14 +39,14 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        public void Insert(List<NpcMonsterDTO> npcs)
+        public void Insert(List<NpcMonsterDTO> npcMonsters)
         {
             try
             {
                 using (var context = DataAccessHelper.CreateContext())
                 {
                     context.Configuration.AutoDetectChangesEnabled = false;
-                    foreach (NpcMonsterDTO Item in npcs)
+                    foreach (NpcMonsterDTO Item in npcMonsters)
                     {
                         NpcMonster entity = _mapper.Map<NpcMonster>(Item);
                         context.NpcMonster.Add(entity);
@@ -117,13 +117,13 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        public NpcMonsterDTO LoadByVNum(short vnum)
+        public NpcMonsterDTO LoadByVNum(short npcMonsterVNum)
         {
             try
             {
                 using (var context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<NpcMonsterDTO>(context.NpcMonster.FirstOrDefault(i => i.NpcMonsterVNum.Equals(vnum)));
+                    return _mapper.Map<NpcMonsterDTO>(context.NpcMonster.FirstOrDefault(i => i.NpcMonsterVNum.Equals(npcMonsterVNum)));
                 }
             }
             catch (Exception e)

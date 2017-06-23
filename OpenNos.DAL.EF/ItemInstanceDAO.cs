@@ -159,15 +159,13 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        protected override ItemInstanceDTO InsertOrUpdate(OpenNosContext context, ItemInstanceDTO itemInstance)
+        protected override ItemInstanceDTO InsertOrUpdate(OpenNosContext context, ItemInstanceDTO dto)
         {
             try
             {
-                var entity = context.ItemInstance.FirstOrDefault(c => c.Id == itemInstance.Id);
-
-                itemInstance = entity == null ? Insert(itemInstance, context) : Update(entity, itemInstance, context);
-
-                return itemInstance;
+                ItemInstance entity = context.ItemInstance.FirstOrDefault(c => c.Id == dto.Id);
+                dto = entity == null ? Insert(dto, context) : Update(entity, dto, context);
+                return dto;
             }
             catch (Exception e)
             {

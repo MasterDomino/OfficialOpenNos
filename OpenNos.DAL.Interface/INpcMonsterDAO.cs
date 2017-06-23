@@ -39,8 +39,8 @@ namespace OpenNos.DAL.Interface
         /// <summary>
         /// Used for inserting list of data to entity
         /// </summary>
-        /// <param name="npc"></param>
-        void Insert(List<NpcMonsterDTO> npc);
+        /// <param name="npcMonsters"></param>
+        void Insert(List<NpcMonsterDTO> npcMonsters);
 
         /// <summary>
         /// Inser or Update data in entity

@@ -1766,14 +1766,14 @@ namespace OpenNos.Handler
                 return;
             }
             Session.CurrentMapInstance = Session.Character.MapInstance;
-            if (ConfigurationManager.AppSettings["SceneOnCreate"].ToLower() == "true" & Session.Character.GeneralLogs.Count(s => s.LogType != "Connection") < 2)
+            if (string.Equals(ConfigurationManager.AppSettings["SceneOnCreate"], "true", StringComparison.CurrentCultureIgnoreCase) & Session.Character.GeneralLogs.Count(s => s.LogType != "Connection") < 2)
             {
                 Session.SendPacket("scene 40");
             }
-            if (ConfigurationManager.AppSettings["WorldInformation"].ToLower() == "true")
+            if (string.Equals(ConfigurationManager.AppSettings["WorldInformation"], "true", StringComparison.CurrentCultureIgnoreCase))
             {
                 Assembly assembly = Assembly.GetEntryAssembly();
-                string productVersion = assembly != null && assembly.Location != null ? FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion : "1337";
+                string productVersion = assembly?.Location != null ? FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion : "1337";
                 Session.SendPacket(Session.Character.GenerateSay("----------[World Information]----------", 10));
                 Session.SendPacket(Session.Character.GenerateSay($"OpenNos by OpenNos Team\nVersion : v{productVersion}", 11));
                 Session.SendPacket(Session.Character.GenerateSay("-----------------------------------------------", 10));
@@ -1893,9 +1893,9 @@ namespace OpenNos.Handler
             Session.Character.LoadSentMail();
             Session.Character.DeleteTimeout();
 
-            foreach (StaticBuffDTO sb in DAOFactory.StaticBuffDAO.LoadByCharacterId(Session.Character.CharacterId))
+            foreach (StaticBuffDTO staticBuff in DAOFactory.StaticBuffDAO.LoadByCharacterId(Session.Character.CharacterId))
             {
-                Session.Character.AddStaticBuff(sb);
+                Session.Character.AddStaticBuff(staticBuff);
             }
         }
 

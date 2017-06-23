@@ -614,7 +614,7 @@ namespace OpenNos.Handler
             string[] packetsplit = packet.PacketEnd.Split(' ');
             for (int i = 0; i < packet.Amount * 3; i += 3)
             {
-                if (packetsplit.Count() >= packet.Amount * 3)
+                if (packetsplit.Length >= packet.Amount * 3)
                 {
                     int PetId = int.Parse(packetsplit[i]);
                     short PositionX = short.Parse(packetsplit[i + 1]);

@@ -18,7 +18,7 @@ using System.Collections.Generic;
 
 namespace OpenNos.GameObject
 {
-    public class MapInstancePortalHandler
+    public static class MapInstancePortalHandler
     {
         #region Properties
 

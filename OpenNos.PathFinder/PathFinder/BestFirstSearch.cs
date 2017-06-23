@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace OpenNos.PathFinder
 {
-    public class BestFirstSearch
+    public static class BestFirstSearch
     {
         #region Methods
 
@@ -44,7 +44,7 @@ namespace OpenNos.PathFinder
                 // get neigbours of the current node
                 List<Node> neighbors = GetNeighbors(grid, node,Grid);
 
-                for (int i = 0, l = neighbors.Count(); i < l; ++i)
+                for (int i = 0, l = neighbors.Count; i < l; ++i)
                 {
                     Node neighbor = neighbors[i];
 
@@ -107,10 +107,10 @@ namespace OpenNos.PathFinder
 
                 grid[node.X, node.Y].Closed = true;
 
-                // get neigbours of the current node
+                // get neighbors of the current node
                 List<Node> neighbors = GetNeighbors(grid, node, mapGrid);
 
-                for (int i = 0, l = neighbors.Count(); i < l; ++i)
+                for (int i = 0, l = neighbors.Count; i < l; ++i)
                 {
                     Node neighbor = neighbors[i];
 

@@ -26,7 +26,7 @@ using System.Threading;
 
 namespace OpenNos.Import.Console
 {
-    public class Program
+    public static class Program
     {
         #region Methods
 

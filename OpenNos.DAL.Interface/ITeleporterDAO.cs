@@ -25,9 +25,9 @@ namespace OpenNos.DAL.Interface
 
         IEnumerable<TeleporterDTO> LoadAll();
 
-        TeleporterDTO LoadById(short TeleporterId);
+        TeleporterDTO LoadById(short teleporterId);
 
-        IEnumerable<TeleporterDTO> LoadFromNpc(int NpcId);
+        IEnumerable<TeleporterDTO> LoadFromNpc(int npcId);
 
         #endregion
     }

@@ -1769,7 +1769,7 @@ namespace OpenNos.Handler
                 {
                     string[] packetsplit = contents.Split(' ');
                     bool withPage = byte.TryParse(packetsplit[0], out page);
-                    name = packetsplit.Length == 1 && withPage ? string.Empty : packetsplit.Skip(withPage ? 1 : 0).Aggregate((a, b) => a + " " + b);
+                    name = packetsplit.Length == 1 && withPage ? string.Empty : packetsplit.Skip(withPage ? 1 : 0).Aggregate((a, b) => a + ' ' + b);
                 }
                 IEnumerable<ItemDTO> itemlist = DAOFactory.ItemDAO.FindByName(name).OrderBy(s => s.VNum).Skip(page * 200).Take(200).ToList();
                 if (itemlist.Any())
@@ -1807,7 +1807,7 @@ namespace OpenNos.Handler
                 {
                     string[] packetsplit = contents.Split(' ');
                     bool withPage = byte.TryParse(packetsplit[0], out page);
-                    name = packetsplit.Length == 1 && withPage ? string.Empty : packetsplit.Skip(withPage ? 1 : 0).Aggregate((a, b) => a + " " + b);
+                    name = packetsplit.Length == 1 && withPage ? string.Empty : packetsplit.Skip(withPage ? 1 : 0).Aggregate((a, b) => a + ' ' + b);
                 }
                 IEnumerable<NpcMonsterDTO> monsterlist = DAOFactory.NpcMonsterDAO.FindByName(name).OrderBy(s => s.NpcMonsterVNum).Skip(page * 200).Take(200).ToList();
                 if (monsterlist.Any())

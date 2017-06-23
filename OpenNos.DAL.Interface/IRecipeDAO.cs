@@ -25,7 +25,7 @@ namespace OpenNos.DAL.Interface
 
         IEnumerable<RecipeDTO> LoadAll();
 
-        RecipeDTO LoadById(short RecipeId);
+        RecipeDTO LoadById(short recipeId);
 
         IEnumerable<RecipeDTO> LoadByNpc(int mapNpcId);
 

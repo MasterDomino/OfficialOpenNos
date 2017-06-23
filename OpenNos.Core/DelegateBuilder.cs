@@ -20,7 +20,7 @@ using System.Reflection;
 
 namespace OpenNos.Core
 {
-    public class DelegateBuilder
+    public static class DelegateBuilder
     {
         #region Methods
 

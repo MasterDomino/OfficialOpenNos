@@ -25,6 +25,7 @@ namespace OpenNos.GameObject
         #region Members
 
         private int _order;
+        private readonly object _lock = new object();
 
         #endregion
 
@@ -92,14 +93,14 @@ namespace OpenNos.GameObject
             return result;
         }
 
-        public string GeneraterRaidmbf(ClientSession sessison)
+        public string GeneraterRaidmbf(ClientSession session)
         {
-            return $"raidmbf {sessison.CurrentMapInstance?.InstanceBag.MonsterLocker.Initial} {sessison.CurrentMapInstance?.InstanceBag.MonsterLocker.Current} {sessison.CurrentMapInstance?.InstanceBag.ButtonLocker.Initial} {sessison.CurrentMapInstance?.InstanceBag.ButtonLocker.Current} {Raid?.InstanceBag.Lives - Raid?.InstanceBag.DeadList.Count()} {Raid?.InstanceBag.Lives} 25";
+            return $"raidmbf {session.CurrentMapInstance?.InstanceBag.MonsterLocker.Initial} {session.CurrentMapInstance?.InstanceBag.MonsterLocker.Current} {session.CurrentMapInstance?.InstanceBag.ButtonLocker.Initial} {session.CurrentMapInstance?.InstanceBag.ButtonLocker.Current} {Raid?.InstanceBag.Lives - Raid?.InstanceBag.DeadList.Count} {Raid?.InstanceBag.Lives} 25";
         }
 
         public long? GetNextOrderedCharacterId(Character character)
         {
-            lock (this)
+            lock (_lock)
             {
                 _order++;
                 List<ClientSession> sessions = Characters.Where(s => Map.GetDistance(s.Character, character) < 50).ToList();
@@ -108,7 +109,7 @@ namespace OpenNos.GameObject
                     _order = 0;
                 }
 
-                if (!sessions.Any()) // group seems to be empty
+                if (sessions.Count == 0) // group seems to be empty
                 {
                     return null;
                 }

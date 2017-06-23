@@ -27,7 +27,7 @@ namespace OpenNos.DAL.Interface
 
         IEnumerable<ComboDTO> LoadAll();
 
-        ComboDTO LoadById(short ComboId);
+        ComboDTO LoadById(short comboId);
 
         IEnumerable<ComboDTO> LoadBySkillVnum(short skillVNum);
 

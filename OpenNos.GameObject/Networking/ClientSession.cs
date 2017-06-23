@@ -63,7 +63,7 @@ namespace OpenNos.GameObject
             _random = new Random((int)client.ClientId);
 
             // initialize lagging mode
-            bool isLagMode = ConfigurationManager.AppSettings["LagMode"].ToLower() == "true";
+            bool isLagMode = string.Equals(ConfigurationManager.AppSettings["LagMode"], "true", StringComparison.CurrentCultureIgnoreCase);
 
             // initialize network client
             _client = client;

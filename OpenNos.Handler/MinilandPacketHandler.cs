@@ -107,7 +107,7 @@ namespace OpenNos.Handler
                         Session.Character.CurrentMinigame = 0;
                         Session.Character.MapInstance.Broadcast(UserInterfaceHelper.Instance.GenerateGuri(6, 1, Session.Character.CharacterId));
                         int Level = -1;
-                        for (short i = 0; i < GetMinilandMaxPoint(game).Count(); i++)
+                        for (short i = 0; i < GetMinilandMaxPoint(game).Length; i++)
                         {
                             if (packet.Point > GetMinilandMaxPoint(game)[i])
                             {

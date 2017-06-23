@@ -89,33 +89,33 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        public IEnumerable<BCardDTO> LoadByItemVNum(short Vnum)
+        public IEnumerable<BCardDTO> LoadByItemVNum(short vNum)
         {
             using (var context = DataAccessHelper.CreateContext())
             {
-                foreach (BCard card in context.BCard.Where(s => s.ItemVNum == Vnum))
+                foreach (BCard card in context.BCard.Where(s => s.ItemVNum == vNum))
                 {
                     yield return _mapper.Map<BCardDTO>(card);
                 }
             }
         }
 
-        public IEnumerable<BCardDTO> LoadBySkillVNum(short Vnum)
+        public IEnumerable<BCardDTO> LoadBySkillVNum(short vNum)
         {
             using (var context = DataAccessHelper.CreateContext())
             {
-                foreach (BCard card in context.BCard.Where(s => s.SkillVNum == Vnum))
+                foreach (BCard card in context.BCard.Where(s => s.SkillVNum == vNum))
                 {
                     yield return _mapper.Map<BCardDTO>(card);
                 }
             }
         }
 
-        public IEnumerable<BCardDTO> LoadByNpcMonsterVNum(short Vnum)
+        public IEnumerable<BCardDTO> LoadByNpcMonsterVNum(short vNum)
         {
             using (var context = DataAccessHelper.CreateContext())
             {
-                foreach (BCard card in context.BCard.Where(s => s.NpcMonsterVNum == Vnum))
+                foreach (BCard card in context.BCard.Where(s => s.NpcMonsterVNum == vNum))
                 {
                     yield return _mapper.Map<BCardDTO>(card);
                 }

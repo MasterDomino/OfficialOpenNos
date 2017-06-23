@@ -29,7 +29,7 @@ namespace OpenNos.DAL.Mock
             throw new NotImplementedException();
         }
 
-        public void Insert(List<NpcMonsterDTO> npc)
+        public void Insert(List<NpcMonsterDTO> npcMonsters)
         {
             throw new NotImplementedException();
         }
@@ -39,7 +39,7 @@ namespace OpenNos.DAL.Mock
             throw new NotImplementedException();
         }
 
-        public NpcMonsterDTO LoadByVNum(short MapId)
+        public NpcMonsterDTO LoadByVNum(short npcMonsterVNum)
         {
             throw new NotImplementedException();
         }

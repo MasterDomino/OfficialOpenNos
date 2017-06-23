@@ -30,7 +30,7 @@ using System.Threading;
 
 namespace OpenNos.Master.Server
 {
-    internal class Program
+    internal static class Program
     {
         #region Members
 

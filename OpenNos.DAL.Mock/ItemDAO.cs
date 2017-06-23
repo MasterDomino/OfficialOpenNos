@@ -28,9 +28,9 @@ namespace OpenNos.DAL.Mock
             return Container.Where(i => i.Name.Contains(name)).Select(e => MapEntity(e));
         }
 
-        public ItemDTO LoadById(short vnum)
+        public ItemDTO LoadById(short vNum)
         {
-            return Container.SingleOrDefault(i => i.VNum == vnum);
+            return Container.SingleOrDefault(i => i.VNum == vNum);
         }
 
         #endregion

@@ -22,7 +22,7 @@ using System.Threading;
 
 namespace OpenNos.GameObject.Event
 {
-    public class LOD
+    public static class LOD
     {
         #region Methods
 

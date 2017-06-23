@@ -57,13 +57,13 @@ namespace OpenNos.Core
             return decpass;
         }
 
-        public override string Decrypt(byte[] packet, int sessionId = 0)
+        public override string Decrypt(byte[] data, int sessionId = 0)
         {
             try
             {
                 string decryptedPacket = string.Empty;
 
-                foreach (byte character in packet)
+                foreach (byte character in data)
                 {
                     if (character > 14)
                     {
@@ -88,15 +88,15 @@ namespace OpenNos.Core
             throw new NotImplementedException();
         }
 
-        public override byte[] Encrypt(string packet)
+        public override byte[] Encrypt(string data)
         {
             try
             {
-                packet += " ";
-                byte[] tmp = Encoding.UTF8.GetBytes(packet);
-                for (int i = 0; i < packet.Length; i++)
+                data += " ";
+                byte[] tmp = Encoding.UTF8.GetBytes(data);
+                for (int i = 0; i < data.Length; i++)
                 {
-                    tmp[i] = Convert.ToByte(packet[i] + 15);
+                    tmp[i] = Convert.ToByte(data[i] + 15);
                 }
                 tmp[tmp.Length - 1] = 25;
                 return tmp;
