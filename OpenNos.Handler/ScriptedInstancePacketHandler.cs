@@ -37,6 +37,7 @@ namespace OpenNos.Handler
             if (Session.CurrentMapInstance.MapInstanceType == MapInstanceType.TimeSpaceInstance)
             {
                 ServerManager.Instance.ChangeMap(Session.Character.CharacterId, Session.Character.MapId, Session.Character.MapX, Session.Character.MapY);
+                Session.Character.Timespace = null;
             }
             else if (Session.CurrentMapInstance.MapInstanceType == MapInstanceType.RaidInstance)
             {
@@ -58,26 +59,24 @@ namespace OpenNos.Handler
         /// <param name="packet"></param>
         public void GetGift(RSelPacket packet)
         {
-            if (Session.CurrentMapInstance.MapInstanceType == MapInstanceType.TimeSpaceInstance)
+            if (Session.Character.Timespace?.FirstMap?.MapInstanceType == MapInstanceType.TimeSpaceInstance)
             {
                 Guid mapInstanceId = ServerManager.Instance.GetBaseMapInstanceIdByMapId(Session.Character.MapId);
-                MapInstance map = ServerManager.Instance.GetMapInstance(mapInstanceId);
-                ScriptedInstance si = map.ScriptedInstances.FirstOrDefault(s => s.PositionX == Session.Character.MapX && s.PositionY == Session.Character.MapY);
-                if (si != null && map.InstanceBag.EndState == 5)
+                if (Session.Character.Timespace != null && Session.Character.Timespace.FirstMap.InstanceBag.EndState == 5)
                 {
-                    Session.Character.GetReput(si.Reputation);
+                    Session.Character.GetReput(Session.Character.Timespace.Reputation);
 
-                    Session.Character.Gold = Session.Character.Gold + si.Gold > ServerManager.Instance.MaxGold ? ServerManager.Instance.MaxGold : Session.Character.Gold + si.Gold;
+                    Session.Character.Gold = Session.Character.Gold + Session.Character.Timespace.Gold > ServerManager.Instance.MaxGold ? ServerManager.Instance.MaxGold : Session.Character.Gold + Session.Character.Timespace.Gold;
                     Session.SendPacket(Session.Character.GenerateGold());
-                    Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("GOLD_TS_END"), si.Gold), 10));
+                    Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("GOLD_TS_END"), Session.Character.Timespace.Gold), 10));
 
-                    var rand = new Random().Next(si.DrawItems.Count);
+                    var rand = new Random().Next(Session.Character.Timespace.DrawItems.Count);
                     var repay = "repay ";
-                    Session.Character.GiftAdd(si.DrawItems[rand].VNum, si.DrawItems[rand].Amount);
+                    Session.Character.GiftAdd(Session.Character.Timespace.DrawItems[rand].VNum, Session.Character.Timespace.DrawItems[rand].Amount);
 
                     for (int i = 0; i < 3; i++)
                     {
-                        Gift gift = si.GiftItems.ElementAtOrDefault(i);
+                        Gift gift = Session.Character.Timespace.GiftItems.ElementAtOrDefault(i);
                         repay += gift == null ? "-1.0.0 " : $"{gift.VNum}.0.{gift.Amount} ";
                         if (gift != null)
                         {
@@ -88,7 +87,7 @@ namespace OpenNos.Handler
                     // TODO: Add HasAlreadyDone
                     for (int i = 0; i < 2; i++)
                     {
-                        Gift gift = si.SpecialItems.ElementAtOrDefault(i);
+                        Gift gift = Session.Character.Timespace.SpecialItems.ElementAtOrDefault(i);
                         repay += gift == null ? "-1.0.0 " : $"{gift.VNum}.0.{gift.Amount} ";
                         if (gift != null)
                         {
@@ -96,9 +95,10 @@ namespace OpenNos.Handler
                         }
                     }
 
-                    repay += $"{si.DrawItems[rand].VNum}.0.{si.DrawItems[rand].Amount}";
+                    repay += $"{Session.Character.Timespace.DrawItems[rand].VNum}.0.{Session.Character.Timespace.DrawItems[rand].Amount}";
                     Session.SendPacket(repay);
-                    map.InstanceBag.EndState = 6;
+                    Session.Character.Timespace.FirstMap.InstanceBag.EndState = 6;
+                    Session.Character.Timespace = null;
                 }
             }
         }
@@ -135,10 +135,12 @@ namespace OpenNos.Handler
                     Session.Character.MapX = timespace.PositionX;
                     Session.Character.MapY = timespace.PositionY;
                     ServerManager.Instance.TeleportOnRandomPlaceInMap(Session, timespace.FirstMap.MapInstanceId);
-                    timespace.FirstMap.InstanceBag.Creator = Session.Character.CharacterId;
+                    timespace.InstanceBag.Creator = Session.Character.CharacterId;
                     Session.SendPackets(timespace.GenerateMinimap());
                     Session.SendPacket(timespace.GenerateMainInfo());
                     Session.SendPacket(timespace.FirstMap.InstanceBag.GenerateScore());
+
+                    Session.Character.Timespace = timespace;
                 }
                 else
                 {
@@ -159,8 +161,8 @@ namespace OpenNos.Handler
                     Session.Character.Group.Raid.LoadScript(MapInstanceType.RaidInstance);
                 }
                 if (Session.Character.Group.Raid.FirstMap == null) return;
-                Session.Character.Group.Raid.FirstMap.InstanceBag.Lock = true;
-                if (Session.Character.Group.CharacterCount > 4)
+                Session.Character.Group.Raid.InstanceBag.Lock = true;
+                if (Session.Character.Group.CharacterCount > 0)
                 {
                     Session.Character.Group.Characters.Where(s => s.CurrentMapInstance != Session.CurrentMapInstance).ToList().ForEach(
                     session =>
@@ -170,17 +172,17 @@ namespace OpenNos.Handler
                         session.SendPacket(session.Character.GenerateRaid(2, true));
                     });
 
-                    Session.Character.Group.Raid.FirstMap.InstanceBag.Lives = (short)Session.Character.Group.CharacterCount;
-                    Session.Character.Group.Characters.ForEach(
-                    session =>
+                    Session.Character.Group.Raid.InstanceBag.Lives = (short)Session.Character.Group.CharacterCount;
+
+                    foreach (ClientSession session in Session.Character.Group.Characters)
                     {
                         ServerManager.Instance.ChangeMapInstance(session.Character.CharacterId, session.Character.Group.Raid.FirstMap.MapInstanceId, session.Character.Group.Raid.StartX, session.Character.Group.Raid.StartY);
                         session.SendPacket("raidbf 0 0 25");
-                        session.SendPacket(session.Character.Group.GeneraterRaidmbf());
+                        session.SendPacket(session.Character.Group.GeneraterRaidmbf(session));
                         session.SendPacket(session.Character.GenerateRaid(5, false));
                         session.SendPacket(session.Character.GenerateRaid(4, false));
                         session.SendPacket(session.Character.GenerateRaid(3, false));
-                    });
+                    }
 
                     Logger.LogEvent("RAID_START", Session.GenerateIdentity(), $"RaidId: {Session.Character.Group.GroupId}");
 
@@ -244,6 +246,7 @@ namespace OpenNos.Handler
                                 Session.SendPacket(portal.GenerateMainInfo());
                                 Session.SendPackets(portal.GenerateMinimap());
                                 Session.SendPacket(portal.FirstMap.InstanceBag.GenerateScore());
+                                Session.Character.Timespace = portal;
                             }
                             break;
                     }

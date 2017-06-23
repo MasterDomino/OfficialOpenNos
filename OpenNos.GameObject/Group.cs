@@ -87,14 +87,14 @@ namespace OpenNos.GameObject
         {
             string result = string.Empty;
             result = $"rdlst{((GroupType == GroupType.GiantTeam) ? "f" : "")} {Raid.LevelMinimum} {Raid.LevelMaximum} 0";
-            Characters.ForEach(session => result += $" {session.Character.Level}.{(session.Character.UseSp || session.Character.IsVehicled ? session.Character.Morph : -1)}.{(short)session.Character.Class}.{Raid?.FirstMap?.InstanceBag.DeadList.Count(s => s == session.Character.CharacterId) ?? 0}.{session.Character.Name}.{(short)session.Character.Gender}.{session.Character.CharacterId}.{session.Character.HeroLevel}");
+            Characters.ForEach(session => result += $" {session.Character.Level}.{(session.Character.UseSp || session.Character.IsVehicled ? session.Character.Morph : -1)}.{(short)session.Character.Class}.{Raid?.InstanceBag.DeadList.Count(s => s == session.Character.CharacterId) ?? 0}.{session.Character.Name}.{(short)session.Character.Gender}.{session.Character.CharacterId}.{session.Character.HeroLevel}");
 
             return result;
         }
 
-        public string GeneraterRaidmbf()
+        public string GeneraterRaidmbf(ClientSession sessison)
         {
-            return $"raidmbf {Raid?.FirstMap?.InstanceBag.MonsterLocker.Initial} {Raid?.FirstMap?.InstanceBag.MonsterLocker.Current} {Raid?.FirstMap?.InstanceBag.ButtonLocker.Initial} {Raid?.FirstMap?.InstanceBag.ButtonLocker.Current} {Raid?.FirstMap?.InstanceBag.Lives - Raid?.FirstMap?.InstanceBag.DeadList.Count()} {Raid?.FirstMap?.InstanceBag.Lives} 25";
+            return $"raidmbf {sessison.CurrentMapInstance?.InstanceBag.MonsterLocker.Initial} {sessison.CurrentMapInstance?.InstanceBag.MonsterLocker.Current} {sessison.CurrentMapInstance?.InstanceBag.ButtonLocker.Initial} {sessison.CurrentMapInstance?.InstanceBag.ButtonLocker.Current} {Raid?.InstanceBag.Lives - Raid?.InstanceBag.DeadList.Count()} {Raid?.InstanceBag.Lives} 25";
         }
 
         public long? GetNextOrderedCharacterId(Character character)

@@ -384,6 +384,8 @@ namespace OpenNos.GameObject
 
         public List<StaticBonusDTO> StaticBonusList { get; set; }
 
+        public ScriptedInstance Timespace { get; set; }
+
         public int TimesUsed { get; set; }
 
         public List<long> TradeRequests { get; set; }

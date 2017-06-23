@@ -31,6 +31,14 @@ namespace OpenNos.GameObject
 
         private InstanceBag _instancebag = new InstanceBag();
 
+        public InstanceBag InstanceBag
+        {
+            get
+            {
+                return _instancebag;
+            }
+        }
+
         private Dictionary<int, MapInstance> _mapinstancedictionary = new Dictionary<int, MapInstance>();
 
         private IDisposable obs;
@@ -85,7 +93,7 @@ namespace OpenNos.GameObject
 
         public string GenerateMainInfo()
         {
-            return $"minfo 0 1 -1.0/0 -1.0/0 -1/0 -1.0/0 1 {FirstMap.InstanceBag.Lives + 1} 0";
+            return $"minfo 0 1 -1.0/0 -1.0/0 -1/0 -1.0/0 1 {InstanceBag.Lives + 1} 0";
         }
 
         public List<string> GenerateMinimap()
@@ -210,7 +218,7 @@ namespace OpenNos.GameObject
                     if (variable.Name == "CreateMap")
                     {
                         _instancebag.Lives = Lives;
-                        MapInstance newmap = ServerManager.Instance.GenerateMapInstance(short.Parse(variable?.Attributes["VNum"].Value), mapinstancetype, _instancebag);
+                        MapInstance newmap = ServerManager.Instance.GenerateMapInstance(short.Parse(variable?.Attributes["VNum"].Value), mapinstancetype, new InstanceBag());
                         byte.TryParse(variable?.Attributes["IndexX"]?.Value, out byte indexx);
                         newmap.MapIndexX = indexx;
 
@@ -228,7 +236,7 @@ namespace OpenNos.GameObject
                 Observable.Timer(TimeSpan.FromMinutes(3)).Subscribe(
                    x =>
                    {
-                       if (!FirstMap.InstanceBag.Lock)
+                       if (!InstanceBag.Lock)
                        {
                            _mapinstancedictionary.Values.ToList().ForEach(m => EventHelper.Instance.RunEvent(new EventContainer(m, EventActionType.SCRIPTEND, (byte)1)));
                            Dispose();

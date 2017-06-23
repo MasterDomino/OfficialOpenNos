@@ -380,7 +380,7 @@ namespace OpenNos.Handler
 
                 case 2://leave
                     ClientSession sender = ServerManager.Instance.GetSessionByCharacterId(rdPacket.CharacterId);
-                    if (sender.Character?.Group == null)
+                    if (sender?.Character?.Group == null)
                         return;
 
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("LEFT_RAID")), 0));
@@ -395,7 +395,7 @@ namespace OpenNos.Handler
                     grp.Characters.ForEach(s =>
                     {
                         s.SendPacket(grp.GenerateRdlst());
-                        s.SendPacket(grp.GeneraterRaidmbf());
+                        s.SendPacket(grp.GeneraterRaidmbf(s));
                         s.SendPacket(s.Character.GenerateRaid(0, false));
                     });
                     break;
@@ -1299,7 +1299,7 @@ namespace OpenNos.Handler
         {
             if (rStartPacket.Type == 1)
             {
-                Session.CurrentMapInstance.InstanceBag.Lock = true;
+                Session.Character.Timespace.InstanceBag.Lock = true;
                 Preq(new PreqPacket());
             }
         }
@@ -1356,9 +1356,9 @@ namespace OpenNos.Handler
                             return;
                     }
 
-                    if (Session.CurrentMapInstance.MapInstanceType == MapInstanceType.TimeSpaceInstance && !Session.CurrentMapInstance.InstanceBag.Lock)
+                    if (Session.CurrentMapInstance.MapInstanceType == MapInstanceType.TimeSpaceInstance && !Session.Character.Timespace.InstanceBag.Lock)
                     {
-                        if (Session.Character.CharacterId == Session.CurrentMapInstance.InstanceBag.Creator)
+                        if (Session.Character.CharacterId == Session.Character.Timespace.InstanceBag.Creator)
                         {
                             Session.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#rstart^1 rstart {Language.Instance.GetMessageFromKey("ASK_ENTRY_IN_FIRST_ROOM")}"));
                         }
