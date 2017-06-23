@@ -10,7 +10,7 @@ namespace OpenNos.GameObject
         [PacketIndex(0)]
         public string CharacterName { get; set; }
 
-        [PacketIndex(1)]
+        [PacketIndex(1, serializeToEnd: true)]
         public string CommandContents { get; set; }
 
         public static string ReturnHelp()
