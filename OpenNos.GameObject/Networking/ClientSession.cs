@@ -187,7 +187,10 @@ namespace OpenNos.GameObject
                         });
                     }
                 }
-                ServerManager.Instance.RemoveMapInstance(Character.Miniland.MapInstanceId);
+                if (Character?.Miniland != null)
+                {
+                    ServerManager.Instance.RemoveMapInstance(Character.Miniland.MapInstanceId);
+                }
 
                 // TODO Check why ExchangeInfo.TargetCharacterId is null Character.CloseTrade();
                 // disconnect client
