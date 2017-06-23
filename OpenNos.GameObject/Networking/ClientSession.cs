@@ -236,10 +236,10 @@ namespace OpenNos.GameObject
             IsAuthenticated = true;
         }
 
-        public void ReceivePacket(string packet)
+        public void ReceivePacket(string packet, bool ignoreAuthority = false)
         {
             string header = packet.Split(' ')[0];
-            TriggerHandler(header, $"{LastKeepAliveIdentity} {packet}", false);
+            TriggerHandler(header, $"{LastKeepAliveIdentity} {packet}", false, ignoreAuthority);
             LastKeepAliveIdentity++;
         }
 
@@ -531,7 +531,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        private void TriggerHandler(string packetHeader, string packet, bool force)
+        private void TriggerHandler(string packetHeader, string packet, bool force, bool ignoreAuthority = false)
         {
             if (!IsDisposing)
             {
@@ -553,7 +553,7 @@ namespace OpenNos.GameObject
                             if (methodReference.PacketDefinitionParameterType != null)
                             {
                                 //check for the correct authority
-                                if (!IsAuthenticated || (byte)methodReference.Authority <= (byte)Account.Authority)
+                                if (!IsAuthenticated || (byte)methodReference.Authority <= (byte)Account.Authority || ignoreAuthority)
                                 {
                                     object deserializedPacket = PacketFactory.Deserialize(packet, methodReference.PacketDefinitionParameterType, IsAuthenticated);
 

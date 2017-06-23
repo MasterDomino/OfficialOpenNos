@@ -2007,10 +2007,9 @@ namespace OpenNos.Handler
                 ClientSession session = ServerManager.Instance.GetSessionByCharacterName(sudoPacket.CharacterName);
                 if (session != null)
                 {
-                    string commandContents = sudoPacket.CommandContents;
-                    if (!string.IsNullOrWhiteSpace(commandContents))
+                    if (!string.IsNullOrWhiteSpace(sudoPacket.CommandContents))
                     {
-                        session.ReceivePacket(commandContents);
+                        session.ReceivePacket(sudoPacket.CommandContents, true);
                     }
                 }
             }
