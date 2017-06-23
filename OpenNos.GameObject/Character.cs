@@ -611,7 +611,7 @@ namespace OpenNos.GameObject
             {
                 if (CurrentMinigame != 0 && LastEffect.AddSeconds(3) <= DateTime.Now)
                 {
-                    MapInstance.Broadcast(GenerateEff(CurrentMinigame));
+                    Session.CurrentMapInstance?.Broadcast(GenerateEff(CurrentMinigame));
                     LastEffect = DateTime.Now;
                 }
 
