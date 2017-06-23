@@ -3,7 +3,7 @@ namespace OpenNos.DAL.EF.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Aphrodite54 : DbMigration
+    public partial class Aphrodite55 : DbMigration
     {
         public override void Up()
         {
@@ -12,7 +12,6 @@ namespace OpenNos.DAL.EF.Migrations
                 c => new
                     {
                         RollGeneratedItemId = c.Short(nullable: false, identity: true),
-                        OriginalItemRare = c.Byte(nullable: false),
                         OriginalItemDesign = c.Short(nullable: false),
                         OriginalItemVNum = c.Short(nullable: false),
                         Probability = c.Short(nullable: false),

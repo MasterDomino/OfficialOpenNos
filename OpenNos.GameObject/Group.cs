@@ -119,7 +119,14 @@ namespace OpenNos.GameObject
 
         public bool IsLeader(ClientSession session)
         {
-            return Characters.ElementAt(0) == session;
+            if (Characters.Count > 0)
+            {
+                return Characters.ElementAt(0) == session;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public bool IsMemberOfGroup(long characterId)

@@ -27,7 +27,7 @@ namespace OpenNos.GameObject
         {
             VNum = vnum;
             Amount = amount;
-            IsRareRandom = isRareRandom;
+            IsRandomRare = isRareRandom;
             Design = design;
         }
 
@@ -42,8 +42,6 @@ namespace OpenNos.GameObject
         public short VNum { get; set; }
 
         public bool IsRandomRare { get;  set; }
-
-        public bool IsRareRandom { get;  set; }
 
         #endregion
     }

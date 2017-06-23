@@ -373,7 +373,7 @@ namespace OpenNos.GameObject
                 }
             }
 
-            if (IsBoss)
+            if (IsBoss && IsAlive)
             {
                 MapInstance.Broadcast(GenerateBoss());
             }

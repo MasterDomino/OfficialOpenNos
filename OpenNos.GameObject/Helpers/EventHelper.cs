@@ -237,19 +237,16 @@ namespace OpenNos.GameObject.Helpers
                                     {
                                         return;
                                     }
-                                    if (evt.MapInstance.InstanceBag.EndState == 1)
+                                    if (evt.MapInstance.InstanceBag.EndState == 1 && evt.MapInstance.Monsters.Any(s=>s.IsBoss))
                                     {
-                                        foreach (ClientSession sess in grp.Characters)
+                                        foreach (ClientSession sess in grp.Characters.Where(s=> s.CurrentMapInstance.Monsters.Any(e => e.IsBoss)))
                                         {
                                             foreach(Gift gift in grp?.Raid?.GiftItems)
                                             {
                                                 byte rare = 0;
-                                                if (gift.IsRandomRare)
-                                                {
-                                                    rare = (byte)ServerManager.Instance.RandomNumber(0, 7);
-                                                }
+
                                                //TODO add random rarity for some object
-                                                sess.Character.GiftAdd(gift.VNum, gift.Amount, rare, gift.Design);
+                                                sess.Character.GiftAdd(gift.VNum, gift.Amount, rare, gift.Design, gift.IsRandomRare);
                                             }
                                         }
                                         Logger.LogEvent("RAID_SUCCESS", grp.Characters.ElementAt(0).Character.Name, $"RaidId: {grp.GroupId}");

@@ -691,7 +691,10 @@ namespace OpenNos.GameObject
                         {
                             if (Group != null)
                             {
-                                Group.Characters.ForEach(s => ServerManager.Instance.GetSessionByCharacterId(s.Character.CharacterId)?.SendPacket(GenerateStat()));
+                                if (Group.Raid == null)
+                                {
+                                    Group.Characters.ForEach(s => s?.SendPacket(GenerateStat()));
+                                }
                             }
                             else
                             {
@@ -2587,7 +2590,6 @@ namespace OpenNos.GameObject
             return Reput <= 5000000 ? 26 : 27;
         }
 
-        public void GiftAdd(short itemVNum, byte amount, byte rare = 0, short design = 0)
         /// <summary>
         /// Get Stuff Buffs Useful for Stats for example
         /// </summary>
@@ -2617,7 +2619,7 @@ namespace OpenNos.GameObject
             return new[] { value1, value2 };
         }
 
-        public void GiftAdd(short itemVNum, byte amount, byte rare = 0, short design = 0)
+        public void GiftAdd(short itemVNum, byte amount, byte rare = 0, short design = 0, bool forceRandom = false)
         {
             //TODO add the rare support
             if (Inventory != null)
@@ -2628,11 +2630,25 @@ namespace OpenNos.GameObject
                     if (newItem != null)
                     {
                         newItem.Design = design;
-                        if (newItem.Item.ItemType == ItemType.Armor || newItem.Item.ItemType == ItemType.Weapon || newItem.Item.ItemType == ItemType.Shell)
+
+                        if (newItem.Item.ItemType == ItemType.Armor || newItem.Item.ItemType == ItemType.Weapon || newItem.Item.ItemType == ItemType.Shell || forceRandom)
                         {
-                            ((WearableInstance)newItem).RarifyItem(Session, RarifyMode.Drop, RarifyProtection.None);
-                            newItem.Upgrade = newItem.Item.BasicUpgrade;
+                            while (forceRandom)
+                            {
+                                ((WearableInstance)newItem).RarifyItem(Session, RarifyMode.Drop, RarifyProtection.None);
+                                newItem.Upgrade = newItem.Item.BasicUpgrade;
+                                if(newItem.Rare >= 0)
+                                {
+                                    break;
+                                }
+                            }
                         }
+
+                        if (newItem.Item.Type.Equals(InventoryType.Equipment) && rare != 0)
+                        {
+                            newItem.Rare = (sbyte)rare;
+                        }
+
                         List<ItemInstance> newInv = Inventory.AddToInventory(newItem);
                         if (newInv.Any())
                         {
