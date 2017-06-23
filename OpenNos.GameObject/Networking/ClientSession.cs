@@ -240,7 +240,7 @@ namespace OpenNos.GameObject
         {
             string header = packet.Split(' ')[0];
             TriggerHandler(header, $"{LastKeepAliveIdentity} {packet}", false);
-            LastKeepAliveIdentity += 1;
+            LastKeepAliveIdentity++;
         }
 
         //[Obsolete("Primitive string operations will be removed in future, use PacketDefinition SendPacket instead. SendPacket with string parameter should only be used for debugging.")]
