@@ -14,11 +14,7 @@ namespace OpenNos.GameObject
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new DamageHelper();
-                }
-                return instance;
+                return instance ?? (instance = new DamageHelper());
             }
         }
 
@@ -76,7 +72,6 @@ namespace OpenNos.GameObject
             {
                 attacker.BCards.AddRange(skill.BCards);
             }
-
 
             #region Basic Buff Initialisation
 
@@ -280,6 +275,7 @@ namespace OpenNos.GameObject
                     staticBoostCategory3 += GetAttackerBenefitingBuffs(CardType.AttackPower, (byte)AdditionalTypes.AttackPower.MeleeAttacksIncreased)[0];
                     staticBoostCategory3 += GetDefenderBenefitingBuffs(CardType.AttackPower, (byte)AdditionalTypes.AttackPower.MeleeAttacksDecreased)[0];
                     break;
+
                 case AttackType.Range:
                     def2 = GetAttackerBenefitingBuffs(CardType.Block, (byte)AdditionalTypes.Block.ChanceRangedIncreased);
                     boostCategory1 += GetAttackerBenefitingBuffs(CardType.Damage, (byte)AdditionalTypes.Damage.RangedIncreased)[0] / 100D;
@@ -287,6 +283,7 @@ namespace OpenNos.GameObject
                     staticBoostCategory3 += GetAttackerBenefitingBuffs(CardType.AttackPower, (byte)AdditionalTypes.AttackPower.MeleeAttacksIncreased)[0];
                     staticBoostCategory3 += GetDefenderBenefitingBuffs(CardType.AttackPower, (byte)AdditionalTypes.AttackPower.MeleeAttacksDecreased)[0];
                     break;
+
                 case AttackType.Magical:
                     def2 = GetAttackerBenefitingBuffs(CardType.Block, (byte)AdditionalTypes.Block.ChanceRangedIncreased);
                     boostCategory1 += GetAttackerBenefitingBuffs(CardType.Damage, (byte)AdditionalTypes.Damage.MagicalIncreased)[0] / 100D;
@@ -327,6 +324,7 @@ namespace OpenNos.GameObject
                     staticBoostCategory5 += GetAttackerBenefitingBuffs(CardType.Element, (byte)AdditionalTypes.Element.FireIncreased)[0];
                     staticBoostCategory5 += GetDefenderBenefitingBuffs(CardType.Element, (byte)AdditionalTypes.Element.FireDecreased)[0];
                     break;
+
                 case 2:
                     defender.WaterResistance += GetDefenderBenefitingBuffs(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
                     defender.WaterResistance += GetAttackerBenefitingBuffs(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllDecreased)[0];
@@ -340,6 +338,7 @@ namespace OpenNos.GameObject
                     staticBoostCategory5 += GetAttackerBenefitingBuffs(CardType.Element, (byte)AdditionalTypes.Element.WaterIncreased)[0];
                     staticBoostCategory5 += GetDefenderBenefitingBuffs(CardType.Element, (byte)AdditionalTypes.Element.WaterDecreased)[0];
                     break;
+
                 case 3:
                     defender.LightResistance += GetDefenderBenefitingBuffs(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
                     defender.LightResistance += GetAttackerBenefitingBuffs(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllDecreased)[0];
@@ -353,6 +352,7 @@ namespace OpenNos.GameObject
                     staticBoostCategory5 += GetAttackerBenefitingBuffs(CardType.Element, (byte)AdditionalTypes.Element.LightIncreased)[0];
                     staticBoostCategory5 += GetDefenderBenefitingBuffs(CardType.Element, (byte)AdditionalTypes.Element.Light5Decreased)[0];
                     break;
+
                 case 4:
                     defender.ShadowResistance += GetDefenderBenefitingBuffs(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
                     defender.ShadowResistance += GetAttackerBenefitingBuffs(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllDecreased)[0];
@@ -381,11 +381,13 @@ namespace OpenNos.GameObject
                     defender.ArmorDefense = defender.ArmorMeleeDefense;
                     defender.Dodge = defender.MeleeDefenseDodge;
                     break;
+
                 case AttackType.Range:
                     defender.Defense = defender.RangeDefense;
                     defender.ArmorDefense = defender.ArmorRangeDefense;
                     defender.Dodge = defender.RangeDefenseDodge;
                     break;
+
                 case AttackType.Magical:
                     defender.Defense = defender.MagicalDefense;
                     defender.ArmorDefense = defender.ArmorMagicalDefense;
@@ -463,9 +465,9 @@ namespace OpenNos.GameObject
             {
                 attacker.AttackUpgrade = -10;
             }
-            else if (attacker.AttackUpgrade > 10)
+            else if (attacker.AttackUpgrade > ServerManager.Instance.MaxUpgrade)
             {
-                attacker.AttackUpgrade = 10;
+                attacker.AttackUpgrade = ServerManager.Instance.MaxUpgrade;
             }
 
             switch (attacker.AttackUpgrade)
@@ -473,6 +475,7 @@ namespace OpenNos.GameObject
                 case 0:
                     weaponDamage = 0;
                     break;
+
                 case 1:
                     weaponDamage = (int)(weaponDamage * 0.1);
                     break;
@@ -510,7 +513,12 @@ namespace OpenNos.GameObject
                     break;
 
                 case 10:
-                    weaponDamage = weaponDamage * 2;
+                    weaponDamage *= 2;
+                    break;
+
+                default:
+                    if (attacker.AttackUpgrade > 0)
+                        weaponDamage *= attacker.AttackUpgrade / 5;
                     break;
             }
 
@@ -523,8 +531,13 @@ namespace OpenNos.GameObject
 
             switch (attacker.AttackUpgrade)
             {
+                default:
+                    if (attacker.AttackUpgrade > 0)
+                        defender.ArmorDefense += attacker.AttackUpgrade / 5;
+                    break;
+
                 case -10:
-                    defender.ArmorDefense = defender.ArmorDefense * 2;
+                    defender.ArmorDefense *= 2;
                     break;
 
                 case -9:
@@ -562,6 +575,7 @@ namespace OpenNos.GameObject
                 case -1:
                     defender.ArmorDefense = (int)(defender.ArmorDefense * 0.1);
                     break;
+
                 case 0:
                     defender.ArmorDefense = 0;
                     break;
@@ -688,9 +702,6 @@ namespace OpenNos.GameObject
                             break;
 
                         case 2:
-                            elementalBoost = 1;
-                            break;
-
                         case 3:
                             elementalBoost = 1;
                             break;
@@ -753,7 +764,7 @@ namespace OpenNos.GameObject
 
             if ((attacker.EntityType == EntityType.Player || attacker.EntityType == EntityType.Mate) && (defender.EntityType == EntityType.Player || defender.EntityType == EntityType.Mate))
             {
-                totalDamage = totalDamage / 2;
+                totalDamage /= 2;
             }
 
             if (defender.EntityType == EntityType.Monster || defender.EntityType == EntityType.NPC)
