@@ -12,37 +12,23 @@
  * GNU General Public License for more details.
  */
 
-namespace OpenNos.GameObject
+using OpenNos.Data;
+using System.Collections.Generic;
+
+namespace OpenNos.DAL.Interface
 {
-    public class Gift
+    public interface IRollGeneratedItemDAO : IMappingBaseDAO
     {
-        #region Instantiation
+        #region Methods
 
-        public Gift()
-        {
-            // do nothing
-        }
+        RollGeneratedItemDTO Insert(RollGeneratedItemDTO item);
 
-        public Gift(short vnum, byte amount, short design = 0, bool isRareRandom = false)
-        {
-            VNum = vnum;
-            Amount = amount;
-            IsRandomRare = isRareRandom;
-            Design = design;
-        }
+        IEnumerable<RollGeneratedItemDTO> LoadAll();
 
-        #endregion
+        RollGeneratedItemDTO LoadById(short id);
 
-        #region Properties
-
-        public byte Amount { get; set; }
-
-        public short Design { get; set; }
-
-        public short VNum { get; set; }
-
-        public bool IsRandomRare { get;  set; }
-
+        IEnumerable<RollGeneratedItemDTO> LoadByItemVNum(short vnum);
+        
         #endregion
     }
 }

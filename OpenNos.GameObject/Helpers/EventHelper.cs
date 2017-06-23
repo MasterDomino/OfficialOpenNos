@@ -237,8 +237,18 @@ namespace OpenNos.GameObject.Helpers
                                     {
                                         return;
                                     }
-                                    if (evt.MapInstance.InstanceBag.EndState == 1)
+                                    if (evt.MapInstance.InstanceBag.EndState == 1 && evt.MapInstance.Monsters.Any(s=>s.IsBoss))
                                     {
+                                        foreach (ClientSession sess in grp.Characters.Where(s=> s.CurrentMapInstance.Monsters.Any(e => e.IsBoss)))
+                                        {
+                                            foreach(Gift gift in grp?.Raid?.GiftItems)
+                                            {
+                                                byte rare = 0;
+
+                                               //TODO add random rarity for some object
+                                                sess.Character.GiftAdd(gift.VNum, gift.Amount, rare, gift.Design, gift.IsRandomRare);
+                                            }
+                                        }
                                         Logger.LogEvent("RAID_SUCCESS", grp.Characters.ElementAt(0).Character.Name, $"RaidId: {grp.GroupId}");
 
                                         ServerManager.Instance.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("RAID_SUCCEED"), grp?.Raid?.Label, grp.Characters.ElementAt(0).Character.Name), 0));
@@ -363,7 +373,7 @@ namespace OpenNos.GameObject.Helpers
                         ClientSession cl = evt.MapInstance.Sessions.FirstOrDefault();
                         if (cl?.Character != null)
                         {
-                            ServerManager.Instance.Broadcast(cl, cl.Character?.Group.GeneraterRaidmbf(), ReceiverType.Group);
+                            ServerManager.Instance.Broadcast(cl, cl.Character?.Group.GeneraterRaidmbf(cl), ReceiverType.Group);
                             ServerManager.Instance.Broadcast(cl, UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NEW_MISSION"), 0), ReceiverType.Group);
                         }
                         break;
@@ -377,7 +387,7 @@ namespace OpenNos.GameObject.Helpers
 
                     case EventActionType.THROWITEMS:
                         Tuple<int, short, byte, int, int> parameters = (Tuple<int, short, byte, int, int>)evt.Parameter;
-                          evt.MapInstance.ThrowItems(parameters);
+                        evt.MapInstance.ThrowItems(parameters);
                         break;
 
                     case EventActionType.SPAWNONLASTENTRY:

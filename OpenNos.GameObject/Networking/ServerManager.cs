@@ -318,10 +318,10 @@ namespace OpenNos.GameObject
                             Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("YOU_HAVE_LIFE_RAID"), 2 - Session.CurrentMapInstance.InstanceBag.DeadList.Where(s => s == Session.Character.CharacterId).Count())));
                             Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("RAID_MEMBER_DEAD"), Session.Character.Name)));
 
-                            Session.CurrentMapInstance.InstanceBag.DeadList.Add(Session.Character.CharacterId);
+                            Session.Character.Group?.Raid?.InstanceBag.DeadList.Add(Session.Character.CharacterId);
                             Session.Character.Group?.Characters.ForEach(session =>
                             {
-                                session.SendPacket(session.Character.Group.GeneraterRaidmbf());
+                                session.SendPacket(session.Character.Group.GeneraterRaidmbf(session));
                                 session.SendPacket(session.Character.Group.GenerateRdlst());
                             });
                             Task.Factory.StartNew(async () =>
@@ -337,7 +337,7 @@ namespace OpenNos.GameObject
                             {
                                 grp.Characters.ForEach(s =>
                                 {
-                                    s.SendPacket(s.Character.Group.GeneraterRaidmbf());
+                                    s.SendPacket(s.Character.Group.GeneraterRaidmbf(s));
                                     s.SendPacket(s.Character.Group.GenerateRdlst());
                                 });
                                 grp.LeaveGroup(Session);
@@ -457,6 +457,10 @@ namespace OpenNos.GameObject
                     session.SendPackets(session.Character.GeneratePst());
                     session.SendPacket(session.Character.GenerateAct());
                     session.SendPacket(session.Character.GenerateScpStc());
+                    if (session.Character.Group?.Raid != null && session.Character.Group.Raid.InstanceBag?.Lock == true)
+                    {
+                        session.SendPacket(session.Character.Group.GeneraterRaidmbf(session));
+                    }
 
                     Parallel.ForEach(session.CurrentMapInstance.Sessions.Where(s => s.Character != null && !s.Character.InvisibleGm), visibleSession =>
                     {

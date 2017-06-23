@@ -384,6 +384,8 @@ namespace OpenNos.GameObject
 
         public List<StaticBonusDTO> StaticBonusList { get; set; }
 
+        public ScriptedInstance Timespace { get; set; }
+
         public int TimesUsed { get; set; }
 
         public List<long> TradeRequests { get; set; }
@@ -611,7 +613,7 @@ namespace OpenNos.GameObject
             {
                 if (CurrentMinigame != 0 && LastEffect.AddSeconds(3) <= DateTime.Now)
                 {
-                    MapInstance.Broadcast(GenerateEff(CurrentMinigame));
+                    Session.CurrentMapInstance?.Broadcast(GenerateEff(CurrentMinigame));
                     LastEffect = DateTime.Now;
                 }
 
@@ -691,7 +693,10 @@ namespace OpenNos.GameObject
                         {
                             if (Group != null)
                             {
-                                Group.Characters.ForEach(s => ServerManager.Instance.GetSessionByCharacterId(s.Character.CharacterId)?.SendPacket(GenerateStat()));
+                                if (Group.Raid == null)
+                                {
+                                    Group.Characters.ForEach(s => s?.SendPacket(GenerateStat()));
+                                }
                             }
                             else
                             {
@@ -2616,8 +2621,9 @@ namespace OpenNos.GameObject
             return new[] { value1, value2 };
         }
 
-        public void GiftAdd(short itemVNum, byte amount, byte rare = 0)
+        public void GiftAdd(short itemVNum, byte amount, byte rare = 0, short design = 0, bool forceRandom = false)
         {
+            //TODO add the rare support
             if (Inventory != null)
             {
                 lock (Inventory)
@@ -2625,11 +2631,26 @@ namespace OpenNos.GameObject
                     ItemInstance newItem = Inventory.InstantiateItemInstance(itemVNum, CharacterId, amount);
                     if (newItem != null)
                     {
-                        if (newItem.Item.ItemType == ItemType.Armor || newItem.Item.ItemType == ItemType.Weapon || newItem.Item.ItemType == ItemType.Shell)
+                        newItem.Design = design;
+
+                        if (newItem.Item.ItemType == ItemType.Armor || newItem.Item.ItemType == ItemType.Weapon || newItem.Item.ItemType == ItemType.Shell || forceRandom)
                         {
-                            ((WearableInstance)newItem).RarifyItem(Session, RarifyMode.Drop, RarifyProtection.None);
-                            newItem.Upgrade = newItem.Item.BasicUpgrade;
+                            while (forceRandom)
+                            {
+                                ((WearableInstance)newItem).RarifyItem(Session, RarifyMode.Drop, RarifyProtection.None);
+                                newItem.Upgrade = newItem.Item.BasicUpgrade;
+                                if(newItem.Rare >= 0)
+                                {
+                                    break;
+                                }
+                            }
                         }
+
+                        if (newItem.Item.Type.Equals(InventoryType.Equipment) && rare != 0)
+                        {
+                            newItem.Rare = (sbyte)rare;
+                        }
+
                         List<ItemInstance> newInv = Inventory.AddToInventory(newItem);
                         if (newInv.Any())
                         {

@@ -12,36 +12,33 @@
  * GNU General Public License for more details.
  */
 
-namespace OpenNos.GameObject
+using OpenNos.Domain;
+using OpenNos.GameObject;
+using System.Collections.Generic;
+
+namespace OpenNos.Data
 {
-    public class Gift
+    public class RollGeneratedItemDTO : MappingBaseDTO
     {
-        #region Instantiation
-
-        public Gift()
-        {
-            // do nothing
-        }
-
-        public Gift(short vnum, byte amount, short design = 0, bool isRareRandom = false)
-        {
-            VNum = vnum;
-            Amount = amount;
-            IsRandomRare = isRareRandom;
-            Design = design;
-        }
-
-        #endregion
-
         #region Properties
 
-        public byte Amount { get; set; }
+        public short RollGeneratedItemId { get; set; }   
 
-        public short Design { get; set; }
+        public short OriginalItemDesign { get; set; }
 
-        public short VNum { get; set; }
+        public short OriginalItemVNum { get; set; }
 
-        public bool IsRandomRare { get;  set; }
+        public short Probability { get; set; }
+
+        public byte ItemGeneratedAmount { get; set; }
+
+        public short ItemGeneratedVNum { get; set; }
+
+        public bool IsRareRandom { get; set; }
+
+        public byte MinimumOriginalItemRare { get; set; }
+
+        public byte MaximumOriginalItemRare { get; set; }
 
         #endregion
     }

@@ -51,6 +51,8 @@ namespace OpenNos.DAL.EF.DB
 
         public virtual DbSet<CharacterSkill> CharacterSkill { get; set; }
 
+        public virtual DbSet<RollGeneratedItem> RollGeneratedItem { get; set; }
+
         public virtual DbSet<Combo> Combo { get; set; }
 
         public virtual DbSet<Drop> Drop { get; set; }
@@ -295,6 +297,18 @@ namespace OpenNos.DAL.EF.DB
                  .WithMany(e => e.Mail)
                  .HasForeignKey(e => e.AttachmentVNum)
                  .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<RollGeneratedItem>()
+               .HasRequired(e => e.OriginalItem)
+               .WithMany(e => e.RollGeneratedItem)
+               .HasForeignKey(e => e.OriginalItemVNum)
+               .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<RollGeneratedItem>()
+               .HasRequired(e => e.ItemGenerated)
+               .WithMany(e => e.RollGeneratedItem2)
+               .HasForeignKey(e => e.ItemGeneratedVNum)
+               .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Map>()
                 .HasMany(e => e.Character)

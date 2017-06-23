@@ -8,7 +8,7 @@ namespace OpenNos.GameObject.Packets.ServerPackets
         #region Properties
 
         [PacketIndex(1)]
-        public long? Param { get; set; }
+        public long Param { get; set; }
 
         [PacketIndex(0)]
         public byte Value { get; set; }

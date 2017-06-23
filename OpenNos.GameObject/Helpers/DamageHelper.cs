@@ -414,7 +414,7 @@ namespace OpenNos.GameObject
 
             if (attacker.AttackType != AttackType.Magical)
             {
-                double multiplier = defender.Dodge / (attacker.Hitrate + attacker.Morale);
+                double multiplier = defender.Dodge / (attacker.Hitrate + attacker.Morale + 1);
                 if (multiplier > 5)
                 {
                     multiplier = 5;
