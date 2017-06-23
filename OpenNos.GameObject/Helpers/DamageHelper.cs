@@ -533,7 +533,7 @@ namespace OpenNos.GameObject
             {
                 default:
                     if (attacker.AttackUpgrade < 0)
-                        defender.ArmorDefense += attacker.AttackUpgrade / 5;
+                        defender.ArmorDefense += defender.ArmorDefense / 5;
                     break;
 
                 case -10:
