@@ -64,7 +64,7 @@ namespace OpenNos.GameObject.Event
                             SpawnDH(fam.LandOfDeath);
                         }
                     }
-                }        
+                }
                 else if (LODTime == HornTime - (HornRespawn * dhspawns) - HornStay)
                 {
                     SpinWait.SpinUntil(() => !ServerManager.Instance.InFamilyRefreshMode);

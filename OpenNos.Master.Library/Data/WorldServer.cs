@@ -28,7 +28,7 @@ namespace OpenNos.Master.Library.Data
 
         public Guid Id { get; set; }
 
-        public SerializableWorldServer Serializable { get; private set; }
+        public SerializableWorldServer Serializable { get; }
 
         public IScsServiceClient ServiceClient { get; set; }
 

@@ -283,36 +283,30 @@ namespace OpenNos.GameObject
                     break;
 
                 case BCardType.CardType.MeditationSkill:
-                    if (session.GetType() == typeof(Character))
+                    if (session.GetType() == typeof(Character) && SubType.Equals((byte)AdditionalTypes.MeditationSkill.CausingChance / 10))
                     {
-                        if (SubType.Equals((byte)AdditionalTypes.MeditationSkill.CausingChance / 10))
+                        if (ServerManager.Instance.RandomNumber() < FirstData)
                         {
-                            if (ServerManager.Instance.RandomNumber() < FirstData)
+                            Character character = (session as Character);
+
+                            if (SkillVNum.HasValue)
                             {
-                                Character character = (session as Character);
-
-                                if (SkillVNum.HasValue)
+                                character.InSkillCombo = true;
+                                Skill skill = ServerManager.Instance.GetSkill(SkillVNum.Value);
+                                Skill newSkill = ServerManager.Instance.GetSkill((short)SecondData);
+                                Observable.Timer(TimeSpan.FromMilliseconds(100)).Subscribe(observer =>
                                 {
-                                    character.InSkillCombo = true;
-                                    Skill skill = ServerManager.Instance.GetSkill(SkillVNum.Value);
-                                    Skill newSkill = ServerManager.Instance.GetSkill((short)SecondData);
-                                    Observable.Timer(TimeSpan.FromMilliseconds(100)).Subscribe(observer =>
+                                    foreach (QuicklistEntryDTO qe in character.QuicklistEntries.Where(s => s.Pos.Equals(skill.CastId)))
                                     {
-                                        foreach (QuicklistEntryDTO qe in character.QuicklistEntries.Where(s => s.Pos.Equals(skill.CastId)))
-                                        {
-                                            character.Session.SendPacket($"qset {qe.Q1} {qe.Q2} {qe.Type}.{qe.Slot}.{newSkill.CastId}.0");
-                                        }
-                                        character.Session.SendPacket($"mslot {newSkill.CastId} -1");
-                                    });
-
-                                    if (skill.CastId > 10)
-                                    {
-                                        // HACK this way
-                                        Observable.Timer(TimeSpan.FromMilliseconds(skill.Cooldown * 100 + 500)).Subscribe(observer =>
-                                        {
-                                            character.Session.SendPacket($"sr {skill.CastId}");
-                                        });
+                                        character.Session.SendPacket($"qset {qe.Q1} {qe.Q2} {qe.Type}.{qe.Slot}.{newSkill.CastId}.0");
                                     }
+                                    character.Session.SendPacket($"mslot {newSkill.CastId} -1");
+                                });
+
+                                if (skill.CastId > 10)
+                                {
+                                    // HACK this way
+                                    Observable.Timer(TimeSpan.FromMilliseconds((skill.Cooldown * 100) + 500)).Subscribe(observer => character.Session.SendPacket($"sr {skill.CastId}"));
                                 }
                             }
                         }

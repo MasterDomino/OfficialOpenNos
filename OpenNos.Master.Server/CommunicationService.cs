@@ -78,7 +78,7 @@ namespace OpenNos.Master.Server
             {
                 account.ConnectedWorld = MSManager.Instance.WorldServers.FirstOrDefault(w => w.Id.Equals(worldId));
             }
-            return account.ConnectedWorld == null ? false : true;
+            return account.ConnectedWorld != null;
         }
 
         public bool ConnectCharacter(Guid worldId, long characterId)
@@ -328,7 +328,7 @@ namespace OpenNos.Master.Server
                     if (message.DestinationCharacterId.HasValue)
                     {
                         AccountConnection account = MSManager.Instance.ConnectedAccounts.FirstOrDefault(a => a.CharacterId.Equals(message.DestinationCharacterId.Value));
-                        if (account != null && account.ConnectedWorld != null)
+                        if (account?.ConnectedWorld != null)
                         {
                             account.ConnectedWorld.ServiceClient.GetClientProxy<ICommunicationClient>().SendMessageToCharacter(message);
                             return account.ConnectedWorld.ChannelId;
@@ -440,7 +440,7 @@ namespace OpenNos.Master.Server
             {
                 MSManager.Instance.ConnectedAccounts.CopyTo(tmp);
             }
-            foreach (AccountConnection account in tmp.Where(a => a != null && a.LastPulse.AddMinutes(5) <= DateTime.Now))
+            foreach (AccountConnection account in tmp.Where(a => a?.LastPulse.AddMinutes(5) <= DateTime.Now))
             {
                 KickSession(account.AccountId, null);
             }

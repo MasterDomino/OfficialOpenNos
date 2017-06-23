@@ -86,10 +86,7 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Service
         /// </summary>
         public CommunicationStates CommunicationState
         {
-            get
-            {
-                return _serverClient.CommunicationState;
-            }
+            get { return _serverClient.CommunicationState; }
         }
 
         /// <summary>

@@ -49,7 +49,6 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         /// </summary>
         private readonly Socket _clientSocket;
 
-        // 4KB
         private readonly ScsTcpEndPoint _remoteEndPoint;
 
         /// <summary>
@@ -58,18 +57,18 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         private readonly object _syncLock;
 
         private bool _disposed;
-        private ConcurrentQueue<byte[]> _highPriorityBuffer;
-        private ConcurrentQueue<byte[]> _lowPriorityBuffer;
-        private Random _random = new Random();
+        private readonly ConcurrentQueue<byte[]> _highPriorityBuffer;
+        private readonly ConcurrentQueue<byte[]> _lowPriorityBuffer;
+        private readonly Random _random = new Random();
 
         /// <summary>
         /// A flag to control thread's running
         /// </summary>
         private volatile bool _running;
 
-        private CancellationTokenSource _sendCancellationToken = new CancellationTokenSource();
+        private readonly CancellationTokenSource _sendCancellationToken = new CancellationTokenSource();
 
-        private Task _sendTask;
+        private readonly Task _sendTask;
 
         #endregion
 
@@ -124,8 +123,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         {
             while (!_sendCancellationToken.IsCancellationRequested)
             {
-                await Task.Delay(period, _sendCancellationToken);
-
+                await Task.Delay(period, _sendCancellationToken).ConfigureAwait(false);
                 if (!_sendCancellationToken.IsCancellationRequested)
                 {
                     action();
@@ -219,6 +217,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         /// Sends a message to the remote application.
         /// </summary>
         /// <param name="message">Message to be sent</param>
+        /// <param name="priority">Priority of message to send</param>
         protected override void SendMessagepublic(IScsMessage message, byte priority)
         {
             if (priority > 5)

@@ -19,61 +19,49 @@ namespace OpenNos.Handler
 {
     public class UselessPacketHandler : IPacketHandler
     {
-        #region Members
-
-        private readonly ClientSession _session;
-
-        #endregion
-
         #region Instantiation
 
         public UselessPacketHandler(ClientSession session)
         {
-            _session = session;
+            Session = session;
         }
 
         #endregion
 
         #region Properties
 
-        public ClientSession Session
-        {
-            get
-            {
-                return _session;
-            }
-        }
+        public ClientSession Session { get; }
 
         #endregion
 
         #region Methods
 
-        public void CClose(CClosePacket packet)
+        public void CClose(CClosePacket cClosePacket)
         {
             // idk
         }
 
-        public void FStashEnd(FStashEndPacket packet)
+        public void FStashEnd(FStashEndPacket fStashEndPacket)
         {
             // idk
         }
 
-        public void FStashEnd(StashEndPacket packet)
+        public void FStashEnd(StashEndPacket stashEndPacket)
         {
             // idk
         }
 
-        public void Lbs(LbsPacket packet)
+        public void Lbs(LbsPacket lbsPacket)
         {
             // idk
         }
 
-        public void ShopClose(ShopClosePacket packet)
+        public void ShopClose(ShopClosePacket shopClosePacket)
         {
             // Not needed for now.
         }
 
-        public void Snap(SnapPacket packet)
+        public void Snap(SnapPacket snapPacket)
         {
             // Not needed for now. (pictures)
         }

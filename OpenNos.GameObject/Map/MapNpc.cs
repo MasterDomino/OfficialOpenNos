@@ -240,11 +240,11 @@ namespace OpenNos.GameObject
                     npcMonsterSkill = Npc.Skills.Where(s => (DateTime.Now - s.LastSkillUse).TotalMilliseconds >= 100 * s.Skill.Cooldown).OrderBy(rnd => _random.Next()).FirstOrDefault();
                 }
                 int hitmode = 0;
-                int damage = DamageHelper.Instance.CalculateDamage(new BattleEntity(this), new BattleEntity(monster), npcMonsterSkill?.Skill, ref hitmode); ;
+                int damage = DamageHelper.Instance.CalculateDamage(new BattleEntity(this), new BattleEntity(monster), npcMonsterSkill?.Skill, ref hitmode);
                 int distance = Map.GetDistance(new MapCell { X = MapX, Y = MapY }, new MapCell { X = monster.MapX, Y = monster.MapY });
-                if (monster.CurrentHp > 0 && (npcMonsterSkill != null && distance < npcMonsterSkill.Skill.Range || distance <= Npc.BasicRange))
+                if (monster.CurrentHp > 0 && ((npcMonsterSkill != null && distance < npcMonsterSkill.Skill.Range) || distance <= Npc.BasicRange))
                 {
-                    if ((DateTime.Now - LastEffect).TotalMilliseconds >= 1000 + Npc.BasicCooldown * 200 && !Npc.Skills.Any() || npcMonsterSkill != null)
+                    if (((DateTime.Now - LastEffect).TotalMilliseconds >= 1000 + (Npc.BasicCooldown * 200) && Npc.Skills.Count == 0) || npcMonsterSkill != null)
                     {
                         if (npcMonsterSkill != null)
                         {
@@ -282,18 +282,18 @@ namespace OpenNos.GameObject
                     if (IsMoving)
                     {
                         const short maxDistance = 5;
-                        if (!Path.Any() && distance > 1 && distance < maxDistance)
+                        if (Path.Count == 0 && distance > 1 && distance < maxDistance)
                         {
                             short xoffset = (short)ServerManager.Instance.RandomNumber(-1, 1);
                             short yoffset = (short)ServerManager.Instance.RandomNumber(-1, 1);
                             //go to monster
                             Path = BestFirstSearch.FindPath(new GridPos { X = MapX, Y = MapY }, new GridPos { X = (short)(monster.MapX + xoffset), Y = (short)(monster.MapY + yoffset) }, MapInstance.Map.Grid);
                         }
-                        if (DateTime.Now > LastMove && Npc.Speed > 0 && Path.Any())
+                        if (DateTime.Now > LastMove && Npc.Speed > 0 && Path.Count > 0)
                         {
                             int maxindex = Path.Count > Npc.Speed / 2 && Npc.Speed > 1 ? Npc.Speed / 2 : Path.Count;
-                            short mapX = (short)Path.ElementAt(maxindex - 1).X;
-                            short mapY = (short)Path.ElementAt(maxindex - 1).Y;
+                            short mapX = Path[maxindex - 1].X;
+                            short mapY = Path[maxindex - 1].Y;
                             double waitingtime = Map.GetDistance(new MapCell { X = mapX, Y = mapY }, new MapCell { X = MapX, Y = MapY }) / (double)Npc.Speed;
                             MapInstance.Broadcast(new BroadcastPacket(null, $"mv 2 {MapNpcId} {mapX} {mapY} {Npc.Speed}", ReceiverType.All, xCoordinate: mapX, yCoordinate: mapY));
                             LastMove = DateTime.Now.AddSeconds(waitingtime > 1 ? 1 : waitingtime);
@@ -316,7 +316,6 @@ namespace OpenNos.GameObject
                 }
             }
         }
-
 
         /// <summary>
         /// Remove the current Target from Npc.

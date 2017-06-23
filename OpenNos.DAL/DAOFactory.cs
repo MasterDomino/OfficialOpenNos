@@ -348,7 +348,6 @@ namespace OpenNos.DAL
             }
         }
 
-
         public static IItemDAO ItemDAO
         {
             get

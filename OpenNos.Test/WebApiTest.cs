@@ -22,7 +22,7 @@ namespace OpenNos.Test
                      CommunicationServiceClient.Instance.RegisterAccountLogin(x, x, "127.0.0.1");
                      bool hasRegisteredAccountLogin = CommunicationServiceClient.Instance.IsLoginPermitted(x, x);
                      Assert.IsTrue(hasRegisteredAccountLogin);
-                 });
+                 }).ConfigureAwait(false);
             }
         }
 

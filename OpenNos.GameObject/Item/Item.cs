@@ -23,11 +23,11 @@ namespace OpenNos.GameObject
     {
         #region Instantiation
 
-        public Item()
+        protected Item()
         {
         }
 
-        public Item(ItemDTO item)
+        protected Item(ItemDTO item)
         {
             InitializeItem(item);
         }

@@ -85,7 +85,6 @@ namespace OpenNos.GameObject
             defender.DefenseUpgrade += (short)GetDefenderBenefitingBuffs(CardType.Defence, (byte)AdditionalTypes.Defence.DefenceLevelIncreased)[0];
             defender.DefenseUpgrade += (short)GetAttackerBenefitingBuffs(CardType.Defence, (byte)AdditionalTypes.Defence.DefenceLevelDecreased)[0];
 
-
             /*
              * 
              * Percentage Boost categories:
@@ -127,13 +126,13 @@ namespace OpenNos.GameObject
             double boostCategory3 = 1;
             double boostCategory4 = 1;
             double boostCategory5 = 1;
-            double shellBoostCategory1 = 1;
-            double shellBoostCategory2 = 1;
-            double shellBoostCategory3 = 1;
-            double shellBoostCategory4 = 1;
-            double shellBoostCategory5 = 1;
-            int staticBoostCategory1 = 0;
-            int staticBoostCategory2 = 0;
+            const double shellBoostCategory1 = 1;
+            const double shellBoostCategory2 = 1;
+            const double shellBoostCategory3 = 1;
+            const double shellBoostCategory4 = 1;
+            const double shellBoostCategory5 = 1;
+            const int staticBoostCategory1 = 0;
+            const int staticBoostCategory2 = 0;
             int staticBoostCategory3 = 0;
             int staticBoostCategory4 = 0;
             int staticBoostCategory5 = 0;
@@ -157,7 +156,6 @@ namespace OpenNos.GameObject
             {
                 boostCategory1 += GetAttackerBenefitingBuffs(CardType.SpecialisationBuffResistance, (byte)AdditionalTypes.SpecialisationBuffResistance.IncreaseDamageInPVP)[0] / 100D;
                 boostCategory1 += GetAttackerBenefitingBuffs(CardType.LeonaPassiveSkill, (byte)AdditionalTypes.LeonaPassiveSkill.AttackIncreasedInPVP)[0] / 100D;
-
             }
 
             #endregion
@@ -398,12 +396,9 @@ namespace OpenNos.GameObject
 
             #region Too Near Range Attack Penalty (boostCategory2)
 
-            if (attacker.AttackType == AttackType.Range)
+            if (attacker.AttackType == AttackType.Range && Map.GetDistance(new MapCell { X = attacker.PositionX, Y = attacker.PositionY }, new MapCell { X = defender.PositionX, Y = defender.PositionY }) < 4)
             {
-                if (Map.GetDistance(new MapCell { X = attacker.PositionX, Y = attacker.PositionY }, new MapCell { X = defender.PositionX, Y = defender.PositionY }) < 4)
-                {
-                    boostCategory2 -= 0.3;
-                }
+                boostCategory2 -= 0.3;
             }
 
             #endregion
@@ -419,7 +414,7 @@ namespace OpenNos.GameObject
                 {
                     multiplier = 5;
                 }
-                double chance = -0.25 * Math.Pow(multiplier, 3) - 0.57 * Math.Pow(multiplier, 2) + 25.3 * multiplier - 1.41;
+                double chance = (-0.25 * Math.Pow(multiplier, 3)) - (0.57 * Math.Pow(multiplier, 2)) + (25.3 * multiplier) - 1.41;
                 if (chance <= 1)
                 {
                     chance = 1;
@@ -428,13 +423,10 @@ namespace OpenNos.GameObject
                 //{
                 //    chance = 10;
                 //}
-                if (!defender.Invincible)
+                if (!defender.Invincible && ServerManager.Instance.RandomNumber() < chance)
                 {
-                    if (ServerManager.Instance.RandomNumber() < chance)
-                    {
-                        hitMode = 1;
-                        return 0;
-                    }
+                    hitMode = 1;
+                    return 0;
                 }
             }
 
@@ -606,18 +598,15 @@ namespace OpenNos.GameObject
 
             #region Crit Damage
 
-            if (ServerManager.Instance.RandomNumber() < attacker.CritChance)
+            if (ServerManager.Instance.RandomNumber() < attacker.CritChance && attacker.AttackType != AttackType.Magical)
             {
-                if (attacker.AttackType != AttackType.Magical)
+                double multiplier = attacker.CritRate / 100D;
+                if (multiplier > 3)
                 {
-                    double multiplier = attacker.CritRate / 100D;
-                    if (multiplier > 3)
-                    {
-                        multiplier = 3;
-                    }
-                    normalDamage += (int)(normalDamage * multiplier);
-                    hitMode = 3;
+                    multiplier = 3;
                 }
+                normalDamage += (int)(normalDamage * multiplier);
+                hitMode = 3;
             }
 
             #endregion
@@ -748,8 +737,7 @@ namespace OpenNos.GameObject
 
             #region Elemental Damage 
 
-
-            int elementalDamage = (int)((int)((int)((int)((staticBoostCategory5 + fairyDamage) * elementalBoost) * (1 - defender.Resistance / 100D)) * boostCategory5) * shellBoostCategory5);
+            int elementalDamage = (int)((int)((int)((int)((staticBoostCategory5 + fairyDamage) * elementalBoost) * (1 - (defender.Resistance / 100D))) * boostCategory5) * shellBoostCategory5);
 
             if (elementalDamage < 0)
             {

@@ -137,7 +137,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
 
         public async Task ClearLowPriorityQueue()
         {
-            await _communicationChannel.ClearLowPriorityQueue();
+            await _communicationChannel.ClearLowPriorityQueue().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -152,6 +152,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
         /// Sends a message to the client.
         /// </summary>
         /// <param name="message">Message to be sent</param>
+        /// <param name="priority">Message priority to send</param>
         public void SendMessage(IScsMessage message, byte priority)
         {
             _communicationChannel.SendMessage(message, priority);
@@ -183,7 +184,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
         /// <param name="e">Event arguments</param>
         private void CommunicationChannel_MessageReceived(object sender, MessageEventArgs e)
         {
-            var message = e.Message;
+            IScsMessage message = e.Message;
             if (message is ScsPingMessage)
             {
                 _communicationChannel.SendMessage(new ScsPingMessage { RepliedMessageId = message.MessageId }, 10);

@@ -22,7 +22,7 @@ namespace OpenNos.GameObject
     {
         #region Properties
 
-        public static int SourceX { get; private set; }
+        public static int SourceX { get; }
 
         #endregion
 

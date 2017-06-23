@@ -122,7 +122,7 @@ namespace OpenNos.Handler
         {
             SpinWait.SpinUntil(() => !ServerManager.Instance.InFamilyRefreshMode);
 
-            if (Session.Character.Group != null && Session.Character.Group.GroupType == GroupType.Group && Session.Character.Group.CharacterCount == 3)
+            if (Session.Character.Group?.GroupType == GroupType.Group && Session.Character.Group.CharacterCount == 3)
             {
                 foreach (ClientSession session in Session.Character.Group.Characters)
                 {
@@ -189,7 +189,7 @@ namespace OpenNos.Handler
             SpinWait.SpinUntil(() => !ServerManager.Instance.InFamilyRefreshMode);
             if (Session.Character.Family != null && Session.Character.FamilyCharacter != null)
             {
-                if (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Assistant || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager && Session.Character.Family.ManagerCanShout || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Head)
+                if (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Assistant || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager && Session.Character.Family.ManagerCanShout) || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Head)
                 {
                     string msg = string.Empty;
                     int i = 0;
@@ -286,8 +286,8 @@ namespace OpenNos.Handler
         {
             if (Session.Character.Family == null || !(Session.Character.FamilyCharacter.Authority == FamilyAuthority.Head
               || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Assistant
-              || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Member && Session.Character.Family.MemberAuthorityType != FamilyAuthorityType.NONE
-              || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager && Session.Character.Family.ManagerAuthorityType != FamilyAuthorityType.NONE
+              || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Member && Session.Character.Family.MemberAuthorityType != FamilyAuthorityType.NONE)
+              || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager && Session.Character.Family.ManagerAuthorityType != FamilyAuthorityType.NONE)
               )
              )
             {
@@ -329,8 +329,8 @@ namespace OpenNos.Handler
             Family fam = Session.Character.Family;
             List<ClientSession> sessions = ServerManager.Instance.Sessions.Where(s => s.Character?.Family != null && s.Character.Family.FamilyId == fam.FamilyId).ToList();
 
-            fam.FamilyCharacters.ForEach(s => { DAOFactory.FamilyCharacterDAO.Delete(s.Character.Name); });
-            fam.FamilyLogs.ForEach(s => { DAOFactory.FamilyLogDAO.Delete(s.FamilyLogId); });
+            fam.FamilyCharacters.ForEach(s => DAOFactory.FamilyCharacterDAO.Delete(s.Character.Name));
+            fam.FamilyLogs.ForEach(s => DAOFactory.FamilyLogDAO.Delete(s.FamilyLogId));
             DAOFactory.FamilyDAO.Delete(fam.FamilyId);
             ServerManager.Instance.FamilyRefresh(fam.FamilyId);
 
@@ -606,7 +606,7 @@ namespace OpenNos.Handler
             SpinWait.SpinUntil(() => !ServerManager.Instance.InFamilyRefreshMode);
             if (Session.Character.Family != null && Session.Character.FamilyCharacter != null)
             {
-                if (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Assistant || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager && Session.Character.Family.ManagerCanShout || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Head)
+                if (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Assistant || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager && Session.Character.Family.ManagerCanShout) || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Head)
                 {
                     string msg = string.Empty;
                     int i = 0;
@@ -675,8 +675,8 @@ namespace OpenNos.Handler
         {
             if (Session.Character.Family == null || !(Session.Character.FamilyCharacter.Authority == FamilyAuthority.Head
              || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Assistant
-             || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Member && Session.Character.Family.MemberAuthorityType == FamilyAuthorityType.ALL
-             || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager && Session.Character.Family.ManagerAuthorityType == FamilyAuthorityType.ALL))
+             || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Member && Session.Character.Family.MemberAuthorityType == FamilyAuthorityType.ALL)
+             || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager && Session.Character.Family.ManagerAuthorityType == FamilyAuthorityType.ALL)))
             {
                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("NO_FAMILY_RIGHT")));
                 return;
@@ -740,11 +740,11 @@ namespace OpenNos.Handler
                     }
                 }
             }
-            if (sourceInventory != null && sourceInventory.Amount > 0)
+            if (sourceInventory?.Amount > 0)
             {
                 DAOFactory.IteminstanceDAO.InsertOrUpdate(sourceInventory);
             }
-            if (destinationInventory != null && destinationInventory.Amount > 0)
+            if (destinationInventory?.Amount > 0)
             {
                 DAOFactory.IteminstanceDAO.InsertOrUpdate(destinationInventory);
             }
@@ -761,8 +761,8 @@ namespace OpenNos.Handler
         {
             if (Session.Character.Family == null || !(Session.Character.FamilyCharacter.Authority == FamilyAuthority.Head
            || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Assistant
-           || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Member && Session.Character.Family.MemberAuthorityType == FamilyAuthorityType.ALL
-           || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager && Session.Character.Family.ManagerAuthorityType == FamilyAuthorityType.ALL))
+           || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Member && Session.Character.Family.MemberAuthorityType == FamilyAuthorityType.ALL)
+           || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager && Session.Character.Family.ManagerAuthorityType == FamilyAuthorityType.ALL)))
             {
                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("NO_FAMILY_RIGHT")));
                 return;
@@ -814,7 +814,7 @@ namespace OpenNos.Handler
                 return;
             }
 
-            if (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Member || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager && !Session.Character.Family.ManagerCanInvite)
+            if (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Member || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager && !Session.Character.Family.ManagerCanInvite))
             {
                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("FAMILY_INVITATION_NOT_ALLOWED"))));
                 return;
@@ -863,7 +863,7 @@ namespace OpenNos.Handler
             if (joinFamilyPacket.Type == 1)
             {
                 ClientSession inviteSession = ServerManager.Instance.GetSessionByCharacterId(characterId);
-                if (inviteSession != null && inviteSession.Character.FamilyInviteCharacters.Contains(Session.Character.CharacterId) && inviteSession.Character.Family != null && inviteSession.Character.Family.FamilyCharacters != null)
+                if (inviteSession?.Character.FamilyInviteCharacters.Contains(Session.Character.CharacterId) == true && inviteSession.Character.Family != null && inviteSession.Character.Family.FamilyCharacters != null)
                 {
                     if (inviteSession.Character.Family.FamilyCharacters.Count + 1 > inviteSession.Character.Family.MaxSize)
                     {

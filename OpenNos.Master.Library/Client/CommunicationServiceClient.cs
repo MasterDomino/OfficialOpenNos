@@ -16,8 +16,8 @@ namespace OpenNos.Master.Library.Client
         #region Members
 
         private static CommunicationServiceClient _instance;
-        private IScsServiceClient<ICommunicationService> _client;
-        private CommunicationClient _commClient;
+        private readonly IScsServiceClient<ICommunicationService> _client;
+        private readonly CommunicationClient _commClient;
 
         #endregion
 

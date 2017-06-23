@@ -96,7 +96,6 @@ namespace OpenNos.GameObject
                             case ClassType.Archer:
                                 weapon = character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.SecondaryWeapon, InventoryType.Wear);
                                 break;
-
                         }
                         break;
                 }
@@ -362,6 +361,5 @@ namespace OpenNos.GameObject
         public short PositionX { get; set; }
 
         public short PositionY { get; set; }
-
     }
 }

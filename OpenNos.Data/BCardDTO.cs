@@ -27,6 +27,5 @@ namespace OpenNos.Data
         public bool IsLevelScaled { get; set; }
 
         public short Delay { get; set; }
-
     }
 }

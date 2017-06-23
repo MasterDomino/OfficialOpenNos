@@ -37,11 +37,7 @@ namespace OpenNos.GameObject.Helpers
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new EventHelper();
-                }
-                return instance;
+                return instance ?? (instance = new EventHelper());
             }
         }
 
@@ -136,10 +132,7 @@ namespace OpenNos.GameObject.Helpers
                     case EventActionType.SENDPACKET:
                         if (session == null)
                         {
-                            evt.MapInstance.Sessions.ToList().ForEach(e =>
-                            {
-                                RunEvent(evt, e);
-                            });
+                            evt.MapInstance.Sessions.ToList().ForEach(e => RunEvent(evt, e));
                         }
                         break;
 
@@ -237,15 +230,15 @@ namespace OpenNos.GameObject.Helpers
                                     {
                                         return;
                                     }
-                                    if (evt.MapInstance.InstanceBag.EndState == 1 && evt.MapInstance.Monsters.Any(s=>s.IsBoss))
+                                    if (evt.MapInstance.InstanceBag.EndState == 1 && evt.MapInstance.Monsters.Any(s => s.IsBoss))
                                     {
-                                        foreach (ClientSession sess in grp.Characters.Where(s=> s.CurrentMapInstance.Monsters.Any(e => e.IsBoss)))
+                                        foreach (ClientSession sess in grp.Characters.Where(s => s.CurrentMapInstance.Monsters.Any(e => e.IsBoss)))
                                         {
-                                            foreach(Gift gift in grp?.Raid?.GiftItems)
+                                            foreach (Gift gift in grp?.Raid?.GiftItems)
                                             {
-                                                byte rare = 0;
+                                                const byte rare = 0;
 
-                                               //TODO add random rarity for some object
+                                                //TODO add random rarity for some object
                                                 sess.Character.GiftAdd(gift.VNum, gift.Amount, rare, gift.Design, gift.IsRandomRare);
                                             }
                                         }
@@ -255,29 +248,28 @@ namespace OpenNos.GameObject.Helpers
                                     }
 
                                     Observable.Timer(TimeSpan.FromSeconds(evt.MapInstance.InstanceBag.EndState == 1 ? 30 : 0)).Subscribe(o =>
+                                    {
+                                        ClientSession[] grpmembers = new ClientSession[40];
+                                        grp.Characters.CopyTo(grpmembers);
+                                        foreach (ClientSession targetSession in grpmembers)
                                         {
-
-                                            ClientSession[] grpmembers = new ClientSession[40];
-                                            grp.Characters.CopyTo(grpmembers);
-                                            foreach (ClientSession targetSession in grpmembers)
+                                            if (targetSession != null)
                                             {
-                                                if (targetSession != null)
+                                                if (targetSession.Character.Hp <= 0)
                                                 {
-                                                    if (targetSession.Character.Hp <= 0)
-                                                    {
-                                                        targetSession.Character.Hp = 1;
-                                                        targetSession.Character.Mp = 1;
-                                                    }
-                                                    targetSession.SendPacket(targetSession.Character.GenerateRaidBf(evt.MapInstance.InstanceBag.EndState));
-                                                    targetSession.SendPacket(targetSession.Character.GenerateRaid(1, true));
-                                                    targetSession.SendPacket(targetSession.Character.GenerateRaid(2, true));
-                                                    grp.LeaveGroup(targetSession);
+                                                    targetSession.Character.Hp = 1;
+                                                    targetSession.Character.Mp = 1;
                                                 }
+                                                targetSession.SendPacket(targetSession.Character.GenerateRaidBf(evt.MapInstance.InstanceBag.EndState));
+                                                targetSession.SendPacket(targetSession.Character.GenerateRaid(1, true));
+                                                targetSession.SendPacket(targetSession.Character.GenerateRaid(2, true));
+                                                grp.LeaveGroup(targetSession);
                                             }
-                                            ServerManager.Instance.GroupList.RemoveAll(s => s.GroupId == grp.GroupId);
-                                            ServerManager.Instance.GroupsThreadSafe.Remove(grp.GroupId);
-                                            evt.MapInstance.Dispose();
-                                        });
+                                        }
+                                        ServerManager.Instance.GroupList.RemoveAll(s => s.GroupId == grp.GroupId);
+                                        ServerManager.Instance.GroupsThreadSafe.Remove(grp.GroupId);
+                                        evt.MapInstance.Dispose();
+                                    });
                                 }
                                 break;
                         }
@@ -410,10 +402,7 @@ namespace OpenNos.GameObject.Helpers
 
         public void ScheduleEvent(TimeSpan timeSpan, EventContainer evt)
         {
-            Observable.Timer(timeSpan).Subscribe(x =>
-            {
-                RunEvent(evt);
-            });
+            Observable.Timer(timeSpan).Subscribe(x => RunEvent(evt));
         }
 
         #endregion

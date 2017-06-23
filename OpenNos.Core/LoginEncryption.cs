@@ -23,7 +23,6 @@ namespace OpenNos.Core
 
         public LoginEncryption() : base(false)
         {
-            // do nothing
         }
 
         #endregion

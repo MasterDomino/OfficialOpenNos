@@ -22,7 +22,7 @@ namespace OpenNos.Data
     {
         #region Properties
 
-        public short RollGeneratedItemId { get; set; }   
+        public short RollGeneratedItemId { get; set; }
 
         public short OriginalItemDesign { get; set; }
 

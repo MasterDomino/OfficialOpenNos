@@ -70,19 +70,16 @@ namespace OpenNos.Handler
                 {
                     List<CharacterSkill> skills = Session.Character.UseSp ? Session.Character.SkillsSp.GetAllItems() : Session.Character.Skills.GetAllItems();
                     CharacterSkill ski = skills?.FirstOrDefault(s => s.Skill.CastId == subpacket.SkillCastId - 1);
-                    if (ski != null && ski.CanBeUsed() && Session.HasCurrentMapInstance)
+                    if (ski?.CanBeUsed() == true && Session.HasCurrentMapInstance)
                     {
                         MapMonster mon = Session.CurrentMapInstance.GetMonster(subpacket.TargetId);
-                        if (mon != null && mon.IsInRange(Session.Character.PositionX, Session.Character.PositionY, ski.Skill.Range) && mon.CurrentHp > 0)
+                        if (mon?.IsInRange(Session.Character.PositionX, Session.Character.PositionY, ski.Skill.Range) == true && mon.CurrentHp > 0)
                         {
                             Session.Character.LastSkillUse = DateTime.Now;
                             mon.HitQueue.Enqueue(new HitRequest(TargetHitType.SpecialZoneHit, Session, ski.Skill));
                         }
 
-                        Observable.Timer(TimeSpan.FromMilliseconds(ski.Skill.Cooldown * 100)).Subscribe(o =>
-                        {
-                            Session.SendPacket($"sr {subpacket.SkillCastId - 1}");
-                        });
+                        Observable.Timer(TimeSpan.FromMilliseconds(ski.Skill.Cooldown * 100)).Subscribe(o => Session.SendPacket($"sr {subpacket.SkillCastId - 1}"));
                     }
                 }
             }
@@ -216,8 +213,8 @@ namespace OpenNos.Handler
                 {
                     if (target?.CurrentMapInstance?.Map?.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
                     {
-                        hitRequest.Session.Character.Act4Kill += 1;
-                        target.Character.Act4Dead += 1;
+                        hitRequest.Session.Character.Act4Kill++;
+                        target.Character.Act4Dead++;
                         target.Character.GetAct4Points(-1);
                         if (target.Character.Level + 10 >= hitRequest.Session.Character.Level && hitRequest.Session.Character.Level <= target.Character.Level - 10)
                         {
@@ -260,12 +257,9 @@ namespace OpenNos.Handler
                     }
                     else
                     {
-                        hitRequest.Session.Character.TalentWin += 1;
-                        target.Character.TalentLose += 1;
-                        Observable.Timer(TimeSpan.FromMilliseconds(1000)).Subscribe(o =>
-                        {
-                            ServerManager.Instance.AskPVPRevive(target.Character.CharacterId);
-                        });
+                        hitRequest.Session.Character.TalentWin++;
+                        target.Character.TalentLose++;
+                        Observable.Timer(TimeSpan.FromMilliseconds(1000)).Subscribe(o => ServerManager.Instance.AskPVPRevive(target.Character.CharacterId));
                     }
                 }
 
@@ -383,7 +377,6 @@ namespace OpenNos.Handler
                     }
                 }
 
-
                 if (ski != null && Session.Character.Mp >= ski.Skill.MpCost)
                 {
                     // AOE Target hit
@@ -471,22 +464,15 @@ namespace OpenNos.Handler
                                 {
                                     foreach (ClientSession target in clientSessions)
                                     {
-
                                         ski.Skill.BCards.ForEach(s => s.ApplyBCards(target.Character));
                                     }
-
                                 }
                                 break;
 
                             case 4:
                             case 0:
-                                ski.Skill.BCards.ForEach(c =>
-                                {
-                                    ski.Skill.BCards.ForEach(s => s.ApplyBCards(Session.Character));
-                                });
+                                ski.Skill.BCards.ForEach(c => ski.Skill.BCards.ForEach(s => s.ApplyBCards(Session.Character)));
                                 break;
-
-
                         }
                     }
                     else if (ski.Skill.TargetType == 0 && Session.HasCurrentMapInstance) // monster target
@@ -543,7 +529,7 @@ namespace OpenNos.Handler
                                             int count = 0;
                                             foreach (ClientSession character in playersInAOERange)
                                             {
-                                                if (Session.CurrentMapInstance != null && Session.CurrentMapInstance.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4))
+                                                if (Session.CurrentMapInstance?.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
                                                 {
                                                     if (Session.Character.Family == null || character.Character.Family == null || Session.Character.Family.FamilyId != character.Character.Family.FamilyId)
                                                     {
@@ -562,7 +548,7 @@ namespace OpenNos.Handler
                                                         PVPHit(new HitRequest(TargetHitType.SingleTargetHitCombo, Session, ski.Skill, skillCombo: skillCombo), playerToAttack);
                                                     }
                                                 }
-                                                else if (Session.CurrentMapInstance != null && Session.CurrentMapInstance.IsPVP)
+                                                else if (Session.CurrentMapInstance?.IsPVP == true)
                                                 {
                                                     if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId))
                                                     {
@@ -582,7 +568,7 @@ namespace OpenNos.Handler
 
                                             // hit the targetted monster
 
-                                            if (Session.CurrentMapInstance != null && Session.CurrentMapInstance.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4))
+                                            if (Session.CurrentMapInstance?.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
                                             {
                                                 if (Session.Character.Family == null || playerToAttack.Character.Family == null || Session.Character.Family.FamilyId != playerToAttack.Character.Family.FamilyId)
                                                 {
@@ -611,7 +597,7 @@ namespace OpenNos.Handler
                                                     Session.SendPacket($"cancel 2 {targetId}");
                                                 }
                                             }
-                                            else if (Session.CurrentMapInstance != null && Session.CurrentMapInstance.IsPVP)
+                                            else if (Session.CurrentMapInstance?.IsPVP == true)
                                             {
                                                 if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(playerToAttack.Character.CharacterId))
                                                 {
@@ -630,7 +616,7 @@ namespace OpenNos.Handler
                                             //hit all other monsters
                                             foreach (ClientSession character in playersInAOERange)
                                             {
-                                                if (Session.CurrentMapInstance != null && Session.CurrentMapInstance.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4))
+                                                if (Session.CurrentMapInstance?.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
                                                 {
                                                     if (Session.Character.Family == null || character.Character.Family == null || Session.Character.Family.FamilyId != character.Character.Family.FamilyId)
                                                     {
@@ -670,7 +656,7 @@ namespace OpenNos.Handler
                                             {
                                                 ski.Hit = 0;
                                             }
-                                            if (Session.CurrentMapInstance != null && Session.CurrentMapInstance.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4))
+                                            if (Session.CurrentMapInstance?.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
                                             {
                                                 if (Session.Character.Family == null || playerToAttack.Character.Family == null || Session.Character.Family.FamilyId != playerToAttack.Character.Family.FamilyId)
                                                 {
@@ -699,7 +685,7 @@ namespace OpenNos.Handler
                                                     Session.SendPacket($"cancel 2 {targetId}");
                                                 }
                                             }
-                                            else if (Session.CurrentMapInstance != null && Session.CurrentMapInstance.IsPVP)
+                                            else if (Session.CurrentMapInstance?.IsPVP == true)
                                             {
                                                 if (Session.CurrentMapInstance.MapInstanceId != ServerManager.Instance.FamilyArenaInstance.MapInstanceId)
                                                 {
@@ -732,7 +718,7 @@ namespace OpenNos.Handler
                                         }
                                         else
                                         {
-                                            if (Session.CurrentMapInstance != null && Session.CurrentMapInstance.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4))
+                                            if (Session.CurrentMapInstance?.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
                                             {
                                                 if (Session.Character.Family == null || playerToAttack.Character.Family == null || Session.Character.Family.FamilyId != playerToAttack.Character.Family.FamilyId)
                                                 {
@@ -761,7 +747,7 @@ namespace OpenNos.Handler
                                                     Session.SendPacket($"cancel 2 {targetId}");
                                                 }
                                             }
-                                            else if (Session.CurrentMapInstance != null && Session.CurrentMapInstance.IsPVP)
+                                            else if (Session.CurrentMapInstance?.IsPVP == true)
                                             {
                                                 if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(playerToAttack.Character.CharacterId))
                                                 {
@@ -944,7 +930,7 @@ namespace OpenNos.Handler
                 return;
             }
 
-            if (characterSkill != null && characterSkill.CanBeUsed())
+            if (characterSkill?.CanBeUsed() == true)
             {
                 if (Session.Character.Mp >= characterSkill.Skill.MpCost)
                 {
@@ -974,7 +960,7 @@ namespace OpenNos.Handler
                         }
                         foreach (ClientSession character in ServerManager.Instance.Sessions.Where(s => s.CurrentMapInstance == Session.CurrentMapInstance && s.Character.CharacterId != Session.Character.CharacterId && s.Character.IsInRange(x, y, characterSkill.Skill.TargetRange)))
                         {
-                            if (Session.CurrentMapInstance != null && Session.CurrentMapInstance.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4))
+                            if (Session.CurrentMapInstance?.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
                             {
                                 if (Session.Character.Family == null || character.Character.Family == null || Session.Character.Family.FamilyId != character.Character.Family.FamilyId)
                                 {
@@ -991,7 +977,7 @@ namespace OpenNos.Handler
                                     PVPHit(new HitRequest(TargetHitType.ZoneHit, Session, characterSkill.Skill, x, y), character);
                                 }
                             }
-                            else if (Session.CurrentMapInstance != null && Session.CurrentMapInstance.IsPVP)
+                            else if (Session.CurrentMapInstance?.IsPVP == true)
                             {
                                 if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId))
                                 {
@@ -1001,10 +987,7 @@ namespace OpenNos.Handler
                         }
                     });
 
-                    Observable.Timer(TimeSpan.FromMilliseconds(characterSkill.Skill.Cooldown * 100)).Subscribe(o =>
-                    {
-                        Session.SendPacket($"sr {Castingid}");
-                    });
+                    Observable.Timer(TimeSpan.FromMilliseconds(characterSkill.Skill.Cooldown * 100)).Subscribe(o => Session.SendPacket($"sr {Castingid}"));
                 }
                 else
                 {

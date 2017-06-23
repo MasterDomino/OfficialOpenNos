@@ -4,12 +4,6 @@ namespace OpenNos.PathFinder
 {
     public class Node : GridPos, IComparable<Node>
     {
-        #region Members
-
-        private readonly Node node;
-
-        #endregion
-
         #region Instantiation
 
         public Node(GridPos node)

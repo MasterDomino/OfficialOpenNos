@@ -256,7 +256,7 @@ namespace OpenNos.GameObject
             const int scrollVnum = 1218;
             double rnd;
 
-            if (session != null && !session.HasCurrentMapInstance)
+            if (session?.HasCurrentMapInstance == false)
             {
                 return;
             }
@@ -274,16 +274,16 @@ namespace OpenNos.GameObject
             if (protection == RarifyProtection.RedAmulet)
             {
                 raren2 = raren1 * reducedchancefactor;
-                raren1 = raren1 * reducedchancefactor;
-                rare0 = rare0 * reducedchancefactor;
-                rare1 = rare1 * reducedchancefactor;
-                rare2 = rare2 * reducedchancefactor;
-                rare3 = rare3 * reducedchancefactor;
-                rare4 = rare4 * reducedchancefactor;
-                rare5 = rare5 * reducedchancefactor;
-                rare6 = rare6 * reducedchancefactor;
-                rare7 = rare7 * reducedchancefactor;
-                rare8 = rare8 * reducedchancefactor;
+                raren1 *= reducedchancefactor;
+                rare0 *= reducedchancefactor;
+                rare1 *= reducedchancefactor;
+                rare2 *= reducedchancefactor;
+                rare3 *= reducedchancefactor;
+                rare4 *= reducedchancefactor;
+                rare5 *= reducedchancefactor;
+                rare6 *= reducedchancefactor;
+                rare7 *= reducedchancefactor;
+                rare8 *= reducedchancefactor;
             }
             if (session != null)
             {
@@ -319,8 +319,8 @@ namespace OpenNos.GameObject
                         {
                             return;
                         }
-                        if (protection == RarifyProtection.Scroll && !isCommand &&
-                            session.Character.Inventory.CountItem(scrollVnum) < 1)
+                        if (protection == RarifyProtection.Scroll && !isCommand
+                            && session.Character.Inventory.CountItem(scrollVnum) < 1)
                         {
                             return;
                         }
@@ -342,23 +342,20 @@ namespace OpenNos.GameObject
                         throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
                 }
             }
-            if (Item.IsHeroic && protection == RarifyProtection.Scroll)
+            if (Item.IsHeroic && protection == RarifyProtection.Scroll && rnd < rare8 && !(protection == RarifyProtection.Scroll && Rare >= 8))
             {
-                if (rnd < rare8 && !(protection == RarifyProtection.Scroll && Rare >= 8))
+                Rare = 8;
+                if (mode != RarifyMode.Drop)
                 {
-                    Rare = 8;
-                    if (mode != RarifyMode.Drop)
-                    {
-                        session?.Character.NotifyRarifyResult(this);
-                    }
-                    SetRarityPoint();
-                    ItemInstance inventory = session?.Character.Inventory.GetItemInstanceById(Id);
-                    if (inventory != null)
-                    {
-                        session.SendPacket(inventory.GenerateInventoryAdd());
-                    }
-                    return;
+                    session?.Character.NotifyRarifyResult(this);
                 }
+                SetRarityPoint();
+                ItemInstance inventory = session?.Character.Inventory.GetItemInstanceById(Id);
+                if (inventory != null)
+                {
+                    session.SendPacket(inventory.GenerateInventoryAdd());
+                }
+                return;
             }
             if (rnd < rare7 && !(protection == RarifyProtection.Scroll && Rare >= 7))
             {
@@ -574,7 +571,7 @@ namespace OpenNos.GameObject
                 int[] goldprice = { 1500, 3000, 6000, 12000, 24000, 48000 };
                 short[] sand = { 5, 10, 15, 20, 25, 30 };
                 const int sandVnum = 1027;
-                if (Upgrade + itemToSum.Upgrade < 6 && (itemToSum.Item.EquipmentSlot == EquipmentType.Gloves && Item.EquipmentSlot == EquipmentType.Gloves || Item.EquipmentSlot == EquipmentType.Boots && itemToSum.Item.EquipmentSlot == EquipmentType.Boots))
+                if (Upgrade + itemToSum.Upgrade < 6 && ((itemToSum.Item.EquipmentSlot == EquipmentType.Gloves && Item.EquipmentSlot == EquipmentType.Gloves) || (Item.EquipmentSlot == EquipmentType.Boots && itemToSum.Item.EquipmentSlot == EquipmentType.Boots)))
                 {
                     if (session.Character.Gold < goldprice[Upgrade])
                     {

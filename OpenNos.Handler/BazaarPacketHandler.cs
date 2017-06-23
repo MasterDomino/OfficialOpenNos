@@ -94,7 +94,7 @@ namespace OpenNos.Handler
                             newBz.Type = newBz.Item.Type;
 
                             List<ItemInstance> newInv = Session.Character.Inventory.AddToInventory(newBz);
-                            if (newInv.Any())
+                            if (newInv.Count > 0)
                             {
                                 Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: { bzcree.Item.Item.Name} x {cBuyPacket.Amount}", 10));
                             }
@@ -133,7 +133,7 @@ namespace OpenNos.Handler
                     return;
                 int soldedamount = bz.Amount - Item.Amount;
                 long taxes = bz.MedalUsed ? 0 : (long)(bz.Price * 0.10 * soldedamount);
-                long price = bz.Price * soldedamount - taxes;
+                long price = (bz.Price * soldedamount) - taxes;
                 if (Session.Character.Inventory.CanAddItem(Item.ItemVNum))
                 {
                     if (Session.Character.Gold + price <= ServerManager.Instance.MaxGold)
@@ -233,10 +233,10 @@ namespace OpenNos.Handler
 
             long price = cRegPacket.Price * cRegPacket.Amount;
             long taxmax = price > 100000 ? price / 200 : 500;
-            long taxmin = price >= 4000 ? (60 + (price - 4000) / 2000 * 30 > 10000 ? 10000 : 60 + (price - 4000) / 2000 * 30) : 50;
+            long taxmin = price >= 4000 ? (60 + ((price - 4000) / 2000 * 30) > 10000 ? 10000 : 60 + ((price - 4000) / 2000 * 30)) : 50;
             long tax = medal == null ? taxmax : taxmin;
             long maxGold = ServerManager.Instance.MaxGold;
-            if (Session.Character.Gold < tax || cRegPacket.Amount <= 0 || Session.Character.ExchangeInfo != null && Session.Character.ExchangeInfo.ExchangeList.Any() || Session.Character.IsShopping)
+            if (Session.Character.Gold < tax || cRegPacket.Amount <= 0 || Session.Character.ExchangeInfo?.ExchangeList.Count > 0 || Session.Character.IsShopping)
             {
                 return;
             }

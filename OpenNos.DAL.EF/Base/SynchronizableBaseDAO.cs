@@ -91,14 +91,12 @@ namespace OpenNos.DAL.EF
             TEntity entity = context.Set<TEntity>().FirstOrDefault(c => c.Id == primaryKey);
             if (entity == null)
             {
-                dto = Insert(dto, context);
+                return Insert(dto, context);
             }
             else
             {
-                dto = Update(entity, dto, context);
+                return Update(entity, dto, context);
             }
-
-            return dto;
         }
 
         protected virtual TEntity MapEntity(TDTO dto)

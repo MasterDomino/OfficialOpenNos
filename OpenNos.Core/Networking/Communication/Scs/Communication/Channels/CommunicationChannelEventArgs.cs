@@ -39,7 +39,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels
         /// <summary>
         /// Communication channel that is associated with this event.
         /// </summary>
-        public ICommunicationChannel Channel { get; private set; }
+        public ICommunicationChannel Channel { get; }
 
         #endregion
     }

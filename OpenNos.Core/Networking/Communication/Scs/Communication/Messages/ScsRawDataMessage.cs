@@ -45,8 +45,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messages
         /// </summary>
         /// <param name="messageData">Message data that is being transmitted</param>
         /// <param name="repliedMessageId">Replied message id if this is a reply for a message.</param>
-        public ScsRawDataMessage(byte[] messageData, string repliedMessageId)
-            : this(messageData)
+        public ScsRawDataMessage(byte[] messageData, string repliedMessageId) : this(messageData)
         {
             RepliedMessageId = repliedMessageId;
         }
@@ -82,7 +81,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messages
         /// <returns>A string to represents this object</returns>
         public override string ToString()
         {
-            var messageLength = MessageData == null ? 0 : MessageData.Length;
+            int messageLength = MessageData == null ? 0 : MessageData.Length;
             return string.IsNullOrEmpty(RepliedMessageId)
                        ? $"ScsRawDataMessage [{MessageId}]: {messageLength} bytes"
                        : $"ScsRawDataMessage [{MessageId}] Replied To [{RepliedMessageId}]: {messageLength} bytes";

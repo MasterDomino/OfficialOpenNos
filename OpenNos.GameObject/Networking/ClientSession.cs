@@ -37,12 +37,12 @@ namespace OpenNos.GameObject
 
         private static EncryptionBase _encryptor;
         private Character _character;
-        private INetworkClient _client;
+        private readonly INetworkClient _client;
         private IDictionary<string, HandlerMethodReference> _handlerMethods;
-        private Random _random;
-        private ConcurrentQueue<byte[]> _receiveQueue;
-        private object _receiveQueueObservable;
-        private IList<string> _waitForPacketList = new List<string>();
+        private readonly Random _random;
+        private readonly ConcurrentQueue<byte[]> _receiveQueue;
+        private readonly object _receiveQueueObservable;
+        private readonly IList<string> _waitForPacketList = new List<string>();
 
         // Packetwait Packets
         private int? _waitForPacketsAmount;
@@ -120,6 +120,7 @@ namespace OpenNos.GameObject
                 _handlerMethods = value;
             }
         }
+
         public bool HasCurrentMapInstance => CurrentMapInstance != null;
 
         public bool HasSelectedCharacter { get; set; }
@@ -264,10 +265,7 @@ namespace OpenNos.GameObject
         {
             if (!IsDisposing)
             {
-                Observable.Timer(TimeSpan.FromMilliseconds(milliseconds)).Subscribe(o =>
-                {
-                    SendPacket(packet);
-                });
+                Observable.Timer(TimeSpan.FromMilliseconds(milliseconds)).Subscribe(o => SendPacket(packet));
             }
         }
 
@@ -340,7 +338,7 @@ namespace OpenNos.GameObject
                     List<PacketAttribute> packetAttributes = methodInfo.GetCustomAttributes(false).OfType<PacketAttribute>().ToList();
 
                     // assume PacketDefinition based handler method
-                    if (!packetAttributes.Any())
+                    if (packetAttributes.Count == 0)
                     {
                         HandlerMethodReference methodReference = new HandlerMethodReference(DelegateBuilder.BuildDelegate<Action<object, object>>(methodInfo), handler, methodInfo.GetParameters().FirstOrDefault()?.ParameterType);
                         HandlerMethods.Add(methodReference.Identification, methodReference);
@@ -371,7 +369,7 @@ namespace OpenNos.GameObject
                     string sessionPacket = _encryptor.DecryptCustomParameter(packetData);
 
                     string[] sessionParts = sessionPacket.Split(' ');
-                    if (!sessionParts.Any())
+                    if (sessionParts.Length == 0)
                     {
                         return;
                     }
@@ -491,7 +489,7 @@ namespace OpenNos.GameObject
                 return;
             }
 
-            if (message.MessageData.Any() && message.MessageData.Length > 2)
+            if (message.MessageData.Length > 0 && message.MessageData.Length > 2)
             {
                 _receiveQueue.Enqueue(message.MessageData);
             }
@@ -503,13 +501,10 @@ namespace OpenNos.GameObject
         {
             Tuple<long, string> loggedInCharacter = (Tuple<long, string>)sender;
 
-            if (Character.IsFriendOfCharacter(loggedInCharacter.Item1))
+            if (Character.IsFriendOfCharacter(loggedInCharacter.Item1) && Character != null && Character.CharacterId != loggedInCharacter.Item1)
             {
-                if (Character != null && Character.CharacterId != loggedInCharacter.Item1)
-                {
-                    _client.SendPacket(Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("CHARACTER_LOGGED_IN"), loggedInCharacter.Item2), 10));
-                    _client.SendPacket(Character.GenerateFinfo(loggedInCharacter.Item1, true));
-                }
+                _client.SendPacket(Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("CHARACTER_LOGGED_IN"), loggedInCharacter.Item2), 10));
+                _client.SendPacket(Character.GenerateFinfo(loggedInCharacter.Item1, true));
             }
             FamilyCharacter chara = Character.Family?.FamilyCharacters.FirstOrDefault(s => s.CharacterId == loggedInCharacter.Item1);
             if (chara != null && loggedInCharacter.Item1 != Character?.CharacterId)
@@ -521,13 +516,10 @@ namespace OpenNos.GameObject
         private void OnOtherCharacterDisconnected(object sender, EventArgs e)
         {
             Tuple<long, string> loggedOutCharacter = (Tuple<long, string>)sender;
-            if (Character.IsFriendOfCharacter(loggedOutCharacter.Item1))
+            if (Character.IsFriendOfCharacter(loggedOutCharacter.Item1) && Character != null && Character.CharacterId != loggedOutCharacter.Item1)
             {
-                if (Character != null && Character.CharacterId != loggedOutCharacter.Item1)
-                {
-                    _client.SendPacket(Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("CHARACTER_LOGGED_OUT"), loggedOutCharacter.Item2), 10));
-                    _client.SendPacket(Character.GenerateFinfo(loggedOutCharacter.Item1, false));
-                }
+                _client.SendPacket(Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("CHARACTER_LOGGED_OUT"), loggedOutCharacter.Item2), 10));
+                _client.SendPacket(Character.GenerateFinfo(loggedOutCharacter.Item1, false));
             }
         }
 

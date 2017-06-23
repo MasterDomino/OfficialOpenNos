@@ -24,24 +24,18 @@ namespace OpenNos.Handler
 {
     public class MinilandPacketHandler : IPacketHandler
     {
-        #region Members
-
-        private readonly ClientSession _session;
-
-        #endregion
-
         #region Instantiation
 
         public MinilandPacketHandler(ClientSession session)
         {
-            _session = session;
+            Session = session;
         }
 
         #endregion
 
         #region Properties
 
-        private ClientSession Session => _session;
+        private ClientSession Session { get; }
 
         #endregion
 
@@ -77,8 +71,8 @@ namespace OpenNos.Handler
             MinilandObject mlobj = client?.Character.MinilandObjects.FirstOrDefault(s => s.ItemInstance.ItemVNum == packet.MinigameVNum);
             if (mlobj != null)
             {
-                bool full = false;
-                byte game = (byte)(mlobj.ItemInstance.Item.EquipmentSlot == 0 ? 4 + mlobj.ItemInstance.ItemVNum % 10 : (int)mlobj.ItemInstance.Item.EquipmentSlot / 3);
+                const bool full = false;
+                byte game = (byte)(mlobj.ItemInstance.Item.EquipmentSlot == 0 ? 4 + (mlobj.ItemInstance.ItemVNum % 10) : (int)mlobj.ItemInstance.Item.EquipmentSlot / 3);
                 switch (packet.Type)
                 {
                     //play
@@ -134,7 +128,7 @@ namespace OpenNos.Handler
                                 Session.SendPacket(Session.Character.GenerateMinilandPoint());
                                 List<ItemInstance> inv = Session.Character.Inventory.AddNewToInventory(obj.VNum, obj.Amount);
                                 Session.Character.MinilandPoint -= 100;
-                                if (!inv.Any())
+                                if (inv.Count == 0)
                                 {
                                     Session.Character.SendGift(Session.Character.CharacterId, obj.VNum, obj.Amount, 0, 0, false);
                                 }
@@ -239,16 +233,18 @@ namespace OpenNos.Handler
                         {
                             if (gifts.Count > i)
                             {
-                                List<ItemInstance> inv = Session.Character.Inventory.AddNewToInventory(gifts.ElementAt(i).VNum, gifts.ElementAt(i).Amount);
-                                if (inv.Any())
+                                short itemVNum = gifts[i].VNum;
+                                byte itemAmount = gifts[i].Amount;
+                                List<ItemInstance> inv = Session.Character.Inventory.AddNewToInventory(itemVNum, itemAmount);
+                                if (inv.Count > 0)
                                 {
-                                    Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {ServerManager.Instance.GetItem(gifts.ElementAt(i).VNum).Name} x {gifts.ElementAt(i).Amount}", 12));
+                                    Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {ServerManager.Instance.GetItem(itemVNum).Name} x {itemAmount}", 12));
                                 }
                                 else
                                 {
-                                    Session.Character.SendGift(Session.Character.CharacterId, gifts.ElementAt(i).VNum, gifts.ElementAt(i).Amount, 0, 0, false);
+                                    Session.Character.SendGift(Session.Character.CharacterId, itemVNum, itemAmount, 0, 0, false);
                                 }
-                                str += $" {gifts.ElementAt(i).VNum} {gifts.ElementAt(i).Amount}";
+                                str += $" {itemVNum} {itemAmount}";
                             }
                             else
                             {
@@ -263,8 +259,9 @@ namespace OpenNos.Handler
                         List<ItemInstance> items = Session.Character.Inventory.GetAllItems().Where(s => s.ItemVNum == 1269 || s.ItemVNum == 1271).OrderBy(s => s.Slot).ToList();
                         if (items.Count > 0)
                         {
-                            Session.Character.Inventory.RemoveItemAmount(items.ElementAt(0).ItemVNum);
-                            int point = items.ElementAt(0).ItemVNum == 1269 ? 300 : 500;
+                            short itemVNum = items[0].ItemVNum;
+                            Session.Character.Inventory.RemoveItemAmount(itemVNum);
+                            int point = itemVNum == 1269 ? 300 : 500;
                             mlobj.ItemInstance.DurabilityPoint += point;
                             Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey(string.Format("REFILL_MINIGAME", point))));
                             Session.SendPacket(Session.Character.GenerateMloMg(mlobj, packet));
@@ -436,8 +433,8 @@ namespace OpenNos.Handler
                 {
                     if (!minilandObjectItem.Item.IsMinilandObject)
                     {
-                        byte game = (byte)(minilandObject.ItemInstance.Item.EquipmentSlot == 0 ? 4 + minilandObject.ItemInstance.ItemVNum % 10 : (int)minilandObject.ItemInstance.Item.EquipmentSlot / 3);
-                        bool full = false;
+                        byte game = (byte)(minilandObject.ItemInstance.Item.EquipmentSlot == 0 ? 4 + (minilandObject.ItemInstance.ItemVNum % 10) : (int)minilandObject.ItemInstance.Item.EquipmentSlot / 3);
+                        const bool full = false;
                         Session.SendPacket($"mlo_info {(client == Session ? 1 : 0)} {minilandObjectItem.ItemVNum} {packet.Slot} {Session.Character.MinilandPoint} {(minilandObjectItem.DurabilityPoint < 1000 ? 1 : 0)} {(full ? 1 : 0)} 0 {GetMinilandMaxPoint(game)[0]} {GetMinilandMaxPoint(game)[0] + 1} {GetMinilandMaxPoint(game)[1]} {GetMinilandMaxPoint(game)[1] + 1} {GetMinilandMaxPoint(game)[2]} {GetMinilandMaxPoint(game)[2] + 2} {GetMinilandMaxPoint(game)[3]} {GetMinilandMaxPoint(game)[3] + 1} {GetMinilandMaxPoint(game)[4]} {GetMinilandMaxPoint(game)[4] + 1} {GetMinilandMaxPoint(game)[5]}");
                     }
                     else
@@ -981,38 +978,27 @@ namespace OpenNos.Handler
 
         private static int[] GetMinilandMaxPoint(byte game)
         {
-            int[] points;
             switch (game)
             {
                 case 0:
-                    points = new[] { 999, 4999, 7999, 11999, 15999, 1000000 };
-                    break;
+                    return new[] { 999, 4999, 7999, 11999, 15999, 1000000 };
 
                 case 1:
-                    points = new[] { 999, 4999, 9999, 13999, 17999, 1000000 };
-                    break;
+                    return new[] { 999, 4999, 9999, 13999, 17999, 1000000 };
 
                 case 2:
-                    points = new[] { 999, 3999, 7999, 14999, 24999, 1000000 };
-                    break;
+                    return new[] { 999, 3999, 7999, 14999, 24999, 1000000 };
 
                 case 3:
-                    points = new[] { 999, 3999, 7999, 11999, 19999, 1000000 };
-                    break;
+                    return new[] { 999, 3999, 7999, 11999, 19999, 1000000 };
 
                 case 4:
-                    points = new[] { 999, 4999, 7999, 11999, 15999, 1000000 };
-                    break;
-
                 case 5:
-                    points = new[] { 999, 4999, 7999, 11999, 15999, 1000000 };
-                    break;
+                    return new[] { 999, 4999, 7999, 11999, 15999, 1000000 };
 
                 default:
-                    points = new[] { 999, 4999, 7999, 14999, 24999, 1000000 };
-                    break;
+                    return new[] { 999, 4999, 7999, 14999, 24999, 1000000 };
             }
-            return points;
         }
 
         #endregion

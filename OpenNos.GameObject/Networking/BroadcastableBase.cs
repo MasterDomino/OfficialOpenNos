@@ -144,7 +144,7 @@ namespace OpenNos.GameObject
         public void UnregisterSession(long characterId)
         {
             // Get client from client list, if not in list do not continue
-            var session = _sessions[characterId];
+            ClientSession session = _sessions[characterId];
             if (session == null)
             {
                 return;
@@ -171,7 +171,6 @@ namespace OpenNos.GameObject
         {
             if (Sessions != null && !string.IsNullOrEmpty(sentPacket?.Packet))
             {
-
                 switch (sentPacket.Receiver)
                 {
                     case ReceiverType.All: // send packet to everyone
@@ -305,7 +304,7 @@ namespace OpenNos.GameObject
                         if (sentPacket.SomeonesCharacterId > 0 || !string.IsNullOrEmpty(sentPacket.SomeonesCharacterName))
                         {
                             ClientSession targetSession = Sessions.SingleOrDefault(s => s.Character.CharacterId == sentPacket.SomeonesCharacterId || s.Character.Name == sentPacket.SomeonesCharacterName);
-                            if (targetSession != null && targetSession.HasSelectedCharacter)
+                            if (targetSession?.HasSelectedCharacter == true)
                             {
                                 if (sentPacket.Sender != null)
                                 {
@@ -329,12 +328,9 @@ namespace OpenNos.GameObject
                     case ReceiverType.AllNoEmoBlocked:
                         Parallel.ForEach(Sessions.Where(s => !s.Character.EmoticonsBlocked), session =>
                         {
-                            if (session.HasSelectedCharacter)
+                            if (session.HasSelectedCharacter && !sentPacket.Sender.Character.IsBlockedByCharacter(session.Character.CharacterId))
                             {
-                                if (!sentPacket.Sender.Character.IsBlockedByCharacter(session.Character.CharacterId))
-                                {
-                                    session.SendPacket(sentPacket.Packet);
-                                }
+                                session.SendPacket(sentPacket.Packet);
                             }
                         });
                         break;
@@ -342,21 +338,15 @@ namespace OpenNos.GameObject
                     case ReceiverType.AllNoHeroBlocked:
                         Parallel.ForEach(Sessions.Where(s => !s.Character.HeroChatBlocked), session =>
                         {
-                            if (session.HasSelectedCharacter)
+                            if (session.HasSelectedCharacter && !sentPacket.Sender.Character.IsBlockedByCharacter(session.Character.CharacterId))
                             {
-                                if (!sentPacket.Sender.Character.IsBlockedByCharacter(session.Character.CharacterId))
-                                {
-                                    session.SendPacket(sentPacket.Packet);
-                                }
+                                session.SendPacket(sentPacket.Packet);
                             }
                         });
                         break;
 
                     case ReceiverType.Group:
-                        Parallel.ForEach(Sessions.Where(s => s.Character?.Group != null && sentPacket.Sender?.Character?.Group != null && s.Character.Group.GroupId == sentPacket.Sender.Character.Group.GroupId), session =>
-                        {
-                            session.SendPacket(sentPacket.Packet);
-                        });
+                        Parallel.ForEach(Sessions.Where(s => s.Character?.Group != null && sentPacket.Sender?.Character?.Group != null && s.Character.Group.GroupId == sentPacket.Sender.Character.Group.GroupId), session => session.SendPacket(sentPacket.Packet));
                         break;
 
                     case ReceiverType.Unknown:

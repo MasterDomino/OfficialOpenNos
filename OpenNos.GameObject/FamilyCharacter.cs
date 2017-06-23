@@ -31,11 +31,7 @@ namespace OpenNos.GameObject
         {
             get
             {
-                if (_character == null)
-                {
-                    _character = DAOFactory.CharacterDAO.LoadById(CharacterId);
-                }
-                return _character;
+                return _character ?? (_character = DAOFactory.CharacterDAO.LoadById(CharacterId));
             }
         }
 

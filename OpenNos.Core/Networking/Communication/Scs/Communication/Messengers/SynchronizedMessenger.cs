@@ -25,6 +25,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
     /// operation. It extends RequestReplyMessenger. It is suitable to use in applications those want
     /// to receive messages by synchronized method calls instead of asynchronous MessageReceived event.
     /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class SynchronizedMessenger<T> : RequestReplyMessenger<T> where T : IMessenger
     {
         #region Members
@@ -53,8 +54,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         /// Creates a new SynchronizedMessenger object.
         /// </summary>
         /// <param name="messenger">A IMessenger object to be used to send/receive messages</param>
-        public SynchronizedMessenger(T messenger)
-            : this(messenger, int.MaxValue)
+        public SynchronizedMessenger(T messenger) : this(messenger, int.MaxValue)
         {
         }
 
@@ -63,8 +63,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         /// </summary>
         /// <param name="messenger">A IMessenger object to be used to send/receive messages</param>
         /// <param name="incomingMessageQueueCapacity">capacity of the incoming message queue</param>
-        public SynchronizedMessenger(T messenger, int incomingMessageQueueCapacity)
-            : base(messenger)
+        public SynchronizedMessenger(T messenger, int incomingMessageQueueCapacity) : base(messenger)
         {
             _receiveWaiter = new ManualResetEventSlim();
             _receivingMessageQueue = new Queue<IScsMessage>();
@@ -130,7 +129,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
                 }
 
                 // Wait for a message
-                var signalled = _receiveWaiter.Wait(timeout);
+                bool signalled = _receiveWaiter.Wait(timeout);
 
                 // If not signalled, throw exception
                 if (!signalled)
@@ -146,6 +145,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         /// This method is used to receive a specific type of message from remote application. It
         /// waits until a message is received.
         /// </summary>
+        /// <typeparam name="TMessage"></typeparam>
         /// <returns>Received message</returns>
         public TMessage ReceiveMessage<TMessage>() where TMessage : IScsMessage
         {
@@ -156,13 +156,14 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         /// This method is used to receive a specific type of message from remote application. It
         /// waits until a message is received or timeout occurs.
         /// </summary>
+        /// <typeparam name="TMessage"></typeparam>
         /// <param name="timeout">
         /// Timeout value to wait if no message is received. Use -1 to wait indefinitely.
         /// </param>
         /// <returns>Received message</returns>
         public TMessage ReceiveMessage<TMessage>(int timeout) where TMessage : IScsMessage
         {
-            var receivedMessage = ReceiveMessage(timeout);
+            IScsMessage receivedMessage = ReceiveMessage(timeout);
             if (!(receivedMessage is TMessage))
             {
                 throw new Exception("Unexpected message received." +

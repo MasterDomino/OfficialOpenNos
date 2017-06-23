@@ -35,7 +35,7 @@ namespace OpenNos.DAL.EF
 
         [Key]
         public short RollGeneratedItemId { get; set; }
-        
+
         public short OriginalItemDesign { get; set; }
 
         public virtual Item OriginalItem { get; set; }

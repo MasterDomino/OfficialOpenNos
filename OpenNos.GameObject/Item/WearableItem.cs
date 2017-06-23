@@ -79,7 +79,7 @@ namespace OpenNos.GameObject
                     }
                     if (!inv.IsBound)
                     {
-                        if (!delay && (EquipmentSlot == EquipmentType.Fairy && (MaxElementRate == 70 || MaxElementRate == 80) || EquipmentSlot == EquipmentType.CostumeHat || EquipmentSlot == EquipmentType.CostumeSuit || EquipmentSlot == EquipmentType.WeaponSkin))
+                        if (!delay && ((EquipmentSlot == EquipmentType.Fairy && (MaxElementRate == 70 || MaxElementRate == 80)) || EquipmentSlot == EquipmentType.CostumeHat || EquipmentSlot == EquipmentType.CostumeSuit || EquipmentSlot == EquipmentType.WeaponSkin))
                         {
                             session.SendPacket($"qna #u_i^1^{session.Character.CharacterId}^{(byte)itemToWearType}^{slot}^1 {Language.Instance.GetMessageFromKey("ASK_BIND")}");
                             return;
@@ -106,13 +106,13 @@ namespace OpenNos.GameObject
                             return;
                         }
 
-                        if (ItemType != ItemType.Weapon
+                        if ((ItemType != ItemType.Weapon
                             && ItemType != ItemType.Armor
                             && ItemType != ItemType.Fashion
                             && ItemType != ItemType.Jewelery
-                            && ItemType != ItemType.Specialist
-                            || LevelMinimum > (IsHeroic ? session.Character.HeroLevel : session.Character.Level) || Sex != 0 && Sex != (byte)session.Character.Gender + 1
-                            || ItemType != ItemType.Jewelery && EquipmentSlot != EquipmentType.Boots && EquipmentSlot != EquipmentType.Gloves && ((Class >> (byte)session.Character.Class) & 1) != 1)
+                            && ItemType != ItemType.Specialist)
+                            || LevelMinimum > (IsHeroic ? session.Character.HeroLevel : session.Character.Level) || (Sex != 0 && Sex != (byte)session.Character.Gender + 1)
+                            || (ItemType != ItemType.Jewelery && EquipmentSlot != EquipmentType.Boots && EquipmentSlot != EquipmentType.Gloves && ((Class >> (byte)session.Character.Class) & 1) != 1))
                         {
                             session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("BAD_EQUIPMENT"), 10));
                             return;

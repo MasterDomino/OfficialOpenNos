@@ -13,8 +13,6 @@
  */
 
 using OpenNos.Domain;
-using OpenNos.GameObject;
-using System.Collections.Generic;
 
 namespace OpenNos.Data
 {
@@ -29,7 +27,7 @@ namespace OpenNos.Data
         public int EffectId { get; set; }
 
         public byte Level { get; set; }
-        
+
         public string Name { get; set; }
 
         public short TimeoutBuff { get; set; }
@@ -41,7 +39,6 @@ namespace OpenNos.Data
         public int Delay { get; set; }
 
         public byte Propability { get; set; }
-   
 
         #endregion
     }

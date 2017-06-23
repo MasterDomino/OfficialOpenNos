@@ -24,7 +24,7 @@ namespace OpenNos.DAL.Mock
     {
         #region Members
 
-        private IList<NpcMonsterSkillDTO> _mockContainer = new List<NpcMonsterSkillDTO>();
+        private readonly IList<NpcMonsterSkillDTO> _mockContainer = new List<NpcMonsterSkillDTO>();
 
         #endregion
 

@@ -1,4 +1,18 @@
-﻿using System;
+﻿/*
+ * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,9 +56,9 @@ namespace OpenNos.Core
                 deserializedPacket = Deserialize(packetContent, deserializedPacket, serializationInformation, includesKeepAliveIdentity);
                 return deserializedPacket;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Logger.Log.Warn($"The serialized packet has the wrong format. Packet: {packetContent}");
+                Logger.Log.Warn($"The serialized packet has the wrong format. Packet: {packetContent}", ex);
                 return null;
             }
         }
@@ -52,6 +66,7 @@ namespace OpenNos.Core
         /// <summary>
         /// Deserializes a string into a PacketDefinition
         /// </summary>
+        /// <typeparam name="TPacket"></typeparam>
         /// <param name="packetContent">The content to deseralize</param>
         /// <param name="includesKeepAliveIdentity">
         /// Include the keep alive identity or exclude it
@@ -179,15 +194,14 @@ namespace OpenNos.Core
             return deserializedPacket;
         }
 
-        /// <summary> Converts for instance -1.12.1.8.-1.-1.-1.-1.-1 to eg. List<byte?> </summary>
-        /// <param name="currentValues">String to convert</param> <param name="genericListType">Type
-        /// of the property to convert</param> <returns>The string as converted List</returns>
+        /// <summary> Converts simple list to List of Bytes </summary>
+        /// <param name="currentValues">String to convert</param>
+        /// <param name="genericListType">Type of the property to convert</param>
+        /// <returns>The string as converted List</returns>
         private static IList DeserializeSimpleList(string currentValues, Type genericListType)
         {
             IList subpackets = (IList)Convert.ChangeType(Activator.CreateInstance(genericListType), genericListType);
-            IEnumerable<string> splittedValues = currentValues.Split('.');
-
-            foreach (string currentValue in splittedValues)
+            foreach (string currentValue in (IEnumerable<string>)currentValues.Split('.'))
             {
                 object value = DeserializeValue(genericListType.GenericTypeArguments[0], currentValue, null, null);
                 subpackets.Add(value);
@@ -199,7 +213,7 @@ namespace OpenNos.Core
         private static object DeserializeSubpacket(string currentSubValues, Type packetBasePropertyType, KeyValuePair<Tuple<Type, string>, Dictionary<PacketIndexAttribute, PropertyInfo>> subpacketSerializationInfo, bool isReturnPacket = false)
         {
             string[] subpacketValues = currentSubValues.Split(isReturnPacket ? '^' : '.');
-            var newSubpacket = Activator.CreateInstance(packetBasePropertyType);
+            object newSubpacket = Activator.CreateInstance(packetBasePropertyType);
 
             foreach (var subpacketPropertyInfo in subpacketSerializationInfo.Value)
             {
@@ -212,12 +226,13 @@ namespace OpenNos.Core
             return newSubpacket;
         }
 
-        /// <summary> Converts a Sublist of Packets, For instance 0.4903.5.0.0 2.340.0.0.0
-        /// 3.720.0.0.0 5.4912.6.0.0 9.227.0.0.0 10.803.0.0.0 to List<EquipSubPacket> </summary>
-        /// <param name="currentValue">The value as String</param> <param
-        /// name="packetBasePropertyType">Type of the Property to convert to</param> <param
-        /// name="shouldRemoveSeparator"></param> <param name="packetMatchCollections"></param>
-        /// <param name="currentIndex"></param> <param name="includesKeepAliveIdentity"></param> <returns></returns>
+        /// <summary> Converts a Sublist of Packets to List of Subpackets </summary>
+        /// <param name="currentValue">The value as String</param>
+        /// <param name="packetBasePropertyType">Type of the Property to convert to</param>
+        /// <param name="shouldRemoveSeparator"></param> <param name="packetMatchCollections"></param>
+        /// <param name="currentIndex"></param> 
+        /// <param name="includesKeepAliveIdentity"></param> 
+        /// <returns>List of Deserialized subpackets</returns>
         private static IList DeserializeSubpackets(string currentValue, Type packetBasePropertyType, bool shouldRemoveSeparator, MatchCollection packetMatchCollections, int? currentIndex, bool includesKeepAliveIdentity)
         {
             // split into single values
@@ -288,7 +303,7 @@ namespace OpenNos.Core
             }
 
             // enum should be casted to number
-            if (packetPropertyType.BaseType != null && packetPropertyType.BaseType.Equals(typeof(Enum)))
+            if (packetPropertyType.BaseType?.Equals(typeof(Enum)) == true)
             {
                 object convertedValue = null;
                 try
@@ -307,9 +322,9 @@ namespace OpenNos.Core
             }
             if (packetPropertyType.Equals(typeof(bool))) // handle boolean values
             {
-                return currentValue != "0";
+                return !currentValue.Equals("0");
             }
-            if (packetPropertyType.BaseType != null && packetPropertyType.BaseType.Equals(typeof(PacketDefinition))) // subpacket
+            if (packetPropertyType.BaseType?.Equals(typeof(PacketDefinition)) == true) // subpacket
             {
                 var subpacketSerializationInfo = GetSerializationInformation(packetPropertyType);
                 return DeserializeSubpacket(currentValue, packetPropertyType, subpacketSerializationInfo, packetIndexAttribute?.IsReturnPacket ?? false);
@@ -389,9 +404,10 @@ namespace OpenNos.Core
                                               : GenerateSerializationInformations(serializationType); // generic runtime serialization parameter generation
         }
 
-        /// <summary> Converts for instance List<byte?> to -1.12.1.8.-1.-1.-1.-1.-1 </summary> <param
-        /// name="listValues">Values in List of simple type.</param> <param name="propertyType">The
-        /// simple type.</param> <returns></returns>
+        /// <summary> Converts List of Bytes to Simple list </summary> 
+        /// <param name="listValues">Values in List of simple type.</param>
+        /// <param name="propertyType">The simple type.</param> 
+        /// <returns> String of serialized bytes </returns>
         private static string SerializeSimpleList(IList listValues, Type propertyType)
         {
             string resultListPacket = string.Empty;
@@ -459,7 +475,7 @@ namespace OpenNos.Core
                 }
 
                 // enum should be casted to number
-                if (propertyType.BaseType != null && propertyType.BaseType.Equals(typeof(Enum)))
+                if (propertyType.BaseType?.Equals(typeof(Enum)) == true)
                 {
                     return $" {Convert.ToInt16(value)}";
                 }
@@ -468,7 +484,7 @@ namespace OpenNos.Core
                     // bool is 0 or 1 not True or False
                     return Convert.ToBoolean(value) ? " 1" : " 0";
                 }
-                if (propertyType.BaseType != null && propertyType.BaseType.Equals(typeof(PacketDefinition)))
+                if (propertyType.BaseType?.Equals(typeof(PacketDefinition)) == true)
                 {
                     var subpacketSerializationInfo = GetSerializationInformation(propertyType);
                     return SerializeSubpacket(value, subpacketSerializationInfo, packetIndexAttribute?.IsReturnPacket ?? false, packetIndexAttribute?.RemoveSeparator ?? false);
