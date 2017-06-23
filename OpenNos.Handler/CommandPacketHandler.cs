@@ -1769,7 +1769,7 @@ namespace OpenNos.Handler
                 {
                     string[] packetsplit = contents.Split(' ');
                     bool withPage = byte.TryParse(packetsplit[0], out page);
-                    name = packetsplit.Length == 1 && withPage ? string.Empty : packetsplit.Skip(withPage ? 1 : 0).Aggregate((a, b) => a + ' ' + b);
+                    name = packetsplit.Length == 1 && withPage ? string.Empty : packetsplit.Skip(withPage ? 1 : 0).Aggregate((a, b) => a + " " + b);
                 }
                 IEnumerable<ItemDTO> itemlist = DAOFactory.ItemDAO.FindByName(name).OrderBy(s => s.VNum).Skip(page * 200).Take(200).ToList();
                 if (itemlist.Any())
@@ -1807,7 +1807,7 @@ namespace OpenNos.Handler
                 {
                     string[] packetsplit = contents.Split(' ');
                     bool withPage = byte.TryParse(packetsplit[0], out page);
-                    name = packetsplit.Length == 1 && withPage ? string.Empty : packetsplit.Skip(withPage ? 1 : 0).Aggregate((a, b) => a + ' ' + b);
+                    name = packetsplit.Length == 1 && withPage ? string.Empty : packetsplit.Skip(withPage ? 1 : 0).Aggregate((a, b) => a + " " + b);
                 }
                 IEnumerable<NpcMonsterDTO> monsterlist = DAOFactory.NpcMonsterDAO.FindByName(name).OrderBy(s => s.NpcMonsterVNum).Skip(page * 200).Take(200).ToList();
                 if (monsterlist.Any())
@@ -2005,12 +2005,13 @@ namespace OpenNos.Handler
                 Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Sudo]CharacterName: {sudoPacket.CharacterName} CommandContents:{sudoPacket.CommandContents}");
 
                 ClientSession session = ServerManager.Instance.GetSessionByCharacterName(sudoPacket.CharacterName);
-                if (session != null)
+                if (session != null && !string.IsNullOrWhiteSpace(sudoPacket.CommandContents))
                 {
-                    if (!string.IsNullOrWhiteSpace(sudoPacket.CommandContents))
-                    {
-                        session.ReceivePacket(sudoPacket.CommandContents, true);
-                    }
+                    session.ReceivePacket(sudoPacket.CommandContents, true);
+                }
+                else
+                {
+                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("USER_NOT_CONNECTED"), 0));
                 }
             }
             else
@@ -2246,7 +2247,7 @@ namespace OpenNos.Handler
                 else
                 {
                     ClientSession targetSession = ServerManager.Instance.GetSessionByCharacterName(teleportToMePacket.CharacterName);
-                    if (targetSession != null && !targetSession.Character.IsChangingMapInstance)
+                    if (targetSession?.Character.IsChangingMapInstance == false)
                     {
                         targetSession.Character.Dispose();
                         targetSession.Character.IsSitting = false;
