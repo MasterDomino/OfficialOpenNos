@@ -32,7 +32,7 @@ namespace OpenNos.Master.Library.Data
 
         #region Properties
 
-        public long AccountId { get; private set; }
+        public long AccountId { get; }
 
         public long CharacterId { get; set; }
 
@@ -40,9 +40,9 @@ namespace OpenNos.Master.Library.Data
 
         public WorldServer ConnectedWorld { get; set; }
 
-        public int SessionId { get; private set; }
+        public int SessionId { get; }
 
-        public string IpAddress { get; private set; }
+        public string IpAddress { get; }
 
         #endregion
     }

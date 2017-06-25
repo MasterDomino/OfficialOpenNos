@@ -37,8 +37,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messages
         /// Creates a new reply ScsMessage.
         /// </summary>
         /// <param name="repliedMessageId">Replied message id if this is a reply for a message.</param>
-        public ScsMessage(string repliedMessageId)
-            : this()
+        public ScsMessage(string repliedMessageId) : this()
         {
             RepliedMessageId = repliedMessageId;
         }

@@ -22,7 +22,7 @@ namespace OpenNos.Core
     {
         #region Instantiation
 
-        public EncryptionBase(bool hasCustomParameter)
+        protected EncryptionBase(bool hasCustomParameter)
         {
             HasCustomParameter = hasCustomParameter;
         }
@@ -41,7 +41,7 @@ namespace OpenNos.Core
         {
             using (SHA512 hash = SHA512.Create())
             {
-                return string.Join(string.Empty, hash.ComputeHash(Encoding.UTF8.GetBytes(inputString)).Select(item => item.ToString("x2")));
+                return string.Concat(hash.ComputeHash(Encoding.UTF8.GetBytes(inputString)).Select(item => item.ToString("x2")));
             }
         }
 

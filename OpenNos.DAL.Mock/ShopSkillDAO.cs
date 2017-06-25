@@ -28,12 +28,12 @@ namespace OpenNos.DAL.Mock
             throw new NotImplementedException();
         }
 
-        public new ShopSkillDTO Insert(ShopSkillDTO shopskill)
+        public new ShopSkillDTO Insert(ShopSkillDTO shopSkill)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<ShopSkillDTO> LoadByShopId(int ShopId)
+        public IEnumerable<ShopSkillDTO> LoadByShopId(int shopId)
         {
             throw new NotImplementedException();
         }

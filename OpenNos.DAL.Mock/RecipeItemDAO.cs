@@ -23,7 +23,7 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public new RecipeItemDTO Insert(RecipeItemDTO recipeitem)
+        public new RecipeItemDTO Insert(RecipeItemDTO recipeItem)
         {
             throw new NotImplementedException();
         }
@@ -33,7 +33,7 @@ namespace OpenNos.DAL.Mock
             throw new NotImplementedException();
         }
 
-        public RecipeItemDTO LoadById(short RecipeItemId)
+        public RecipeItemDTO LoadById(short recipeItemId)
         {
             throw new NotImplementedException();
         }

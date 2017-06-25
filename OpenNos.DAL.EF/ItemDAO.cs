@@ -89,13 +89,13 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        public ItemDTO LoadById(short ItemVnum)
+        public ItemDTO LoadById(short vNum)
         {
             try
             {
                 using (var context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<ItemDTO>(context.Item.FirstOrDefault(i => i.VNum.Equals(ItemVnum)));
+                    return _mapper.Map<ItemDTO>(context.Item.FirstOrDefault(i => i.VNum.Equals(vNum)));
                 }
             }
             catch (Exception e)

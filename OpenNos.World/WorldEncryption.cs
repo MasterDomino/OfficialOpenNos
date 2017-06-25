@@ -103,7 +103,7 @@ namespace OpenNos.World
             return Encoding.UTF8.GetString(Encoding.Convert(Encoding.Default, Encoding.UTF8, receiveData.ToArray()));
         }
 
-        public override string Decrypt(byte[] str, int sessionId = 0)
+        public override string Decrypt(byte[] data, int sessionId = 0)
         {
             string encrypted_string = "";
             int session_key = sessionId & 0xFF;
@@ -114,7 +114,7 @@ namespace OpenNos.World
             switch (session_number)
             {
                 case 0:
-                    foreach (byte character in str)
+                    foreach (byte character in data)
                     {
                         byte firstbyte = unchecked((byte)(session_key + 0x40));
                         byte highbyte = unchecked((byte)(character - firstbyte));
@@ -123,7 +123,7 @@ namespace OpenNos.World
                     break;
 
                 case 1:
-                    foreach (byte character in str)
+                    foreach (byte character in data)
                     {
                         byte firstbyte = unchecked((byte)(session_key + 0x40));
                         byte highbyte = unchecked((byte)(character + firstbyte));
@@ -132,7 +132,7 @@ namespace OpenNos.World
                     break;
 
                 case 2:
-                    foreach (byte character in str)
+                    foreach (byte character in data)
                     {
                         byte firstbyte = unchecked((byte)(session_key + 0x40));
                         byte highbyte = unchecked((byte)(character - firstbyte ^ 0xC3));
@@ -141,7 +141,7 @@ namespace OpenNos.World
                     break;
 
                 case 3:
-                    foreach (byte character in str)
+                    foreach (byte character in data)
                     {
                         byte firstbyte = unchecked((byte)(session_key + 0x40));
                         byte highbyte = unchecked((byte)(character + firstbyte ^ 0xC3));
@@ -169,19 +169,19 @@ namespace OpenNos.World
             return save;
         }
 
-        public override string DecryptCustomParameter(byte[] str)
+        public override string DecryptCustomParameter(byte[] data)
         {
             try
             {
                 string encrypted_string = string.Empty;
-                for (int i = 1; i < str.Length; i++)
+                for (int i = 1; i < data.Length; i++)
                 {
-                    if (Convert.ToChar(str[i]) == 0xE)
+                    if (Convert.ToChar(data[i]) == 0xE)
                     {
                         return encrypted_string;
                     }
 
-                    int firstbyte = Convert.ToInt32(str[i] - 0xF);
+                    int firstbyte = Convert.ToInt32(data[i] - 0xF);
                     int secondbyte = firstbyte;
                     secondbyte &= 0xF0;
                     firstbyte = Convert.ToInt32(firstbyte - secondbyte);
@@ -190,9 +190,6 @@ namespace OpenNos.World
                     switch (secondbyte)
                     {
                         case 0:
-                            encrypted_string += ' ';
-                            break;
-
                         case 1:
                             encrypted_string += ' ';
                             break;
@@ -214,9 +211,6 @@ namespace OpenNos.World
                     switch (firstbyte)
                     {
                         case 0:
-                            encrypted_string += ' ';
-                            break;
-
                         case 1:
                             encrypted_string += ' ';
                             break;
@@ -244,9 +238,9 @@ namespace OpenNos.World
             }
         }
 
-        public override byte[] Encrypt(string str)
+        public override byte[] Encrypt(string data)
         {
-            byte[] StrBytes = Encoding.Default.GetBytes(str);
+            byte[] StrBytes = Encoding.Default.GetBytes(data);
             int BytesLength = StrBytes.Length;
 
             byte[] encryptedData = new byte[BytesLength + (int)Math.Ceiling((decimal)BytesLength / 0x7E) + 1];

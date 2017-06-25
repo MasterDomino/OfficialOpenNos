@@ -37,7 +37,7 @@ namespace OpenNos.Core.Handling
             HandlerMethod = handlerMethod;
             ParentHandler = parentHandler;
             PacketDefinitionParameterType = packetBaseParameterType;
-            PacketHeaderAttribute headerAttribute = (PacketHeaderAttribute)PacketDefinitionParameterType.GetCustomAttributes(true).FirstOrDefault(ca => ca.GetType().Equals(typeof(PacketHeaderAttribute)));
+            PacketHeaderAttribute headerAttribute = (PacketHeaderAttribute)Array.Find(PacketDefinitionParameterType.GetCustomAttributes(true), ca => ca.GetType().Equals(typeof(PacketHeaderAttribute)));
             Identification = headerAttribute?.Identification;
             PassNonParseablePacket = headerAttribute?.PassNonParseablePacket ?? false;
             Authority = headerAttribute?.Authority ?? AuthorityType.User;
@@ -47,22 +47,22 @@ namespace OpenNos.Core.Handling
 
         #region Properties
 
-        public AuthorityType Authority { get; private set; }
+        public AuthorityType Authority { get; }
 
-        public Action<object, object> HandlerMethod { get; private set; }
+        public Action<object, object> HandlerMethod { get; }
 
         public PacketAttribute HandlerMethodAttribute { get; }
 
         /// <summary>
         /// Unique identification of the Packet by Header
         /// </summary>
-        public string Identification { get; private set; }
+        public string Identification { get; }
 
         public Type PacketDefinitionParameterType { get; }
 
-        public IPacketHandler ParentHandler { get; private set; }
+        public IPacketHandler ParentHandler { get; }
 
-        public bool PassNonParseablePacket { get; private set; }
+        public bool PassNonParseablePacket { get; }
 
         #endregion
     }

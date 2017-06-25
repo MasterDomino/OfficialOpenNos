@@ -28,13 +28,13 @@ namespace OpenNos.DAL.EF
     {
         #region Methods
 
-        public DeleteResult Delete(int penaltylogid)
+        public DeleteResult Delete(int penaltyLogId)
         {
             try
             {
                 using (var context = DataAccessHelper.CreateContext())
                 {
-                    PenaltyLog PenaltyLog = context.PenaltyLog.FirstOrDefault(c => c.PenaltyLogId.Equals(penaltylogid));
+                    PenaltyLog PenaltyLog = context.PenaltyLog.FirstOrDefault(c => c.PenaltyLogId.Equals(penaltyLogId));
 
                     if (PenaltyLog != null)
                     {
@@ -47,7 +47,7 @@ namespace OpenNos.DAL.EF
             }
             catch (Exception e)
             {
-                Logger.Log.Error(string.Format(Language.Instance.GetMessageFromKey("DELETE_PENALTYLOG_ERROR"), penaltylogid, e.Message), e);
+                Logger.Log.Error(string.Format(Language.Instance.GetMessageFromKey("DELETE_PENALTYLOG_ERROR"), penaltyLogId, e.Message), e);
                 return DeleteResult.Error;
             }
         }
@@ -100,13 +100,13 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        public PenaltyLogDTO LoadById(int relId)
+        public PenaltyLogDTO LoadById(int penaltyLogId)
         {
             try
             {
                 using (var context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<PenaltyLogDTO>(context.PenaltyLog.FirstOrDefault(s => s.PenaltyLogId.Equals(relId)));
+                    return _mapper.Map<PenaltyLogDTO>(context.PenaltyLog.FirstOrDefault(s => s.PenaltyLogId.Equals(penaltyLogId)));
                 }
             }
             catch (Exception e)

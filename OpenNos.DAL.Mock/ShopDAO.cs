@@ -33,12 +33,12 @@ namespace OpenNos.DAL.Mock
             throw new NotImplementedException();
         }
 
-        public ShopDTO LoadById(int ShopId)
+        public ShopDTO LoadById(int shopId)
         {
             throw new NotImplementedException();
         }
 
-        public ShopDTO LoadByNpc(int NpcId)
+        public ShopDTO LoadByNpc(int mapNpcId)
         {
             throw new NotImplementedException();
         }

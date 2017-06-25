@@ -2,7 +2,7 @@
 
 namespace OpenNos.PathFinder
 {
-    public class Heuristic
+    public static class Heuristic
     {
         #region Members
 
@@ -21,7 +21,7 @@ namespace OpenNos.PathFinder
         {
             float tFdx = iDx;
             float tFdy = iDy;
-            return Math.Sqrt(tFdx * tFdx + tFdy * tFdy);
+            return Math.Sqrt((tFdx * tFdx) + (tFdy * tFdy));
         }
 
         public static double Manhattan(int iDx, int iDy)
@@ -33,7 +33,7 @@ namespace OpenNos.PathFinder
         {
             int min = Math.Min(iDx, iDy);
             int max = Math.Max(iDx, iDy);
-            return min * SQRT_2 + max - min;
+            return (min * SQRT_2) + max - min;
         }
 
         #endregion

@@ -121,6 +121,7 @@ namespace OpenNos.Master.Library.Interface
         /// <summary>
         /// Generates the Channel Selection Packet
         /// </summary>
+        /// <param name="sessionId"></param>
         /// <returns>the actual packet</returns>
         string RetrieveRegisteredWorldServers(int sessionId);
 

@@ -151,7 +151,7 @@ namespace OpenNos.Handler
                 }
                 if (skillinfo.SkillVNum < 200)
                 {
-                    foreach (var skill in Session.Character.Skills.GetAllItems())
+                    foreach (CharacterSkill skill in Session.Character.Skills.GetAllItems())
                     {
                         if (skillinfo.CastId == skill.Skill.CastId && skill.Skill.SkillVNum < 200)
                         {
@@ -523,7 +523,7 @@ namespace OpenNos.Handler
             {
                 Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[JLvl]JobLevel: {changeJobLevelPacket.JobLevel}");
 
-                if ((Session.Character.Class == 0 && changeJobLevelPacket.JobLevel <= 20 || Session.Character.Class != 0 && changeJobLevelPacket.JobLevel <= 255) && changeJobLevelPacket.JobLevel > 0)
+                if (((Session.Character.Class == 0 && changeJobLevelPacket.JobLevel <= 20) || (Session.Character.Class != 0 && changeJobLevelPacket.JobLevel <= 255)) && changeJobLevelPacket.JobLevel > 0)
                 {
                     Session.Character.JobLevel = changeJobLevelPacket.JobLevel;
                     Session.Character.JobLevelXp = 0;
@@ -533,14 +533,14 @@ namespace OpenNos.Handler
                     Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(), ReceiverType.AllExceptMe);
                     Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(), ReceiverType.AllExceptMe);
                     Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateEff(8), Session.Character.PositionX, Session.Character.PositionY);
-                    Session.Character.Skills[(short)(200 + 20 * (byte)Session.Character.Class)] = new CharacterSkill
+                    Session.Character.Skills[(short)(200 + (20 * (byte)Session.Character.Class))] = new CharacterSkill
                     {
-                        SkillVNum = (short)(200 + 20 * (byte)Session.Character.Class),
+                        SkillVNum = (short)(200 + (20 * (byte)Session.Character.Class)),
                         CharacterId = Session.Character.CharacterId
                     };
-                    Session.Character.Skills[(short)(201 + 20 * (byte)Session.Character.Class)] = new CharacterSkill
+                    Session.Character.Skills[(short)(201 + (20 * (byte)Session.Character.Class))] = new CharacterSkill
                     {
-                        SkillVNum = (short)(201 + 20 * (byte)Session.Character.Class),
+                        SkillVNum = (short)(201 + (20 * (byte)Session.Character.Class)),
                         CharacterId = Session.Character.CharacterId
                     };
                     Session.Character.Skills[236] = new CharacterSkill
@@ -993,15 +993,15 @@ namespace OpenNos.Handler
 
                 string name = demotePacket.CharacterName;
                 AccountDTO account = DAOFactory.AccountDAO.LoadById(DAOFactory.CharacterDAO.LoadByName(name).AccountId);
-                if (account != null && account.Authority > AuthorityType.User)
+                if (account?.Authority > AuthorityType.User)
                 {
-                    account.Authority -= 1;
+                    account.Authority--;
                     DAOFactory.AccountDAO.InsertOrUpdate(ref account);
                     ClientSession session = ServerManager.Instance.Sessions.FirstOrDefault(s => s.Character?.Name == name);
                     if (session != null)
                     {
-                        session.Account.Authority -= 1;
-                        session.Character.Authority -= 1;
+                        session.Account.Authority--;
+                        session.Character.Authority--;
                         ServerManager.Instance.ChangeMap(session.Character.CharacterId);
                         DAOFactory.AccountDAO.WriteGeneralLog(session.Account.AccountId, session.IpAddress, session.Character.CharacterId, GeneralLogType.Demotion, $"by: {Session.Character.Name}");
                     }
@@ -1106,10 +1106,7 @@ namespace OpenNos.Handler
                 {
                     if (Session.HasCurrentMapInstance)
                     {
-                        Parallel.ForEach(Session.CurrentMapInstance.Sessions, session =>
-                        {
-                            Session.Character.SendGift(session.Character.CharacterId, giftPacket.VNum, giftPacket.Amount, giftPacket.Rare, giftPacket.Upgrade, false);
-                        });
+                        Parallel.ForEach(Session.CurrentMapInstance.Sessions, session => Session.Character.SendGift(session.Character.CharacterId, giftPacket.VNum, giftPacket.Amount, giftPacket.Rare, giftPacket.Upgrade, false));
                         Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("GIFT_SENT"), 10));
                     }
                 }
@@ -1398,10 +1395,7 @@ namespace OpenNos.Handler
 
                 if (kickPacket.CharacterName == "*")
                 {
-                    Parallel.ForEach(ServerManager.Instance.Sessions, session =>
-                    {
-                        session.Disconnect();
-                    });
+                    Parallel.ForEach(ServerManager.Instance.Sessions, session => session.Disconnect());
                 }
                 ServerManager.Instance.Kick(kickPacket.CharacterName);
             }
@@ -1414,6 +1408,7 @@ namespace OpenNos.Handler
         /// <summary>
         /// $KickSession Command
         /// </summary>
+        /// <param name="kickSessionPacket"></param>
         public void KickSession(KickSessionPacket kickSessionPacket)
         {
             if (kickSessionPacket != null)
@@ -1621,15 +1616,15 @@ namespace OpenNos.Handler
 
                 string name = promotePacket.CharacterName;
                 AccountDTO account = DAOFactory.AccountDAO.LoadById(DAOFactory.CharacterDAO.LoadByName(name).AccountId);
-                if (account != null && account.Authority >= AuthorityType.User && account.Authority < AuthorityType.GameMaster)
+                if (account?.Authority >= AuthorityType.User && account.Authority < AuthorityType.GameMaster)
                 {
-                    account.Authority += 1;
+                    account.Authority++;
                     DAOFactory.AccountDAO.InsertOrUpdate(ref account);
                     ClientSession session = ServerManager.Instance.Sessions.FirstOrDefault(s => s.Character?.Name == name);
                     if (session != null)
                     {
-                        session.Account.Authority += 1;
-                        session.Character.Authority += 1;
+                        session.Account.Authority++;
+                        session.Character.Authority++;
                         ServerManager.Instance.ChangeMap(session.Character.CharacterId);
                         DAOFactory.AccountDAO.WriteGeneralLog(session.Account.AccountId, session.IpAddress, session.Character.CharacterId, GeneralLogType.Promotion, $"by: {Session.Character.Name}");
                     }
@@ -2005,12 +2000,13 @@ namespace OpenNos.Handler
                 Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Sudo]CharacterName: {sudoPacket.CharacterName} CommandContents:{sudoPacket.CommandContents}");
 
                 ClientSession session = ServerManager.Instance.GetSessionByCharacterName(sudoPacket.CharacterName);
-                if (session != null)
+                if (session != null && !string.IsNullOrWhiteSpace(sudoPacket.CommandContents))
                 {
-                    if (!string.IsNullOrWhiteSpace(sudoPacket.CommandContents))
-                    {
-                        session.ReceivePacket(sudoPacket.CommandContents, true);
-                    }
+                    session.ReceivePacket(sudoPacket.CommandContents, true);
+                }
+                else
+                {
+                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("USER_NOT_CONNECTED"), 0));
                 }
             }
             else
@@ -2246,7 +2242,7 @@ namespace OpenNos.Handler
                 else
                 {
                     ClientSession targetSession = ServerManager.Instance.GetSessionByCharacterName(teleportToMePacket.CharacterName);
-                    if (targetSession != null && !targetSession.Character.IsChangingMapInstance)
+                    if (targetSession?.Character.IsChangingMapInstance == false)
                     {
                         targetSession.Character.Dispose();
                         targetSession.Character.IsSitting = false;
@@ -2392,10 +2388,7 @@ namespace OpenNos.Handler
                 if (character != null)
                 {
                     ClientSession session = ServerManager.Instance.GetSessionByCharacterName(characterName);
-                    if (session != null)
-                    {
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("WARNING"), warningPacket.Reason)));
-                    }
+                    session?.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("WARNING"), warningPacket.Reason)));
                     PenaltyLogDTO log = new PenaltyLogDTO
                     {
                         AccountId = character.AccountId,
@@ -2549,7 +2542,7 @@ namespace OpenNos.Handler
             if (characterToMute != null)
             {
                 ClientSession session = ServerManager.Instance.GetSessionByCharacterName(characterName);
-                if (session != null && !session.Character.IsMuted())
+                if (session?.Character.IsMuted() == false)
                 {
                     session?.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("MUTED_PLURAL"), reason, duration)));
                 }

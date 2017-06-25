@@ -18,11 +18,11 @@ using System.Collections.Generic;
 
 namespace OpenNos.GameObject
 {
-    public class MapInstancePortalHandler
+    public static class MapInstancePortalHandler
     {
         #region Properties
 
-        public static int SourceX { get; private set; }
+        public static int SourceX { get; }
 
         #endregion
 

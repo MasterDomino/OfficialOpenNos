@@ -25,15 +25,15 @@ namespace OpenNos.GameObject
             // intialize hardcode in waiting for better solution
             GuriItemEffects = new Dictionary<int, int>
             {
-                {859, 1343},
-                {860, 1344},
-                {861, 1344},
-                {875, 1558},
-                {876, 1559},
-                {877, 1560},
-                {878, 1560},
-                {879, 1561},
-                {880, 1561}
+                [859] = 1343,
+                [860] = 1344,
+                [861] = 1344,
+                [875] = 1558,
+                [876] = 1559,
+                [877] = 1560,
+                [878] = 1560,
+                [879] = 1561,
+                [880] = 1561
             };
 
             // effect items aka. fireworks

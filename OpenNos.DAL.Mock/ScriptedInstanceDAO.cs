@@ -23,7 +23,7 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public void Insert(List<ScriptedInstanceDTO> portals)
+        public void Insert(List<ScriptedInstanceDTO> scriptedInstances)
         {
             throw new NotImplementedException();
         }

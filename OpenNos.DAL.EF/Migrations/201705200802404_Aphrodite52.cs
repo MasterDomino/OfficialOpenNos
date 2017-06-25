@@ -2,7 +2,7 @@ namespace OpenNos.DAL.EF.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class Aphrodite52 : DbMigration
     {
         public override void Up()
@@ -11,7 +11,7 @@ namespace OpenNos.DAL.EF.Migrations
             AddColumn("dbo.BCard", "Delay", c => c.Short(nullable: false));
             DropColumn("dbo.BCard", "Delayed");
         }
-        
+
         public override void Down()
         {
             AddColumn("dbo.BCard", "Delayed", c => c.Boolean(nullable: false));

@@ -18,14 +18,11 @@ using System.Runtime.CompilerServices;
 
 namespace OpenNos.Core
 {
-    public class Logger
+    public static class Logger
     {
         #region Properties
 
-        public static ILog Log
-        {
-            get; set;
-        }
+        public static ILog Log { get; set; }
 
         #endregion
 
@@ -73,6 +70,10 @@ namespace OpenNos.Core
         /// Wraps up the info message with the Logging Event
         /// </summary>
         /// <param name="message"></param>
+        /// <param name="logEvent"></param>
+        /// <param name="caller"></param>
+        /// <param name="data"></param>
+        /// <param name="ex"></param>
         public static void LogEvent(string logEvent, string caller, string data, Exception ex = null)
         {
             if (ex != null)
@@ -88,11 +89,6 @@ namespace OpenNos.Core
         public static void InitializeLogger(ILog log)
         {
             Log = log;
-        }
-
-        public static void InitializeLogger(object p)
-        {
-            throw new NotImplementedException();
         }
 
         #endregion

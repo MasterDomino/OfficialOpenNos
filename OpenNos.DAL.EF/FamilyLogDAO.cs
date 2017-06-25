@@ -28,13 +28,13 @@ namespace OpenNos.DAL.EF
     {
         #region Methods
 
-        public DeleteResult Delete(long familylogId)
+        public DeleteResult Delete(long familyLogId)
         {
             try
             {
                 using (var context = DataAccessHelper.CreateContext())
                 {
-                    FamilyLog famlog = context.FamilyLog.FirstOrDefault(c => c.FamilyLogId.Equals(familylogId));
+                    FamilyLog famlog = context.FamilyLog.FirstOrDefault(c => c.FamilyLogId.Equals(familyLogId));
 
                     if (famlog != null)
                     {
@@ -47,33 +47,33 @@ namespace OpenNos.DAL.EF
             }
             catch (Exception e)
             {
-                Logger.Log.Error(string.Format(Language.Instance.GetMessageFromKey("DELETE_ERROR"), familylogId, e.Message), e);
+                Logger.Log.Error(string.Format(Language.Instance.GetMessageFromKey("DELETE_ERROR"), familyLogId, e.Message), e);
                 return DeleteResult.Error;
             }
         }
 
-        public SaveResult InsertOrUpdate(ref FamilyLogDTO famlog)
+        public SaveResult InsertOrUpdate(ref FamilyLogDTO familyLog)
         {
             try
             {
                 using (var context = DataAccessHelper.CreateContext())
                 {
-                    long FamilyLog = famlog.FamilyLogId;
+                    long FamilyLog = familyLog.FamilyLogId;
                     FamilyLog entity = context.FamilyLog.FirstOrDefault(c => c.FamilyLogId.Equals(FamilyLog));
 
                     if (entity == null)
                     {
-                        famlog = Insert(famlog, context);
+                        familyLog = Insert(familyLog, context);
                         return SaveResult.Inserted;
                     }
 
-                    famlog = Update(entity, famlog, context);
+                    familyLog = Update(entity, familyLog, context);
                     return SaveResult.Updated;
                 }
             }
             catch (Exception e)
             {
-                Logger.Log.Error(string.Format(Language.Instance.GetMessageFromKey("UPDATE_FAMILYLOG_ERROR"), famlog.FamilyLogId, e.Message), e);
+                Logger.Log.Error(string.Format(Language.Instance.GetMessageFromKey("UPDATE_FAMILYLOG_ERROR"), familyLog.FamilyLogId, e.Message), e);
                 return SaveResult.Error;
             }
         }

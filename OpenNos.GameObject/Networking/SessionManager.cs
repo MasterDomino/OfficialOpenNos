@@ -54,14 +54,11 @@ namespace OpenNos.GameObject
             ClientSession session = IntializeNewSession(customClient);
             customClient.SetClientSession(session);
 
-            if (session != null && IsWorldServer)
+            if (session != null && IsWorldServer && !_sessions.TryAdd(customClient.ClientId, session))
             {
-                if (!_sessions.TryAdd(customClient.ClientId, session))
-                {
-                    Logger.Log.WarnFormat(Language.Instance.GetMessageFromKey("FORCED_DISCONNECT"), customClient.ClientId);
-                    customClient.Disconnect();
-                    _sessions.TryRemove(customClient.ClientId, out session);
-                }
+                Logger.Log.WarnFormat(Language.Instance.GetMessageFromKey("FORCED_DISCONNECT"), customClient.ClientId);
+                customClient.Disconnect();
+                _sessions.TryRemove(customClient.ClientId, out session);
             }
         }
 
@@ -95,22 +92,19 @@ namespace OpenNos.GameObject
 
                 session.Destroy();
 
-                if (IsWorldServer)
+                if (IsWorldServer && session.HasSelectedCharacter)
                 {
-                    if (session.HasSelectedCharacter)
+                    if (session.Character.Hp < 1)
                     {
-                        if (session.Character.Hp < 1)
-                        {
-                            session.Character.Hp = 1;
-                        }
-
-                        if (ServerManager.Instance.Groups.Any(s => s.IsMemberOfGroup(session.Character.CharacterId)))
-                        {
-                            ServerManager.Instance.GroupLeave(session);
-                        }
-
-                        session.Character.Save();
+                        session.Character.Hp = 1;
                     }
+
+                    if (ServerManager.Instance.Groups.Any(s => s.IsMemberOfGroup(session.Character.CharacterId)))
+                    {
+                        ServerManager.Instance.GroupLeave(session);
+                    }
+
+                    session.Character.Save();
                 }
 
                 client.Disconnect();

@@ -26,13 +26,13 @@ namespace OpenNos.DAL.EF
     {
         #region Methods
 
-        public CardDTO Insert(ref CardDTO cardObject)
+        public CardDTO Insert(ref CardDTO card)
         {
             try
             {
                 using (var context = DataAccessHelper.CreateContext())
                 {
-                    Card entity = _mapper.Map<Card>(cardObject);
+                    Card entity = _mapper.Map<Card>(card);
                     context.Card.Add(entity);
                     context.SaveChanges();
                     return _mapper.Map<CardDTO>(entity);

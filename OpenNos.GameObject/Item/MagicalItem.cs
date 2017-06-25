@@ -208,23 +208,17 @@ namespace OpenNos.GameObject
 
                 // speakers
                 case 15:
-                    if (!session.Character.IsVehicled)
+                    if (!session.Character.IsVehicled && Option == 0)
                     {
-                        if (Option == 0)
-                        {
-                            session.SendPacket(UserInterfaceHelper.Instance.GenerateGuri(10, 3, session.Character.CharacterId, 1));
-                        }
+                        session.SendPacket(UserInterfaceHelper.Instance.GenerateGuri(10, 3, session.Character.CharacterId, 1));
                     }
                     break;
 
                 // bubbles
                 case 16:
-                    if (!session.Character.IsVehicled)
+                    if (!session.Character.IsVehicled && Option == 0)
                     {
-                        if (Option == 0)
-                        {
-                            session.SendPacket(UserInterfaceHelper.Instance.GenerateGuri(10, 4, session.Character.CharacterId, 1));
-                        }
+                        session.SendPacket(UserInterfaceHelper.Instance.GenerateGuri(10, 4, session.Character.CharacterId, 1));
                     }
                     break;
 

@@ -44,7 +44,7 @@ namespace OpenNos.Handler
 
         #region Methods
 
-        public string BuildServersPacket(long accountId, int sessionId)
+        public string BuildServersPacket(int sessionId)
         {
             string channelpacket = CommunicationServiceClient.Instance.RetrieveRegisteredWorldServers(sessionId);
 
@@ -74,7 +74,7 @@ namespace OpenNos.Handler
                 Password = ConfigurationManager.AppSettings["UseOldCrypto"] == "true" ? EncryptionBase.Sha512(LoginEncryption.GetPassword(loginPacket.Password)).ToUpper() : loginPacket.Password
             };
             AccountDTO loadedAccount = DAOFactory.AccountDAO.LoadByName(user.Name);
-            if (loadedAccount != null && loadedAccount.Password.ToUpper().Equals(user.Password))
+            if (loadedAccount?.Password.ToUpper().Equals(user.Password) == true)
             {
                 string ipAddress = _session.IpAddress;
                 DAOFactory.AccountDAO.WriteGeneralLog(loadedAccount.AccountId, ipAddress, null, GeneralLogType.Connection, "LoginServer");
@@ -100,7 +100,7 @@ namespace OpenNos.Handler
 
                             case AuthorityType.Banned:
                                 {
-                                    _session.SendPacket($"fail {Language.Instance.GetMessageFromKey("IDERROR")}");
+                                    _session.SendPacket($"fail {string.Format(Language.Instance.GetMessageFromKey("BANNED"), "Unknown", "Unknown")}");
                                 }
                                 break;
 
@@ -125,7 +125,7 @@ namespace OpenNos.Handler
                                     {
                                         Logger.Log.Error("General Error SessionId: " + newSessionId, ex);
                                     }
-                                    _session.SendPacket(BuildServersPacket(loadedAccount.AccountId, newSessionId));
+                                    _session.SendPacket(BuildServersPacket(newSessionId));
                                 }
                                 break;
                         }

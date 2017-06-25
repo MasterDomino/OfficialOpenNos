@@ -22,7 +22,7 @@ namespace OpenNos.DAL.Interface
     {
         #region Methods
 
-        DeleteResult Delete(int penaltylogId);
+        DeleteResult Delete(int penaltyLogId);
 
         SaveResult InsertOrUpdate(ref PenaltyLogDTO log);
 
@@ -30,7 +30,7 @@ namespace OpenNos.DAL.Interface
 
         IEnumerable<PenaltyLogDTO> LoadByAccount(long accountId);
 
-        PenaltyLogDTO LoadById(int relId);
+        PenaltyLogDTO LoadById(int penaltyLogId);
 
         #endregion
     }

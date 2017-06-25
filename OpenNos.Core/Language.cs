@@ -24,8 +24,8 @@ namespace OpenNos.Core
         #region Members
 
         private static Language instance;
-        private ResourceManager _manager;
-        private CultureInfo _resourceCulture;
+        private readonly ResourceManager _manager;
+        private readonly CultureInfo _resourceCulture;
 
         #endregion
 

@@ -22,7 +22,7 @@ namespace OpenNos.GameObject
     {
         #region Members
 
-        private Random _random;
+        private readonly Random _random;
         private Item item;
 
         #endregion

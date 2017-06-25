@@ -22,13 +22,13 @@ namespace OpenNos.DAL.Interface
     {
         #region Methods
 
-        DeleteResult Delete(long characterrelationid);
+        DeleteResult Delete(long characterRelationId);
 
-        SaveResult InsertOrUpdate(ref CharacterRelationDTO relation);
+        SaveResult InsertOrUpdate(ref CharacterRelationDTO characterRelation);
 
         IEnumerable<CharacterRelationDTO> LoadAll();
 
-        CharacterRelationDTO LoadById(long relId);
+        CharacterRelationDTO LoadById(long characterId);
 
         #endregion
     }

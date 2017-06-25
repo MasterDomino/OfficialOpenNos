@@ -21,9 +21,9 @@ namespace OpenNos.DAL.Interface
     {
         #region Methods
 
-        ScriptedInstanceDTO Insert(ScriptedInstanceDTO portal);
+        ScriptedInstanceDTO Insert(ScriptedInstanceDTO scriptedInstance);
 
-        void Insert(List<ScriptedInstanceDTO> portals);
+        void Insert(List<ScriptedInstanceDTO> scriptedInstances);
 
         IEnumerable<ScriptedInstanceDTO> LoadByMap(short mapId);
 

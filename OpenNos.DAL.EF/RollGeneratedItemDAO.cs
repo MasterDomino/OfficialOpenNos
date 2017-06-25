@@ -82,7 +82,6 @@ namespace OpenNos.DAL.EF
             }
         }
 
-
         #endregion
     }
 }

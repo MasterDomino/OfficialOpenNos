@@ -44,8 +44,8 @@ namespace OpenNos.DAL.EF.Helpers
         public static DbTransaction BeginTransaction()
         {
             // an open connection is needed for a transaction
-            if (Context.Database.Connection.State == ConnectionState.Broken ||
-                Context.Database.Connection.State == ConnectionState.Closed)
+            if (Context.Database.Connection.State == ConnectionState.Broken
+                || Context.Database.Connection.State == ConnectionState.Closed)
             {
                 Context.Database.Connection.Open();
             }

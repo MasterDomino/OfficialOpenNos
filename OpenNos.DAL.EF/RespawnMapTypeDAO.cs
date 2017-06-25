@@ -28,14 +28,14 @@ namespace OpenNos.DAL.EF
     {
         #region Methods
 
-        public void Insert(List<RespawnMapTypeDTO> respawnMapType)
+        public void Insert(List<RespawnMapTypeDTO> respawnMapTypes)
         {
             try
             {
                 using (var context = DataAccessHelper.CreateContext())
                 {
                     context.Configuration.AutoDetectChangesEnabled = false;
-                    foreach (RespawnMapTypeDTO RespawnMapType in respawnMapType)
+                    foreach (RespawnMapTypeDTO RespawnMapType in respawnMapTypes)
                     {
                         RespawnMapType entity = _mapper.Map<RespawnMapType>(RespawnMapType);
                         context.RespawnMapType.Add(entity);

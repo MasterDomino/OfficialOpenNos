@@ -29,7 +29,7 @@ namespace OpenNos.DAL.Interface
 
         IEnumerable<ItemDTO> LoadAll();
 
-        ItemDTO LoadById(short Vnum);
+        ItemDTO LoadById(short vNum);
 
         #endregion
     }

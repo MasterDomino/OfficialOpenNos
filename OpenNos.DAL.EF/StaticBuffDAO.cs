@@ -28,23 +28,23 @@ namespace OpenNos.DAL.EF
     {
         #region Methods
 
-        public SaveResult InsertOrUpdate(ref StaticBuffDTO StaticBuff)
+        public SaveResult InsertOrUpdate(ref StaticBuffDTO staticBuff)
         {
             try
             {
                 using (var context = DataAccessHelper.CreateContext())
                 {
-                    long id = StaticBuff.CharacterId;
-                    short cardid = StaticBuff.CardId;
+                    long id = staticBuff.CharacterId;
+                    short cardid = staticBuff.CardId;
                     StaticBuff entity = context.StaticBuff.FirstOrDefault(c => c.CardId == cardid && c.CharacterId == id);
 
                     if (entity == null)
                     {
-                        StaticBuff = Insert(StaticBuff, context);
+                        staticBuff = Insert(staticBuff, context);
                         return SaveResult.Inserted;
                     }
-                    StaticBuff.StaticBuffId = entity.StaticBuffId;
-                    StaticBuff = Update(entity, StaticBuff, context);
+                    staticBuff.StaticBuffId = entity.StaticBuffId;
+                    staticBuff = Update(entity, staticBuff, context);
                     return SaveResult.Updated;
                 }
             }
@@ -54,7 +54,7 @@ namespace OpenNos.DAL.EF
                 return SaveResult.Error;
             }
         }
-        
+
         public IEnumerable<StaticBuffDTO> LoadByCharacterId(long characterId)
         {
             using (var context = DataAccessHelper.CreateContext())
@@ -111,7 +111,6 @@ namespace OpenNos.DAL.EF
                         context.StaticBuff.Remove(bon);
                         context.SaveChanges();
                     }
-
                 }
             }
             catch (Exception e)

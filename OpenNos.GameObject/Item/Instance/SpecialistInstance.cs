@@ -26,7 +26,7 @@ namespace OpenNos.GameObject
     {
         #region Members
 
-        private Random _random;
+        private readonly Random _random;
 
         private long _transportId;
 
@@ -144,7 +144,7 @@ namespace OpenNos.GameObject
             {
                 spdestroyed = 1;
             }
-            if (!skillsSp.Any())
+            if (skillsSp.Count == 0)
             {
                 skill = "-1";
             }
@@ -152,10 +152,9 @@ namespace OpenNos.GameObject
 
             for (int i = 1; i < 11; i++)
             {
-                if (skillsSp.Count >= i + 1)
+                if (skillsSp.Count >= i + 1 && skillsSp[i].SkillVNum <= firstskillvnum + 10)
                 {
-                    if (skillsSp[i].SkillVNum <= firstskillvnum + 10)
-                        skill += $"{skillsSp[i].SkillVNum}.";
+                    skill += $"{skillsSp[i].SkillVNum}.";
                 }
             }
 

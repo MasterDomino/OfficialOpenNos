@@ -28,12 +28,12 @@ namespace OpenNos.DAL.Mock
             throw new NotImplementedException();
         }
 
-        public TeleporterDTO LoadById(short TeleporterId)
+        public TeleporterDTO LoadById(short teleporterId)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<TeleporterDTO> LoadFromNpc(int NpcId)
+        public IEnumerable<TeleporterDTO> LoadFromNpc(int npcId)
         {
             throw new NotImplementedException();
         }

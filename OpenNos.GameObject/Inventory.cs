@@ -29,7 +29,7 @@ namespace OpenNos.GameObject
 
         private const short DEFAULT_BACKPACK_SIZE = 48;
         private const byte MAX_ITEM_AMOUNT = 99;
-        private Random _random;
+        private readonly Random _random;
 
         #endregion
 
@@ -185,8 +185,8 @@ namespace OpenNos.GameObject
                 if (newItem.Type != InventoryType.Bazaar && (newItem.Item.Type == InventoryType.Etc || newItem.Item.Type == InventoryType.Main))
                 {
                     IEnumerable<ItemInstance> slotNotFull = GetAllItems().Where(i => i.Type != InventoryType.Bazaar && i.Type != InventoryType.PetWarehouse && i.Type != InventoryType.Warehouse && i.Type != InventoryType.FamilyWareHouse && i.ItemVNum.Equals(newItem.ItemVNum) && i.Amount < MAX_ITEM_AMOUNT);
-                    int freeslot = DEFAULT_BACKPACK_SIZE + (Owner.HaveBackpack() ? 1 : 0) * 12 - GetAllItems().Where(s => s.Type == newItem.Type).Count();
-                    if (newItem.Amount <= freeslot * MAX_ITEM_AMOUNT + slotNotFull.Sum(s => MAX_ITEM_AMOUNT - s.Amount))
+                    int freeslot = DEFAULT_BACKPACK_SIZE + ((Owner.HaveBackpack() ? 1 : 0) * 12) - GetAllItems().Count(s => s.Type == newItem.Type);
+                    if (newItem.Amount <= (freeslot * MAX_ITEM_AMOUNT) + slotNotFull.Sum(s => MAX_ITEM_AMOUNT - s.Amount))
                     {
                         foreach (ItemInstance slot in slotNotFull)
                         {
@@ -215,9 +215,6 @@ namespace OpenNos.GameObject
                     }
                 }
             }
-
-
-
             return invlist;
         }
 
@@ -340,19 +337,19 @@ namespace OpenNos.GameObject
         public bool EnoughPlace(List<ItemInstance> itemInstances, int backPack)
         {
             Dictionary<InventoryType, int> place = new Dictionary<InventoryType, int>();
-            foreach (var itemgroup in itemInstances.GroupBy(s => s.ItemVNum))
+            foreach (IGrouping<short, ItemInstance> itemgroup in itemInstances.GroupBy(s => s.ItemVNum))
             {
                 InventoryType type = itemgroup.FirstOrDefault().Type;
                 List<ItemInstance> listitem = GetAllItems().Where(i => i.Type == type).ToList();
                 if (!place.ContainsKey(type))
                 {
-                    place.Add(type, (type != InventoryType.Miniland ? DEFAULT_BACKPACK_SIZE + backPack * 12 : 50) - listitem.Count);
+                    place.Add(type, (type != InventoryType.Miniland ? DEFAULT_BACKPACK_SIZE + (backPack * 12) : 50) - listitem.Count);
                 }
 
                 int amount = itemgroup.Sum(s => s.Amount);
                 int rest = amount % (type == InventoryType.Equipment ? 1 : 99);
                 bool needanotherslot = listitem.Where(s => s.ItemVNum == itemgroup.Key).Sum(s => MAX_ITEM_AMOUNT - s.Amount) <= rest;
-                place[itemgroup.FirstOrDefault().Type] -= amount / (type == InventoryType.Equipment ? 1 : 99) + (needanotherslot ? 1 : 0);
+                place[itemgroup.FirstOrDefault().Type] -= (amount / (type == InventoryType.Equipment ? 1 : 99)) + (needanotherslot ? 1 : 0);
 
                 if (place[itemgroup.FirstOrDefault().Type] < 0)
                 {
@@ -401,13 +398,13 @@ namespace OpenNos.GameObject
             T retItem = null;
             try
             {
-                retItem = (T)GetAllItems().SingleOrDefault(i => i != null && i.GetType().Equals(typeof(T)) && i.Slot == slot && i.Type == type);
+                retItem = (T)GetAllItems().SingleOrDefault(i => i?.GetType().Equals(typeof(T)) == true && i.Slot == slot && i.Type == type);
             }
             catch (InvalidOperationException ioEx)
             {
                 Logger.Error(ioEx);
                 bool isFirstItem = true;
-                foreach (ItemInstance item in GetAllItems().Where(i => i != null && i.GetType().Equals(typeof(T)) && i.Slot == slot && i.Type == type))
+                foreach (ItemInstance item in GetAllItems().Where(i => i?.GetType().Equals(typeof(T)) == true && i.Slot == slot && i.Type == type))
                 {
                     if (isFirstItem)
                     {
@@ -415,7 +412,7 @@ namespace OpenNos.GameObject
                         isFirstItem = false;
                         continue;
                     }
-                    ItemInstance iteminstance = GetAllItems().FirstOrDefault(i => i != null && i.GetType().Equals(typeof(T)) && i.Slot == slot && i.Type == type);
+                    ItemInstance iteminstance = GetAllItems().FirstOrDefault(i => i?.GetType().Equals(typeof(T)) == true && i.Slot == slot && i.Type == type);
                     if (iteminstance != null)
                     {
                         Remove(iteminstance.Id);
@@ -430,13 +427,13 @@ namespace OpenNos.GameObject
             ItemInstance retItem = null;
             try
             {
-                retItem = GetAllItems().SingleOrDefault(i => i != null && i.Slot.Equals(slot) && i.Type.Equals(type));
+                retItem = GetAllItems().SingleOrDefault(i => i?.Slot.Equals(slot) == true && i.Type.Equals(type));
             }
             catch (InvalidOperationException ioEx)
             {
                 Logger.Error(ioEx);
                 bool isFirstItem = true;
-                foreach (ItemInstance item in GetAllItems().Where(i => i != null && i.Slot.Equals(slot) && i.Type.Equals(type)))
+                foreach (ItemInstance item in GetAllItems().Where(i => i?.Slot.Equals(slot) == true && i.Type.Equals(type)))
                 {
                     if (isFirstItem)
                     {
@@ -444,7 +441,7 @@ namespace OpenNos.GameObject
                         isFirstItem = false;
                         continue;
                     }
-                    Remove(GetAllItems().First(i => i != null && i.Slot.Equals(slot) && i.Type.Equals(type)).Id);
+                    Remove(GetAllItems().First(i => i?.Slot.Equals(slot) == true && i.Type.Equals(type)).Id);
                 }
             }
             return retItem;
@@ -461,7 +458,7 @@ namespace OpenNos.GameObject
         /// <param name="wear"></param>
         public ItemInstance MoveInInventory(short sourceSlot, InventoryType sourceType, InventoryType targetType, short? targetSlot = null, bool wear = true)
         {
-            var sourceInstance = LoadBySlotAndType(sourceSlot, sourceType);
+            ItemInstance sourceInstance = LoadBySlotAndType(sourceSlot, sourceType);
 
             if (sourceInstance == null && wear)
             {
@@ -475,7 +472,7 @@ namespace OpenNos.GameObject
                     if (wear)
                     {
                         // swap
-                        var targetInstance = LoadBySlotAndType(targetSlot.Value, targetType);
+                        ItemInstance targetInstance = LoadBySlotAndType(targetSlot.Value, targetType);
 
                         sourceInstance.Slot = targetSlot.Value;
                         sourceInstance.Type = targetType;
@@ -524,7 +521,11 @@ namespace OpenNos.GameObject
                     return null;
                 }
             }
-            else return null;
+            else
+            {
+                return null;
+            }
+
             return sourceInstance;
         }
 
@@ -732,9 +733,9 @@ namespace OpenNos.GameObject
             IEnumerable<int> itemInstanceSlotsByType = GetAllItems().Where(i => i.Type == type).OrderBy(i => i.Slot).Select(i => (int)i.Slot);
             IEnumerable<int> instanceSlotsByType = itemInstanceSlotsByType as int[] ?? itemInstanceSlotsByType.ToArray();
             int nextFreeSlot = instanceSlotsByType.Any()
-                                ? Enumerable.Range(0, (type != InventoryType.Miniland ? DEFAULT_BACKPACK_SIZE + backPack * 12 : 50) + 1).Except(instanceSlotsByType).FirstOrDefault()
+                                ? Enumerable.Range(0, (type != InventoryType.Miniland ? DEFAULT_BACKPACK_SIZE + (backPack * 12) : 50) + 1).Except(instanceSlotsByType).FirstOrDefault()
                                 : 0;
-            return (short?)nextFreeSlot < (type != InventoryType.Miniland ? DEFAULT_BACKPACK_SIZE + backPack * 12 : 50) ? (short?)nextFreeSlot : null;
+            return (short?)nextFreeSlot < (type != InventoryType.Miniland ? DEFAULT_BACKPACK_SIZE + (backPack * 12) : 50) ? (short?)nextFreeSlot : null;
         }
 
         /// <summary>

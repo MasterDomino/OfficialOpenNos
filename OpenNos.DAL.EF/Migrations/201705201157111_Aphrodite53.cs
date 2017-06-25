@@ -2,7 +2,7 @@ namespace OpenNos.DAL.EF.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class Aphrodite53 : DbMigration
     {
         public override void Up()
@@ -12,7 +12,7 @@ namespace OpenNos.DAL.EF.Migrations
             AddForeignKey("dbo.StaticBuff", "CardId", "dbo.Card", "CardId");
             DropColumn("dbo.StaticBuff", "EffectId");
         }
-        
+
         public override void Down()
         {
             AddColumn("dbo.StaticBuff", "EffectId", c => c.Int(nullable: false));

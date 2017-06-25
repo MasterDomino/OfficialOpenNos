@@ -22,7 +22,7 @@ namespace OpenNos.DAL.Interface
     {
         #region Methods
 
-        IEnumerable<CellonOptionDTO> GetOptionsByWearableInstanceId(Guid inventoryitemId);
+        IEnumerable<CellonOptionDTO> GetOptionsByWearableInstanceId(Guid wearableInstanceId);
 
         #endregion
     }

@@ -22,7 +22,7 @@ using System.Threading;
 
 namespace OpenNos.GameObject.Event
 {
-    public class LOD
+    public static class LOD
     {
         #region Methods
 
@@ -64,7 +64,7 @@ namespace OpenNos.GameObject.Event
                             SpawnDH(fam.LandOfDeath);
                         }
                     }
-                }        
+                }
                 else if (LODTime == HornTime - (HornRespawn * dhspawns) - HornStay)
                 {
                     SpinWait.SpinUntil(() => !ServerManager.Instance.InFamilyRefreshMode);

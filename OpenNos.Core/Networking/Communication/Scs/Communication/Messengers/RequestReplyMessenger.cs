@@ -144,7 +144,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         /// <summary>
         /// Gets the underlying IMessenger object.
         /// </summary>
-        public T Messenger { get; private set; }
+        public T Messenger { get; }
 
         /// <summary>
         /// Timeout value as milliseconds to wait for a receiving message on
@@ -193,6 +193,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         /// Sends a message.
         /// </summary>
         /// <param name="message">Message to be sent</param>
+        /// <param name="priority">Message priority to send</param>
         public void SendMessage(IScsMessage message, byte priority)
         {
             Messenger.SendMessage(message, priority);
@@ -209,6 +210,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         /// MessageReceived event is not raised for response messages.
         /// </remarks>
         /// <param name="message">message to send</param>
+        /// <param name="priority">Message priority to send</param>
         /// <returns>Response message</returns>
         public IScsMessage SendMessageAndWaitForResponse(IScsMessage message, byte priority)
         {
@@ -227,6 +229,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         /// </remarks>
         /// <param name="message">message to send</param>
         /// <param name="timeoutMilliseconds">Timeout duration as milliseconds.</param>
+        /// <param name="priority">Message priority to send</param>
         /// <returns>Response message</returns>
         /// <exception cref="TimeoutException">
         /// Throws TimeoutException if can not receive reply message in timeout value
@@ -237,7 +240,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         public IScsMessage SendMessageAndWaitForResponse(IScsMessage message, int timeoutMilliseconds, byte priority)
         {
             // Create a waiting message record and add to list
-            var waitingMessage = new WaitingMessage();
+            WaitingMessage waitingMessage = new WaitingMessage();
             lock (_syncObj)
             {
                 _waitingMessages[message.MessageId] = waitingMessage;
@@ -298,7 +301,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
             // disconnected and can not receive messages anymore.
             lock (_syncObj)
             {
-                foreach (var waitingMessage in _waitingMessages.Values)
+                foreach (WaitingMessage waitingMessage in _waitingMessages.Values)
                 {
                     waitingMessage.State = WaitingMessageStates.Cancelled;
                     waitingMessage.WaitEvent.Set();
@@ -413,7 +416,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
             /// <summary>
             /// ManualResetEvent to block thread until response is received.
             /// </summary>
-            public ManualResetEventSlim WaitEvent { get; private set; }
+            public ManualResetEventSlim WaitEvent { get; }
 
             #endregion
         }

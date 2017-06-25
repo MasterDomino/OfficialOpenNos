@@ -45,20 +45,17 @@ namespace OpenNos.GameObject
                 MapTypes.Add(maptype);
             }
 
-            if (MapTypes.Any())
+            if (MapTypes.Count > 0 && MapTypes[0].RespawnMapTypeId != null)
             {
-                if (MapTypes.ElementAt(0).RespawnMapTypeId != null)
+                long? respawnMapTypeId = MapTypes[0].RespawnMapTypeId;
+                long? returnMapTypeId = MapTypes[0].ReturnMapTypeId;
+                if (respawnMapTypeId != null)
                 {
-                    long? respawnMapTypeId = MapTypes.ElementAt(0).RespawnMapTypeId;
-                    long? returnMapTypeId = MapTypes.ElementAt(0).ReturnMapTypeId;
-                    if (respawnMapTypeId != null)
-                    {
-                        DefaultRespawn = DAOFactory.RespawnMapTypeDAO.LoadById((long)respawnMapTypeId);
-                    }
-                    if (returnMapTypeId != null)
-                    {
-                        DefaultReturn = DAOFactory.RespawnMapTypeDAO.LoadById((long)returnMapTypeId);
-                    }
+                    DefaultRespawn = DAOFactory.RespawnMapTypeDAO.LoadById((long)respawnMapTypeId);
+                }
+                if (returnMapTypeId != null)
+                {
+                    DefaultReturn = DAOFactory.RespawnMapTypeDAO.LoadById((long)returnMapTypeId);
                 }
             }
         }
@@ -69,9 +66,9 @@ namespace OpenNos.GameObject
 
         public byte[] Data { get; set; }
 
-        public RespawnMapTypeDTO DefaultRespawn { get; private set; }
+        public RespawnMapTypeDTO DefaultRespawn { get; }
 
-        public RespawnMapTypeDTO DefaultReturn { get; private set; }
+        public RespawnMapTypeDTO DefaultReturn { get; }
 
         public GridPos[,] Grid { get; set; }
 
@@ -149,12 +146,9 @@ namespace OpenNos.GameObject
         {
             try
             {
-                if (Grid != null)
+                if (Grid?[x, y].IsWalkable() == false)
                 {
-                    if (!Grid[x, y].IsWalkable())
-                    {
-                        return true;
-                    }
+                    return true;
                 }
                 return false;
             }
@@ -199,7 +193,7 @@ namespace OpenNos.GameObject
         {
             for (int i = 1; i <= Math.Abs(mapX - firstX); i++)
             {
-                if (IsBlockedZone(firstX + Math.Sign(mapX - firstX) * i, firstY))
+                if (IsBlockedZone(firstX + (Math.Sign(mapX - firstX) * i), firstY))
                 {
                     return true;
                 }
@@ -207,7 +201,7 @@ namespace OpenNos.GameObject
 
             for (int i = 1; i <= Math.Abs(mapY - firstY); i++)
             {
-                if (IsBlockedZone(firstX, firstY + Math.Sign(mapY - firstY) * i))
+                if (IsBlockedZone(firstX, firstY + (Math.Sign(mapY - firstY) * i)))
                 {
                     return true;
                 }

@@ -22,7 +22,7 @@ namespace OpenNos.DAL.Interface
     {
         #region Methods
 
-        void Insert(List<RespawnMapTypeDTO> respawnmaptypemaps);
+        void Insert(List<RespawnMapTypeDTO> respawnMapTypes);
 
         SaveResult InsertOrUpdate(ref RespawnMapTypeDTO respawnMapType);
 

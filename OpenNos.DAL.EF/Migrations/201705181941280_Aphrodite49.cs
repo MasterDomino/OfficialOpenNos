@@ -2,7 +2,7 @@ namespace OpenNos.DAL.EF.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class Aphrodite49 : DbMigration
     {
         public override void Up()
@@ -13,7 +13,7 @@ namespace OpenNos.DAL.EF.Migrations
             AddColumn("dbo.Card", "BuffType", c => c.Byte(nullable: false));
             DropColumn("dbo.Card", "Period");
         }
-        
+
         public override void Down()
         {
             AddColumn("dbo.Card", "Period", c => c.Short(nullable: false));

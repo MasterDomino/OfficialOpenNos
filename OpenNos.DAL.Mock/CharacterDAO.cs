@@ -48,7 +48,7 @@ namespace OpenNos.DAL.Mock
 
         public override CharacterDTO Insert(CharacterDTO dto)
         {
-            dto.CharacterId = Container.Any() ? Container.Max(c => c.CharacterId) + 1 : 1;
+            dto.CharacterId = Container.Count > 0 ? Container.Max(c => c.CharacterId) + 1 : 1;
             return base.Insert(dto);
         }
 

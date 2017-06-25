@@ -42,7 +42,7 @@ namespace OpenNos.Core.Threading
         /// </summary>
         private volatile bool _running;
 
-        private object lockObject = new object();
+        private readonly object _lock = new object();
 
         #endregion
 
@@ -122,7 +122,7 @@ namespace OpenNos.Core.Threading
         /// </summary>
         public void Stop()
         {
-            lock (lockObject)
+            lock (_lock)
             {
                 _running = false;
                 _taskTimer.Change(Timeout.Infinite, Timeout.Infinite);
@@ -134,7 +134,7 @@ namespace OpenNos.Core.Threading
         /// </summary>
         public void WaitToStop()
         {
-            lock (lockObject)
+            lock (_lock)
             {
                 while (_performingTasks)
                 {
@@ -158,7 +158,7 @@ namespace OpenNos.Core.Threading
         /// <param name="state">Not used argument</param>
         private void TimerCallBack(object state)
         {
-            lock (lockObject)
+            lock (_lock)
             {
                 if (!_running || _performingTasks)
                 {
@@ -178,7 +178,7 @@ namespace OpenNos.Core.Threading
             }
             finally
             {
-                lock (lockObject)
+                lock (_lock)
                 {
                     _performingTasks = false;
                     if (_running)

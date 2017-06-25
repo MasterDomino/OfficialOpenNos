@@ -72,7 +72,7 @@ namespace OpenNos.GameObject
         {
             get
             {
-                int dmg = 100; //TODO: get proper Damage
+                const int dmg = 100; //TODO: get proper Damage
                 return Monster.DamageMinimum + dmg;
             }
         }
@@ -81,7 +81,7 @@ namespace OpenNos.GameObject
         {
             get
             {
-                int dmg = 100; //TODO: get proper Damage
+                const int dmg = 100; //TODO: get proper Damage
                 return Monster.DamageMaximum + dmg;
             }
         }
@@ -90,11 +90,7 @@ namespace OpenNos.GameObject
         {
             get
             {
-                if (monster == null)
-                {
-                    monster = ServerManager.Instance.GetNpc(NpcMonsterVNum);
-                }
-                return monster;
+                return monster ?? (monster = ServerManager.Instance.GetNpc(NpcMonsterVNum));
             }
             set
             {
@@ -106,11 +102,7 @@ namespace OpenNos.GameObject
         {
             get
             {
-                if (owner == null)
-                {
-                    owner = ServerManager.Instance.GetSessionByCharacterId(CharacterId).Character;
-                }
-                return owner;
+                return owner ?? (owner = ServerManager.Instance.GetSessionByCharacterId(CharacterId).Character);
             }
             set
             {
@@ -123,6 +115,7 @@ namespace OpenNos.GameObject
         public short PositionX { get; set; }
 
         public short PositionY { get; set; }
+
         public int MeleeDefense
         {
             get
@@ -130,6 +123,7 @@ namespace OpenNos.GameObject
                 return Monster.CloseDefence; //TODO: get proper Defense
             }
         }
+
         public int MeleeDefenseRate
         {
             get
@@ -137,6 +131,7 @@ namespace OpenNos.GameObject
                 return Monster.DefenceDodge; //TODO: get proper Defense
             }
         }
+
         public int RangeDefense
         {
             get
@@ -144,6 +139,7 @@ namespace OpenNos.GameObject
                 return Monster.DistanceDefence; //TODO: get proper Defense
             }
         }
+
         public int RangeDefenseRate
         {
             get
@@ -151,6 +147,7 @@ namespace OpenNos.GameObject
                 return Monster.DistanceDefenceDodge; //TODO: get proper Defense
             }
         }
+
         public int MagicalDefense
         {
             get
@@ -165,7 +162,7 @@ namespace OpenNos.GameObject
 
         public void GeneateMateTransportId()
         {
-            int nextId = ServerManager.Instance.MateIds.Any() ? ServerManager.Instance.MateIds.Last() + 1 : 2000000;
+            int nextId = ServerManager.Instance.MateIds.Count > 0 ? ServerManager.Instance.MateIds.Last() + 1 : 2000000;
             ServerManager.Instance.MateIds.Add(nextId);
             MateTransportId = nextId;
         }
@@ -208,7 +205,7 @@ namespace OpenNos.GameObject
 
         public string GenerateSay(string message, int type)
         {
-            return $"say 2 {MateTransportId} 2 {message}";
+            return $"say 2 {MateTransportId} {type} {message}";
         }
 
         public string GenerateScPacket()
@@ -249,6 +246,9 @@ namespace OpenNos.GameObject
 
                 case 2:
                     items = Owner.Inventory.GetAllItems().Where(s => s.Type == InventoryType.ThirdPartnerInventory).ToList();
+                    break;
+
+                default:
                     break;
             }
             return items;

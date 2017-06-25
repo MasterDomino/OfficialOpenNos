@@ -2,7 +2,7 @@ namespace OpenNos.DAL.EF.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class Aphrodite55 : DbMigration
     {
         public override void Up()
@@ -26,9 +26,8 @@ namespace OpenNos.DAL.EF.Migrations
                 .ForeignKey("dbo.Item", t => t.OriginalItemVNum)
                 .Index(t => t.OriginalItemVNum)
                 .Index(t => t.ItemGeneratedVNum);
-            
         }
-        
+
         public override void Down()
         {
             DropForeignKey("dbo.RollGeneratedItem", "OriginalItemVNum", "dbo.Item");

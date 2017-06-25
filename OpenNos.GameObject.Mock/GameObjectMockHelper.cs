@@ -25,7 +25,7 @@
 
         public long GetNextClientId()
         {
-            nextClientId = nextClientId + 1;
+            nextClientId++;
             return nextClientId;
         }
 

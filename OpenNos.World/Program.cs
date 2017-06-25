@@ -32,12 +32,12 @@ using System.Threading;
 
 namespace OpenNos.World
 {
-    public class Program
+    public static class Program
     {
         #region Members
 
         private static EventHandler exitHandler;
-        private static ManualResetEvent run = new ManualResetEvent(true);
+        private static readonly ManualResetEvent run = new ManualResetEvent(true);
 
         #endregion
 
@@ -62,7 +62,7 @@ namespace OpenNos.World
 
         #region Methods
 
-        public static void Main(string[] args)
+        public static void Main()
         {
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
 
@@ -74,7 +74,7 @@ namespace OpenNos.World
             Console.Title = $"OpenNos World Server v{fileVersionInfo.ProductVersion}dev";
             int port = Convert.ToInt32(ConfigurationManager.AppSettings["WorldPort"]);
             string text = $"WORLD SERVER v{fileVersionInfo.ProductVersion}dev - by OpenNos Team";
-            int offset = Console.WindowWidth / 2 + text.Length / 2;
+            int offset = (Console.WindowWidth / 2) + (text.Length / 2);
             string separator = new string('=', Console.WindowWidth);
             Console.WriteLine(separator + string.Format("{0," + offset + "}\n", text) + separator);
 
@@ -218,7 +218,7 @@ namespace OpenNos.World
             DAOFactory.ScriptedInstanceDAO.RegisterMapping(typeof(ScriptedInstance)).InitializeMapper();
         }
 
-        public class NativeMethods
+        public static class NativeMethods
         {
             [DllImport("Kernel32")]
             internal static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);

@@ -37,7 +37,7 @@ namespace OpenNos.GameObject
 
         public sealed override byte Amount { get; set; }
 
-        public int GoldAmount { get; private set; }
+        public int GoldAmount { get; }
 
         public sealed override short ItemVNum { get; set; }
 

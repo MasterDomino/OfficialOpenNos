@@ -24,8 +24,8 @@ namespace OpenNos.Domain
         GroupSharing = 8,
         MouseAimLock = 9,
         HeroChatBlocked = 10,
-        EmoticonsBlocked = 12,
         QuickGetUp = 11,
+        EmoticonsBlocked = 12,
         HpBlocked = 13,
         BuffBlocked = 14,
         MinilandInviteBlocked = 15

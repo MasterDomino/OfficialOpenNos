@@ -21,9 +21,9 @@ namespace OpenNos.DAL.Interface
     {
         #region Methods
 
-        CardDTO Insert(ref CardDTO cardObject);
+        CardDTO Insert(ref CardDTO card);
 
-        void Insert(List<CardDTO> card);
+        void Insert(List<CardDTO> cards);
 
         IEnumerable<CardDTO> LoadAll();
 

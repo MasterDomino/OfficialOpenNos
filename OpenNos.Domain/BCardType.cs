@@ -14,15 +14,13 @@
 
 namespace OpenNos.Domain
 {
-    public class BCardType
+    public static class BCardType
     {
         #region Enums
 
         public enum CardType : byte
         {
-            // 1-20
             SpecialAttack = 1,
-
             SpecialDefence = 2,
             AttackPower = 3,
             Target = 4,
@@ -42,10 +40,7 @@ namespace OpenNos.Domain
             Casting = 18,
             Move = 19,
             Reflection = 20,
-
-            // 21-40
             DrainAndSteal = 21,
-
             HealingBurningAndCasting = 22,
             HPMP = 23,
             SpecialisationBuffResistance = 24,
@@ -65,10 +60,7 @@ namespace OpenNos.Domain
             Count = 38,
             NoDefeatAndNoDamage = 39,
             SpecialActions = 40,
-
-            // 41-60
             Mode = 41,
-
             NoCharacteristicValue = 42,
             LightAndShadow = 43,
             Item = 44,
@@ -83,15 +75,13 @@ namespace OpenNos.Domain
             LordHatus = 53,
             LordCalvinas = 54,
             SESpecialist = 55,
-            FourthGlacernonFamilyRaid = 57,
             SummonedMonsterAttack = 56,
+            FourthGlacernonFamilyRaid = 57,
             BearSpirit = 58,
             SummonSkill = 59,
             InflictSkill = 60,
-
-            // 61-80 Missingno = 61,
+            // 61 missingno ?
             HideBarrelSkill = 62,
-
             FocusEnemyAttentionSkill = 63,
             TauntSkill = 64,
             FireCannoneerRangeBuff = 65,
@@ -110,17 +100,14 @@ namespace OpenNos.Domain
             TeamArenaBuff = 78,
             ArenaCamera = 79,
             DarkCloneSummon = 80,
-
-            // 81-??
             AbsorbedSpirit = 81,
-
             AngerSkill = 82,
             MeteoriteTeleport = 83,
             StealBuff = 84
         }
     }
 
-    public class AdditionalTypes : BCardType
+    public static class AdditionalTypes
     {
         // 1-20
         public enum SpecialAttack : byte
@@ -331,8 +318,8 @@ namespace OpenNos.Domain
             AlwaysDodgePropabilityNegated = 22,
             NoPenatly = 41,
             NoPenatlyNegated = 42,
-            DistanceDamageIncreasing = 41,
-            DistanceDamageIncreasingNegated = 42
+            DistanceDamageIncreasing = 51,
+            DistanceDamageIncreasingNegated = 52
         }
 
         public enum Morale : byte
@@ -389,7 +376,6 @@ namespace OpenNos.Domain
             EnemyMPDecreased = 42
         }
 
-        // 21-40
         public enum DrainAndSteal : byte
         {
             ReceiveHpFromMP = 11,
@@ -625,7 +611,6 @@ namespace OpenNos.Domain
             SeeHiddenThings = 52
         }
 
-        // 41-60
         public enum Mode : byte
         {
             Range = 11,
@@ -812,13 +797,6 @@ namespace OpenNos.Domain
             InflictDamageAtLocation = 11,
             InflictDamageAtLocationNegated = 12
         }
-
-        // 61-80
-        /*public enum Missingno : byte
-        {
-            Unknown = 11,
-            Unknown2 = 12
-        }*/
 
         public enum HideBarrelSkill : byte
         {
@@ -1040,7 +1018,6 @@ namespace OpenNos.Domain
             DarkElementDamageDecreaseChance = 52
         }
 
-        // 81-??
         public enum AbsorbedSpirit : byte
         {
             ApplyEffectIfPresent = 11,
@@ -1088,8 +1065,6 @@ namespace OpenNos.Domain
             StealGoodEffect = 41,
             StealGoodEffectNegated = 42
         }
-
-        // end!
     }
 
     #endregion

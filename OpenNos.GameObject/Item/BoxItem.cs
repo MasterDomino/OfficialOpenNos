@@ -81,12 +81,12 @@ namespace OpenNos.GameObject
                                         if (currentrnd >= rnd)
                                         {
                                             newInv = session.Character.Inventory.AddNewToInventory(rollitem.ItemGeneratedVNum, rollitem.ItemGeneratedAmount);
-                                            if (newInv.Any())
+                                            if (newInv.Count > 0)
                                             {
                                                 short Slot = inv.Slot;
                                                 if (Slot != -1)
                                                 {
-                                                    session.SendPacket(session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {newInv.First().Item.Name} x 1)", 12));
+                                                    session.SendPacket(session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {newInv[0].Item.Name} x 1)", 12));
                                                     newInv.ForEach(s => session.SendPacket(s.GenerateInventoryAdd()));
                                                     session.Character.Inventory.RemoveItemAmountFromInventory(1, box.Id);
                                                 }
@@ -97,22 +97,19 @@ namespace OpenNos.GameObject
                             }
                             else if (box.HoldingVNum == 0)
                             {
-                                if (packetsplit.Length == 1)
+                                if (packetsplit.Length == 1 && int.TryParse(packetsplit[0], out int PetId))
                                 {
-                                    if (int.TryParse(packetsplit[0], out int PetId))
-                                    {
-                                        Mate mate = session.Character.Mates.FirstOrDefault(s => s.MateTransportId == PetId);
-                                        box.HoldingVNum = mate.NpcMonsterVNum;
-                                        box.SpLevel = mate.Level;
-                                        box.SpDamage = mate.Attack;
-                                        box.SpDefence = mate.Defence;
-                                        session.Character.Mates.Remove(mate);
-                                        session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("PET_STORED")));
-                                        session.SendPacket(UserInterfaceHelper.Instance.GeneratePClear());
-                                        session.SendPackets(session.Character.GenerateScP());
-                                        session.SendPackets(session.Character.GenerateScN());
-                                        session.CurrentMapInstance?.Broadcast(mate.GenerateOut());
-                                    }
+                                    Mate mate = session.Character.Mates.FirstOrDefault(s => s.MateTransportId == PetId);
+                                    box.HoldingVNum = mate.NpcMonsterVNum;
+                                    box.SpLevel = mate.Level;
+                                    box.SpDamage = mate.Attack;
+                                    box.SpDefence = mate.Defence;
+                                    session.Character.Mates.Remove(mate);
+                                    session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("PET_STORED")));
+                                    session.SendPacket(UserInterfaceHelper.Instance.GeneratePClear());
+                                    session.SendPackets(session.Character.GenerateScP());
+                                    session.SendPackets(session.Character.GenerateScN());
+                                    session.CurrentMapInstance?.Broadcast(mate.GenerateOut());
                                 }
                             }
                             else
@@ -174,9 +171,9 @@ namespace OpenNos.GameObject
                             else
                             {
                                 List<ItemInstance> newInv = session.Character.Inventory.AddNewToInventory(box.HoldingVNum);
-                                if (newInv.Any())
+                                if (newInv.Count > 0)
                                 {
-                                    ItemInstance itemInstance = newInv.First();
+                                    ItemInstance itemInstance = newInv[0];
                                     SpecialistInstance specialist = session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>(itemInstance.Slot, itemInstance.Type);
                                     if (specialist != null)
                                     {
@@ -227,9 +224,9 @@ namespace OpenNos.GameObject
                             else
                             {
                                 List<ItemInstance> newInv = session.Character.Inventory.AddNewToInventory(box.HoldingVNum);
-                                if (newInv.Any())
+                                if (newInv.Count > 0)
                                 {
-                                    ItemInstance itemInstance = newInv.First();
+                                    ItemInstance itemInstance = newInv[0];
                                     WearableInstance fairy = session.Character.Inventory.LoadBySlotAndType<WearableInstance>(itemInstance.Slot, itemInstance.Type);
                                     if (fairy != null)
                                     {
@@ -265,12 +262,12 @@ namespace OpenNos.GameObject
                             else
                             {
                                 List<ItemInstance> newInv = session.Character.Inventory.AddNewToInventory(box.HoldingVNum);
-                                if (newInv.Any())
+                                if (newInv.Count > 0)
                                 {
                                     short Slot = inv.Slot;
                                     if (Slot != -1)
                                     {
-                                        session.SendPacket(session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {newInv.First().Item.Name} x 1)", 12));
+                                        session.SendPacket(session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {newInv[0].Item.Name} x 1)", 12));
                                         newInv.ForEach(s => session.SendPacket(s.GenerateInventoryAdd()));
                                         session.Character.Inventory.RemoveItemAmountFromInventory(1, box.Id);
                                     }

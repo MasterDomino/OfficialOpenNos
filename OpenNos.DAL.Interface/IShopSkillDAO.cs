@@ -21,13 +21,13 @@ namespace OpenNos.DAL.Interface
     {
         #region Methods
 
-        ShopSkillDTO Insert(ShopSkillDTO shopskill);
+        ShopSkillDTO Insert(ShopSkillDTO shopSkill);
 
         void Insert(List<ShopSkillDTO> skills);
 
         IEnumerable<ShopSkillDTO> LoadAll();
 
-        IEnumerable<ShopSkillDTO> LoadByShopId(int ShopId);
+        IEnumerable<ShopSkillDTO> LoadByShopId(int shopId);
 
         #endregion
     }

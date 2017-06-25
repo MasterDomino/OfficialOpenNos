@@ -27,7 +27,7 @@ using System.Threading.Tasks;
 
 namespace OpenNos.GameObject
 {
-    public class MapInstance : BroadcastableBase, IDisposable
+    public class MapInstance : BroadcastableBase
     {
         #region Members
 
@@ -38,8 +38,6 @@ namespace OpenNos.GameObject
         private readonly ThreadSafeSortedList<long, MapMonster> _monsters;
 
         private readonly ThreadSafeSortedList<long, MapNpc> _npcs;
-
-        private readonly List<Portal> _portals;
 
         private readonly Random _random;
 
@@ -77,7 +75,7 @@ namespace OpenNos.GameObject
             _mapMonsterIds = new List<int>();
             _mapNpcIds = new List<int>();
             DroppedList = new ThreadSafeSortedList<long, MapItem>();
-            _portals = new List<Portal>();
+            Portals = new List<Portal>();
             UserShops = new Dictionary<long, MapShop>();
             StartLife();
         }
@@ -150,7 +148,7 @@ namespace OpenNos.GameObject
 
         public List<EventContainer> OnMoveOnMapEvents { get; set; }
 
-        public List<Portal> Portals => _portals;
+        public List<Portal> Portals { get; }
 
         public List<ScriptedInstance> ScriptedInstances { get; set; }
 
@@ -277,10 +275,7 @@ namespace OpenNos.GameObject
         public List<string> GetMapItems()
         {
             List<string> packets = new List<string>();
-            Sessions.Where(s => s.Character != null && !s.Character.InvisibleGm).ToList().ForEach(s =>
-            {
-                s.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m => packets.Add(m.GenerateIn()));
-            });
+            Sessions.Where(s => s.Character?.InvisibleGm == false).ToList().ForEach(s => s.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m => packets.Add(m.GenerateIn())));
 
             // TODO: Parallelize getting of items of mapinstance
             Portals.ForEach(s => packets.Add(s.GenerateGp()));
@@ -312,7 +307,7 @@ namespace OpenNos.GameObject
         // TODO: Fix, Seems glitchy.
         public int GetNextMonsterId()
         {
-            int nextId = _mapMonsterIds.Any() ? _mapMonsterIds.Last() + 1 : 1;
+            int nextId = _mapMonsterIds.Count > 0 ? _mapMonsterIds.Last() + 1 : 1;
             _mapMonsterIds.Add(nextId);
             return nextId;
         }
@@ -320,7 +315,7 @@ namespace OpenNos.GameObject
         // TODO: Fix, Seems glitchy.
         public int GetNextNpcId()
         {
-            int nextId = _mapNpcIds.Any() ? _mapNpcIds.Last() + 1 : 1;
+            int nextId = _mapNpcIds.Count > 0 ? _mapNpcIds.Last() + 1 : 1;
             _mapNpcIds.Add(nextId);
             return nextId;
         }
@@ -361,7 +356,7 @@ namespace OpenNos.GameObject
                 portal2.SourceMapInstanceId = MapInstanceId;
                 _portalList[portal2.PortalId] = portal2;
             });
-            _portals.AddRange(_portalList.GetAllItems());
+            Portals.AddRange(_portalList.GetAllItems());
         }
 
         public void MapClear()
@@ -399,18 +394,15 @@ namespace OpenNos.GameObject
                 }
             }
 
-            if (niceSpot)
+            if (niceSpot && amount > 0 && amount <= inv.Amount)
             {
-                if (amount > 0 && amount <= inv.Amount)
-                {
-                    ItemInstance newItemInstance = inv.DeepCopy();
-                    newItemInstance.Id = random2;
-                    newItemInstance.Amount = amount;
-                    droppedItem = new CharacterMapItem(mapX, mapY, newItemInstance);
+                ItemInstance newItemInstance = inv.DeepCopy();
+                newItemInstance.Id = random2;
+                newItemInstance.Amount = amount;
+                droppedItem = new CharacterMapItem(mapX, mapY, newItemInstance);
 
-                    DroppedList[droppedItem.TransportId] = droppedItem;
-                    inv.Amount -= amount;
-                }
+                DroppedList[droppedItem.TransportId] = droppedItem;
+                inv.Amount -= amount;
             }
             return droppedItem;
         }
@@ -448,7 +440,7 @@ namespace OpenNos.GameObject
         internal void CreatePortal(Portal portal)
         {
             portal.SourceMapInstanceId = MapInstanceId;
-            _portals.Add(portal);
+            Portals.Add(portal);
             Broadcast(portal.GenerateGp());
         }
 
@@ -469,10 +461,7 @@ namespace OpenNos.GameObject
 
         internal void RemoveMonstersTarget(long characterId)
         {
-            Parallel.ForEach(Monsters.Where(m => m.Target == characterId), monster =>
-            {
-                monster.RemoveTarget();
-            });
+            Parallel.ForEach(Monsters.Where(m => m.Target == characterId), monster => monster.RemoveTarget());
         }
 
         public void ThrowItems(Tuple<int, short, byte, int, int> parameter)
@@ -501,10 +490,7 @@ namespace OpenNos.GameObject
                 {
                     if (Monsters.Count(s => s.IsAlive) == 0)
                     {
-                        OnMapClean.ForEach(e =>
-                        {
-                            EventHelper.Instance.RunEvent(e);
-                        });
+                        OnMapClean.ForEach(e => EventHelper.Instance.RunEvent(e));
                         OnMapClean.RemoveAll(s => s != null);
                     }
                     if (!IsSleeping)

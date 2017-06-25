@@ -25,6 +25,7 @@ namespace OpenNos.GameObject
         #region Members
 
         private int _order;
+        private readonly object _lock = new object();
 
         #endregion
 
@@ -66,7 +67,7 @@ namespace OpenNos.GameObject
         public List<string> GeneratePst(ClientSession player)
         {
             List<string> str = new List<string>();
-            var i = 0;
+            int i = 0;
             foreach (ClientSession session in Characters)
             {
                 if (session == player)
@@ -77,7 +78,7 @@ namespace OpenNos.GameObject
                 }
                 else
                 {
-                    str.Add($"pst 1 {session.Character.CharacterId} {++i} {(int)(session.Character.Hp / session.Character.HPLoad() * 100)} {(int)(session.Character.Mp / session.Character.MPLoad() * 100)} {session.Character.HPLoad()} {session.Character.MPLoad()} {(byte)session.Character.Class} {(byte)session.Character.Gender} {(session.Character.UseSp ? session.Character.Morph : 0)}{(session.Character.Buff.GetAllItems().Aggregate(string.Empty, (current, buff) => current + $" {buff.Card.CardId}"))}");
+                    str.Add($"pst 1 {session.Character.CharacterId} {++i} {(int)(session.Character.Hp / session.Character.HPLoad() * 100)} {(int)(session.Character.Mp / session.Character.MPLoad() * 100)} {session.Character.HPLoad()} {session.Character.MPLoad()} {(byte)session.Character.Class} {(byte)session.Character.Gender} {(session.Character.UseSp ? session.Character.Morph : 0)}{session.Character.Buff.GetAllItems().Aggregate(string.Empty, (current, buff) => current + $" {buff.Card.CardId}")}");
                 }
             }
             return str;
@@ -92,14 +93,14 @@ namespace OpenNos.GameObject
             return result;
         }
 
-        public string GeneraterRaidmbf(ClientSession sessison)
+        public string GeneraterRaidmbf(ClientSession session)
         {
-            return $"raidmbf {sessison.CurrentMapInstance?.InstanceBag.MonsterLocker.Initial} {sessison.CurrentMapInstance?.InstanceBag.MonsterLocker.Current} {sessison.CurrentMapInstance?.InstanceBag.ButtonLocker.Initial} {sessison.CurrentMapInstance?.InstanceBag.ButtonLocker.Current} {Raid?.InstanceBag.Lives - Raid?.InstanceBag.DeadList.Count()} {Raid?.InstanceBag.Lives} 25";
+            return $"raidmbf {session.CurrentMapInstance?.InstanceBag.MonsterLocker.Initial} {session.CurrentMapInstance?.InstanceBag.MonsterLocker.Current} {session.CurrentMapInstance?.InstanceBag.ButtonLocker.Initial} {session.CurrentMapInstance?.InstanceBag.ButtonLocker.Current} {Raid?.InstanceBag.Lives - Raid?.InstanceBag.DeadList.Count} {Raid?.InstanceBag.Lives} 25";
         }
 
         public long? GetNextOrderedCharacterId(Character character)
         {
-            lock (this)
+            lock (_lock)
             {
                 _order++;
                 List<ClientSession> sessions = Characters.Where(s => Map.GetDistance(s.Character, character) < 50).ToList();
@@ -108,7 +109,7 @@ namespace OpenNos.GameObject
                     _order = 0;
                 }
 
-                if (!sessions.Any()) // group seems to be empty
+                if (sessions.Count == 0) // group seems to be empty
                 {
                     return null;
                 }
@@ -131,12 +132,12 @@ namespace OpenNos.GameObject
 
         public bool IsMemberOfGroup(long characterId)
         {
-            return Characters != null && Characters.Any(s => s?.Character?.CharacterId == characterId);
+            return Characters?.Any(s => s?.Character?.CharacterId == characterId) == true;
         }
 
         public bool IsMemberOfGroup(ClientSession session)
         {
-            return Characters != null && Characters.Any(s => s?.Character?.CharacterId == session.Character.CharacterId);
+            return Characters?.Any(s => s?.Character?.CharacterId == session.Character.CharacterId) == true;
         }
 
         public void JoinGroup(long characterId)

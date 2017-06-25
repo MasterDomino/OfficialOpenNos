@@ -162,7 +162,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
 
         public async Task ClearLowPriorityQueue()
         {
-            await _communicationChannel.ClearLowPriorityQueue();
+            await _communicationChannel.ClearLowPriorityQueue().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -211,6 +211,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
         /// Sends a message to the server.
         /// </summary>
         /// <param name="message">Message to be sent</param>
+        /// <param name="priority">Priority of message to send</param>
         /// <exception cref="CommunicationStateException">
         /// Throws a CommunicationStateException if client is not connected to the server.
         /// </exception>
@@ -323,7 +324,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
 
             try
             {
-                var lastMinute = DateTime.Now.AddMinutes(-1);
+                DateTime lastMinute = DateTime.Now.AddMinutes(-1);
                 if (_communicationChannel.LastReceivedMessageTime > lastMinute || _communicationChannel.LastSentMessageTime > lastMinute)
                 {
                     return;

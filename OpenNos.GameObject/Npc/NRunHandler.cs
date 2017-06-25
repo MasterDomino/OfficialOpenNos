@@ -55,8 +55,8 @@ namespace OpenNos.GameObject
                     }
                     if (Session.Character.Inventory.GetAllItems().All(i => i.Type != InventoryType.Wear))
                     {
-                        Session.Character.Inventory.AddNewToInventory((short)(4 + packet.Type * 14), type: InventoryType.Wear);
-                        Session.Character.Inventory.AddNewToInventory((short)(81 + packet.Type * 13), type: InventoryType.Wear);
+                        Session.Character.Inventory.AddNewToInventory((short)(4 + (packet.Type * 14)), type: InventoryType.Wear);
+                        Session.Character.Inventory.AddNewToInventory((short)(81 + (packet.Type * 13)), type: InventoryType.Wear);
                         switch (packet.Type)
                         {
                             case 1:
@@ -146,15 +146,12 @@ namespace OpenNos.GameObject
                             break;
 
                         case 6:
-                            if (mate != null)
+                            if (mate != null && Session.Character.Miniland != Session.Character.MapInstance)
                             {
-                                if (Session.Character.Miniland != Session.Character.MapInstance)
-                                {
-                                    mate.IsTeamMember = false;
-                                    Session.CurrentMapInstance.Broadcast(mate.GenerateOut());
-                                    Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PET_KICKED"), mate.Name), 11));
-                                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PET_KICKED"), mate.Name), 0));
-                                }
+                                mate.IsTeamMember = false;
+                                Session.CurrentMapInstance.Broadcast(mate.GenerateOut());
+                                Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PET_KICKED"), mate.Name), 11));
+                                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PET_KICKED"), mate.Name), 0));
                             }
                             break;
 
@@ -375,7 +372,7 @@ namespace OpenNos.GameObject
                     break;
 
                 case 1602:
-                    if (Session.Character.Family != null && Session.Character.Family.FamilyLevel >= 3 && Session.Character.Family.WarehouseSize < 21)
+                    if (Session.Character.Family?.FamilyLevel >= 3 && Session.Character.Family.WarehouseSize < 21)
                     {
                         if (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Head)
                         {
@@ -400,7 +397,7 @@ namespace OpenNos.GameObject
                     break;
 
                 case 1603:
-                    if (Session.Character.Family != null && Session.Character.Family.FamilyLevel >= 7 && Session.Character.Family.WarehouseSize < 49)
+                    if (Session.Character.Family?.FamilyLevel >= 7 && Session.Character.Family.WarehouseSize < 49)
                     {
                         if (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Head)
                         {
@@ -425,7 +422,7 @@ namespace OpenNos.GameObject
                     break;
 
                 case 1604:
-                    if (Session.Character.Family != null && Session.Character.Family.FamilyLevel >= 5 && Session.Character.Family.MaxSize < 70)
+                    if (Session.Character.Family?.FamilyLevel >= 5 && Session.Character.Family.MaxSize < 70)
                     {
                         if (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Head)
                         {
@@ -450,7 +447,7 @@ namespace OpenNos.GameObject
                     break;
 
                 case 1605:
-                    if (Session.Character.Family != null && Session.Character.Family.FamilyLevel >= 9 && Session.Character.Family.MaxSize < 100)
+                    if (Session.Character.Family?.FamilyLevel >= 9 && Session.Character.Family.MaxSize < 100)
                     {
                         if (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Head)
                         {
@@ -477,7 +474,7 @@ namespace OpenNos.GameObject
                 case 23:
                     if (packet.Type == 0)
                     {
-                        if (Session.Character.Group != null && Session.Character.Group.CharacterCount == 3)
+                        if (Session.Character.Group?.CharacterCount == 3)
                         {
                             foreach (ClientSession s in Session.Character.Group.Characters)
                             {

@@ -24,7 +24,7 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public void Insert(List<MapTypeMapDTO> maptypemap)
+        public void Insert(List<MapTypeMapDTO> mapTypeMaps)
         {
             throw new NotImplementedException();
         }

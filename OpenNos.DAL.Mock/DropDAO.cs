@@ -24,7 +24,7 @@ namespace OpenNos.DAL.Mock
     {
         #region Members
 
-        private IList<DropDTO> _mockContainer = new List<DropDTO>();
+        private readonly IList<DropDTO> _mockContainer = new List<DropDTO>();
 
         #endregion
 

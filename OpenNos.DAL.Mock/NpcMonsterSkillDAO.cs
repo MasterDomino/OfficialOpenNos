@@ -24,7 +24,7 @@ namespace OpenNos.DAL.Mock
     {
         #region Members
 
-        private IList<NpcMonsterSkillDTO> _mockContainer = new List<NpcMonsterSkillDTO>();
+        private readonly IList<NpcMonsterSkillDTO> _mockContainer = new List<NpcMonsterSkillDTO>();
 
         #endregion
 
@@ -35,7 +35,7 @@ namespace OpenNos.DAL.Mock
             throw new NotImplementedException();
         }
 
-        public NpcMonsterSkillDTO Insert(ref NpcMonsterSkillDTO npcmonsterskill)
+        public NpcMonsterSkillDTO Insert(ref NpcMonsterSkillDTO npcMonsterSkill)
         {
             throw new NotImplementedException();
         }

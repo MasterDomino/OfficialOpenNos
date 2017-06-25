@@ -26,16 +26,16 @@ namespace OpenNos.DAL.EF
     {
         #region Methods
 
-        public void Insert(List<ScriptedInstanceDTO> portals)
+        public void Insert(List<ScriptedInstanceDTO> scriptedInstances)
         {
             try
             {
                 using (var context = DataAccessHelper.CreateContext())
                 {
                     context.Configuration.AutoDetectChangesEnabled = false;
-                    foreach (ScriptedInstanceDTO Item in portals)
+                    foreach (ScriptedInstanceDTO scriptedInstance in scriptedInstances)
                     {
-                        ScriptedInstance entity = _mapper.Map<ScriptedInstance>(Item);
+                        ScriptedInstance entity = _mapper.Map<ScriptedInstance>(scriptedInstance);
                         context.ScriptedInstance.Add(entity);
                     }
                     context.Configuration.AutoDetectChangesEnabled = true;
@@ -48,13 +48,13 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        public ScriptedInstanceDTO Insert(ScriptedInstanceDTO timespace)
+        public ScriptedInstanceDTO Insert(ScriptedInstanceDTO scriptedInstance)
         {
             try
             {
                 using (var context = DataAccessHelper.CreateContext())
                 {
-                    ScriptedInstance entity = _mapper.Map<ScriptedInstance>(timespace);
+                    ScriptedInstance entity = _mapper.Map<ScriptedInstance>(scriptedInstance);
                     context.ScriptedInstance.Add(entity);
                     context.SaveChanges();
                     return _mapper.Map<ScriptedInstanceDTO>(entity);

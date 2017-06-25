@@ -128,7 +128,7 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Client
         /// <summary>
         /// Reference to the service proxy to invoke remote service methods.
         /// </summary>
-        public T ServiceProxy { get; private set; }
+        public T ServiceProxy { get; }
 
         /// <summary>
         /// Timeout value when invoking a service method. If timeout occurs before end of remote
@@ -215,7 +215,7 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Client
         /// </summary>
         private void OnConnected()
         {
-            var handler = Connected;
+            EventHandler handler = Connected;
             handler?.Invoke(this, EventArgs.Empty);
         }
 
@@ -224,7 +224,7 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Client
         /// </summary>
         private void OnDisconnected()
         {
-            var handler = Disconnected;
+            EventHandler handler = Disconnected;
             handler?.Invoke(this, EventArgs.Empty);
         }
 
@@ -237,7 +237,7 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Client
         private void RequestReplyMessenger_MessageReceived(object sender, MessageEventArgs e)
         {
             // Cast message to ScsRemoteInvokeMessage and check it
-            var invokeMessage = e.Message as ScsRemoteInvokeMessage;
+            ScsRemoteInvokeMessage invokeMessage = e.Message as ScsRemoteInvokeMessage;
             if (invokeMessage == null)
             {
                 return;
@@ -254,13 +254,14 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Client
             object returnValue;
             try
             {
-                var type = _clientObject.GetType();
-                var method = type.GetMethod(invokeMessage.MethodName);
+                // reflection?
+                Type type = _clientObject.GetType();
+                MethodInfo method = type.GetMethod(invokeMessage.MethodName);
                 returnValue = method.Invoke(_clientObject, invokeMessage.Parameters);
             }
             catch (TargetInvocationException ex)
             {
-                var innerEx = ex.InnerException;
+                Exception innerEx = ex.InnerException;
                 if (innerEx != null)
                 {
                     SendInvokeResponse(invokeMessage, null, new ScsRemoteException(innerEx.Message, innerEx));
@@ -287,16 +288,16 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Client
         {
             try
             {
-                _requestReplyMessenger.SendMessage(
-                    new ScsRemoteInvokeReturnMessage
-                    {
-                        RepliedMessageId = requestMessage.MessageId,
-                        ReturnValue = returnValue,
-                        RemoteException = exception
-                    }, 10);
+                _requestReplyMessenger.SendMessage(new ScsRemoteInvokeReturnMessage
+                {
+                    RepliedMessageId = requestMessage.MessageId,
+                    ReturnValue = returnValue,
+                    RemoteException = exception
+                }, 10);
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.Log.Error("Invoke response failed to send", ex);
             }
         }
 

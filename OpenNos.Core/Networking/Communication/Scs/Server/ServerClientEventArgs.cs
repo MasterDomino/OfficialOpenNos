@@ -39,7 +39,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
         /// <summary>
         /// Client that is associated with this event.
         /// </summary>
-        public IScsServerClient Client { get; private set; }
+        public IScsServerClient Client { get; }
 
         #endregion
     }

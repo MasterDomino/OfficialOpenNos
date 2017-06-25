@@ -25,7 +25,7 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public DeleteResult Delete(int penaltylogId)
+        public DeleteResult Delete(int penaltyLogId)
         {
             throw new NotImplementedException();
         }
@@ -40,7 +40,7 @@ namespace OpenNos.DAL.Mock
             return Container.Where(pl => pl.AccountId == accountId);
         }
 
-        public PenaltyLogDTO LoadById(int relId)
+        public PenaltyLogDTO LoadById(int penaltyLogId)
         {
             throw new NotImplementedException();
         }

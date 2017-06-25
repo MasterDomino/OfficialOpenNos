@@ -27,7 +27,7 @@ namespace OpenNos.DAL.Interface
 
         IEnumerable<SkillDTO> LoadAll();
 
-        SkillDTO LoadById(short SkillId);
+        SkillDTO LoadById(short skillId);
 
         #endregion
     }

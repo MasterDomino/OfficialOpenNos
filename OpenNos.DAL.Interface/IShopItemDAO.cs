@@ -22,7 +22,7 @@ namespace OpenNos.DAL.Interface
     {
         #region Methods
 
-        DeleteResult DeleteById(int ItemId);
+        DeleteResult DeleteById(int itemId);
 
         ShopItemDTO Insert(ShopItemDTO item);
 
@@ -30,9 +30,9 @@ namespace OpenNos.DAL.Interface
 
         IEnumerable<ShopItemDTO> LoadAll();
 
-        ShopItemDTO LoadById(int ItemId);
+        ShopItemDTO LoadById(int itemId);
 
-        IEnumerable<ShopItemDTO> LoadByShopId(int ShopId);
+        IEnumerable<ShopItemDTO> LoadByShopId(int shopId);
 
         #endregion
     }

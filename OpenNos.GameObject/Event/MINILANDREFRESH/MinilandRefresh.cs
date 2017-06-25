@@ -21,7 +21,7 @@ using System.Linq;
 
 namespace OpenNos.GameObject.Event
 {
-    public class MinilandRefresh
+    public static class MinilandRefresh
     {
         #region Methods
 

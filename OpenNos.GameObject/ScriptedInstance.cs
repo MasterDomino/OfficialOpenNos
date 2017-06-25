@@ -29,17 +29,7 @@ namespace OpenNos.GameObject
     {
         #region Members
 
-        private InstanceBag _instancebag = new InstanceBag();
-
-        public InstanceBag InstanceBag
-        {
-            get
-            {
-                return _instancebag;
-            }
-        }
-
-        private Dictionary<int, MapInstance> _mapinstancedictionary = new Dictionary<int, MapInstance>();
+        private readonly Dictionary<int, MapInstance> _mapinstancedictionary = new Dictionary<int, MapInstance>();
 
         private IDisposable obs;
 
@@ -55,9 +45,11 @@ namespace OpenNos.GameObject
 
         public long Gold { get; set; }
 
-        public string Label { get; set; }
-
         public byte Id { get; set; }
+
+        public InstanceBag InstanceBag { get; } = new InstanceBag();
+
+        public string Label { get; set; }
 
         public byte LevelMaximum { get; set; }
 
@@ -71,15 +63,15 @@ namespace OpenNos.GameObject
 
         public int Reputation { get; set; }
 
-        public short StartX { get; set; }
-
-        public short StartY { get; set; }
-
         public List<Gift> RequieredItems { get; set; }
 
         public int RoomAmount { get; internal set; }
 
         public List<Gift> SpecialItems { get; set; }
+
+        public short StartX { get; set; }
+
+        public short StartY { get; set; }
 
         #endregion
 
@@ -126,8 +118,8 @@ namespace OpenNos.GameObject
                 Gift gift = GiftItems.ElementAtOrDefault(i);
                 bonusitems += $"{(i == 0 ? "" : " ")}{(gift == null ? "-1.0" : $"{gift.VNum}.{gift.Amount}")}";
             }
-            int WinnerScore = 0;
-            string Winner = "";
+            const int WinnerScore = 0;
+            const string Winner = "";
             return $"rbr 0.0.0 4 15 {LevelMinimum}.{LevelMaximum} {RequieredItems.Sum(s => s.Amount)} {drawgift} {specialitems} {bonusitems} {WinnerScore}.{(WinnerScore > 0 ? Winner : "")} 0 0 {Language.Instance.GetMessageFromKey("TS_TUTORIAL")}\n{Label}";
         }
 
@@ -217,7 +209,7 @@ namespace OpenNos.GameObject
                 {
                     if (variable.Name == "CreateMap")
                     {
-                        _instancebag.Lives = Lives;
+                        InstanceBag.Lives = Lives;
                         MapInstance newmap = ServerManager.Instance.GenerateMapInstance(short.Parse(variable?.Attributes["VNum"].Value), mapinstancetype, new InstanceBag());
                         byte.TryParse(variable?.Attributes["IndexX"]?.Value, out byte indexx);
                         newmap.MapIndexX = indexx;
@@ -233,24 +225,23 @@ namespace OpenNos.GameObject
                 }
 
                 FirstMap = _mapinstancedictionary.Values.FirstOrDefault();
-                Observable.Timer(TimeSpan.FromMinutes(3)).Subscribe(
-                   x =>
-                   {
-                       if (!InstanceBag.Lock)
-                       {
-                           _mapinstancedictionary.Values.ToList().ForEach(m => EventHelper.Instance.RunEvent(new EventContainer(m, EventActionType.SCRIPTEND, (byte)1)));
-                           Dispose();
-                       }
-                   });
+                Observable.Timer(TimeSpan.FromMinutes(3)).Subscribe(x =>
+                {
+                    if (!InstanceBag.Lock)
+                    {
+                        _mapinstancedictionary.Values.ToList().ForEach(m => EventHelper.Instance.RunEvent(new EventContainer(m, EventActionType.SCRIPTEND, (byte)1)));
+                        Dispose();
+                    }
+                });
                 obs = Observable.Interval(TimeSpan.FromMilliseconds(100)).Subscribe(x =>
                 {
-                    if (_instancebag.Lives - _instancebag.DeadList.Count() < 0)
+                    if (InstanceBag.Lives - InstanceBag.DeadList.Count < 0)
                     {
                         _mapinstancedictionary.Values.ToList().ForEach(m => EventHelper.Instance.RunEvent(new EventContainer(m, EventActionType.SCRIPTEND, (byte)3)));
                         Dispose();
                         obs.Dispose();
                     }
-                    if (_instancebag.Clock.DeciSecondRemaining <= 0)
+                    if (InstanceBag.Clock.DeciSecondRemaining <= 0)
                     {
                         _mapinstancedictionary.Values.ToList().ForEach(m => EventHelper.Instance.RunEvent(new EventContainer(m, EventActionType.SCRIPTEND, (byte)1)));
                         Dispose();
@@ -323,11 +314,7 @@ namespace OpenNos.GameObject
                 {
                     isHostile = true;
                 }
-                MapInstance mapinstance = _mapinstancedictionary.FirstOrDefault(s => s.Key == mapid).Value;
-                if (mapinstance == null)
-                {
-                    mapinstance = parentmapinstance;
-                }
+                MapInstance mapinstance = _mapinstancedictionary.FirstOrDefault(s => s.Key == mapid).Value ?? parentmapinstance;
                 MapCell cell;
                 switch (mapevent.Name)
                 {
@@ -387,7 +374,7 @@ namespace OpenNos.GameObject
                         break;
 
                     case "SummonNps":
-                        NpcAmount += short.Parse(mapevent?.Attributes["Amount"].Value); ;
+                        NpcAmount += short.Parse(mapevent?.Attributes["Amount"].Value);
                         evts.Add(new EventContainer(mapinstance, EventActionType.SPAWNNPCS,
                             mapinstance.Map.GenerateNpcs(short.Parse(mapevent?.Attributes["VNum"].Value),
                             short.Parse(mapevent?.Attributes["Amount"].Value), new List<EventContainer>(), isMate, isProtected)));

@@ -6,7 +6,7 @@ namespace OpenNos.Data
     {
         #region Instantiation
 
-        public SynchronizableBaseDTO()
+        protected SynchronizableBaseDTO()
         {
             Id = Guid.NewGuid(); //make unique
         }

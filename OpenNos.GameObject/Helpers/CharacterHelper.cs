@@ -328,9 +328,9 @@ namespace OpenNos.GameObject.Helpers
         {
             if (elementRate < 40)
             {
-                return elementRate * elementRate + 50;
+                return (elementRate * elementRate) + 50;
             }
-            return elementRate * elementRate * 3 + 50;
+            return (elementRate * elementRate * 3) + 50;
         }
 
         public static int LoadFamilyXPData(byte familyLevel)
@@ -469,7 +469,7 @@ namespace OpenNos.GameObject.Helpers
                     p = rarity * 2;
                     break;
             }
-            return p * (lvl / 5 + 1);
+            return p * ((lvl / 5) + 1);
         }
 
         [SuppressMessage("Microsoft.StyleCop.CSharp.LayoutRules", "SA1503:CurlyBracketsMustNotBeOmitted", Justification = "Easier to read")]
@@ -484,80 +484,80 @@ namespace OpenNos.GameObject.Helpers
                         if (spPoint <= 10)
                             point = spPoint;
                         else if (spPoint <= 28)
-                            point = 10 + (spPoint - 10) / 2;
+                            point = 10 + ((spPoint - 10) / 2);
                         else if (spPoint <= 88)
-                            point = 19 + (spPoint - 28) / 3;
+                            point = 19 + ((spPoint - 28) / 3);
                         else if (spPoint <= 168)
-                            point = 39 + (spPoint - 88) / 4;
+                            point = 39 + ((spPoint - 88) / 4);
                         else if (spPoint <= 268)
-                            point = 59 + (spPoint - 168) / 5;
+                            point = 59 + ((spPoint - 168) / 5);
                         else if (spPoint <= 334)
-                            point = 79 + (spPoint - 268) / 6;
+                            point = 79 + ((spPoint - 268) / 6);
                         else if (spPoint <= 383)
-                            point = 90 + (spPoint - 334) / 7;
+                            point = 90 + ((spPoint - 334) / 7);
                         else if (spPoint <= 391)
-                            point = 97 + (spPoint - 383) / 8;
+                            point = 97 + ((spPoint - 383) / 8);
                         else if (spPoint <= 400)
-                            point = 98 + (spPoint - 391) / 9;
+                            point = 98 + ((spPoint - 391) / 9);
                         else if (spPoint <= 410)
-                            point = 99 + (spPoint - 400) / 10;
+                            point = 99 + ((spPoint - 400) / 10);
                         break;
 
                     case 2:
                         if (spPoint <= 20)
                             point = spPoint;
                         else if (spPoint <= 40)
-                            point = 20 + (spPoint - 20) / 2;
+                            point = 20 + ((spPoint - 20) / 2);
                         else if (spPoint <= 70)
-                            point = 30 + (spPoint - 40) / 3;
+                            point = 30 + ((spPoint - 40) / 3);
                         else if (spPoint <= 110)
-                            point = 40 + (spPoint - 70) / 4;
+                            point = 40 + ((spPoint - 70) / 4);
                         else if (spPoint <= 210)
-                            point = 50 + (spPoint - 110) / 5;
+                            point = 50 + ((spPoint - 110) / 5);
                         else if (spPoint <= 270)
-                            point = 70 + (spPoint - 210) / 6;
+                            point = 70 + ((spPoint - 210) / 6);
                         else if (spPoint <= 410)
-                            point = 80 + (spPoint - 270) / 7;
+                            point = 80 + ((spPoint - 270) / 7);
                         break;
 
                     case 1:
                         if (spPoint <= 10)
                             point = spPoint;
                         else if (spPoint <= 48)
-                            point = 10 + (spPoint - 10) / 2;
+                            point = 10 + ((spPoint - 10) / 2);
                         else if (spPoint <= 81)
-                            point = 29 + (spPoint - 48) / 3;
+                            point = 29 + ((spPoint - 48) / 3);
                         else if (spPoint <= 161)
-                            point = 40 + (spPoint - 81) / 4;
+                            point = 40 + ((spPoint - 81) / 4);
                         else if (spPoint <= 236)
-                            point = 60 + (spPoint - 161) / 5;
+                            point = 60 + ((spPoint - 161) / 5);
                         else if (spPoint <= 290)
-                            point = 75 + (spPoint - 236) / 6;
+                            point = 75 + ((spPoint - 236) / 6);
                         else if (spPoint <= 360)
-                            point = 84 + (spPoint - 290) / 7;
+                            point = 84 + ((spPoint - 290) / 7);
                         else if (spPoint <= 400)
-                            point = 97 + (spPoint - 360) / 8;
+                            point = 97 + ((spPoint - 360) / 8);
                         else if (spPoint <= 410)
-                            point = 99 + (spPoint - 400) / 10;
+                            point = 99 + ((spPoint - 400) / 10);
                         break;
 
                     case 3:
                         if (spPoint <= 10)
                             point = spPoint;
                         else if (spPoint <= 50)
-                            point = 10 + (spPoint - 10) / 2;
+                            point = 10 + ((spPoint - 10) / 2);
                         else if (spPoint <= 110)
-                            point = 30 + (spPoint - 50) / 3;
+                            point = 30 + ((spPoint - 50) / 3);
                         else if (spPoint <= 150)
-                            point = 50 + (spPoint - 110) / 4;
+                            point = 50 + ((spPoint - 110) / 4);
                         else if (spPoint <= 200)
-                            point = 60 + (spPoint - 150) / 5;
+                            point = 60 + ((spPoint - 150) / 5);
                         else if (spPoint <= 260)
-                            point = 70 + (spPoint - 200) / 6;
+                            point = 70 + ((spPoint - 200) / 6);
                         else if (spPoint <= 330)
-                            point = 80 + (spPoint - 260) / 7;
+                            point = 80 + ((spPoint - 260) / 7);
                         else if (spPoint <= 410)
-                            point = 90 + (spPoint - 330) / 8;
+                            point = 90 + ((spPoint - 330) / 8);
                         break;
                 }
                 return point;
@@ -731,7 +731,7 @@ namespace OpenNos.GameObject.Helpers
             // Load SpData
             _heroXpData = new double[256];
             _heroXpData[0] = 949560;
-            for (var i = 1; i < _heroXpData.Length; i++)
+            for (int i = 1; i < _heroXpData.Length; i++)
             {
                 _heroXpData[i] = Convert.ToInt64(_heroXpData[i - 1] * 1.08);
             }
@@ -744,7 +744,7 @@ namespace OpenNos.GameObject.Helpers
             // Adventurer HP
             for (int i = 1; i < _hp.GetLength(1); i++)
             {
-                _hp[(int)ClassType.Adventurer, i] = (int)(1 / 2.0 * i * i + 31 / 2.0 * i + 205);
+                _hp[(int)ClassType.Adventurer, i] = (int)((1 / 2.0 * i * i) + (31 / 2.0 * i) + 205);
             }
 
             // Swordsman HP
@@ -773,7 +773,7 @@ namespace OpenNos.GameObject.Helpers
             // Magician HP
             for (int i = 0; i < _hp.GetLength(1); i++)
             {
-                _hp[(int)ClassType.Magician, i] = (int)(((i + 15) * (i + 15) + i + 15.0) / 2.0 - 465 + 550);
+                _hp[(int)ClassType.Magician, i] = (int)(((((i + 15) * (i + 15)) + i + 15.0) / 2.0) - 465 + 550);
             }
 
             // Archer HP
@@ -917,7 +917,7 @@ namespace OpenNos.GameObject.Helpers
             }
             for (int i = 20; i < _spxpData.Length; i++)
             {
-                _spxpData[i] = _spxpData[i - 1] + 6 * (3 * i * (i + 1) + 1);
+                _spxpData[i] = _spxpData[i - 1] + (6 * ((3 * i * (i + 1)) + 1));
             }
         }
 
@@ -953,7 +953,7 @@ namespace OpenNos.GameObject.Helpers
                 _distRate[(int)ClassType.Adventurer, i] = (i + 9) * 2; // approx
                 _criticalDistRate[(int)ClassType.Adventurer, i] = 0; // sure
                 _criticalDist[(int)ClassType.Adventurer, i] = 0; // sure
-                _hitDef[(int)ClassType.Adventurer, i] = i + 9 / 2; // approx
+                _hitDef[(int)ClassType.Adventurer, i] = i + (9 / 2); // approx
                 _hitDodge[(int)ClassType.Adventurer, i] = i + 9; // approx
                 _distDef[(int)ClassType.Adventurer, i] = (i + 9) / 2; // approx
                 _distDodge[(int)ClassType.Adventurer, i] = i + 9; // approx
@@ -973,8 +973,8 @@ namespace OpenNos.GameObject.Helpers
                 _hitRate[(int)ClassType.Swordman, i] = i + 27; // approx
                 _hitDef[(int)ClassType.Swordman, i] = i + 2; // approx
 
-                _minHit[(int)ClassType.Swordman, i] = 2 * i + 5; // approx Numbers n such that 10n+9 is prime.
-                _maxHit[(int)ClassType.Swordman, i] = 2 * i + 5; // approx Numbers n such that 10n+9 is prime.
+                _minHit[(int)ClassType.Swordman, i] = (2 * i) + 5; // approx Numbers n such that 10n+9 is prime.
+                _maxHit[(int)ClassType.Swordman, i] = (2 * i) + 5; // approx Numbers n such that 10n+9 is prime.
                 _distDef[(int)ClassType.Swordman, i] = i; // approx
 
                 // MAGICIAN
@@ -992,8 +992,8 @@ namespace OpenNos.GameObject.Helpers
                 _hitDodge[(int)ClassType.Magician, i] = 24 + i; // approx
                 _distDodge[(int)ClassType.Magician, i] = 14 + i; // approx
 
-                _minHit[(int)ClassType.Magician, i] = 2 * i + 9; // approx Numbers n such that n^2 is of form x^ 2 + 40y ^ 2 with positive x,y.
-                _maxHit[(int)ClassType.Magician, i] = 2 * i + 9; // approx Numbers n such that n^2 is of form x^2+40y^2 with positive x,y.
+                _minHit[(int)ClassType.Magician, i] = (2 * i) + 9; // approx Numbers n such that n^2 is of form x^ 2 + 40y ^ 2 with positive x,y.
+                _maxHit[(int)ClassType.Magician, i] = (2 * i) + 9; // approx Numbers n such that n^2 is of form x^2+40y^2 with positive x,y.
                 _distDef[(int)ClassType.Magician, i] = 20 + i; // approx
 
                 // ARCHER
@@ -1002,15 +1002,15 @@ namespace OpenNos.GameObject.Helpers
                 _criticalDistRate[(int)ClassType.Archer, i] = 0; // sure
                 _criticalDist[(int)ClassType.Archer, i] = 0; // sure
 
-                _minHit[(int)ClassType.Archer, i] = 9 + i * 3; // approx
-                _maxHit[(int)ClassType.Archer, i] = 9 + i * 3; // approx
+                _minHit[(int)ClassType.Archer, i] = 9 + (i * 3); // approx
+                _maxHit[(int)ClassType.Archer, i] = 9 + (i * 3); // approx
                 int add = i % 2 == 0 ? 2 : 4;
                 _hitRate[(int)ClassType.Archer, 1] = 41;
-                _hitRate[(int)ClassType.Archer, i] = _hitRate[(int)ClassType.Archer, i] + add; // approx
+                _hitRate[(int)ClassType.Archer, i] += add; // approx
                 _minDist[(int)ClassType.Archer, i] = 2 * i; // approx
                 _maxDist[(int)ClassType.Archer, i] = 2 * i; // approx
 
-                _distRate[(int)ClassType.Archer, i] = 20 + 2 * i; // approx
+                _distRate[(int)ClassType.Archer, i] = 20 + (2 * i); // approx
                 _hitDef[(int)ClassType.Archer, i] = i; // approx
                 _magicalDef[(int)ClassType.Archer, i] = i + 2; // approx
                 _hitDodge[(int)ClassType.Archer, i] = 41 + i; // approx
@@ -1024,13 +1024,13 @@ namespace OpenNos.GameObject.Helpers
             // Load XpData
             _xpData = new double[256];
             double[] v = new double[256];
-            double var = 1;
+            double variable = 1;
             v[0] = 540;
             v[1] = 960;
             _xpData[0] = 300;
             for (int i = 2; i < v.Length; i++)
             {
-                v[i] = v[i - 1] + 420 + 120 * (i - 1);
+                v[i] = v[i - 1] + 420 + (120 * (i - 1));
             }
             for (int i = 1; i < _xpData.Length; i++)
             {
@@ -1038,33 +1038,33 @@ namespace OpenNos.GameObject.Helpers
                 {
                     if (i == 14)
                     {
-                        var = 6 / 3d;
+                        variable = 6 / 3d;
                     }
                     else if (i == 39)
                     {
-                        var = 19 / 3d;
+                        variable = 19 / 3d;
                     }
                     else if (i == 59)
                     {
-                        var = 70 / 3d;
+                        variable = 70 / 3d;
                     }
-                    _xpData[i] = Convert.ToInt64(_xpData[i - 1] + var * v[i - 1]);
+                    _xpData[i] = Convert.ToInt64(_xpData[i - 1] + (variable * v[i - 1]));
                 }
                 if (i >= 79)
                 {
                     if (i == 79)
                     {
-                        var = 5000;
+                        variable = 5000;
                     }
                     if (i == 82)
                     {
-                        var = 9000;
+                        variable = 9000;
                     }
                     if (i == 84)
                     {
-                        var = 13000;
+                        variable = 13000;
                     }
-                    _xpData[i] = Convert.ToInt64(_xpData[i - 1] + var * (i + 2) * (i + 2));
+                    _xpData[i] = Convert.ToInt64(_xpData[i - 1] + (variable * (i + 2) * (i + 2)));
                 }
 
                 // Console.WriteLine($"LvL {i}: xpdata: {_xpData[i - 1]} v: {v[i - 1]}");

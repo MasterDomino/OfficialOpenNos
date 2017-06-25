@@ -27,9 +27,9 @@ namespace OpenNos.GameObject
         #region Members
 
         private IDictionary<string, DateTime> _connectionLog;
-        private EncryptorT _encryptor;
-        private EncryptionBase _fallbackEncryptor;
-        private IScsServer _server;
+        private readonly EncryptorT _encryptor;
+        private readonly EncryptionBase _fallbackEncryptor;
+        private readonly IScsServer _server;
 
         #endregion
 
@@ -101,9 +101,9 @@ namespace OpenNos.GameObject
         {
             if (!client.IpAddress.Contains("127.0.0.1"))
             {
-                if (ConnectionLog.Any())
+                if (ConnectionLog.Count > 0)
                 {
-                    foreach (var item in ConnectionLog.Where(cl => cl.Key.Contains(client.IpAddress.Split(':')[1]) && (DateTime.Now - cl.Value).TotalSeconds > 3).ToList())
+                    foreach (KeyValuePair<string, DateTime> item in ConnectionLog.Where(cl => cl.Key.Contains(client.IpAddress.Split(':')[1]) && (DateTime.Now - cl.Value).TotalSeconds > 3).ToList())
                     {
                         ConnectionLog.Remove(item.Key);
                     }

@@ -24,7 +24,7 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public void Insert(List<RespawnMapTypeDTO> respawnmaptypemaps)
+        public void Insert(List<RespawnMapTypeDTO> respawnMapTypes)
         {
             throw new NotImplementedException();
         }

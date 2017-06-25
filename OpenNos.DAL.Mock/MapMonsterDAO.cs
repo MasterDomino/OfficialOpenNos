@@ -35,7 +35,7 @@ namespace OpenNos.DAL.Mock
             throw new NotImplementedException();
         }
 
-        public new void Insert(IEnumerable<MapMonsterDTO> monsters)
+        public new void Insert(IEnumerable<MapMonsterDTO> mapMonsters)
         {
             throw new NotImplementedException();
         }

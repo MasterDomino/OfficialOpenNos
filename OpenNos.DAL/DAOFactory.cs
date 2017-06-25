@@ -20,7 +20,7 @@ using System.Configuration;
 
 namespace OpenNos.DAL
 {
-    public class DAOFactory
+    public static class DAOFactory
     {
         #region Members
 
@@ -347,7 +347,6 @@ namespace OpenNos.DAL
                 return _generallogDAO;
             }
         }
-
 
         public static IItemDAO ItemDAO
         {

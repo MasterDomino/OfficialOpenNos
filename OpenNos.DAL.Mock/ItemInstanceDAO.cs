@@ -28,7 +28,7 @@ namespace OpenNos.DAL.Mock
         #region Members
 
         private Type _baseType;
-        private IDictionary<Type, Type> itemInstanceMappings = new Dictionary<Type, Type>();
+        private readonly IDictionary<Type, Type> itemInstanceMappings = new Dictionary<Type, Type>();
 
         #endregion
 
@@ -42,7 +42,7 @@ namespace OpenNos.DAL.Mock
         public void InitializeMapper(Type baseType)
         {
             _baseType = baseType;
-            var config = new MapperConfiguration(cfg =>
+            MapperConfiguration config = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap(baseType, typeof(ItemInstanceDTO));
                 cfg.CreateMap(typeof(ItemInstanceDTO), typeof(ItemInstanceDTO)).As(baseType);

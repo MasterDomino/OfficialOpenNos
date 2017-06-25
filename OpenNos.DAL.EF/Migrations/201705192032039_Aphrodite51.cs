@@ -2,7 +2,7 @@ namespace OpenNos.DAL.EF.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class Aphrodite51 : DbMigration
     {
         public override void Up()
@@ -25,7 +25,7 @@ namespace OpenNos.DAL.EF.Migrations
             DropColumn("dbo.Skill", "SkillChance");
             DropTable("dbo.SkillCard");
         }
-        
+
         public override void Down()
         {
             CreateTable(
@@ -37,7 +37,7 @@ namespace OpenNos.DAL.EF.Migrations
                         CardChance = c.Short(nullable: false),
                     })
                 .PrimaryKey(t => new { t.SkillVNum, t.CardId });
-            
+
             AddColumn("dbo.Skill", "SkillChance", c => c.Short(nullable: false));
             AddColumn("dbo.Skill", "SecondarySkillVNum", c => c.Short(nullable: false));
             AddColumn("dbo.Skill", "ElementalDamage", c => c.Short(nullable: false));

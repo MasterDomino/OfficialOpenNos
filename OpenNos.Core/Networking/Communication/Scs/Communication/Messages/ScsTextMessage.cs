@@ -45,8 +45,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messages
         /// </summary>
         /// <param name="text">Message text that is being transmitted</param>
         /// <param name="repliedMessageId">Replied message id if this is a reply for a message.</param>
-        public ScsTextMessage(string text, string repliedMessageId)
-            : this(text)
+        public ScsTextMessage(string text, string repliedMessageId) : this(text)
         {
             RepliedMessageId = repliedMessageId;
         }

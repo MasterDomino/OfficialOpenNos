@@ -27,7 +27,7 @@ namespace OpenNos.GameObject
 
         #region Instantiation
 
-        public MapItem(short x, short y)
+        protected MapItem(short x, short y)
         {
             PositionX = x;
             PositionY = y;

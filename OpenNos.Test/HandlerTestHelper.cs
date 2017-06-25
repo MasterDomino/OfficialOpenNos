@@ -138,7 +138,7 @@ namespace OpenNos.Test
                 {
                     string packet = client.SentPackets.Dequeue();
                     Debug.WriteLine($"Dequeued {packet}");
-                    if (packet != null && packet.StartsWith(packetHeader))
+                    if (packet?.StartsWith(packetHeader) == true)
                     {
                         return packet;
                     }

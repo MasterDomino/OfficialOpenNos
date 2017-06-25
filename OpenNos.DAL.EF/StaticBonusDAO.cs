@@ -27,7 +27,6 @@ namespace OpenNos.DAL.EF
 {
     public class StaticBonusDAO : MappingBaseDAO<StaticBonus, StaticBonusDTO>, IStaticBonusDAO
     {
-
         #region Methods
 
         public void Delete(short bonusToDelete, long characterId)
@@ -43,7 +42,6 @@ namespace OpenNos.DAL.EF
                         context.StaticBonus.Remove(bon);
                         context.SaveChanges();
                     }
-                    
                 }
             }
             catch (Exception e)
@@ -120,9 +118,7 @@ namespace OpenNos.DAL.EF
                 Logger.Error(e);
                 return null;
             }
-
         }
-
 
         private StaticBonusDTO Insert(StaticBonusDTO sb, OpenNosContext context)
         {

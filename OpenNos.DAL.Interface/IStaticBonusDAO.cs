@@ -26,6 +26,7 @@ namespace OpenNos.DAL.Interface
         /// Inserts new object to database context
         /// </summary>
         /// <param name="staticBonus"></param>
+        /// <param name="staticBuff"></param>
         /// <returns></returns>
         SaveResult InsertOrUpdate(ref StaticBuffDTO staticBuff);
 
