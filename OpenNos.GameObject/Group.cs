@@ -25,7 +25,8 @@ namespace OpenNos.GameObject
         #region Members
 
         private int _order;
-        private readonly object _lock = new object();
+
+        private readonly object _syncObj = new object();
 
         #endregion
 
@@ -99,8 +100,8 @@ namespace OpenNos.GameObject
         }
 
         public long? GetNextOrderedCharacterId(Character character)
-        {
-            lock (_lock)
+        { 
+            lock (_syncObj)
             {
                 _order++;
                 List<ClientSession> sessions = Characters.Where(s => Map.GetDistance(s.Character, character) < 50).ToList();

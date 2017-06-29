@@ -1926,7 +1926,16 @@ namespace OpenNos.Handler
                         Session.SendPacket(Session.Character.GenerateCond());
                         Session.Character.LastMove = DateTime.Now;
 
-                        Session.CurrentMapInstance?.OnMoveOnMapEvents?.ForEach(e => EventHelper.Instance.RunEvent(e));
+                        Session.CurrentMapInstance?.OnAreaEntryEvents?.Where(s => s.Item2.InZone(Session.Character.PositionX, Session.Character.PositionY)).ToList().ForEach(e =>
+                        {
+                            EventHelper.Instance.RunEvent(e.Item1);
+                        });
+                        Session.CurrentMapInstance?.OnAreaEntryEvents?.RemoveAll(s => s.Item2.InZone(Session.Character.PositionX, Session.Character.PositionY));
+
+                        Session.CurrentMapInstance?.OnMoveOnMapEvents?.ForEach(e =>
+                        {
+                            EventHelper.Instance.RunEvent(e);
+                        });
                         Session.CurrentMapInstance?.OnMoveOnMapEvents?.RemoveAll(s => s != null);
                     }
                     else
