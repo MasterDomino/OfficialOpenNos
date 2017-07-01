@@ -145,11 +145,10 @@ namespace OpenNos.Import.Console
                                     Type = byte.Parse(currentLine[2 + (i * 6)]),
                                     SubType = (byte)(byte.Parse(currentLine[3 + (i * 6)]) + 1),
 
-                                    Delay = 0,
                                     IsLevelScaled = Convert.ToBoolean(first % 4),
                                     FirstData = first / 4,
-                                    SecondData = int.Parse(currentLine[7 + (i * 6)]) / 4
-
+                                    SecondData = int.Parse(currentLine[7 + (i * 6)]) / 4,
+                                    ThirdData = int.Parse(currentLine[5 + (i * 6)])
                                 };
                                 bcards.Add(bcard);
                             }
@@ -164,12 +163,12 @@ namespace OpenNos.Import.Console
                             {
                                 bcard = new BCardDTO()
                                 {
-                                    IsDelayed = true,
+                                    CastType = 1,
                                     CardId = card.CardId,
                                     Type = byte.Parse(currentLine[2 + (i * 6)]),
                                     SubType = (byte)(byte.Parse(currentLine[3 + (i * 6)]) + 1),
 
-                                    Delay = (short)card.Delay,
+                                    ThirdData = int.Parse(currentLine[5 + (i * 6)]) / 4,
                                     IsLevelScaled = Convert.ToBoolean(first % 4),
                                     FirstData = first / 4,
                                     SecondData = int.Parse(currentLine[7 + (i * 6)]) / 4
@@ -1161,7 +1160,29 @@ namespace OpenNos.Import.Console
                                     IsLevelScaled = Convert.ToBoolean(first % 4),
                                     FirstData = (short)(first / 4),
                                     SecondData = (short)(int.Parse(currentLine[4 + (5 * i)]) / 4),
-                                    Delay = (short)(int.Parse(currentLine[6 + (5 * i)]) / 4),
+                                    ThirdData = (short)(int.Parse(currentLine[6 + 5 * i]) / 4),
+                                };
+                                monstercards.Add(itemCard);
+                            }
+                        }
+                    }
+                    else if (currentLine.Length > 1 && currentLine[1] == "BASIC")
+                    {
+                        for (int i = 0; i < 4; i++)
+                        {
+                            byte type = (byte)(Int32.Parse(currentLine[2 + 5 * i]));
+                            if (type != 0)
+                            {
+                                BCardDTO itemCard = new BCardDTO
+                                {
+                                    NpcMonsterVNum = npc.NpcMonsterVNum,
+                                    Type = type,
+                                    SubType = (byte)int.Parse(currentLine[6 + 5 * i]),
+                                    FirstData = (short)(int.Parse(currentLine[5 + 5])),
+                                    SecondData = (short)(int.Parse(currentLine[4 + 5 * i]) / 4),
+                                    ThirdData = (short)(int.Parse(currentLine[3 + 5 * i]) / 4),
+                                    CastType = 1,
+                                    IsLevelScaled = false
                                 };
                                 monstercards.Add(itemCard);
                             }
@@ -2187,7 +2208,7 @@ namespace OpenNos.Import.Console
                                 IsLevelScaled = Convert.ToBoolean(first % 4),
                                 FirstData = (short)(first / 4),
                                 SecondData = (short)(int.Parse(currentLine[6]) / 4),
-                                Delay = (short)(int.Parse(currentLine[7]) / 4),
+                                ThirdData = (short)(int.Parse(currentLine[7]) / 4),
                             };
                             skillCards.Add(itemCard);
                         }
@@ -3439,7 +3460,7 @@ namespace OpenNos.Import.Console
                                     IsLevelScaled = Convert.ToBoolean(first % 4),
                                     FirstData = (short)(first / 4),
                                     SecondData = (short)(int.Parse(currentLine[4 + (5 * i)]) / 4),
-                                    Delay = (short)(int.Parse(currentLine[6 + (5 * i)]) / 4),
+                                    ThirdData = (short)(int.Parse(currentLine[6 + (5 * i)]) / 4),
                                 };
                                 itemCards.Add(itemCard);
                             }

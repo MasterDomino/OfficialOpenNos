@@ -48,11 +48,11 @@ namespace OpenNos.DAL.EF
 
         public short? NpcMonsterVNum { get; set; }
 
-        public bool IsDelayed { get; set; }
+        public byte CastType { get; set; }
+
+        public int ThirdData { get; set; }
 
         public bool IsLevelScaled { get; set; }
-
-        public short Delay { get; set; }
 
         #endregion
     }

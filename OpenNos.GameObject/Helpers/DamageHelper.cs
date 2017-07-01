@@ -842,11 +842,11 @@ namespace OpenNos.GameObject
                 {
                     if (subtype % 10 == 1)
                     {
-                        cards = buff.Card.BCards.Where(s => s.Type.Equals((byte)type) && s.SubType.Equals((byte)(subtype / 10)) && (!s.IsDelayed || (s.IsDelayed && buff.Start.AddMilliseconds(buff.Card.Delay * 100) < DateTime.Now)) && s.FirstData >= 0);
+                        cards = buff.Card.BCards.Where(s => s.Type.Equals((byte)type) && s.SubType.Equals((byte)(subtype / 10)) && (s.CastType != 1 || (s.CastType == 1 && buff.Start.AddMilliseconds(buff.Card.Delay * 100) < DateTime.Now)) && s.FirstData >= 0);
                     }
                     else
                     {
-                        cards = buff.Card.BCards.Where(s => s.Type.Equals((byte)type) && s.SubType.Equals((byte)(subtype / 10)) && (!s.IsDelayed || (s.IsDelayed && buff.Start.AddMilliseconds(buff.Card.Delay * 100) < DateTime.Now)) && s.FirstData <= 0);
+                        cards = buff.Card.BCards.Where(s => s.Type.Equals((byte)type) && s.SubType.Equals((byte)(subtype / 10)) && (s.CastType != 1 || (s.CastType == 1 && buff.Start.AddMilliseconds(buff.Card.Delay * 100) < DateTime.Now)) && s.FirstData <= 0);
                     }
 
                     foreach (BCard entry in cards)

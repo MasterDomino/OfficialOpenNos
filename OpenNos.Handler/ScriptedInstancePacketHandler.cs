@@ -153,14 +153,15 @@ namespace OpenNos.Handler
         {
             if (Session.Character.Group?.Raid != null && Session.Character.Group.IsLeader(Session))
             {
-                if (Session.Character.Group.Raid.FirstMap == null)
+                if (Session.Character.Group.CharacterCount > 4)
                 {
-                    Session.Character.Group.Raid.LoadScript(MapInstanceType.RaidInstance);
-                }
-                if (Session.Character.Group.Raid.FirstMap == null) return;
-                Session.Character.Group.Raid.InstanceBag.Lock = true;
-                if (Session.Character.Group.CharacterCount > 0)
-                {
+                    if (Session.Character.Group.Raid.FirstMap == null)
+                    {
+                        Session.Character.Group.Raid.LoadScript(MapInstanceType.RaidInstance);
+                    }
+                    if (Session.Character.Group.Raid.FirstMap == null) return;
+                    Session.Character.Group.Raid.FirstMap.InstanceBag.Lock = true;
+
                     Session.Character.Group.Characters.Where(s => s.CurrentMapInstance != Session.CurrentMapInstance).ToList().ForEach(
                     session =>
                     {

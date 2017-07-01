@@ -70,19 +70,25 @@ namespace OpenNos.GameObject
                         List<MonsterToSummon> summonParameters = new List<MonsterToSummon>();
                         for (int i = 0; i < FirstData; i++)
                         {
-                            short x = (short)(ServerManager.Instance.RandomNumber(-1, 2) + (session as MapMonster).MapX);
-                            short y = (short)(ServerManager.Instance.RandomNumber(-1, 2) + (session as MapMonster).MapY);
-                            summonParameters.Add(new MonsterToSummon((short)SecondData, new MapCell() { X = x, Y = y }, -1, true, new List<EventContainer>()));
+                            short x = (short)(ServerManager.Instance.RandomNumber(-3, 3) + (session as MapMonster).MapX);
+                            short y = (short)(ServerManager.Instance.RandomNumber(-3, 3) + (session as MapMonster).MapY);
+                            summonParameters.Add(new MonsterToSummon((short)SecondData, new MapCell() { X = x, Y = y }, -1, true));
                         }
-                        switch (SubType)
+                        int rnd = ServerManager.Instance.RandomNumber();
+                        if (rnd <= Math.Abs(ThirdData) || ThirdData == 0)
                         {
-                            case 20:
-                                EventHelper.Instance.RunEvent(new EventContainer((session as MapMonster).MapInstance, EventActionType.SPAWNMONSTERS, summonParameters));
-                                break;
-
-                            default:
-                                (session as MapMonster).OnDeathEvents.Add(new EventContainer((session as MapMonster).MapInstance, EventActionType.SPAWNMONSTERS, summonParameters));
-                                break;
+                            switch (SubType)
+                            {
+                                case 2:
+                                    EventHelper.Instance.RunEvent(new EventContainer((session as MapMonster).MapInstance, EventActionType.SPAWNMONSTERS, summonParameters));
+                                    break;
+                                default:
+                                    if (!(session as MapMonster).OnDeathEvents.Any(s => s.EventActionType == EventActionType.SPAWNMONSTERS))
+                                    {
+                                        (session as MapMonster).OnDeathEvents.Add(new EventContainer((session as MapMonster).MapInstance, EventActionType.SPAWNMONSTERS, summonParameters));
+                                    }
+                                    break;
+                            }
                         }
                     }
                     else if (session.GetType() == typeof(MapNpc))

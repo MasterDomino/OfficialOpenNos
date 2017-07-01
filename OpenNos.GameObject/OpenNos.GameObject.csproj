@@ -111,6 +111,8 @@
     <Compile Include="Buff\Buff.cs" />
     <Compile Include="Buff\BCard.cs" />
     <Compile Include="Buff\Card.cs" />
+    <Compile Include="Event\EventWave.cs" />
+    <Compile Include="Map\Zone.cs" />
     <Compile Include="BattleEntity.cs" />
     <Compile Include="Helpers\DamageHelper.cs" />
     <Compile Include="Event\EventContainer.cs" />
