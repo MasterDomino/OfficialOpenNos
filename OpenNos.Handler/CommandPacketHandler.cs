@@ -1318,14 +1318,20 @@ namespace OpenNos.Handler
             {
                 Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[InstanceMusic]SongId: {instanceMusicPacket.Music} Mode: {instanceMusicPacket.Maps}");
 
-                // method in a method yay! \o/
                 void changeMusic(bool isRevert)
                 {
                     try
                     {
                         foreach (MapInstance instance in ServerManager.Instance.GetMapInstances())
                         {
-                            instance.InstanceMusic = isRevert ? instance.Map.Music : instanceMusicPacket.Music;
+                            if (!isRevert && int.TryParse(instanceMusicPacket.Music, out int mapMusic))
+                            {
+                                instance.InstanceMusic = mapMusic;
+                            }
+                            else
+                            {
+                                instance.InstanceMusic = instance.Map.Music;
+                            }
                             instance.Broadcast($"bgm {instance.InstanceMusic}");
                         }
                     }
@@ -1337,17 +1343,26 @@ namespace OpenNos.Handler
 
                 if (instanceMusicPacket.Maps == "*")
                 {
-                    changeMusic(false);
-                }
-                else if (instanceMusicPacket.Maps == "?")
-                {
-                    changeMusic(true);
-                }
-                else
-                {
-                    if (Session.CurrentMapInstance != null)
+                    if (instanceMusicPacket.Music == "?")
                     {
-                        Session.CurrentMapInstance.InstanceMusic = instanceMusicPacket.Music;
+                        changeMusic(true);
+                    }
+                    else
+                    {
+                        changeMusic(false);
+                    }
+                }
+                else if (Session.CurrentMapInstance != null)
+                {
+                    if (instanceMusicPacket.Music == "?")
+                    {
+                        Session.CurrentMapInstance.InstanceMusic = Session.CurrentMapInstance.Map.Music;
+                        Session.CurrentMapInstance.Broadcast($"bgm {Session.CurrentMapInstance.Map.Music}");
+                        return;
+                    }
+                    if (int.TryParse(instanceMusicPacket.Music, out int mapMusic))
+                    {
+                        Session.CurrentMapInstance.InstanceMusic = mapMusic;
                         Session.CurrentMapInstance.Broadcast($"bgm {instanceMusicPacket.Music}");
                     }
                 }

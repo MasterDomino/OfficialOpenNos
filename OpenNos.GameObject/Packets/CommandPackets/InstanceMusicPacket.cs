@@ -8,14 +8,14 @@ namespace OpenNos.GameObject.CommandPackets
     public class InstanceMusicPacket : PacketDefinition
     {
         [PacketIndex(0)]
-        public int Music { get; set; }
+        public string Music { get; set; }
 
         [PacketIndex(1)]
         public string Maps { get; set; }
 
         public static string ReturnHelp()
         {
-            return "$InstanceMusic MUSIC (*)nullable";
+            return "$InstanceMusic (?)MUSIC (*)nullable";
         }
     }
 }
