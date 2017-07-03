@@ -146,6 +146,7 @@ namespace OpenNos.Import.Console
                                     SubType = (byte)(byte.Parse(currentLine[3 + (i * 6)]) + 1),
 
                                     IsLevelScaled = Convert.ToBoolean(first % 4),
+                                    IsLevelDivided = (first % 4) == 2,
                                     FirstData = first / 4,
                                     SecondData = int.Parse(currentLine[7 + (i * 6)]) / 4,
                                     ThirdData = int.Parse(currentLine[5 + (i * 6)])
@@ -170,6 +171,7 @@ namespace OpenNos.Import.Console
 
                                     ThirdData = int.Parse(currentLine[5 + (i * 6)]) / 4,
                                     IsLevelScaled = Convert.ToBoolean(first % 4),
+                                    IsLevelDivided = (first % 4) == 2,
                                     FirstData = first / 4,
                                     SecondData = int.Parse(currentLine[7 + (i * 6)]) / 4
 
@@ -1158,6 +1160,7 @@ namespace OpenNos.Import.Console
                                     Type = type,
                                     SubType = (byte)(int.Parse(currentLine[5 + (5 * i)]) + 1),
                                     IsLevelScaled = Convert.ToBoolean(first % 4),
+                                    IsLevelDivided = (first % 4) == 2,
                                     FirstData = (short)(first / 4),
                                     SecondData = (short)(int.Parse(currentLine[4 + (5 * i)]) / 4),
                                     ThirdData = (short)(int.Parse(currentLine[6 + 5 * i]) / 4),
@@ -1182,7 +1185,8 @@ namespace OpenNos.Import.Console
                                     SecondData = (short)(int.Parse(currentLine[4 + 5 * i]) / 4),
                                     ThirdData = (short)(int.Parse(currentLine[3 + 5 * i]) / 4),
                                     CastType = 1,
-                                    IsLevelScaled = false
+                                    IsLevelScaled = false,
+                                    IsLevelDivided = false
                                 };
                                 monstercards.Add(itemCard);
                             }
@@ -2206,6 +2210,7 @@ namespace OpenNos.Import.Console
                                 Type = type,
                                 SubType = (byte)(int.Parse(currentLine[4]) + 1),
                                 IsLevelScaled = Convert.ToBoolean(first % 4),
+                                IsLevelDivided = (first % 4) == 2,
                                 FirstData = (short)(first / 4),
                                 SecondData = (short)(int.Parse(currentLine[6]) / 4),
                                 ThirdData = (short)(int.Parse(currentLine[7]) / 4),
@@ -3458,6 +3463,7 @@ namespace OpenNos.Import.Console
                                     Type = type,
                                     SubType = (byte)(int.Parse(currentLine[5 + (5 * i)]) + 1),
                                     IsLevelScaled = Convert.ToBoolean(first % 4),
+                                    IsLevelDivided = (first % 4) == 2,
                                     FirstData = (short)(first / 4),
                                     SecondData = (short)(int.Parse(currentLine[4 + (5 * i)]) / 4),
                                     ThirdData = (short)(int.Parse(currentLine[6 + (5 * i)]) / 4),

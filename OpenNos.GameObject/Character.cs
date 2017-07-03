@@ -2349,7 +2349,14 @@ namespace OpenNos.GameObject
             {
                 if (entry.IsLevelScaled)
                 {
-                    value1 += entry.FirstData * Level;
+                    if (entry.IsLevelDivided)
+                    {
+                        value1 += entry.FirstData / Level;
+                    }
+                    else
+                    {
+                        value1 += entry.FirstData * Level;
+                    }
                 }
                 else
                 {
@@ -2369,7 +2376,14 @@ namespace OpenNos.GameObject
                     {
                         if (entry.IsLevelScaled)
                         {
-                            value1 += entry.FirstData * buff.Level;
+                            if (entry.IsLevelDivided)
+                            {
+                                value1 += entry.FirstData / buff.Level;
+                            }
+                            else
+                            {
+                                value1 += entry.FirstData * buff.Level;
+                            }
                         }
                         else
                         {

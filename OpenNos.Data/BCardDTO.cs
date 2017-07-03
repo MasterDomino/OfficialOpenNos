@@ -27,5 +27,7 @@ namespace OpenNos.Data
         public byte CastType { get; set; }
 
         public bool IsLevelScaled { get; set; }
+
+        public bool IsLevelDivided { get; set; }
     }
 }
