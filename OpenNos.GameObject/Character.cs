@@ -52,7 +52,7 @@ namespace OpenNos.GameObject
             StaticBonusList = new List<StaticBonusDTO>();
             MinilandObjects = new List<MinilandObject>();
             Mates = new List<Mate>();
-            EquipmentBCards = new List<BCard>();
+            EquipmentBCards = new ThreadSafeGenericList<BCard>();
             MeditationDictionary = new Dictionary<short, DateTime>();
             BuffObservables = new ThreadSafeSortedList<short, IDisposable>();
             EquipmentBCards = new ThreadSafeGenericList<BCard>();
@@ -1870,7 +1870,7 @@ namespace OpenNos.GameObject
             }
             if (grp != null)
             {
-                foreach (ClientSession groupSessionForId in grp.Characters)
+                foreach (ClientSession groupSessionForId in grp.Characters.GetAllItems())
                 {
                     i++;
                     str += $" 1|{groupSessionForId.Character.CharacterId}|{i}|{groupSessionForId.Character.Level}|{groupSessionForId.Character.Name}|0|{(byte)groupSessionForId.Character.Gender}|{(byte)groupSessionForId.Character.Class}|{(groupSessionForId.Character.UseSp ? groupSessionForId.Character.Morph : 0)}|{groupSessionForId.Character.HeroLevel}";
@@ -3788,7 +3788,7 @@ namespace OpenNos.GameObject
             {
                 actMultiplier = 5;
             }
-            int gold = lowBaseGold * ServerManager.Instance.GoldRate * actMultiplier * eqMultiplier;
+            int gold = (int)(lowBaseGold * ServerManager.Instance.GoldRate * actMultiplier * eqMultiplier);
             return gold;
         }
 

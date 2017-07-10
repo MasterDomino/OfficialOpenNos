@@ -229,7 +229,7 @@ namespace OpenNos.Handler
                             break;
 
                         case 3:
-                            ClientSession character = Session.Character.Group?.Characters.Where(s => s.Character.CharacterId == packet.Param).FirstOrDefault();
+                            ClientSession character = Session.Character.Group?.Characters.GetAllItems().Where(s => s.Character.CharacterId == packet.Param).FirstOrDefault();
                             if (character != null)
                             {
                                 if (portal.LevelMinimum > Session.Character.Level)

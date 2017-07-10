@@ -476,7 +476,7 @@ namespace OpenNos.GameObject
                     {
                         if (Session.Character.Group?.CharacterCount == 3)
                         {
-                            foreach (ClientSession s in Session.Character.Group.Characters)
+                            foreach (ClientSession s in Session.Character.Group.Characters.GetAllItems())
                             {
                                 if (s.Character.Family != null)
                                 {
