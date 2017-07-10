@@ -181,6 +181,12 @@ namespace OpenNos.GameObject
                     newItem.Type = type.Value;
                 }
 
+                if (newItem.Item.Effect == 420 && newItem.Item.EffectValue == 911)
+                {
+                    newItem.BoundCharacterId = Owner.CharacterId;
+                    newItem.DurabilityPoint = (int)newItem.Item.ItemValidTime;
+                }
+
                 // check if item can be stapled
                 if (newItem.Type != InventoryType.Bazaar && (newItem.Item.Type == InventoryType.Etc || newItem.Item.Type == InventoryType.Main))
                 {

@@ -26,7 +26,7 @@ namespace OpenNos.GameObject
         /// <param name="skill">The used Skill</param>
         /// <param name="hitMode">reference to HitMode</param>
         /// <returns>Damage</returns>
-        public int CalculateDamage(BattleEntity attacker, BattleEntity defender, Skill skill, ref int hitMode)
+        public int CalculateDamage(BattleEntity attacker, BattleEntity defender, Skill skill, ref int hitMode, ref bool onyxWings)
         {
             int[] GetAttackerBenefitingBuffs(CardType type, byte subtype)
             {
@@ -196,6 +196,12 @@ namespace OpenNos.GameObject
             #region Soft-Damage
 
             int[] soft = GetAttackerBenefitingBuffs(CardType.IncreaseDamage, (byte)AdditionalTypes.IncreaseDamage.IncreasingPropability);
+            int[] skin = GetAttackerBenefitingBuffs(CardType.EffectSummon, (byte)AdditionalTypes.EffectSummon.DamageBoostOnHigherLvl);
+            if (attacker.Level < defender.Level)
+            {
+                soft[0] += skin[0];
+                soft[1] += skin[1];
+            }
             if (ServerManager.Instance.RandomNumber() < soft[0])
             {
                 boostCategory3 += soft[1] / 100D;
@@ -409,7 +415,8 @@ namespace OpenNos.GameObject
 
             if (attacker.AttackType != AttackType.Magical)
             {
-                double multiplier = defender.Dodge / (attacker.Hitrate + attacker.Morale + 1);
+                int hitrate = attacker.Hitrate + attacker.Morale;
+                double multiplier = defender.Dodge / (hitrate > 1 ? hitrate : 1);
                 if (multiplier > 5)
                 {
                     multiplier = 5;
@@ -728,7 +735,7 @@ namespace OpenNos.GameObject
                     break;
             }
 
-            if (skill?.Element == 0 || skill?.Element != attacker.Element)
+            if (skill?.Element == 0 || (skill?.Element != attacker.Element && attacker.EntityType == EntityType.Player))
             {
                 elementalBoost = 0;
             }
@@ -768,6 +775,16 @@ namespace OpenNos.GameObject
             if (attacker.EntityType == EntityType.Monster || attacker.EntityType == EntityType.NPC)
             {
                 totalDamage += GetMonsterDamageBonus(attacker.Level);
+            }
+
+            #endregion
+
+            #region Onyx Wings
+
+            int[] onyxBuff = GetAttackerBenefitingBuffs(CardType.StealBuff, (byte)AdditionalTypes.StealBuff.ChanceSummonOnyxDragon);
+            if (onyxBuff[0] > ServerManager.Instance.RandomNumber())
+            {
+                onyxWings = true;
             }
 
             #endregion
@@ -827,7 +844,7 @@ namespace OpenNos.GameObject
                     {
                         if (entry.IsLevelDivided)
                         {
-                            value1 += entry.FirstData / Level;
+                            value1 += Level / entry.FirstData;
                         }
                         else
                         {
@@ -862,7 +879,7 @@ namespace OpenNos.GameObject
                         {
                             if (entry.IsLevelDivided)
                             {
-                                value1 += entry.FirstData / buff.Level;
+                                value1 += buff.Level / entry.FirstData;
                             }
                             else
                             {

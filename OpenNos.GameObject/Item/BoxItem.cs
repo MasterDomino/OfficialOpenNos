@@ -80,14 +80,25 @@ namespace OpenNos.GameObject
                                         currentrnd += rollitem.Probability;
                                         if (currentrnd >= rnd)
                                         {
-                                            newInv = session.Character.Inventory.AddNewToInventory(rollitem.ItemGeneratedVNum, rollitem.ItemGeneratedAmount);
+                                            Item i = ServerManager.Instance.GetItem(rollitem.ItemGeneratedVNum);
+                                            sbyte rare = 0;
+                                            byte design = 0;
+                                            if (i.ItemType == ItemType.Armor || i.ItemType == ItemType.Weapon || i.ItemType == ItemType.Sell)
+                                            {
+                                                rare = box.Rare;
+                                            }
+                                            if (i.ItemType == ItemType.Shell)
+                                            {
+                                                design = (byte)ServerManager.Instance.RandomNumber(50, 81);
+                                            }
+                                            newInv = session.Character.Inventory.AddNewToInventory(rollitem.ItemGeneratedVNum, amount: rollitem.ItemGeneratedAmount, Design: design, Rare: rare);
                                             if (newInv.Count > 0)
                                             {
                                                 short Slot = inv.Slot;
                                                 if (Slot != -1)
                                                 {
-                                                    session.SendPacket(session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {newInv[0].Item.Name} x 1)", 12));
-                                                    newInv.ForEach(s => session.SendPacket(s.GenerateInventoryAdd()));
+                                                    session.SendPacket(session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {newInv.FirstOrDefault(s => s != null)?.Item?.Name} x {rollitem.ItemGeneratedAmount}", 12));
+                                                    newInv.Where(s => s != null).ToList().ForEach(s => session.SendPacket(s.GenerateInventoryAdd()));
                                                     session.Character.Inventory.RemoveItemAmountFromInventory(1, box.Id);
                                                 }
                                             }

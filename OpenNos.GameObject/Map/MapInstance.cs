@@ -31,9 +31,9 @@ namespace OpenNos.GameObject
     {
         #region Members
 
-        private readonly List<int> _mapMonsterIds;
+        private readonly ThreadSafeSortedList<int, int> _mapMonsterIds;
 
-        private readonly List<int> _mapNpcIds;
+        private readonly ThreadSafeSortedList<int, int> _mapNpcIds;
 
         private readonly ThreadSafeSortedList<long, MapMonster> _monsters;
 
@@ -74,8 +74,8 @@ namespace OpenNos.GameObject
             OnMapClean = new List<EventContainer>();
             _monsters = new ThreadSafeSortedList<long, MapMonster>();
             _npcs = new ThreadSafeSortedList<long, MapNpc>();
-            _mapMonsterIds = new List<int>();
-            _mapNpcIds = new List<int>();
+            _mapMonsterIds = new ThreadSafeSortedList<int, int>();
+            _mapNpcIds = new ThreadSafeSortedList<int, int>();
             DroppedList = new ThreadSafeSortedList<long, MapItem>();
             Portals = new List<Portal>();
             UserShops = new Dictionary<long, MapShop>();
@@ -297,7 +297,10 @@ namespace OpenNos.GameObject
             });
             Npcs.ForEach(s => packets.Add(s.GenerateIn()));
             packets.AddRange(GenerateNPCShopOnMap());
-            Parallel.ForEach(DroppedList.GetAllItems(), session => packets.Add(session.GenerateIn()));
+            foreach (MapItem session in DroppedList.GetAllItems())
+            {
+                packets.Add(session.GenerateIn());
+            }
 
             Buttons.ForEach(s => packets.Add(s.GenerateIn()));
             packets.AddRange(GenerateUserShops());
@@ -313,42 +316,42 @@ namespace OpenNos.GameObject
         // TODO: Fix, Seems glitchy.
         public int GetNextMonsterId()
         {
-            int nextId = _mapMonsterIds.Count > 0 ? _mapMonsterIds.Last() + 1 : 1;
-            _mapMonsterIds.Add(nextId);
+            int nextId = _mapMonsterIds.GetAllItems().Any() ? _mapMonsterIds.GetAllItems().Last() + 1 : 1;
+            _mapMonsterIds[nextId] = nextId;
             return nextId;
         }
 
         // TODO: Fix, Seems glitchy.
         public int GetNextNpcId()
         {
-            int nextId = _mapNpcIds.Count > 0 ? _mapNpcIds.Last() + 1 : 1;
-            _mapNpcIds.Add(nextId);
+            int nextId = _mapNpcIds.GetAllItems().Any() ? _mapNpcIds.GetAllItems().Last() + 1 : 1;
+            _mapNpcIds[nextId] = nextId;
             return nextId;
         }
 
         public void LoadMonsters()
         {
-            var partitioner = Partitioner.Create(DAOFactory.MapMonsterDAO.LoadFromMap(Map.MapId), EnumerablePartitionerOptions.None);
-            Parallel.ForEach(partitioner, monster =>
+            // TODO: Parallelize, if possible.
+            Parallel.ForEach(DAOFactory.MapMonsterDAO.LoadFromMap(Map.MapId).ToList(), monster =>
             {
                 MapMonster mapMonster = monster as MapMonster;
                 mapMonster.Initialize(this);
                 int mapMonsterId = mapMonster.MapMonsterId;
                 _monsters[mapMonsterId] = mapMonster;
-                _mapMonsterIds.Add(mapMonsterId);
+                _mapMonsterIds[mapMonsterId] = mapMonsterId;
             });
         }
 
         public void LoadNpcs()
         {
-            var partitioner = Partitioner.Create(DAOFactory.MapNpcDAO.LoadFromMap(Map.MapId), EnumerablePartitionerOptions.None);
-            Parallel.ForEach(partitioner, npc =>
+            // TODO: Parallelize, if possible.
+            Parallel.ForEach(DAOFactory.MapNpcDAO.LoadFromMap(Map.MapId).ToList(), npc =>
             {
                 MapNpc mapNpc = npc as MapNpc;
                 mapNpc.Initialize(this);
                 int mapNpcId = mapNpc.MapNpcId;
                 _npcs[mapNpcId] = mapNpc;
-                _mapNpcIds.Add(mapNpcId);
+                _mapNpcIds[mapNpcId] = mapNpcId;
             });
         }
 
@@ -473,6 +476,14 @@ namespace OpenNos.GameObject
         public void ThrowItems(Tuple<int, short, byte, int, int> parameter)
         {
             MapMonster mon = Monsters.FirstOrDefault(s => s.MapMonsterId == parameter.Item1);
+            if (mon == null)
+            {
+                mon = Monsters.FirstOrDefault(s => s.MonsterVNum == parameter.Item1);
+            }
+            if (mon == null)
+            {
+                return;
+            }
             short originX = mon.MapX;
             short originY = mon.MapY;
             short destX;

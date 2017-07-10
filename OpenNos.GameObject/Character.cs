@@ -53,6 +53,10 @@ namespace OpenNos.GameObject
             MinilandObjects = new List<MinilandObject>();
             Mates = new List<Mate>();
             EquipmentBCards = new List<BCard>();
+            MeditationDictionary = new Dictionary<short, DateTime>();
+            BuffObservables = new ThreadSafeSortedList<short, IDisposable>();
+            EquipmentBCards = new ThreadSafeGenericList<BCard>();
+
         }
 
         #endregion
@@ -64,6 +68,8 @@ namespace OpenNos.GameObject
         public Node[,] BrushFire { get; set; }
 
         public ThreadSafeSortedList<short, Buff> Buff { get; internal set; }
+
+        public ThreadSafeSortedList<short, IDisposable> BuffObservables { get; internal set; }
 
         public bool CanFight => !IsSitting && ExchangeInfo == null;    
 
@@ -104,7 +110,7 @@ namespace OpenNos.GameObject
 
         public int ElementRateSP { get; private set; }
 
-        public List<BCard> EquipmentBCards { get; set; }
+        public ThreadSafeGenericList<BCard> EquipmentBCards { get; set; }
 
         public ExchangeInfo ExchangeInfo { get; set; }
 
@@ -202,6 +208,8 @@ namespace OpenNos.GameObject
 
         public int LastNRunId { get; set; }
 
+        public DateTime LastPermBuffRefresh { get; set; }
+
         public double LastPortal { get; set; }
 
         public DateTime LastPotion { get; set; }
@@ -239,6 +247,8 @@ namespace OpenNos.GameObject
         public int MaxHit { get; set; }
 
         public int MaxSnack { get; set; }
+
+        public Dictionary<short, DateTime> MeditationDictionary { get; set; }
 
         public int MinDistance { get; set; }
 
@@ -405,40 +415,48 @@ namespace OpenNos.GameObject
 
         #region Methods
 
-        public void AddBuff(Buff indicator)
+        public void AddBuff(Buff indicator, bool noMessage = false)
         {
-            Buff.Remove(indicator.Card.CardId);
-            Buff[indicator.Card.CardId] = indicator;
-            indicator.RemainingTime = indicator.Card.Duration;
-            indicator.Start = DateTime.Now;
-
-            Session.SendPacket($"bf 1 {CharacterId} 0.{indicator.Card.CardId}.{indicator.RemainingTime} {Level}");
-            Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), Name), 20));
-
-            indicator.Card.BCards.ForEach(c => c.ApplyBCards(Session.Character));
-            Observable.Timer(TimeSpan.FromMilliseconds(indicator.Card.Duration * 100)).Subscribe(o =>
+            if (!noMessage || !Buff.GetAllItems().Any(s => s.Card.CardId == indicator.Card.CardId))
             {
-                RemoveBuff(indicator.Card.CardId);
-                if (indicator.Card.TimeoutBuff != 0 && ServerManager.Instance.RandomNumber() < indicator.Card.TimeoutBuffChance)
+                Buff.Remove(indicator.Card.CardId);
+                Buff[indicator.Card.CardId] = indicator;
+                indicator.RemainingTime = indicator.Card.Duration;
+                indicator.Start = DateTime.Now;
+
+                Session.SendPacket($"bf 1 {CharacterId} 0.{indicator.Card.CardId}.{indicator.RemainingTime} {Level}");
+                Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), indicator.Card.Name), 20));
+
+                indicator.Card.BCards.ForEach(c => c.ApplyBCards(Session.Character));
+                if (BuffObservables.ContainsKey(indicator.Card.CardId))
                 {
-                    AddBuff(new Buff(indicator.Card.TimeoutBuff, Level));
+                    BuffObservables[indicator.Card.CardId]?.Dispose();
+                    BuffObservables.Remove(indicator.Card.CardId);
                 }
-            });
-            if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.Move && !s.SubType.Equals((byte)AdditionalTypes.Move.MovementImpossible / 10)))
-            {
-                LastSpeedChange = DateTime.Now;
-                LoadSpeed();
-                Session.SendPacket(GenerateCond());
-            }
-            if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.SpecialAttack && s.SubType.Equals((byte)AdditionalTypes.SpecialAttack.NoAttack / 10)))
-            {
-                NoAttack = true;
-                Session.SendPacket(GenerateCond());
-            }
-            if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.Move && s.SubType.Equals((byte)AdditionalTypes.Move.MovementImpossible / 10)))
-            {
-                NoMove = true;
-                Session.SendPacket(GenerateCond());
+                BuffObservables[indicator.Card.CardId] = Observable.Timer(TimeSpan.FromMilliseconds(indicator.Card.Duration * 100)).Subscribe(o =>
+                {
+                    RemoveBuff(indicator.Card.CardId);
+                    if (indicator.Card.TimeoutBuff != 0 && ServerManager.Instance.RandomNumber() < indicator.Card.TimeoutBuffChance)
+                    {
+                        AddBuff(new Buff(indicator.Card.TimeoutBuff, Level));
+                    }
+                });
+                if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.Move && !s.SubType.Equals((byte)AdditionalTypes.Move.MovementImpossible / 10)))
+                {
+                    LastSpeedChange = DateTime.Now;
+                    LoadSpeed();
+                    Session.SendPacket(GenerateCond());
+                }
+                if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.SpecialAttack && s.SubType.Equals((byte)AdditionalTypes.SpecialAttack.NoAttack / 10)))
+                {
+                    NoAttack = true;
+                    Session.SendPacket(GenerateCond());
+                }
+                if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.Move && s.SubType.Equals((byte)AdditionalTypes.Move.MovementImpossible / 10)))
+                {
+                    NoMove = true;
+                    Session.SendPacket(GenerateCond());
+                }
             }
         }
 
@@ -489,8 +507,8 @@ namespace OpenNos.GameObject
             else if (oldbuff != null)
             {
                 Buff.Remove(bf.Card.CardId);
-
-                bf.RemainingTime = (bf.Card.Duration * 6 / 10) + oldbuff.RemainingTime;
+                int time = (int)((oldbuff.Start.AddSeconds(oldbuff.Card.Duration * 6 / 10) - DateTime.Now).TotalSeconds / 10 * 6);
+                bf.RemainingTime = bf.Card.Duration * 6 / 10 + (time > 0 ? time : 0);
                 Buff[bf.Card.CardId] = bf;
             }
             else
@@ -499,7 +517,12 @@ namespace OpenNos.GameObject
                 Buff[bf.Card.CardId] = bf;
             }
             bf.Card.BCards.ForEach(c => c.ApplyBCards(Session.Character));
-            Observable.Timer(TimeSpan.FromSeconds(bf.RemainingTime)).Subscribe(o =>
+            if (BuffObservables.ContainsKey(bf.Card.CardId))
+            {
+                BuffObservables[bf.Card.CardId].Dispose();
+                BuffObservables.Remove(bf.Card.CardId);
+            }
+            BuffObservables[bf.Card.CardId] = Observable.Timer(TimeSpan.FromSeconds(bf.RemainingTime)).Subscribe(o =>
             {
                 RemoveBuff(bf.Card.CardId);
                 if (bf.Card.TimeoutBuff != 0 && ServerManager.Instance.RandomNumber() < bf.Card.TimeoutBuffChance)
@@ -639,8 +662,15 @@ namespace OpenNos.GameObject
                     }
                     if (Group != null && (Group.GroupType == GroupType.Team || Group.GroupType == GroupType.BigTeam || Group.GroupType == GroupType.GiantTeam))
                     {
-                        Session.CurrentMapInstance?.Broadcast(Session, GenerateEff(828 + (Group.IsLeader(Session) ? 1 : 0)), ReceiverType.AllExceptGroup);
-                        Session.CurrentMapInstance?.Broadcast(Session, GenerateEff(830 + (Group.IsLeader(Session) ? 1 : 0)), ReceiverType.Group);
+                        try
+                        {
+                            Session.CurrentMapInstance?.Broadcast(Session, GenerateEff(828 + (Group.IsLeader(Session) ? 1 : 0)), ReceiverType.AllExceptGroup);
+                            Session.CurrentMapInstance?.Broadcast(Session, GenerateEff(830 + (Group.IsLeader(Session) ? 1 : 0)), ReceiverType.Group);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(ex, "CharacterLife");
+                        }
                     }
                     Mates.Where(s => s.CanPickUp).ToList().ForEach(s => Session.CurrentMapInstance?.Broadcast(s.GenerateEff(3007)));
                     LastEffect = DateTime.Now;
@@ -692,33 +722,104 @@ namespace OpenNos.GameObject
                         }
                         if (change)
                         {
-                            if (Group != null)
-                            {
-                                if (Group.Raid == null)
-                                {
-                                    Group.Characters.ForEach(s => s?.SendPacket(GenerateStat()));
-                                }
-                            }
-                            else
-                            {
-                                Session.SendPacket(GenerateStat());
-                            }
+                            //if (Group != null)
+                            //{
+                            //    if (Group.Raid == null)
+                            //    {
+                            //        Group.Characters.ForEach(s => s?.SendPacket(GenerateStat()));
+                            //    }
+                            //}
+                            //else
+                            //{
+                            Session.SendPacket(GenerateStat());
+                            //}
                         }
                     }
                 }
+                if (MeditationDictionary.Count != 0)
+                {
+                    if (MeditationDictionary.ContainsKey(534) && MeditationDictionary[534] < DateTime.Now)
+                    {
+                        Session.SendPacket(GenerateEff(4344));
+                        AddBuff(new Buff(534, Level));
+                        if (BuffObservables.ContainsKey(533))
+                        {
+                            BuffObservables[533].Dispose();
+                            BuffObservables.Remove(533);
+                        }
+                        RemoveBuff(533);
+                        MeditationDictionary.Remove(534);
+                    }
+                    else if (MeditationDictionary.ContainsKey(533) && MeditationDictionary[533] < DateTime.Now)
+                    {
+                        Session.SendPacket(GenerateEff(4343));
+                        AddBuff(new Buff(533, Level));
+                        if (BuffObservables.ContainsKey(532))
+                        {
+                            BuffObservables[532].Dispose();
+                            BuffObservables.Remove(532);
+                        }
+                        RemoveBuff(532);
+                        MeditationDictionary.Remove(533);
+                    }
+                    else if (MeditationDictionary.ContainsKey(532) && MeditationDictionary[532] < DateTime.Now)
+                    {
+                        Session.SendPacket(GenerateEff(4343));
+                        AddBuff(new Buff(532, Level));
+                        if (BuffObservables.ContainsKey(534))
+                        {
+                            BuffObservables[534].Dispose();
+                            BuffObservables.Remove(534);
+                        }
+                        RemoveBuff(534);
+                        MeditationDictionary.Remove(532);
+                    }
+                }
+
                 if (UseSp)
                 {
+                    SpecialistInstance specialist = Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear);
+                    if (specialist == null)
+                    {
+                        return;
+                    }
+                    if (LastPermBuffRefresh.AddSeconds(2) <= DateTime.Now)
+                    {
+                        LastPermBuffRefresh = DateTime.Now;
+                        switch (specialist.Design)
+                        {
+                            case 6:
+                                AddBuff(new Buff(387, Level), true);
+                                break;
+                            case 7:
+                                AddBuff(new Buff(395, Level), true);
+                                break;
+                            case 8:
+                                AddBuff(new Buff(396, Level), true);
+                                break;
+                            case 9:
+                                AddBuff(new Buff(397, Level), true);
+                                break;
+                            case 10:
+                                AddBuff(new Buff(398, Level), true);
+                                break;
+                            case 11:
+                                AddBuff(new Buff(410, Level), true);
+                                break;
+                            case 12:
+                                AddBuff(new Buff(411, Level), true);
+                                break;
+                            case 13:
+                                AddBuff(new Buff(444, Level), true);
+                                break;
+                        }
+                    }
                     if (LastSpGaugeRemove <= new DateTime(0001, 01, 01, 00, 00, 00))
                     {
                         LastSpGaugeRemove = DateTime.Now;
                     }
                     if (LastSkillUse.AddSeconds(15) >= DateTime.Now && LastSpGaugeRemove.AddSeconds(1) <= DateTime.Now)
                     {
-                        SpecialistInstance specialist = Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear);
-                        if (specialist == null)
-                        {
-                            return;
-                        }
                         byte spType = 0;
 
                         if ((specialist.Item.Morph > 1 && specialist.Item.Morph < 8) || (specialist.Item.Morph > 9 && specialist.Item.Morph < 16))
@@ -957,7 +1058,7 @@ namespace OpenNos.GameObject
             lock (Buff)
             {
                 Buff.GetAllItems().Where(s => types.Contains(s.Card.BuffType) && !s.StaticBuff && s.Card.Level < level).ToList()
-                    .ForEach(s => RemoveBuff(s.Card.CardId));
+                    .ForEach(s => { if (BuffObservables.ContainsKey(s.Card.CardId)) { BuffObservables[s.Card.CardId].Dispose(); BuffObservables.Remove(s.Card.CardId); } RemoveBuff(s.Card.CardId); });
             }
         }
 
@@ -1417,64 +1518,64 @@ namespace OpenNos.GameObject
 
                 Random random = new Random(DateTime.Now.Millisecond & monsterToAttack.MapMonsterId);
 
-            // owner set
-            long? dropOwner = monsterToAttack.DamageList.Count > 0 ? monsterToAttack.DamageList.First().Key : (long?)null;
-            Group group = null;
-            if (dropOwner != null)
-            {
-                group = ServerManager.Instance.Groups.FirstOrDefault(g => g.IsMemberOfGroup((long)dropOwner));
-            }
+                // owner set
+                long? dropOwner = monsterToAttack.DamageList.Count > 0 ? monsterToAttack.DamageList.First().Key : (long?)null;
+                Group group = null;
+                if (dropOwner != null)
+                {
+                    group = ServerManager.Instance.Groups.FirstOrDefault(g => g.IsMemberOfGroup((long)dropOwner));
+                }
 
                 // end owner set
-                if (Session.HasCurrentMapInstance)
+                if (Session.HasCurrentMapInstance && (Group == null || Group.GroupType == GroupType.Group))
                 {
                     List<DropDTO> droplist = monsterToAttack.Monster.Drops.Where(s => Session.CurrentMapInstance.Map.MapTypes.Any(m => m.MapTypeId == s.MapTypeId) || s.MapTypeId == null).ToList();
                     if (monsterToAttack.Monster.MonsterType != MonsterType.Special)
                     {
                         #region item drop
 
-                    int dropRate = ServerManager.Instance.DropRate * MapInstance.DropRate;
-                    int x = 0;
-                    foreach (DropDTO drop in droplist.OrderBy(s => random.Next()))
-                    {
-                        if (x < 4)
+                        int dropRate = ServerManager.Instance.DropRate * MapInstance.DropRate;
+                        int x = 0;
+                        foreach (DropDTO drop in droplist.OrderBy(s => random.Next()))
                         {
-                            double rndamount = ServerManager.Instance.RandomNumber() * random.NextDouble();
-                            if (rndamount <= (double)drop.DropChance * dropRate / 5000.000)
+                            if (x < 4)
                             {
-                                x++;
-                                if (Session.CurrentMapInstance != null)
+                                double rndamount = ServerManager.Instance.RandomNumber() * random.NextDouble();
+                                if (rndamount <= (double)drop.DropChance * dropRate / 5000.000)
                                 {
-                                    if (Session.CurrentMapInstance.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) || monsterToAttack.Monster.MonsterType == MonsterType.Elite)
+                                    x++;
+                                    if (Session.CurrentMapInstance != null)
                                     {
-                                        List<long> alreadyGifted = new List<long>();
-                                        foreach (long charId in monsterToAttack.DamageList.Keys)
+                                        if (Session.CurrentMapInstance.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) || monsterToAttack.Monster.MonsterType == MonsterType.Elite)
                                         {
-                                            if (!alreadyGifted.Contains(charId))
+                                            List<long> alreadyGifted = new List<long>();
+                                            foreach (long charId in monsterToAttack.DamageList.Keys)
                                             {
-                                                ClientSession giftsession = ServerManager.Instance.GetSessionByCharacterId(charId);
-                                                giftsession?.Character.GiftAdd(drop.ItemVNum, (byte)drop.Amount);
-                                                alreadyGifted.Add(charId);
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (group?.GroupType == GroupType.Group)
-                                        {
-                                            if (group.SharingMode == (byte)GroupSharingType.ByOrder)
-                                            {
-                                                dropOwner = group.GetNextOrderedCharacterId(this);
-                                                if (dropOwner.HasValue)
+                                                if (!alreadyGifted.Contains(charId))
                                                 {
-                                                    group.Characters.ForEach(s => s.SendPacket(s.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("ITEM_BOUND_TO"), ServerManager.Instance.GetItem(drop.ItemVNum).Name, group.Characters.Single(c => c.Character.CharacterId == (long)dropOwner).Character.Name, drop.Amount), 10)));
+                                                    ClientSession giftsession = ServerManager.Instance.GetSessionByCharacterId(charId);
+                                                    giftsession?.Character.GiftAdd(drop.ItemVNum, (byte)drop.Amount);
+                                                    alreadyGifted.Add(charId);
                                                 }
                                             }
-                                            else
-                                            {
-                                                group.Characters.ForEach(s => s.SendPacket(s.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("DROPPED_ITEM"), ServerManager.Instance.GetItem(drop.ItemVNum).Name, drop.Amount), 10)));
-                                            }
                                         }
+                                        else
+                                        {
+                                            if (group?.GroupType == GroupType.Group)
+                                            {
+                                                if (group.SharingMode == (byte)GroupSharingType.ByOrder)
+                                                {
+                                                    dropOwner = group.GetNextOrderedCharacterId(this);
+                                                    if (dropOwner.HasValue)
+                                                    {
+                                                        group.Characters.ForEach(s => s.SendPacket(s.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("ITEM_BOUND_TO"), ServerManager.Instance.GetItem(drop.ItemVNum).Name, group.Characters.GetAllItems().Single(c => c.Character.CharacterId == (long)dropOwner).Character.Name, drop.Amount), 10)));
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    group.Characters.ForEach(s => s.SendPacket(s.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("DROPPED_ITEM"), ServerManager.Instance.GetItem(drop.ItemVNum).Name, drop.Amount), 10)));
+                                                }
+                                            }
 
                                             long? owner = dropOwner;
                                             Observable.Timer(TimeSpan.FromMilliseconds(500)).Subscribe(o =>
@@ -1488,121 +1589,120 @@ namespace OpenNos.GameObject
                                     }
                                 }
                             }
-                        }
+                            #endregion
 
-                        #endregion
+                            #region gold drop
 
-                        #region gold drop
+                            // gold calculation
+                            int gold = GetGold(monsterToAttack);
+                            long maxGold = ServerManager.Instance.MaxGold;
+                            gold = gold > maxGold ? (int)maxGold : gold;
+                            double randChance = ServerManager.Instance.RandomNumber() * random.NextDouble();
 
-                        // gold calculation
-                        int gold = GetGold(monsterToAttack);
-                        long maxGold = ServerManager.Instance.MaxGold;
-                        gold = gold > maxGold ? (int)maxGold : gold;
-                        double randChance = ServerManager.Instance.RandomNumber() * random.NextDouble();
-
-                        if (gold > 0 && randChance <= (int)(ServerManager.Instance.GoldDropRate * 10 * CharacterHelper.GoldPenalty(Level, monsterToAttack.Monster.Level)))
-                        {
-                            DropDTO drop2 = new DropDTO
+                            if (gold > 0 && randChance <= (int)(ServerManager.Instance.GoldDropRate * 10 * CharacterHelper.GoldPenalty(Level, monsterToAttack.Monster.Level)))
                             {
-                                Amount = gold,
-                                ItemVNum = 1046
-                            };
-                            if (Session.CurrentMapInstance != null)
-                            {
-                                if (Session.CurrentMapInstance.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) || monsterToAttack.Monster.MonsterType == MonsterType.Elite)
+                                DropDTO drop2 = new DropDTO
                                 {
-                                    List<long> alreadyGifted = new List<long>();
-                                    foreach (long charId in monsterToAttack.DamageList.Keys)
+                                    Amount = gold,
+                                    ItemVNum = 1046
+                                };
+                                if (Session.CurrentMapInstance != null)
+                                {
+                                    if (Session.CurrentMapInstance.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) || monsterToAttack.Monster.MonsterType == MonsterType.Elite)
                                     {
-                                        if (!alreadyGifted.Contains(charId))
+                                        List<long> alreadyGifted = new List<long>();
+                                        foreach (long charId in monsterToAttack.DamageList.Keys)
                                         {
-                                            ClientSession session = ServerManager.Instance.GetSessionByCharacterId(charId);
-                                            if (session != null)
+                                            if (!alreadyGifted.Contains(charId))
                                             {
-                                                session.Character.Gold += drop2.Amount;
-                                                if (session.Character.Gold > maxGold)
+                                                ClientSession session = ServerManager.Instance.GetSessionByCharacterId(charId);
+                                                if (session != null)
                                                 {
-                                                    session.Character.Gold = maxGold;
-                                                    session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("MAX_GOLD"), 0));
+                                                    session.Character.Gold += drop2.Amount;
+                                                    if (session.Character.Gold > maxGold)
+                                                    {
+                                                        session.Character.Gold = maxGold;
+                                                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("MAX_GOLD"), 0));
+                                                    }
+                                                    session.SendPacket(session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {ServerManager.Instance.GetItem(drop2.ItemVNum).Name} x {drop2.Amount}", 10));
+                                                    session.SendPacket(session.Character.GenerateGold());
                                                 }
-                                                session.SendPacket(session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {ServerManager.Instance.GetItem(drop2.ItemVNum).Name} x {drop2.Amount}", 10));
-                                                session.SendPacket(session.Character.GenerateGold());
-                                            }
-                                            alreadyGifted.Add(charId);
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    if (group != null && MapInstance.MapInstanceType != MapInstanceType.LodInstance)
-                                    {
-                                        if (group.SharingMode == (byte)GroupSharingType.ByOrder)
-                                        {
-                                            dropOwner = group.GetNextOrderedCharacterId(this);
-
-                                            if (dropOwner.HasValue)
-                                            {
-                                                group.Characters.ForEach(s => s.SendPacket(s.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("ITEM_BOUND_TO"), ServerManager.Instance.GetItem(drop2.ItemVNum).Name, group.Characters.Single(c => c.Character.CharacterId == (long)dropOwner).Character.Name, drop2.Amount), 10)));
+                                                alreadyGifted.Add(charId);
                                             }
                                         }
-                                        else
-                                        {
-                                            group.Characters.ForEach(s => s.SendPacket(s.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("DROPPED_ITEM"), ServerManager.Instance.GetItem(drop2.ItemVNum).Name, drop2.Amount), 10)));
-                                        }
-                                    }
-
-                                    // delayed Drop
-                                    Observable.Timer(TimeSpan.FromMilliseconds(500))
-                                          .Subscribe(
-                                          o =>
-                                          {
-                                              if (Session.HasCurrentMapInstance)
-                                              {
-                                                  Session.CurrentMapInstance.DropItemByMonster(dropOwner, drop2, monsterToAttack.MapX, monsterToAttack.MapY);
-                                              }
-                                          });
-                                }
-                            }
-                        }
-
-                        #endregion
-
-                        #region exp
-
-                        if (Hp > 0)
-                        {
-                            Group grp = ServerManager.Instance.Groups.FirstOrDefault(g => g.IsMemberOfGroup(CharacterId));
-                            if (grp != null)
-                            {
-                                foreach (ClientSession targetSession in grp.Characters.Where(g => g.Character.MapInstanceId == MapInstanceId))
-                                {
-                                    if (grp.IsMemberOfGroup(monsterToAttack.DamageList.FirstOrDefault().Key))
-                                    {
-                                        targetSession.Character.GenerateXp(monsterToAttack, true);
                                     }
                                     else
                                     {
-                                        targetSession.SendPacket(targetSession.Character.GenerateSay(Language.Instance.GetMessageFromKey("XP_NOTFIRSTHIT"), 10));
-                                        targetSession.Character.GenerateXp(monsterToAttack, false);
+                                        if (group != null && MapInstance.MapInstanceType != MapInstanceType.LodInstance)
+                                        {
+                                            if (group.SharingMode == (byte)GroupSharingType.ByOrder)
+                                            {
+                                                dropOwner = group.GetNextOrderedCharacterId(this);
+
+                                                if (dropOwner.HasValue)
+                                                {
+                                                    group.Characters.ForEach(s => s.SendPacket(s.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("ITEM_BOUND_TO"), ServerManager.Instance.GetItem(drop2.ItemVNum).Name, group.Characters.GetAllItems().Single(c => c.Character.CharacterId == (long)dropOwner).Character.Name, drop2.Amount), 10)));
+                                                }
+                                            }
+                                            else
+                                            {
+                                                group.Characters.ForEach(s => s.SendPacket(s.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("DROPPED_ITEM"), ServerManager.Instance.GetItem(drop2.ItemVNum).Name, drop2.Amount), 10)));
+                                            }
+                                        }
+
+                                        // delayed Drop
+                                        Observable.Timer(TimeSpan.FromMilliseconds(500))
+                                              .Subscribe(
+                                              o =>
+                                              {
+                                                  if (Session.HasCurrentMapInstance)
+                                                  {
+                                                      Session.CurrentMapInstance.DropItemByMonster(dropOwner, drop2, monsterToAttack.MapX, monsterToAttack.MapY);
+                                                  }
+                                              });
                                     }
                                 }
                             }
-                            else
+
+                            #endregion
+
+                            #region exp
+
+                            if (Hp > 0)
                             {
-                                if (monsterToAttack.DamageList.FirstOrDefault().Key == CharacterId)
+                                Group grp = ServerManager.Instance.Groups.FirstOrDefault(g => g.IsMemberOfGroup(CharacterId));
+                                if (grp != null)
                                 {
-                                    GenerateXp(monsterToAttack, true);
+                                    foreach (ClientSession targetSession in grp.Characters.GetAllItems().Where(g => g.Character.MapInstanceId == MapInstanceId))
+                                    {
+                                        if (grp.IsMemberOfGroup(monsterToAttack.DamageList.FirstOrDefault().Key))
+                                        {
+                                            targetSession.Character.GenerateXp(monsterToAttack, true);
+                                        }
+                                        else
+                                        {
+                                            targetSession.SendPacket(targetSession.Character.GenerateSay(Language.Instance.GetMessageFromKey("XP_NOTFIRSTHIT"), 10));
+                                            targetSession.Character.GenerateXp(monsterToAttack, false);
+                                        }
+                                    }
                                 }
                                 else
                                 {
-                                    Session.SendPacket(GenerateSay(Language.Instance.GetMessageFromKey("XP_NOTFIRSTHIT"), 10));
-                                    GenerateXp(monsterToAttack, false);
+                                    if (monsterToAttack.DamageList.FirstOrDefault().Key == CharacterId)
+                                    {
+                                        GenerateXp(monsterToAttack, true);
+                                    }
+                                    else
+                                    {
+                                        Session.SendPacket(GenerateSay(Language.Instance.GetMessageFromKey("XP_NOTFIRSTHIT"), 10));
+                                        GenerateXp(monsterToAttack, false);
+                                    }
                                 }
+                                GenerateDignity(monsterToAttack.Monster);
                             }
-                            GenerateDignity(monsterToAttack.Monster);
-                        }
 
-                        #endregion
+                            #endregion
+                        }
                     }
                 }
             }
@@ -1742,7 +1842,7 @@ namespace OpenNos.GameObject
             if (!isLeaveGroup && Group != null)
             {
                 string result = $"pidx {Group.GroupId}";
-                foreach (ClientSession session in Group.Characters)
+                foreach (ClientSession session in Group.Characters.GetAllItems())
                 {
                     if (session.Character != null)
                     {
@@ -2345,13 +2445,13 @@ namespace OpenNos.GameObject
             int value1 = 0;
             int value2 = 0;
 
-            foreach (BCard entry in EquipmentBCards.Where(s => s.Type.Equals((byte)type) && s.SubType.Equals((byte)(subtype / 10))))
+            foreach (BCard entry in EquipmentBCards.GetAllItems().Where(s => s != null && s.Type.Equals((byte)type) && s.SubType.Equals((byte)(subtype / 10))))
             {
                 if (entry.IsLevelScaled)
                 {
                     if (entry.IsLevelDivided)
                     {
-                        value1 += entry.FirstData / Level;
+                        value1 += Level / entry.FirstData;
                     }
                     else
                     {
@@ -2378,7 +2478,7 @@ namespace OpenNos.GameObject
                         {
                             if (entry.IsLevelDivided)
                             {
-                                value1 += entry.FirstData / buff.Level;
+                                value1 += buff.Level / entry.FirstData;
                             }
                             else
                             {
@@ -2576,7 +2676,7 @@ namespace OpenNos.GameObject
         {
             int value1 = 0;
             int value2 = 0;
-            foreach (BCard entry in EquipmentBCards.Where(
+            foreach (BCard entry in EquipmentBCards.GetAllItems().Where(
                 s => s.Type.Equals((byte)type) && s.SubType.Equals((byte)(subtype / 10))))
             {
                 if (entry.IsLevelScaled)
@@ -3167,17 +3267,6 @@ namespace OpenNos.GameObject
                     DAOFactory.MinilandObjectDAO.InsertOrUpdate(ref mobj);
                 }
 
-                IEnumerable<short> currentlySavedBonus = DAOFactory.StaticBonusDAO.LoadTypeByCharacterId(CharacterId);
-                foreach (short bonusToDelete in currentlySavedBonus.Except(Buff.GetAllItems().Select(s => s.Card.CardId)))
-                {
-                    DAOFactory.StaticBonusDAO.Delete(bonusToDelete, CharacterId);
-                }
-                foreach (StaticBonusDTO bonus in StaticBonusList.ToArray())
-                {
-                    StaticBonusDTO bonus2 = bonus;
-                    DAOFactory.StaticBonusDAO.InsertOrUpdate(ref bonus2);
-                }
-
                 IEnumerable<short> currentlySavedBuff = DAOFactory.StaticBuffDAO.LoadByTypeCharacterId(CharacterId);
                 foreach (short bonusToDelete in currentlySavedBuff.Except(Buff.GetAllItems().Select(s => s.Card.CardId)))
                 {
@@ -3692,13 +3781,14 @@ namespace OpenNos.GameObject
             {
                 return 0;
             }
+            double eqMultiplier = 1 + (GetBuff(CardType.Item, (byte)AdditionalTypes.Item.IncreaseEarnedGold)[0] / 100D);
             int lowBaseGold = ServerManager.Instance.RandomNumber(6 * mapMonster.Monster?.Level ?? 1, 12 * mapMonster.Monster?.Level ?? 1);
             int actMultiplier = Session?.CurrentMapInstance?.Map.MapTypes?.Any(s => s.MapTypeId == (short)MapTypeEnum.Act52) ?? false ? 10 : 1;
             if (Session?.CurrentMapInstance?.Map.MapTypes?.Any(s => s.MapTypeId == (short)MapTypeEnum.Act61 || s.MapTypeId == (short)MapTypeEnum.Act61a || s.MapTypeId == (short)MapTypeEnum.Act61d) == true)
             {
                 actMultiplier = 5;
             }
-            int gold = lowBaseGold * ServerManager.Instance.GoldRate * actMultiplier;
+            int gold = lowBaseGold * ServerManager.Instance.GoldRate * actMultiplier * eqMultiplier;
             return gold;
         }
 
@@ -3709,7 +3799,7 @@ namespace OpenNos.GameObject
 
             if (group != null)
             {
-                int levelSum = group.Characters.Sum(g => g.Character.JobLevel);
+                int levelSum = group.Characters.GetAllItems().Sum(g => g.Character.JobLevel);
                 partySize = group.CharacterCount;
                 partyPenalty = (6f / partySize) / levelSum;
             }
@@ -3732,12 +3822,12 @@ namespace OpenNos.GameObject
 
             if (group != null)
             {
-                int levelSum = group.Characters.Sum(g => g.Character.Level);
+                int levelSum = group.Characters.GetAllItems().Sum(g => g.Character.Level);
                 partySize = group.CharacterCount;
                 partyPenalty = (6f / partySize) / levelSum;
             }
 
-            int xpcalculation = levelDifference < 5 ? monster.XP : monster.XP * (2 / 3);
+            int xpcalculation = levelDifference < 5 ? monster.XP : monster.XP / 3 * 2;
 
             int xp = (int)Math.Round(xpcalculation * CharacterHelper.ExperiencePenalty(Level, monster.Level) * ServerManager.Instance.XPRate * MapInstance.XpRate);
 
@@ -3802,7 +3892,7 @@ namespace OpenNos.GameObject
             {
                 specialist = Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear);
             }
-            return specialist != null ? CharacterHelper.SPXPData[specialist.SpLevel - 1] : 0;
+            return specialist != null ? CharacterHelper.SPXPData[(specialist.SpLevel == 0 ? 0 : specialist.SpLevel - 1)] : 0;
         }
 
         private double XPLoad()
@@ -3839,7 +3929,7 @@ namespace OpenNos.GameObject
             return result;
         }
 
-        private void RemoveBuff(short id)
+        public void RemoveBuff(short id)
         {
             Buff indicator = Buff[id];
             if (indicator != null)

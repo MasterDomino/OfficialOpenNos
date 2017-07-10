@@ -103,7 +103,9 @@ namespace OpenNos.Domain
             AbsorbedSpirit = 81,
             AngerSkill = 82,
             MeteoriteTeleport = 83,
-            StealBuff = 84
+            StealBuff = 84,
+            Unknown = 85,
+            EffectSummon = 86
         }
     }
 
@@ -775,13 +777,13 @@ namespace OpenNos.Domain
 
         public enum BearSpirit : byte
         {
-            IncreaseMaximumMP = 11,
-            DecreaseMaximumMP = 12,
+            IncreaseMaximumHP = 11,
+            DecreaseMaximumHP = 12,
 
             // Unknown = 21, Unknown2 = 22,
-            IncreaseMaximumHP = 31,
+            IncreaseMaximumMP = 31,
 
-            DecreaseMaximumHP = 32
+            DecreaseMaximumMP = 32
         }
 
         public enum SummonSkill : byte
@@ -1064,6 +1066,19 @@ namespace OpenNos.Domain
             ChanceSummonOnyxDragonNegated = 32,
             StealGoodEffect = 41,
             StealGoodEffectNegated = 42
+        }
+
+        public enum Unknown : byte
+        {
+            // TODO
+            Unknown = 11,
+        }
+
+        public enum EffectSummon : byte
+        {
+            // TODO
+            LastSkillReset = 11,
+            DamageBoostOnHigherLvl = 31
         }
     }
 

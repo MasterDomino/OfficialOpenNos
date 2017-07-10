@@ -168,7 +168,7 @@ namespace OpenNos.Master.Library.Client
             return _client.ServiceProxy.RetrieveServerStatistics();
         }
 
-        public int[] RetrieveSessionListWithIp(string ipAddress)
+        public long[] RetrieveSessionListWithIp(string ipAddress)
         {
             return _client.ServiceProxy.RetrieveSessionListWithIp(ipAddress);
         }

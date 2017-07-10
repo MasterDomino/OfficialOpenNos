@@ -151,7 +151,58 @@ namespace OpenNos.GameObject
                         }
                         else
                         {
+                            if (session.Character.BuffObservables.ContainsKey(387))
+                            {
+                                session.Character.BuffObservables[387].Dispose();
+                                session.Character.BuffObservables.Remove(387);
+                            }
+                            if (session.Character.BuffObservables.ContainsKey(395))
+                            {
+                                session.Character.BuffObservables[395].Dispose();
+                                session.Character.BuffObservables.Remove(395);
+                            }
+                            if (session.Character.BuffObservables.ContainsKey(396))
+                            {
+                                session.Character.BuffObservables[396].Dispose();
+                                session.Character.BuffObservables.Remove(396);
+                            }
+                            if (session.Character.BuffObservables.ContainsKey(397))
+                            {
+                                session.Character.BuffObservables[397].Dispose();
+                                session.Character.BuffObservables.Remove(397);
+                            }
+                            if (session.Character.BuffObservables.ContainsKey(398))
+                            {
+                                session.Character.BuffObservables[398].Dispose();
+                                session.Character.BuffObservables.Remove(398);
+                            }
+                            if (session.Character.BuffObservables.ContainsKey(410))
+                            {
+                                session.Character.BuffObservables[410].Dispose();
+                                session.Character.BuffObservables.Remove(410);
+                            }
+                            if (session.Character.BuffObservables.ContainsKey(411))
+                            {
+                                session.Character.BuffObservables[411].Dispose();
+                                session.Character.BuffObservables.Remove(411);
+                            }
+                            if (session.Character.BuffObservables.ContainsKey(444))
+                            {
+                                session.Character.BuffObservables[444].Dispose();
+                                session.Character.BuffObservables.Remove(444);
+                            }
+
+                            session.Character.RemoveBuff(387);
+                            session.Character.RemoveBuff(395);
+                            session.Character.RemoveBuff(396);
+                            session.Character.RemoveBuff(397);
+                            session.Character.RemoveBuff(398);
+                            session.Character.RemoveBuff(410);
+                            session.Character.RemoveBuff(411);
+                            session.Character.RemoveBuff(444);
+
                             specialistInstance.Design = (byte)EffectValue;
+
                             session.Character.MorphUpgrade2 = EffectValue;
                             session.CurrentMapInstance?.Broadcast(session.Character.GenerateCMode());
                             session.SendPacket(session.Character.GenerateStat());
@@ -306,6 +357,22 @@ namespace OpenNos.GameObject
                             session.CurrentMapInstance.Broadcast(monster.GenerateIn());
                             session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
                         }
+                    }
+                    break;
+
+                case 420:
+                    if (EffectValue == 0)
+                    {
+                        for (int i = 0; i < 5; i++)
+                        {
+                            session.Character.GiftAdd((short)(1894 + ServerManager.Instance.RandomNumber(0, 10)), 1);
+                        }
+                        session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                    }
+                    else
+                    {
+                        session.Character.GiftAdd((short)EffectValue, 1);
+                        session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
                     }
                     break;
 

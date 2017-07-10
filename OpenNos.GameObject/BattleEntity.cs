@@ -10,7 +10,7 @@ namespace OpenNos.GameObject
         {
             Session = character.Session;
             Buffs = character.Buff.GetAllItems();
-            BCards = character.EquipmentBCards.ToList();
+            BCards = character.EquipmentBCards.GetAllItems();
             Level = character.Level;
             EntityType = EntityType.Player;
             DamageMinimum = character.MinHit;
@@ -150,8 +150,8 @@ namespace OpenNos.GameObject
             BCards = mate.Monster.BCards.ToList();
             Level = mate.Level;
             EntityType = EntityType.Mate;
-            DamageMinimum = mate.MinHit;
-            DamageMaximum = mate.MaxHit;
+            DamageMinimum = 0;
+            DamageMaximum = 0;
             WeaponDamageMinimum = mate.MinHit;
             WeaponDamageMaximum = mate.MaxHit;
             Hitrate = mate.Monster.Concentrate;
@@ -199,8 +199,8 @@ namespace OpenNos.GameObject
             BCards = monster.Monster.BCards.ToList();
             Level = monster.Monster.Level;
             EntityType = EntityType.Monster;
-            DamageMinimum = monster.Monster.DamageMinimum;
-            DamageMaximum = monster.Monster.DamageMaximum;
+            DamageMinimum = 0;
+            DamageMaximum = 0;
             WeaponDamageMinimum = monster.Monster.DamageMinimum;
             WeaponDamageMaximum = monster.Monster.DamageMaximum;
             Hitrate = monster.Monster.Concentrate;
@@ -248,8 +248,8 @@ namespace OpenNos.GameObject
             BCards = npc.Npc.BCards.ToList();
             Level = npc.Npc.Level;
             EntityType = EntityType.Monster;
-            DamageMinimum = npc.Npc.DamageMinimum;
-            DamageMaximum = npc.Npc.DamageMaximum;
+            DamageMinimum = 0;
+            DamageMaximum = 0;
             WeaponDamageMinimum = npc.Npc.DamageMinimum;
             WeaponDamageMaximum = npc.Npc.DamageMaximum;
             Hitrate = npc.Npc.Concentrate;

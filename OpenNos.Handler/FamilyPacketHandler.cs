@@ -124,7 +124,7 @@ namespace OpenNos.Handler
 
             if (Session.Character.Group?.GroupType == GroupType.Group && Session.Character.Group.CharacterCount == 3)
             {
-                foreach (ClientSession session in Session.Character.Group.Characters)
+                foreach (ClientSession session in Session.Character.Group.Characters.GetAllItems())
                 {
                     if (session.Character.Family != null || session.Character.FamilyCharacter != null)
                     {
@@ -157,7 +157,7 @@ namespace OpenNos.Handler
                 Logger.LogEvent("GUILDLEAVE", Session.GenerateIdentity(), $"[{family.FamilyId}]");
 
                 ServerManager.Instance.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("FAMILY_FOUNDED"), name), 0));
-                foreach (ClientSession session in Session.Character.Group.Characters)
+                foreach (ClientSession session in Session.Character.Group.Characters.GetAllItems())
                 {
                     FamilyCharacterDTO familyCharacter = new FamilyCharacterDTO
                     {

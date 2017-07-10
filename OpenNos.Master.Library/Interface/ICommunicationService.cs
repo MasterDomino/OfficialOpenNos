@@ -136,7 +136,7 @@ namespace OpenNos.Master.Library.Interface
         /// </summary>
         /// <param name="ipAddress">IpAddress to gather wanted SessionIds</param>
         /// <returns>List of SessionId</returns>
-        int[] RetrieveSessionListWithIp(string ipAddress);
+        long[] RetrieveSessionListWithIp(string ipAddress);
 
         /// <summary>
         /// Sends a Message to a specific Character

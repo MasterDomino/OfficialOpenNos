@@ -12,6 +12,7 @@
  * GNU General Public License for more details.
  */
 
+using OpenNos.Core;
 using OpenNos.Data;
 using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
@@ -160,6 +161,68 @@ namespace OpenNos.GameObject
                     break;
 
                 case BCardType.CardType.HealingBurningAndCasting:
+                    if (session.GetType() == typeof(Character))
+                    {
+                        Character chara = session as Character;
+                        int bonus = 0;
+
+                        if (SubType == (byte)AdditionalTypes.HealingBurningAndCasting.RestoreHP / 10)
+                        {
+                            if (IsLevelScaled)
+                            {
+                                bonus = chara.Level * FirstData;
+                            }
+                            else
+                            {
+                                bonus = FirstData;
+                            }
+                            if (chara.Hp + bonus <= chara.HPLoad())
+                            {
+                                chara.Hp += bonus;
+                            }
+                            else
+                            {
+                                bonus = (int)chara.HPLoad() - chara.Hp;
+                                chara.Hp = (int)chara.HPLoad();
+                            }
+                            chara.Session.CurrentMapInstance?.Broadcast(chara.Session, chara.GenerateRc(bonus));
+                        }
+                        if (SubType == (byte)AdditionalTypes.HealingBurningAndCasting.RestoreMP / 10)
+                        {
+                            if (IsLevelScaled)
+                            {
+                                bonus = chara.Level * FirstData;
+                            }
+                            else
+                            {
+                                bonus = FirstData;
+                            }
+                            if (chara.Mp + bonus <= chara.MPLoad())
+                            {
+                                chara.Mp += bonus;
+                            }
+                            else
+                            {
+                                bonus = (int)chara.MPLoad() - chara.Mp;
+                                chara.Mp = (int)chara.MPLoad();
+                            }
+                        }
+                        chara.Session.SendPacket(chara.GenerateStat());
+
+                    }
+                    else if (session.GetType() == typeof(MapMonster))
+                    {
+                        if (ServerManager.Instance.RandomNumber() < FirstData)
+                        {
+                            (session as MapMonster).AddBuff(new Buff(SecondData, (session as MapMonster).Monster.Level));
+                        }
+                    }
+                    else if (session.GetType() == typeof(MapNpc))
+                    {
+                    }
+                    else if (session.GetType() == typeof(Mate))
+                    {
+                    }
                     break;
 
                 case BCardType.CardType.HPMP:
@@ -317,6 +380,23 @@ namespace OpenNos.GameObject
                             }
                         }
                     }
+                    else if (session.GetType() == typeof(Character))
+                    {
+                        Character character = (session as Character);
+
+                        switch (SubType)
+                        {
+                            case 2:
+                                character.MeditationDictionary[(short)SecondData] = DateTime.Now.AddSeconds(4);
+                                break;
+                            case 3:
+                                character.MeditationDictionary[(short)SecondData] = DateTime.Now.AddSeconds(8);
+                                break;
+                            case 4:
+                                character.MeditationDictionary[(short)SecondData] = DateTime.Now.AddSeconds(12);
+                                break;
+                        }
+                    }
                     break;
 
                 case BCardType.CardType.FalconSkill:
@@ -367,8 +447,16 @@ namespace OpenNos.GameObject
                 case BCardType.CardType.StealBuff:
                     break;
 
+                case BCardType.CardType.Unknown:
+                    break;
+
+                case BCardType.CardType.EffectSummon:
+                    break;
+
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    Logger.Error(new ArgumentOutOfRangeException($"Card Type {Type} not defined!"));
+                    //throw new ArgumentOutOfRangeException();
+                    break;
             }
         }
 

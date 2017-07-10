@@ -15,6 +15,7 @@
 using OpenNos.Core;
 using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -69,7 +70,7 @@ namespace OpenNos.GameObject
         {
             List<string> str = new List<string>();
             int i = 0;
-            foreach (ClientSession session in Characters)
+            foreach (ClientSession session in Characters.GetAllItems())
             {
                 if (session == player)
                 {
@@ -89,8 +90,14 @@ namespace OpenNos.GameObject
         {
             string result = string.Empty;
             result = $"rdlst{((GroupType == GroupType.GiantTeam) ? "f" : "")} {Raid.LevelMinimum} {Raid.LevelMaximum} 0";
-            Characters.ForEach(session => result += $" {session.Character.Level}.{(session.Character.UseSp || session.Character.IsVehicled ? session.Character.Morph : -1)}.{(short)session.Character.Class}.{Raid?.InstanceBag.DeadList.Count(s => s == session.Character.CharacterId) ?? 0}.{session.Character.Name}.{(short)session.Character.Gender}.{session.Character.CharacterId}.{session.Character.HeroLevel}");
-
+            try
+            {
+                Characters.ForEach(session => result += $" {session.Character.Level}.{(session.Character.UseSp || session.Character.IsVehicled ? session.Character.Morph : -1)}.{(short)session.Character.Class}.{Raid?.InstanceBag.DeadList.Count(s => s == session.Character.CharacterId) ?? 0}.{session.Character.Name}.{(short)session.Character.Gender}.{session.Character.CharacterId}.{session.Character.HeroLevel}");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "GenerateRdlst");
+            }
             return result;
         }
 
@@ -104,7 +111,7 @@ namespace OpenNos.GameObject
             lock (_syncObj)
             {
                 _order++;
-                List<ClientSession> sessions = Characters.Where(s => Map.GetDistance(s.Character, character) < 50).ToList();
+                List<ClientSession> sessions = Characters.GetAllItems().Where(s => Map.GetDistance(s.Character, character) < 50).ToList();
                 if (_order > sessions.Count - 1) // if order wents out of amount of ppl, reset it -> zero based index
                 {
                     _order = 0;

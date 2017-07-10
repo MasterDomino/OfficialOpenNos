@@ -52,7 +52,6 @@ namespace OpenNos.Handler
         /// <param name="bIPacket"></param>
         public void AskToDelete(BIPacket bIPacket)
         {
-            Logger.Debug(Session.Character.GenerateIdentity(), bIPacket.ToString());
             switch (bIPacket.Option)
             {
                 case null:
@@ -71,8 +70,10 @@ namespace OpenNos.Handler
                     ItemInstance delInstance = Session.Character.Inventory.LoadBySlotAndType(bIPacket.Slot, bIPacket.InventoryType);
                     Session.Character.DeleteItem(bIPacket.InventoryType, bIPacket.Slot);
 
-                    Logger.LogEvent("ITEM_DELETE", Session.GenerateIdentity(), $"IIId: {delInstance.Id} ItemVNum: {delInstance.ItemVNum} Amount: {delInstance.Amount} MapId: {Session.CurrentMapInstance?.Map.MapId} MapX: {Session.Character.PositionX} MapY: {Session.Character.PositionY}");
-
+                    if (delInstance != null)
+                    {
+                        Logger.LogEvent("ITEM_DELETE", Session.GenerateIdentity(), $"IIId: {delInstance.Id} ItemVNum: {delInstance.ItemVNum} Amount: {delInstance.Amount} MapId: {Session.CurrentMapInstance?.Map.MapId} MapX: {Session.Character.PositionX} MapY: {Session.Character.PositionY}");
+                    }
                     break;
             }
         }
@@ -100,7 +101,7 @@ namespace OpenNos.Handler
 
             // actually move the item from source to destination
             Session.Character.Inventory.DepositItem(depositPacket.Inventory, depositPacket.Slot, depositPacket.Amount, depositPacket.NewSlot, ref item, ref itemdest, depositPacket.PartnerBackpack);
-            Logger.LogEvent("STASH_DEPOSIT", Session.GenerateIdentity(), $"OldIIId: {item.Id} NewIIId: {itemdest.Id} Amount: {depositPacket.Amount} PartnerBackpack: {depositPacket.PartnerBackpack}");
+            Logger.LogEvent("STASH_DEPOSIT", Session.GenerateIdentity(), $"OldIIId: {item?.Id} NewIIId: {itemdest?.Id} Amount: {depositPacket?.Amount} PartnerBackpack: {depositPacket?.PartnerBackpack}");
         }
 
         /// <summary>
@@ -109,7 +110,6 @@ namespace OpenNos.Handler
         /// <param name="equipmentInfoPacket"></param>
         public void EquipmentInfo(EquipmentInfoPacket equipmentInfoPacket)
         {
-            Logger.Debug(Session.Character.GenerateIdentity(), equipmentInfoPacket.ToString());
             bool isNPCShopItem = false;
             WearableInstance inventory = null;
             switch (equipmentInfoPacket.Type)
@@ -202,7 +202,6 @@ namespace OpenNos.Handler
         [Packet("exc_list")]
         public void ExchangeList(string packet)
         {
-            Logger.Debug(Session.Character.GenerateIdentity(), packet);
             string[] packetsplit = packet.Split(' ');
             if (!long.TryParse(packetsplit[2], out long gold))
             {
@@ -683,7 +682,6 @@ namespace OpenNos.Handler
         /// <param name="mvePacket"></param>
         public void MoveEquipment(MvePacket mvePacket)
         {
-            Logger.Debug(Session.Character.GenerateIdentity(), mvePacket.ToString());
             lock (Session.Character.Inventory)
             {
                 if (mvePacket.Slot.Equals(mvePacket.DestinationSlot) && mvePacket.InventoryType.Equals(mvePacket.DestinationInventoryType))
@@ -717,7 +715,6 @@ namespace OpenNos.Handler
         /// <param name="mviPacket"></param>
         public void MoveItem(MviPacket mviPacket)
         {
-            Logger.Debug(Session.Character.GenerateIdentity(), mviPacket.ToString());
             lock (Session.Character.Inventory)
             {
                 if (mviPacket.Amount == 0)
@@ -762,7 +759,6 @@ namespace OpenNos.Handler
         /// <param name="putPacket"></param>
         public void PutItem(PutPacket putPacket)
         {
-            Logger.Debug(Session.Character.GenerateIdentity(), putPacket.ToString());
             lock (Session.Character.Inventory)
             {
                 ItemInstance invitem = Session.Character.Inventory.LoadBySlotAndType(putPacket.Slot, putPacket.InventoryType);
@@ -810,7 +806,6 @@ namespace OpenNos.Handler
         /// <param name="removePacket"></param>
         public void Remove(RemovePacket removePacket)
         {
-            Logger.Debug(Session.Character.GenerateIdentity(), removePacket.ToString());
             InventoryType equipment;
             Mate mate = null;
             switch (removePacket.Type)
@@ -936,7 +931,6 @@ namespace OpenNos.Handler
         [Packet("sortopen")]
         public void SortOpen(string packet)
         {
-            Logger.Debug(Session.Character.GenerateIdentity(), packet);
             bool gravity = true;
             while (gravity)
             {
@@ -971,7 +965,6 @@ namespace OpenNos.Handler
         /// <param name="specialistHolderPacket"></param>
         public void SpecialistHolder(SpecialistHolderPacket specialistHolderPacket)
         {
-            Logger.Debug(Session.Character.GenerateIdentity(), specialistHolderPacket.ToString());
             SpecialistInstance specialist = Session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>(specialistHolderPacket.Slot, InventoryType.Equipment);
             BoxInstance holder = Session.Character.Inventory.LoadBySlotAndType<BoxInstance>(specialistHolderPacket.HolderSlot, InventoryType.Equipment);
             if (specialist != null && holder != null)
@@ -1004,7 +997,6 @@ namespace OpenNos.Handler
         /// <param name="spTransformPacket"></param>
         public void SpTransform(SpTransformPacket spTransformPacket)
         {
-            Logger.Debug(Session.Character.GenerateIdentity(), spTransformPacket.ToString());
 
             SpecialistInstance specialistInstance = Session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear);
 
@@ -1510,7 +1502,6 @@ namespace OpenNos.Handler
         /// <param name="upgradePacket"></param>
         public void Upgrade(UpgradePacket upgradePacket)
         {
-            Logger.Debug(Session.Character.GenerateIdentity(), upgradePacket.ToString());
             if (Session.Character.ExchangeInfo?.ExchangeList.Count > 0 || Session.Character.Speed == 0)
             {
                 return;
@@ -1674,7 +1665,6 @@ namespace OpenNos.Handler
         /// <param name="useItemPacket"></param>
         public void UseItem(UseItemPacket useItemPacket)
         {
-            Logger.Debug(Session.Character.GenerateIdentity(), useItemPacket.ToString());
             if ((byte)useItemPacket.Type >= 9)
             {
                 return;
@@ -1690,7 +1680,6 @@ namespace OpenNos.Handler
         /// <param name="wearPacket"></param>
         public void Wear(WearPacket wearPacket)
         {
-            Logger.Debug(Session.Character.GenerateIdentity(), wearPacket.ToString());
             if (Session.Character.ExchangeInfo?.ExchangeList.Count > 0 || Session.Character.Speed == 0)
             {
                 return;

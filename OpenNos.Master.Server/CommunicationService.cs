@@ -121,7 +121,7 @@ namespace OpenNos.Master.Server
                 return;
             }
 
-            foreach (AccountConnection account in MSManager.Instance.ConnectedAccounts.Where(c => c.CharacterId.Equals(characterId) && c.ConnectedWorld.Id.Equals(worldId)))
+            foreach (AccountConnection account in MSManager.Instance.ConnectedAccounts.GetAllItems().Where(c => c.CharacterId.Equals(characterId) && c.ConnectedWorld.Id.Equals(worldId)))
             {
                 foreach (WorldServer world in MSManager.Instance.WorldServers.Where(w => w.WorldGroup.Equals(account.ConnectedWorld.WorldGroup)))
                 {
@@ -215,9 +215,9 @@ namespace OpenNos.Master.Server
             MSManager.Instance.ConnectedAccounts.Add(new AccountConnection(accountId, sessionId, ipAddress));
         }
 
-        public int[] RetrieveSessionListWithIp(string ipAddress)
+        public long[] RetrieveSessionListWithIp(string ipAddress)
         {
-            return MSManager.Instance.ConnectedAccounts.Where(s => s.IpAddress == ipAddress).Select(s => s.SessionId).ToArray();
+            return MSManager.Instance.ConnectedAccounts.GetAllItems().Where(s => s.IpAddress == ipAddress).Select(s => s.AccountId).ToArray();
         }
 
         public int? RegisterWorldServer(SerializableWorldServer worldServer)

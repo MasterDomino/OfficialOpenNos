@@ -54,7 +54,6 @@ namespace OpenNos.Handler
             {
                 return;
             }
-            Logger.Debug(Session.Character.GenerateIdentity(), buyPacket.ToString());
 
             byte amount = buyPacket.Amount;
 
@@ -339,7 +338,6 @@ namespace OpenNos.Handler
         [Packet("m_shop")]
         public void CreateShop(string packet)
         {
-            Logger.Debug(Session.Character.GenerateIdentity(), packet);
             string[] packetsplit = packet.Split(' ');
             InventoryType[] type = new InventoryType[20];
             long[] gold = new long[20];
@@ -489,7 +487,6 @@ namespace OpenNos.Handler
         /// <param name="packet"></param>
         public void NpcRunFunction(NRunPacket packet)
         {
-            Logger.Debug(Session.Character.GenerateIdentity(), packet.ToString());
             Session.Character.LastNRunId = packet.NpcId;
             if (Session.Character.Hp > 0)
             {
@@ -503,7 +500,6 @@ namespace OpenNos.Handler
         /// <param name="pdtsePacket"></param>
         public void Pdtse(PdtsePacket pdtsePacket)
         {
-            Logger.Debug(Session.Character.GenerateIdentity(), pdtsePacket.ToString());
             if (!Session.HasCurrentMapInstance)
             {
                 return;
@@ -649,7 +645,6 @@ namespace OpenNos.Handler
         /// <param name="sellPacket"></param>
         public void SellShop(SellPacket sellPacket)
         {
-            Logger.Debug(Session.Character.GenerateIdentity(), sellPacket.ToString());
             if (Session.Character.ExchangeInfo?.ExchangeList.Count > 0 || Session.Character.IsShopping)
             {
                 return;
@@ -723,7 +718,6 @@ namespace OpenNos.Handler
         /// <param name="shoppingPacket"></param>
         public void Shopping(ShoppingPacket shoppingPacket)
         {
-            Logger.Debug(Session.Character.GenerateIdentity(), shoppingPacket.ToString());
             byte type = shoppingPacket.Type, typeshop = 0;
             int NpcId = shoppingPacket.NpcId;
             if (Session.Character.IsShopping || !Session.HasCurrentMapInstance)
@@ -837,7 +831,6 @@ namespace OpenNos.Handler
         /// <param name="requestNpcPacket"></param>
         public void ShowShop(RequestNpcPacket requestNpcPacket)
         {
-            Logger.Debug(Session.Character.GenerateIdentity(), requestNpcPacket.ToString());
             long owner = requestNpcPacket.Owner;
             if (!Session.HasCurrentMapInstance)
             {

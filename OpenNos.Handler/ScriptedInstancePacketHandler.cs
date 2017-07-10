@@ -153,26 +153,26 @@ namespace OpenNos.Handler
         {
             if (Session.Character.Group?.Raid != null && Session.Character.Group.IsLeader(Session))
             {
-                if (Session.Character.Group.CharacterCount > 4)
+                if (Session.Character.Group.CharacterCount > 4 && Session.Character.Group.Characters.All(s => s.CurrentMapInstance.Portals.Any(p => p.Type == (short)PortalType.Raid)))
                 {
                     if (Session.Character.Group.Raid.FirstMap == null)
                     {
                         Session.Character.Group.Raid.LoadScript(MapInstanceType.RaidInstance);
                     }
                     if (Session.Character.Group.Raid.FirstMap == null) return;
-                    Session.Character.Group.Raid.FirstMap.InstanceBag.Lock = true;
+                    Session.Character.Group.Raid.InstanceBag.Lock = true;
 
-                    Session.Character.Group.Characters.Where(s => s.CurrentMapInstance != Session.CurrentMapInstance).ToList().ForEach(
-                    session =>
-                    {
-                        Session.Character.Group.LeaveGroup(session);
-                        session.SendPacket(session.Character.GenerateRaid(1, true));
-                        session.SendPacket(session.Character.GenerateRaid(2, true));
-                    });
+                    //Session.Character.Group.Characters.Where(s => s.CurrentMapInstance != Session.CurrentMapInstance).ToList().ForEach(
+                    //session =>
+                    //{
+                    //    Session.Character.Group.LeaveGroup(session);
+                    //    session.SendPacket(session.Character.GenerateRaid(1, true));
+                    //    session.SendPacket(session.Character.GenerateRaid(2, true));
+                    //});
 
                     Session.Character.Group.Raid.InstanceBag.Lives = (short)Session.Character.Group.CharacterCount;
 
-                    foreach (ClientSession session in Session.Character.Group.Characters)
+                    foreach (ClientSession session in Session.Character.Group.Characters.GetAllItems())
                     {
                         ServerManager.Instance.ChangeMapInstance(session.Character.CharacterId, session.Character.Group.Raid.FirstMap.MapInstanceId, session.Character.Group.Raid.StartX, session.Character.Group.Raid.StartY);
                         session.SendPacket("raidbf 0 0 25");
@@ -181,6 +181,8 @@ namespace OpenNos.Handler
                         session.SendPacket(session.Character.GenerateRaid(4, false));
                         session.SendPacket(session.Character.GenerateRaid(3, false));
                     }
+
+                    ServerManager.Instance.GroupList.Remove(Session.Character.Group);
 
                     Logger.LogEvent("RAID_START", Session.GenerateIdentity(), $"RaidId: {Session.Character.Group.GroupId}");
                 }

@@ -15,16 +15,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace OpenNos.Core
 {
     //Definitely not the best approach, but it does what it has to do.
-    public class ThreadSafeGenericList<T>
+    public class ThreadSafeGenericList<T> : IDisposable
     {
         #region Members
 
-        private readonly List<T> _list;
-        private readonly object _sync;
+        protected readonly List<T> _list;
+        protected readonly ReaderWriterLockSlim Lock;
+        private bool _disposed;
 
         #endregion
 
@@ -33,7 +35,7 @@ namespace OpenNos.Core
         public ThreadSafeGenericList()
         {
             _list = new List<T>();
-            _sync = new object();
+            Lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
         }
 
         #endregion
@@ -44,10 +46,19 @@ namespace OpenNos.Core
         {
             get
             {
-                lock (_sync)
+                if (!_disposed)
                 {
-                    return _list.Count;
+                    Lock.EnterReadLock();
+                    try
+                    {
+                        return _list.Count;
+                    }
+                    finally
+                    {
+                        Lock.ExitReadLock();
+                    }
                 }
+                return 0;
             }
         }
 
@@ -57,118 +68,251 @@ namespace OpenNos.Core
 
         public void Add(T value)
         {
-            lock (_sync)
+            if (!_disposed)
             {
-                _list.Add(value);
+                Lock.EnterWriteLock();
+                try
+                {
+                    _list.Add(value);
+                }
+                finally
+                {
+                    Lock.ExitWriteLock();
+                }
+            }
+        }
+
+        public void AddRange(List<T> value)
+        {
+            if (!_disposed)
+            {
+                Lock.EnterWriteLock();
+                try
+                {
+                    _list.AddRange(value);
+                }
+                finally
+                {
+                    Lock.ExitWriteLock();
+                }
             }
         }
 
         public bool Any(Func<T, bool> predicate)
         {
-            lock (_sync)
+            if (!_disposed)
             {
-                return _list.Any(predicate);
+                Lock.EnterReadLock();
+                try
+                {
+                    return _list.Any(predicate);
+                }
+                finally
+                {
+                    Lock.ExitReadLock();
+                }
             }
+            return false;
+        }
+
+        public bool All(Func<T, bool> predicate)
+        {
+            if (!_disposed)
+            {
+                Lock.EnterReadLock();
+                try
+                {
+                    return _list.All(predicate);
+                }
+                finally
+                {
+                    Lock.ExitReadLock();
+                }
+            }
+            return false;
         }
 
         public int CountLinq(Func<T, bool> predicate)
         {
-            lock (_sync)
+            if (!_disposed)
             {
-                return _list.Count(predicate);
+                Lock.EnterReadLock();
+                try
+                {
+                    return _list.Count(predicate);
+                }
+                finally
+                {
+                    Lock.ExitReadLock();
+                }
             }
+            return 0;
         }
 
         public void CopyTo(T[] grpmembers)
         {
-            _list.CopyTo(grpmembers);
+            if (!_disposed)
+            {
+                Lock.EnterReadLock();
+                try
+                {
+                    _list.CopyTo(grpmembers);
+                }
+                finally
+                {
+                    Lock.ExitReadLock();
+                }
+            }
         }
 
         public void Clear()
         {
-            lock (_sync)
+            if (!_disposed)
             {
-                _list.Clear();
+                Lock.EnterWriteLock();
+                try
+                {
+                    _list.Clear();
+                }
+                finally
+                {
+                    Lock.ExitWriteLock();
+                }
             }
         }
 
         public T ElementAt(int v)
         {
-            lock (_sync)
+            if (!_disposed)
             {
-                return _list[v];
+                Lock.EnterReadLock();
+                try
+                {
+                    return _list.ElementAt(v);
+                }
+                finally
+                {
+                    Lock.ExitReadLock();
+                }
             }
+            return default(T);
         }
 
         public T FirstOrDefault()
         {
-            lock (_sync)
+            if (!_disposed)
             {
-                return _list.FirstOrDefault();
+                Lock.EnterReadLock();
+                try
+                {
+                    return _list.FirstOrDefault();
+                }
+                finally
+                {
+                    Lock.ExitReadLock();
+                }
             }
+            return default(T);
         }
 
         public T FirstOrDefault(Func<T, bool> predicate)
         {
-            lock (_sync)
+            if (!_disposed)
             {
-                return _list.FirstOrDefault(predicate);
+                Lock.EnterReadLock();
+                try
+                {
+                    return _list.FirstOrDefault(predicate);
+                }
+                finally
+                {
+                    Lock.ExitReadLock();
+                }
             }
+            return default(T);
         }
 
         public T Find(Predicate<T> predicate)
         {
-            lock (_sync)
+            if (!_disposed)
             {
-                return _list.Find(predicate);
+                Lock.EnterReadLock();
+                try
+                {
+                    return _list.Find(predicate);
+                }
+                finally
+                {
+                    Lock.ExitReadLock();
+                }
             }
+            return default(T);
         }
 
         public void ForEach(Action<T> action)
         {
-            lock (_sync)
+            if (!_disposed)
             {
-                _list.ForEach(action);
+                Lock.EnterReadLock();
+                try
+                {
+                    _list.ForEach(action);
+                }
+                finally
+                {
+                    Lock.ExitReadLock();
+                }
             }
         }
 
-        public IEnumerator<T> GetEnumerator()
+        public List<T> GetAllItems()
         {
-            lock (_sync)
+            if (!_disposed)
             {
-                return _list.GetEnumerator();
+                Lock.EnterReadLock();
+                try
+                {
+                    return new List<T>(_list);
+                }
+                finally
+                {
+                    Lock.ExitReadLock();
+                }
             }
+            return new List<T>();
         }
 
         public void RemoveAll(Predicate<T> match)
         {
-            lock (_sync)
+            if (!_disposed)
             {
-                _list.RemoveAll(match);
+                Lock.EnterWriteLock();
+                try
+                {
+                    _list.RemoveAll(match);
+                }
+                finally
+                {
+                    Lock.ExitWriteLock();
+                }
             }
         }
 
-        public T Single(Func<T, bool> p)
+        public void Dispose()
         {
-            lock (_sync)
+            if (!_disposed)
             {
-                return _list.Single(p);
+                _disposed = true;
+                Dispose(true);
+                GC.SuppressFinalize(this);
             }
         }
-
-        public int Sum(Func<T, int> p)
+        protected virtual void Dispose(bool disposing)
         {
-            lock (_sync)
+            if (disposing)
             {
-                return _list.Sum(p);
-            }
-        }
-
-        public IEnumerable<T> Where(Func<T, bool> p)
-        {
-            lock (_sync)
-            {
-                return _list.Where(p);
+                Clear();
+                Lock.Dispose();
             }
         }
 

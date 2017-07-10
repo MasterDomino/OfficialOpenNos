@@ -63,7 +63,6 @@ namespace OpenNos.Handler
                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("CANT_ATTACKNOW"), 0));
                 return;
             }
-            Logger.Debug(Session.Character.GenerateIdentity(), mutliTargetListPacket.ToString());
             if (mutliTargetListPacket.TargetsAmount > 0 && mutliTargetListPacket.TargetsAmount == mutliTargetListPacket.Targets.Count)
             {
                 foreach (MultiTargetListSubPacket subpacket in mutliTargetListPacket.Targets)
@@ -97,7 +96,6 @@ namespace OpenNos.Handler
             }
             if (Session.Character.CanFight && useSkillPacket != null)
             {
-                Logger.Debug(Session.Character.GenerateIdentity(), useSkillPacket.ToString());
 
                 bool isMuted = Session.Character.MuteMessage();
                 if (isMuted || Session.Character.IsVehicled || Session.Character.InvisibleGm)
@@ -120,6 +118,23 @@ namespace OpenNos.Handler
                         if (Session.Character.Hp > 0)
                         {
                             TargetHit(useSkillPacket.CastId, useSkillPacket.MapMonsterId);
+                            int[] fairyWings = Session.Character.GetBuff(BCardType.CardType.EffectSummon, 11);
+                            int random = ServerManager.Instance.RandomNumber();
+                            if (fairyWings[0] > random)
+                            {
+                                Observable.Timer(TimeSpan.FromSeconds(1)).Subscribe(o =>
+                                {
+                                    if (Session?.Character != null)
+                                    {
+                                        CharacterSkill ski = (Session.Character.UseSp ? Session.Character.SkillsSp?.GetAllItems() : Session.Character.Skills?.GetAllItems()).FirstOrDefault(s => s.Skill?.CastId == useSkillPacket.CastId && s.Skill?.UpgradeSkill == 0);
+                                        if (ski != null)
+                                        {
+                                            ski.LastUse = DateTime.Now.AddMilliseconds(ski.Skill.Cooldown * 100 * -1);
+                                            Session.SendPacket($"sr {useSkillPacket.CastId}");
+                                        }
+                                    }
+                                });
+                            }
                         }
                         break;
 
@@ -133,6 +148,23 @@ namespace OpenNos.Handler
                             else
                             {
                                 TargetHit(useSkillPacket.CastId, useSkillPacket.MapMonsterId);
+                            }
+                            int[] fairyWings = Session.Character.GetBuff(BCardType.CardType.EffectSummon, 11);
+                            int random = ServerManager.Instance.RandomNumber();
+                            if (fairyWings[0] > random)
+                            {
+                                Observable.Timer(TimeSpan.FromSeconds(1)).Subscribe(o =>
+                                {
+                                    if (Session?.Character != null)
+                                    {
+                                        CharacterSkill ski = (Session.Character.UseSp ? Session.Character.SkillsSp?.GetAllItems() : Session.Character.Skills?.GetAllItems()).FirstOrDefault(s => s.Skill?.CastId == useSkillPacket.CastId && s.Skill?.UpgradeSkill == 0);
+                                        if (ski != null)
+                                        {
+                                            ski.LastUse = DateTime.Now.AddMilliseconds(ski.Skill.Cooldown * 100 * -1);
+                                            Session.SendPacket($"sr {useSkillPacket.CastId}");
+                                        }
+                                    }
+                                });
                             }
                         }
                         else
@@ -171,7 +203,6 @@ namespace OpenNos.Handler
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("CANT_ATTACK"), 0));
                     return;
                 }
-                Logger.Debug(Session.Character.GenerateIdentity(), useAOESkillPacket.ToString());
                 if (Session.Character.CanFight)
                 {
                     if (Session.Character.Hp > 0)
@@ -194,7 +225,8 @@ namespace OpenNos.Handler
 
                 // calculate damage
                 //int damage = hitRequest.Session.Character.GenerateDamage(this, hitRequest.Skill, ref hitmode);
-                int damage = DamageHelper.Instance.CalculateDamage(new BattleEntity(hitRequest.Session.Character, hitRequest.Skill), new BattleEntity(target.Character, null), hitRequest.Skill, ref hitmode);
+                bool onyxWings = false;
+                int damage = DamageHelper.Instance.CalculateDamage(new BattleEntity(hitRequest.Session.Character, hitRequest.Skill), new BattleEntity(target.Character, null), hitRequest.Skill, ref hitmode, ref onyxWings);
                 if (target.Character.HasGodMode)
                 {
                     damage = 0;
@@ -450,7 +482,7 @@ namespace OpenNos.Handler
                         Session.CurrentMapInstance?.Broadcast($"ct 1 {Session.Character.CharacterId} 1 {Session.Character.CharacterId} {ski.Skill.CastAnimation} {ski.Skill.CastEffect} {ski.Skill.SkillVNum}");
                         Session.CurrentMapInstance?.Broadcast($"su 1 {Session.Character.CharacterId} 1 {targetId} {ski.Skill.SkillVNum} {ski.Skill.Cooldown} {ski.Skill.AttackAnimation} {ski.Skill.Effect} {Session.Character.PositionX} {Session.Character.PositionY} 1 {(int)((double)Session.Character.Hp / Session.Character.HPLoad()) * 100} 0 -1 {ski.Skill.SkillType - 1}");
                         ClientSession target = ServerManager.Instance.GetSessionByCharacterId(targetId) ?? Session;
-                        ski.Skill.BCards.ForEach(s => s.ApplyBCards(target.Character));
+                        ski.Skill.BCards.Where(s => !s.Type.Equals((byte)BCardType.CardType.MeditationSkill)).ToList().ForEach(s => s.ApplyBCards(target.Character));
                     }
                     else if (ski.Skill.TargetType == 1 && ski.Skill.HitType != 1)
                     {
@@ -464,14 +496,14 @@ namespace OpenNos.Handler
                                 {
                                     foreach (ClientSession target in clientSessions)
                                     {
-                                        ski.Skill.BCards.ForEach(s => s.ApplyBCards(target.Character));
+                                        ski.Skill.BCards.Where(s => !s.Type.Equals((byte)BCardType.CardType.MeditationSkill)).ToList().ForEach(s => s.ApplyBCards(target.Character));
                                     }
                                 }
                                 break;
 
                             case 4:
                             case 0:
-                                ski.Skill.BCards.ForEach(c => ski.Skill.BCards.ForEach(s => s.ApplyBCards(Session.Character)));
+                                ski.Skill.BCards.Where(s => !s.Type.Equals((byte)BCardType.CardType.MeditationSkill)).ToList().ForEach(s => s.ApplyBCards(Session.Character));
                                 break;
                         }
                     }

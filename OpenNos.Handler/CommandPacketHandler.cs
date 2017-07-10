@@ -868,7 +868,7 @@ namespace OpenNos.Handler
                 Item iteminfo = ServerManager.Instance.GetItem(vnum);
                 if (iteminfo != null)
                 {
-                    if (iteminfo.IsColored || iteminfo.VNum == 302)
+                    if (iteminfo.IsColored || (iteminfo.ItemType == ItemType.Box && iteminfo.ItemSubType == 3))
                     {
                         if (createItemPacket.Design.HasValue)
                         {
@@ -2366,6 +2366,21 @@ namespace OpenNos.Handler
             }
         }
 
+        public void Unstuck(UnstuckPacket packet)
+        {
+            if (Session?.Character != null)
+            {
+                if (Session.Character.Miniland == Session.Character.MapInstance)
+                {
+                    ServerManager.Instance.JoinMiniland(Session, Session);
+                }
+                else
+                {
+                    ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, Session.Character.MapInstanceId, Session.Character.PositionX, Session.Character.PositionY);
+                }
+            }
+        }
+
         /// <summary>
         /// $Upgrade Command
         /// </summary>
@@ -2637,10 +2652,10 @@ namespace OpenNos.Handler
                 Session.SendPacket(Session.Character.GenerateSay("----- SESSION -----", 13));
                 string ipAddress = session.IpAddress;
                 Session.SendPacket(Session.Character.GenerateSay($"Current IP: {ipAddress}", 13));
-                foreach (int sessionId in CommunicationServiceClient.Instance.RetrieveSessionListWithIp(ipAddress.Substring(6, ipAddress.LastIndexOf(':') - 6)))
+                foreach (int accountId in CommunicationServiceClient.Instance.RetrieveSessionListWithIp(ipAddress.Substring(6, ipAddress.LastIndexOf(':') - 6)))
                 {
-                    ClientSession sessionWithIp = ServerManager.Instance.GetSessionBySessionId(sessionId);
-                    Session.SendPacket(Session.Character.GenerateSay($"SessionId: {sessionWithIp.SessionId} AccountName: {sessionWithIp.Account.Name} CharacterName: {sessionWithIp.Character.Name}", 13));
+                    AccountDTO acc = DAOFactory.AccountDAO.LoadById(accountId);
+                    Session.SendPacket(Session.Character.GenerateSay($"AccountName: {acc.Name}", 13));
                 }
                 Session.SendPacket(Session.Character.GenerateSay("----- ------------ -----", 13));
             }

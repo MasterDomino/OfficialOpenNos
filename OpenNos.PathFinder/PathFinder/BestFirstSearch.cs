@@ -11,6 +11,10 @@ namespace OpenNos.PathFinder
 
         public static List<Node> FindPath(GridPos start, GridPos end, GridPos[,] Grid)
         {
+            if (Grid.GetLength(0) < start.X || Grid.GetLength(1) < start.Y || start.X < 0 || start.Y < 0)
+            {
+                return new List<Node>();
+            }
             Node node = new Node();
             Node[,] grid = new Node[Grid.GetLength(0), Grid.GetLength(1)];
             if (grid[start.X, start.Y] == null)
@@ -290,7 +294,7 @@ namespace OpenNos.PathFinder
         public static List<Node> TracePath(Node node, Node[,] Grid, GridPos[,] MapGrid)
         {
             List<Node> list = new List<Node>();
-            if (MapGrid == null || Grid == null || node.X >= Grid.GetLength(0) || node.Y >= Grid.GetLength(1) || Grid[node.X, node.Y] == null)
+            if (MapGrid == null || Grid == null || node.X >= Grid.GetLength(0) || node.Y >= Grid.GetLength(1) || node.X < 0 || node.Y < 0 || Grid[node.X, node.Y] == null)
             {
                 node.F = 100;
                 list.Add(node);

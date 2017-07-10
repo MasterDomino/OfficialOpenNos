@@ -63,6 +63,10 @@ namespace OpenNos.Handler
                         bzcree.Owner = DAOFactory.CharacterDAO.LoadById(bz.SellerId)?.Name;
                         bzcree.Item = (ItemInstance)DAOFactory.IteminstanceDAO.LoadById(bz.ItemInstanceId);
                     }
+                    else
+                    {
+                        return;
+                    }
                     if (cBuyPacket.Amount <= bzcree.Item.Amount)
                     {
                         if (!Session.Character.Inventory.CanAddItem(bzcree.Item.ItemVNum))

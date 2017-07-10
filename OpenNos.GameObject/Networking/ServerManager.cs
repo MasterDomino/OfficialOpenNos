@@ -224,7 +224,7 @@ namespace OpenNos.GameObject
         public void AskRevive(long characterId)
         {
             ClientSession Session = GetSessionByCharacterId(characterId);
-            if (Session?.HasSelectedCharacter == true)
+            if (Session?.HasSelectedCharacter == true && Session.HasCurrentMapInstance)
             {
                 if (Session.Character.IsVehicled)
                 {
@@ -514,7 +514,7 @@ namespace OpenNos.GameObject
                     {
                         Parallel.ForEach(Groups, group =>
                         {
-                            foreach (ClientSession groupSession in group.Characters)
+                            foreach (ClientSession groupSession in group.Characters.GetAllItems())
                             {
                                 ClientSession groupCharacterSession = Sessions.FirstOrDefault(s => s.Character != null && s.Character.CharacterId == groupSession.Character.CharacterId && s.CurrentMapInstance == groupSession.CurrentMapInstance);
                                 if (groupCharacterSession == null)
@@ -709,7 +709,7 @@ namespace OpenNos.GameObject
 
                         if (grp.GroupType == GroupType.Group)
                         {
-                            foreach (ClientSession groupSession in grp.Characters)
+                            foreach (ClientSession groupSession in grp.Characters.GetAllItems())
                             {
                                 groupSession.SendPacket(groupSession.Character.GeneratePinit());
                                 groupSession.SendPackets(session.Character.GeneratePst());
@@ -722,7 +722,7 @@ namespace OpenNos.GameObject
                         }
                         else
                         {
-                            foreach (ClientSession groupSession in grp.Characters)
+                            foreach (ClientSession groupSession in grp.Characters.GetAllItems())
                             {
                                 session.SendPacket(session.Character.GenerateRaid(1, true));
                                 session.SendPacket(session.Character.GenerateRaid(2, true));
@@ -1265,7 +1265,7 @@ namespace OpenNos.GameObject
                     ThreadSafeGenericList<ClientSession> groupMembers = Groups.FirstOrDefault(s => s.IsMemberOfGroup(charId))?.Characters;
                     if (groupMembers != null)
                     {
-                        foreach (ClientSession session in groupMembers)
+                        foreach (ClientSession session in groupMembers.GetAllItems())
                         {
                             session.SendPacket(session.Character.GeneratePinit());
                             session.Character.Group.Characters.ForEach(s => session.SendPacket(s.Character.GenerateStat()));
@@ -1352,7 +1352,7 @@ namespace OpenNos.GameObject
                 {
                     Parallel.ForEach(Groups, grp =>
                     {
-                        foreach (ClientSession session in grp.Characters)
+                        foreach (ClientSession session in grp.Characters.GetAllItems())
                         {
                             foreach (string str in grp.GeneratePst(session))
                             {
@@ -1745,7 +1745,10 @@ namespace OpenNos.GameObject
             if (sender != null)
             {
                 Tuple<long?, long?> kickedSession = (Tuple<long?, long?>)sender;
-
+                if (!kickedSession.Item1.HasValue && !kickedSession.Item2.HasValue)
+                {
+                    return;
+                }
                 ClientSession targetSession = Sessions.FirstOrDefault(s => (!kickedSession.Item1.HasValue || s.SessionId == kickedSession.Item1.Value)
                 && (!kickedSession.Item1.HasValue || s.Account.AccountId == kickedSession.Item2));
 

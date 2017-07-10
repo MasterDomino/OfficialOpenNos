@@ -204,7 +204,7 @@ namespace OpenNos.GameObject
                                 Item spitem = ServerManager.Instance.GetItem(specialist.HoldingVNum);
                                 return specialist.HoldingVNum == 0 ?
                                     $"e_info 7 {ItemVNum} 0" :
-                                    $"e_info 7 {ItemVNum} 1 {specialist.HoldingVNum} {specialist.SpLevel} {specialist.XP} {CharacterHelper.SPXPData[specialist.SpLevel - 1]} {Upgrade} {CharacterHelper.SlPoint(specialist.SlDamage, 0)} {CharacterHelper.SlPoint(specialist.SlDefence, 1)} {CharacterHelper.SlPoint(specialist.SlElement, 2)} {CharacterHelper.SlPoint(specialist.SlHP, 3)} {CharacterHelper.SPPoint(specialist.SpLevel, Upgrade) - specialist.SlDamage - specialist.SlHP - specialist.SlElement - specialist.SlDefence} {specialist.SpStoneUpgrade} {spitem.FireResistance} {spitem.WaterResistance} {spitem.LightResistance} {spitem.DarkResistance} {specialist.SpDamage} {specialist.SpDefence} {specialist.SpElement} {specialist.SpHP} {specialist.SpFire} {specialist.SpWater} {specialist.SpLight} {specialist.SpDark}";
+                                    $"e_info 7 {ItemVNum} 1 {specialist.HoldingVNum} {specialist.SpLevel} {specialist.XP} {CharacterHelper.SPXPData[(specialist.SpLevel == 0 ? 0 : specialist.SpLevel - 1)]} {Upgrade} {CharacterHelper.SlPoint(specialist.SlDamage, 0)} {CharacterHelper.SlPoint(specialist.SlDefence, 1)} {CharacterHelper.SlPoint(specialist.SlElement, 2)} {CharacterHelper.SlPoint(specialist.SlHP, 3)} {CharacterHelper.SPPoint(specialist.SpLevel, Upgrade) - specialist.SlDamage - specialist.SlHP - specialist.SlElement - specialist.SlDefence} {specialist.SpStoneUpgrade} {spitem.FireResistance} {spitem.WaterResistance} {spitem.LightResistance} {spitem.DarkResistance} {specialist.SpDamage} {specialist.SpDefence} {specialist.SpElement} {specialist.SpHP} {specialist.SpFire} {specialist.SpWater} {specialist.SpLight} {specialist.SpDark}";
 
                             case 4:
                                 return specialist.HoldingVNum == 0 ?
@@ -224,7 +224,7 @@ namespace OpenNos.GameObject
                     return $"e_info 7 {ItemVNum} 0";
 
                 case ItemType.Shell:
-                    return $"e_info 4 {ItemVNum} {Item.LevelMinimum} {Rare} {Item.Price} 0"; // 0 = Number of effects
+                    return $"e_info 9 {ItemVNum} {Design} {Rare} {Item.Price} 0"; // 0 = Number of effects
             }
             return string.Empty;
         }

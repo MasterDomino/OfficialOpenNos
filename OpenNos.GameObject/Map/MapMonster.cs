@@ -272,7 +272,7 @@ namespace OpenNos.GameObject
                 Character character = ServerManager.Instance.Sessions.FirstOrDefault(s => s?.Character != null && s.Character.Hp > 0 && !s.Character.InvisibleGm && !s.Character.Invisible && s.Character.MapInstance == MapInstance && Map.GetDistance(new MapCell { X = MapX, Y = MapY }, new MapCell { X = s.Character.PositionX, Y = s.Character.PositionY }) < (NoticeRange == 0 ? Monster.NoticeRange : NoticeRange))?.Character;
                 if (character != null)
                 {
-                    if (!OnNoticeEvents.Any() && LastEffect.AddSeconds(5) < DateTime.Now && MoveEvent == null)
+                    if (!OnNoticeEvents.Any() && MoveEvent == null)
                     {
                         Target = character.CharacterId;
                         if (!Monster.NoAggresiveIcon)
@@ -393,7 +393,26 @@ namespace OpenNos.GameObject
                     int hitmode = 0;
 
                     // calculate damage
-                    int damage = DamageHelper.Instance.CalculateDamage(new BattleEntity(hitRequest.Session.Character, hitRequest.Skill), new BattleEntity(this), hitRequest.Skill, ref hitmode);
+                    bool onyxWings = false;
+                    int damage = DamageHelper.Instance.CalculateDamage(new BattleEntity(hitRequest.Session.Character, hitRequest.Skill), new BattleEntity(this), hitRequest.Skill, ref hitmode, ref onyxWings);
+                    if (onyxWings)
+                    {
+                        short onyxX = (short)(hitRequest.Session.Character.PositionX + 2);
+                        short onyxY = (short)(hitRequest.Session.Character.PositionY + 2);
+                        int onyxId = MapInstance.GetNextMonsterId();
+                        MapMonster onyx = new MapMonster() { MonsterVNum = 2371, MapX = onyxX, MapY = onyxY, MapMonsterId = onyxId, IsHostile = false, IsMoving = false, ShouldRespawn = false };
+                        MapInstance.Broadcast($"guri 31 1 {hitRequest.Session.Character.CharacterId} {onyxX} {onyxY}");
+                        onyx.Initialize(MapInstance);
+                        MapInstance.AddMonster(onyx);
+                        MapInstance.Broadcast(onyx.GenerateIn());
+                        CurrentHp -= damage / 2;
+                        Observable.Timer(TimeSpan.FromMilliseconds(350)).Subscribe(o =>
+                        {
+                            MapInstance.Broadcast($"su 3 {onyxId} 3 {MapMonsterId} -1 0 -1 {hitRequest.Skill.Effect} -1 -1 1 92 {damage / 2} 0 0");
+                            MapInstance.RemoveMonster(onyx);
+                            MapInstance.Broadcast(onyx.GenerateOut());
+                        });
+                    }
                     hitRequest.Skill.BCards.Where(s => s.Type.Equals((byte)CardType.Buff)).ToList().ForEach(s => s.ApplyBCards(this));
                     if (DamageList.ContainsKey(hitRequest.Session.Character.CharacterId))
                     {
@@ -713,7 +732,8 @@ namespace OpenNos.GameObject
             if (Monster != null && ((DateTime.Now - LastSkill).TotalMilliseconds >= 1000 + (Monster.BasicCooldown * 200) || npcMonsterSkill != null))
             {
                 int hitmode = 0;
-                int damage = DamageHelper.Instance.CalculateDamage(new BattleEntity(this), new BattleEntity(targetSession.Character, null), npcMonsterSkill?.Skill, ref hitmode);
+                bool onyxWings = false;
+                int damage = DamageHelper.Instance.CalculateDamage(new BattleEntity(this), new BattleEntity(targetSession.Character, null), npcMonsterSkill?.Skill, ref hitmode, ref onyxWings);
 
                 if (npcMonsterSkill != null)
                 {
