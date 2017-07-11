@@ -105,6 +105,7 @@ namespace OpenNos.World
             try
             {
                 exitHandler += ExitHandler;
+                AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionHandler;
                 NativeMethods.SetConsoleCtrlHandler(exitHandler, true);
             }
             catch (Exception ex)
@@ -143,6 +144,22 @@ namespace OpenNos.World
                 Console.ReadKey();
                 return;
             }
+        }
+
+        static void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
+        {
+            ServerManager.Instance.InShutdown = true;
+            Logger.Error((Exception)e.ExceptionObject);
+            Logger.Log.Debug("Server crashed! Rebooting gracefully...");
+            string serverGroup = ConfigurationManager.AppSettings["ServerGroup"];
+            int port = Convert.ToInt32(ConfigurationManager.AppSettings["WorldPort"]);
+            CommunicationServiceClient.Instance.UnregisterWorldServer(ServerManager.Instance.WorldId);
+
+            ServerManager.Instance.Shout(string.Format(Language.Instance.GetMessageFromKey("SHUTDOWN_SEC"), 5));
+            ServerManager.Instance.SaveAll();
+
+            Process.Start("OpenNos.World.exe");
+            Environment.Exit(1);
         }
 
         private static bool ExitHandler(CtrlType sig)

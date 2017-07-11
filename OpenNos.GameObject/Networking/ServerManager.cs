@@ -93,6 +93,8 @@ namespace OpenNos.GameObject
 
         #region Properties
 
+        public bool InShutdown;
+
         public static ServerManager Instance => _instance ?? (_instance = new ServerManager());
 
         public MapInstance ArenaInstance { get; private set; }
@@ -1235,6 +1237,7 @@ namespace OpenNos.GameObject
                     return;
                 }
             }
+            InShutdown = true;
             Instance.SaveAll();
             CommunicationServiceClient.Instance.UnregisterWorldServer(WorldId);
             Environment.Exit(0);

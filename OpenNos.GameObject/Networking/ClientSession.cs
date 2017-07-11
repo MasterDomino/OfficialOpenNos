@@ -528,6 +528,10 @@ namespace OpenNos.GameObject
 
         private void TriggerHandler(string packetHeader, string packet, bool force, bool ignoreAuthority = false)
         {
+            if (ServerManager.Instance.InShutdown)
+            {
+                return;
+            }
             if (!IsDisposing)
             {
                 HandlerMethodReference methodReference = HandlerMethods.ContainsKey(packetHeader) ? HandlerMethods[packetHeader] : null;
