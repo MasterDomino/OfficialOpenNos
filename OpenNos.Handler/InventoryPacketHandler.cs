@@ -402,7 +402,7 @@ namespace OpenNos.Handler
                                     int backpack = targetSession.Character.HaveBackpack() ? 1 : 0;
                                     long maxGold = ServerManager.Instance.MaxGold;
 
-                                    if (targetExchange == null)
+                                    if (targetExchange == null || Session.Character.ExchangeInfo == null)
                                     {
                                         return;
                                     }
