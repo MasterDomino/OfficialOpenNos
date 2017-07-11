@@ -112,6 +112,10 @@ namespace OpenNos.GameObject
 
         public void AddBuff(Buff indicator)
         {
+            if (indicator?.Card == null)
+            {
+                return;
+            }
             Buff[indicator.Card.CardId] = indicator;
             indicator.RemainingTime = indicator.Card.Duration;
             indicator.Start = DateTime.Now;
