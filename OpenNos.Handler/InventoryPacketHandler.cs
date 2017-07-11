@@ -84,6 +84,11 @@ namespace OpenNos.Handler
         /// <param name="depositPacket"></param>
         public void Deposit(DepositPacket depositPacket)
         {
+            if (depositPacket.Inventory == InventoryType.Bazaar || depositPacket.Inventory == InventoryType.FamilyWareHouse || depositPacket.Inventory == InventoryType.Miniland)
+            {
+                return;
+            }
+
             ItemInstance item = Session.Character.Inventory.LoadBySlotAndType(depositPacket.Slot, depositPacket.Inventory);
             ItemInstance itemdest = Session.Character.Inventory.LoadBySlotAndType(depositPacket.NewSlot, depositPacket.PartnerBackpack ? InventoryType.PetWarehouse : InventoryType.Warehouse);
 
