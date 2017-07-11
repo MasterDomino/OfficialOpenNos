@@ -1980,26 +1980,28 @@ namespace OpenNos.Handler
 
                 Session.SendPacket(Session.Character.GenerateSpk(message, 5));
                 CharacterDTO receiver = DAOFactory.CharacterDAO.LoadByName(characterName);
-                if (receiver.CharacterId == Session.Character.CharacterId)
-                {
-                    return;
-                }
+                int? sentChannelId = null;
                 if (receiver != null)
                 {
+                    if (receiver.CharacterId == Session.Character.CharacterId)
+                    {
+                        return;
+                    }
                     if (Session.Character.IsBlockedByCharacter(receiver.CharacterId))
                     {
                         Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("BLACKLIST_BLOCKED")));
                         return;
                     }
+                    sentChannelId = CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+                    {
+                        DestinationCharacterId = receiver.CharacterId,
+                        SourceCharacterId = Session.Character.CharacterId,
+                        SourceWorldId = ServerManager.Instance.WorldId,
+                        Message = Session.Character.GenerateSpk(message, Session.Account.Authority == AuthorityType.GameMaster ? 15 : 5),
+                        Type = packetsplit[0] == "GM" ? MessageType.WhisperGM : MessageType.Whisper
+                    });
                 }
-                int? sentChannelId = CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
-                {
-                    DestinationCharacterId = receiver.CharacterId,
-                    SourceCharacterId = Session.Character.CharacterId,
-                    SourceWorldId = ServerManager.Instance.WorldId,
-                    Message = Session.Character.GenerateSpk(message, Session.Account.Authority == AuthorityType.GameMaster ? 15 : 5),
-                    Type = packetsplit[0] == "GM" ? MessageType.WhisperGM : MessageType.Whisper
-                });
+
                 if (sentChannelId == null)
                 {
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("USER_NOT_CONNECTED")));
