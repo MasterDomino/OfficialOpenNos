@@ -565,9 +565,7 @@ namespace OpenNos.GameObject
 
         public void FamilyRefresh(long FamilyId)
         {
-            InFamilyRefreshMode = true;
             CommunicationServiceClient.Instance.UpdateFamily(ServerGroup, FamilyId);
-            SpinWait.SpinUntil(() => !InFamilyRefreshMode);
         }
 
         public MapInstance GenerateMapInstance(short MapId, MapInstanceType type, InstanceBag mapclock)
