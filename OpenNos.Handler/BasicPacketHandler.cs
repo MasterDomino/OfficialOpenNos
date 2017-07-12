@@ -1828,6 +1828,12 @@ namespace OpenNos.Handler
             Session.SendPacket("zzim");
             Session.SendPacket($"twk 2 {Session.Character.CharacterId} {Session.Account.Name} {Session.Character.Name} shtmxpdlfeoqkr");
 
+            long? familyId = DAOFactory.FamilyCharacterDAO.LoadByCharacterId(Session.Character.CharacterId)?.FamilyId;
+            if (familyId.HasValue)
+            {
+                Session.Character.Family = ServerManager.Instance.FamilyList[familyId.Value];
+            }
+
             // qstlist target sqst bf
             Session.SendPacket("act6");
             Session.SendPacket(Session.Character.GenerateFaction());

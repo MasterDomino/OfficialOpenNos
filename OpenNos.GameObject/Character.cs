@@ -37,6 +37,7 @@ namespace OpenNos.GameObject
 
         private Random _random;
         private byte _speed;
+        private Family _family;
         private readonly object _syncObj = new object();
 
         #endregion
@@ -118,10 +119,11 @@ namespace OpenNos.GameObject
         {
             get
             {
-                lock (ServerManager.Instance.FamilyList)
-                {
-                    return ServerManager.Instance.FamilyList.FirstOrDefault(s => s?.FamilyCharacters.Any(c => c != null && c.CharacterId == CharacterId) == true);
-                }
+                return _family;
+            }
+            set
+            {
+                _family = value;
             }
         }
 

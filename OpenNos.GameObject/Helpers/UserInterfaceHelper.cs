@@ -61,19 +61,19 @@ namespace OpenNos.GameObject.Helpers
             switch (type)
             {
                 case 0:
-                    familyordered = ServerManager.Instance.FamilyList.OrderByDescending(s => s.FamilyExperience).ToList();
+                    familyordered = ServerManager.Instance.FamilyList.GetAllItems().OrderByDescending(s => s.FamilyExperience).ToList();
                     break;
 
                 case 1:
-                    familyordered = ServerManager.Instance.FamilyList.OrderByDescending(s => s.FamilyLogs.Where(l => l.FamilyLogType == FamilyLogType.FamilyXP && l.Timestamp.AddDays(30) < DateTime.Now).ToList().Sum(c => long.Parse(c.FamilyLogData.Split('|')[1]))).ToList();//use month instead log
+                    familyordered = ServerManager.Instance.FamilyList.GetAllItems().OrderByDescending(s => s.FamilyLogs.Where(l => l.FamilyLogType == FamilyLogType.FamilyXP && l.Timestamp.AddDays(30) < DateTime.Now).ToList().Sum(c => long.Parse(c.FamilyLogData.Split('|')[1]))).ToList();//use month instead log
                     break;
 
                 case 2:
-                    familyordered = ServerManager.Instance.FamilyList.OrderByDescending(s => s.FamilyCharacters.Sum(c => c.Character.Reput)).ToList();//use month instead log
+                    familyordered = ServerManager.Instance.FamilyList.GetAllItems().OrderByDescending(s => s.FamilyCharacters.Sum(c => c.Character.Reput)).ToList();//use month instead log
                     break;
 
                 case 3:
-                    familyordered = ServerManager.Instance.FamilyList.OrderByDescending(s => s.FamilyCharacters.Sum(c => c.Character.Reput)).ToList();
+                    familyordered = ServerManager.Instance.FamilyList.GetAllItems().OrderByDescending(s => s.FamilyCharacters.Sum(c => c.Character.Reput)).ToList();
                     break;
             }
             int i = 0;

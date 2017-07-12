@@ -115,7 +115,7 @@ namespace OpenNos.GameObject
 
         public MapInstance FamilyArenaInstance { get; private set; }
 
-        public List<Family> FamilyList { get; set; }
+        public ThreadSafeSortedList<long, Family> FamilyList { get; set; }
 
         public int GoldDropRate { get; set; }
 
@@ -1423,8 +1423,7 @@ namespace OpenNos.GameObject
         private void LoadFamilies()
         {
             // TODO: Parallelization of family load
-            FamilyList = new List<Family>();
-            ThreadSafeSortedList<long, Family> _family = new ThreadSafeSortedList<long, Family>();
+            FamilyList = new ThreadSafeSortedList<long, Family>();
             Parallel.ForEach(DAOFactory.FamilyDAO.LoadAll(), familyDTO =>
             {
                 Family family = (Family)familyDTO;
@@ -1444,9 +1443,8 @@ namespace OpenNos.GameObject
                     }
                 }
                 family.FamilyLogs = DAOFactory.FamilyLogDAO.LoadByFamilyId(family.FamilyId).ToList();
-                _family[family.FamilyId] = family;
+                FamilyList[family.FamilyId] = family;
             });
-            FamilyList.AddRange(_family.GetAllItems());
         }
 
         private void LoadScriptedInstances()
@@ -1536,63 +1534,57 @@ namespace OpenNos.GameObject
             // TODO: Parallelization of family.
             long FamilyId = (long)sender;
             FamilyDTO famdto = DAOFactory.FamilyDAO.LoadById(FamilyId);
-            Family fam = FamilyList.FirstOrDefault(s => s.FamilyId == FamilyId);
+            Family fam = FamilyList[FamilyId];
             lock (FamilyList)
             {
                 if (famdto != null)
                 {
+                    Family newFam = (Family)famdto;
+
                     if (fam != null)
                     {
-                        MapInstance lod = fam.LandOfDeath;
-                        FamilyList.Remove(fam);
-                        fam = (Family)famdto;
-                        fam.FamilyCharacters = new List<FamilyCharacter>();
-                        foreach (FamilyCharacterDTO famchar in DAOFactory.FamilyCharacterDAO.LoadByFamilyId(fam.FamilyId).ToList())
-                        {
-                            fam.FamilyCharacters.Add((FamilyCharacter)famchar);
-                        }
-                        FamilyCharacter familyCharacter = fam.FamilyCharacters.FirstOrDefault(s => s.Authority == FamilyAuthority.Head);
-                        if (familyCharacter != null)
-                        {
-                            fam.Warehouse = new Inventory((Character)familyCharacter.Character);
-                            foreach (ItemInstanceDTO inventory in DAOFactory.IteminstanceDAO.LoadByCharacterId(familyCharacter.CharacterId).Where(s => s.Type == InventoryType.FamilyWareHouse).ToList())
-                            {
-                                inventory.CharacterId = familyCharacter.CharacterId;
-                                fam.Warehouse[inventory.Id] = (ItemInstance)inventory;
-                            }
-                        }
-                        fam.FamilyLogs = DAOFactory.FamilyLogDAO.LoadByFamilyId(fam.FamilyId).ToList();
-                        fam.LandOfDeath = lod;
-                        FamilyList.Add(fam);
+                        newFam.LandOfDeath = fam.LandOfDeath;
                     }
-                    else
+
+                    newFam.FamilyCharacters = new List<FamilyCharacter>();
+                    foreach (FamilyCharacterDTO famchar in DAOFactory.FamilyCharacterDAO.LoadByFamilyId(famdto.FamilyId).ToList())
                     {
-                        Family fami = (Family)famdto;
-                        fami.FamilyCharacters = new List<FamilyCharacter>();
-                        foreach (FamilyCharacterDTO famchar in DAOFactory.FamilyCharacterDAO.LoadByFamilyId(fami.FamilyId).ToList())
+                        newFam.FamilyCharacters.Add((FamilyCharacter)famchar);
+                    }
+                    FamilyCharacter familyCharacter = newFam.FamilyCharacters.FirstOrDefault(s => s.Authority == FamilyAuthority.Head);
+                    if (familyCharacter != null)
+                    {
+                        newFam.Warehouse = new Inventory((Character)familyCharacter.Character);
+                        foreach (ItemInstanceDTO inventory in DAOFactory.IteminstanceDAO.LoadByCharacterId(familyCharacter.CharacterId).Where(s => s.Type == InventoryType.FamilyWareHouse).ToList())
                         {
-                            fami.FamilyCharacters.Add((FamilyCharacter)famchar);
+                            inventory.CharacterId = familyCharacter.CharacterId;
+                            newFam.Warehouse[inventory.Id] = (ItemInstance)inventory;
                         }
-                        FamilyCharacter familyCharacter = fami.FamilyCharacters.FirstOrDefault(s => s.Authority == FamilyAuthority.Head);
-                        if (familyCharacter != null)
-                        {
-                            fami.Warehouse = new Inventory((Character)familyCharacter.Character);
-                            foreach (ItemInstanceDTO inventory in DAOFactory.IteminstanceDAO.LoadByCharacterId(familyCharacter.CharacterId).Where(s => s.Type == InventoryType.FamilyWareHouse).ToList())
-                            {
-                                inventory.CharacterId = familyCharacter.CharacterId;
-                                fami.Warehouse[inventory.Id] = (ItemInstance)inventory;
-                            }
-                        }
-                        fami.FamilyLogs = DAOFactory.FamilyLogDAO.LoadByFamilyId(fami.FamilyId).ToList();
-                        FamilyList.Add(fami);
+                    }
+
+                    newFam.FamilyLogs = DAOFactory.FamilyLogDAO.LoadByFamilyId(famdto.FamilyId).ToList();
+
+
+                    FamilyList[FamilyId] = newFam;
+
+                    foreach (ClientSession sess in Sessions.Where(s => newFam.FamilyCharacters.Any(f => f.CharacterId.Equals(s.Character.CharacterId))))
+                    {
+                        sess.Character.Family = newFam;
                     }
                 }
                 else if (fam != null)
                 {
-                    FamilyList.Remove(fam);
+                    lock (FamilyList)
+                    {
+                        FamilyList.Remove(fam.FamilyId);
+                    }
+                    foreach (ClientSession sess in Sessions.Where(s => fam.FamilyCharacters.Any(f => f.CharacterId.Equals(s.Character.CharacterId))))
+                    {
+                        sess.Character.Family = null;
+                        sess.SendPacket(sess.Character.GenerateGidx());
+                    }
                 }
             }
-            InFamilyRefreshMode = false;
         }
 
         private void OnMessageSentToCharacter(object sender, EventArgs e)
