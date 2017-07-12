@@ -514,6 +514,31 @@ namespace OpenNos.Handler
         }
 
         /// <summary>
+        /// $Maintenance Command
+        /// </summary>
+        /// <param name="maintenancePacket"></param>
+        public void PlanMaintenance(MaintenancePacket maintenancePacket)
+        {
+            if (maintenancePacket != null)
+            {
+                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Maintenance]Delay: {maintenancePacket.Delay} Duration: {maintenancePacket.Duration} Reason: {maintenancePacket.Reason}");
+                DateTime dateStart = DateTime.Now.AddMinutes(maintenancePacket.Delay).RoundToNearest(TimeSpan.FromMinutes(15));
+                MaintenanceLogDTO maintenance = new MaintenanceLogDTO()
+                {
+                    DateEnd = dateStart.AddMinutes(maintenancePacket.Duration),
+                    DateStart = dateStart,
+                    Reason = maintenancePacket.Reason
+                };
+                DAOFactory.MaintenanceLogDAO.Insert(maintenance);
+                Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay(MaintenancePacket.ReturnHelp(), 10));
+            }
+        }
+
+        /// <summary>
         /// $JLvl Command
         /// </summary>
         /// <param name="changeJobLevelPacket"></param>
@@ -721,6 +746,7 @@ namespace OpenNos.Handler
                         propertyInfo.SetValue(Session.Character, Convert.ChangeType(characterEditPacket.Data, propertyInfo.PropertyType));
                         ServerManager.Instance.ChangeMap(Session.Character.CharacterId);
                         Session.Character.Save();
+                        Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
                     }
                 }
             }
