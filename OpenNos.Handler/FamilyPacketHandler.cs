@@ -152,7 +152,7 @@ namespace OpenNos.Handler
                 };
                 DAOFactory.FamilyDAO.InsertOrUpdate(ref family);
 
-                Logger.LogEvent("GUILDLEAVE", Session.GenerateIdentity(), $"[{family.FamilyId}]");
+                Logger.LogEvent("GUILDCREATE", Session.GenerateIdentity(), $"[FamilyCreate][{family.FamilyId}]");
 
                 ServerManager.Instance.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("FAMILY_FOUNDED"), name), 0));
                 foreach (ClientSession session in Session.Character.Group.Characters.GetAllItems())
@@ -239,7 +239,7 @@ namespace OpenNos.Handler
                     ccmsg = $"[GM {Session.Character.Name}]:{msg}";
                 }
 
-                Logger.LogEvent("GUILDCHAT", Session.GenerateIdentity(), $"[{Session.Character.Family.FamilyId}]Message: {msg}");
+                Logger.LogEvent("GUILDCHAT", Session.GenerateIdentity(), $"[FamilyChat][{Session.Character.Family.FamilyId}]Message: {msg}");
 
                 CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
                 {
@@ -249,8 +249,7 @@ namespace OpenNos.Handler
                     Message = ccmsg,
                     Type = MessageType.FamilyChat
                 });
-                List<ClientSession> tmp = ServerManager.Instance.Sessions.ToList();
-                foreach (ClientSession s in tmp)
+                foreach (ClientSession s in ServerManager.Instance.Sessions.ToList())
                 {
                     if (s.HasSelectedCharacter && s.Character.Family != null && Session.Character.Family != null && s.Character.Family?.FamilyId == Session.Character.Family?.FamilyId)
                     {
@@ -280,11 +279,9 @@ namespace OpenNos.Handler
         public void FamilyDeposit(FDepositPacket fDepositPacket)
         {
             if (Session.Character.Family == null || !(Session.Character.FamilyCharacter.Authority == FamilyAuthority.Head
-              || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Assistant
-              || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Member && Session.Character.Family.MemberAuthorityType != FamilyAuthorityType.NONE)
-              || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager && Session.Character.Family.ManagerAuthorityType != FamilyAuthorityType.NONE)
-              )
-             )
+                || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Assistant
+                || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Member && Session.Character.Family.MemberAuthorityType != FamilyAuthorityType.NONE)
+                || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager && Session.Character.Family.ManagerAuthorityType != FamilyAuthorityType.NONE)))
             {
                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("NO_FAMILY_RIGHT")));
                 return;
@@ -327,7 +324,7 @@ namespace OpenNos.Handler
             DAOFactory.FamilyDAO.Delete(fam.FamilyId);
             ServerManager.Instance.FamilyRefresh(fam.FamilyId);
 
-            Logger.LogEvent("GUILDLEAVE", Session.GenerateIdentity(), $"[{fam.FamilyId}]");
+            Logger.LogEvent("GUILDDISMISS", Session.GenerateIdentity(), $"[FamilyDismiss][{fam.FamilyId}]");
 
             CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
             {
@@ -420,7 +417,7 @@ namespace OpenNos.Handler
                 DAOFactory.FamilyCharacterDAO.Delete(Session.Character.Name);
 
                 Logger.LogEvent("GUILDCOMMAND", Session.GenerateIdentity(), $"[FamilyLeave][{Session.Character.Family.FamilyId}]");
-                Logger.LogEvent("GUILDLEAVE", Session.GenerateIdentity(), $"[{Session.Character.Family.FamilyId}]");
+                Logger.LogEvent("GUILDLEAVE", Session.GenerateIdentity(), $"[FamilyLeave][{Session.Character.Family.FamilyId}]");
 
                 Session.Character.Family.InsertFamilyLog(FamilyLogType.FamilyManaged, Session.Character.Name);
                 Session.Character.Family = null;
@@ -434,15 +431,12 @@ namespace OpenNos.Handler
         /// <param name="gListPacket"></param>
         public void FamilyList(GListPacket gListPacket)
         {
-            if (Session.Character.Family != null && Session.Character.FamilyCharacter != null)
+            if (Session.Character.Family != null && Session.Character.FamilyCharacter != null && gListPacket.Type == 2)
             {
-                if (gListPacket.Type == 2)
-                {
-                    Session.SendPacket(Session.Character.GenerateGInfo());
-                    Session.SendPacket(Session.Character.GenerateFamilyMember());
-                    Session.SendPacket(Session.Character.GenerateFamilyMemberMessage());
-                    Session.SendPacket(Session.Character.GenerateFamilyMemberExp());
-                }
+                Session.SendPacket(Session.Character.GenerateGInfo());
+                Session.SendPacket(Session.Character.GenerateFamilyMember());
+                Session.SendPacket(Session.Character.GenerateFamilyMemberMessage());
+                Session.SendPacket(Session.Character.GenerateFamilyMemberExp());
             }
         }
 
@@ -457,7 +451,7 @@ namespace OpenNos.Handler
                 return;
             }
 
-            Logger.LogEvent("GUILDMGMT", Session.GenerateIdentity(), $"[{Session.Character.Family.FamilyId}]TargetId: {familyManagementPacket.TargetId} AuthorityType: {familyManagementPacket.FamilyAuthorityType.ToString()}");
+            Logger.LogEvent("GUILDMGMT", Session.GenerateIdentity(), $"[FamilyManagement][{Session.Character.Family.FamilyId}]TargetId: {familyManagementPacket.TargetId} AuthorityType: {familyManagementPacket.FamilyAuthorityType.ToString()}");
 
             if (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Member || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager)
             {
@@ -495,9 +489,7 @@ namespace OpenNos.Handler
                     Session.Character.FamilyCharacter.Authority = FamilyAuthority.Assistant;
                     FamilyCharacterDTO chara2 = Session.Character.FamilyCharacter;
                     DAOFactory.FamilyCharacterDAO.InsertOrUpdate(ref chara2);
-
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("DONE")));
-
                     break;
 
                 case FamilyAuthority.Assistant:
@@ -526,7 +518,6 @@ namespace OpenNos.Handler
 
                     chara = targetSession.Character.FamilyCharacter;
                     DAOFactory.FamilyCharacterDAO.InsertOrUpdate(ref chara);
-
                     break;
 
                 case FamilyAuthority.Manager:
@@ -547,10 +538,8 @@ namespace OpenNos.Handler
                     }
                     targetSession.Character.FamilyCharacter.Authority = FamilyAuthority.Manager;
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("DONE")));
-
                     chara = targetSession.Character.FamilyCharacter;
                     DAOFactory.FamilyCharacterDAO.InsertOrUpdate(ref chara);
-
                     break;
 
                 case FamilyAuthority.Member:
@@ -657,9 +646,9 @@ namespace OpenNos.Handler
         public void FamilyRepos(FReposPacket fReposPacket)
         {
             if (Session.Character.Family == null || !(Session.Character.FamilyCharacter.Authority == FamilyAuthority.Head
-             || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Assistant
-             || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Member && Session.Character.Family.MemberAuthorityType == FamilyAuthorityType.ALL)
-             || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager && Session.Character.Family.ManagerAuthorityType == FamilyAuthorityType.ALL)))
+                || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Assistant
+                || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Member && Session.Character.Family.MemberAuthorityType == FamilyAuthorityType.ALL)
+                || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager && Session.Character.Family.ManagerAuthorityType == FamilyAuthorityType.ALL)))
             {
                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("NO_FAMILY_RIGHT")));
                 return;
@@ -743,9 +732,9 @@ namespace OpenNos.Handler
         public void FamilyWithdraw(FWithdrawPacket fWithdrawPacket)
         {
             if (Session.Character.Family == null || !(Session.Character.FamilyCharacter.Authority == FamilyAuthority.Head
-           || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Assistant
-           || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Member && Session.Character.Family.MemberAuthorityType == FamilyAuthorityType.ALL)
-           || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager && Session.Character.Family.ManagerAuthorityType == FamilyAuthorityType.ALL)))
+                || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Assistant
+                || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Member && Session.Character.Family.MemberAuthorityType == FamilyAuthorityType.ALL)
+                || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager && Session.Character.Family.ManagerAuthorityType == FamilyAuthorityType.ALL)))
             {
                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("NO_FAMILY_RIGHT")));
                 return;
@@ -786,7 +775,6 @@ namespace OpenNos.Handler
         public void InviteFamily(string packet)
         {
             string[] packetsplit = packet.Split(' ');
-
             if (packetsplit.Length != 3)
             {
                 return;
@@ -803,7 +791,6 @@ namespace OpenNos.Handler
             }
 
             Logger.LogEvent("GUILDCOMMAND", Session.GenerateIdentity(), $"[FamilyInvite][{Session.Character.Family.FamilyId}]Message: {packetsplit[2]}");
-
             ClientSession otherSession = ServerManager.Instance.GetSessionByCharacterName(packetsplit[2]);
             if (otherSession == null)
             {
@@ -862,7 +849,7 @@ namespace OpenNos.Handler
                     DAOFactory.FamilyCharacterDAO.InsertOrUpdate(ref familyCharacter);
                     inviteSession.Character.Family.InsertFamilyLog(FamilyLogType.UserManaged, inviteSession.Character.Name, Session.Character.Name);
 
-                    Logger.LogEvent("GUILDJOIN", Session.GenerateIdentity(), $"[{inviteSession.Character.Family.FamilyId}]");
+                    Logger.LogEvent("GUILDJOIN", Session.GenerateIdentity(), $"[FamilyJoin][{inviteSession.Character.Family.FamilyId}]");
 
                     CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
                     {

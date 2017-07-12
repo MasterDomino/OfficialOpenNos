@@ -192,19 +192,19 @@ namespace OpenNos.GameObject
                     {
                         BoxInstance specialist = (BoxInstance)this;
 
-                        // 0 = NOSMATE pearl 1= npc pearl 2 = sp box 3 = raid box 4= VEHICLE pearl
-                        // 5=fairy pearl
+                        // 0 = NOSMATE pearl 1= npc pearl 2 = sp box 3 = raid box 4 = VEHICLE pearl
+                        // 5 = fairy pearl
                         switch (subtype)
                         {
                             case 0:
                                 return specialist.HoldingVNum == 0 ?
-    $"e_info 7 {ItemVNum} 0" : $"e_info 7 {ItemVNum} 1 {specialist.HoldingVNum} {specialist.SpLevel} {specialist.XP} 100 {specialist.SpDamage} {specialist.SpDefence}";
+                                    $"e_info 7 {ItemVNum} 0" : $"e_info 7 {ItemVNum} 1 {specialist.HoldingVNum} {specialist.SpLevel} {specialist.XP} 100 {specialist.SpDamage} {specialist.SpDefence}";
 
                             case 2:
                                 Item spitem = ServerManager.Instance.GetItem(specialist.HoldingVNum);
                                 return specialist.HoldingVNum == 0 ?
                                     $"e_info 7 {ItemVNum} 0" :
-                                    $"e_info 7 {ItemVNum} 1 {specialist.HoldingVNum} {specialist.SpLevel} {specialist.XP} {CharacterHelper.SPXPData[(specialist.SpLevel == 0 ? 0 : specialist.SpLevel - 1)]} {Upgrade} {CharacterHelper.SlPoint(specialist.SlDamage, 0)} {CharacterHelper.SlPoint(specialist.SlDefence, 1)} {CharacterHelper.SlPoint(specialist.SlElement, 2)} {CharacterHelper.SlPoint(specialist.SlHP, 3)} {CharacterHelper.SPPoint(specialist.SpLevel, Upgrade) - specialist.SlDamage - specialist.SlHP - specialist.SlElement - specialist.SlDefence} {specialist.SpStoneUpgrade} {spitem.FireResistance} {spitem.WaterResistance} {spitem.LightResistance} {spitem.DarkResistance} {specialist.SpDamage} {specialist.SpDefence} {specialist.SpElement} {specialist.SpHP} {specialist.SpFire} {specialist.SpWater} {specialist.SpLight} {specialist.SpDark}";
+                                    $"e_info 7 {ItemVNum} 1 {specialist.HoldingVNum} {specialist.SpLevel} {specialist.XP} {CharacterHelper.SPXPData[specialist.SpLevel == 0 ? 0 : specialist.SpLevel - 1]} {Upgrade} {CharacterHelper.SlPoint(specialist.SlDamage, 0)} {CharacterHelper.SlPoint(specialist.SlDefence, 1)} {CharacterHelper.SlPoint(specialist.SlElement, 2)} {CharacterHelper.SlPoint(specialist.SlHP, 3)} {CharacterHelper.SPPoint(specialist.SpLevel, Upgrade) - specialist.SlDamage - specialist.SlHP - specialist.SlElement - specialist.SlDefence} {specialist.SpStoneUpgrade} {spitem.FireResistance} {spitem.WaterResistance} {spitem.LightResistance} {spitem.DarkResistance} {specialist.SpDamage} {specialist.SpDefence} {specialist.SpElement} {specialist.SpHP} {specialist.SpFire} {specialist.SpWater} {specialist.SpLight} {specialist.SpDark}";
 
                             case 4:
                                 return specialist.HoldingVNum == 0 ?
@@ -234,8 +234,7 @@ namespace OpenNos.GameObject
             _random = new Random();
         }
 
-        public void RarifyItem(ClientSession session, RarifyMode mode, RarifyProtection protection,
-            bool isCommand = false)
+        public void RarifyItem(ClientSession session, RarifyMode mode, RarifyProtection protection,bool isCommand = false)
         {
             double raren2 = 80;
             double raren1 = 70;
@@ -293,8 +292,6 @@ namespace OpenNos.GameObject
                         break;
 
                     case RarifyMode.Reduced:
-
-                        // TODO: Reduced Item Amount
                         if (session.Character.Gold < (long)(goldprice * reducedpricefactor))
                         {
                             return;
@@ -309,8 +306,6 @@ namespace OpenNos.GameObject
                         break;
 
                     case RarifyMode.Normal:
-
-                        // TODO: Normal Item Amount
                         if (session.Character.Gold < goldprice)
                         {
                             return;
@@ -447,26 +442,23 @@ namespace OpenNos.GameObject
                 }
                 SetRarityPoint();
             }
-            else
+            else if (mode != RarifyMode.Drop && session != null)
             {
-                if (mode != RarifyMode.Drop && session != null)
+                if (protection == RarifyProtection.None)
                 {
-                    if (protection == RarifyProtection.None)
-                    {
-                        Logger.LogEvent("GAMBLE", session.GenerateIdentity(), $"Type: DESTROY IIId: {Id} ItemVnum: {ItemVNum}");
+                    Logger.LogEvent("GAMBLE", session.GenerateIdentity(), $"[RarifyItem]Protection: {protection.ToString()} IIId: {Id} ItemVnum: {ItemVNum} Result: Destroyed");
 
-                        session.Character.DeleteItemByItemInstanceId(Id);
-                        session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("RARIFY_FAILED"), 11));
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("RARIFY_FAILED"), 0));
-                    }
-                    else
-                    {
-                        Logger.LogEvent("GAMBLE", session.GenerateIdentity(), $"Type: FAIL IIId: {Id} ItemVnum: {ItemVNum}");
+                    session.Character.DeleteItemByItemInstanceId(Id);
+                    session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("RARIFY_FAILED"), 11));
+                    session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("RARIFY_FAILED"), 0));
+                }
+                else
+                {
+                    Logger.LogEvent("GAMBLE", session.GenerateIdentity(), $"[RarifyItem]Protection: {protection.ToString()} IIId: {Id} ItemVnum: {ItemVNum} Result: Fail");
 
-                        session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("RARIFY_FAILED_ITEM_SAVED"), 11));
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("RARIFY_FAILED_ITEM_SAVED"), 0));
-                        session.CurrentMapInstance.Broadcast(session.Character.GenerateEff(3004), session.Character.MapX, session.Character.MapY);
-                    }
+                    session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("RARIFY_FAILED_ITEM_SAVED"), 11));
+                    session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("RARIFY_FAILED_ITEM_SAVED"), 0));
+                    session.CurrentMapInstance.Broadcast(session.Character.GenerateEff(3004), session.Character.MapX, session.Character.MapY);
                 }
             }
             if (mode != RarifyMode.Drop && session != null)
@@ -587,6 +579,8 @@ namespace OpenNos.GameObject
                     int rnd = ServerManager.Instance.RandomNumber();
                     if (rnd < upsuccess[Upgrade + itemToSum.Upgrade])
                     {
+                        Logger.LogEvent("SUM_ITEM", session.GenerateIdentity(), $"[SumItem]ItemId {Id} ItemToSumId: {itemToSum.Id} Upgrade: {Upgrade} ItemToSumUpgrade: {itemToSum.Upgrade} Result: Success");
+
                         Upgrade += (byte)(itemToSum.Upgrade + 1);
                         DarkResistance += (short)(itemToSum.DarkResistance + itemToSum.Item.DarkResistance);
                         LightResistance += (short)(itemToSum.LightResistance + itemToSum.Item.LightResistance);
@@ -601,6 +595,8 @@ namespace OpenNos.GameObject
                     }
                     else
                     {
+                        Logger.LogEvent("SUM_ITEM", session.GenerateIdentity(), $"[SumItem]ItemId {Id} ItemToSumId: {itemToSum.Id} Upgrade: {Upgrade} ItemToSumUpgrade: {itemToSum.Upgrade} Result: Fail");
+
                         session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("SUM_FAILED"), 0));
                         session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("SUM_FAILED"), 11));
                         session.SendPacket(UserInterfaceHelper.Instance.GenerateGuri(19, 1, session.Character.CharacterId, 1332));
@@ -666,8 +662,6 @@ namespace OpenNos.GameObject
                         break;
 
                     case UpgradeMode.Reduced:
-
-                        // TODO: Reduced Item Amount
                         if (session.Character.Gold < (long)(goldprice[Upgrade] * reducedpricefactor))
                         {
                             session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NOT_ENOUGH_MONEY"), 10));
@@ -712,8 +706,6 @@ namespace OpenNos.GameObject
                         break;
 
                     case UpgradeMode.Normal:
-
-                        // TODO: Normal Item Amount
                         if (session.Character.Inventory.CountItem(cellaVnum) < cella[Upgrade])
                         {
                             return;
@@ -764,7 +756,7 @@ namespace OpenNos.GameObject
                 {
                     if (rnd < upfail[Upgrade])
                     {
-                        Logger.LogEvent("UPGRADE_WEAPON", session.GenerateIdentity(), $"Protection: {protection.ToString()} IIId: {Id} Upgrade: {wearable.Upgrade} Result: Fail");
+                        Logger.LogEvent("UPGRADE_ITEM", session.GenerateIdentity(), $"[UpgradeItem]ItemType: {wearable.Item.ItemType} Protection: {protection.ToString()} IIId: {Id} Upgrade: {wearable.Upgrade} Result: Fail");
 
                         if (protection == UpgradeProtection.None)
                         {
@@ -781,7 +773,7 @@ namespace OpenNos.GameObject
                     }
                     else if (rnd < upfix[Upgrade])
                     {
-                        Logger.LogEvent("UPGRADE_WEAPON", session.GenerateIdentity(), $"Protection: {protection.ToString()} IIId: {Id} Upgrade: {wearable.Upgrade} Result: Fixed");
+                        Logger.LogEvent("UPGRADE_ITEM", session.GenerateIdentity(), $"[UpgradeItem]ItemType: {wearable.Item.ItemType} Protection: {protection.ToString()} IIId: {Id} Upgrade: {wearable.Upgrade} Result: Fixed");
 
                         session.CurrentMapInstance.Broadcast(session.Character.GenerateEff(3004), session.Character.MapX, session.Character.MapY);
                         wearable.IsFixed = true;
@@ -790,7 +782,7 @@ namespace OpenNos.GameObject
                     }
                     else
                     {
-                        Logger.LogEvent("UPGRADE_WEAPON", session.GenerateIdentity(), $"Protection: {protection.ToString()} IIId: {Id} Upgrade: {wearable.Upgrade} Result: Success");
+                        Logger.LogEvent("UPGRADE_ITEM", session.GenerateIdentity(), $"[UpgradeItem]ItemType: {wearable.Item.ItemType} Protection: {protection.ToString()} IIId: {Id} Upgrade: {wearable.Upgrade} Result: Success");
 
                         session.CurrentMapInstance.Broadcast(session.Character.GenerateEff(3005), session.Character.MapX, session.Character.MapY);
                         session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("UPGRADE_SUCCESS"), 12));
@@ -807,7 +799,7 @@ namespace OpenNos.GameObject
                 {
                     if (rnd < upfix[Upgrade])
                     {
-                        Logger.LogEvent("UPGRADE_WEAPON", session.GenerateIdentity(), $"Protection: {protection.ToString()} IIId: {Id} Upgrade: {wearable.Upgrade} Result: Fixed");
+                        Logger.LogEvent("UPGRADE_ITEM", session.GenerateIdentity(), $"[UpgradeItem]ItemType: {wearable.Item.ItemType} Protection: {protection.ToString()} IIId: {Id} Upgrade: {wearable.Upgrade} Result: Fixed");
 
                         session.CurrentMapInstance.Broadcast(session.Character.GenerateEff(3004), session.Character.MapX, session.Character.MapY);
                         wearable.IsFixed = true;
@@ -816,7 +808,7 @@ namespace OpenNos.GameObject
                     }
                     else if (rnd < upfail[Upgrade] + upfix[Upgrade])
                     {
-                        Logger.LogEvent("UPGRADE_WEAPON", session.GenerateIdentity(), $"Protection: {protection.ToString()} IIId: {Id} Upgrade: {wearable.Upgrade} Result: Fail");
+                        Logger.LogEvent("UPGRADE_ITEM", session.GenerateIdentity(), $"[UpgradeItem]ItemType: {wearable.Item.ItemType} Protection: {protection.ToString()} IIId: {Id} Upgrade: {wearable.Upgrade} Result: Fail");
 
                         if (protection == UpgradeProtection.None)
                         {
@@ -833,7 +825,7 @@ namespace OpenNos.GameObject
                     }
                     else
                     {
-                        Logger.LogEvent("UPGRADE_WEAPON", session.GenerateIdentity(), $"Protection: {protection.ToString()} IIId: {Id} Upgrade: {wearable.Upgrade} Result: Success");
+                        Logger.LogEvent("UPGRADE_ITEM", session.GenerateIdentity(), $"[UpgradeItem]ItemType: {wearable.Item.ItemType} Protection: {protection.ToString()} IIId: {Id} Upgrade: {wearable.Upgrade} Result: Success");
 
                         session.CurrentMapInstance.Broadcast(session.Character.GenerateEff(3005), session.Character.MapX, session.Character.MapY);
                         session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("UPGRADE_SUCCESS"), 12));
