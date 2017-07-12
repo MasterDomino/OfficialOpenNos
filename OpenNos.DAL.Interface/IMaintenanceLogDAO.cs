@@ -25,6 +25,8 @@ namespace OpenNos.DAL.Interface
 
         IEnumerable<MaintenanceLogDTO> LoadAll();
 
+        MaintenanceLogDTO LoadFirst();
+
         #endregion
     }
 }

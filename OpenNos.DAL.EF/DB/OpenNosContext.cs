@@ -39,9 +39,9 @@ namespace OpenNos.DAL.EF.DB
 
         public virtual DbSet<BazaarItem> BazaarItem { get; set; }
 
-        public virtual DbSet<Card> Card { get; set; }
-
         public virtual DbSet<BCard> BCard { get; set; }
+
+        public virtual DbSet<Card> Card { get; set; }
 
         public virtual DbSet<CellonOption> CellonOption { get; set; }
 
@@ -50,8 +50,6 @@ namespace OpenNos.DAL.EF.DB
         public virtual DbSet<CharacterRelation> CharacterRelation { get; set; }
 
         public virtual DbSet<CharacterSkill> CharacterSkill { get; set; }
-
-        public virtual DbSet<RollGeneratedItem> RollGeneratedItem { get; set; }
 
         public virtual DbSet<Combo> Combo { get; set; }
 
@@ -70,6 +68,8 @@ namespace OpenNos.DAL.EF.DB
         public virtual DbSet<ItemInstance> ItemInstance { get; set; }
 
         public virtual DbSet<Mail> Mail { get; set; }
+
+        public virtual DbSet<MaintenanceLog> MaintenanceLog { get; set; }
 
         public virtual DbSet<Map> Map { get; set; }
 
@@ -103,6 +103,8 @@ namespace OpenNos.DAL.EF.DB
 
         public virtual DbSet<RespawnMapType> RespawnMapType { get; set; }
 
+        public virtual DbSet<RollGeneratedItem> RollGeneratedItem { get; set; }
+
         public virtual DbSet<ScriptedInstance> ScriptedInstance { get; set; }
 
         public virtual DbSet<Shop> Shop { get; set; }
@@ -115,11 +117,9 @@ namespace OpenNos.DAL.EF.DB
 
         public virtual DbSet<StaticBonus> StaticBonus { get; set; }
 
-        public virtual DbSet<Teleporter> Teleporter { get; set; }
-
         public virtual DbSet<StaticBuff> StaticBuff { get; set; }
 
-        public virtual DbSet<MaintenanceLog> MaintenanceLog { get; set; }
+        public virtual DbSet<Teleporter> Teleporter { get; set; }
 
         #endregion
 
@@ -295,22 +295,22 @@ namespace OpenNos.DAL.EF.DB
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Mail>()
-                 .HasOptional(e => e.Item)
-                 .WithMany(e => e.Mail)
-                 .HasForeignKey(e => e.AttachmentVNum)
-                 .WillCascadeOnDelete(false);
+                .HasOptional(e => e.Item)
+                .WithMany(e => e.Mail)
+                .HasForeignKey(e => e.AttachmentVNum)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<RollGeneratedItem>()
-               .HasRequired(e => e.OriginalItem)
-               .WithMany(e => e.RollGeneratedItem)
-               .HasForeignKey(e => e.OriginalItemVNum)
-               .WillCascadeOnDelete(false);
+                .HasRequired(e => e.OriginalItem)
+                .WithMany(e => e.RollGeneratedItem)
+                .HasForeignKey(e => e.OriginalItemVNum)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<RollGeneratedItem>()
-               .HasRequired(e => e.ItemGenerated)
-               .WithMany(e => e.RollGeneratedItem2)
-               .HasForeignKey(e => e.ItemGeneratedVNum)
-               .WillCascadeOnDelete(false);
+                .HasRequired(e => e.ItemGenerated)
+                .WithMany(e => e.RollGeneratedItem2)
+                .HasForeignKey(e => e.ItemGeneratedVNum)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Map>()
                 .HasMany(e => e.Character)
@@ -370,10 +370,10 @@ namespace OpenNos.DAL.EF.DB
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Map>()
-               .HasMany(e => e.ScriptedInstance)
-               .WithRequired(e => e.Map)
-               .HasForeignKey(e => e.MapId)
-               .WillCascadeOnDelete(false);
+                .HasMany(e => e.ScriptedInstance)
+                .WithRequired(e => e.Map)
+                .HasForeignKey(e => e.MapId)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Map>()
                 .HasMany(e => e.Teleporter)
@@ -381,16 +381,16 @@ namespace OpenNos.DAL.EF.DB
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<BCard>()
-             .HasOptional(e => e.Skill)
-              .WithMany(e => e.BCards)
-              .HasForeignKey(e => e.SkillVNum)
-              .WillCascadeOnDelete(false);
+                .HasOptional(e => e.Skill)
+                .WithMany(e => e.BCards)
+                .HasForeignKey(e => e.SkillVNum)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<BCard>()
-            .HasOptional(e => e.NpcMonster)
-             .WithMany(e => e.BCards)
-             .HasForeignKey(e => e.NpcMonsterVNum)
-             .WillCascadeOnDelete(false);
+                .HasOptional(e => e.NpcMonster)
+                .WithMany(e => e.BCards)
+                .HasForeignKey(e => e.NpcMonsterVNum)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<BCard>()
                 .HasOptional(e => e.Card)
@@ -400,9 +400,9 @@ namespace OpenNos.DAL.EF.DB
 
             modelBuilder.Entity<BCard>()
                 .HasOptional(e => e.Item)
-                 .WithMany(e => e.BCards)
-                 .HasForeignKey(e => e.ItemVNum)
-                 .WillCascadeOnDelete(false);
+                .WithMany(e => e.BCards)
+                .HasForeignKey(e => e.ItemVNum)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<MapTypeMap>()
                 .HasRequired(e => e.Map)

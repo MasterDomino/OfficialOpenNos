@@ -196,7 +196,7 @@ namespace OpenNos.Login.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Server is currently under maintenance. Maintenance estimated time {0}.
+        ///   Looks up a localized string similar to Server is currently under maintenance. Maintenance estimated time: {0} reason: {1}.
         /// </summary>
         internal static string MAINTENANCE {
             get {
@@ -228,6 +228,15 @@ namespace OpenNos.Login.Resource {
         internal static string NEW_CONNECT {
             get {
                 return ResourceManager.GetString("NEW_CONNECT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 404: No world servers found! please try again later..
+        /// </summary>
+        internal static string NO_WORLDSERVERS {
+            get {
+                return ResourceManager.GetString("NO_WORLDSERVERS", resourceCulture);
             }
         }
         

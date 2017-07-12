@@ -18,11 +18,14 @@ using OpenNos.DAL.Interface;
 using OpenNos.Data;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenNos.DAL.EF
 {
     public class MaintenanceLogDAO : MappingBaseDAO<MaintenanceLog, MaintenanceLogDTO>, IMaintenanceLogDAO
     {
+        #region Methods
+
         public MaintenanceLogDTO Insert(MaintenanceLogDTO maintenanceLog)
         {
             try
@@ -52,5 +55,23 @@ namespace OpenNos.DAL.EF
                 }
             }
         }
+
+        public MaintenanceLogDTO LoadFirst()
+        {
+            try
+            {
+                using (var context = DataAccessHelper.CreateContext())
+                {
+                    return _mapper.Map<MaintenanceLogDTO>(context.MaintenanceLog.FirstOrDefault(m => m.DateEnd > DateTime.Now && m.DateStart <= DateTime.Now));
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                return null;
+            }
+        }
+
+        #endregion
     }
 }
