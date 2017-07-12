@@ -133,8 +133,6 @@ namespace OpenNos.GameObject
 
         public bool InBazaarRefreshMode { get; set; }
 
-        public bool InFamilyRefreshMode { get; set; }
-
         public List<MailDTO> Mails { get; private set; }
 
         public List<int> MateIds { get; internal set; } = new List<int>();
@@ -565,9 +563,7 @@ namespace OpenNos.GameObject
 
         public void FamilyRefresh(long FamilyId)
         {
-            InFamilyRefreshMode = true;
             CommunicationServiceClient.Instance.UpdateFamily(ServerGroup, FamilyId);
-            SpinWait.SpinUntil(() => !InFamilyRefreshMode);
         }
 
         public MapInstance GenerateMapInstance(short MapId, MapInstanceType type, InstanceBag mapclock)
