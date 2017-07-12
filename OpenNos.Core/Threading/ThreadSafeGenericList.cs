@@ -188,7 +188,7 @@ namespace OpenNos.Core
                 Lock.EnterReadLock();
                 try
                 {
-                    return _list.ElementAt(v);
+                    return _list[v];
                 }
                 finally
                 {

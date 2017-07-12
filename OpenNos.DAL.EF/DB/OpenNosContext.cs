@@ -119,6 +119,8 @@ namespace OpenNos.DAL.EF.DB
 
         public virtual DbSet<StaticBuff> StaticBuff { get; set; }
 
+        public virtual DbSet<MaintenanceLog> MaintenanceLog { get; set; }
+
         #endregion
 
         #region Methods

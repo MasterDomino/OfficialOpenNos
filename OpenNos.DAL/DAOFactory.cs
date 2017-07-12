@@ -67,6 +67,7 @@ namespace OpenNos.DAL
         private static IStaticBonusDAO _staticBonusDAO;
         private static IStaticBuffDAO _staticBuffDAO;
         private static ITeleporterDAO _teleporterDAO;
+        private static IMaintenanceLogDAO _maintenanceLogDAO;
 
         #endregion
 
@@ -105,6 +106,26 @@ namespace OpenNos.DAL
                 }
 
                 return _accountDAO;
+            }
+        }
+
+        public static IMaintenanceLogDAO MaintenanceLogDAO
+        {
+            get
+            {
+                if (_maintenanceLogDAO == null)
+                {
+                    if (_useMock)
+                    {
+                        _maintenanceLogDAO = new MaintenanceLogDAO();
+                    }
+                    else
+                    {
+                        _maintenanceLogDAO = new EF.MaintenanceLogDAO();
+                    }
+                }
+
+                return _maintenanceLogDAO;
             }
         }
 

@@ -12,16 +12,25 @@
  * GNU General Public License for more details.
  */
 
-namespace OpenNos.Domain
+using System;
+using System.ComponentModel.DataAnnotations;
+
+namespace OpenNos.DAL.EF
 {
-    public enum MessageType : byte
+    public class MaintenanceLog
     {
-        Whisper = 0,
-        PrivateChat = 1,
-        Family = 2,
-        Shout = 3,
-        FamilyChat = 4,
-        WhisperSupport = 5,
-        WhisperGM = 6
+        #region Properties
+
+        public DateTime DateEnd { get; set; }
+
+        public DateTime DateStart { get; set; }
+
+        [Key]
+        public long LogId { get; set; }
+
+        [MaxLength(255)]
+        public string Reason { get; set; }
+
+        #endregion
     }
 }

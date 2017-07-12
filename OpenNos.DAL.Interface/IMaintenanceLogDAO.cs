@@ -12,16 +12,19 @@
  * GNU General Public License for more details.
  */
 
-namespace OpenNos.Domain
+using OpenNos.Data;
+using System.Collections.Generic;
+
+namespace OpenNos.DAL.Interface
 {
-    public enum MessageType : byte
+    public interface IMaintenanceLogDAO : IMappingBaseDAO
     {
-        Whisper = 0,
-        PrivateChat = 1,
-        Family = 2,
-        Shout = 3,
-        FamilyChat = 4,
-        WhisperSupport = 5,
-        WhisperGM = 6
+        #region Methods
+
+        MaintenanceLogDTO Insert(MaintenanceLogDTO maintenanceLog);
+
+        IEnumerable<MaintenanceLogDTO> LoadAll();
+
+        #endregion
     }
 }
