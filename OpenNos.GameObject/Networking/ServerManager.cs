@@ -133,8 +133,6 @@ namespace OpenNos.GameObject
 
         public bool InBazaarRefreshMode { get; set; }
 
-        public bool InFamilyRefreshMode { get; set; }
-
         public List<MailDTO> Mails { get; private set; }
 
         public List<int> MateIds { get; internal set; } = new List<int>();

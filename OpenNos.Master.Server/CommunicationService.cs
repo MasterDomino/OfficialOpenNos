@@ -110,7 +110,6 @@ namespace OpenNos.Master.Server
             {
                 return;
             }
-
             MSManager.Instance.ConnectedAccounts.RemoveAll(c => c.AccountId.Equals(accountId));
         }
 
@@ -127,8 +126,6 @@ namespace OpenNos.Master.Server
                 {
                     world.ServiceClient.GetClientProxy<ICommunicationClient>().CharacterDisconnected(characterId);
                 }
-                account.CharacterId = 0;
-                account.ConnectedWorld = null;
             }
         }
 
@@ -231,6 +228,10 @@ namespace OpenNos.Master.Server
                 ServiceClient = CurrentClient,
                 ChannelId = Enumerable.Range(1, 30).Except(MSManager.Instance.WorldServers.Where(w => w.WorldGroup.Equals(worldServer.WorldGroup)).OrderBy(w => w.ChannelId).Select(w => w.ChannelId)).First()
             };
+            if (worldServer.EndPointPort == 4003)
+            {
+                ws.ChannelId = 51;
+            }
             MSManager.Instance.WorldServers.Add(ws);
             return ws.ChannelId;
         }
@@ -249,8 +250,13 @@ namespace OpenNos.Master.Server
                 }
                 lastGroup = world.WorldGroup;
 
-                int currentlyConnectedAccounts = MSManager.Instance.ConnectedAccounts.CountLinq(a => a.ConnectedWorld?.WorldGroup == world.WorldGroup);
+                int currentlyConnectedAccounts = MSManager.Instance.ConnectedAccounts.CountLinq(a => a.ConnectedWorld?.ChannelId == world.ChannelId);
                 int channelcolor = (int)Math.Round(((double)currentlyConnectedAccounts / world.AccountLimit) * 20) + 1;
+
+                if (world.ChannelId == 51)
+                {
+                    continue;
+                }
 
                 channelPacket += $"{world.Endpoint.IpAddress}:{world.Endpoint.TcpPort}:{channelcolor}:{worldCount}.{world.ChannelId}.{world.WorldGroup} ";
             }
@@ -421,7 +427,7 @@ namespace OpenNos.Master.Server
 
         public void PulseAccount(long accountId)
         {
-            Logger.Log.Debug("PulseAccount");
+            //Logger.Log.Debug("PulseAccount");
             if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
             {
                 return;
