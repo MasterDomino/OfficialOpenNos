@@ -72,7 +72,7 @@ namespace OpenNos.Handler
 
                     if (delInstance != null)
                     {
-                        Logger.LogEvent("ITEM_DELETE", Session.GenerateIdentity(), $"IIId: {delInstance.Id} ItemVNum: {delInstance.ItemVNum} Amount: {delInstance.Amount} MapId: {Session.CurrentMapInstance?.Map.MapId} MapX: {Session.Character.PositionX} MapY: {Session.Character.PositionY}");
+                        Logger.LogEvent("ITEM_DELETE", Session.GenerateIdentity(), $"[DeleteItem]IIId: {delInstance.Id} ItemVNum: {delInstance.ItemVNum} Amount: {delInstance.Amount} MapId: {Session.CurrentMapInstance?.Map.MapId} MapX: {Session.Character.PositionX} MapY: {Session.Character.PositionY}");
                     }
                     break;
             }
@@ -106,7 +106,7 @@ namespace OpenNos.Handler
 
             // actually move the item from source to destination
             Session.Character.Inventory.DepositItem(depositPacket.Inventory, depositPacket.Slot, depositPacket.Amount, depositPacket.NewSlot, ref item, ref itemdest, depositPacket.PartnerBackpack);
-            Logger.LogEvent("STASH_DEPOSIT", Session.GenerateIdentity(), $"OldIIId: {item?.Id} NewIIId: {itemdest?.Id} Amount: {depositPacket?.Amount} PartnerBackpack: {depositPacket?.PartnerBackpack}");
+            Logger.LogEvent("STASH_DEPOSIT", Session.GenerateIdentity(), $"[Deposit]OldIIId: {item?.Id} NewIIId: {itemdest?.Id} Amount: {depositPacket?.Amount} PartnerBackpack: {depositPacket?.PartnerBackpack}");
         }
 
         /// <summary>
@@ -181,9 +181,6 @@ namespace OpenNos.Handler
                     break;
 
                 case 7:
-                    inventory = Session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>(equipmentInfoPacket.Slot, InventoryType.Specialist);
-                    break;
-
                 case 10:
                     inventory = Session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>(equipmentInfoPacket.Slot, InventoryType.Specialist);
                     break;
@@ -356,7 +353,7 @@ namespace OpenNos.Handler
                             {
                                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateModal(string.Format(Language.Instance.GetMessageFromKey("YOU_ASK_FOR_EXCHANGE"), targetSession.Character.Name), 0));
 
-                                Logger.LogEvent("TRADE_REQUEST", Session.GenerateIdentity(), $"[{targetSession.GenerateIdentity()}]");
+                                Logger.LogEvent("TRADE_REQUEST", Session.GenerateIdentity(), $"[ExchangeRequest][{targetSession.GenerateIdentity()}]");
 
                                 Session.Character.TradeRequests.Add(targetSession.Character.CharacterId);
                                 targetSession.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#req_exc^2^{Session.Character.CharacterId} #req_exc^5^{Session.Character.CharacterId} {string.Format(Language.Instance.GetMessageFromKey("INCOMING_EXCHANGE"), Session.Character.Name)}"));
@@ -413,7 +410,7 @@ namespace OpenNos.Handler
                                     }
                                     if (Session.Character.ExchangeInfo.Validate && targetExchange.Validate)
                                     {
-                                        Logger.LogEvent("TRADE_ACCEPT", Session.GenerateIdentity(), $"[{targetSession.GenerateIdentity()}]");
+                                        Logger.LogEvent("TRADE_ACCEPT", Session.GenerateIdentity(), $"[ExchangeAccept][{targetSession.GenerateIdentity()}]");
                                         Session.Character.ExchangeInfo.Confirm = true;
                                         if (targetExchange.Confirm && Session.Character.ExchangeInfo.Confirm)
                                         {
@@ -512,12 +509,11 @@ namespace OpenNos.Handler
                             }
 
                             Session.SendPacket($"exc_list 1 {exchangeRequestPacket.CharacterId} -1");
-                            ExchangeInfo exc = new ExchangeInfo
+                            Session.Character.ExchangeInfo = new ExchangeInfo
                             {
                                 TargetCharacterId = exchangeRequestPacket.CharacterId,
                                 Confirm = false
                             };
-                            Session.Character.ExchangeInfo = exc;
                             ServerManager.Instance.SetProperty(exchangeRequestPacket.CharacterId, nameof(Character.ExchangeInfo), new ExchangeInfo { TargetCharacterId = Session.Character.CharacterId, Confirm = false });
                             Session.CurrentMapInstance?.Broadcast(Session, $"exc_list 1 {Session.Character.CharacterId} -1", ReceiverType.OnlySomeone, string.Empty, exchangeRequestPacket.CharacterId);
                         }
@@ -643,7 +639,7 @@ namespace OpenNos.Handler
                                         {
                                             Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateSay($"{string.Format(Language.Instance.GetMessageFromKey("ITEM_ACQUIRED_LOD"), Session.Character.Name)}: {inv.Item.Name} x {mapItem.Amount}", 10));
                                         }
-                                        Logger.LogEvent("CHARACTER_ITEM_GET", Session.GenerateIdentity(), $"IIId: {inv.Id} ItemVNum: {inv.ItemVNum} Amount: {amount}");
+                                        Logger.LogEvent("CHARACTER_ITEM_GET", Session.GenerateIdentity(), $"[GetItem]IIId: {inv.Id} ItemVNum: {inv.ItemVNum} Amount: {amount}");
                                     }
                                     else
                                     {
@@ -663,13 +659,13 @@ namespace OpenNos.Handler
                                     Session.SendPacket(Session.Character.GenerateIcon(1, 1, 1046));
                                 }
                                 Session.Character.Gold += droppedGold.GoldAmount;
-                                Logger.LogEvent("CHARACTER_ITEM_GET", Session.GenerateIdentity(), $"Gold: {droppedGold.GoldAmount}");
+                                Logger.LogEvent("CHARACTER_ITEM_GET", Session.GenerateIdentity(), $"[GetItem]Gold: {droppedGold.GoldAmount}");
                                 Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {mapItem.GetItemInstance().Item.Name} x {droppedGold.GoldAmount}", 12));
                             }
                             else
                             {
                                 Session.Character.Gold = maxGold;
-                                Logger.LogEvent("CHARACTER_ITEM_GET", Session.GenerateIdentity(), $"MaxGold");
+                                Logger.LogEvent("CHARACTER_ITEM_GET", Session.GenerateIdentity(), "[MaxGold]");
                                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("MAX_GOLD"), 0));
                             }
                             Session.SendPacket(Session.Character.GenerateGold());
@@ -785,7 +781,7 @@ namespace OpenNos.Handler
                             {
                                 Session.Character.DeleteItem(invitem.Type, invitem.Slot);
                             }
-                            Logger.LogEvent("CHARACTER_ITEM_DROP", Session.GenerateIdentity(), $"IIId: {invitem.Id} ItemVNum: {droppedItem.ItemVNum} Amount: {droppedItem.Amount} MapId: {Session.CurrentMapInstance.Map.MapId} MapX: {droppedItem.PositionX} MapY: {droppedItem.PositionY}");
+                            Logger.LogEvent("CHARACTER_ITEM_DROP", Session.GenerateIdentity(), $"[PutItem]IIId: {invitem.Id} ItemVNum: {droppedItem.ItemVNum} Amount: {droppedItem.Amount} MapId: {Session.CurrentMapInstance.Map.MapId} MapX: {droppedItem.PositionX} MapY: {droppedItem.PositionY}");
                             Session.CurrentMapInstance?.Broadcast($"drop {droppedItem.ItemVNum} {droppedItem.TransportId} {droppedItem.PositionX} {droppedItem.PositionY} {droppedItem.Amount} 0 -1");
                         }
                         else
@@ -899,7 +895,7 @@ namespace OpenNos.Handler
         /// <param name="reposPacket"></param>
         public void Repos(ReposPacket reposPacket)
         {
-            Logger.LogEvent("STASH_REPOS", Session.GenerateIdentity(), $"OldSlot: {reposPacket.OldSlot} NewSlot: {reposPacket.NewSlot} Amount: {reposPacket.Amount} PartnerBackpack: {reposPacket.PartnerBackpack}");
+            Logger.LogEvent("STASH_REPOS", Session.GenerateIdentity(), $"[ItemReposition]OldSlot: {reposPacket.OldSlot} NewSlot: {reposPacket.NewSlot} Amount: {reposPacket.Amount} PartnerBackpack: {reposPacket.PartnerBackpack}");
             if (reposPacket.OldSlot.Equals(reposPacket.NewSlot))
             {
                 return;
@@ -934,7 +930,7 @@ namespace OpenNos.Handler
         }
 
         [Packet("sortopen")]
-        public void SortOpen(string packet)
+        public void SortOpen()
         {
             bool gravity = true;
             while (gravity)
@@ -945,18 +941,15 @@ namespace OpenNos.Handler
                     for (short x = 0; x < 44; x++)
                     {
                         InventoryType type = i == 0 ? InventoryType.Specialist : InventoryType.Costume;
-                        if (Session.Character.Inventory.LoadBySlotAndType<ItemInstance>(x, type) == null)
+                        if (Session.Character.Inventory.LoadBySlotAndType<ItemInstance>(x, type) == null && Session.Character.Inventory.LoadBySlotAndType<ItemInstance>((short)(x + 1), type) != null)
                         {
-                            if (Session.Character.Inventory.LoadBySlotAndType<ItemInstance>((short)(x + 1), type) != null)
+                            Session.Character.Inventory.MoveItem(type, type, (short)(x + 1), 1, x, out ItemInstance inv, out ItemInstance invdest);
+                            if (invdest is WearableInstance wearableInstance)
                             {
-                                Session.Character.Inventory.MoveItem(type, type, (short)(x + 1), 1, x, out ItemInstance inv, out ItemInstance invdest);
-                                if (invdest is WearableInstance wearableInstance)
-                                {
-                                    Session.SendPacket(invdest.GenerateInventoryAdd());
-                                }
-                                Session.Character.DeleteItem(type, (short)(x + 1));
-                                gravity = true;
+                                Session.SendPacket(invdest.GenerateInventoryAdd());
                             }
+                            Session.Character.DeleteItem(type, (short)(x + 1));
+                            gravity = true;
                         }
                     }
                     Session.Character.Inventory.Reorder(Session, i == 0 ? InventoryType.Specialist : InventoryType.Costume);
@@ -1715,7 +1708,7 @@ namespace OpenNos.Handler
             ItemInstance item2 = previousInventory.DeepCopy();
             item2.Id = Guid.NewGuid();
             item2.Amount = withdrawPacket.Amount;
-            Logger.LogEvent("STASH_WITHDRAW", Session.GenerateIdentity(), $"OldIIId: {previousInventory.Id} NewIIId: {item2.Id} Amount: {withdrawPacket.Amount} PartnerBackpack: {withdrawPacket.PetBackpack}");
+            Logger.LogEvent("STASH_WITHDRAW", Session.GenerateIdentity(), $"[Withdraw]OldIIId: {previousInventory.Id} NewIIId: {item2.Id} Amount: {withdrawPacket.Amount} PartnerBackpack: {withdrawPacket.PetBackpack}");
             Session.Character.Inventory.RemoveItemAmountFromInventory(withdrawPacket.Amount, previousInventory.Id);
             Session.Character.Inventory.AddToInventory(item2, item2.Item.Type);
             previousInventory = Session.Character.Inventory.LoadBySlotAndType(withdrawPacket.Slot, withdrawPacket.PetBackpack ? InventoryType.PetWarehouse : InventoryType.Warehouse);
