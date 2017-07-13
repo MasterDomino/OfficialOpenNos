@@ -51,7 +51,7 @@ namespace OpenNos.Handler
             if (channelpacket == null)
             {
                 Logger.Log.Error("Could not retrieve Worldserver groups. Please make sure they've already been registered.");
-                _session.SendPacket($"fail {string.Format(Language.Instance.GetMessageFromKey("MAINTENANCE"), DateTime.Now)}");
+                _session.SendPacket($"fail {string.Format(Language.Instance.GetMessageFromKey("NO_WORLDSERVERS"))}");
             }
 
             return channelpacket;
@@ -112,10 +112,18 @@ namespace OpenNos.Handler
 
                             default:
                                 {
+                                    if (loadedAccount.Authority == AuthorityType.User)
+                                    {
+                                        MaintenanceLogDTO maintenanceLog = DAOFactory.MaintenanceLogDAO.LoadFirst();
+                                        if (maintenanceLog != null)
+                                        {
+                                            _session.SendPacket($"fail {string.Format(Language.Instance.GetMessageFromKey("MAINTENANCE"), maintenanceLog.DateEnd, maintenanceLog.Reason)}");
+                                            return;
+                                        }
+                                    }
+
                                     int newSessionId = SessionFactory.Instance.GenerateSessionId();
                                     Logger.Log.DebugFormat(Language.Instance.GetMessageFromKey("CONNECTION"), user.Name, newSessionId);
-
-                                    // inform communication service about new player from login server
                                     try
                                     {
                                         ipAddress = ipAddress.Substring(6, ipAddress.LastIndexOf(':') - 6);

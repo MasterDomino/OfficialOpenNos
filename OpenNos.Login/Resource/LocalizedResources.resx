@@ -178,7 +178,7 @@
     <value>Connection closed.</value>
   </data>
   <data name="MAINTENANCE" xml:space="preserve">
-    <value>Server is currently under maintenance. Maintenance estimated time {0}</value>
+    <value>Server is currently under maintenance. Maintenance estimated time: {0} reason: {1}</value>
   </data>
   <data name="CORRUPT_PACKET" xml:space="preserve">
     <value>Packet with Header {0} is corrupt or PacketDefinition is invalid. Content: {1} </value>
@@ -188,5 +188,8 @@
   </data>
   <data name="RETRY_CONNECTION" xml:space="preserve">
     <value>Cannot connect to Master Server! Trying again in 5 seconds...</value>
+  </data>
+  <data name="NO_WORLDSERVERS" xml:space="preserve">
+    <value>404: No world servers found! please try again later.</value>
   </data>
 </root>

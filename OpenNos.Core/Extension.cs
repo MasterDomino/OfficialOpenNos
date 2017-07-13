@@ -12,6 +12,8 @@
  * GNU General Public License for more details.
  */
 
+using System;
+
 namespace OpenNos.Core
 {
     public static class Extension
@@ -21,6 +23,28 @@ namespace OpenNos.Core
         public static string Truncate(this string str, int length)
         {
             return str.Length > length ? str.Substring(0, length) : str;
+        }
+
+        public static DateTime RoundUp(this DateTime dt, TimeSpan d)
+        {
+            long modTicks = dt.Ticks % d.Ticks;
+            long delta = modTicks != 0 ? d.Ticks - modTicks : 0;
+            return new DateTime(dt.Ticks + delta, dt.Kind);
+        }
+
+        public static DateTime RoundDown(this DateTime dt, TimeSpan d)
+        {
+            long delta = dt.Ticks % d.Ticks;
+            return new DateTime(dt.Ticks - delta, dt.Kind);
+        }
+
+        public static DateTime RoundToNearest(this DateTime dt, TimeSpan d)
+        {
+            long delta = dt.Ticks % d.Ticks;
+            bool roundUp = delta > d.Ticks / 2;
+            long offset = roundUp ? d.Ticks : 0;
+
+            return new DateTime(dt.Ticks + offset - delta, dt.Kind);
         }
 
         #endregion

@@ -330,6 +330,7 @@ namespace OpenNos.Master.Server
 
                 case MessageType.PrivateChat:
                 case MessageType.Whisper:
+                case MessageType.WhisperSupport:
                 case MessageType.WhisperGM:
                     if (message.DestinationCharacterId.HasValue)
                     {
