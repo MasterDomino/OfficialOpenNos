@@ -1165,7 +1165,7 @@ namespace OpenNos.GameObject
             MaintenanceLogDTO maintenanceLog = DAOFactory.MaintenanceLogDAO.LoadFirst();
             if (maintenanceLog != null)
             {
-                sessions.ForEach(session => session.Disconnect());
+                sessions.Where(s => s.Account.Authority < AuthorityType.Moderator).ToList().ForEach(session => session.Disconnect());
             }
             sessions.ForEach(s => s.Character?.Save());
             DAOFactory.BazaarItemDAO.RemoveOutDated();
