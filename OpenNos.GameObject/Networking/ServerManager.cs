@@ -1162,6 +1162,11 @@ namespace OpenNos.GameObject
         public void SaveAll()
         {
             List<ClientSession> sessions = Sessions.Where(c => c.IsConnected).ToList();
+            MaintenanceLogDTO maintenanceLog = DAOFactory.MaintenanceLogDAO.LoadFirst();
+            if (maintenanceLog != null)
+            {
+                sessions.ForEach(session => session.Disconnect());
+            }
             sessions.ForEach(s => s.Character?.Save());
             DAOFactory.BazaarItemDAO.RemoveOutDated();
         }
