@@ -418,7 +418,7 @@ namespace OpenNos.Core
 
                 for (int i = 1; i < listValueCount; i++)
                 {
-                    resultListPacket += $".{SerializeValue(propertyType.GenericTypeArguments[0], listValues[i]).Replace(" ", "")}";
+                    resultListPacket += $".{SerializeValue(propertyType.GenericTypeArguments[0], listValues[i]).Replace(" ", string.Empty)}";
                 }
             }
 
@@ -438,7 +438,7 @@ namespace OpenNos.Core
                     serializedSubpacket += isReturnPacket ? "^" : shouldRemoveSeparator ? " " : ".";
                 }
 
-                serializedSubpacket += SerializeValue(subpacketPropertyInfo.Value.PropertyType, subpacketPropertyInfo.Value.GetValue(value)).Replace(" ", "");
+                serializedSubpacket += SerializeValue(subpacketPropertyInfo.Value.PropertyType, subpacketPropertyInfo.Value.GetValue(value)).Replace(" ", string.Empty);
             }
 
             return serializedSubpacket;

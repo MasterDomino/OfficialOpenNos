@@ -1443,7 +1443,7 @@ namespace OpenNos.Handler
             {
                 Session.Character.MeditationDictionary.Clear();
             }
-            sitpacket.Users.ForEach(u =>
+            sitpacket.Users?.ForEach(u =>
             {
                 if (u.UserType == 1)
                 {
@@ -1938,11 +1938,11 @@ namespace OpenNos.Handler
                         Session.SendPacket(Session.Character.GenerateCond());
                         Session.Character.LastMove = DateTime.Now;
 
-                    Session.CurrentMapInstance?.OnAreaEntryEvents?.Where(s => s.InZone(Session.Character.PositionX, Session.Character.PositionY)).ToList().ForEach(e =>
-                    {
-                        e.Events.ForEach(evt => EventHelper.Instance.RunEvent(evt));
-                    });
-                    Session.CurrentMapInstance?.OnAreaEntryEvents?.RemoveAll(s => s.InZone(Session.Character.PositionX, Session.Character.PositionY));
+                        Session.CurrentMapInstance?.OnAreaEntryEvents?.Where(s => s.InZone(Session.Character.PositionX, Session.Character.PositionY)).ToList().ForEach(e =>
+                        {
+                            e.Events.ForEach(evt => EventHelper.Instance.RunEvent(evt));
+                        });
+                        Session.CurrentMapInstance?.OnAreaEntryEvents?.RemoveAll(s => s.InZone(Session.Character.PositionX, Session.Character.PositionY));
 
                         Session.CurrentMapInstance?.OnMoveOnMapEvents?.ForEach(e =>
                         {

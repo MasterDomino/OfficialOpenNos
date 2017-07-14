@@ -180,7 +180,6 @@
     <Compile Include="Packets\ClientPackets\LoginPacket.cs" />
     <Compile Include="Packets\ClientPackets\PtCtlSubPacket.cs" />
     <Compile Include="Packets\ClientPackets\BIPacket.cs" />
-    <Compile Include="Packets\ClientPackets\SitSubPacket.cs" />
     <Compile Include="Packets\ClientPackets\PtCtlPacket.cs" />
     <Compile Include="Packets\ClientPackets\NRunPacket.cs" />
     <Compile Include="Packets\ClientPackets\FReposPacket.cs" />
