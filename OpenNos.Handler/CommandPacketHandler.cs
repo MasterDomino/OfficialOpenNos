@@ -210,28 +210,7 @@ namespace OpenNos.Handler
             if (banPacket != null)
             {
                 Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Ban]CharacterName: {banPacket.CharacterName} Reason: {banPacket.Reason} Until: {(banPacket.Duration == 0 ? DateTime.Now.AddYears(15) : DateTime.Now.AddDays(banPacket.Duration))}");
-
-                banPacket.Reason = banPacket.Reason?.Trim();
-                CharacterDTO character = DAOFactory.CharacterDAO.LoadByName(banPacket.CharacterName);
-                if (character != null)
-                {
-                    ServerManager.Instance.Kick(banPacket.CharacterName);
-                    PenaltyLogDTO log = new PenaltyLogDTO
-                    {
-                        AccountId = character.AccountId,
-                        Reason = banPacket.Reason,
-                        Penalty = PenaltyType.Banned,
-                        DateStart = DateTime.Now,
-                        DateEnd = banPacket.Duration == 0 ? DateTime.Now.AddYears(15) : DateTime.Now.AddDays(banPacket.Duration),
-                        AdminName = Session.Character.Name
-                    };
-                    Session.Character.InsertOrUpdatePenalty(log);
-                    Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
-                }
-                else
-                {
-                    Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("USER_NOT_FOUND"), 10));
-                }
+                BanMethod(banPacket.CharacterName, banPacket.Duration, banPacket.Reason);
             }
             else
             {
@@ -510,31 +489,6 @@ namespace OpenNos.Handler
             else
             {
                 Session.SendPacket(Session.Character.GenerateSay(ChangeHeroLevelPacket.ReturnHelp(), 10));
-            }
-        }
-
-        /// <summary>
-        /// $Maintenance Command
-        /// </summary>
-        /// <param name="maintenancePacket"></param>
-        public void PlanMaintenance(MaintenancePacket maintenancePacket)
-        {
-            if (maintenancePacket != null)
-            {
-                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Maintenance]Delay: {maintenancePacket.Delay} Duration: {maintenancePacket.Duration} Reason: {maintenancePacket.Reason}");
-                DateTime dateStart = DateTime.Now.AddMinutes(maintenancePacket.Delay).RoundToNearest(TimeSpan.FromMinutes(15));
-                MaintenanceLogDTO maintenance = new MaintenanceLogDTO()
-                {
-                    DateEnd = dateStart.AddMinutes(maintenancePacket.Duration),
-                    DateStart = dateStart,
-                    Reason = maintenancePacket.Reason
-                };
-                DAOFactory.MaintenanceLogDAO.Insert(maintenance);
-                Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
-            }
-            else
-            {
-                Session.SendPacket(Session.Character.GenerateSay(MaintenancePacket.ReturnHelp(), 10));
             }
         }
 
@@ -1635,6 +1589,31 @@ namespace OpenNos.Handler
         }
 
         /// <summary>
+        /// $Maintenance Command
+        /// </summary>
+        /// <param name="maintenancePacket"></param>
+        public void PlanMaintenance(MaintenancePacket maintenancePacket)
+        {
+            if (maintenancePacket != null)
+            {
+                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Maintenance]Delay: {maintenancePacket.Delay} Duration: {maintenancePacket.Duration} Reason: {maintenancePacket.Reason}");
+                DateTime dateStart = DateTime.Now.AddMinutes(maintenancePacket.Delay).RoundToNearest(TimeSpan.FromMinutes(15));
+                MaintenanceLogDTO maintenance = new MaintenanceLogDTO()
+                {
+                    DateEnd = dateStart.AddMinutes(maintenancePacket.Duration),
+                    DateStart = dateStart,
+                    Reason = maintenancePacket.Reason
+                };
+                DAOFactory.MaintenanceLogDAO.Insert(maintenance);
+                Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay(MaintenancePacket.ReturnHelp(), 10));
+            }
+        }
+
+        /// <summary>
         /// $Position Command
         /// </summary>
         /// <param name="positionPacket"></param>
@@ -2445,7 +2424,7 @@ namespace OpenNos.Handler
                 {
                     ClientSession session = ServerManager.Instance.GetSessionByCharacterName(characterName);
                     session?.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("WARNING"), warningPacket.Reason)));
-                    PenaltyLogDTO log = new PenaltyLogDTO
+                    Session.Character.InsertOrUpdatePenalty(new PenaltyLogDTO
                     {
                         AccountId = character.AccountId,
                         Reason = warningPacket.Reason,
@@ -2453,11 +2432,8 @@ namespace OpenNos.Handler
                         DateStart = DateTime.Now,
                         DateEnd = DateTime.Now,
                         AdminName = Session.Character.Name
-                    };
-                    Session.Character.InsertOrUpdatePenalty(log);
-                    int penaltyCount = DAOFactory.PenaltyLogDAO.LoadByAccount(character.AccountId).Count(p => p.Penalty == PenaltyType.Warning);
-
-                    switch (penaltyCount)
+                    });
+                    switch (DAOFactory.PenaltyLogDAO.LoadByAccount(character.AccountId).Count(p => p.Penalty == PenaltyType.Warning))
                     {
                         case 1: break;
 
@@ -2475,6 +2451,10 @@ namespace OpenNos.Handler
 
                         case 5:
                             MuteMethod(characterName, "Auto-Warning mute: 5 strikes", 1440);
+                            break;
+
+                        case 69:
+                            BanMethod(characterName, 7, "LOL SIXTY NINE AMIRITE?");
                             break;
 
                         default:
@@ -2583,6 +2563,30 @@ namespace OpenNos.Handler
             else
             {
                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_IN_MINILAND"), 0));
+            }
+        }
+
+        private void BanMethod(string characterName, int duration, string reason)
+        {
+            CharacterDTO character = DAOFactory.CharacterDAO.LoadByName(characterName);
+            if (character != null)
+            {
+                ServerManager.Instance.Kick(characterName);
+                PenaltyLogDTO log = new PenaltyLogDTO
+                {
+                    AccountId = character.AccountId,
+                    Reason = reason?.Trim(),
+                    Penalty = PenaltyType.Banned,
+                    DateStart = DateTime.Now,
+                    DateEnd = duration == 0 ? DateTime.Now.AddYears(15) : DateTime.Now.AddDays(duration),
+                    AdminName = Session.Character.Name
+                };
+                Session.Character.InsertOrUpdatePenalty(log);
+                Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("USER_NOT_FOUND"), 10));
             }
         }
 
