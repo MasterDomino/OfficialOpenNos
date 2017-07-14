@@ -241,6 +241,15 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do you want to start the mission?.
+        /// </summary>
+        internal static string ASK_ENTRY_IN_FIRST_ROOM {
+            get {
+                return ResourceManager.GetString("ASK_ENTRY_IN_FIRST_ROOM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You&apos;ve been invited to family {0}, do you want to join?.
         /// </summary>
         internal static string ASK_FAMILY_INVITED {
@@ -925,6 +934,15 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You&apos;ve lost some of your dignity!.
+        /// </summary>
+        internal static string DIGNITY_LOST {
+            get {
+                return ResourceManager.GetString("DIGNITY_LOST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Client disconnected! ClientId = .
         /// </summary>
         internal static string DISCONNECT {
@@ -1398,6 +1416,15 @@ namespace OpenNos.World.Resource {
         internal static string GOLD_SET {
             get {
                 return ResourceManager.GetString("GOLD_SET", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You got {0} gold after finishing the timespace..
+        /// </summary>
+        internal static string GOLD_TS_END {
+            get {
+                return ResourceManager.GetString("GOLD_TS_END", resourceCulture);
             }
         }
         
@@ -2122,6 +2149,15 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Planned Maintenance detected, kicking users....
+        /// </summary>
+        internal static string MAINTENANCE_PLANNED {
+            get {
+                return ResourceManager.GetString("MAINTENANCE_PLANNED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Manager.
         /// </summary>
         internal static string MANAGER {
@@ -2397,6 +2433,15 @@ namespace OpenNos.World.Resource {
         internal static string MUTED_PLURAL {
             get {
                 return ResourceManager.GetString("MUTED_PLURAL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You&apos;ve been muted for 1 minute..
+        /// </summary>
+        internal static string MUTED_SINGULAR {
+            get {
+                return ResourceManager.GetString("MUTED_SINGULAR", resourceCulture);
             }
         }
         
@@ -3607,15 +3652,6 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Support.
-        /// </summary>
-        internal static string SUPPORT {
-            get {
-                return ResourceManager.GetString("SUPPORT", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Are you sure you want to delete this item?.
         /// </summary>
         internal static string SURE_TO_DELETE {
@@ -3702,6 +3738,15 @@ namespace OpenNos.World.Resource {
         internal static string TRY_FAILED_WAIT {
             get {
                 return ResourceManager.GetString("TRY_FAILED_WAIT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Timespace tutorial.
+        /// </summary>
+        internal static string TS_TUTORIAL {
+            get {
+                return ResourceManager.GetString("TS_TUTORIAL", resourceCulture);
             }
         }
         

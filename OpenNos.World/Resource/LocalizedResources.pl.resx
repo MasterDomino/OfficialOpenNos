@@ -1339,7 +1339,7 @@
   <data name="HORN_DISAPEAR" xml:space="preserve">
     <value>Mroczny Władca zniknął</value>
   </data>
-  <data name="SUPPORT" xml:space="preserve">
-    <value>Support</value>
+  <data name="MUTED_PLURAL" xml:space="preserve">
+    <value>Zostałeś uciszony! Powód: {0} na: {1} minut</value>
   </data>
 </root>

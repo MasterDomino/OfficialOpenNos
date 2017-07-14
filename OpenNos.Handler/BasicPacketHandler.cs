@@ -1561,7 +1561,7 @@ namespace OpenNos.Handler
                 {
                     type = 12;
                     Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateSay(message.Trim(), 1), ReceiverType.AllExceptMe);
-                    message = $"[{Language.Instance.GetMessageFromKey("SUPPORT")} {Session.Character.Name}]: " + message;
+                    message = $"[Support {Session.Character.Name}]: {message}";
                 }
                 Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateSay(message.Trim(), type), ReceiverType.AllExceptMe);
             }

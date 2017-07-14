@@ -1165,6 +1165,7 @@ namespace OpenNos.GameObject
             MaintenanceLogDTO maintenanceLog = DAOFactory.MaintenanceLogDAO.LoadFirst();
             if (maintenanceLog != null)
             {
+                Logger.LogEvent("MAINTENANCE_STATE", "Caller: ServerManager", $"[Maintenance]{Language.Instance.GetMessageFromKey("MAINTENANCE_PLANNED")}");
                 sessions.Where(s => s.Account.Authority < AuthorityType.Moderator).ToList().ForEach(session => session.Disconnect());
             }
             sessions.ForEach(s => s.Character?.Save());
@@ -1184,15 +1185,14 @@ namespace OpenNos.GameObject
 
         public void Shout(string message)
         {
-            Broadcast($"say 1 0 10 ({Language.Instance.GetMessageFromKey("ADMINISTRATOR")}){message}");
-            Broadcast($"msg 2 {message}");
+            Instance.Broadcast(UserInterfaceHelper.Instance.GenerateSay($"({Language.Instance.GetMessageFromKey("ADMINISTRATOR")}){message}", 10));
+            Instance.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(message, 2));
         }
 
         public async void ShutdownTask()
         {
             string message = string.Format(Language.Instance.GetMessageFromKey("SHUTDOWN_MIN"), 5);
-            Instance.Broadcast($"say 1 0 10 ({Language.Instance.GetMessageFromKey("ADMINISTRATOR")}){message}");
-            Instance.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(message, 2));
+            Shout(message);
             for (int i = 0; i < 60 * 4; i++)
             {
                 await Task.Delay(1000).ConfigureAwait(false);
@@ -1203,8 +1203,7 @@ namespace OpenNos.GameObject
                 }
             }
             message = string.Format(Language.Instance.GetMessageFromKey("SHUTDOWN_MIN"), 1);
-            Instance.Broadcast($"say 1 0 10 ({Language.Instance.GetMessageFromKey("ADMINISTRATOR")}){message}");
-            Instance.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(message, 2));
+            Shout(message);
             for (int i = 0; i < 30; i++)
             {
                 await Task.Delay(1000).ConfigureAwait(false);
@@ -1215,8 +1214,7 @@ namespace OpenNos.GameObject
                 }
             }
             message = string.Format(Language.Instance.GetMessageFromKey("SHUTDOWN_SEC"), 30);
-            Instance.Broadcast($"say 1 0 10 ({Language.Instance.GetMessageFromKey("ADMINISTRATOR")}){message}");
-            Instance.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(message, 2));
+            Shout(message);
             for (int i = 0; i < 30; i++)
             {
                 await Task.Delay(1000).ConfigureAwait(false);
@@ -1227,8 +1225,7 @@ namespace OpenNos.GameObject
                 }
             }
             message = string.Format(Language.Instance.GetMessageFromKey("SHUTDOWN_SEC"), 10);
-            Instance.Broadcast($"say 1 0 10 ({Language.Instance.GetMessageFromKey("ADMINISTRATOR")}){message}");
-            Instance.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(message, 2));
+            Shout(message);
             for (int i = 0; i < 10; i++)
             {
                 await Task.Delay(1000).ConfigureAwait(false);
@@ -1272,7 +1269,6 @@ namespace OpenNos.GameObject
                         foreach (ClientSession session in groupMembers.GetAllItems())
                         {
                             session.SendPacket(session.Character.GeneratePinit());
-                            //session.Character.Group.Characters.ForEach(s => session.SendPacket(s.Character.GenerateStat()));
                             session.SendPackets(session.Character.GeneratePst());
                         }
                     }
@@ -1358,10 +1354,7 @@ namespace OpenNos.GameObject
                     {
                         foreach (ClientSession session in grp.Characters.GetAllItems())
                         {
-                            foreach (string str in grp.GeneratePst(session))
-                            {
-                                session.SendPacket(str);
-                            }
+                            session.SendPackets(grp.GeneratePst(session));
                         }
                     });
                 }
@@ -1423,7 +1416,6 @@ namespace OpenNos.GameObject
 
         private void LoadFamilies()
         {
-            // TODO: Parallelization of family load
             FamilyList = new ThreadSafeSortedList<long, Family>();
             Parallel.ForEach(DAOFactory.FamilyDAO.LoadAll(), familyDTO =>
             {
@@ -1532,7 +1524,6 @@ namespace OpenNos.GameObject
 
         private void OnFamilyRefresh(object sender, EventArgs e)
         {
-            // TODO: Parallelization of family.
             long FamilyId = (long)sender;
             FamilyDTO famdto = DAOFactory.FamilyDAO.LoadById(FamilyId);
             Family fam = FamilyList[FamilyId];
@@ -1541,7 +1532,6 @@ namespace OpenNos.GameObject
                 if (famdto != null)
                 {
                     Family newFam = (Family)famdto;
-
                     if (fam != null)
                     {
                         newFam.LandOfDeath = fam.LandOfDeath;
@@ -1562,10 +1552,7 @@ namespace OpenNos.GameObject
                             newFam.Warehouse[inventory.Id] = (ItemInstance)inventory;
                         }
                     }
-
                     newFam.FamilyLogs = DAOFactory.FamilyLogDAO.LoadByFamilyId(famdto.FamilyId).ToList();
-
-
                     FamilyList[FamilyId] = newFam;
 
                     foreach (ClientSession sess in Sessions.Where(s => newFam.FamilyCharacters.Any(f => f.CharacterId.Equals(s.Character.CharacterId))))
@@ -1660,12 +1647,9 @@ namespace OpenNos.GameObject
                         {
                             Parallel.ForEach(Instance.Sessions, session =>
                             {
-                                if (session.HasSelectedCharacter && session.Character.Family != null)
+                                if (session.HasSelectedCharacter && session.Character.Family != null && session.Character.Family.FamilyId == message.DestinationCharacterId)
                                 {
-                                    if (session.Character.Family.FamilyId == message.DestinationCharacterId)
-                                    {
-                                        session.SendPacket($"say 1 0 6 <{Language.Instance.GetMessageFromKey("CHANNEL")}: {CommunicationServiceClient.Instance.GetChannelIdByWorldId(message.SourceWorldId)}>{message.Message}");
-                                    }
+                                    session.SendPacket($"say 1 0 6 <{Language.Instance.GetMessageFromKey("CHANNEL")}: {CommunicationServiceClient.Instance.GetChannelIdByWorldId(message.SourceWorldId)}>{message.Message}");
                                 }
                             });
                         }

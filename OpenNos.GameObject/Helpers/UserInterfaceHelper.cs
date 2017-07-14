@@ -41,6 +41,11 @@ namespace OpenNos.GameObject.Helpers
 
         #region Methods
 
+        public string GenerateSay(string message, int type, long callerId = 0)
+        {
+            return $"say 1 {callerId} {type} {message}";
+        }
+
         public string GenerateDelay(int delay, int type, string argument)
         {
             return $"delay {delay} {type} {argument}";

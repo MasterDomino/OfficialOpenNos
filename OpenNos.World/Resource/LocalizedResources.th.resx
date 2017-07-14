@@ -638,7 +638,7 @@
     <comment>[WAIT][ONONLY]</comment>
   </data>
   <data name="MUTED_SINGULAR" xml:space="preserve">
-    <value>You have been muted! Reason: {0} For: 1 hour</value>
+    <value></value>
     <comment>[WAIT][ONONLY]</comment>
   </data>
   <data name="MUTE_END" xml:space="preserve">
