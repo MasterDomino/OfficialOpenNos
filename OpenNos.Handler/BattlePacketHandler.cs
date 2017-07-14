@@ -203,12 +203,9 @@ namespace OpenNos.Handler
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("CANT_ATTACK"), 0));
                     return;
                 }
-                if (Session.Character.CanFight)
+                if (Session.Character.CanFight && Session.Character.Hp > 0)
                 {
-                    if (Session.Character.Hp > 0)
-                    {
-                        ZoneHit(useAOESkillPacket.CastId, useAOESkillPacket.MapX, useAOESkillPacket.MapY);
-                    }
+                    ZoneHit(useAOESkillPacket.CastId, useAOESkillPacket.MapX, useAOESkillPacket.MapY);
                 }
             }
         }

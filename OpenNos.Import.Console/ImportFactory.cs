@@ -882,12 +882,9 @@ namespace OpenNos.Import.Console
                     baseHp = 1765;
                     basup = 65;
                 }
-                if (i >= 41)
+                if (i >= 41 && (99 - i) % 8 == 0)
                 {
-                    if ((99 - i) % 8 == 0)
-                    {
-                        basup++;
-                    }
+                    basup++;
                 }
             }
 

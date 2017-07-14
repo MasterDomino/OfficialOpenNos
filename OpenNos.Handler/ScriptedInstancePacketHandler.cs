@@ -274,23 +274,20 @@ namespace OpenNos.Handler
         /// <param name="rxitPacket"></param>
         public void InstanceExit(RxitPacket rxitPacket)
         {
-            if (rxitPacket?.State == 1)
+            if (rxitPacket?.State == 1 && Session.CurrentMapInstance?.MapInstanceType == MapInstanceType.TimeSpaceInstance)
             {
-                if (Session.CurrentMapInstance?.MapInstanceType == MapInstanceType.TimeSpaceInstance)
+                if (Session.CurrentMapInstance.InstanceBag.Lock)
                 {
-                    if (Session.CurrentMapInstance.InstanceBag.Lock)
-                    {
-                        //5seed
-                        Session.CurrentMapInstance.InstanceBag.DeadList.Add(Session.Character.CharacterId);
-                        Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("DIGNITY_LOST"), 20), 11));
-                        Session.Character.Dignity = Session.Character.Dignity < -980 ? -1000 : Session.Character.Dignity - 20;
-                    }
-                    else
-                    {
-                        //1seed
-                    }
-                    ServerManager.Instance.ChangeMap(Session.Character.CharacterId, Session.Character.MapId, Session.Character.MapX, Session.Character.MapY);
+                    //5seed
+                    Session.CurrentMapInstance.InstanceBag.DeadList.Add(Session.Character.CharacterId);
+                    Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("DIGNITY_LOST"), 20), 11));
+                    Session.Character.Dignity = Session.Character.Dignity < -980 ? -1000 : Session.Character.Dignity - 20;
                 }
+                else
+                {
+                    //1seed
+                }
+                ServerManager.Instance.ChangeMap(Session.Character.CharacterId, Session.Character.MapId, Session.Character.MapX, Session.Character.MapY);
             }
         }
 
