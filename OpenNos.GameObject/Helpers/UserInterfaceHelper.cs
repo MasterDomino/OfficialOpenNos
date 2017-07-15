@@ -402,7 +402,7 @@ namespace OpenNos.GameObject.Helpers
                             {
                                 if (packet.RareFilter == 0 || packet.RareFilter == bz.Item.Rare + 1)
                                 {
-                                    if (bz.Item is BoxInstance boxInstance && (packet.LevelFilter == 0 || (boxInstance.SpLevel < (packet.LevelFilter * 10) + 1 && boxInstance.SpLevel >= (packet.LevelFilter * 10) - 9)))
+                                    if (bz.Item is BoxInstance shellInstance && (packet.LevelFilter == 0 || (shellInstance.SpLevel < (packet.LevelFilter * 10) + 1 && shellInstance.SpLevel >= (packet.LevelFilter * 10) - 9)))
                                     {
                                         bzlist.Add(bz);
                                     }
