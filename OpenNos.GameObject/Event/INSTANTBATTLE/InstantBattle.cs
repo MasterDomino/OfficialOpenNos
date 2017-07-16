@@ -205,35 +205,6 @@ namespace OpenNos.GameObject.Event
                     break;
 
                 case 40:
-                    switch (wave)
-                    {
-                        case 0:
-                            dropParameters.AddRange(GenerateDrop(map, 1046, 15, 1500));
-                            dropParameters.AddRange(GenerateDrop(map, 1008, 5, 3));
-                            dropParameters.AddRange(GenerateDrop(map, 180, 5, 1));
-                            break;
-
-                        case 1:
-                            dropParameters.AddRange(GenerateDrop(map, 1046, 15, 2000));
-                            dropParameters.AddRange(GenerateDrop(map, 1008, 8, 3));
-                            dropParameters.AddRange(GenerateDrop(map, 181, 5, 1));
-                            break;
-
-                        case 2:
-                            dropParameters.AddRange(GenerateDrop(map, 1046, 15, 2500));
-                            dropParameters.AddRange(GenerateDrop(map, 1009, 10, 3));
-                            dropParameters.AddRange(GenerateDrop(map, 1246, 5, 1));
-                            dropParameters.AddRange(GenerateDrop(map, 1247, 5, 1));
-                            break;
-
-                        case 3:
-                            dropParameters.AddRange(GenerateDrop(map, 1046, 15, 3000));
-                            dropParameters.AddRange(GenerateDrop(map, 1009, 10, 3));
-                            dropParameters.AddRange(GenerateDrop(map, 1248, 5, 1));
-                            break;
-                    }
-                    break;
-
                 case 50:
                     switch (wave)
                     {

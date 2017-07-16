@@ -12,23 +12,14 @@
  * GNU General Public License for more details.
  */
 
-using OpenNos.Domain;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Xml;
 
 namespace OpenNos.GameObject
 {
     public class EventWave
     {
-        #region Methods
-
-        #endregion
-        public byte Delay { get; set; }
-        public byte Offset { get; set; }
-        public DateTime LastStart { get; set; }
-        public List<EventContainer> Events { get; set; }
+        #region Instantiation
 
         public EventWave(byte Delay, List<EventContainer> Events, byte Offset = 0)
         {
@@ -36,5 +27,19 @@ namespace OpenNos.GameObject
             this.Offset = Offset;
             this.Events = Events;
         }
+
+        #endregion
+
+        #region Properties
+
+        public byte Delay { get; set; }
+
+        public List<EventContainer> Events { get; set; }
+
+        public DateTime LastStart { get; set; }
+
+        public byte Offset { get; set; }
+
+        #endregion
     }
 }

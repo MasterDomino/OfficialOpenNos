@@ -38,12 +38,11 @@ namespace OpenNos.GameObject
         {
             if (str.Attributes != null)
             {
-                Schedule result = new Schedule
+                return new Schedule
                 {
                     Event = (EventType)Enum.Parse(typeof(EventType), str.Attributes["event"].Value),
                     Time = TimeSpan.Parse(str.Attributes["time"].Value)
                 };
-                return result;
             }
             return null;
         }
