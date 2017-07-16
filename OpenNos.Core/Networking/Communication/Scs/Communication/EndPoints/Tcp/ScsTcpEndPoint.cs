@@ -102,8 +102,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.EndPoints.Tcp
 
         public override bool Equals(object obj)
         {
-            return ((ScsTcpEndPoint)obj).IpAddress == IpAddress
-                && ((ScsTcpEndPoint)obj).TcpPort == TcpPort;
+            return ((ScsTcpEndPoint)obj).IpAddress == IpAddress && ((ScsTcpEndPoint)obj).TcpPort == TcpPort;
         }
 
         public override int GetHashCode()
@@ -117,7 +116,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.EndPoints.Tcp
         /// <returns>String representation of this end point object</returns>
         public override string ToString()
         {
-            return string.IsNullOrEmpty(IpAddress) ? "tcp://" + TcpPort : "tcp://" + IpAddress + ":" + TcpPort;
+            return string.IsNullOrEmpty(IpAddress) ? $"tcp://{TcpPort}" : $"tcp://{IpAddress}:{TcpPort}";
         }
 
         #endregion

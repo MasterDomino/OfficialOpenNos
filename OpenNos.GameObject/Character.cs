@@ -2018,9 +2018,9 @@ namespace OpenNos.GameObject
             return $"revive 1 {CharacterId} {(lives > 0 ? lives : 0)}";
         }
 
-        public string GenerateSay(string message, int type)
+        public string GenerateSay(string message, int type, bool ignoreNickname = false)
         {
-            return $"say 1 {CharacterId} {type} {message}";
+            return $"say {(ignoreNickname ? 2 : 1)} {CharacterId} {type} {message}";
         }
 
         public string GenerateScal()
