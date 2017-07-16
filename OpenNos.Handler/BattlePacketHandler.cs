@@ -529,7 +529,6 @@ namespace OpenNos.Handler
                                     Session.Character.Skills.GetAllItems().Where(s => s.Id != ski.Id).ToList().ForEach(i => i.Hit = 0);
 
                                     // Generate scp
-                                    ski.LastUse = DateTime.Now;
                                     if ((DateTime.Now - ski.LastUse).TotalSeconds > 3)
                                     {
                                         ski.Hit = 0;
@@ -538,6 +537,7 @@ namespace OpenNos.Handler
                                     {
                                         ski.Hit++;
                                     }
+                                    ski.LastUse = DateTime.Now;
 
                                     if (ski.Skill.CastEffect != 0)
                                     {
@@ -830,7 +830,6 @@ namespace OpenNos.Handler
                                     Session.Character.Skills.GetAllItems().Where(s => s.Id != ski.Id).ToList().ForEach(i => i.Hit = 0);
 
                                     // Generate scp
-                                    ski.LastUse = DateTime.Now;
                                     if ((DateTime.Now - ski.LastUse).TotalSeconds > 3)
                                     {
                                         ski.Hit = 0;
@@ -839,7 +838,7 @@ namespace OpenNos.Handler
                                     {
                                         ski.Hit++;
                                     }
-
+                                    ski.LastUse = DateTime.Now;
                                     if (ski.Skill.CastEffect != 0)
                                     {
                                         Thread.Sleep(ski.Skill.CastTime * 100);
@@ -972,9 +971,7 @@ namespace OpenNos.Handler
                     }
                     Session.SendPacket(Session.Character.GenerateStat());
                     characterSkill.LastUse = DateTime.Now;
-                    Observable.Timer(TimeSpan.FromMilliseconds(characterSkill.Skill.CastTime * 100))
-                    .Subscribe(
-                    o =>
+                    Observable.Timer(TimeSpan.FromMilliseconds(characterSkill.Skill.CastTime * 100)).Subscribe(o =>
                     {
                         Session.Character.LastSkillUse = DateTime.Now;
 
@@ -1016,7 +1013,6 @@ namespace OpenNos.Handler
                             }
                         }
                     });
-
                     Observable.Timer(TimeSpan.FromMilliseconds(characterSkill.Skill.Cooldown * 100)).Subscribe(o => Session.SendPacket($"sr {Castingid}"));
                 }
                 else
