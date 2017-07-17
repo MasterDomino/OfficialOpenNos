@@ -513,7 +513,6 @@ namespace OpenNos.Handler
                             {
                                 if (Map.GetDistance(new MapCell { X = Session.Character.PositionX, Y = Session.Character.PositionY }, new MapCell { X = playerToAttack.Character.PositionX, Y = playerToAttack.Character.PositionY }) <= ski.Skill.Range + 1)
                                 {
-                                    ski.LastUse = DateTime.Now;
                                     if (!Session.Character.HasGodMode)
                                     {
                                         Session.Character.Mp -= ski.Skill.MpCost;
@@ -812,7 +811,6 @@ namespace OpenNos.Handler
                                 if (Map.GetDistance(new MapCell { X = Session.Character.PositionX, Y = Session.Character.PositionY },
                                                     new MapCell { X = monsterToAttack.MapX, Y = monsterToAttack.MapY }) <= ski.Skill.Range + 1 + monsterToAttack.Monster.BasicArea)
                                 {
-                                    ski.LastUse = DateTime.Now;
                                     if (!Session.Character.HasGodMode)
                                     {
                                         Session.Character.Mp -= ski.Skill.MpCost;
