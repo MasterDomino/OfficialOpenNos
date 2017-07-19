@@ -106,7 +106,7 @@ namespace OpenNos.Handler
         /// <param name="treqPacket"></param>
         public void GetTreq(TreqPacket treqPacket)
         {
-            ScriptedInstance timespace = Session.CurrentMapInstance.ScriptedInstances.FirstOrDefault(s => treqPacket.X == s.PositionX && treqPacket.Y == s.PositionY).GetClone();
+            ScriptedInstance timespace = Session.CurrentMapInstance.ScriptedInstances.Find(s => treqPacket.X == s.PositionX && treqPacket.Y == s.PositionY).GetClone();
 
             if (timespace != null)
             {
@@ -259,7 +259,7 @@ namespace OpenNos.Handler
         /// <param name="packet"></param>
         public void Git(GitPacket packet)
         {
-            MapButton button = Session.CurrentMapInstance.Buttons.FirstOrDefault(s => s.MapButtonId == packet.ButtonId);
+            MapButton button = Session.CurrentMapInstance.Buttons.Find(s => s.MapButtonId == packet.ButtonId);
             if (button != null)
             {
                 Session.CurrentMapInstance.Broadcast(button.GenerateOut());

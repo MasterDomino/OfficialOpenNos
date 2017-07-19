@@ -770,7 +770,7 @@ namespace OpenNos.Handler
             }
             else
             {
-                FamilyCharacter fhead = Session.Character.Family.FamilyCharacters.FirstOrDefault(s => s.Authority == FamilyAuthority.Head);
+                FamilyCharacter fhead = Session.Character.Family.FamilyCharacters.Find(s => s.Authority == FamilyAuthority.Head);
                 if (fhead == null)
                     return;
                 DAOFactory.IteminstanceDAO.DeleteFromSlotAndType(fhead.CharacterId, fWithdrawPacket.Slot, InventoryType.FamilyWareHouse);
@@ -934,7 +934,7 @@ namespace OpenNos.Handler
                     return;
                 }
 
-                FamilyCharacterDTO fchar = Session.Character.Family.FamilyCharacters.FirstOrDefault(s => s.Character.Name == packetsplit[2]);
+                FamilyCharacterDTO fchar = Session.Character.Family.FamilyCharacters.Find(s => s.Character.Name == packetsplit[2]);
                 if (fchar != null && byte.TryParse(packetsplit[3], out byte rank))
                 {
                     fchar.Rank = (FamilyMemberRank)rank;

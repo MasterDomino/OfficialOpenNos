@@ -169,7 +169,7 @@ namespace OpenNos.Handler
 
                     if (skillinfo.UpgradeSkill != 0)
                     {
-                        CharacterSkill oldupgrade = Session.Character.Skills.GetAllItems().FirstOrDefault(s => s.Skill.UpgradeSkill == skillinfo.UpgradeSkill && s.Skill.UpgradeType == skillinfo.UpgradeType && s.Skill.UpgradeSkill != 0);
+                        CharacterSkill oldupgrade = Session.Character.Skills.GetAllItems().Find(s => s.Skill.UpgradeSkill == skillinfo.UpgradeSkill && s.Skill.UpgradeType == skillinfo.UpgradeType && s.Skill.UpgradeSkill != 0);
                         if (oldupgrade != null)
                         {
                             Session.Character.Skills.Remove(oldupgrade.SkillVNum);
@@ -822,7 +822,7 @@ namespace OpenNos.Handler
                 else
                 {
                     Session.SendPacket(Session.Character.GenerateSay("-------------Command Info-------------", 11));
-                    Session.SendPacket(Session.Character.GenerateSay(messages.FirstOrDefault(s => s.ToLower().Contains(helpPacket.Contents.ToLower())), 12));
+                    Session.SendPacket(Session.Character.GenerateSay(messages.Find(s => s.ToLower().Contains(helpPacket.Contents.ToLower())), 12));
                 }
                 Session.SendPacket(Session.Character.GenerateSay("-----------------------------------------------", 11));
             }
@@ -1730,7 +1730,7 @@ namespace OpenNos.Handler
         {
             if (Session.HasCurrentMapInstance)
             {
-                Portal portal = Session.CurrentMapInstance.Portals.FirstOrDefault(s => s.SourceMapInstanceId == Session.Character.MapInstanceId && Map.GetDistance(new MapCell { X = s.SourceX, Y = s.SourceY }, new MapCell { X = Session.Character.PositionX, Y = Session.Character.PositionY }) < 10);
+                Portal portal = Session.CurrentMapInstance.Portals.Find(s => s.SourceMapInstanceId == Session.Character.MapInstanceId && Map.GetDistance(new MapCell { X = s.SourceX, Y = s.SourceY }, new MapCell { X = Session.Character.PositionX, Y = Session.Character.PositionY }) < 10);
                 if (portal != null)
                 {
                     Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[RemovePortal]MapId: {portal.SourceMapId} MapX: {portal.SourceX} MapY: {portal.SourceY}");
@@ -2294,7 +2294,7 @@ namespace OpenNos.Handler
                 CharacterDTO chara = DAOFactory.CharacterDAO.LoadByName(name);
                 if (chara != null)
                 {
-                    PenaltyLogDTO log = ServerManager.Instance.PenaltyLogs.FirstOrDefault(s => s.AccountId == chara.AccountId && s.Penalty == PenaltyType.Banned && s.DateEnd > DateTime.Now);
+                    PenaltyLogDTO log = ServerManager.Instance.PenaltyLogs.Find(s => s.AccountId == chara.AccountId && s.Penalty == PenaltyType.Banned && s.DateEnd > DateTime.Now);
                     if (log != null)
                     {
                         log.DateEnd = DateTime.Now.AddSeconds(-1);
@@ -2347,7 +2347,7 @@ namespace OpenNos.Handler
                 {
                     if (ServerManager.Instance.PenaltyLogs.Any(s => s.AccountId == chara.AccountId && s.Penalty == (byte)PenaltyType.Muted && s.DateEnd > DateTime.Now))
                     {
-                        PenaltyLogDTO log = ServerManager.Instance.PenaltyLogs.FirstOrDefault(s => s.AccountId == chara.AccountId && s.Penalty == (byte)PenaltyType.Muted && s.DateEnd > DateTime.Now);
+                        PenaltyLogDTO log = ServerManager.Instance.PenaltyLogs.Find(s => s.AccountId == chara.AccountId && s.Penalty == (byte)PenaltyType.Muted && s.DateEnd > DateTime.Now);
                         if (log != null)
                         {
                             log.DateEnd = DateTime.Now.AddSeconds(-1);

@@ -143,7 +143,7 @@ namespace OpenNos.Handler
                     break;
 
                 case CharacterOption.GroupSharing:
-                    Group grp = ServerManager.Instance.Groups.FirstOrDefault(g => g.IsMemberOfGroup(Session.Character.CharacterId));
+                    Group grp = ServerManager.Instance.Groups.Find(g => g.IsMemberOfGroup(Session.Character.CharacterId));
                     if (grp == null)
                     {
                         return;
@@ -155,7 +155,7 @@ namespace OpenNos.Handler
                     }
                     if (!characterOptionPacket.IsActive)
                     {
-                        Group group = ServerManager.Instance.Groups.FirstOrDefault(s => s.IsMemberOfGroup(Session.Character.CharacterId));
+                        Group group = ServerManager.Instance.Groups.Find(s => s.IsMemberOfGroup(Session.Character.CharacterId));
                         if (group != null)
                         {
                             group.SharingMode = 1;
@@ -164,7 +164,7 @@ namespace OpenNos.Handler
                     }
                     else
                     {
-                        Group group = ServerManager.Instance.Groups.FirstOrDefault(s => s.IsMemberOfGroup(Session.Character.CharacterId));
+                        Group group = ServerManager.Instance.Groups.Find(s => s.IsMemberOfGroup(Session.Character.CharacterId));
                         if (group != null)
                         {
                             group.SharingMode = 0;
@@ -445,7 +445,7 @@ namespace OpenNos.Handler
                         });
                         Parallel.ForEach(Session.CurrentMapInstance.Sessions, session =>
                         {
-                            Mate mate = session.Character.Mates.FirstOrDefault(s => s.MateTransportId == (int)ncifPacket.TargetId);
+                            Mate mate = session.Character.Mates.Find(s => s.MateTransportId == (int)ncifPacket.TargetId);
                             if (mate != null)
                             {
                                 Session.SendPacket(mate.GenerateStatInfo());
@@ -753,7 +753,7 @@ namespace OpenNos.Handler
                 }
                 else
                 {
-                    Mate mate = Session.Character.Mates.FirstOrDefault(s => s.MateTransportId == Convert.ToInt32(guriPacket[4]));
+                    Mate mate = Session.Character.Mates.Find(s => s.MateTransportId == Convert.ToInt32(guriPacket[4]));
                     if (mate != null)
                     {
                         Session.CurrentMapInstance?.Broadcast(Session, mate.GenerateEff(Convert.ToInt32(guriPacket[5]) + 4099), ReceiverType.AllNoEmoBlocked);
@@ -849,7 +849,7 @@ namespace OpenNos.Handler
                     {
                         return;
                     }
-                    MapNpc npc = Session.CurrentMapInstance.Npcs.FirstOrDefault(n => n.MapNpcId.Equals(MapNpcId));
+                    MapNpc npc = Session.CurrentMapInstance.Npcs.Find(n => n.MapNpcId.Equals(MapNpcId));
                     if (npc != null)
                     {
                         NpcMonster mapobject = ServerManager.Instance.GetNpc(npc.NpcVNum);
@@ -866,7 +866,7 @@ namespace OpenNos.Handler
                             }
                             Random random = new Random();
                             double randomAmount = ServerManager.Instance.RandomNumber() * random.NextDouble();
-                            DropDTO drop = mapobject.Drops.FirstOrDefault(s => s.MonsterVNum == npc.NpcVNum);
+                            DropDTO drop = mapobject.Drops.Find(s => s.MonsterVNum == npc.NpcVNum);
                             if (drop != null)
                             {
                                 int dropChance = drop.DropChance;
@@ -938,7 +938,7 @@ namespace OpenNos.Handler
                 const int petnameVNum = 2157;
                 if (guriPacket[3] == "1")
                 {
-                    Mate mate = Session.Character.Mates.FirstOrDefault(s => s.MateTransportId == int.Parse(guriPacket[5]));
+                    Mate mate = Session.Character.Mates.Find(s => s.MateTransportId == int.Parse(guriPacket[5]));
                     if (mate != null)
                     {
                         mate.Name = guriPacket[6];
@@ -1407,7 +1407,7 @@ namespace OpenNos.Handler
             {
                 if (reqInfoPacket.MateVNum.HasValue)
                 {
-                    Mate mate = Session.CurrentMapInstance.Sessions.FirstOrDefault(s => s.Character?.Mates != null && s.Character.Mates.Any(o => o.MateTransportId == reqInfoPacket.MateVNum.Value))?.Character.Mates.FirstOrDefault(o => o.MateTransportId == reqInfoPacket.MateVNum.Value);
+                    Mate mate = Session.CurrentMapInstance.Sessions.FirstOrDefault(s => s.Character?.Mates != null && s.Character.Mates.Any(o => o.MateTransportId == reqInfoPacket.MateVNum.Value))?.Character.Mates.Find(o => o.MateTransportId == reqInfoPacket.MateVNum.Value);
                     Session.SendPacket(mate?.GenerateEInfo());
                 }
             }
@@ -1443,7 +1443,7 @@ namespace OpenNos.Handler
                 }
                 else
                 {
-                    Session.CurrentMapInstance.Broadcast(Session.Character.Mates.FirstOrDefault(s => s.MateTransportId == (int)u.UserId)?.GenerateRest());
+                    Session.CurrentMapInstance.Broadcast(Session.Character.Mates.Find(s => s.MateTransportId == (int)u.UserId)?.GenerateRest());
                 }
             });
         }
@@ -1786,7 +1786,7 @@ namespace OpenNos.Handler
             Session.SendPacket("rage 0 250000");
             Session.SendPacket("rank_cool 0 0 18000");
             SpecialistInstance specialistInstance = Session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>(8, InventoryType.Wear);
-            StaticBonusDTO medal = Session.Character.StaticBonusList.FirstOrDefault(s => s.StaticBonusType == StaticBonusType.BazaarMedalGold || s.StaticBonusType == StaticBonusType.BazaarMedalSilver);
+            StaticBonusDTO medal = Session.Character.StaticBonusList.Find(s => s.StaticBonusType == StaticBonusType.BazaarMedalGold || s.StaticBonusType == StaticBonusType.BazaarMedalSilver);
             if (medal != null)
             {
                 Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("LOGIN_MEDAL"), 12));

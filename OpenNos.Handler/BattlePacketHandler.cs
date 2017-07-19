@@ -126,7 +126,7 @@ namespace OpenNos.Handler
                                 {
                                     if (Session?.Character != null)
                                     {
-                                        CharacterSkill ski = (Session.Character.UseSp ? Session.Character.SkillsSp?.GetAllItems() : Session.Character.Skills?.GetAllItems()).FirstOrDefault(s => s.Skill?.CastId == useSkillPacket.CastId && s.Skill?.UpgradeSkill == 0);
+                                        CharacterSkill ski = (Session.Character.UseSp ? Session.Character.SkillsSp?.GetAllItems() : Session.Character.Skills?.GetAllItems()).Find(s => s.Skill?.CastId == useSkillPacket.CastId && s.Skill?.UpgradeSkill == 0);
                                         if (ski != null)
                                         {
                                             ski.LastUse = DateTime.Now.AddMilliseconds(ski.Skill.Cooldown * 100 * -1);
@@ -157,7 +157,7 @@ namespace OpenNos.Handler
                                 {
                                     if (Session?.Character != null)
                                     {
-                                        CharacterSkill ski = (Session.Character.UseSp ? Session.Character.SkillsSp?.GetAllItems() : Session.Character.Skills?.GetAllItems()).FirstOrDefault(s => s.Skill?.CastId == useSkillPacket.CastId && s.Skill?.UpgradeSkill == 0);
+                                        CharacterSkill ski = (Session.Character.UseSp ? Session.Character.SkillsSp?.GetAllItems() : Session.Character.Skills?.GetAllItems()).Find(s => s.Skill?.CastId == useSkillPacket.CastId && s.Skill?.UpgradeSkill == 0);
                                         if (ski != null)
                                         {
                                             ski.LastUse = DateTime.Now.AddMilliseconds(ski.Skill.Cooldown * 100 * -1);
@@ -387,7 +387,7 @@ namespace OpenNos.Handler
 
             if (skills != null)
             {
-                CharacterSkill ski = skills.FirstOrDefault(s => s.Skill?.CastId == castingId && s.Skill?.UpgradeSkill == 0);
+                CharacterSkill ski = skills.Find(s => s.Skill?.CastId == castingId && s.Skill?.UpgradeSkill == 0);
                 if (castingId != 0)
                 {
                     Session.SendPacket("ms_c 0");
@@ -546,7 +546,7 @@ namespace OpenNos.Handler
                                     // check if we will hit mutltiple targets
                                     if (ski.Skill.TargetRange != 0)
                                     {
-                                        ComboDTO skillCombo = ski.Skill.Combos.FirstOrDefault(s => ski.Hit == s.Hit);
+                                        ComboDTO skillCombo = ski.Skill.Combos.Find(s => ski.Hit == s.Hit);
                                         if (skillCombo != null)
                                         {
                                             if (ski.Skill.Combos.OrderByDescending(s => s.Hit).First().Hit == ski.Hit)
@@ -677,7 +677,7 @@ namespace OpenNos.Handler
                                     }
                                     else
                                     {
-                                        ComboDTO skillCombo = ski.Skill.Combos.FirstOrDefault(s => ski.Hit == s.Hit);
+                                        ComboDTO skillCombo = ski.Skill.Combos.Find(s => ski.Hit == s.Hit);
                                         if (skillCombo != null)
                                         {
                                             if (ski.Skill.Combos.OrderByDescending(s => s.Hit).First().Hit == ski.Hit)
@@ -845,7 +845,7 @@ namespace OpenNos.Handler
                                     // check if we will hit mutltiple targets
                                     if (ski.Skill.TargetRange != 0)
                                     {
-                                        ComboDTO skillCombo = ski.Skill.Combos.FirstOrDefault(s => ski.Hit == s.Hit);
+                                        ComboDTO skillCombo = ski.Skill.Combos.Find(s => ski.Hit == s.Hit);
                                         if (skillCombo != null)
                                         {
                                             if (ski.Skill.Combos.OrderByDescending(s => s.Hit).First().Hit == ski.Hit)
@@ -896,7 +896,7 @@ namespace OpenNos.Handler
                                     }
                                     else
                                     {
-                                        ComboDTO skillCombo = ski.Skill.Combos.FirstOrDefault(s => ski.Hit == s.Hit);
+                                        ComboDTO skillCombo = ski.Skill.Combos.Find(s => ski.Hit == s.Hit);
                                         if (skillCombo != null)
                                         {
                                             if (ski.Skill.Combos.OrderByDescending(s => s.Hit).First().Hit == ski.Hit)
@@ -950,7 +950,7 @@ namespace OpenNos.Handler
         private void ZoneHit(int Castingid, short x, short y)
         {
             List<CharacterSkill> skills = Session.Character.UseSp ? Session.Character.SkillsSp.GetAllItems() : Session.Character.Skills.GetAllItems();
-            CharacterSkill characterSkill = skills.FirstOrDefault(s => s.Skill.CastId == Castingid);
+            CharacterSkill characterSkill = skills.Find(s => s.Skill.CastId == Castingid);
             if (!Session.Character.WeaponLoaded(characterSkill) || !Session.HasCurrentMapInstance)
             {
                 Session.SendPacket("cancel 2 0");

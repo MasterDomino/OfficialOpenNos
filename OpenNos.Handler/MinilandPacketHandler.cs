@@ -68,7 +68,7 @@ namespace OpenNos.Handler
         public void MinigamePlay(MinigamePacket packet)
         {
             ClientSession client = ServerManager.Instance.Sessions.FirstOrDefault(s => s.Character?.Miniland == Session.Character.MapInstance);
-            MinilandObject mlobj = client?.Character.MinilandObjects.FirstOrDefault(s => s.ItemInstance.ItemVNum == packet.MinigameVNum);
+            MinilandObject mlobj = client?.Character.MinilandObjects.Find(s => s.ItemInstance.ItemVNum == packet.MinigameVNum);
             if (mlobj != null)
             {
                 const bool full = false;
@@ -318,7 +318,7 @@ namespace OpenNos.Handler
                                     break;
                             }
 
-                            MinilandObject min = Session.Character.MinilandObjects.FirstOrDefault(s => s.ItemInstance.Item.ItemType == ItemType.House && s.ItemInstance.Item.ItemSubType == minilandobject.Item.ItemSubType);
+                            MinilandObject min = Session.Character.MinilandObjects.Find(s => s.ItemInstance.Item.ItemType == ItemType.House && s.ItemInstance.Item.ItemSubType == minilandobject.Item.ItemSubType);
                             if (min != null)
                             {
                                 MinilandRemoveObject(new RmvobjPacket { Slot = min.ItemInstance.Slot });
@@ -398,7 +398,7 @@ namespace OpenNos.Handler
             {
                 if (Session.Character.MinilandState == MinilandState.LOCK)
                 {
-                    MinilandObject minilandObject = Session.Character.MinilandObjects.FirstOrDefault(s => s.ItemInstanceId == minilandobject.Id);
+                    MinilandObject minilandObject = Session.Character.MinilandObjects.Find(s => s.ItemInstanceId == minilandobject.Id);
                     if (minilandObject != null)
                     {
                         if (minilandobject.Item.IsMinilandObject)
@@ -428,7 +428,7 @@ namespace OpenNos.Handler
             ItemInstance minilandObjectItem = client?.Character.Inventory.LoadBySlotAndType<ItemInstance>(packet.Slot, InventoryType.Miniland);
             if (minilandObjectItem != null)
             {
-                MinilandObject minilandObject = client.Character.MinilandObjects.FirstOrDefault(s => s.ItemInstanceId == minilandObjectItem.Id);
+                MinilandObject minilandObject = client.Character.MinilandObjects.Find(s => s.ItemInstanceId == minilandObjectItem.Id);
                 if (minilandObject != null)
                 {
                     if (!minilandObjectItem.Item.IsMinilandObject)

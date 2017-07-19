@@ -192,7 +192,7 @@ namespace OpenNos.Handler
         public void OpenBazaar(CSkillPacket cSkillPacket)
         {
             SpinWait.SpinUntil(() => !ServerManager.Instance.InBazaarRefreshMode);
-            StaticBonusDTO medal = Session.Character.StaticBonusList.FirstOrDefault(s => s.StaticBonusType == StaticBonusType.BazaarMedalGold || s.StaticBonusType == StaticBonusType.BazaarMedalSilver);
+            StaticBonusDTO medal = Session.Character.StaticBonusList.Find(s => s.StaticBonusType == StaticBonusType.BazaarMedalGold || s.StaticBonusType == StaticBonusType.BazaarMedalSilver);
             if (medal != null)
             {
                 byte Medal = medal.StaticBonusType == StaticBonusType.BazaarMedalGold ? (byte)MedalType.Gold : (byte)MedalType.Silver;
@@ -233,7 +233,7 @@ namespace OpenNos.Handler
         public void SellBazaar(CRegPacket cRegPacket)
         {
             SpinWait.SpinUntil(() => !ServerManager.Instance.InBazaarRefreshMode);
-            StaticBonusDTO medal = Session.Character.StaticBonusList.FirstOrDefault(s => s.StaticBonusType == StaticBonusType.BazaarMedalGold || s.StaticBonusType == StaticBonusType.BazaarMedalSilver);
+            StaticBonusDTO medal = Session.Character.StaticBonusList.Find(s => s.StaticBonusType == StaticBonusType.BazaarMedalGold || s.StaticBonusType == StaticBonusType.BazaarMedalSilver);
 
             long price = cRegPacket.Price * cRegPacket.Amount;
             long taxmax = price > 100000 ? price / 200 : 500;

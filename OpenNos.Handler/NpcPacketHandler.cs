@@ -65,7 +65,7 @@ namespace OpenNos.Handler
                         return;
                     }
                     KeyValuePair<long, MapShop> shop = Session.CurrentMapInstance.UserShops.FirstOrDefault(mapshop => mapshop.Value.OwnerId.Equals(buyPacket.OwnerId));
-                    PersonalShopItem item = shop.Value?.Items.FirstOrDefault(i => i.ShopSlot.Equals(buyPacket.Slot));
+                    PersonalShopItem item = shop.Value?.Items.Find(i => i.ShopSlot.Equals(buyPacket.Slot));
                     if (item == null || amount <= 0 || amount > 99)
                     {
                         return;
@@ -110,7 +110,7 @@ namespace OpenNos.Handler
                     {
                         return;
                     }
-                    MapNpc npc = Session.CurrentMapInstance.Npcs.FirstOrDefault(n => n.MapNpcId.Equals((short)buyPacket.OwnerId));
+                    MapNpc npc = Session.CurrentMapInstance.Npcs.Find(n => n.MapNpcId.Equals((short)buyPacket.OwnerId));
                     if (npc != null)
                     {
                         int dist = Map.GetDistance(new MapCell { X = Session.Character.PositionX, Y = Session.Character.PositionY }, new MapCell { X = npc.MapX, Y = npc.MapY });
@@ -216,7 +216,7 @@ namespace OpenNos.Handler
                                     }
                                     if (skillinfo.UpgradeSkill != 0)
                                     {
-                                        CharacterSkill oldupgrade = Session.Character.Skills.GetAllItems().FirstOrDefault(s => s.Skill.UpgradeSkill == skillinfo.UpgradeSkill && s.Skill.UpgradeType == skillinfo.UpgradeType && s.Skill.UpgradeSkill != 0);
+                                        CharacterSkill oldupgrade = Session.Character.Skills.GetAllItems().Find(s => s.Skill.UpgradeSkill == skillinfo.UpgradeSkill && s.Skill.UpgradeType == skillinfo.UpgradeType && s.Skill.UpgradeSkill != 0);
                                         if (oldupgrade != null)
                                         {
                                             Session.Character.Skills.Remove(oldupgrade.SkillVNum);
@@ -237,7 +237,7 @@ namespace OpenNos.Handler
                         else if (npc.Shop.ShopItems.Count > 0)
                         {
                             // npc shop
-                            ShopItemDTO shopItem = npc.Shop.ShopItems.FirstOrDefault(it => it.Slot == buyPacket.Slot);
+                            ShopItemDTO shopItem = npc.Shop.ShopItems.Find(it => it.Slot == buyPacket.Slot);
                             if (shopItem == null || amount <= 0 || amount > 99)
                             {
                                 return;
@@ -507,7 +507,7 @@ namespace OpenNos.Handler
             short VNum = pdtsePacket.VNum;
             if (pdtsePacket.Type == 1)
             {
-                MapNpc npc = Session.CurrentMapInstance.Npcs.FirstOrDefault(s => s.MapNpcId == Session.Character.LastNRunId);
+                MapNpc npc = Session.CurrentMapInstance.Npcs.Find(s => s.MapNpcId == Session.Character.LastNRunId);
                 if (npc != null)
                 {
                     int distance = Map.GetDistance(new MapCell
@@ -521,7 +521,7 @@ namespace OpenNos.Handler
                     });
                     if (npc.MapInstance == Session.CurrentMapInstance && distance <= 5)
                     {
-                        Recipe rec = npc.Recipes.FirstOrDefault(s => s.ItemVNum == VNum);
+                        Recipe rec = npc.Recipes.Find(s => s.ItemVNum == VNum);
                         if (rec?.Amount > 0)
                         {
                             string rece = $"m_list 3 {rec.Amount}";
@@ -537,7 +537,7 @@ namespace OpenNos.Handler
             }
             else
             {
-                MapNpc npc = Session.CurrentMapInstance.Npcs.FirstOrDefault(s => s.MapNpcId == Session.Character.LastNRunId);
+                MapNpc npc = Session.CurrentMapInstance.Npcs.Find(s => s.MapNpcId == Session.Character.LastNRunId);
                 if (npc != null)
                 {
                     int distance = Map.GetDistance(new MapCell
@@ -551,7 +551,7 @@ namespace OpenNos.Handler
                     });
                     if (npc.MapInstance == Session.CurrentMapInstance && distance <= 5)
                     {
-                        Recipe rec = npc.Recipes.FirstOrDefault(s => s.ItemVNum == VNum);
+                        Recipe rec = npc.Recipes.Find(s => s.ItemVNum == VNum);
                         if (rec != null)
                         {
                             if (rec.Amount <= 0)
@@ -599,7 +599,7 @@ namespace OpenNos.Handler
                     short PositionX = short.Parse(packetsplit[i + 1]);
                     short PositionY = short.Parse(packetsplit[i + 2]);
 
-                    Mate mate = Session.Character.Mates.FirstOrDefault(s => s.MateTransportId == PetId);
+                    Mate mate = Session.Character.Mates.Find(s => s.MateTransportId == PetId);
                     if (mate != null)
                     {
                         mate.PositionX = PositionX;
@@ -632,7 +632,7 @@ namespace OpenNos.Handler
             {
                 return;
             }
-            Mate mate = Session.Character.Mates.FirstOrDefault(s => s.MateTransportId == sayPPacket.PetId);
+            Mate mate = Session.Character.Mates.Find(s => s.MateTransportId == sayPPacket.PetId);
             if (mate != null)
             {
                 Session.CurrentMapInstance.Broadcast(mate.GenerateSay(sayPPacket.Message, 2));
@@ -724,7 +724,7 @@ namespace OpenNos.Handler
             {
                 return;
             }
-            MapNpc mapnpc = Session.CurrentMapInstance.Npcs.FirstOrDefault(n => n.MapNpcId.Equals(NpcId));
+            MapNpc mapnpc = Session.CurrentMapInstance.Npcs.Find(n => n.MapNpcId.Equals(NpcId));
             if (mapnpc?.Shop == null)
             {
                 return;
@@ -845,7 +845,7 @@ namespace OpenNos.Handler
             else
             {
                 // Npc Shop , ignore if has drop
-                MapNpc npc = Session.CurrentMapInstance.Npcs.FirstOrDefault(n => n.MapNpcId.Equals((int)requestNpcPacket.Owner));
+                MapNpc npc = Session.CurrentMapInstance.Npcs.Find(n => n.MapNpcId.Equals((int)requestNpcPacket.Owner));
                 if (npc == null)
                 {
                     return;
@@ -875,7 +875,7 @@ namespace OpenNos.Handler
             {
                 return false;
             }
-            PersonalShopItem shopitem = clientSession.CurrentMapInstance.UserShops[shop.Key].Items.FirstOrDefault(i => i.ShopSlot.Equals(slot));
+            PersonalShopItem shopitem = clientSession.CurrentMapInstance.UserShops[shop.Key].Items.Find(i => i.ShopSlot.Equals(slot));
             if (shopitem == null)
             {
                 return false;

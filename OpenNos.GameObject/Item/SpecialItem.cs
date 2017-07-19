@@ -78,7 +78,7 @@ namespace OpenNos.GameObject
                     ItemInstance raidSeal = session.Character.Inventory.LoadBySlotAndType<ItemInstance>(inv.Slot, InventoryType.Main);
                     session.Character.Inventory.RemoveItemAmountFromInventory(1, raidSeal.Id);
 
-                    ScriptedInstance raid = ServerManager.Instance.Raids.FirstOrDefault(s => s.RequieredItems.Any(obj => obj.VNum == raidSeal.ItemVNum)).GetClone();
+                    ScriptedInstance raid = ServerManager.Instance.Raids.Find(s => s.RequieredItems.Any(obj => obj.VNum == raidSeal.ItemVNum)).GetClone();
                     if (raid != null)
                     {
                         Group group = new Group()
@@ -102,7 +102,7 @@ namespace OpenNos.GameObject
                     break;
 
                 case 305:
-                    Mate mate = session.Character.Mates.FirstOrDefault(s => s.MateTransportId == int.Parse(packetsplit[3]));
+                    Mate mate = session.Character.Mates.Find(s => s.MateTransportId == int.Parse(packetsplit[3]));
                     if (mate != null && EffectValue == mate.NpcMonsterVNum && mate.Skin == 0)
                     {
                         mate.Skin = Morph;

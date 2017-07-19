@@ -34,7 +34,7 @@ namespace OpenNos.GameObject
             {
                 return;
             }
-            MapNpc npc = Session.CurrentMapInstance.Npcs.FirstOrDefault(s => s.MapNpcId == packet.NpcId);
+            MapNpc npc = Session.CurrentMapInstance.Npcs.Find(s => s.MapNpcId == packet.NpcId);
             TeleporterDTO tp;
             switch (packet.Runner)
             {
@@ -88,7 +88,7 @@ namespace OpenNos.GameObject
                     break;
 
                 case 4:
-                    Mate mate = Session.Character.Mates.FirstOrDefault(s => s.MateTransportId == packet.NpcId);
+                    Mate mate = Session.Character.Mates.Find(s => s.MateTransportId == packet.NpcId);
                     switch (packet.Type)
                     {
                         case 2:
@@ -510,7 +510,7 @@ namespace OpenNos.GameObject
                     break;
 
                 case 60:
-                    StaticBonusDTO medal = Session.Character.StaticBonusList.FirstOrDefault(s => s.StaticBonusType == StaticBonusType.BazaarMedalGold || s.StaticBonusType == StaticBonusType.BazaarMedalSilver);
+                    StaticBonusDTO medal = Session.Character.StaticBonusList.Find(s => s.StaticBonusType == StaticBonusType.BazaarMedalGold || s.StaticBonusType == StaticBonusType.BazaarMedalSilver);
                     byte Medal = 0;
                     int Time = 0;
                     if (medal != null)

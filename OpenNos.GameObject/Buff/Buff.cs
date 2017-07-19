@@ -30,7 +30,7 @@ namespace OpenNos.GameObject
 
         public Buff(int id, byte level)
         {
-            Card = ServerManager.Instance.Cards.FirstOrDefault(s => s.CardId == id);
+            Card = ServerManager.Instance.Cards.Find(s => s.CardId == id);
             Level = level;
         }
 
