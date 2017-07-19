@@ -62,7 +62,7 @@ namespace OpenNos.DAL.EF
             {
                 using (var context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<MaintenanceLogDTO>(context.MaintenanceLog.FirstOrDefault(m => m.DateEnd > DateTime.Now && m.DateStart <= DateTime.Now));
+                    return _mapper.Map<MaintenanceLogDTO>(context.MaintenanceLog.FirstOrDefault(m => m.DateEnd > DateTime.Now));
                 }
             }
             catch (Exception e)

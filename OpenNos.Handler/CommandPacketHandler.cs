@@ -1597,7 +1597,7 @@ namespace OpenNos.Handler
             if (maintenancePacket != null)
             {
                 Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Maintenance]Delay: {maintenancePacket.Delay} Duration: {maintenancePacket.Duration} Reason: {maintenancePacket.Reason}");
-                DateTime dateStart = DateTime.Now.AddMinutes(maintenancePacket.Delay).RoundToNearest(TimeSpan.FromMinutes(15));
+                DateTime dateStart = DateTime.Now.AddMinutes(maintenancePacket.Delay);
                 MaintenanceLogDTO maintenance = new MaintenanceLogDTO()
                 {
                     DateEnd = dateStart.AddMinutes(maintenancePacket.Duration),

@@ -1162,12 +1162,6 @@ namespace OpenNos.GameObject
         public void SaveAll()
         {
             List<ClientSession> sessions = Sessions.Where(c => c.IsConnected).ToList();
-            MaintenanceLogDTO maintenanceLog = DAOFactory.MaintenanceLogDAO.LoadFirst();
-            if (maintenanceLog != null)
-            {
-                Logger.LogEvent("MAINTENANCE_STATE", "Caller: ServerManager", $"[Maintenance]{Language.Instance.GetMessageFromKey("MAINTENANCE_PLANNED")}");
-                sessions.Where(s => s.Account.Authority < AuthorityType.Moderator).ToList().ForEach(session => session.Disconnect());
-            }
             sessions.ForEach(s => s.Character?.Save());
             DAOFactory.BazaarItemDAO.RemoveOutDated();
         }
@@ -1375,6 +1369,8 @@ namespace OpenNos.GameObject
 
             Observable.Interval(TimeSpan.FromHours(3)).Subscribe(x => BotProcess());
 
+            Observable.Interval(TimeSpan.FromMinutes(1)).Subscribe(x => MaintenanceProcess());
+
             EventHelper.Instance.RunEvent(new EventContainer(Instance.GetMapInstance(Instance.GetBaseMapInstanceIdByMapId(98)), EventActionType.NPCSEFFECTCHANGESTATE, true));
             foreach (Schedule schedule in Schedules)
             {
@@ -1393,6 +1389,28 @@ namespace OpenNos.GameObject
             CommunicationServiceClient.Instance.PenaltyLogRefresh += OnPenaltyLogRefresh;
             CommunicationServiceClient.Instance.ShutdownEvent += OnShutdown;
             _lastGroupId = 1;
+        }
+
+        private void MaintenanceProcess()
+        {
+            List<ClientSession> sessions = Sessions.Where(c => c.IsConnected).ToList();
+            MaintenanceLogDTO maintenanceLog = DAOFactory.MaintenanceLogDAO.LoadFirst();
+            if (maintenanceLog != null)
+            {
+                if (maintenanceLog.DateStart <= DateTime.Now)
+                {
+                    Logger.LogEvent("MAINTENANCE_STATE", "Caller: ServerManager", $"[Maintenance]{Language.Instance.GetMessageFromKey("MAINTENANCE_PLANNED")}");
+                    sessions.Where(s => s.Account.Authority < AuthorityType.Moderator).ToList().ForEach(session => session.Disconnect());
+                }
+                else if (maintenanceLog.DateStart <= DateTime.Now.AddMinutes(5))
+                {
+                    int min = (maintenanceLog.DateStart - DateTime.Now).Minutes;
+                    if (min != 0)
+                    {
+                        Shout($"Maintenance will begin in {min} minutes");
+                    }
+                }
+            }
         }
 
         private void LoadBazaar()

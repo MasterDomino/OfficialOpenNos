@@ -43,8 +43,9 @@ namespace OpenNos.Core
             long delta = dt.Ticks % d.Ticks;
             bool roundUp = delta > d.Ticks / 2;
             long offset = roundUp ? d.Ticks : 0;
+            DateTime targetTime = new DateTime(dt.Ticks + offset - delta, dt.Kind);
 
-            return new DateTime(dt.Ticks + offset - delta, dt.Kind);
+            return targetTime <= DateTime.Now ? RoundUp(dt, d) : targetTime;
         }
 
         #endregion
