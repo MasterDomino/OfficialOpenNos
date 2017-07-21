@@ -1444,4 +1444,7 @@
   <data name="GOLD_TS_END" xml:space="preserve">
     <value>You got {0} gold after finishing the timespace.</value>
   </data>
+  <data name="GIFT_SENT" xml:space="preserve">
+    <value>Gift has been sent!</value>
+  </data>
 </root>
