@@ -147,21 +147,17 @@ namespace OpenNos.GameObject
 
         internal void StartLife()
         {
-            Observable.Interval(TimeSpan.FromMilliseconds(400)).Subscribe(x =>
+            try
             {
-                Started = true;
-                try
+                if (!MapInstance.IsSleeping)
                 {
-                    if (!MapInstance.IsSleeping)
-                    {
-                        NpcLife();
-                    }
+                    NpcLife();
                 }
-                catch (Exception e)
-                {
-                    Logger.Error(e);
-                }
-            });
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+            }
         }
 
         private string GenerateMv2()
