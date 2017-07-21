@@ -1878,12 +1878,9 @@ namespace OpenNos.Import.Console
                         }
                     }
                 }
-                else
+                else if (currentPacket.Length > 3)
                 {
-                    if (currentPacket.Length > 3)
-                    {
-                        type = byte.Parse(currentPacket[1]);
-                    }
+                    type = byte.Parse(currentPacket[1]);
                 }
             }
 
@@ -1963,12 +1960,9 @@ namespace OpenNos.Import.Console
                         }
                     }
                 }
-                else
+                else if (currentPacket.Length > 3)
                 {
-                    if (currentPacket.Length > 3)
-                    {
-                        type = byte.Parse(currentPacket[1]);
-                    }
+                    type = byte.Parse(currentPacket[1]);
                 }
             }
 

@@ -69,39 +69,36 @@ namespace OpenNos.GameObject
                                 {
                                     session.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#u_i^{type}^{secondaryType}^{inventoryType}^{slot}^1 #u_i^{type}^{secondaryType}^{inventoryType}^{slot}^2 {Language.Instance.GetMessageFromKey("WANT_TO_SAVE_POSITION")}"));
                                 }
-                                else
+                                else if (int.TryParse(packetsplit[6], out packetType))
                                 {
-                                    if (int.TryParse(packetsplit[6], out packetType))
+                                    switch (packetType)
                                     {
-                                        switch (packetType)
-                                        {
-                                            case 1:
-                                                session.SendPacket(UserInterfaceHelper.Instance.GenerateDelay(5000, 7, $"#u_i^{type}^{secondaryType}^{inventoryType}^{slot}^3"));
-                                                break;
+                                        case 1:
+                                            session.SendPacket(UserInterfaceHelper.Instance.GenerateDelay(5000, 7, $"#u_i^{type}^{secondaryType}^{inventoryType}^{slot}^3"));
+                                            break;
 
-                                            case 2:
-                                                session.SendPacket(UserInterfaceHelper.Instance.GenerateDelay(5000, 7, $"#u_i^{type}^{secondaryType}^{inventoryType}^{slot}^4"));
-                                                break;
+                                        case 2:
+                                            session.SendPacket(UserInterfaceHelper.Instance.GenerateDelay(5000, 7, $"#u_i^{type}^{secondaryType}^{inventoryType}^{slot}^4"));
+                                            break;
 
-                                            case 3:
-                                                session.Character.SetReturnPoint(session.Character.MapId, session.Character.MapX, session.Character.MapY);
-                                                RespawnMapTypeDTO respawn = session.Character.Respawn;
-                                                if (respawn.DefaultX != 0 && respawn.DefaultY != 0 && respawn.DefaultMapId != 0)
-                                                {
-                                                    ServerManager.Instance.ChangeMap(session.Character.CharacterId, respawn.DefaultMapId, (short)(respawn.DefaultX + ServerManager.Instance.RandomNumber(-5, 5)), (short)(respawn.DefaultY + ServerManager.Instance.RandomNumber(-5, 5)));
-                                                }
-                                                session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
-                                                break;
+                                        case 3:
+                                            session.Character.SetReturnPoint(session.Character.MapId, session.Character.MapX, session.Character.MapY);
+                                            RespawnMapTypeDTO respawn = session.Character.Respawn;
+                                            if (respawn.DefaultX != 0 && respawn.DefaultY != 0 && respawn.DefaultMapId != 0)
+                                            {
+                                                ServerManager.Instance.ChangeMap(session.Character.CharacterId, respawn.DefaultMapId, (short)(respawn.DefaultX + ServerManager.Instance.RandomNumber(-5, 5)), (short)(respawn.DefaultY + ServerManager.Instance.RandomNumber(-5, 5)));
+                                            }
+                                            session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                                            break;
 
-                                            case 4:
-                                                RespawnMapTypeDTO respawnObj = session.Character.Respawn;
-                                                if (respawnObj.DefaultX != 0 && respawnObj.DefaultY != 0 && respawnObj.DefaultMapId != 0)
-                                                {
-                                                    ServerManager.Instance.ChangeMap(session.Character.CharacterId, respawnObj.DefaultMapId, (short)(respawnObj.DefaultX + ServerManager.Instance.RandomNumber(-5, 5)), (short)(respawnObj.DefaultY + ServerManager.Instance.RandomNumber(-5, 5)));
-                                                }
-                                                session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
-                                                break;
-                                        }
+                                        case 4:
+                                            RespawnMapTypeDTO respawnObj = session.Character.Respawn;
+                                            if (respawnObj.DefaultX != 0 && respawnObj.DefaultY != 0 && respawnObj.DefaultMapId != 0)
+                                            {
+                                                ServerManager.Instance.ChangeMap(session.Character.CharacterId, respawnObj.DefaultMapId, (short)(respawnObj.DefaultX + ServerManager.Instance.RandomNumber(-5, 5)), (short)(respawnObj.DefaultY + ServerManager.Instance.RandomNumber(-5, 5)));
+                                            }
+                                            session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                                            break;
                                     }
                                 }
                                 break;

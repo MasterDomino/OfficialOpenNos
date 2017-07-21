@@ -214,12 +214,9 @@ namespace OpenNos.Handler
                             Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("COMPLIMENT_COOLDOWN"), 11));
                         }
                     }
-                    else
+                    else if (dto != null)
                     {
-                        if (dto != null)
-                        {
-                            Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("COMPLIMENT_LOGIN_COOLDOWN"), (dto.Timestamp.AddMinutes(60) - DateTime.Now).Minutes), 11));
-                        }
+                        Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("COMPLIMENT_LOGIN_COOLDOWN"), (dto.Timestamp.AddMinutes(60) - DateTime.Now).Minutes), 11));
                     }
                 }
                 else
@@ -754,15 +751,12 @@ namespace OpenNos.Handler
                     {
                         Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateEff(guriPacket.Data + 4099), ReceiverType.AllNoEmoBlocked);
                     }
-                    else
+                    else if (guriPacket.User.TryCast(out int mateTransportId))
                     {
-                        if (guriPacket.User.TryCast(out int mateTransportId))
+                        Mate mate = Session.Character.Mates.Find(s => s.MateTransportId == mateTransportId);
+                        if (mate != null)
                         {
-                            Mate mate = Session.Character.Mates.Find(s => s.MateTransportId == mateTransportId);
-                            if (mate != null)
-                            {
-                                Session.CurrentMapInstance?.Broadcast(Session, mate.GenerateEff(guriPacket.Data + 4099), ReceiverType.AllNoEmoBlocked);
-                            }
+                            Session.CurrentMapInstance?.Broadcast(Session, mate.GenerateEff(guriPacket.Data + 4099), ReceiverType.AllNoEmoBlocked);
                         }
                     }
                 }
@@ -1610,38 +1604,35 @@ namespace OpenNos.Handler
                     Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("USER_NOT_FOUND"), 10));
                 }
             }
-            else
+            else if (pstPacket.Id.TryCast(out int id) && pstPacket.Type.TryCast(out byte type))
             {
-                if (pstPacket.Id.TryCast(out int id) && pstPacket.Type.TryCast(out byte type))
+                if (pstPacket.Argument == 3)
                 {
-                    if (pstPacket.Argument == 3)
+                    if (Session.Character.MailList.ContainsKey(id))
                     {
-                        if (Session.Character.MailList.ContainsKey(id))
+                        if (!Session.Character.MailList[id].IsOpened)
                         {
-                            if (!Session.Character.MailList[id].IsOpened)
-                            {
-                                Session.Character.MailList[id].IsOpened = true;
-                                MailDTO mailupdate = Session.Character.MailList[id];
-                                DAOFactory.MailDAO.InsertOrUpdate(ref mailupdate);
-                            }
-                            Session.SendPacket(Session.Character.GeneratePostMessage(Session.Character.MailList[id], type));
+                            Session.Character.MailList[id].IsOpened = true;
+                            MailDTO mailupdate = Session.Character.MailList[id];
+                            DAOFactory.MailDAO.InsertOrUpdate(ref mailupdate);
                         }
+                        Session.SendPacket(Session.Character.GeneratePostMessage(Session.Character.MailList[id], type));
                     }
-                    else if (pstPacket.Argument == 2)
+                }
+                else if (pstPacket.Argument == 2)
+                {
+                    if (Session.Character.MailList.ContainsKey(id))
                     {
+                        MailDTO mail = Session.Character.MailList[id];
+                        Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("MAIL_DELETED"), 11));
+                        Session.SendPacket($"post 2 {type} {id}");
+                        if (DAOFactory.MailDAO.LoadById(mail.MailId) != null)
+                        {
+                            DAOFactory.MailDAO.DeleteById(mail.MailId);
+                        }
                         if (Session.Character.MailList.ContainsKey(id))
                         {
-                            MailDTO mail = Session.Character.MailList[id];
-                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("MAIL_DELETED"), 11));
-                            Session.SendPacket($"post 2 {type} {id}");
-                            if (DAOFactory.MailDAO.LoadById(mail.MailId) != null)
-                            {
-                                DAOFactory.MailDAO.DeleteById(mail.MailId);
-                            }
-                            if (Session.Character.MailList.ContainsKey(id))
-                            {
-                                Session.Character.MailList.Remove(id);
-                            }
+                            Session.Character.MailList.Remove(id);
                         }
                     }
                 }
@@ -1774,12 +1765,10 @@ namespace OpenNos.Handler
             {
                 Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("LOGIN_MEDAL"), 12));
             }
-
             if (Session.Character.StaticBonusList.Any(s => s.StaticBonusType == StaticBonusType.PetBasket))
             {
                 Session.SendPacket("ib 1278 1");
             }
-
             if (Session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.CleftOfDarkness))
             {
                 Session.SendPacket("bc 0 0 0");
