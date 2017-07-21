@@ -46,7 +46,7 @@ namespace OpenNos.PathFinder
                 }
 
                 // get neigbours of the current node
-                List<Node> neighbors = GetNeighbors(grid, node,Grid);
+                List<Node> neighbors = GetNeighbors(grid, node, Grid);
 
                 for (int i = 0, l = neighbors.Count; i < l; ++i)
                 {
@@ -75,6 +75,7 @@ namespace OpenNos.PathFinder
                         }
                         else
                         {
+
                             neighbor.Parent = node;
                         }
                     }
@@ -84,6 +85,7 @@ namespace OpenNos.PathFinder
         }
 
         public static Node[,] LoadBrushFire(GridPos user, GridPos[,] mapGrid, short MaxDistance = 22)
+
         {
             Node[,] grid = new Node[mapGrid.GetLength(0), mapGrid.GetLength(1)];
 
@@ -94,6 +96,7 @@ namespace OpenNos.PathFinder
             }
             Node Start = grid[user.X, user.Y];
             MinHeap path = new MinHeap();
+
 
             // push the start node into the open list
             path.Push(Start);

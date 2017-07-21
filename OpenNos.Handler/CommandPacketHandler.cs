@@ -2382,6 +2382,7 @@ namespace OpenNos.Handler
                 else
                 {
                     ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, Session.Character.MapInstanceId, Session.Character.PositionX, Session.Character.PositionY);
+                    Session.SendPacket("cancel 2 0");
                 }
             }
         }

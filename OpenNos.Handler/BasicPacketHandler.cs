@@ -1912,7 +1912,7 @@ namespace OpenNos.Handler
 
                 if (Session.HasCurrentMapInstance && !Session.CurrentMapInstance.Map.IsBlockedZone(walkPacket.XCoordinate, walkPacket.YCoordinate) && !Session.Character.IsChangingMapInstance && !Session.Character.HasShopOpened)
                 {
-                    if ((Session.Character.Speed >= walkPacket.Speed || Session.Character.LastSpeedChange.AddSeconds(1) > DateTime.Now) && !(distance > 60 && timeSpanSinceLastPortal > 10))
+                    if ((Session.Character.Speed >= walkPacket.Speed || Session.Character.LastSpeedChange.AddSeconds(5) > DateTime.Now) && !(distance > 60 && timeSpanSinceLastPortal > 10))
                     {
                         if (Session.Character.MapInstance.MapInstanceType == MapInstanceType.BaseMapInstance)
                         {
@@ -1921,11 +1921,11 @@ namespace OpenNos.Handler
                         }
                         Session.Character.PositionX = walkPacket.XCoordinate;
                         Session.Character.PositionY = walkPacket.YCoordinate;
-                        Session.Character.BrushFire = BestFirstSearch.LoadBrushFire(new GridPos()
+
+                        if (Session.Character.LastMonsterAggro.AddSeconds(5) > DateTime.Now)
                         {
-                            X = Session.Character.PositionX,
-                            Y = Session.Character.PositionY
-                        }, Session.CurrentMapInstance.Map.Grid);
+                            Session.Character.UpdateBushFire();
+                        }
                         Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateMv());
                         Session.SendPacket(Session.Character.GenerateCond());
                         Session.Character.LastMove = DateTime.Now;
@@ -1942,6 +1942,7 @@ namespace OpenNos.Handler
                         });
                         Session.CurrentMapInstance?.OnMoveOnMapEvents?.RemoveAll(s => s != null);
                     }
+
                     else
                     {
                         Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo("Ciapa said you shouldn't use hacks!"));
