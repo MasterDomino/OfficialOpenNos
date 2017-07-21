@@ -214,10 +214,10 @@ namespace OpenNos.GameObject
             {
                 case MateType.Partner:
                     List<ItemInstance> items = GetInventory();
-                    ItemInstance Weapon = items.FirstOrDefault(s => s.Slot == (short)EquipmentType.MainWeapon);
-                    ItemInstance Armor = items.FirstOrDefault(s => s.Slot == (short)EquipmentType.Armor);
-                    ItemInstance Gloves = items.FirstOrDefault(s => s.Slot == (short)EquipmentType.Gloves);
-                    ItemInstance Boots = items.FirstOrDefault(s => s.Slot == (short)EquipmentType.Boots);
+                    ItemInstance Weapon = items.Find(s => s.Slot == (short)EquipmentType.MainWeapon);
+                    ItemInstance Armor = items.Find(s => s.Slot == (short)EquipmentType.Armor);
+                    ItemInstance Gloves = items.Find(s => s.Slot == (short)EquipmentType.Gloves);
+                    ItemInstance Boots = items.Find(s => s.Slot == (short)EquipmentType.Boots);
                     return $"sc_n {PetId} {NpcMonsterVNum} {MateTransportId} {Level} {Loyalty} {Experience} {(Weapon != null ? $"{Weapon.ItemVNum}.{Weapon.Rare}.{Weapon.Upgrade}" : "-1")} {(Armor != null ? $"{Armor.ItemVNum}.{Armor.Rare}.{Armor.Upgrade}" : "-1")} {(Gloves != null ? $"{Gloves.ItemVNum}.0.0" : "-1")} {(Boots != null ? $"{Boots.ItemVNum}.0.0" : "-1")} 0 0 1 0 142 174 232 4 70 0 73 158 86 158 69 0 0 0 0 0 2641 2641 1065 1065 0 285816 {Name.Replace(' ', '^')} {(Skin != 0 ? Skin : -1)} {(IsSummonable ? 1 : 0)} -1 -1 -1 -1";
 
                 case MateType.Pet:

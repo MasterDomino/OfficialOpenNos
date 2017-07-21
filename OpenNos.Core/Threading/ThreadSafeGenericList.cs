@@ -215,6 +215,7 @@ namespace OpenNos.Core
             return default(T);
         }
 
+        [Obsolete]
         public T FirstOrDefault(Func<T, bool> predicate)
         {
             if (!_disposed)

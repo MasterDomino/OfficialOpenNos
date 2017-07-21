@@ -251,7 +251,7 @@ namespace OpenNos.GameObject.Helpers
                                 {
                                     Guid MapInstanceId = ServerManager.Instance.GetBaseMapInstanceIdByMapId(client.Character.MapId);
                                     MapInstance map = ServerManager.Instance.GetMapInstance(MapInstanceId);
-                                    ScriptedInstance si = map.ScriptedInstances.FirstOrDefault(s => s.PositionX == client.Character.MapX && s.PositionY == client.Character.MapY);
+                                    ScriptedInstance si = map.ScriptedInstances.Find(s => s.PositionX == client.Character.MapX && s.PositionY == client.Character.MapY);
                                     byte penalty = 0;
                                     if (penalty > (client.Character.Level - si.LevelMinimum) * 2)
                                     {
@@ -378,7 +378,7 @@ namespace OpenNos.GameObject.Helpers
 
                     case EventActionType.CHANGEPORTALTYPE:
                         Tuple<int, PortalType> param = (Tuple<int, PortalType>)evt.Parameter;
-                        Portal portal = evt.MapInstance.Portals.FirstOrDefault(s => s.PortalId == param.Item1);
+                        Portal portal = evt.MapInstance.Portals.Find(s => s.PortalId == param.Item1);
                         if (portal != null)
                         {
                             portal.Type = (short)param.Item2;

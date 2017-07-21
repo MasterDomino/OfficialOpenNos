@@ -2056,7 +2056,7 @@ namespace OpenNos.Import.Console
                         skill.LevelMinimum = currentLine[2] != "-1" ? byte.Parse(currentLine[2]) : (byte)0;
                         if (skill.Class > 31)
                         {
-                            SkillDTO firstskill = skills.FirstOrDefault(s => s.Class == skill.Class);
+                            SkillDTO firstskill = skills.Find(s => s.Class == skill.Class);
                             if (firstskill == null || skill.SkillVNum <= firstskill.SkillVNum + 10)
                             {
                                 switch (skill.Class)

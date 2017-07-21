@@ -44,7 +44,7 @@ namespace OpenNos.GameObject
                 case 11:
                     if (int.TryParse(packetsplit[3], out x1))
                     {
-                        Mate mate = session.Character.Mates.FirstOrDefault(s => s.MateTransportId == x1);
+                        Mate mate = session.Character.Mates.Find(s => s.MateTransportId == x1);
                         if (mate == null || mate.Level >= session.Character.Level - 5)
                         {
                             return;
@@ -65,7 +65,7 @@ namespace OpenNos.GameObject
                 case 14:
                     if (int.TryParse(packetsplit[3], out x1))
                     {
-                        Mate mate = session.Character.Mates.FirstOrDefault(s => s.MateTransportId == x1 && s.MateType == MateType.Pet);
+                        Mate mate = session.Character.Mates.Find(s => s.MateTransportId == x1 && s.MateType == MateType.Pet);
                         if (mate?.CanPickUp == false)
                         {
                             session.Character.Inventory.RemoveItemAmount(inv.ItemVNum, 1);
@@ -83,7 +83,7 @@ namespace OpenNos.GameObject
                 case 17:
                     if (int.TryParse(packetsplit[3], out x1))
                     {
-                        Mate mate = session.Character.Mates.FirstOrDefault(s => s.MateTransportId == x1);
+                        Mate mate = session.Character.Mates.Find(s => s.MateTransportId == x1);
                         if (mate?.IsSummonable == false)
                         {
                             session.Character.Inventory.RemoveItemAmount(inv.ItemVNum, 1);
@@ -98,7 +98,7 @@ namespace OpenNos.GameObject
                 case 1000:
                     if (int.TryParse(packetsplit[3], out x1))
                     {
-                        Mate mate = session.Character.Mates.FirstOrDefault(s => s.MateTransportId == x1 && s.MateType == MateType.Pet);
+                        Mate mate = session.Character.Mates.Find(s => s.MateTransportId == x1 && s.MateType == MateType.Pet);
                         if (mate != null)
                         {
                             if (!mate.IsTeamMember)
@@ -123,7 +123,7 @@ namespace OpenNos.GameObject
                 case 1001:
                     if (int.TryParse(packetsplit[3], out x1))
                     {
-                        Mate mate = session.Character.Mates.FirstOrDefault(s => s.MateTransportId == x1 && s.MateType == MateType.Partner);
+                        Mate mate = session.Character.Mates.Find(s => s.MateTransportId == x1 && s.MateType == MateType.Partner);
                         if (mate != null)
                         {
                             if (!mate.IsTeamMember)

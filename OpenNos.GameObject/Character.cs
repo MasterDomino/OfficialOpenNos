@@ -132,7 +132,7 @@ namespace OpenNos.GameObject
         {
             get
             {
-                return Family?.FamilyCharacters.FirstOrDefault(s => s.CharacterId == CharacterId);
+                return Family?.FamilyCharacters.Find(s => s.CharacterId == CharacterId);
             }
         }
 
@@ -296,7 +296,7 @@ namespace OpenNos.GameObject
                     long? respawnmaptype = Session.CurrentMapInstance.Map.MapTypes[0].RespawnMapTypeId;
                     if (respawnmaptype != null)
                     {
-                        RespawnDTO resp = Respawns.FirstOrDefault(s => s.RespawnMapTypeId == respawnmaptype);
+                        RespawnDTO resp = Respawns.Find(s => s.RespawnMapTypeId == respawnmaptype);
                         if (resp == null)
                         {
                             RespawnMapTypeDTO defaultresp = Session.CurrentMapInstance.Map.DefaultRespawn;
@@ -333,7 +333,7 @@ namespace OpenNos.GameObject
                     long? respawnmaptype = Session.CurrentMapInstance.Map.MapTypes[0].ReturnMapTypeId;
                     if (respawnmaptype != null)
                     {
-                        RespawnDTO resp = Respawns.FirstOrDefault(s => s.RespawnMapTypeId == respawnmaptype);
+                        RespawnDTO resp = Respawns.Find(s => s.RespawnMapTypeId == respawnmaptype);
                         if (resp == null)
                         {
                             RespawnMapTypeDTO defaultresp = Session.CurrentMapInstance.Map.DefaultReturn;
@@ -980,7 +980,7 @@ namespace OpenNos.GameObject
 
         public void DeleteBlackList(long characterId)
         {
-            CharacterRelationDTO chara = CharacterRelations.FirstOrDefault(s => s.RelatedCharacterId == characterId);
+            CharacterRelationDTO chara = CharacterRelations.Find(s => s.RelatedCharacterId == characterId);
             if (chara != null)
             {
                 long id = chara.CharacterRelationId;
@@ -1010,7 +1010,7 @@ namespace OpenNos.GameObject
 
         public void DeleteRelation(long characterId)
         {
-            CharacterRelationDTO chara = CharacterRelations.FirstOrDefault(s => s.RelatedCharacterId == characterId || s.CharacterId == characterId);
+            CharacterRelationDTO chara = CharacterRelations.Find(s => s.RelatedCharacterId == characterId || s.CharacterId == characterId);
             if (chara != null)
             {
                 long id = chara.CharacterRelationId;
@@ -1461,7 +1461,7 @@ namespace OpenNos.GameObject
 
         public string GenerateGidx()
         {
-            return Family != null ? $"gidx 1 {CharacterId} {Family.FamilyId} {Family.Name}({Language.Instance.GetMessageFromKey(Family.FamilyCharacters.FirstOrDefault(s => s.CharacterId == CharacterId)?.Authority.ToString().ToUpper())}) {Family.FamilyLevel}" : $"gidx 1 {CharacterId} -1 - 0";
+            return Family != null ? $"gidx 1 {CharacterId} {Family.FamilyId} {Family.Name}({Language.Instance.GetMessageFromKey(Family.FamilyCharacters.Find(s => s.CharacterId == CharacterId)?.Authority.ToString().ToUpper())}) {Family.FamilyLevel}" : $"gidx 1 {CharacterId} -1 - 0";
         }
 
         public string GenerateGInfo()
@@ -1470,7 +1470,7 @@ namespace OpenNos.GameObject
             {
                 try
                 {
-                    FamilyCharacter familyCharacter = Family.FamilyCharacters.FirstOrDefault(s => s.Authority == FamilyAuthority.Head);
+                    FamilyCharacter familyCharacter = Family.FamilyCharacters.Find(s => s.Authority == FamilyAuthority.Head);
                     if (familyCharacter != null)
                     {
                         return $"ginfo {Family.Name} {familyCharacter.Character.Name} {(byte)Family.FamilyHeadGender} {Family.FamilyLevel} {Family.FamilyExperience} {CharacterHelper.LoadFamilyXPData(Family.FamilyLevel)} {Family.FamilyCharacters.Count} {Family.MaxSize} {(byte)FamilyCharacter.Authority} {(Family.ManagerCanInvite ? 1 : 0)} {(Family.ManagerCanNotice ? 1 : 0)} {(Family.ManagerCanShout ? 1 : 0)} {(Family.ManagerCanGetHistory ? 1 : 0)} {(byte)Family.ManagerAuthorityType} {(Family.MemberCanGetHistory ? 1 : 0)} {(byte)Family.MemberAuthorityType} {Family.FamilyMessage.Replace(' ', '^')}";
@@ -1537,7 +1537,7 @@ namespace OpenNos.GameObject
                 Group group = null;
                 if (dropOwner != null)
                 {
-                    group = ServerManager.Instance.Groups.FirstOrDefault(g => g.IsMemberOfGroup((long)dropOwner));
+                    group = ServerManager.Instance.Groups.Find(g => g.IsMemberOfGroup((long)dropOwner));
                 }
 
                 // end owner set
@@ -1685,7 +1685,7 @@ namespace OpenNos.GameObject
 
                         if (Hp > 0)
                         {
-                            Group grp = ServerManager.Instance.Groups.FirstOrDefault(g => g.IsMemberOfGroup(CharacterId));
+                            Group grp = ServerManager.Instance.Groups.Find(g => g.IsMemberOfGroup(CharacterId));
                             if (grp != null)
                             {
                                 foreach (ClientSession targetSession in grp.Characters.GetAllItems().Where(g => g.Character.MapInstanceId == MapInstanceId))
@@ -1870,7 +1870,7 @@ namespace OpenNos.GameObject
 
         public string GeneratePinit()
         {
-            Group grp = ServerManager.Instance.Groups.FirstOrDefault(s => s.IsMemberOfGroup(CharacterId) && s.GroupType == GroupType.Group);
+            Group grp = ServerManager.Instance.Groups.Find(s => s.IsMemberOfGroup(CharacterId) && s.GroupType == GroupType.Group);
             List<Mate> mates = Mates;
             int i = 0;
             string str = string.Empty;
@@ -1929,7 +1929,7 @@ namespace OpenNos.GameObject
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    QuicklistEntryDTO qi = QuicklistEntries.FirstOrDefault(n => n.Q1 == j && n.Q2 == i && n.Morph == (UseSp ? Morph : 0));
+                    QuicklistEntryDTO qi = QuicklistEntries.Find(n => n.Q1 == j && n.Q2 == i && n.Morph == (UseSp ? Morph : 0));
                     pktQs[j] += $" {qi?.Type ?? 7}.{qi?.Slot ?? 7}.{qi?.Pos.ToString() ?? "-1"}";
                 }
             }
@@ -2612,7 +2612,7 @@ namespace OpenNos.GameObject
                 {
                     WareHouseSize = item.Item.MinilandObjectPoint;
                 }
-                MinilandObject mp = MinilandObjects.FirstOrDefault(s => s.ItemInstanceId == item.Id);
+                MinilandObject mp = MinilandObjects.Find(s => s.ItemInstanceId == item.Id);
                 bool used = mp != null;
                 mlobjstring += $" {item.Slot}.{(used ? 1 : 0)}.{(used ? mp.MapX : 0)}.{(used ? mp.MapY : 0)}.{(item.Item.Width != 0 ? item.Item.Width : 1) }.{(item.Item.Height != 0 ? item.Item.Height : 1) }.{(used ? mp.ItemInstance.DurabilityPoint : 0)}.100.0.1";
             }
@@ -3396,7 +3396,7 @@ namespace OpenNos.GameObject
                 long? respawnmaptype = Session.CurrentMapInstance.Map.MapTypes[0].RespawnMapTypeId;
                 if (respawnmaptype != null)
                 {
-                    RespawnDTO resp = Respawns.FirstOrDefault(s => s.RespawnMapTypeId == respawnmaptype);
+                    RespawnDTO resp = Respawns.Find(s => s.RespawnMapTypeId == respawnmaptype);
                     if (resp == null)
                     {
                         resp = new RespawnDTO { CharacterId = CharacterId, MapId = mapId, X = mapX, Y = mapY, RespawnMapTypeId = (long)respawnmaptype };
@@ -3419,7 +3419,7 @@ namespace OpenNos.GameObject
                 long? respawnmaptype = Session.CurrentMapInstance.Map.MapTypes[0].ReturnMapTypeId;
                 if (respawnmaptype != null)
                 {
-                    RespawnDTO resp = Respawns.FirstOrDefault(s => s.RespawnMapTypeId == respawnmaptype);
+                    RespawnDTO resp = Respawns.Find(s => s.RespawnMapTypeId == respawnmaptype);
                     if (resp == null)
                     {
                         resp = new RespawnDTO { CharacterId = CharacterId, MapId = mapId, X = mapX, Y = mapY, RespawnMapTypeId = (long)respawnmaptype };
@@ -3588,7 +3588,7 @@ namespace OpenNos.GameObject
             NpcMonster monsterinfo = monster.Monster;
             if (!Session.Account.PenaltyLogs.Any(s => s.Penalty == PenaltyType.BlockExp && s.DateEnd > DateTime.Now))
             {
-                Group grp = ServerManager.Instance.Groups.FirstOrDefault(g => g.IsMemberOfGroup(CharacterId));
+                Group grp = ServerManager.Instance.Groups.Find(g => g.IsMemberOfGroup(CharacterId));
                 SpecialistInstance specialist = null;
                 if (Hp <= 0)
                 {

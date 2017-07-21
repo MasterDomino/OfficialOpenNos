@@ -158,7 +158,7 @@ namespace OpenNos.Handler
                     if (equipmentInfoPacket.ShopOwnerId != null)
                     {
                         KeyValuePair<long, MapShop> shop = Session.CurrentMapInstance.UserShops.FirstOrDefault(mapshop => mapshop.Value.OwnerId.Equals(equipmentInfoPacket.ShopOwnerId));
-                        PersonalShopItem item = shop.Value?.Items.FirstOrDefault(i => i.ShopSlot.Equals(equipmentInfoPacket.Slot));
+                        PersonalShopItem item = shop.Value?.Items.Find(i => i.ShopSlot.Equals(equipmentInfoPacket.Slot));
                         if (item != null)
                         {
                             if (item.ItemInstance.GetType() == typeof(BoxInstance))
@@ -551,7 +551,7 @@ namespace OpenNos.Handler
 
             if (getPacket.TransportId < 100000)
             {
-                MapButton button = Session.CurrentMapInstance.Buttons.FirstOrDefault(s => s.MapButtonId == getPacket.TransportId);
+                MapButton button = Session.CurrentMapInstance.Buttons.Find(s => s.MapButtonId == getPacket.TransportId);
                 if (button != null)
                 {
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateDelay(2000, 1, $"#git^{button.MapButtonId}"));
@@ -576,7 +576,7 @@ namespace OpenNos.Handler
                             break;
 
                         case 2:
-                            Mate mate = Session.Character.Mates.FirstOrDefault(s => s.MateTransportId == getPacket.PickerId && s.CanPickUp);
+                            Mate mate = Session.Character.Mates.Find(s => s.MateTransportId == getPacket.PickerId && s.CanPickUp);
                             if (mate != null)
                             {
                                 canpick = mate.IsInRange(mapItem.PositionX, mapItem.PositionY, 8);
@@ -590,7 +590,7 @@ namespace OpenNos.Handler
                             MonsterMapItem monsterMapItem = item;
                             if (Session.CurrentMapInstance.MapInstanceType != MapInstanceType.LodInstance && monsterMapItem.OwnerId.HasValue && monsterMapItem.OwnerId.Value != -1)
                             {
-                                Group group = ServerManager.Instance.Groups.FirstOrDefault(g => g.IsMemberOfGroup(monsterMapItem.OwnerId.Value) && g.IsMemberOfGroup(Session.Character.CharacterId));
+                                Group group = ServerManager.Instance.Groups.Find(g => g.IsMemberOfGroup(monsterMapItem.OwnerId.Value) && g.IsMemberOfGroup(Session.Character.CharacterId));
                                 if (item.CreatedDate.AddSeconds(30) > DateTime.Now && !(monsterMapItem.OwnerId == Session.Character.CharacterId || (group?.SharingMode == (byte)GroupSharingType.Everyone)))
                                 {
                                     Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NOT_YOUR_ITEM"), 10));
@@ -813,17 +813,17 @@ namespace OpenNos.Handler
             {
                 case 1:
                     equipment = InventoryType.FirstPartnerInventory;
-                    mate = Session.Character.Mates.FirstOrDefault(s => s.PetId == removePacket.Type - 1);
+                    mate = Session.Character.Mates.Find(s => s.PetId == removePacket.Type - 1);
                     break;
 
                 case 2:
                     equipment = InventoryType.SecondPartnerInventory;
-                    mate = Session.Character.Mates.FirstOrDefault(s => s.PetId == removePacket.Type - 1);
+                    mate = Session.Character.Mates.Find(s => s.PetId == removePacket.Type - 1);
                     break;
 
                 case 3:
                     equipment = InventoryType.ThirdPartnerInventory;
-                    mate = Session.Character.Mates.FirstOrDefault(s => s.PetId == removePacket.Type - 1);
+                    mate = Session.Character.Mates.Find(s => s.PetId == removePacket.Type - 1);
                     break;
 
                 default:

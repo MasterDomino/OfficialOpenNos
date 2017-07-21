@@ -568,7 +568,7 @@ namespace OpenNos.GameObject
 
         public MapInstance GenerateMapInstance(short MapId, MapInstanceType type, InstanceBag mapclock)
         {
-            Map map = _maps.FirstOrDefault(m => m.MapId.Equals(MapId));
+            Map map = _maps.Find(m => m.MapId.Equals(MapId));
             if (map != null)
             {
                 Guid guid = Guid.NewGuid();
@@ -614,7 +614,7 @@ namespace OpenNos.GameObject
 
         public Item GetItem(short vnum)
         {
-            return _items.FirstOrDefault(m => m.VNum.Equals(vnum));
+            return _items.Find(m => m.VNum.Equals(vnum));
         }
 
         public MapInstance GetMapInstance(Guid id)
@@ -635,7 +635,7 @@ namespace OpenNos.GameObject
 
         public NpcMonster GetNpc(short npcVNum)
         {
-            return _npcs.FirstOrDefault(m => m.NpcMonsterVNum.Equals(npcVNum));
+            return _npcs.Find(m => m.NpcMonsterVNum.Equals(npcVNum));
         }
 
         public T GetProperty<T>(string charName, string property)
@@ -675,7 +675,7 @@ namespace OpenNos.GameObject
 
         public Skill GetSkill(short skillVNum)
         {
-            return _skills.FirstOrDefault(m => m.SkillVNum.Equals(skillVNum));
+            return _skills.Find(m => m.SkillVNum.Equals(skillVNum));
         }
 
         public T GetUserMethod<T>(long characterId, string methodName)
@@ -694,7 +694,7 @@ namespace OpenNos.GameObject
         {
             if (Groups != null)
             {
-                Group grp = Instance.Groups.FirstOrDefault(s => s.IsMemberOfGroup(session.Character.CharacterId));
+                Group grp = Instance.Groups.Find(s => s.IsMemberOfGroup(session.Character.CharacterId));
                 if (grp != null)
                 {
                     if ((grp.CharacterCount >= 3 && grp.GroupType == GroupType.Group) || (grp.CharacterCount >= 2 && grp.GroupType != GroupType.Group))
@@ -1162,12 +1162,6 @@ namespace OpenNos.GameObject
         public void SaveAll()
         {
             List<ClientSession> sessions = Sessions.Where(c => c.IsConnected).ToList();
-            MaintenanceLogDTO maintenanceLog = DAOFactory.MaintenanceLogDAO.LoadFirst();
-            if (maintenanceLog != null)
-            {
-                Logger.LogEvent("MAINTENANCE_STATE", "Caller: ServerManager", $"[Maintenance]{Language.Instance.GetMessageFromKey("MAINTENANCE_PLANNED")}");
-                sessions.Where(s => s.Account.Authority < AuthorityType.Moderator).ToList().ForEach(session => session.Disconnect());
-            }
             sessions.ForEach(s => s.Character?.Save());
             DAOFactory.BazaarItemDAO.RemoveOutDated();
         }
@@ -1258,12 +1252,12 @@ namespace OpenNos.GameObject
             {
                 if (Groups != null)
                 {
-                    Group myGroup = Groups.FirstOrDefault(s => s.IsMemberOfGroup(charId));
+                    Group myGroup = Groups.Find(s => s.IsMemberOfGroup(charId));
                     if (myGroup == null)
                     {
                         return;
                     }
-                    ThreadSafeGenericList<ClientSession> groupMembers = Groups.FirstOrDefault(s => s.IsMemberOfGroup(charId))?.Characters;
+                    ThreadSafeGenericList<ClientSession> groupMembers = Groups.Find(s => s.IsMemberOfGroup(charId))?.Characters;
                     if (groupMembers != null)
                     {
                         foreach (ClientSession session in groupMembers.GetAllItems())
@@ -1375,6 +1369,8 @@ namespace OpenNos.GameObject
 
             Observable.Interval(TimeSpan.FromHours(3)).Subscribe(x => BotProcess());
 
+            Observable.Interval(TimeSpan.FromMinutes(1)).Subscribe(x => MaintenanceProcess());
+
             EventHelper.Instance.RunEvent(new EventContainer(Instance.GetMapInstance(Instance.GetBaseMapInstanceIdByMapId(98)), EventActionType.NPCSEFFECTCHANGESTATE, true));
             foreach (Schedule schedule in Schedules)
             {
@@ -1393,6 +1389,28 @@ namespace OpenNos.GameObject
             CommunicationServiceClient.Instance.PenaltyLogRefresh += OnPenaltyLogRefresh;
             CommunicationServiceClient.Instance.ShutdownEvent += OnShutdown;
             _lastGroupId = 1;
+        }
+
+        private void MaintenanceProcess()
+        {
+            List<ClientSession> sessions = Sessions.Where(c => c.IsConnected).ToList();
+            MaintenanceLogDTO maintenanceLog = DAOFactory.MaintenanceLogDAO.LoadFirst();
+            if (maintenanceLog != null)
+            {
+                if (maintenanceLog.DateStart <= DateTime.Now)
+                {
+                    Logger.LogEvent("MAINTENANCE_STATE", "Caller: ServerManager", $"[Maintenance]{Language.Instance.GetMessageFromKey("MAINTENANCE_PLANNED")}");
+                    sessions.Where(s => s.Account.Authority < AuthorityType.Moderator).ToList().ForEach(session => session.Disconnect());
+                }
+                else if (maintenanceLog.DateStart <= DateTime.Now.AddMinutes(5))
+                {
+                    int min = (maintenanceLog.DateStart - DateTime.Now).Minutes;
+                    if (min != 0)
+                    {
+                        Shout($"Maintenance will begin in {min} minutes");
+                    }
+                }
+            }
         }
 
         private void LoadBazaar()
@@ -1425,7 +1443,7 @@ namespace OpenNos.GameObject
                 {
                     family.FamilyCharacters.Add((FamilyCharacter)famchar);
                 }
-                FamilyCharacter familyCharacter = family.FamilyCharacters.FirstOrDefault(s => s.Authority == FamilyAuthority.Head);
+                FamilyCharacter familyCharacter = family.FamilyCharacters.Find(s => s.Authority == FamilyAuthority.Head);
                 if (familyCharacter != null)
                 {
                     family.Warehouse = new Inventory((Character)familyCharacter.Character);
@@ -1486,7 +1504,7 @@ namespace OpenNos.GameObject
         {
             long BazaarId = (long)sender;
             BazaarItemDTO bzdto = DAOFactory.BazaarItemDAO.LoadById(BazaarId);
-            BazaarItemLink bzlink = BazaarList.FirstOrDefault(s => s.BazaarItem.BazaarItemId == BazaarId);
+            BazaarItemLink bzlink = BazaarList.Find(s => s.BazaarItem.BazaarItemId == BazaarId);
             lock (BazaarList)
             {
                 if (bzdto != null)
@@ -1542,7 +1560,7 @@ namespace OpenNos.GameObject
                     {
                         newFam.FamilyCharacters.Add((FamilyCharacter)famchar);
                     }
-                    FamilyCharacter familyCharacter = newFam.FamilyCharacters.FirstOrDefault(s => s.Authority == FamilyAuthority.Head);
+                    FamilyCharacter familyCharacter = newFam.FamilyCharacters.Find(s => s.Authority == FamilyAuthority.Head);
                     if (familyCharacter != null)
                     {
                         newFam.Warehouse = new Inventory((Character)familyCharacter.Character);
@@ -1675,7 +1693,7 @@ namespace OpenNos.GameObject
         {
             int relId = (int)sender;
             PenaltyLogDTO reldto = DAOFactory.PenaltyLogDAO.LoadById(relId);
-            PenaltyLogDTO rel = PenaltyLogs.FirstOrDefault(s => s.PenaltyLogId == relId);
+            PenaltyLogDTO rel = PenaltyLogs.Find(s => s.PenaltyLogId == relId);
             if (reldto != null)
             {
                 if (rel != null)
@@ -1700,7 +1718,7 @@ namespace OpenNos.GameObject
             lock (CharacterRelations)
             {
                 CharacterRelationDTO reldto = DAOFactory.CharacterRelationDAO.LoadById(relId);
-                CharacterRelationDTO rel = CharacterRelations.FirstOrDefault(s => s.CharacterRelationId == relId);
+                CharacterRelationDTO rel = CharacterRelations.Find(s => s.CharacterRelationId == relId);
                 if (reldto != null)
                 {
                     if (rel != null)

@@ -76,7 +76,6 @@ namespace OpenNos.GameObject
                                 int probabilities = roll.Sum(s => s.Probability);
                                 int rnd = ServerManager.Instance.RandomNumber(0, probabilities);
                                 int currentrnd = 0;
-                                List<ItemInstance> newInv = null;
                                 foreach (RollGeneratedItemDTO rollitem in roll)
                                 {
                                     currentrnd += rollitem.Probability;
@@ -120,7 +119,7 @@ namespace OpenNos.GameObject
                             {
                                 if (packetsplit.Length == 1 && int.TryParse(packetsplit[0], out int PetId))
                                 {
-                                    Mate mate = session.Character.Mates.FirstOrDefault(s => s.MateTransportId == PetId);
+                                    Mate mate = session.Character.Mates.Find(s => s.MateTransportId == PetId);
                                     box.HoldingVNum = mate.NpcMonsterVNum;
                                     box.SpLevel = mate.Level;
                                     box.SpDamage = mate.Attack;

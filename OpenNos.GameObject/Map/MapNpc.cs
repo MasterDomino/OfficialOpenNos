@@ -217,7 +217,7 @@ namespace OpenNos.GameObject
             {
                 if (IsHostile && Shop == null)
                 {
-                    MapMonster monster = MapInstance.Monsters.FirstOrDefault(s => MapInstance == s.MapInstance && Map.GetDistance(new MapCell { X = MapX, Y = MapY }, new MapCell { X = s.MapX, Y = s.MapY }) < (Npc.NoticeRange > 5 ? Npc.NoticeRange / 2 : Npc.NoticeRange));
+                    MapMonster monster = MapInstance.Monsters.Find(s => MapInstance == s.MapInstance && Map.GetDistance(new MapCell { X = MapX, Y = MapY }, new MapCell { X = s.MapX, Y = s.MapY }) < (Npc.NoticeRange > 5 ? Npc.NoticeRange / 2 : Npc.NoticeRange));
                     ClientSession session = MapInstance.Sessions.FirstOrDefault(s => MapInstance == s.Character.MapInstance && Map.GetDistance(new MapCell { X = MapX, Y = MapY }, new MapCell { X = s.Character.PositionX, Y = s.Character.PositionY }) < Npc.NoticeRange);
 
                     if (monster != null && session != null)
@@ -228,7 +228,7 @@ namespace OpenNos.GameObject
             }
             else if (Target != -1)
             {
-                MapMonster monster = MapInstance.Monsters.FirstOrDefault(s => s.MapMonsterId == Target);
+                MapMonster monster = MapInstance.Monsters.Find(s => s.MapMonsterId == Target);
                 if (monster == null || monster.CurrentHp < 1)
                 {
                     Target = -1;

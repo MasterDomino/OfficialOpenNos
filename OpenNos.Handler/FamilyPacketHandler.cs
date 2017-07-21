@@ -25,6 +25,7 @@ using OpenNos.Master.Library.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace OpenNos.Handler
 {
@@ -251,28 +252,31 @@ namespace OpenNos.Handler
                     Message = ccmsg,
                     Type = MessageType.FamilyChat
                 });
-                foreach (ClientSession s in ServerManager.Instance.Sessions.ToList())
+                Parallel.ForEach(ServerManager.Instance.Sessions.ToList(), session =>
                 {
-                    if (s.HasSelectedCharacter && s.Character.Family != null && Session.Character.Family != null && s.Character.Family?.FamilyId == Session.Character.Family?.FamilyId)
+                    if (session.HasSelectedCharacter && session.Character.Family != null && Session.Character.Family != null && session.Character.Family?.FamilyId == Session.Character.Family?.FamilyId)
                     {
-                        if (Session.HasCurrentMapInstance && s.HasCurrentMapInstance && Session.CurrentMapInstance == s.CurrentMapInstance && !Session.Character.InvisibleGm)
+                        if (Session.HasCurrentMapInstance && session.HasCurrentMapInstance && Session.CurrentMapInstance == session.CurrentMapInstance)
                         {
-                            if (Session.Account.Authority != AuthorityType.Moderator)
+                            if (Session.Account.Authority != AuthorityType.Moderator && !Session.Character.InvisibleGm)
                             {
-                                s.SendPacket(Session.Character.GenerateSay(msg, 6));
+                                session.SendPacket(Session.Character.GenerateSay(msg, 6, false));
                             }
                             else
                             {
-                                s.SendPacket(Session.Character.GenerateSay(ccmsg, 6, true));
+                                session.SendPacket(Session.Character.GenerateSay(ccmsg, 6, true));
                             }
                         }
                         else
                         {
-                            s.SendPacket(Session.Character.GenerateSay(ccmsg, 6));
+                            session.SendPacket(Session.Character.GenerateSay(ccmsg, 6));
                         }
-                        s.SendPacket(Session.Character.GenerateSpk(msg, 1));
+                        if (!Session.Character.InvisibleGm)
+                        {
+                            session.SendPacket(Session.Character.GenerateSpk(msg, 1));
+                        }
                     }
-                }
+                });
             }
         }
 
@@ -766,7 +770,7 @@ namespace OpenNos.Handler
             }
             else
             {
-                FamilyCharacter fhead = Session.Character.Family.FamilyCharacters.FirstOrDefault(s => s.Authority == FamilyAuthority.Head);
+                FamilyCharacter fhead = Session.Character.Family.FamilyCharacters.Find(s => s.Authority == FamilyAuthority.Head);
                 if (fhead == null)
                     return;
                 DAOFactory.IteminstanceDAO.DeleteFromSlotAndType(fhead.CharacterId, fWithdrawPacket.Slot, InventoryType.FamilyWareHouse);
@@ -930,7 +934,7 @@ namespace OpenNos.Handler
                     return;
                 }
 
-                FamilyCharacterDTO fchar = Session.Character.Family.FamilyCharacters.FirstOrDefault(s => s.Character.Name == packetsplit[2]);
+                FamilyCharacterDTO fchar = Session.Character.Family.FamilyCharacters.Find(s => s.Character.Name == packetsplit[2]);
                 if (fchar != null && byte.TryParse(packetsplit[3], out byte rank))
                 {
                     fchar.Rank = (FamilyMemberRank)rank;

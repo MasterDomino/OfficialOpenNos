@@ -48,7 +48,7 @@ namespace OpenNos.GameObject
                     Mate mate = null;
                     if (Option != 0)
                     {
-                        mate = session.Character.Mates.FirstOrDefault(s => s.MateType == MateType.Partner && s.PetId == Option - 1);
+                        mate = session.Character.Mates.Find(s => s.MateType == MateType.Partner && s.PetId == Option - 1);
                     }
                     short slot = inv.Slot;
                     InventoryType equipment = InventoryType.Wear;

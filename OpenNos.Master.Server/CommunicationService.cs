@@ -73,10 +73,10 @@ namespace OpenNos.Master.Server
                 return false;
             }
 
-            AccountConnection account = MSManager.Instance.ConnectedAccounts.FirstOrDefault(a => a.AccountId.Equals(accountId) && a.SessionId.Equals(sessionId));
+            AccountConnection account = MSManager.Instance.ConnectedAccounts.Find(a => a.AccountId.Equals(accountId) && a.SessionId.Equals(sessionId));
             if (account != null)
             {
-                account.ConnectedWorld = MSManager.Instance.WorldServers.FirstOrDefault(w => w.Id.Equals(worldId));
+                account.ConnectedWorld = MSManager.Instance.WorldServers.Find(w => w.Id.Equals(worldId));
             }
             return account.ConnectedWorld != null;
         }
@@ -91,7 +91,7 @@ namespace OpenNos.Master.Server
             //Multiple WorldGroups not yet supported by DAOFactory
             long accountId = DAOFactory.CharacterDAO.LoadById(characterId)?.AccountId ?? 0;
 
-            AccountConnection account = MSManager.Instance.ConnectedAccounts.FirstOrDefault(a => a.AccountId.Equals(accountId) && a.ConnectedWorld.Id.Equals(worldId));
+            AccountConnection account = MSManager.Instance.ConnectedAccounts.Find(a => a.AccountId.Equals(accountId) && a.ConnectedWorld.Id.Equals(worldId));
             if (account != null)
             {
                 account.CharacterId = characterId;
@@ -131,7 +131,7 @@ namespace OpenNos.Master.Server
 
         public int? GetChannelIdByWorldId(Guid worldId)
         {
-            return MSManager.Instance.WorldServers.FirstOrDefault(w => w.Id == worldId)?.ChannelId;
+            return MSManager.Instance.WorldServers.Find(w => w.Id == worldId)?.ChannelId;
         }
 
         public bool IsAccountConnected(long accountId)
@@ -313,7 +313,7 @@ namespace OpenNos.Master.Server
                 return null;
             }
 
-            WorldServer sourceWorld = MSManager.Instance.WorldServers.FirstOrDefault(s => s.Id.Equals(message.SourceWorldId));
+            WorldServer sourceWorld = MSManager.Instance.WorldServers.Find(s => s.Id.Equals(message.SourceWorldId));
             if (message == null || message.Message == null || sourceWorld == null)
             {
                 return null;
@@ -334,7 +334,7 @@ namespace OpenNos.Master.Server
                 case MessageType.WhisperGM:
                     if (message.DestinationCharacterId.HasValue)
                     {
-                        AccountConnection account = MSManager.Instance.ConnectedAccounts.FirstOrDefault(a => a.CharacterId.Equals(message.DestinationCharacterId.Value));
+                        AccountConnection account = MSManager.Instance.ConnectedAccounts.Find(a => a.CharacterId.Equals(message.DestinationCharacterId.Value));
                         if (account?.ConnectedWorld != null)
                         {
                             account.ConnectedWorld.ServiceClient.GetClientProxy<ICommunicationClient>().SendMessageToCharacter(message);
@@ -360,7 +360,7 @@ namespace OpenNos.Master.Server
                 return;
             }
 
-            MSManager.Instance.ConnectedAccounts.RemoveAll(a => a != null && a.ConnectedWorld?.Id.Equals(worldId) == true);
+            MSManager.Instance.ConnectedAccounts.RemoveAll(a => a?.ConnectedWorld?.Id.Equals(worldId) == true);
             MSManager.Instance.WorldServers.RemoveAll(w => w.Id.Equals(worldId));
         }
 
@@ -433,7 +433,7 @@ namespace OpenNos.Master.Server
             {
                 return;
             }
-            AccountConnection account = MSManager.Instance.ConnectedAccounts.FirstOrDefault(a => a.AccountId.Equals(accountId));
+            AccountConnection account = MSManager.Instance.ConnectedAccounts.Find(a => a.AccountId.Equals(accountId));
             if (account != null)
             {
                 account.LastPulse = DateTime.Now;

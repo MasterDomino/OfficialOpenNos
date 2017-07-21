@@ -307,7 +307,7 @@ namespace OpenNos.GameObject
         {
             if (Owner != null)
             {
-                ItemInstance inv = GetAllItems().FirstOrDefault(i => i.Slot.Equals(slot) && i.Type.Equals(type));
+                ItemInstance inv = GetAllItems().Find(i => i.Slot.Equals(slot) && i.Type.Equals(type));
 
                 if (inv != null)
                 {
@@ -369,7 +369,7 @@ namespace OpenNos.GameObject
         {
             if (item != null && amount <= item.Amount && amount > 0 && item.Item.IsTradable && !item.IsBound)
             {
-                FamilyCharacter fhead = Owner.Family?.FamilyCharacters.FirstOrDefault(s => s.Authority == FamilyAuthority.Head);
+                FamilyCharacter fhead = Owner.Family?.FamilyCharacters.Find(s => s.Authority == FamilyAuthority.Head);
                 if (fhead == null)
                 {
                     return;
@@ -418,7 +418,7 @@ namespace OpenNos.GameObject
                         isFirstItem = false;
                         continue;
                     }
-                    ItemInstance iteminstance = GetAllItems().FirstOrDefault(i => i?.GetType().Equals(typeof(T)) == true && i.Slot == slot && i.Type == type);
+                    ItemInstance iteminstance = GetAllItems().Find(i => i?.GetType().Equals(typeof(T)) == true && i.Slot == slot && i.Type == type);
                     if (iteminstance != null)
                     {
                         Remove(iteminstance.Id);
@@ -641,7 +641,7 @@ namespace OpenNos.GameObject
         {
             if (Owner != null)
             {
-                ItemInstance inv = GetAllItems().FirstOrDefault(i => i.Id.Equals(id));
+                ItemInstance inv = GetAllItems().Find(i => i.Id.Equals(id));
 
                 if (inv != null)
                 {
