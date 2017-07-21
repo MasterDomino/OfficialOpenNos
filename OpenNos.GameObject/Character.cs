@@ -1957,7 +1957,7 @@ namespace OpenNos.GameObject
                     string info = string.Empty;
                     if (bz.Item.Item.Type == InventoryType.Equipment && bz.Item is WearableInstance)
                     {
-                        info = (bz.Item as WearableInstance).GenerateEInfo().Replace(' ', '^').Replace("e_info^", "");
+                        info = (bz.Item as WearableInstance).GenerateEInfo().Replace(' ', '^').Replace("e_info^", string.Empty);
                     }
                     if (packet.Filter == 0 || packet.Filter == Status)
                     {
@@ -2571,12 +2571,12 @@ namespace OpenNos.GameObject
                     if (i == 50)
                     {
                         i = 0;
-                        packetList.Add($"{packetheader}{(amount == 0 ? " 0 " : "")}{packet}");
+                        packetList.Add($"{packetheader}{(amount == 0 ? " 0 " : string.Empty)}{packet}");
                         amount++;
                     }
                     else if (i + (50 * amount) == Family.FamilyLogs.Count)
                     {
-                        packetList.Add($"{packetheader}{(amount == 0 ? " 0 " : "")}{packet}");
+                        packetList.Add($"{packetheader}{(amount == 0 ? " 0 " : string.Empty)}{packet}");
                     }
                 }
 

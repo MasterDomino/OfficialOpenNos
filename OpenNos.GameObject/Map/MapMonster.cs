@@ -194,7 +194,6 @@ namespace OpenNos.GameObject
             {
                 if (IsBoss)
                 {
-
                     MaxHp *= 7;
                     MaxMp *= 7;
                 }
@@ -342,11 +341,10 @@ namespace OpenNos.GameObject
         {
             if (IsMoving)
             {
-                short maxDistance = 22;
+                const short maxDistance = 22;
                 int distance = Map.GetDistance(new MapCell() { X = targetSession.Character.PositionX, Y = targetSession.Character.PositionY }, new MapCell() { X = MapX, Y = MapY });
                 if (targetSession != null)
                 {
-
                     if (targetSession.Character.LastMonsterAggro.AddSeconds(5) < DateTime.Now || targetSession.Character.BrushFire == null)
                     {
                         targetSession.Character.UpdateBushFire();
@@ -359,8 +357,7 @@ namespace OpenNos.GameObject
                     short yoffset = (short)ServerManager.Instance.RandomNumber(-1, 1);
                     try
                     {
-                        List<Node> list = BestFirstSearch.TracePath(new Node() { X = MapX, Y = MapY }, targetSession.Character.BrushFire, targetSession.Character.MapInstance.Map.Grid);
-                        Path = list;
+                        Path = BestFirstSearch.TracePath(new Node() { X = MapX, Y = MapY }, targetSession.Character.BrushFire, targetSession.Character.MapInstance.Map.Grid);
                     }
                     catch (Exception ex)
                     {
@@ -821,7 +818,7 @@ namespace OpenNos.GameObject
             {
                 targetSession.Character.GetDamage(damage);
 
-                MapInstance.Broadcast(null, ServerManager.Instance.GetUserMethod<string>(Target, "GenerateStat"), ReceiverType.OnlySomeone, "", Target);
+                MapInstance.Broadcast(null, ServerManager.Instance.GetUserMethod<string>(Target, "GenerateStat"), ReceiverType.OnlySomeone, string.Empty, Target);
 
                 MapInstance.Broadcast(npcMonsterSkill != null
                     ? $"su 3 {MapMonsterId} 1 {Target} {npcMonsterSkill.SkillVNum} {npcMonsterSkill.Skill.Cooldown} {npcMonsterSkill.Skill.AttackAnimation} {npcMonsterSkill.Skill.Effect} {MapX} {MapY} {(targetSession.Character.Hp > 0 ? 1 : 0)} {(int)(targetSession.Character.Hp / targetSession.Character.HPLoad() * 100)} {damage} {hitmode} 0"
@@ -851,7 +848,7 @@ namespace OpenNos.GameObject
                     if (characterInRange.Hp > 0)
                     {
                         characterInRange.GetDamage(damage);
-                        MapInstance.Broadcast(null, characterInRange.GenerateStat(), ReceiverType.OnlySomeone, "", characterInRange.CharacterId);
+                        MapInstance.Broadcast(null, characterInRange.GenerateStat(), ReceiverType.OnlySomeone, string.Empty, characterInRange.CharacterId);
                         MapInstance.Broadcast($"su 3 {MapMonsterId} 1 {characterInRange.CharacterId} 0 {Monster.BasicCooldown} 11 {Monster.BasicSkill} 0 0 {(characterInRange.Hp > 0 ? 1 : 0)} { (int)(characterInRange.Hp / characterInRange.HPLoad() * 100) } {damage} {hitmode} 0");
                         if (characterInRange.Hp <= 0)
                         {

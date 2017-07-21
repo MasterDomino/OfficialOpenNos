@@ -460,7 +460,7 @@ namespace OpenNos.GameObject
                                 }
                                 if (packetsplit[1] != "0")
                                 {
-                                    TriggerHandler(packetsplit[1].Replace("#", ""), packetstring, false);
+                                    TriggerHandler(packetsplit[1].Replace("#", string.Empty), packetstring, false);
                                 }
                             }
                         }
@@ -476,7 +476,7 @@ namespace OpenNos.GameObject
                             packetstring = packet.Insert(packet.IndexOf(' ') + 2, " ");
                         }
 
-                        TriggerHandler(packetHeader.Replace("#", ""), packetstring, false);
+                        TriggerHandler(packetHeader.Replace("#", string.Empty), packetstring, false);
                     }
                 }
             }

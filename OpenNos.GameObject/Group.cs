@@ -108,7 +108,7 @@ namespace OpenNos.GameObject
         public string GenerateRdlst()
         {
             string result = string.Empty;
-            result = $"rdlst{((GroupType == GroupType.GiantTeam) ? "f" : "")} {Raid.LevelMinimum} {Raid.LevelMaximum} 0";
+            result = $"rdlst{((GroupType == GroupType.GiantTeam) ? "f" : string.Empty)} {Raid.LevelMinimum} {Raid.LevelMaximum} 0";
             try
             {
                 Characters.ForEach(session => result += $" {session.Character.Level}.{(session.Character.UseSp || session.Character.IsVehicled ? session.Character.Morph : -1)}.{(short)session.Character.Class}.{Raid?.InstanceBag.DeadList.Count(s => s == session.Character.CharacterId) ?? 0}.{session.Character.Name}.{(short)session.Character.Gender}.{session.Character.CharacterId}.{session.Character.HeroLevel}");

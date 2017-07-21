@@ -88,7 +88,6 @@ namespace OpenNos.PathFinder
                         }
                         else
                         {
-
                             neighbor.Parent = node;
                         }
                     }
@@ -109,7 +108,6 @@ namespace OpenNos.PathFinder
             }
             Node Start = grid[user.X, user.Y];
             MinHeap path = new MinHeap();
-
 
             // push the start node into the open list
             path.Push(Start);

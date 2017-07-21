@@ -1550,17 +1550,17 @@ namespace OpenNos.Handler
         }
 
         /// <summary>
-        /// say packet
+        /// pst packet
         /// </summary>
         /// <param name="pstPacket"></param>
-        public void SendMail(PstPacket pstpacket)
+        public void SendMail(PstPacket pstPacket)
         {
-            if (pstpacket.Data != null)
+            if (pstPacket.Data != null)
             {
-                CharacterDTO Receiver = DAOFactory.CharacterDAO.LoadByName(pstpacket.Receiver);
+                CharacterDTO Receiver = DAOFactory.CharacterDAO.LoadByName(pstPacket.Receiver);
                 if (Receiver != null)
                 {
-                    string[] datasplit = pstpacket.Data.Split(' ');
+                    string[] datasplit = pstPacket.Data.Split(' ');
                     WearableInstance headWearable = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.Hat, InventoryType.Wear);
                     byte color = headWearable?.Item.IsColored == true ? (byte)headWearable.Design : (byte)Session.Character.HairColor;
                     MailDTO mailcopy = new MailDTO
@@ -1612,9 +1612,9 @@ namespace OpenNos.Handler
             }
             else
             {
-                if (pstpacket.Id.TryCast(out int id) && pstpacket.Type.TryCast(out byte type))
+                if (pstPacket.Id.TryCast(out int id) && pstPacket.Type.TryCast(out byte type))
                 {
-                    if (pstpacket.Argument == 3)
+                    if (pstPacket.Argument == 3)
                     {
                         if (Session.Character.MailList.ContainsKey(id))
                         {
@@ -1627,7 +1627,7 @@ namespace OpenNos.Handler
                             Session.SendPacket(Session.Character.GeneratePostMessage(Session.Character.MailList[id], type));
                         }
                     }
-                    else if (pstpacket.Argument == 2)
+                    else if (pstPacket.Argument == 2)
                     {
                         if (Session.Character.MailList.ContainsKey(id))
                         {
@@ -1919,7 +1919,6 @@ namespace OpenNos.Handler
                         Session.CurrentMapInstance?.OnMoveOnMapEvents?.ForEach(e => EventHelper.Instance.RunEvent(e));
                         Session.CurrentMapInstance?.OnMoveOnMapEvents?.RemoveAll(s => s != null);
                     }
-
                     else
                     {
                         Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo("Ciapa said you shouldn't use hacks!"));
@@ -1941,7 +1940,7 @@ namespace OpenNos.Handler
                 {
                     return;
                 }
-                string characterName = whisperPacket.Message.Split(' ')[whisperPacket.Message.StartsWith("GM ") ? 1 : 0].Replace("[Support]", "");
+                string characterName = whisperPacket.Message.Split(' ')[whisperPacket.Message.StartsWith("GM ") ? 1 : 0].Replace("[Support]", string.Empty);
                 string message = string.Empty;
                 string[] packetsplit = whisperPacket.Message.Split(' ');
                 for (int i = packetsplit[0] == "GM" ? 2 : 1; i < packetsplit.Length; i++)
