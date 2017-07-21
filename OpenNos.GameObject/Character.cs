@@ -52,6 +52,7 @@ namespace OpenNos.GameObject
             StaticBonusList = new List<StaticBonusDTO>();
             MinilandObjects = new List<MinilandObject>();
             Mates = new List<Mate>();
+            LastMonsterAggro = DateTime.Now;
             EquipmentBCards = new ThreadSafeGenericList<BCard>();
             MeditationDictionary = new Dictionary<short, DateTime>();
             BuffObservables = new ThreadSafeSortedList<short, IDisposable>();
@@ -187,6 +188,8 @@ namespace OpenNos.GameObject
         public DateTime LastDelay { get; set; }
 
         public DateTime LastEffect { get; set; }
+
+        public DateTime LastMonsterAggro { get; set; }
 
         public DateTime LastHealth { get; set; }
 
@@ -448,6 +451,15 @@ namespace OpenNos.GameObject
                     Session.SendPacket(GenerateCond());
                 }
             }
+        }
+
+        public void UpdateBushFire()
+        {
+            Session.Character.BrushFire = BestFirstSearch.LoadBrushFire(new GridPos()
+            {
+                X = Session.Character.PositionX,
+                Y = Session.Character.PositionY
+            }, Session.CurrentMapInstance.Map.Grid);
         }
 
         public bool AddPet(Mate mate)
