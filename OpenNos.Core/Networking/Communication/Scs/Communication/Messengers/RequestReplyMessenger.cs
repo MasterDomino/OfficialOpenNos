@@ -386,7 +386,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         /// <summary>
         /// This class is used to store messaging context for a request message until response is received.
         /// </summary>
-        private sealed class WaitingMessage
+        private sealed class WaitingMessage : IDisposable
         {
             #region Instantiation
 
@@ -417,6 +417,11 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
             /// ManualResetEvent to block thread until response is received.
             /// </summary>
             public ManualResetEventSlim WaitEvent { get; }
+
+            public void Dispose()
+            {
+                throw new NotImplementedException();
+            }
 
             #endregion
         }

@@ -68,7 +68,7 @@ namespace OpenNos.Handler
                 foreach (MultiTargetListSubPacket subpacket in mutliTargetListPacket.Targets)
                 {
                     List<CharacterSkill> skills = Session.Character.UseSp ? Session.Character.SkillsSp.GetAllItems() : Session.Character.Skills.GetAllItems();
-                    CharacterSkill ski = skills?.FirstOrDefault(s => s.Skill.CastId == subpacket.SkillCastId - 1);
+                    CharacterSkill ski = skills?.Find(s => s.Skill.CastId == subpacket.SkillCastId - 1);
                     if (ski?.CanBeUsed() == true && Session.HasCurrentMapInstance)
                     {
                         MapMonster mon = Session.CurrentMapInstance.GetMonster(subpacket.TargetId);
@@ -96,7 +96,6 @@ namespace OpenNos.Handler
             }
             if (Session.Character.CanFight && useSkillPacket != null)
             {
-
                 bool isMuted = Session.Character.MuteMessage();
                 if (isMuted || Session.Character.IsVehicled || Session.Character.InvisibleGm)
                 {
@@ -821,8 +820,7 @@ namespace OpenNos.Handler
                                     }
                                     monsterToAttack.Monster.BCards.Where(s => s.CastType == 1).ToList().ForEach(s => s.ApplyBCards(this));
                                     Session.SendPacket(Session.Character.GenerateStat());
-                                    CharacterSkill characterSkillInfo = Session.Character.Skills.GetAllItems().OrderBy(o => o.SkillVNum)
-                                        .FirstOrDefault(s => s.Skill.UpgradeSkill == ski.Skill.SkillVNum && s.Skill.Effect > 0 && s.Skill.SkillType == 2);
+                                    CharacterSkill characterSkillInfo = Session.Character.Skills.GetAllItems().OrderBy(o => o.SkillVNum).FirstOrDefault(s => s.Skill.UpgradeSkill == ski.Skill.SkillVNum && s.Skill.Effect > 0 && s.Skill.SkillType == 2);
 
                                     Session.CurrentMapInstance?.Broadcast($"ct 1 {Session.Character.CharacterId} 3 {monsterToAttack.MapMonsterId} {ski.Skill.CastAnimation} {characterSkillInfo?.Skill.CastEffect ?? ski.Skill.CastEffect} {ski.Skill.SkillVNum}");
                                     Session.Character.Skills.GetAllItems().Where(s => s.Id != ski.Id).ToList().ForEach(i => i.Hit = 0);

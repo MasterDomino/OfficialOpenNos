@@ -19,7 +19,6 @@ using OpenNos.GameObject.Helpers;
 using System;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 
 namespace OpenNos.GameObject
 {
@@ -259,7 +258,7 @@ namespace OpenNos.GameObject
                                     ServerManager.Instance.ChangeMapInstance(sess.Character.CharacterId, session.CurrentMapInstance.MapInstanceId, session.Character.PositionX, session.Character.PositionY);
                                 }
                             });
-                            delay = delay + 100;
+                            delay += 100;
                         }
                     }
                     break;

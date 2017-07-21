@@ -4,11 +4,8 @@ using OpenNos.Core;
 
 namespace OpenNos.GameObject
 {
-    [PacketHeader("escape")]
-    public class EscapePacket : PacketDefinition
+    [PacketHeader("sortopen")]
+    public class SortOpenPacket : PacketDefinition
     {
-        #region Properties        
-
-        #endregion
     }
 }

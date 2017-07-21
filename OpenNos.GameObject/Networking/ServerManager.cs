@@ -38,6 +38,8 @@ namespace OpenNos.GameObject
 
         public ThreadSafeSortedList<long, Group> GroupsThreadSafe;
 
+        public bool InShutdown;
+
         public bool ShutdownStop;
 
         private static readonly List<Item> _items = new List<Item>();
@@ -55,8 +57,6 @@ namespace OpenNos.GameObject
         private static ServerManager _instance;
 
         private static int seed = Environment.TickCount;
-
-        private bool _disposed;
 
         private List<DropDTO> _generalDrops;
 
@@ -93,8 +93,6 @@ namespace OpenNos.GameObject
 
         #region Properties
 
-        public bool InShutdown;
-
         public static ServerManager Instance => _instance ?? (_instance = new ServerManager());
 
         public MapInstance ArenaInstance { get; private set; }
@@ -121,8 +119,6 @@ namespace OpenNos.GameObject
 
         public int GoldRate { get; set; }
 
-        public byte MaxUpgrade { get; set; }
-
         public List<Group> GroupList { get; set; } = new List<Group>();
 
         public List<Group> Groups => GroupsThreadSafe.GetAllItems();
@@ -146,6 +142,8 @@ namespace OpenNos.GameObject
         public byte MaxLevel { get; set; }
 
         public byte MaxSPLevel { get; set; }
+
+        public byte MaxUpgrade { get; set; }
 
         public List<PenaltyLogDTO> PenaltyLogs { get; set; }
 
@@ -548,16 +546,6 @@ namespace OpenNos.GameObject
                     Logger.Log.Warn("Character changed while changing map. Do not abuse Commands.");
                     session.Character.IsChangingMapInstance = false;
                 }
-            }
-        }
-
-        public override sealed void Dispose()
-        {
-            if (!_disposed)
-            {
-                Dispose(true);
-                GC.SuppressFinalize(this);
-                _disposed = true;
             }
         }
 
@@ -1322,6 +1310,7 @@ namespace OpenNos.GameObject
                 _recipes.Dispose();
                 _mapNpcs.Dispose();
                 _teleporters.Dispose();
+                GC.SuppressFinalize(this);
             }
         }
 
@@ -1389,28 +1378,6 @@ namespace OpenNos.GameObject
             CommunicationServiceClient.Instance.PenaltyLogRefresh += OnPenaltyLogRefresh;
             CommunicationServiceClient.Instance.ShutdownEvent += OnShutdown;
             _lastGroupId = 1;
-        }
-
-        private void MaintenanceProcess()
-        {
-            List<ClientSession> sessions = Sessions.Where(c => c.IsConnected).ToList();
-            MaintenanceLogDTO maintenanceLog = DAOFactory.MaintenanceLogDAO.LoadFirst();
-            if (maintenanceLog != null)
-            {
-                if (maintenanceLog.DateStart <= DateTime.Now)
-                {
-                    Logger.LogEvent("MAINTENANCE_STATE", "Caller: ServerManager", $"[Maintenance]{Language.Instance.GetMessageFromKey("MAINTENANCE_PLANNED")}");
-                    sessions.Where(s => s.Account.Authority < AuthorityType.Moderator).ToList().ForEach(session => session.Disconnect());
-                }
-                else if (maintenanceLog.DateStart <= DateTime.Now.AddMinutes(5))
-                {
-                    int min = (maintenanceLog.DateStart - DateTime.Now).Minutes;
-                    if (min != 0)
-                    {
-                        Shout($"Maintenance will begin in {min} minutes");
-                    }
-                }
-            }
         }
 
         private void LoadBazaar()
@@ -1497,6 +1464,28 @@ namespace OpenNos.GameObject
             catch (Exception e)
             {
                 Logger.Error(e);
+            }
+        }
+
+        private void MaintenanceProcess()
+        {
+            List<ClientSession> sessions = Sessions.Where(c => c.IsConnected).ToList();
+            MaintenanceLogDTO maintenanceLog = DAOFactory.MaintenanceLogDAO.LoadFirst();
+            if (maintenanceLog != null)
+            {
+                if (maintenanceLog.DateStart <= DateTime.Now)
+                {
+                    Logger.LogEvent("MAINTENANCE_STATE", "Caller: ServerManager", $"[Maintenance]{Language.Instance.GetMessageFromKey("MAINTENANCE_PLANNED")}");
+                    sessions.Where(s => s.Account.Authority < AuthorityType.Moderator).ToList().ForEach(session => session.Disconnect());
+                }
+                else if (maintenanceLog.DateStart <= DateTime.Now.AddMinutes(5))
+                {
+                    int min = (maintenanceLog.DateStart - DateTime.Now).Minutes;
+                    if (min != 0)
+                    {
+                        Shout($"Maintenance will begin in {min} minutes");
+                    }
+                }
             }
         }
 

@@ -181,8 +181,8 @@
     <Compile Include="Serializing\PacketIndexAttribute.cs" />
     <Compile Include="SessionFactory.cs" />
     <Compile Include="Threading\SequentialItemProcessor.cs" />
-    <Compile Include="Threading\ThreadedBase.cs" />
     <Compile Include="Threading\Timer.cs" />
+    <Compile Include="WorldEncryption.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -229,10 +229,7 @@ namespace OpenNos.GameObject
                 MapInstance.InstanceBag.Point += EventHelper.Instance.CalculateComboPoint(MapInstance.InstanceBag.Combo);
             }
             MapInstance.InstanceBag.MonstersKilled++;
-            OnDeathEvents.ForEach(e =>
-            {
-                EventHelper.Instance.RunEvent(e, monster: this);
-            });
+            OnDeathEvents.ForEach(e => EventHelper.Instance.RunEvent(e, monster: this));
         }
 
         public void StartLife()
@@ -276,7 +273,7 @@ namespace OpenNos.GameObject
                 Character character = ServerManager.Instance.Sessions.FirstOrDefault(s => s?.Character != null && s.Character.Hp > 0 && !s.Character.InvisibleGm && !s.Character.Invisible && s.Character.MapInstance == MapInstance && Map.GetDistance(new MapCell { X = MapX, Y = MapY }, new MapCell { X = s.Character.PositionX, Y = s.Character.PositionY }) < (NoticeRange == 0 ? Monster.NoticeRange : NoticeRange))?.Character;
                 if (character != null)
                 {
-                    if (!OnNoticeEvents.Any() && MoveEvent == null)
+                    if (OnNoticeEvents.Count == 0 && MoveEvent == null)
                     {
                         Target = character.CharacterId;
                         if (!Monster.NoAggresiveIcon)
@@ -284,10 +281,7 @@ namespace OpenNos.GameObject
                             character.Session.SendPacket(GenerateEff(5000));
                         }
                     }
-                    OnNoticeEvents.ForEach(e =>
-                    {
-                        EventHelper.Instance.RunEvent(e, monster: this);
-                    });
+                    OnNoticeEvents.ForEach(e => EventHelper.Instance.RunEvent(e, monster: this));
                     OnNoticeEvents.RemoveAll(s => s != null);
                 }
             }
@@ -648,9 +642,8 @@ namespace OpenNos.GameObject
             {
                 double time = (DateTime.Now - LastMove).TotalMilliseconds;
 
-                if (Path.Any()) // move back to initial position after following target
+                if (Path.Count > 0) // move back to initial position after following target
                 {
-
                     int timetowalk = 2000 / Monster.Speed;
                     if (time > timetowalk)
                     {
@@ -660,19 +653,12 @@ namespace OpenNos.GameObject
                         double waitingtime = Map.GetDistance(new MapCell { X = mapX, Y = mapY }, new MapCell { X = MapX, Y = MapY }) / (double)Monster.Speed;
                         LastMove = DateTime.Now.AddSeconds(waitingtime > 1 ? 1 : waitingtime);
 
-                        Observable.Timer(TimeSpan.FromMilliseconds(timetowalk))
-                                             .Subscribe(
-                                             x =>
-                                             {
-                                                 MapX = (short)mapX;
-                                                 MapY = (short)mapY;
-
-                                                 MoveEvent?.Events.ForEach(e =>
-                                                 {
-                                                     EventHelper.Instance.RunEvent(e, monster: this);
-                                                 });
-
-                                             });
+                        Observable.Timer(TimeSpan.FromMilliseconds(timetowalk)).Subscribe(x =>
+                        {
+                            MapX = mapX;
+                            MapY = mapY;
+                            MoveEvent?.Events.ForEach(e => EventHelper.Instance.RunEvent(e, monster: this));
+                        });
                         Path.RemoveRange(0, maxindex);
                         MapInstance.Broadcast(new BroadcastPacket(null, GenerateMv3(), ReceiverType.All, xCoordinate: mapX, yCoordinate: mapY));
                         return;

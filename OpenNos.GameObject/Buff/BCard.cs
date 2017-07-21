@@ -27,7 +27,7 @@ namespace OpenNos.GameObject
     {
         #region Methods
 
-        public void ApplyBCards(Object session)
+        public void ApplyBCards(object session)
         {
             switch ((BCardType.CardType)Type)
             {
@@ -208,7 +208,6 @@ namespace OpenNos.GameObject
                             }
                         }
                         chara.Session.SendPacket(chara.GenerateStat());
-
                     }
                     else if (session.GetType() == typeof(MapMonster))
                     {

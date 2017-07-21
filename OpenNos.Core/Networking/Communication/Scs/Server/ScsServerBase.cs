@@ -21,7 +21,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
     /// <summary>
     /// This class provides base functionality for server Classs.
     /// </summary>
-    public abstract class ScsServerBase : IScsServer
+    public abstract class ScsServerBase : IScsServer, IDisposable
     {
         #region Members
 
@@ -29,6 +29,8 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
         /// This object is used to listen incoming connections.
         /// </summary>
         private IConnectionListener _connectionListener;
+
+        private bool _disposed;
 
         #endregion
 
@@ -151,6 +153,24 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
             Clients[client.ClientId] = client;
             OnClientConnected(client);
             e.Channel.Start();
+        }
+
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+                _disposed = true;
+            }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Clients.Dispose();
+            }
         }
 
         #endregion

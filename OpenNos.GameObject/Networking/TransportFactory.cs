@@ -19,6 +19,7 @@ namespace OpenNos.GameObject
         #region Members
 
         private static TransportFactory instance;
+
         private long _lastTransportId = 100000;
 
         #endregion

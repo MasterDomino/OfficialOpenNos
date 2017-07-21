@@ -215,7 +215,6 @@ namespace OpenNos.Core
             return default(T);
         }
 
-        [Obsolete]
         public T FirstOrDefault(Func<T, bool> predicate)
         {
             if (!_disposed)
@@ -223,7 +222,9 @@ namespace OpenNos.Core
                 Lock.EnterReadLock();
                 try
                 {
+#pragma warning disable RCS1119 // Call 'Find' method instead of 'FirstOrDefault' method.
                     return _list.FirstOrDefault(predicate);
+#pragma warning restore RCS1119 // Call 'Find' method instead of 'FirstOrDefault' method.
                 }
                 finally
                 {
@@ -308,6 +309,7 @@ namespace OpenNos.Core
                 GC.SuppressFinalize(this);
             }
         }
+
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)

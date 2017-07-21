@@ -21,13 +21,15 @@ using System.Linq;
 
 namespace OpenNos.GameObject
 {
-    public class Group
+    public class Group : IDisposable
     {
         #region Members
 
         private int _order;
 
         private readonly object _syncObj = new object();
+
+        private bool _disposed;
 
         #endregion
 
@@ -62,6 +64,23 @@ namespace OpenNos.GameObject
 
         public byte SharingMode { get; set; }
 
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+                _disposed = true;
+            }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Characters.Dispose();
+            }
+        }
         #endregion
 
         #region Methods
@@ -107,7 +126,7 @@ namespace OpenNos.GameObject
         }
 
         public long? GetNextOrderedCharacterId(Character character)
-        { 
+        {
             lock (_syncObj)
             {
                 _order++;

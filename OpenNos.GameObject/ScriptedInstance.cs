@@ -401,7 +401,6 @@ namespace OpenNos.GameObject
                                     byte.TryParse(var?.Attributes["Range"]?.Value, out noticerange);
                                     notice.AddRange(GenerateEvent(var, mapinstance));
                                     break;
-
                             }
                         }
                         List<MonsterToSummon> lst = new List<MonsterToSummon>

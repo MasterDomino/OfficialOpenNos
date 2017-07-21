@@ -25,6 +25,7 @@ namespace OpenNos.GameObject
         /// <param name="defender">The defending Entity</param>
         /// <param name="skill">The used Skill</param>
         /// <param name="hitMode">reference to HitMode</param>
+        /// <param name="onyxWings"></param>
         /// <returns>Damage</returns>
         public int CalculateDamage(BattleEntity attacker, BattleEntity defender, Skill skill, ref int hitMode, ref bool onyxWings)
         {

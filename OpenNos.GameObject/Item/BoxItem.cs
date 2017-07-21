@@ -68,11 +68,9 @@ namespace OpenNos.GameObject
                         {
                             if (box.Item.ItemSubType == 3)
                             {
-                                List<RollGeneratedItemDTO> roll =
-                                    box.Item.RollGeneratedItems
-                                        .Where(s => s.MinimumOriginalItemRare <= box.Rare &&
-                                                    s.MaximumOriginalItemRare >= box.Rare &&
-                                                    s.OriginalItemDesign == box.Design).ToList();
+                                List<RollGeneratedItemDTO> roll = box.Item.RollGeneratedItems.Where(s => s.MinimumOriginalItemRare <= box.Rare
+                                                   && s.MaximumOriginalItemRare >= box.Rare
+                                                   && s.OriginalItemDesign == box.Design).ToList();
                                 int probabilities = roll.Sum(s => s.Probability);
                                 int rnd = ServerManager.Instance.RandomNumber(0, probabilities);
                                 int currentrnd = 0;
@@ -84,17 +82,15 @@ namespace OpenNos.GameObject
                                         Item i = ServerManager.Instance.GetItem(rollitem.ItemGeneratedVNum);
                                         sbyte rare = 0;
                                         byte design = 0;
-                                        if (i.ItemType == ItemType.Armor || i.ItemType == ItemType.Weapon ||
-                                            i.ItemType == ItemType.Sell)
+                                        if (i.ItemType == ItemType.Armor || i.ItemType == ItemType.Weapon || i.ItemType == ItemType.Sell)
                                         {
                                             rare = box.Rare;
                                         }
                                         if (i.ItemType == ItemType.Shell)
                                         {
-                                            design = (byte) ServerManager.Instance.RandomNumber(50, 81);
+                                            design = (byte)ServerManager.Instance.RandomNumber(50, 81);
                                         }
-                                        session.Character.GiftAdd(rollitem.ItemGeneratedVNum,
-                                            rollitem.ItemGeneratedAmount, (byte) rare, design);
+                                        session.Character.GiftAdd(rollitem.ItemGeneratedVNum, rollitem.ItemGeneratedAmount, (byte)rare, design);
                                         session.Character.Inventory.RemoveItemAmountFromInventory(1, box.Id);
                                         return;
                                         //newInv = session.Character.Inventory.AddNewToInventory(rollitem.ItemGeneratedVNum, amount: rollitem.ItemGeneratedAmount, Design: design, Rare: rare);
@@ -125,9 +121,7 @@ namespace OpenNos.GameObject
                                     box.SpDamage = mate.Attack;
                                     box.SpDefence = mate.Defence;
                                     session.Character.Mates.Remove(mate);
-                                    session.SendPacket(
-                                        UserInterfaceHelper.Instance.GenerateInfo(
-                                            Language.Instance.GetMessageFromKey("PET_STORED")));
+                                    session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("PET_STORED")));
                                     session.SendPacket(UserInterfaceHelper.Instance.GeneratePClear());
                                     session.SendPackets(session.Character.GenerateScP());
                                     session.SendPackets(session.Character.GenerateScN());
@@ -147,9 +141,7 @@ namespace OpenNos.GameObject
                                     if (session.Character.AddPet(mate))
                                     {
                                         session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
-                                        session.SendPacket(
-                                            UserInterfaceHelper.Instance.GenerateInfo(
-                                                Language.Instance.GetMessageFromKey("PET_LEAVE_BEAD")));
+                                        session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("PET_LEAVE_BEAD")));
                                     }
                                 }
                             }

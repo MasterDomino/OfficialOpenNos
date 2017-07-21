@@ -146,7 +146,7 @@ namespace OpenNos.World
             }
         }
 
-        static void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
+        private static void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
         {
             ServerManager.Instance.InShutdown = true;
             Logger.Error((Exception)e.ExceptionObject);
@@ -234,7 +234,6 @@ namespace OpenNos.World
             DAOFactory.ScriptedInstanceDAO.RegisterMapping(typeof(ScriptedInstanceDTO)).InitializeMapper();
             DAOFactory.ScriptedInstanceDAO.RegisterMapping(typeof(ScriptedInstance)).InitializeMapper();
             DAOFactory.MaintenanceLogDAO.RegisterMapping(typeof(MaintenanceLogDTO)).InitializeMapper();
-
         }
 
         public static class NativeMethods
