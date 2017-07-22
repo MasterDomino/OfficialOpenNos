@@ -65,10 +65,11 @@ namespace OpenNos.Handler
             }
             if (mutliTargetListPacket.TargetsAmount > 0 && mutliTargetListPacket.TargetsAmount == mutliTargetListPacket.Targets.Count)
             {
+                List<CharacterSkill> skills = Session.Character.UseSp ? Session.Character.SkillsSp.GetAllItems() : Session.Character.Skills.GetAllItems();
+                CharacterSkill ski = null;
                 foreach (MultiTargetListSubPacket subpacket in mutliTargetListPacket.Targets)
                 {
-                    List<CharacterSkill> skills = Session.Character.UseSp ? Session.Character.SkillsSp.GetAllItems() : Session.Character.Skills.GetAllItems();
-                    CharacterSkill ski = skills?.FirstOrDefault(s => s.Skill.CastId == subpacket.SkillCastId - 1);
+                    skills?.FirstOrDefault(s => s.Skill.CastId == subpacket.SkillCastId - 1);
                     if (ski?.CanBeUsed() == true && Session.HasCurrentMapInstance)
                     {
                         MapMonster mon = Session.CurrentMapInstance.GetMonster(subpacket.TargetId);
@@ -81,7 +82,12 @@ namespace OpenNos.Handler
                         Observable.Timer(TimeSpan.FromMilliseconds(ski.Skill.Cooldown * 100)).Subscribe(o => Session.SendPacket($"sr {subpacket.SkillCastId - 1}"));
                     }
                 }
+                if (ski != null)
+                {
+                    ski.LastUse = DateTime.Now;
+                }
             }
+
         }
 
         /// <summary>

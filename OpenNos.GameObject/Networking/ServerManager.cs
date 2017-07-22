@@ -1381,6 +1381,18 @@ namespace OpenNos.GameObject
 
             Observable.Interval(TimeSpan.FromSeconds(1)).Subscribe(x => RemoveItemProcess());
 
+            Observable.Interval(TimeSpan.FromMilliseconds(400)).Subscribe(x =>
+            {
+                foreach (var map in _mapinstances)
+                {
+                    if (!map.Value.IsSleeping)
+                    {
+                        Parallel.ForEach(map.Value.Npcs, npc => { npc.StartLife(); });
+                        Parallel.ForEach(map.Value.Monsters, monster => { monster.StartLife(); });
+                    }
+                }
+            });
+
             CommunicationServiceClient.Instance.SessionKickedEvent += OnSessionKicked;
             CommunicationServiceClient.Instance.MessageSentToCharacter += OnMessageSentToCharacter;
             CommunicationServiceClient.Instance.FamilyRefresh += OnFamilyRefresh;
