@@ -12,33 +12,26 @@
  * GNU General Public License for more details.
  */
 
-using OpenNos.Domain;
-using System;
-
-namespace OpenNos.Master.Library.Data
+namespace OpenNos.PathFinder
 {
-    [Serializable]
-    public class SCSCharacterMessage
+    public class GridPos
     {
-        #region Instantiation
+        #region Properties    
 
-        public SCSCharacterMessage()
-        {
-        }
+        public byte Value { get; set; }
+
+        public short X { get; set; }
+
+        public short Y { get; set; }
 
         #endregion
 
-        #region Properties
+        #region Methods
 
-        public long? DestinationCharacterId { get; set; }
-
-        public string Message { get; set; }
-
-        public long SourceCharacterId { get; set; }
-
-        public Guid SourceWorldId { get; set; }
-
-        public MessageType Type { get; set; }
+        public bool IsWalkable()
+        {
+            return Value == 0 || Value == 2 || (Value >= 16 && Value <= 19);
+        }
 
         #endregion
     }

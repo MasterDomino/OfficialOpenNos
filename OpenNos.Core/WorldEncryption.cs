@@ -12,12 +12,11 @@
  * GNU General Public License for more details.
  */
 
-using OpenNos.Core;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace OpenNos.World
+namespace OpenNos.Core
 {
     public class WorldEncryption : EncryptionBase
     {
@@ -105,7 +104,7 @@ namespace OpenNos.World
 
         public override string Decrypt(byte[] data, int sessionId = 0)
         {
-            string encrypted_string = "";
+            string encrypted_string = string.Empty;
             int session_key = sessionId & 0xFF;
             byte session_number = unchecked((byte)(sessionId >> 6));
             session_number &= 0xFF;
@@ -155,7 +154,7 @@ namespace OpenNos.World
             }
 
             string[] temp = encrypted_string.Split((char)0xFF);
-            string save = "";
+            string save = string.Empty;
 
             for (int i = 0; i < temp.Length; i++)
             {

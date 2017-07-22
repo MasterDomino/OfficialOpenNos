@@ -1147,7 +1147,7 @@ namespace OpenNos.Import.Console
                     {
                         for (int i = 0; i < 4; i++)
                         {
-                            byte type = (byte)(Int32.Parse(currentLine[2 + (5 * i)]));
+                            byte type = (byte)(int.Parse(currentLine[2 + (5 * i)]));
                             if (type != 0 && type != 255)
                             {
                                 int first = int.Parse(currentLine[3 + (5 * i)]);
@@ -1160,7 +1160,7 @@ namespace OpenNos.Import.Console
                                     IsLevelDivided = Math.Abs(first % 4) == 2,
                                     FirstData = (short)(first / 4),
                                     SecondData = (short)(int.Parse(currentLine[4 + (5 * i)]) / 4),
-                                    ThirdData = (short)(int.Parse(currentLine[6 + 5 * i]) / 4),
+                                    ThirdData = (short)(int.Parse(currentLine[6 + (5 * i)]) / 4),
                                 };
                                 monstercards.Add(itemCard);
                             }
@@ -1170,17 +1170,17 @@ namespace OpenNos.Import.Console
                     {
                         for (int i = 0; i < 4; i++)
                         {
-                            byte type = (byte)(Int32.Parse(currentLine[2 + 5 * i]));
+                            byte type = (byte)(int.Parse(currentLine[2 + (5 * i)]));
                             if (type != 0)
                             {
                                 BCardDTO itemCard = new BCardDTO
                                 {
                                     NpcMonsterVNum = npc.NpcMonsterVNum,
                                     Type = type,
-                                    SubType = (byte)int.Parse(currentLine[6 + 5 * i]),
+                                    SubType = (byte)int.Parse(currentLine[6 + (5 * i)]),
                                     FirstData = (short)(int.Parse(currentLine[5 + 5])),
-                                    SecondData = (short)(int.Parse(currentLine[4 + 5 * i]) / 4),
-                                    ThirdData = (short)(int.Parse(currentLine[3 + 5 * i]) / 4),
+                                    SecondData = (short)(int.Parse(currentLine[4 + (5 * i)]) / 4),
+                                    ThirdData = (short)(int.Parse(currentLine[3 + (5 * i)]) / 4),
                                     CastType = 1,
                                     IsLevelScaled = false,
                                     IsLevelDivided = false
@@ -1878,12 +1878,9 @@ namespace OpenNos.Import.Console
                         }
                     }
                 }
-                else
+                else if (currentPacket.Length > 3)
                 {
-                    if (currentPacket.Length > 3)
-                    {
-                        type = byte.Parse(currentPacket[1]);
-                    }
+                    type = byte.Parse(currentPacket[1]);
                 }
             }
 
@@ -1963,12 +1960,9 @@ namespace OpenNos.Import.Console
                         }
                     }
                 }
-                else
+                else if (currentPacket.Length > 3)
                 {
-                    if (currentPacket.Length > 3)
-                    {
-                        type = byte.Parse(currentPacket[1]);
-                    }
+                    type = byte.Parse(currentPacket[1]);
                 }
             }
 
@@ -2197,7 +2191,7 @@ namespace OpenNos.Import.Console
                     }
                     else if (currentLine.Length > 2 && currentLine[1] == "BASIC")
                     {
-                        byte type = (byte)(Int32.Parse(currentLine[3]));
+                        byte type = (byte)(int.Parse(currentLine[3]));
                         if (type != 0 && type != 255)
                         {
                             int first = int.Parse(currentLine[5]);
@@ -3450,7 +3444,7 @@ namespace OpenNos.Import.Console
                     {
                         for (int i = 0; i < 5; i++)
                         {
-                            byte type = (byte)(Int32.Parse(currentLine[2 + (5 * i)]));
+                            byte type = (byte)(int.Parse(currentLine[2 + (5 * i)]));
                             if (type != 0 && type != 255)
                             {
                                 int first = int.Parse(currentLine[3 + (5 * i)]);

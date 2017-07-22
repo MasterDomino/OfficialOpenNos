@@ -325,38 +325,35 @@ namespace OpenNos.GameObject
                         }
                         session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
                     }
-                    else
+                    else if (session.HasCurrentMapInstance && session.CurrentMapInstance.Map.MapTypes.All(m => m.MapTypeId != (short)MapTypeEnum.Act4))
                     {
-                        if (session.HasCurrentMapInstance && session.CurrentMapInstance.Map.MapTypes.All(m => m.MapTypeId != (short)MapTypeEnum.Act4))
+                        short[] vnums =
                         {
-                            short[] vnums =
-                            {
                                     1386, 1387, 1388, 1389, 1390, 1391, 1392, 1393, 1394, 1395, 1396, 1397, 1398, 1399,
                                     1400, 1401, 1402, 1403, 1404, 1405
                                 };
-                            short vnum = vnums[ServerManager.Instance.RandomNumber(0, 20)];
+                        short vnum = vnums[ServerManager.Instance.RandomNumber(0, 20)];
 
-                            NpcMonster npcmonster = ServerManager.Instance.GetNpc(vnum);
-                            if (npcmonster == null)
-                            {
-                                return;
-                            }
-                            MapMonster monster = new MapMonster
-                            {
-                                MonsterVNum = vnum,
-                                MapY = session.Character.MapY,
-                                MapX = session.Character.MapX,
-                                MapId = session.Character.MapInstance.Map.MapId,
-                                Position = (byte)session.Character.Direction,
-                                IsMoving = true,
-                                MapMonsterId = session.CurrentMapInstance.GetNextMonsterId(),
-                                ShouldRespawn = false
-                            };
-                            monster.Initialize(session.CurrentMapInstance);
-                            session.CurrentMapInstance.AddMonster(monster);
-                            session.CurrentMapInstance.Broadcast(monster.GenerateIn());
-                            session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                        NpcMonster npcmonster = ServerManager.Instance.GetNpc(vnum);
+                        if (npcmonster == null)
+                        {
+                            return;
                         }
+                        MapMonster monster = new MapMonster
+                        {
+                            MonsterVNum = vnum,
+                            MapY = session.Character.MapY,
+                            MapX = session.Character.MapX,
+                            MapId = session.Character.MapInstance.Map.MapId,
+                            Position = (byte)session.Character.Direction,
+                            IsMoving = true,
+                            MapMonsterId = session.CurrentMapInstance.GetNextMonsterId(),
+                            ShouldRespawn = false
+                        };
+                        monster.Initialize(session.CurrentMapInstance);
+                        session.CurrentMapInstance.AddMonster(monster);
+                        session.CurrentMapInstance.Broadcast(monster.GenerateIn());
+                        session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
                     }
                     break;
 
@@ -430,14 +427,11 @@ namespace OpenNos.GameObject
                     {
                         session.SendPacket($"qna #u_i^1^{session.Character.CharacterId}^{(byte)inv.Type}^{inv.Slot}^2 {Language.Instance.GetMessageFromKey("ASK_PET_MAX")}");
                     }
-                    else
+                    else if (session.Character.MaxMateCount < 30)
                     {
-                        if (session.Character.MaxMateCount < 30)
-                        {
-                            session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("GET_PET_PLACES"), 10));
-                            session.SendPacket(session.Character.GenerateScpStc());
-                            session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
-                        }
+                        session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("GET_PET_PLACES"), 10));
+                        session.SendPacket(session.Character.GenerateScpStc());
+                        session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
                     }
                     break;
 

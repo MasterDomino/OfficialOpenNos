@@ -71,11 +71,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PathFinder\GridPos.cs" />
-    <Compile Include="PathFinder\Heuristic.cs" />
-    <Compile Include="PathFinder\MinHeap.cs" />
-    <Compile Include="PathFinder\Node.cs" />
-    <Compile Include="PathFinder\BestFirstSearch.cs" />
+    <Compile Include="GridPos.cs" />
+    <Compile Include="Heuristic.cs" />
+    <Compile Include="MinHeap.cs" />
+    <Compile Include="Node.cs" />
+    <Compile Include="BestFirstSearch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

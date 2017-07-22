@@ -929,8 +929,11 @@ namespace OpenNos.Handler
             Session.SendPacket(previousInventory != null ? (reposPacket.PartnerBackpack ? previousInventory.GeneratePStash() : previousInventory.GenerateStash()) : (reposPacket.PartnerBackpack ? UserInterfaceHelper.Instance.GeneratePStashRemove(reposPacket.OldSlot) : UserInterfaceHelper.Instance.GenerateStashRemove(reposPacket.OldSlot)));
         }
 
-        [Packet("sortopen")]
-        public void SortOpen()
+        /// <summary>
+        /// sortopen packet
+        /// </summary>
+        /// <param name="sortOpenPacket"></param>
+        public void SortOpen(SortOpenPacket sortOpenPacket)
         {
             bool gravity = true;
             while (gravity)
@@ -995,7 +998,6 @@ namespace OpenNos.Handler
         /// <param name="spTransformPacket"></param>
         public void SpTransform(SpTransformPacket spTransformPacket)
         {
-
             SpecialistInstance specialistInstance = Session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear);
 
             if (spTransformPacket.Type == 10)

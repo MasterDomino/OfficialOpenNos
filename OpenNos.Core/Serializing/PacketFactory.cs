@@ -51,7 +51,7 @@ namespace OpenNos.Core
             try
             {
                 var serializationInformation = GetSerializationInformation(packetType);
-                PacketDefinition deserializedPacket = (PacketDefinition)Activator.CreateInstance(packetType); // reflection is bad, improve?
+                PacketDefinition deserializedPacket = (PacketDefinition)Activator.CreateInstance(packetType);
                 SetDeserializationInformations(deserializedPacket, packetContent, serializationInformation.Key.Item2);
                 deserializedPacket = Deserialize(packetContent, deserializedPacket, serializationInformation, includesKeepAliveIdentity);
                 return deserializedPacket;
@@ -80,9 +80,7 @@ namespace OpenNos.Core
                 var serializationInformation = GetSerializationInformation(typeof(TPacket));
                 TPacket deserializedPacket = Activator.CreateInstance<TPacket>(); // reflection is bad, improve?
                 SetDeserializationInformations(deserializedPacket, packetContent, serializationInformation.Key.Item2);
-
                 deserializedPacket = (TPacket)Deserialize(packetContent, deserializedPacket, serializationInformation, includesKeepAliveIdentity);
-
                 return deserializedPacket;
             }
             catch (Exception e)
@@ -118,9 +116,7 @@ namespace OpenNos.Core
             {
                 // load pregenerated serialization information
                 var serializationInformation = GetSerializationInformation(packet.GetType());
-
                 string deserializedPacket = serializationInformation.Key.Item2; // set header
-
                 int lastIndex = 0;
                 foreach (var packetBasePropertyInfo in serializationInformation.Value)
                 {

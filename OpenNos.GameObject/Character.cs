@@ -37,7 +37,6 @@ namespace OpenNos.GameObject
 
         private Random _random;
         private byte _speed;
-        private Family _family;
         private readonly object _syncObj = new object();
 
         #endregion
@@ -58,7 +57,6 @@ namespace OpenNos.GameObject
             MeditationDictionary = new Dictionary<short, DateTime>();
             BuffObservables = new ThreadSafeSortedList<short, IDisposable>();
             EquipmentBCards = new ThreadSafeGenericList<BCard>();
-
         }
 
         #endregion
@@ -116,17 +114,7 @@ namespace OpenNos.GameObject
 
         public ExchangeInfo ExchangeInfo { get; set; }
 
-        public Family Family
-        {
-            get
-            {
-                return _family;
-            }
-            set
-            {
-                _family = value;
-            }
-        }
+        public Family Family { get; set; }
 
         public FamilyCharacterDTO FamilyCharacter
         {
@@ -522,7 +510,7 @@ namespace OpenNos.GameObject
             {
                 Buff.Remove(bf.Card.CardId);
                 int time = (int)((oldbuff.Start.AddSeconds(oldbuff.Card.Duration * 6 / 10) - DateTime.Now).TotalSeconds / 10 * 6);
-                bf.RemainingTime = bf.Card.Duration * 6 / 10 + (time > 0 ? time : 0);
+                bf.RemainingTime = (bf.Card.Duration * 6 / 10) + (time > 0 ? time : 0);
                 Buff[bf.Card.CardId] = bf;
             }
             else
@@ -1729,13 +1717,12 @@ namespace OpenNos.GameObject
             {
                 specialist = Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear);
             }
-            return $"lev {Level} {LevelXp} {(!UseSp || specialist == null ? JobLevel : specialist.SpLevel)} {(!UseSp || specialist == null ? JobLevelXp : specialist.XP)} {XPLoad()} {(!UseSp || specialist == null ? JobXPLoad() : SPXPLoad())} {Reput} {GetCP()} {HeroXp} {HeroLevel} {HeroXPLoad()}";
+            return $"lev {Level} {LevelXp} {(!UseSp || specialist == null ? JobLevel : specialist.SpLevel)} {(!UseSp || specialist == null ? JobLevelXp : specialist.XP)} {XPLoad()} {(!UseSp || specialist == null ? JobXPLoad() : SPXPLoad())} {Reput} {GetCP()} {HeroXp} {HeroLevel} {HeroXPLoad()} 0";
         }
 
         public string GenerateLevelUp()
         {
             Logger.LogEvent("LEVELUP", Session.GenerateIdentity(), $"Level: {Level} JobLevel: {JobLevel} SPLevel: {Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear)?.SpLevel} HeroLevel: {HeroLevel} MapId: {Session.CurrentMapInstance?.Map.MapId} MapX: {PositionX} MapY: {PositionY}");
-
             return $"levelup {CharacterId}";
         }
 
@@ -1970,7 +1957,7 @@ namespace OpenNos.GameObject
                     string info = string.Empty;
                     if (bz.Item.Item.Type == InventoryType.Equipment && bz.Item is WearableInstance)
                     {
-                        info = (bz.Item as WearableInstance).GenerateEInfo().Replace(' ', '^').Replace("e_info^", "");
+                        info = (bz.Item as WearableInstance).GenerateEInfo().Replace(' ', '^').Replace("e_info^", string.Empty);
                     }
                     if (packet.Filter == 0 || packet.Filter == Status)
                     {
@@ -2130,12 +2117,9 @@ namespace OpenNos.GameObject
                                     inv0 += $" {inv.Slot}.{inv.ItemVNum}.{specialistInstance.Rare}.{specialistInstance.Upgrade}.{specialistInstance.SpStoneUpgrade}";
                                 }
                             }
-                            else
+                            else if (inv is WearableInstance wearableInstance)
                             {
-                                if (inv is WearableInstance wearableInstance)
-                                {
-                                    inv0 += $" {inv.Slot}.{inv.ItemVNum}.{wearableInstance.Rare}.{(inv.Item.IsColored ? wearableInstance.Design : wearableInstance.Upgrade)}.0";
-                                }
+                                inv0 += $" {inv.Slot}.{inv.ItemVNum}.{wearableInstance.Rare}.{(inv.Item.IsColored ? wearableInstance.Design : wearableInstance.Upgrade)}.0";
                             }
                             break;
 
@@ -2459,7 +2443,7 @@ namespace OpenNos.GameObject
             int value1 = 0;
             int value2 = 0;
 
-            foreach (BCard entry in EquipmentBCards.GetAllItems().Where(s => s != null && s.Type.Equals((byte)type) && s.SubType.Equals((byte)(subtype / 10))))
+            foreach (BCard entry in EquipmentBCards.GetAllItems().Where(s => s?.Type.Equals((byte)type) == true && s.SubType.Equals((byte)(subtype / 10))))
             {
                 if (entry.IsLevelScaled)
                 {
@@ -2584,12 +2568,12 @@ namespace OpenNos.GameObject
                     if (i == 50)
                     {
                         i = 0;
-                        packetList.Add($"{packetheader}{(amount == 0 ? " 0 " : "")}{packet}");
+                        packetList.Add($"{packetheader}{(amount == 0 ? " 0 " : string.Empty)}{packet}");
                         amount++;
                     }
                     else if (i + (50 * amount) == Family.FamilyLogs.Count)
                     {
-                        packetList.Add($"{packetheader}{(amount == 0 ? " 0 " : "")}{packet}");
+                        packetList.Add($"{packetheader}{(amount == 0 ? " 0 " : string.Empty)}{packet}");
                     }
                 }
 
@@ -2742,13 +2726,10 @@ namespace OpenNos.GameObject
                         {
                             Session.SendPacket(GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {newItem.Item.Name} x {amount}", 10));
                         }
-                        else
+                        else if (MailList.Count <= 40)
                         {
-                            if (MailList.Count <= 40)
-                            {
-                                SendGift(CharacterId, itemVNum, amount, newItem.Rare, newItem.Upgrade, false);
-                                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("ITEM_ACQUIRED_BY_THE_GIANT_MONSTER"), 0));
-                            }
+                            SendGift(CharacterId, itemVNum, amount, newItem.Rare, newItem.Upgrade, false);
+                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("ITEM_ACQUIRED_BY_THE_GIANT_MONSTER"), 0));
                         }
                     }
                 }
@@ -3900,7 +3881,6 @@ namespace OpenNos.GameObject
             return heroXp;
         }
 
-
         private int HealthHPLoad()
         {
             if (IsSitting)
@@ -3929,7 +3909,6 @@ namespace OpenNos.GameObject
             return Class == (byte)ClassType.Adventurer ? CharacterHelper.FirstJobXPData[JobLevel - 1] : CharacterHelper.SecondJobXPData[JobLevel - 1];
         }
 
-
         private double SPXPLoad()
         {
             SpecialistInstance specialist = null;
@@ -3937,7 +3916,7 @@ namespace OpenNos.GameObject
             {
                 specialist = Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear);
             }
-            return specialist != null ? CharacterHelper.SPXPData[(specialist.SpLevel == 0 ? 0 : specialist.SpLevel - 1)] : 0;
+            return specialist != null ? CharacterHelper.SPXPData[specialist.SpLevel == 0 ? 0 : specialist.SpLevel - 1] : 0;
         }
 
         private double XPLoad()
@@ -3951,8 +3930,8 @@ namespace OpenNos.GameObject
             switch (Type)
             {
                 case 0:
-                    result = $"raid 0";
-                    Group?.Characters?.ForEach(s => { result += $" {s.Character?.CharacterId}"; });
+                    result = "raid 0";
+                    Group?.Characters?.ForEach(s => result += $" {s.Character?.CharacterId}");
                     break;
                 case 2:
                     result = $"raid 2 {(Exit ? "-1" : $"{CharacterId}")}";
@@ -3962,7 +3941,7 @@ namespace OpenNos.GameObject
                     break;
                 case 3:
                     result = $"raid 3";
-                    Group?.Characters?.ForEach(s => { result += $" {s.Character?.CharacterId}.{Math.Ceiling(s.Character.Hp / s.Character.HPLoad() * 100)}.{Math.Ceiling(s.Character.Mp / s.Character.MPLoad() * 100)}"; });
+                    Group?.Characters?.ForEach(s => result += $" {s.Character?.CharacterId}.{Math.Ceiling(s.Character.Hp / s.Character.HPLoad() * 100)}.{Math.Ceiling(s.Character.Mp / s.Character.MPLoad() * 100)}");
                     break;
                 case 4:
                     result = $"raid 4";

@@ -145,6 +145,7 @@
     <Compile Include="Packets\ClientPackets\JoinFamilyPacket.cs" />
     <Compile Include="Packets\ClientPackets\NcifPacket.cs" />
     <Compile Include="Packets\ClientPackets\PdtsePacket.cs" />
+    <Compile Include="Packets\ClientPackets\PstPacket.cs" />
     <Compile Include="Packets\ClientPackets\QSetPacket.cs" />
     <Compile Include="Packets\ClientPackets\MkraidPacket.cs" />
     <Compile Include="Packets\ClientPackets\RlPacket.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="Packets\ClientPackets\RxitPacket.cs" />
     <Compile Include="Packets\ClientPackets\SellPacket.cs" />
     <Compile Include="Packets\ClientPackets\ShoppingPacket.cs" />
+    <Compile Include="Packets\ClientPackets\SortOpenPacket.cs" />
     <Compile Include="Packets\ClientPackets\UseItemPacket.cs" />
     <Compile Include="Packets\CommandPackets\AddPartnerPacket.cs" />
     <Compile Include="Packets\CommandPackets\CreateItemPacket.cs" />
@@ -298,7 +300,6 @@
     <Compile Include="Packets\ClientPackets\SelectPacket.cs" />
     <Compile Include="Packets\ClientPackets\SitPacket.cs" />
     <Compile Include="Packets\ClientPackets\PulsePacket.cs" />
-    <Compile Include="Packets\ClientPackets\MultiTargetListSubPacket.cs" />
     <Compile Include="Packets\ClientPackets\MvePacket.cs" />
     <Compile Include="Packets\ClientPackets\MviPacket.cs" />
     <Compile Include="Packets\ClientPackets\PJoinPacket.cs" />

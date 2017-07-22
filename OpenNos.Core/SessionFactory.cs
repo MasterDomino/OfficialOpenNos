@@ -19,6 +19,7 @@ namespace OpenNos.Core
         #region Members
 
         private static SessionFactory _instance;
+
         private int _sessionCounter;
 
         #endregion

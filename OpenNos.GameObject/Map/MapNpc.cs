@@ -147,21 +147,17 @@ namespace OpenNos.GameObject
 
         internal void StartLife()
         {
-            Observable.Interval(TimeSpan.FromMilliseconds(400)).Subscribe(x =>
+            try
             {
-                Started = true;
-                try
+                if (!MapInstance.IsSleeping)
                 {
-                    if (!MapInstance.IsSleeping)
-                    {
-                        NpcLife();
-                    }
+                    NpcLife();
                 }
-                catch (Exception e)
-                {
-                    Logger.Error(e);
-                }
-            });
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+            }
         }
 
         private string GenerateMv2()
@@ -261,8 +257,8 @@ namespace OpenNos.GameObject
                         monster.CurrentHp -= damage;
 
                         MapInstance.Broadcast(npcMonsterSkill != null
-                            ? $"su 2 {MapNpcId} 3 {Target} {npcMonsterSkill.SkillVNum} {npcMonsterSkill.Skill.Cooldown} {npcMonsterSkill.Skill.AttackAnimation} {npcMonsterSkill.Skill.Effect} 0 0 {(monster.CurrentHp > 0 ? 1 : 0)} {monster.CurrentHp / monster.Monster.MaxHP * 100} {damage} {hitmode} 0"
-                            : $"su 2 {MapNpcId} 3 {Target} 0 {Npc.BasicCooldown} 11 {Npc.BasicSkill} 0 0 {(monster.CurrentHp > 0 ? 1 : 0)} {monster.CurrentHp / monster.Monster.MaxHP * 100} {damage} {hitmode} 0");
+                            ? $"su 2 {MapNpcId} 3 {Target} {npcMonsterSkill.SkillVNum} {npcMonsterSkill.Skill.Cooldown} {npcMonsterSkill.Skill.AttackAnimation} {npcMonsterSkill.Skill.Effect} 0 0 {(monster.CurrentHp > 0 ? 1 : 0)} {(int)((double)monster.CurrentHp / monster.Monster.MaxHP * 100)} {damage} {hitmode} 0"
+                            : $"su 2 {MapNpcId} 3 {Target} 0 {Npc.BasicCooldown} 11 {Npc.BasicSkill} 0 0 {(monster.CurrentHp > 0 ? 1 : 0)} {(int)((double)monster.CurrentHp / monster.Monster.MaxHP * 100)} {damage} {hitmode} 0");
 
                         LastEffect = DateTime.Now;
                         if (monster.CurrentHp < 1)

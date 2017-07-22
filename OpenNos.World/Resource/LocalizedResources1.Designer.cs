@@ -1339,6 +1339,15 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Gift has been sent!.
+        /// </summary>
+        internal static string GIFT_SENT {
+            get {
+                return ResourceManager.GetString("GIFT_SENT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You received {0} gift/s!.
         /// </summary>
         internal static string GIFTED {

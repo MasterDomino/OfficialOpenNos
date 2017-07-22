@@ -14,7 +14,6 @@
 
 using OpenNos.Domain;
 using System;
-using System.Linq;
 
 namespace OpenNos.Core.Handling
 {

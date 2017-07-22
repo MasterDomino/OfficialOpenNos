@@ -1,8 +1,7 @@
 namespace OpenNos.DAL.EF.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class Aphrodite58 : DbMigration
     {
         public override void Up()
@@ -17,9 +16,8 @@ namespace OpenNos.DAL.EF.Migrations
                         Reason = c.String(maxLength: 255),
                     })
                 .PrimaryKey(t => t.LogId);
-            
         }
-        
+
         public override void Down()
         {
             DropTable("dbo.MaintenanceLog");

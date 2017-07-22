@@ -197,24 +197,24 @@ namespace OpenNos.GameObject.Helpers
                         break;
 
                     case EventActionType.CONTROLEMONSTERINRANGE:
-                        if (monster !=null)
+                        if (monster != null)
                         {
-                            Tuple<short, byte, List<EventContainer>> evnt = (Tuple<short, byte,List<EventContainer>>)evt.Parameter;
+                            Tuple<short, byte, List<EventContainer>> evnt = (Tuple<short, byte, List<EventContainer>>)evt.Parameter;
                             List<MapMonster> MapMonsters = evt.MapInstance.GetListMonsterInRange(monster.MapX, monster.MapY, evnt.Item2);
-                            if(evnt.Item1 != 0)
+                            if (evnt.Item1 != 0)
                             {
                                 MapMonsters.RemoveAll(s => s.MonsterVNum != evnt.Item1);
                             }
-                            MapMonsters.ForEach(s=> evnt.Item3.ForEach(e=>RunEvent(e, monster: s)));
+                            MapMonsters.ForEach(s => evnt.Item3.ForEach(e => RunEvent(e, monster: s)));
                         }
                         break;
 
                     case EventActionType.ONTARGET:
-                        if(monster.MoveEvent != null && monster.MoveEvent.InZone(monster.MapX,monster.MapY))
+                        if (monster.MoveEvent?.InZone(monster.MapX, monster.MapY) == true)
                         {
                             monster.MoveEvent = null;
                             monster.Path = null;
-                            ((List<EventContainer>)evt.Parameter).ForEach(s=>RunEvent(s,monster:monster)); 
+                            ((List<EventContainer>)evt.Parameter).ForEach(s => RunEvent(s, monster: monster));
                         }
                         break;
 
@@ -226,7 +226,7 @@ namespace OpenNos.GameObject.Helpers
                             monster.Path = BestFirstSearch.FindPath(new Node { X = monster.MapX, Y = monster.MapY }, new Node { X = evt4.X, Y = evt4.Y }, evt.MapInstance?.Map.Grid);
                         }
                         break;
-                       
+
                     case EventActionType.CLOCK:
                         evt.MapInstance.InstanceBag.Clock.BasesSecondRemaining = Convert.ToInt32(evt.Parameter);
                         evt.MapInstance.InstanceBag.Clock.DeciSecondRemaining = Convert.ToInt32(evt.Parameter);

@@ -21,13 +21,15 @@ using System.Linq;
 
 namespace OpenNos.GameObject
 {
-    public class Group
+    public class Group : IDisposable
     {
         #region Members
 
         private int _order;
 
         private readonly object _syncObj = new object();
+
+        private bool _disposed;
 
         #endregion
 
@@ -62,6 +64,23 @@ namespace OpenNos.GameObject
 
         public byte SharingMode { get; set; }
 
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+                _disposed = true;
+            }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Characters.Dispose();
+            }
+        }
         #endregion
 
         #region Methods
@@ -89,7 +108,7 @@ namespace OpenNos.GameObject
         public string GenerateRdlst()
         {
             string result = string.Empty;
-            result = $"rdlst{((GroupType == GroupType.GiantTeam) ? "f" : "")} {Raid.LevelMinimum} {Raid.LevelMaximum} 0";
+            result = $"rdlst{((GroupType == GroupType.GiantTeam) ? "f" : string.Empty)} {Raid.LevelMinimum} {Raid.LevelMaximum} 0";
             try
             {
                 Characters.ForEach(session => result += $" {session.Character.Level}.{(session.Character.UseSp || session.Character.IsVehicled ? session.Character.Morph : -1)}.{(short)session.Character.Class}.{Raid?.InstanceBag.DeadList.Count(s => s == session.Character.CharacterId) ?? 0}.{session.Character.Name}.{(short)session.Character.Gender}.{session.Character.CharacterId}.{session.Character.HeroLevel}");
@@ -107,7 +126,7 @@ namespace OpenNos.GameObject
         }
 
         public long? GetNextOrderedCharacterId(Character character)
-        { 
+        {
             lock (_syncObj)
             {
                 _order++;

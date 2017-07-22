@@ -146,11 +146,7 @@ namespace OpenNos.GameObject
         {
             try
             {
-                if (Grid?[x, y].IsWalkable() == false)
-                {
-                    return true;
-                }
-                return false;
+                return Grid?[x, y].IsWalkable() == false;
             }
             catch
             {

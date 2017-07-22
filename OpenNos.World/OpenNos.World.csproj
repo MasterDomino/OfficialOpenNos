@@ -251,7 +251,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>LocalizedResources.resx</DependentUpon>
     </Compile>
-    <Compile Include="WorldEncryption.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

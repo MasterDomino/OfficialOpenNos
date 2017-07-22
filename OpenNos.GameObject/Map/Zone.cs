@@ -1,12 +1,9 @@
-﻿using OpenNos.Domain;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace OpenNos.GameObject
 {
     public class ZoneEvent
     {
-
         #region Properties
 
         public short X { get; set; }

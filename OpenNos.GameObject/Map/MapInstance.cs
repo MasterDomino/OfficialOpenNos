@@ -41,8 +41,6 @@ namespace OpenNos.GameObject
 
         private readonly Random _random;
 
-        private bool _disposed;
-
         private bool _isSleeping;
 
         private bool _isSleepingRequest;
@@ -191,19 +189,8 @@ namespace OpenNos.GameObject
             });
         }
 
-        public override sealed void Dispose()
-        {
-            if (!_disposed)
-            {
-                Dispose(true);
-                GC.SuppressFinalize(this);
-                _disposed = true;
-            }
-        }
-
         public void DropItemByMonster(long? owner, DropDTO drop, short mapX, short mapY)
         {
-            // TODO: Parallelize, if possible.
             try
             {
                 short localMapX = mapX;
@@ -316,7 +303,7 @@ namespace OpenNos.GameObject
         // TODO: Fix, Seems glitchy.
         public int GetNextMonsterId()
         {
-            int nextId = _mapMonsterIds.GetAllItems().Any() ? _mapMonsterIds.GetAllItems().Last() + 1 : 1;
+            int nextId = _mapMonsterIds.GetAllItems().Count > 0 ? _mapMonsterIds.GetAllItems().Last() + 1 : 1;
             _mapMonsterIds[nextId] = nextId;
             return nextId;
         }
@@ -324,7 +311,7 @@ namespace OpenNos.GameObject
         // TODO: Fix, Seems glitchy.
         public int GetNextNpcId()
         {
-            int nextId = _mapNpcIds.GetAllItems().Any() ? _mapNpcIds.GetAllItems().Last() + 1 : 1;
+            int nextId = _mapNpcIds.GetAllItems().Count > 0 ? _mapNpcIds.GetAllItems().Last() + 1 : 1;
             _mapNpcIds[nextId] = nextId;
             return nextId;
         }
@@ -475,11 +462,7 @@ namespace OpenNos.GameObject
 
         public void ThrowItems(Tuple<int, short, byte, int, int> parameter)
         {
-            MapMonster mon = Monsters.Find(s => s.MapMonsterId == parameter.Item1);
-            if (mon == null)
-            {
-                mon = Monsters.Find(s => s.MonsterVNum == parameter.Item1);
-            }
+            MapMonster mon = Monsters.Find(s => s.MapMonsterId == parameter.Item1) ?? Monsters.Find(s => s.MonsterVNum == parameter.Item1);
             if (mon == null)
             {
                 return;
@@ -579,13 +562,16 @@ namespace OpenNos.GameObject
         {
             if (disposing)
             {
+                _npcs.Dispose();
+                _monsters.Dispose();
+                _mapNpcIds.Dispose();
+                _mapMonsterIds.Dispose();
+                DroppedList.Dispose();
                 foreach (ClientSession session in ServerManager.Instance.Sessions.Where(s => s.Character != null && s.Character.MapInstanceId == MapInstanceId))
                 {
                     ServerManager.Instance.ChangeMap(session.Character.CharacterId, session.Character.MapId, session.Character.MapX, session.Character.MapY);
                 }
-                DroppedList.Dispose();
-                _npcs.Dispose();
-                _monsters.Dispose();
+                GC.SuppressFinalize(this);
             }
         }
 

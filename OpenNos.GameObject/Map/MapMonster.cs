@@ -194,7 +194,6 @@ namespace OpenNos.GameObject
             {
                 if (IsBoss)
                 {
-
                     MaxHp *= 7;
                     MaxMp *= 7;
                 }
@@ -265,10 +264,7 @@ namespace OpenNos.GameObject
                 MapInstance.InstanceBag.Point += EventHelper.Instance.CalculateComboPoint(MapInstance.InstanceBag.Combo);
             }
             MapInstance.InstanceBag.MonstersKilled++;
-            OnDeathEvents.ForEach(e =>
-            {
-                EventHelper.Instance.RunEvent(e, monster: this);
-            });
+            OnDeathEvents.ForEach(e => EventHelper.Instance.RunEvent(e, monster: this));
         }
 
         public void StartLife()
@@ -309,7 +305,7 @@ namespace OpenNos.GameObject
                 Character character = ServerManager.Instance.Sessions.Where(s => s?.Character != null && s.Character.Hp > 0 && !s.Character.InvisibleGm && !s.Character.Invisible && s.Character.MapInstance == MapInstance && Map.GetDistance(new MapCell { X = MapX, Y = MapY }, new MapCell { X = s.Character.PositionX, Y = s.Character.PositionY }) < Monster.NoticeRange).OrderBy(s => ServerManager.Instance.RandomNumber(0, int.MaxValue)).FirstOrDefault()?.Character;
                 if (character != null)
                 {
-                    if (!OnNoticeEvents.Any() && MoveEvent == null)
+                    if (OnNoticeEvents.Count == 0 && MoveEvent == null)
                     {
                         Target = character.CharacterId;
                         if (!Monster.NoAggresiveIcon)
@@ -317,10 +313,7 @@ namespace OpenNos.GameObject
                             character.Session.SendPacket(GenerateEff(5000));
                         }
                     }
-                    OnNoticeEvents.ForEach(e =>
-                    {
-                        EventHelper.Instance.RunEvent(e, monster: this);
-                    });
+                    OnNoticeEvents.ForEach(e => EventHelper.Instance.RunEvent(e, monster: this));
                     OnNoticeEvents.RemoveAll(s => s != null);
                 }
             }
@@ -348,11 +341,10 @@ namespace OpenNos.GameObject
         {
             if (IsMoving)
             {
-                short maxDistance = 22;
+                const short maxDistance = 22;
                 int distance = Map.GetDistance(new MapCell() { X = targetSession.Character.PositionX, Y = targetSession.Character.PositionY }, new MapCell() { X = MapX, Y = MapY });
                 if (targetSession != null)
                 {
-
                     if (targetSession.Character.LastMonsterAggro.AddSeconds(5) < DateTime.Now || targetSession.Character.BrushFire == null)
                     {
                         targetSession.Character.UpdateBushFire();
@@ -365,8 +357,7 @@ namespace OpenNos.GameObject
                     short yoffset = (short)ServerManager.Instance.RandomNumber(-1, 1);
                     try
                     {
-                        List<Node> list = BestFirstSearch.TracePath(new Node() { X = MapX, Y = MapY }, targetSession.Character.BrushFire, targetSession.Character.MapInstance.Map.Grid);
-                        Path = list;
+                        Path = BestFirstSearch.TracePath(new Node() { X = MapX, Y = MapY }, targetSession.Character.BrushFire, targetSession.Character.MapInstance.Map.Grid);
                     }
                     catch (Exception ex)
                     {
@@ -607,74 +598,71 @@ namespace OpenNos.GameObject
             }
 
             // target following
-            else
+            else if (MapInstance != null)
             {
-                if (MapInstance != null)
+                GetNearestOponent();
+                HostilityTarget();
+
+                ClientSession targetSession = MapInstance.GetSessionByCharacterId(Target);
+
+                // remove target in some situations
+                if (targetSession == null || targetSession.Character.Invisible || targetSession.Character.Hp <= 0 || CurrentHp <= 0)
                 {
-                    GetNearestOponent();
-                    HostilityTarget();
+                    RemoveTarget();
+                    return;
+                }
 
-                    ClientSession targetSession = MapInstance.GetSessionByCharacterId(Target);
-
-                    // remove target in some situations
-                    if (targetSession == null || targetSession.Character.Invisible || targetSession.Character.Hp <= 0 || CurrentHp <= 0)
+                lock (targetSession)
+                {
+                    NpcMonsterSkill npcMonsterSkill = null;
+                    if (ServerManager.Instance.RandomNumber(0, 10) > 8 && Skills != null)
                     {
-                        RemoveTarget();
-                        return;
+                        npcMonsterSkill = Skills.Where(s => (DateTime.Now - s.LastSkillUse).TotalMilliseconds >= 100 * s.Skill.Cooldown).OrderBy(rnd => _random.Next()).FirstOrDefault();
                     }
 
-                    lock (targetSession)
+                    if (npcMonsterSkill?.Skill.TargetType == 1 && npcMonsterSkill?.Skill.HitType == 0)
                     {
-                        NpcMonsterSkill npcMonsterSkill = null;
-                        if (ServerManager.Instance.RandomNumber(0, 10) > 8 && Skills != null)
-                        {
-                            npcMonsterSkill = Skills.Where(s => (DateTime.Now - s.LastSkillUse).TotalMilliseconds >= 100 * s.Skill.Cooldown).OrderBy(rnd => _random.Next()).FirstOrDefault();
-                        }
+                        TargetHit(targetSession, npcMonsterSkill);
+                    }
 
-                        if (npcMonsterSkill?.Skill.TargetType == 1 && npcMonsterSkill?.Skill.HitType == 0)
+                    // check if target is in range
+                    if (!targetSession.Character.InvisibleGm && !targetSession.Character.Invisible && targetSession.Character.Hp > 0)
+                    {
+                        if (npcMonsterSkill != null && CurrentMp >= npcMonsterSkill.Skill.MpCost
+                             && Map.GetDistance(new MapCell
+                             {
+                                 X = MapX,
+                                 Y = MapY
+                             },
+                                 new MapCell
+                                 {
+                                     X = targetSession.Character.PositionX,
+                                     Y = targetSession.Character.PositionY
+                                 }) < npcMonsterSkill.Skill.Range)
                         {
                             TargetHit(targetSession, npcMonsterSkill);
                         }
-
-                        // check if target is in range
-                        if (!targetSession.Character.InvisibleGm && !targetSession.Character.Invisible && targetSession.Character.Hp > 0)
+                        else if (Map.GetDistance(new MapCell
                         {
-                            if (npcMonsterSkill != null && CurrentMp >= npcMonsterSkill.Skill.MpCost
-                                 && Map.GetDistance(new MapCell
-                                 {
-                                     X = MapX,
-                                     Y = MapY
-                                 },
-                                     new MapCell
-                                     {
-                                         X = targetSession.Character.PositionX,
-                                         Y = targetSession.Character.PositionY
-                                     }) < npcMonsterSkill.Skill.Range)
-                            {
-                                TargetHit(targetSession, npcMonsterSkill);
-                            }
-                            else if (Map.GetDistance(new MapCell
-                            {
-                                X = MapX,
-                                Y = MapY
-                            },
-                                        new MapCell
-                                        {
-                                            X = targetSession.Character.PositionX,
-                                            Y = targetSession.Character.PositionY
-                                        }) <= Monster.BasicRange)
-                            {
-                                TargetHit(targetSession, npcMonsterSkill);
-                            }
-                            else
-                            {
-                                FollowTarget(targetSession);
-                            }
+                            X = MapX,
+                            Y = MapY
+                        },
+                                    new MapCell
+                                    {
+                                        X = targetSession.Character.PositionX,
+                                        Y = targetSession.Character.PositionY
+                                    }) <= Monster.BasicRange)
+                        {
+                            TargetHit(targetSession, npcMonsterSkill);
                         }
                         else
                         {
                             FollowTarget(targetSession);
                         }
+                    }
+                    else
+                    {
+                        FollowTarget(targetSession);
                     }
                 }
             }
@@ -697,9 +685,8 @@ namespace OpenNos.GameObject
             {
                 double time = (DateTime.Now - LastMove).TotalMilliseconds;
 
-                if (Path.Any()) // move back to initial position after following target
+                if (Path.Count > 0) // move back to initial position after following target
                 {
-
                     int timetowalk = 2000 / Monster.Speed;
                     if (time > timetowalk)
                     {
@@ -709,19 +696,12 @@ namespace OpenNos.GameObject
                         double waitingtime = Map.GetDistance(new MapCell { X = mapX, Y = mapY }, new MapCell { X = MapX, Y = MapY }) / (double)Monster.Speed;
                         LastMove = DateTime.Now.AddSeconds(waitingtime > 1 ? 1 : waitingtime);
 
-                        Observable.Timer(TimeSpan.FromMilliseconds(timetowalk))
-                                             .Subscribe(
-                                             x =>
-                                             {
-                                                 MapX = (short)mapX;
-                                                 MapY = (short)mapY;
-
-                                                 MoveEvent?.Events.ForEach(e =>
-                                                 {
-                                                     EventHelper.Instance.RunEvent(e, monster: this);
-                                                 });
-
-                                             });
+                        Observable.Timer(TimeSpan.FromMilliseconds(timetowalk)).Subscribe(x =>
+                        {
+                            MapX = mapX;
+                            MapY = mapY;
+                            MoveEvent?.Events.ForEach(e => EventHelper.Instance.RunEvent(e, monster: this));
+                        });
                         Path.RemoveRange(0, maxindex);
                         MapInstance.Broadcast(new BroadcastPacket(null, GenerateMv3(), ReceiverType.All, xCoordinate: mapX, yCoordinate: mapY));
                         return;
@@ -835,7 +815,7 @@ namespace OpenNos.GameObject
             {
                 targetSession.Character.GetDamage(damage);
 
-                MapInstance.Broadcast(null, ServerManager.Instance.GetUserMethod<string>(Target, "GenerateStat"), ReceiverType.OnlySomeone, "", Target);
+                MapInstance.Broadcast(null, ServerManager.Instance.GetUserMethod<string>(Target, "GenerateStat"), ReceiverType.OnlySomeone, string.Empty, Target);
 
                 MapInstance.Broadcast(npcMonsterSkill != null
                     ? $"su 3 {MapMonsterId} 1 {Target} {npcMonsterSkill.SkillVNum} {npcMonsterSkill.Skill.Cooldown} {npcMonsterSkill.Skill.AttackAnimation} {npcMonsterSkill.Skill.Effect} {MapX} {MapY} {(targetSession.Character.Hp > 0 ? 1 : 0)} {(int)(targetSession.Character.Hp / targetSession.Character.HPLoad() * 100)} {damage} {hitmode} 0"
@@ -865,7 +845,7 @@ namespace OpenNos.GameObject
                     if (characterInRange.Hp > 0)
                     {
                         characterInRange.GetDamage(damage);
-                        MapInstance.Broadcast(null, characterInRange.GenerateStat(), ReceiverType.OnlySomeone, "", characterInRange.CharacterId);
+                        MapInstance.Broadcast(null, characterInRange.GenerateStat(), ReceiverType.OnlySomeone, string.Empty, characterInRange.CharacterId);
                         MapInstance.Broadcast($"su 3 {MapMonsterId} 1 {characterInRange.CharacterId} 0 {Monster.BasicCooldown} 11 {Monster.BasicSkill} 0 0 {(characterInRange.Hp > 0 ? 1 : 0)} { (int)(characterInRange.Hp / characterInRange.HPLoad() * 100) } {damage} {hitmode} 0");
                         if (characterInRange.Hp <= 0)
                         {
