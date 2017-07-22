@@ -751,7 +751,7 @@ namespace OpenNos.Handler
                     {
                         Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateEff(guriPacket.Data + 4099), ReceiverType.AllNoEmoBlocked);
                     }
-                    else if (guriPacket.User.TryCast(out int mateTransportId))
+                    else if (int.TryParse(guriPacket.User.ToString(), out int mateTransportId))
                     {
                         Mate mate = Session.Character.Mates.Find(s => s.MateTransportId == mateTransportId);
                         if (mate != null)
@@ -762,7 +762,7 @@ namespace OpenNos.Handler
                 }
                 else if (guriPacket.Type == 300)
                 {
-                    if (guriPacket.Argument == 8023 && guriPacket.Data.TryCast(out short slot))
+                    if (guriPacket.Argument == 8023 && short.TryParse(guriPacket.Data.ToString(), out short slot))
                     {
                         ItemInstance box = Session.Character.Inventory.LoadBySlotAndType<BoxInstance>(slot, InventoryType.Equipment);
                         if (box != null)
@@ -835,7 +835,7 @@ namespace OpenNos.Handler
                 }
                 else if (guriPacket.Type == 400)
                 {
-                    if (!guriPacket.User.TryCast(out int mapNpcId) || !Session.HasCurrentMapInstance)
+                    if (!int.TryParse(guriPacket.User.ToString(), out int mapNpcId) || !Session.HasCurrentMapInstance)
                     {
                         return;
                     }
@@ -902,7 +902,7 @@ namespace OpenNos.Handler
                 else if (guriPacket.Type == 750)
                 {
                     const short baseVnum = 1623;
-                    if (guriPacket.Argument.TryCast(out short faction) && Session.Character.Inventory.CountItem(baseVnum + faction) > 0)
+                    if (short.TryParse(guriPacket.Argument.ToString(), out short faction) && Session.Character.Inventory.CountItem(baseVnum + faction) > 0)
                     {
                         Session.Character.Faction = faction;
                         Session.Character.Inventory.RemoveItemAmount(baseVnum + faction);
@@ -1009,7 +1009,7 @@ namespace OpenNos.Handler
                 }
                 else if (guriPacket.Type == 208 && guriPacket.Argument == 0)
                 {
-                    if (short.TryParse(guriPacket.Value, out short mountSlot) && guriPacket.User.TryCast(out short pearlSlot))
+                    if (short.TryParse(guriPacket.Value, out short mountSlot) && short.TryParse(guriPacket.User.ToString(), out short pearlSlot))
                     {
                         ItemInstance mount = Session.Character.Inventory.LoadBySlotAndType<ItemInstance>(mountSlot, InventoryType.Main);
                         BoxInstance pearl = Session.Character.Inventory.LoadBySlotAndType<BoxInstance>(pearlSlot, InventoryType.Equipment);
@@ -1022,7 +1022,7 @@ namespace OpenNos.Handler
                 }
                 else if (guriPacket.Type == 209 && guriPacket.Argument == 0)
                 {
-                    if (short.TryParse(guriPacket.Value, out short mountSlot) && guriPacket.User.TryCast(out short pearlSlot))
+                    if (short.TryParse(guriPacket.Value, out short mountSlot) && short.TryParse(guriPacket.User.ToString(), out short pearlSlot))
                     {
                         WearableInstance fairy = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>(mountSlot, InventoryType.Equipment);
                         BoxInstance pearl = Session.Character.Inventory.LoadBySlotAndType<BoxInstance>(pearlSlot, InventoryType.Equipment);
@@ -1604,7 +1604,7 @@ namespace OpenNos.Handler
                     Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("USER_NOT_FOUND"), 10));
                 }
             }
-            else if (pstPacket.Id.TryCast(out int id) && pstPacket.Type.TryCast(out byte type))
+            else if (int.TryParse(pstPacket.Id.ToString(), out int id) && byte.TryParse(pstPacket.Type.ToString(), out byte type))
             {
                 if (pstPacket.Argument == 3)
                 {
