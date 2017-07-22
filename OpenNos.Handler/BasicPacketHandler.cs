@@ -767,14 +767,7 @@ namespace OpenNos.Handler
                         ItemInstance box = Session.Character.Inventory.LoadBySlotAndType<BoxInstance>(slot, InventoryType.Equipment);
                         if (box != null)
                         {
-                            if (guriPacket.Value?.Length == 1)
-                            {
-                                box.Item.Use(Session, ref box, 1, new string[] { guriPacket.Value });
-                            }
-                            else
-                            {
-                                box.Item.Use(Session, ref box, 1);
-                            }
+                            box.Item.Use(Session, ref box, 1, new string[] { guriPacket.Data.ToString() });
                         }
                     }
                 }
