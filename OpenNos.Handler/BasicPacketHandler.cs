@@ -767,7 +767,7 @@ namespace OpenNos.Handler
                         ItemInstance box = Session.Character.Inventory.LoadBySlotAndType<BoxInstance>(slot, InventoryType.Equipment);
                         if (box != null)
                         {
-                            if (guriPacket.Value.Length == 1)
+                            if (guriPacket.Value?.Length == 1)
                             {
                                 box.Item.Use(Session, ref box, 1, new string[] { guriPacket.Value });
                             }
@@ -943,7 +943,7 @@ namespace OpenNos.Handler
                         if (presentationVNum != -1)
                         {
                             string message = string.Empty;
-                            string[] valuesplit = guriPacket.Value.Split(' ');
+                            string[] valuesplit = guriPacket.Value?.Split(' ');
                             for (int i = 0; i < valuesplit.Length; i++)
                             {
                                 message += valuesplit[i] + "^";
@@ -965,7 +965,7 @@ namespace OpenNos.Handler
                     if (guriPacket.Argument == 3 && Session.Character.Inventory.CountItem(speakerVNum) > 0)
                     {
                         string message = $"<{Language.Instance.GetMessageFromKey("SPEAKER")}> [{Session.Character.Name}]:";
-                        string[] valuesplit = guriPacket.Value.Split(' ');
+                        string[] valuesplit = guriPacket.Value?.Split(' ');
                         for (int i = 0; i < valuesplit.Length; i++)
                         {
                             message += valuesplit[i] + " ";
