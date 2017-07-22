@@ -762,7 +762,7 @@ namespace OpenNos.Handler
                 }
                 else if (guriPacket.Type == 300)
                 {
-                    if (guriPacket.Argument == 8023 && short.TryParse(guriPacket.Data.ToString(), out short slot))
+                    if (guriPacket.Argument == 8023 && short.TryParse(guriPacket.User.ToString(), out short slot))
                     {
                         ItemInstance box = Session.Character.Inventory.LoadBySlotAndType<BoxInstance>(slot, InventoryType.Equipment);
                         if (box != null)
