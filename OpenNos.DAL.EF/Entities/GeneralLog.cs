@@ -12,6 +12,7 @@
  * GNU General Public License for more details.
  */
 
+using OpenNos.Domain;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -38,7 +39,7 @@ namespace OpenNos.DAL.EF
         [Key]
         public long LogId { get; set; }
 
-        public string LogType { get; set; }
+        public GeneralLogType LogType { get; set; }
 
         public DateTime Timestamp { get; set; }
 

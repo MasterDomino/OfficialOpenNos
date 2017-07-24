@@ -700,6 +700,15 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Character changed while changing map. Do not abuse Commands..
+        /// </summary>
+        internal static string CHARACTER_CHANGED_MAP {
+            get {
+                return ResourceManager.GetString("CHARACTER_CHANGED_MAP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0}({1}) logged in!.
         /// </summary>
         internal static string CHARACTER_FAMILY_LOGGED_IN {

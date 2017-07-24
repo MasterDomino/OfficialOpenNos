@@ -2177,7 +2177,7 @@ namespace OpenNos.Handler
                 {
                     return;
                 }
-                if (short.TryParse(teleportPacket.Data, out short mapId))
+                if (int.TryParse(teleportPacket.Data, out int mapId))
                 {
                     Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Teleport]MapId: {teleportPacket.Data} MapX: {teleportPacket.X} MapY: {teleportPacket.Y}");
                     ServerManager.Instance.ChangeMap(Session.Character.CharacterId, mapId, teleportPacket.X, teleportPacket.Y);

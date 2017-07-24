@@ -14,6 +14,7 @@
 
 using OpenNos.DAL.Interface;
 using OpenNos.Data;
+using OpenNos.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +35,7 @@ namespace OpenNos.DAL.Mock
             return Container.Where(c => c.AccountId == accountId).Select(e => MapEntity(e));
         }
 
-        public IEnumerable<GeneralLogDTO> LoadByLogType(string logType, long? characterId)
+        public IEnumerable<GeneralLogDTO> LoadByLogType(GeneralLogType logType, long? characterId)
         {
             return Enumerable.Empty<GeneralLogDTO>().Select(e => MapEntity(e));
         }
@@ -44,7 +45,7 @@ namespace OpenNos.DAL.Mock
             throw new NotImplementedException();
         }
 
-        public void WriteGeneralLog(long accountId, string ipAddress, long? characterId, string logType, string logData)
+        public void WriteGeneralLog(long accountId, string ipAddress, long? characterId, GeneralLogType logType, string logData)
         {
             throw new NotImplementedException();
         }

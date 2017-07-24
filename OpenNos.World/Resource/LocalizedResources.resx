@@ -1447,4 +1447,7 @@
   <data name="GIFT_SENT" xml:space="preserve">
     <value>Gift has been sent!</value>
   </data>
+  <data name="CHARACTER_CHANGED_MAP" xml:space="preserve">
+    <value>Character changed while changing map. Do not abuse Commands.</value>
+  </data>
 </root>

@@ -28,7 +28,7 @@ namespace OpenNos.GameObject
 
         #region Methods
 
-        public static List<Portal> GenerateMinilandEntryPortals(short entryMap, Guid exitMapinstanceId)
+        public static List<Portal> GenerateMinilandEntryPortals(int entryMap, Guid exitMapinstanceId)
         {
             List<Portal> list = new List<Portal>();
 
@@ -41,7 +41,7 @@ namespace OpenNos.GameObject
                         SourceY = 132,
                         DestinationX = 5,
                         DestinationY = 8,
-                        Type = (short)PortalType.Miniland,
+                        Type = (short)PortalType.Invisible,
                         SourceMapId = 1,
                         DestinationMapInstanceId = exitMapinstanceId
                     });
@@ -54,7 +54,7 @@ namespace OpenNos.GameObject
                         SourceY = 171,
                         DestinationX = 5,
                         DestinationY = 8,
-                        Type = (short)PortalType.Miniland,
+                        Type = (short)PortalType.Invisible,
                         SourceMapId = 145,
                         DestinationMapInstanceId = exitMapinstanceId
                     });

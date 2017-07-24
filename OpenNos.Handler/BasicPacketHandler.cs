@@ -13,7 +13,6 @@
  */
 
 using OpenNos.Core;
-using OpenNos.Core.Handling;
 using OpenNos.DAL;
 using OpenNos.Data;
 using OpenNos.Domain;
@@ -22,7 +21,6 @@ using OpenNos.GameObject.Helpers;
 using OpenNos.GameObject.Packets.ClientPackets;
 using OpenNos.Master.Library.Client;
 using OpenNos.Master.Library.Data;
-using OpenNos.PathFinder;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -187,8 +185,8 @@ namespace OpenNos.Handler
                 long complimentedCharacterId = complimentPacket.CharacterId;
                 if (Session.Character.Level >= 30)
                 {
-                    GeneralLogDTO dto = Session.Character.GeneralLogs.LastOrDefault(s => s.LogData == "World" && s.LogType == "Connection");
-                    GeneralLogDTO lastcompliment = Session.Character.GeneralLogs.LastOrDefault(s => s.LogData == "World" && s.LogType == "Compliment");
+                    GeneralLogDTO dto = Session.Character.GeneralLogs.LastOrDefault(s => s.LogData == "World" && s.LogType == GeneralLogType.Connection);
+                    GeneralLogDTO lastcompliment = Session.Character.GeneralLogs.LastOrDefault(s => s.LogData == "World" && s.LogType == GeneralLogType.Compliment);
                     if (dto?.Timestamp.AddMinutes(60) <= DateTime.Now)
                     {
                         if (lastcompliment == null || lastcompliment.Timestamp.AddDays(1) <= DateTime.Now.Date)
@@ -203,7 +201,7 @@ namespace OpenNos.Handler
                                 CharacterId = Session.Character.CharacterId,
                                 IpAddress = Session.IpAddress,
                                 LogData = "World",
-                                LogType = "Compliment",
+                                LogType = GeneralLogType.Compliment,
                                 Timestamp = DateTime.Now
                             });
 
@@ -805,7 +803,7 @@ namespace OpenNos.Handler
                                     }
                                     short mapy = session.Character.PositionY;
                                     short mapx = session.Character.PositionX;
-                                    short mapId = session.Character.MapInstance.Map.MapId;
+                                    int mapId = session.Character.MapInstance.Map.MapId;
 
                                     ServerManager.Instance.ChangeMap(Session.Character.CharacterId, mapId, mapx, mapy);
                                     Session.Character.Inventory.RemoveItemAmount(vnumToUse);
@@ -1136,7 +1134,7 @@ namespace OpenNos.Handler
                         case (sbyte)PortalType.MapPortal:
                         case (sbyte)PortalType.TSNormal:
                         case (sbyte)PortalType.Open:
-                        case (sbyte)PortalType.Miniland:
+                        case (sbyte)PortalType.Invisible:
                         case (sbyte)PortalType.TSEnd:
                         case (sbyte)PortalType.Exit:
                         case (sbyte)PortalType.Effect:
@@ -1722,7 +1720,7 @@ namespace OpenNos.Handler
                 return;
             }
             Session.CurrentMapInstance = Session.Character.MapInstance;
-            if (string.Equals(ConfigurationManager.AppSettings["SceneOnCreate"], "true", StringComparison.CurrentCultureIgnoreCase) &&   Session.Character.GeneralLogs.Count(s => s.LogType == "Connection") < 2)
+            if (string.Equals(ConfigurationManager.AppSettings["SceneOnCreate"], "true", StringComparison.CurrentCultureIgnoreCase) && Session.Character.GeneralLogs.Count(s => s.LogType == GeneralLogType.Connection) < 2)
             {
                 Session.SendPacket("scene 40");
             }
@@ -1750,7 +1748,7 @@ namespace OpenNos.Handler
             Session.SendPacket(Session.Character.GenerateSki());
             Session.SendPacket($"fd {Session.Character.Reput} 0 {(int)Session.Character.Dignity} {Math.Abs(Session.Character.GetDignityIco())}");
             Session.SendPacket(Session.Character.GenerateFd());
-            Session.SendPacket("rage 0 250000");
+            // Session.SendPacket("rage 0 250000");
             Session.SendPacket("rank_cool 0 0 18000");
             SpecialistInstance specialistInstance = Session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>(8, InventoryType.Wear);
             StaticBonusDTO medal = Session.Character.StaticBonusList.Find(s => s.StaticBonusType == StaticBonusType.BazaarMedalGold || s.StaticBonusType == StaticBonusType.BazaarMedalSilver);
@@ -1792,43 +1790,19 @@ namespace OpenNos.Handler
             }
 
             // qstlist target sqst bf
-            Session.SendPacket("act6");
+            // Session.SendPacket("act6");
             Session.SendPacket(Session.Character.GenerateFaction());
             Session.SendPackets(Session.Character.GenerateScP());
             Session.SendPackets(Session.Character.GenerateScN());
 #pragma warning disable 618
             Session.Character.GenerateStartupInventory();
 #pragma warning restore 618
-
             Session.SendPacket(Session.Character.GenerateGold());
             Session.SendPackets(Session.Character.GenerateQuicklist());
-
-            string clinit = "clinit";
-            string flinit = "flinit";
-            string kdlinit = "kdlinit";
-            foreach (CharacterDTO character in ServerManager.Instance.TopComplimented)
-            {
-                clinit += $" {character.CharacterId}|{character.Level}|{character.HeroLevel}|{character.Compliment}|{character.Name}";
-            }
-            foreach (CharacterDTO character in ServerManager.Instance.TopReputation)
-            {
-                flinit += $" {character.CharacterId}|{character.Level}|{character.HeroLevel}|{character.Reput}|{character.Name}";
-            }
-            foreach (CharacterDTO character in ServerManager.Instance.TopPoints)
-            {
-                kdlinit += $" {character.CharacterId}|{character.Level}|{character.HeroLevel}|{character.Act4Points}|{character.Name}";
-            }
-
             Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateGidx());
-
             Session.SendPacket(Session.Character.GenerateFinit());
             Session.SendPacket(Session.Character.GenerateBlinit());
-            Session.SendPacket(clinit);
-            Session.SendPacket(flinit);
-            Session.SendPacket(kdlinit);
-
             Session.Character.LastPVPRevive = DateTime.Now;
-
             if (Session.Character.Family != null && Session.Character.FamilyCharacter != null)
             {
                 Session.SendPacket(Session.Character.GenerateGInfo());
@@ -1845,7 +1819,7 @@ namespace OpenNos.Handler
             IEnumerable<PenaltyLogDTO> warning = DAOFactory.PenaltyLogDAO.LoadByAccount(Session.Character.AccountId).Where(p => p.Penalty == PenaltyType.Warning);
             if (warning.Any())
             {
-                Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("WARNING_INFO"), warning.Count())));
+                Session.SendPacket(UserInterfaceHelper.Instance.GenerateDialog(string.Format(Language.Instance.GetMessageFromKey("WARNING_INFO"), warning.Count())));
             }
 
             // finfo - friends info
