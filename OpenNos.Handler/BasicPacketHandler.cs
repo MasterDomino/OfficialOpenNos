@@ -959,6 +959,10 @@ namespace OpenNos.Handler
                     {
                         string message = $"<{Language.Instance.GetMessageFromKey("SPEAKER")}> [{Session.Character.Name}]:";
                         string[] valuesplit = guriPacket.Value?.Split(' ');
+                        if(valuesplit == null)
+                        {
+                            return;
+                        }
                         for (int i = 0; i < valuesplit.Length; i++)
                         {
                             message += valuesplit[i] + " ";
