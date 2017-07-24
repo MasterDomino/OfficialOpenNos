@@ -397,7 +397,7 @@ namespace OpenNos.GameObject
                 }
                 else
                 {
-                    decrypted.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                    packetSplit = decrypted.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
                 }
                 foreach (string packet in packetSplit)
                 {

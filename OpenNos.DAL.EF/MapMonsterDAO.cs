@@ -69,10 +69,17 @@ namespace OpenNos.DAL.EF
                     foreach (MapMonsterDTO monster in mapMonsters)
                     {
                         MapMonster entity = _mapper.Map<MapMonster>(monster);
+                        context.Configuration.AutoDetectChangesEnabled = true;
                         context.MapMonster.Add(entity);
+                        try
+                        {
+                            context.SaveChanges();
+                        }
+                        catch
+                        {
+                            //Do nothing, it's to fix issues with parsing on newer packets
+                        }
                     }
-                    context.Configuration.AutoDetectChangesEnabled = true;
-                    context.SaveChanges();
                 }
             }
             catch (Exception e)

@@ -37,9 +37,16 @@ namespace OpenNos.DAL.EF
                     {
                         Shop entity = _mapper.Map<Shop>(Item);
                         context.Shop.Add(entity);
+                        context.Configuration.AutoDetectChangesEnabled = true;
+                        try
+                        {
+                            context.SaveChanges();
+                        }
+                        catch
+                        {
+                            //Do nothing, it's to fix issues with parsing on newer packets
+                        }
                     }
-                    context.Configuration.AutoDetectChangesEnabled = true;
-                    context.SaveChanges();
                 }
             }
             catch (Exception e)
