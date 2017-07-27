@@ -874,9 +874,12 @@ namespace OpenNos.Handler
                     });
 
                     Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateGidx());
+                    Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(), ReceiverType.AllExceptMe);
                     Session.SendPacket(Session.Character.GenerateFamilyMember());
                     Session.SendPacket(Session.Character.GenerateFamilyMemberMessage());
                     Session.SendPacket(Session.Character.GenerateFamilyMemberExp());
+                    Session.SendPacket(Session.Character.GenerateStatChar());
+                    Session.SendPacket(Session.Character.GenerateCInfo());
                 }
             }
         }
