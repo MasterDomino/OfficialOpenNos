@@ -204,7 +204,7 @@ namespace OpenNos.Import.Console
         public void ImportMapNpcs()
         {
             int npcCounter = 0;
-            short map = 0;
+            int map = 0;
             List<MapNpcDTO> npcs = new List<MapNpcDTO>();
             List<int> npcMvPacketsList = new List<int>();
             Dictionary<int, short> effPacketsDictionary = new Dictionary<int, short>();
@@ -237,7 +237,7 @@ namespace OpenNos.Import.Console
             {
                 if (currentPacket.Length > 5 && currentPacket[0] == "at")
                 {
-                    map = short.Parse(currentPacket[2]);
+                    map = int.Parse(currentPacket[2]);
                     continue;
                 }
                 if (currentPacket.Length > 7 && currentPacket[0] == "in" && currentPacket[1] == "2")
@@ -594,7 +594,7 @@ namespace OpenNos.Import.Console
         public void ImportMonsters()
         {
             int monsterCounter = 0;
-            short map = 0;
+            int map = 0;
             List<int> mobMvPacketsList = new List<int>();
             List<MapMonsterDTO> monsters = new List<MapMonsterDTO>();
 
@@ -610,7 +610,7 @@ namespace OpenNos.Import.Console
             {
                 if (currentPacket.Length > 5 && currentPacket[0] == "at")
                 {
-                    map = short.Parse(currentPacket[2]);
+                    map = int.Parse(currentPacket[2]);
                     continue;
                 }
                 if (currentPacket.Length > 7 && currentPacket[0] == "in" && currentPacket[1] == "3")
@@ -1271,7 +1271,7 @@ namespace OpenNos.Import.Console
         {
             List<PortalDTO> listPortals1 = new List<PortalDTO>();
             List<PortalDTO> listPortals2 = new List<PortalDTO>();
-            short map = 0;
+            int map = 0;
 
             PortalDTO lodPortal = new PortalDTO
             {
@@ -1299,24 +1299,11 @@ namespace OpenNos.Import.Console
             };
             DAOFactory.PortalDAO.Insert(minilandPortal);
 
-            PortalDTO weddingPortal = new PortalDTO
-            {
-                SourceMapId = 2586,
-                SourceX = 34,
-                SourceY = 54,
-                DestinationMapId = 145,
-                Type = -1,
-                DestinationX = 61,
-                DestinationY = 165,
-                IsDisabled = false
-            };
-            DAOFactory.PortalDAO.Insert(weddingPortal);
-
             foreach (string[] currentPacket in _packetList.Where(o => o[0].Equals("at") || o[0].Equals("gp")))
             {
                 if (currentPacket.Length > 5 && currentPacket[0] == "at")
                 {
-                    map = short.Parse(currentPacket[2]);
+                    map = int.Parse(currentPacket[2]);
                     continue;
                 }
                 if (currentPacket.Length > 4 && currentPacket[0] == "gp")
@@ -1326,7 +1313,7 @@ namespace OpenNos.Import.Console
                         SourceMapId = map,
                         SourceX = short.Parse(currentPacket[1]),
                         SourceY = short.Parse(currentPacket[2]),
-                        DestinationMapId = short.Parse(currentPacket[3]),
+                        DestinationMapId = int.Parse(currentPacket[3]),
                         Type = sbyte.Parse(currentPacket[4]),
                         DestinationX = -1,
                         DestinationY = -1,
@@ -1940,14 +1927,14 @@ namespace OpenNos.Import.Console
 
         public void ImportScriptedInstances()
         {
-            short map = 0;
+            int map = 0;
             List<ScriptedInstanceDTO> listtimespace = new List<ScriptedInstanceDTO>();
             List<ScriptedInstanceDTO> bddlist = new List<ScriptedInstanceDTO>();
             foreach (string[] currentPacket in _packetList.Where(o => o[0].Equals("at") || o[0].Equals("wp") || o[0].Equals("gp") || o[0].Equals("rbr")))
             {
                 if (currentPacket.Length > 5 && currentPacket[0] == "at")
                 {
-                    map = short.Parse(currentPacket[2]);
+                    map = int.Parse(currentPacket[2]);
                     bddlist = DAOFactory.ScriptedInstanceDAO.LoadByMap(map).ToList();
                     continue;
                 }
