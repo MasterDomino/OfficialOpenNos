@@ -436,7 +436,7 @@ namespace OpenNos.Handler
                             {
                                 return;
                             }
-                            Session.SendPacket($"st 2 {ncifPacket.TargetId} {npcinfo.Level} {npcinfo.HeroLevel} 100 100 50000 50000");
+                            Session.SendPacket($"st 2 {ncifPacket.TargetId} {npcinfo.Level} 100 100 50000 50000");
                         });
                         Parallel.ForEach(Session.CurrentMapInstance.Sessions, session =>
                         {
@@ -461,7 +461,7 @@ namespace OpenNos.Handler
                                 return;
                             }
                             Session.Character.LastMonsterId = monster.MapMonsterId;
-                            Session.SendPacket($"st 3 {ncifPacket.TargetId} {monsterinfo.Level} {monsterinfo.HeroLevel} {(int)((float)monster.CurrentHp / (float)monster.Monster.MaxHP * 100)} {(int)((float)monster.CurrentMp / (float)monster.Monster.MaxMP * 100)} {monster.CurrentHp} {monster.CurrentMp}{monster.Buff.GetAllItems().Aggregate(string.Empty, (current, buff) => current + $" {buff.Card.CardId}")}");
+                            Session.SendPacket($"st 3 {ncifPacket.TargetId} {monsterinfo.Level} {(int)((float)monster.CurrentHp / (float)monster.Monster.MaxHP * 100)} {(int)((float)monster.CurrentMp / (float)monster.Monster.MaxMP * 100)} {monster.CurrentHp} {monster.CurrentMp}{monster.Buff.GetAllItems().Aggregate(string.Empty, (current, buff) => current + $" {buff.Card.CardId}")}");
                         });
                     }
                     break;
@@ -1138,7 +1138,7 @@ namespace OpenNos.Handler
                         case (sbyte)PortalType.MapPortal:
                         case (sbyte)PortalType.TSNormal:
                         case (sbyte)PortalType.Open:
-                        case (sbyte)PortalType.Invisible:
+                        case (sbyte)PortalType.Miniland:
                         case (sbyte)PortalType.TSEnd:
                         case (sbyte)PortalType.Exit:
                         case (sbyte)PortalType.Effect:

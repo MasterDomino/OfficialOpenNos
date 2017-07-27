@@ -453,7 +453,6 @@ namespace OpenNos.GameObject
                     session.SendPacket(session.Character.GeneratePairy());
                     session.SendPacket(session.Character.GeneratePinit());
                     session.SendPackets(session.Character.GeneratePst());
-                    session.SendPacket(session.Character.GenerateAct());
                     session.SendPacket(session.Character.GenerateScpStc());
                     if (session.Character.Group?.Raid != null && session.Character.Group.Raid.InstanceBag?.Lock == true)
                     {

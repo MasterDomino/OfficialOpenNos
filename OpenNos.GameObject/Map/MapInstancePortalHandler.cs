@@ -37,11 +37,11 @@ namespace OpenNos.GameObject
                 case 1:
                     list.Add(new Portal
                     {
-                        SourceX = 48,
-                        SourceY = 132,
+                        SourceX = 111,
+                        SourceY = 125,
                         DestinationX = 5,
                         DestinationY = 8,
-                        Type = (short)PortalType.Invisible,
+                        Type = (short)PortalType.Miniland,
                         SourceMapId = 1,
                         DestinationMapInstanceId = exitMapinstanceId
                     });
@@ -54,7 +54,7 @@ namespace OpenNos.GameObject
                         SourceY = 171,
                         DestinationX = 5,
                         DestinationY = 8,
-                        Type = (short)PortalType.Invisible,
+                        Type = (short)PortalType.Miniland,
                         SourceMapId = 145,
                         DestinationMapInstanceId = exitMapinstanceId
                     });
