@@ -1722,9 +1722,13 @@ namespace OpenNos.Handler
                         Session.CurrentMapInstance.Broadcast(npc.GenerateOut());
                         Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("NPCMONSTER_REMOVED"), npc.MapNpcId, npc.Npc.Name, npc.MapId, npc.MapX, npc.MapY), 12));
                         Session.CurrentMapInstance.RemoveNpc(npc);
+                        if (DAOFactory.ShopDAO.LoadByNpc(npc.MapNpcId) != null)
+                        {
+                            DAOFactory.ShopDAO.DeleteById(npc.MapNpcId);
+                        }
                         if (DAOFactory.MapNpcDAO.LoadById(npc.MapNpcId) != null)
                         {
-                            DAOFactory.MapMonsterDAO.DeleteById(npc.MapNpcId);
+                            DAOFactory.MapNpcDAO.DeleteById(npc.MapNpcId);
                         }
                     }
                     else

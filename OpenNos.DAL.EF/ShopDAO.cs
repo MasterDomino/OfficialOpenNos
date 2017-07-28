@@ -16,6 +16,7 @@ using OpenNos.Core;
 using OpenNos.DAL.EF.Helpers;
 using OpenNos.DAL.Interface;
 using OpenNos.Data;
+using OpenNos.Data.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -102,6 +103,40 @@ namespace OpenNos.DAL.EF
             {
                 Logger.Error(e);
                 return null;
+            }
+        }
+
+        public DeleteResult DeleteById(int mapNpcId)
+        {
+            try
+            {
+                using (var context = DataAccessHelper.CreateContext())
+                {
+                    Shop shop = context.Shop.First(i => i.MapNpcId.Equals(mapNpcId));
+                    IEnumerable<ShopItem> shopItem = context.ShopItem.Where(s => s.ShopId.Equals(shop.ShopId));
+                    IEnumerable<ShopSkill> shopSkill = context.ShopSkill.Where(s => s.ShopId.Equals(shop.ShopId));
+
+                    if (shop != null)
+                    {
+                        foreach (ShopItem item in shopItem)
+                        {
+                            context.ShopItem.Remove(item);
+                        }
+                        foreach (ShopSkill skill in shopSkill)
+                        {
+                            context.ShopSkill.Remove(skill);
+                        }
+                        context.Shop.Remove(shop);
+                        context.SaveChanges();
+                    }
+
+                    return DeleteResult.Deleted;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                return DeleteResult.Error;
             }
         }
 

@@ -16,6 +16,7 @@ using OpenNos.Core;
 using OpenNos.DAL.EF.Helpers;
 using OpenNos.DAL.Interface;
 using OpenNos.Data;
+using OpenNos.Data.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -82,6 +83,30 @@ namespace OpenNos.DAL.EF
                 {
                     yield return _mapper.Map<MapNpcDTO>(entity);
                 }
+            }
+        }
+
+        public DeleteResult DeleteById(int mapNpcId)
+        {
+            try
+            {
+                using (var context = DataAccessHelper.CreateContext())
+                {
+                    MapNpc npc = context.MapNpc.First(i => i.MapNpcId.Equals(mapNpcId));
+
+                    if (npc != null)
+                    {
+                        context.MapNpc.Remove(npc);
+                        context.SaveChanges();
+                    }
+
+                    return DeleteResult.Deleted;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                return DeleteResult.Error;
             }
         }
 
