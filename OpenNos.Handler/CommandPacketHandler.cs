@@ -951,6 +951,7 @@ namespace OpenNos.Handler
                         DestinationY = portalToPacket.DestinationY,
                         Type = portalToPacket.PortalType == null ? (short)-1 : (short)portalToPacket.PortalType
                     };
+                    DAOFactory.PortalDAO.Insert(portal);
                     Session.CurrentMapInstance.Portals.Add(portal);
                     Session.CurrentMapInstance?.Broadcast(portal.GenerateGp());
                 }

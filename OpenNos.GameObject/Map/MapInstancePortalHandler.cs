@@ -37,8 +37,8 @@ namespace OpenNos.GameObject
                 case 1:
                     list.Add(new Portal
                     {
-                        SourceX = 111,
-                        SourceY = 125,
+                        SourceX = 110,
+                        SourceY = 124,
                         DestinationX = 5,
                         DestinationY = 8,
                         Type = (short)PortalType.Miniland,

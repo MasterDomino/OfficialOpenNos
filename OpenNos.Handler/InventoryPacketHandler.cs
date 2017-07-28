@@ -1671,7 +1671,7 @@ namespace OpenNos.Handler
             }
             ItemInstance inv = Session.Character.Inventory.LoadBySlotAndType(useItemPacket.Slot, useItemPacket.Type);
             string[] packetsplit = useItemPacket.OriginalContent.Split(' ', '^');
-            inv?.Item.Use(Session, ref inv, packetsplit[1][0] == '#' ? (byte)255 : (byte)0, packetsplit);
+            inv?.Item.Use(Session, ref inv, packetsplit[0][0] == '#' ? (byte)255 : (byte)0, packetsplit);
         }
 
         /// <summary>
