@@ -267,6 +267,11 @@ namespace OpenNos.GameObject
             return Math.Abs(PositionX - xCoordinate) <= range && Math.Abs(PositionY - yCoordinate) <= range;
         }
 
+        public string GenerateDir()
+        {
+            return $"dir 2 {MateTransportId} {Direction}";
+        }
+
         #endregion
     }
 }

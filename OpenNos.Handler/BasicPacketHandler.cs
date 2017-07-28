@@ -230,10 +230,24 @@ namespace OpenNos.Handler
         /// <param name="directionPacket"></param>
         public void Dir(DirectionPacket directionPacket)
         {
-            if (directionPacket.CharacterId == Session.Character.CharacterId)
+            switch (directionPacket.Option)
             {
-                Session.Character.Direction = directionPacket.Direction;
-                Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateDir());
+                case 1:
+                    if (directionPacket.CharacterId == Session.Character.CharacterId)
+                    {
+                        Session.Character.Direction = directionPacket.Direction;
+                        Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateDir());
+                    }
+                    break;
+
+                case 2:
+                    Mate mate = Session.Character.Mates.Find(m => m.IsTeamMember && m.MateTransportId == directionPacket.CharacterId);
+                    if (mate != null)
+                    {
+                        mate.Direction = directionPacket.Direction;
+                        Session.CurrentMapInstance?.Broadcast(mate.GenerateDir());
+                    }
+                    break;
             }
         }
 
@@ -957,7 +971,7 @@ namespace OpenNos.Handler
                     {
                         string message = $"<{Language.Instance.GetMessageFromKey("SPEAKER")}> [{Session.Character.Name}]:";
                         string[] valuesplit = guriPacket.Value?.Split(' ');
-                        if(valuesplit == null)
+                        if (valuesplit == null)
                         {
                             return;
                         }
@@ -1733,7 +1747,7 @@ namespace OpenNos.Handler
                 Assembly assembly = Assembly.GetEntryAssembly();
                 string productVersion = assembly?.Location != null ? FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion : "1337";
                 Session.SendPacket(Session.Character.GenerateSay("----------[World Information]----------", 10));
-                Session.SendPacket(Session.Character.GenerateSay($"OpenNos by OpenNos Team\nVersion : v{productVersion}", 11));
+                Session.SendPacket(Session.Character.GenerateSay($"OpenNos-Oldschool by OpenNos Team\nVersion : v{productVersion}", 11));
                 Session.SendPacket(Session.Character.GenerateSay("-----------------------------------------------", 10));
             }
             Session.Character.LoadSpeed();
