@@ -810,7 +810,7 @@
   <data name="SKILL_DOES_NOT_EXIST" xml:space="preserve">
     <value>Der Skill existiert nicht.</value>
   </data>
-  <data name="MONSTER_NOT_FOUND" xml:space="preserve">
+  <data name="NPCMONSTER_NOT_FOUND" xml:space="preserve">
     <value>Das Monster konnte nicht gefunden werden.</value>
   </data>
   <data name="GIFTED" xml:space="preserve">

@@ -474,7 +474,6 @@ namespace OpenNos.Handler
                     Session.Character.HeroXp = 0;
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("HEROLEVEL_CHANGED"), 0));
                     Session.SendPacket(Session.Character.GenerateLev());
-                    Session.SendPacket(Session.Character.GenerateStatInfo());
                     Session.SendPacket(Session.Character.GenerateStatChar());
                     Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(), ReceiverType.AllExceptMe);
                     Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(), ReceiverType.AllExceptMe);
@@ -561,7 +560,6 @@ namespace OpenNos.Handler
                     Session.Character.Hp = (int)Session.Character.HPLoad();
                     Session.Character.Mp = (int)Session.Character.MPLoad();
                     Session.SendPacket(Session.Character.GenerateStat());
-                    Session.SendPacket(Session.Character.GenerateStatInfo());
                     Session.SendPacket(Session.Character.GenerateStatChar());
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("LEVEL_CHANGED"), 0));
                     Session.SendPacket(Session.Character.GenerateLev());
@@ -1691,24 +1689,25 @@ namespace OpenNos.Handler
         /// <summary>
         /// $RemoveMob Packet
         /// </summary>
-        /// <param name="removeMobPacket"></param>
-        public void RemoveMob(RemoveMobPacket removeMobPacket)
+        /// <param name="removeNpcMonsterPacket"></param>
+        public void RemoveNpcMonster(RemoveNpcMonster removeNpcMonsterPacket)
         {
             if (Session.HasCurrentMapInstance)
             {
-                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[RemoveMob]MonsterId: {Session.Character.LastMonsterId}");
+                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[RemoveNpcMonster]NpcMonsterId: {Session.Character.LastNpcMonsterId}");
 
-                MapMonster monst = Session.CurrentMapInstance.GetMonster(Session.Character.LastMonsterId);
-                if (monst != null)
+                MapMonster monster = Session.CurrentMapInstance.GetMonster(Session.Character.LastNpcMonsterId);
+                MapNpc npc = Session.CurrentMapInstance.GetNpc(Session.Character.LastNpcMonsterId);
+                if (monster != null)
                 {
-                    if (monst.IsAlive)
+                    if (monster.IsAlive)
                     {
-                        Session.CurrentMapInstance.Broadcast($"su 1 {Session.Character.CharacterId} 3 {monst.MapMonsterId} 1114 4 11 4260 0 0 0 0 60000 3 0");
-                        Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MONSTER_REMOVED"), monst.MapMonsterId, monst.Monster.Name, monst.MapId, monst.MapX, monst.MapY), 12));
-                        Session.CurrentMapInstance.RemoveMonster(monst);
-                        if (DAOFactory.MapMonsterDAO.LoadById(monst.MapMonsterId) != null)
+                        Session.CurrentMapInstance.Broadcast(monster.GenerateOut());
+                        Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MONSTER_REMOVED"), monster.MapMonsterId, monster.Monster.Name, monster.MapId, monster.MapX, monster.MapY), 12));
+                        Session.CurrentMapInstance.RemoveMonster(monster);
+                        if (DAOFactory.MapMonsterDAO.LoadById(monster.MapMonsterId) != null)
                         {
-                            DAOFactory.MapMonsterDAO.DeleteById(monst.MapMonsterId);
+                            DAOFactory.MapMonsterDAO.DeleteById(monster.MapMonsterId);
                         }
                     }
                     else
@@ -1716,9 +1715,26 @@ namespace OpenNos.Handler
                         Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MONSTER_NOT_ALIVE")), 11));
                     }
                 }
+                else if (npc != null)
+                {
+                    if (!npc.IsMate && !npc.IsDisabled && !npc.IsProtected)
+                    {
+                        Session.CurrentMapInstance.Broadcast(npc.GenerateOut());
+                        Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("NPCMONSTER_REMOVED"), npc.MapNpcId, npc.Npc.Name, npc.MapId, npc.MapX, npc.MapY), 12));
+                        Session.CurrentMapInstance.RemoveNpc(npc);
+                        if (DAOFactory.MapNpcDAO.LoadById(npc.MapNpcId) != null)
+                        {
+                            DAOFactory.MapMonsterDAO.DeleteById(npc.MapNpcId);
+                        }
+                    }
+                    else
+                    {
+                        Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("NPC_CANNOT_BE_REMOVED")), 11));
+                    }
+                }
                 else
                 {
-                    Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("MONSTER_NOT_FOUND"), 11));
+                    Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NPCMONSTER_NOT_FOUND"), 11));
                 }
             }
         }

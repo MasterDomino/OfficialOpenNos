@@ -94,6 +94,11 @@ namespace OpenNos.GameObject
             return string.Empty;
         }
 
+        public string GenerateOut()
+        {
+            return $"out 2 {MapNpcId}";
+        }
+
         public string GetNpcDialog()
         {
             return $"npc_req 2 {MapNpcId} {Dialog}";

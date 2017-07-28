@@ -922,8 +922,8 @@
   <data name="ITEM_NOT_FOUND" xml:space="preserve">
     <value>Item not found!</value>
   </data>
-  <data name="MONSTER_NOT_FOUND" xml:space="preserve">
-    <value>Monster not found!</value>
+  <data name="NPCMONSTER_NOT_FOUND" xml:space="preserve">
+    <value>NpcMonster not found!</value>
   </data>
   <data name="NOT_YOUR_ITEM" xml:space="preserve">
     <value>The item is not yours!</value>
@@ -1449,5 +1449,8 @@
   </data>
   <data name="CHARACTER_CHANGED_MAP" xml:space="preserve">
     <value>Character changed while changing map. Do not abuse Commands.</value>
+  </data>
+  <data name="NPCMONSTER_REMOVED" xml:space="preserve">
+    <value>NPC removed (MapNpcId: {0}, Name: {1}, MapId: {2}, MapX: {3}, MapY: {4})</value>
   </data>
 </root>

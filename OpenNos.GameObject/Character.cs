@@ -195,7 +195,7 @@ namespace OpenNos.GameObject
 
         public DateTime LastMapObject { get; set; }
 
-        public int LastMonsterId { get; set; }
+        public int LastNpcMonsterId { get; set; }
 
         public DateTime LastMove { get; set; }
 
@@ -417,7 +417,7 @@ namespace OpenNos.GameObject
                 indicator.RemainingTime = indicator.Card.Duration;
                 indicator.Start = DateTime.Now;
 
-                Session.SendPacket($"bf 1 {CharacterId} 0.{indicator.Card.CardId}.{indicator.RemainingTime} {Level}");
+                Session.SendPacket($"bf 1 {CharacterId} 0.{indicator.Card.CardId}.{indicator.RemainingTime} 0"); // check the 0 if 1 its a counter
                 Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), indicator.Card.Name), 20));
 
                 indicator.Card.BCards.ForEach(c => c.ApplyBCards(Session.Character));
@@ -3227,10 +3227,7 @@ namespace OpenNos.GameObject
                 {
                     DAOFactory.QuicklistEntryDAO.InsertOrUpdate(quicklistEntry);
                 }
-
-                IEnumerable<MinilandObjectDTO> minilandobjectEntriesToInsertOrUpdate = MinilandObjects.ToList();
-
-                foreach (MinilandObjectDTO mobjEntry in minilandobjectEntriesToInsertOrUpdate)
+                foreach (MinilandObjectDTO mobjEntry in MinilandObjects.AsEnumerable())
                 {
                     MinilandObjectDTO mobj = mobjEntry;
                     DAOFactory.MinilandObjectDAO.InsertOrUpdate(ref mobj);
@@ -3914,14 +3911,14 @@ namespace OpenNos.GameObject
                     result = $"raid 1 {(Exit ? 0 : 1)}";
                     break;
                 case 3:
-                    result = $"raid 3";
+                    result = "raid 3";
                     Group?.Characters?.ForEach(s => result += $" {s.Character?.CharacterId}.{Math.Ceiling(s.Character.Hp / s.Character.HPLoad() * 100)}.{Math.Ceiling(s.Character.Mp / s.Character.MPLoad() * 100)}");
                     break;
                 case 4:
-                    result = $"raid 4";
+                    result = "raid 4";
                     break;
                 case 5:
-                    result = $"raid 5 1";
+                    result = "raid 5 1";
                     break;
             }
             return result;
@@ -3939,7 +3936,7 @@ namespace OpenNos.GameObject
                 }
                 else
                 {
-                    Session.SendPacket($"bf 1 {CharacterId} 0.{indicator.Card.CardId}.0 {Level}");
+                    Session.SendPacket($"bf 1 {CharacterId} 0.{indicator.Card.CardId}.0 0"); // check the 0 if 1 its a counter
                     Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("EFFECT_TERMINATED"), Name), 20));
                 }
 

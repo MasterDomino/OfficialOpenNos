@@ -613,7 +613,7 @@
     <value>{0} MapMonsters Loaded!</value>
     <comment>[ONONLY]</comment>
   </data>
-  <data name="MONSTER_NOT_FOUND" xml:space="preserve">
+  <data name="NPCMONSTER_NOT_FOUND" xml:space="preserve">
     <value>ไม่สามารถหามอนสเตอร์นี้ได้</value>
   </data>
   <data name="MOUSE_LOCKED" xml:space="preserve">

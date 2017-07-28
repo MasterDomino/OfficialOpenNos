@@ -222,7 +222,7 @@
     <Compile Include="Packets\CommandPackets\MorphPacket.cs" />
     <Compile Include="Packets\CommandPackets\PacketCallbackPacket.cs" />
     <Compile Include="Packets\CommandPackets\PositionPacket.cs" />
-    <Compile Include="Packets\CommandPackets\RemoveMobPacket.cs" />
+    <Compile Include="Packets\CommandPackets\RemoveNpcMonsterPacket.cs" />
     <Compile Include="Packets\CommandPackets\RemovePortalPacket.cs" />
     <Compile Include="Packets\CommandPackets\SearchItemPacket.cs" />
     <Compile Include="Packets\CommandPackets\SearchMonsterPacket.cs" />

@@ -2356,15 +2356,6 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Monster not found!.
-        /// </summary>
-        internal static string MONSTER_NOT_FOUND {
-            get {
-                return ResourceManager.GetString("MONSTER_NOT_FOUND", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Monster removed (MapMonsterId: {0}, Name: {1}, MapId: {2}, MapX: {3}, MapY: {4}).
         /// </summary>
         internal static string MONSTER_REMOVED {
@@ -2847,6 +2838,24 @@ namespace OpenNos.World.Resource {
         internal static string NOTICE_BAZAAR {
             get {
                 return ResourceManager.GetString("NOTICE_BAZAAR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NpcMonster not found!.
+        /// </summary>
+        internal static string NPCMONSTER_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("NPCMONSTER_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NPC removed (MapNpcId: {0}, Name: {1}, MapId: {2}, MapX: {3}, MapY: {4}).
+        /// </summary>
+        internal static string NPCMONSTER_REMOVED {
+            get {
+                return ResourceManager.GetString("NPCMONSTER_REMOVED", resourceCulture);
             }
         }
         

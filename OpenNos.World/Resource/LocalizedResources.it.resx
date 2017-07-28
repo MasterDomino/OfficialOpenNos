@@ -930,7 +930,7 @@
   <data name="ITEM_NOT_FOUND" xml:space="preserve">
     <value>Oggetto non trovato!</value>
   </data>
-  <data name="MONSTER_NOT_FOUND" xml:space="preserve">
+  <data name="NPCMONSTER_NOT_FOUND" xml:space="preserve">
     <value>Impossibile trovare questo mostro!</value>
   </data>
   <data name="NOT_YOUR_ITEM" xml:space="preserve">
