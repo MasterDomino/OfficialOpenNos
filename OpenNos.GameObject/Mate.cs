@@ -189,7 +189,7 @@ namespace OpenNos.GameObject
 
         public string GenerateIn()
         {
-            return $"in 2 {NpcMonsterVNum} {MateTransportId} {(IsTeamMember ? PositionX : MapX)} {(IsTeamMember ? PositionY : MapY)} {Direction} {(int)(Hp / (float)MaxHp * 100)} {(int)(Mp / (float)MaxMp * 100)} 0 0 3 {CharacterId} 1 0 {(Skin != 0 ? Skin : -1)} {Name.Replace(' ', '^')} 0 -1 0 0 0 0 0 0 0 0";
+            return $"in 2 {NpcMonsterVNum} {MateTransportId} {(IsTeamMember ? PositionX : MapX)} {(IsTeamMember ? PositionY : MapY)} {Direction} {(int)((float)Hp / (float)MaxHp * 100)} {(int)(float)(Mp / (float)MaxMp * 100)} 0 0 3 {CharacterId} 1 0 {(Skin != 0 ? Skin : -1)} {Name.Replace(' ', '^')} 0 -1 0 0 0 0 0 0 0 0";
         }
 
         public string GenerateOut()
@@ -228,7 +228,7 @@ namespace OpenNos.GameObject
 
         public string GenerateStatInfo()
         {
-            return $"st 2 {MateTransportId} {Level} {(int)(Hp / (float)MaxHp * 100)} {(int)(Mp / (float)MaxMp * 100)} {Hp} {Mp}";
+            return $"st 2 {MateTransportId} {Level} {(int)((float)Hp / (float)MaxHp * 100)} {(int)((float)Mp / (float)MaxMp * 100)} {Hp} {Mp}";
         }
 
         public List<ItemInstance> GetInventory()
@@ -246,9 +246,6 @@ namespace OpenNos.GameObject
 
                 case 2:
                     items = Owner.Inventory.GetAllItems().Where(s => s.Type == InventoryType.ThirdPartnerInventory).ToList();
-                    break;
-
-                default:
                     break;
             }
             return items;
