@@ -1033,6 +1033,15 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Effect of: {0} has been terminated!.
+        /// </summary>
+        internal static string EFFECT_TERMINATED {
+            get {
+                return ResourceManager.GetString("EFFECT_TERMINATED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Emoticons disabled.
         /// </summary>
         internal static string EMO_BLOCKED {
@@ -3774,6 +3783,15 @@ namespace OpenNos.World.Resource {
         internal static string TS_TUTORIAL {
             get {
                 return ResourceManager.GetString("TS_TUTORIAL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You&apos;re under effect of: {0}.
+        /// </summary>
+        internal static string UNDER_EFFECT {
+            get {
+                return ResourceManager.GetString("UNDER_EFFECT", resourceCulture);
             }
         }
         

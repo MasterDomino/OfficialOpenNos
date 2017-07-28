@@ -1744,6 +1744,23 @@ namespace OpenNos.Handler
         }
 
         /// <summary>
+        /// $Buff packet
+        /// </summary>
+        /// <param name="buffPacket"></param>
+        public void Buff(BuffPacket buffPacket)
+        {
+            if (buffPacket != null)
+            {
+                Buff buff = new Buff(buffPacket.CardId, buffPacket.Level ?? (byte)1);
+                Session.Character.AddBuff(buff);
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay(BuffPacket.ReturnHelp(), 10));
+            }
+        }
+
+        /// <summary>
         /// $RemovePortal Command
         /// </summary>
         /// <param name="removePortalPacket"></param>

@@ -13,6 +13,10 @@ namespace OpenNos.GameObject.CommandPackets
         [PacketIndex(0)]
         public short CardId { get; set; }
 
+
+        [PacketIndex(1)]
+        public byte? Level { get; set; }
+
         public static string ReturnHelp()
         {
             return "$Buff CARDID";
