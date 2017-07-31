@@ -122,7 +122,7 @@ namespace OpenNos.GameObject
 
         public string GeneraterRaidmbf(ClientSession session)
         {
-            return $"raidmbf {session.CurrentMapInstance?.InstanceBag.MonsterLocker.Initial} {session.CurrentMapInstance?.InstanceBag.MonsterLocker.Current} {session.CurrentMapInstance?.InstanceBag.ButtonLocker.Initial} {session.CurrentMapInstance?.InstanceBag.ButtonLocker.Current} {Raid?.InstanceBag.Lives - Raid?.InstanceBag.DeadList.Count} {Raid?.InstanceBag.Lives} 25";
+            return $"raidmbf {session?.CurrentMapInstance?.InstanceBag?.MonsterLocker.Initial} {session?.CurrentMapInstance?.InstanceBag?.MonsterLocker.Current} {session?.CurrentMapInstance?.InstanceBag?.ButtonLocker.Initial} {session?.CurrentMapInstance?.InstanceBag?.ButtonLocker.Current} {Raid?.InstanceBag?.Lives - Raid?.InstanceBag?.DeadList.Count} {Raid?.InstanceBag?.Lives} 25";
         }
 
         public long? GetNextOrderedCharacterId(Character character)
