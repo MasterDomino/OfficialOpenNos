@@ -345,6 +345,7 @@ namespace OpenNos.GameObject
                 int distance = Map.GetDistance(new MapCell() { X = targetSession.Character.PositionX, Y = targetSession.Character.PositionY }, new MapCell() { X = MapX, Y = MapY });
                 if (targetSession != null)
                 {
+
                     if (targetSession.Character.LastMonsterAggro.AddSeconds(5) < DateTime.Now || targetSession.Character.BrushFire == null)
                     {
                         targetSession.Character.UpdateBushFire();
@@ -380,7 +381,7 @@ namespace OpenNos.GameObject
                         MapY = mapY;
                     });
                     distance = (int)Path[0].F;
-                    Path.RemoveRange(0, maxindex);
+                    Path.RemoveRange(0, maxindex > Path.Count ? Path.Count : maxindex);
                 }
 
                 if (targetSession == null || MapId != targetSession.Character.MapInstance.Map.MapId || distance > (maxDistance) + 3)
@@ -685,12 +686,16 @@ namespace OpenNos.GameObject
             {
                 double time = (DateTime.Now - LastMove).TotalMilliseconds;
 
-                if (Path.Count > 0) // move back to initial position after following target
+                if (Path.Any()) // move back to initial position after following target
                 {
                     int timetowalk = 2000 / Monster.Speed;
                     if (time > timetowalk)
                     {
                         int maxindex = Path.Count > Monster.Speed / 2 ? Monster.Speed / 2 : Path.Count;
+                        if (Path[maxindex - 1] == null)
+                        {
+                            return;
+                        }
                         short mapX = Path[maxindex - 1].X;
                         short mapY = Path[maxindex - 1].Y;
                         double waitingtime = Map.GetDistance(new MapCell { X = mapX, Y = mapY }, new MapCell { X = MapX, Y = MapY }) / (double)Monster.Speed;
@@ -702,7 +707,7 @@ namespace OpenNos.GameObject
                             MapY = mapY;
                             MoveEvent?.Events.ForEach(e => EventHelper.Instance.RunEvent(e, monster: this));
                         });
-                        Path.RemoveRange(0, maxindex);
+                        Path.RemoveRange(0, maxindex > Path.Count ? Path.Count : maxindex);
                         MapInstance.Broadcast(new BroadcastPacket(null, GenerateMv3(), ReceiverType.All, xCoordinate: mapX, yCoordinate: mapY));
                         return;
                     }
