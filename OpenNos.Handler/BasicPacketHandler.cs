@@ -185,8 +185,8 @@ namespace OpenNos.Handler
                 long complimentedCharacterId = complimentPacket.CharacterId;
                 if (Session.Character.Level >= 30)
                 {
-                    GeneralLogDTO dto = Session.Character.GeneralLogs.LastOrDefault(s => s.LogData == "World" && s.LogType == GeneralLogType.Connection);
-                    GeneralLogDTO lastcompliment = Session.Character.GeneralLogs.LastOrDefault(s => s.LogData == "World" && s.LogType == GeneralLogType.Compliment);
+                    GeneralLogDTO dto = Session.Character.GeneralLogs.FindLast(s => s.LogData == "World" && s.LogType == GeneralLogType.Connection);
+                    GeneralLogDTO lastcompliment = Session.Character.GeneralLogs.FindLast(s => s.LogData == "World" && s.LogType == GeneralLogType.Compliment);
                     if (dto?.Timestamp.AddMinutes(60) <= DateTime.Now)
                     {
                         if (lastcompliment == null || lastcompliment.Timestamp.AddDays(1) <= DateTime.Now.Date)

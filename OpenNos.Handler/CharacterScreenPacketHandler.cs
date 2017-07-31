@@ -195,7 +195,7 @@ namespace OpenNos.Handler
         /// </summary>
         /// <param name="packet"></param>
         /// <returns></returns>
-        [Packet("OpenNos.EntryPoint", 3)]
+        [Packet("OpenNos.EntryPoint", 5)]
         public void LoadCharacters(string packet)
         {
             string[] loginPacketParts = packet.Split(' ');
