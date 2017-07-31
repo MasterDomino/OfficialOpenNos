@@ -148,7 +148,7 @@ namespace OpenNos.Handler
                     {
                         return;
                     }
-                    if (grp.IsLeader(Session))
+                    if (!grp.IsLeader(Session))
                     {
                         Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_MASTER"), 0));
                         return;
