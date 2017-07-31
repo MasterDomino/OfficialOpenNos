@@ -172,7 +172,10 @@ namespace OpenNos.GameObject.Helpers
                         break;
                     case EventActionType.REMOVEMONSTERLOCKER:
                         EventContainer evt2 = (EventContainer)evt.Parameter;
-                        evt.MapInstance.InstanceBag.MonsterLocker.Current--;
+                        if (evt.MapInstance.InstanceBag.MonsterLocker.Current > 0)
+                        {
+                            evt.MapInstance.InstanceBag.MonsterLocker.Current--;
+                        }
                         if (evt.MapInstance.InstanceBag.MonsterLocker.Current == 0 && evt.MapInstance.InstanceBag.ButtonLocker.Current == 0)
                         {
                             evt.MapInstance.InstanceBag.UnlockEvents.ForEach(s => RunEvent(s));
@@ -182,7 +185,10 @@ namespace OpenNos.GameObject.Helpers
 
                     case EventActionType.REMOVEBUTTONLOCKER:
                         evt2 = (EventContainer)evt.Parameter;
-                        evt.MapInstance.InstanceBag.ButtonLocker.Current--;
+                        if (evt.MapInstance.InstanceBag.ButtonLocker.Current > 0)
+                        {
+                            evt.MapInstance.InstanceBag.ButtonLocker.Current--;
+                        }
                         if (evt.MapInstance.InstanceBag.MonsterLocker.Current == 0 && evt.MapInstance.InstanceBag.ButtonLocker.Current == 0)
                         {
                             evt.MapInstance.InstanceBag.UnlockEvents.ForEach(s => RunEvent(s));
