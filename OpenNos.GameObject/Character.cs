@@ -2732,6 +2732,10 @@ namespace OpenNos.GameObject
                         if (newItem.Item.Type.Equals(InventoryType.Equipment) && rare != 0)
                         {
                             newItem.Rare = (sbyte)rare;
+                            if (newItem is WearableInstance)
+                            {
+                                ((WearableInstance)newItem).SetRarityPoint();
+                            }
                         }
 
                         List<ItemInstance> newInv = Inventory.AddToInventory(newItem);
