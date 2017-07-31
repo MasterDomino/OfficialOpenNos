@@ -245,7 +245,7 @@ namespace OpenNos.Handler
         /// <param name="fInsPacket"></param>
         public void FriendAdd(FInsPacket fInsPacket)
         {
-            if (!Session.Character.IsFriendlistFull())
+            if (!Session.Character.IsFriendlistFull() || Session.Character.FriendRequestBlocked)
             {
                 long characterId = fInsPacket.CharacterId;
                 if (!Session.Character.IsFriendOfCharacter(characterId))
