@@ -359,7 +359,6 @@ namespace OpenNos.GameObject
 
                             if (SkillVNum.HasValue)
                             {
-                                character.InSkillCombo = true;
                                 Skill skill = ServerManager.Instance.GetSkill(SkillVNum.Value);
                                 Skill newSkill = ServerManager.Instance.GetSkill((short)SecondData);
                                 Observable.Timer(TimeSpan.FromMilliseconds(100)).Subscribe(observer =>
@@ -370,7 +369,8 @@ namespace OpenNos.GameObject
                                     }
                                     character.Session.SendPacket($"mslot {newSkill.CastId} -1");
                                 });
-
+                                character.SkillComboCount++;
+                                character.LastSkillComboUse = DateTime.Now;
                                 if (skill.CastId > 10)
                                 {
                                     // HACK this way

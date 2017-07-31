@@ -355,7 +355,7 @@ namespace OpenNos.Handler
 
         private void TargetHit(int castingId, int targetId, bool isPvp = false)
         {
-            bool noComboReset = false;
+            bool _shouldCancel = true;
             if ((DateTime.Now - Session.Character.LastTransform).TotalSeconds < 3)
             {
                 Session.SendPacket("cancel 0 0");
@@ -381,7 +381,7 @@ namespace OpenNos.Handler
                 {
                     foreach (BCard bc in ski.Skill.BCards.Where(s => s.Type.Equals((byte)BCardType.CardType.MeditationSkill)))
                     {
-                        noComboReset = true;
+                        _shouldCancel = false;
                         bc.ApplyBCards(Session.Character);
                     }
                 }
@@ -917,7 +917,7 @@ namespace OpenNos.Handler
                 Session.SendPacket($"cancel 2 {targetId}");
             }
 
-            if (castingId < 11 && Session.Character.LastSkillUse.AddSeconds(1) < DateTime.Now && !noComboReset && Session.Character.InSkillCombo)
+            if ((castingId != 0 && castingId < 11 && _shouldCancel) || Session.Character.SkillComboCount > 7)
             {
                 Session.SendPackets(Session.Character.GenerateQuicklist());
                 Session.SendPacket("mslot 0 -1");

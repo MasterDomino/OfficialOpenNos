@@ -160,7 +160,7 @@ namespace OpenNos.GameObject
 
         public bool InExchangeOrTrade => ExchangeInfo != null || Speed == 0;
 
-        public bool InSkillCombo { get; set; }
+        public byte SkillComboCount { get; set; }
 
         public Inventory Inventory { get; set; }
 
@@ -214,6 +214,8 @@ namespace OpenNos.GameObject
         public int LastPulse { get; set; }
 
         public DateTime LastPVPRevive { get; set; }
+
+        public DateTime LastSkillComboUse { get; set; }
 
         public DateTime LastSkillUse { get; set; }
 
@@ -780,6 +782,13 @@ namespace OpenNos.GameObject
                         RemoveBuff(534);
                         MeditationDictionary.Remove(532);
                     }
+                }
+
+                if (SkillComboCount > 0 && LastSkillComboUse.AddSeconds(10) < DateTime.Now)
+                {
+                    SkillComboCount = 0;
+                    Session.SendPackets(Session.Character.GenerateQuicklist());
+                    Session.SendPacket("mslot 0 -1");
                 }
 
                 if (UseSp)
