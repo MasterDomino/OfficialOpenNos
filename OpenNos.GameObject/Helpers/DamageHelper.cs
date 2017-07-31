@@ -151,7 +151,8 @@ namespace OpenNos.GameObject
             #region Boost
 
             boostCategory1 += GetAttackerBenefitingBuffs(CardType.Damage, (byte)AdditionalTypes.Damage.DamageIncreased)[0] / 100D;
-            boostCategory1 += GetDefenderBenefitingBuffs(CardType.Damage, (byte)AdditionalTypes.Damage.DamageDecreased)[0] / 100D;
+            boostCategory1 += GetAttackerBenefitingBuffs(CardType.Item, (byte)AdditionalTypes.Item.AttackIncreased)[0] / 100D;
+            boostCategory1 += GetDefenderBenefitingBuffs(CardType.Item, (byte)AdditionalTypes.Item.DefenceIncreased)[0] / 100D;
 
             if ((attacker.EntityType == EntityType.Player || attacker.EntityType == EntityType.Mate) && (defender.EntityType == EntityType.Player || defender.EntityType == EntityType.Mate))
             {
@@ -473,47 +474,47 @@ namespace OpenNos.GameObject
             switch (attacker.AttackUpgrade)
             {
                 case 0:
-                    weaponDamage = 0;
+                    weaponDamage += 0;
                     break;
 
                 case 1:
-                    weaponDamage = (int)(weaponDamage * 0.1);
+                    weaponDamage += (int)(weaponDamage * 0.1);
                     break;
 
                 case 2:
-                    weaponDamage = (int)(weaponDamage * 0.15);
+                    weaponDamage += (int)(weaponDamage * 0.15);
                     break;
 
                 case 3:
-                    weaponDamage = (int)(weaponDamage * 0.22);
+                    weaponDamage += (int)(weaponDamage * 0.22);
                     break;
 
                 case 4:
-                    weaponDamage = (int)(weaponDamage * 0.32);
+                    weaponDamage += (int)(weaponDamage * 0.32);
                     break;
 
                 case 5:
-                    weaponDamage = (int)(weaponDamage * 0.43);
+                    weaponDamage += (int)(weaponDamage * 0.43);
                     break;
 
                 case 6:
-                    weaponDamage = (int)(weaponDamage * 0.54);
+                    weaponDamage += (int)(weaponDamage * 0.54);
                     break;
 
                 case 7:
-                    weaponDamage = (int)(weaponDamage * 0.65);
+                    weaponDamage += (int)(weaponDamage * 0.65);
                     break;
 
                 case 8:
-                    weaponDamage = (int)(weaponDamage * 0.9);
+                    weaponDamage += (int)(weaponDamage * 0.9);
                     break;
 
                 case 9:
-                    weaponDamage = (int)(weaponDamage * 1.2);
+                    weaponDamage += (int)(weaponDamage * 1.2);
                     break;
 
                 case 10:
-                    weaponDamage *= 2;
+                    weaponDamage += (int)(weaponDamage * 2);
                     break;
 
                 default:
@@ -537,35 +538,35 @@ namespace OpenNos.GameObject
                     break;
 
                 case -10:
-                    defender.ArmorDefense *= 2;
+                    defender.ArmorDefense += (int)(defender.ArmorDefense * 2);
                     break;
 
                 case -9:
-                    defender.ArmorDefense = (int)(defender.ArmorDefense * 1.2);
+                    defender.ArmorDefense += (int)(defender.ArmorDefense * 1.2);
                     break;
 
                 case -8:
-                    defender.ArmorDefense = (int)(defender.ArmorDefense * 0.9);
+                    defender.ArmorDefense += (int)(defender.ArmorDefense * 0.9);
                     break;
 
                 case -7:
-                    defender.ArmorDefense = (int)(defender.ArmorDefense * 0.65);
+                    defender.ArmorDefense += (int)(defender.ArmorDefense * 0.65);
                     break;
 
                 case -6:
-                    defender.ArmorDefense = (int)(defender.ArmorDefense * 0.54);
+                    defender.ArmorDefense += (int)(defender.ArmorDefense * 0.54);
                     break;
 
                 case -5:
-                    defender.ArmorDefense = (int)(defender.ArmorDefense * 0.43);
+                    defender.ArmorDefense += (int)(defender.ArmorDefense * 0.43);
                     break;
 
                 case -4:
-                    defender.ArmorDefense = (int)(defender.ArmorDefense * 0.32);
+                    defender.ArmorDefense += (int)(defender.ArmorDefense * 0.32);
                     break;
 
                 case -3:
-                    defender.ArmorDefense = (int)(defender.ArmorDefense * 0.22);
+                    defender.ArmorDefense += (int)(defender.ArmorDefense * 0.22);
                     break;
 
                 case -2:
@@ -577,9 +578,10 @@ namespace OpenNos.GameObject
                     break;
 
                 case 0:
-                    defender.ArmorDefense = 0;
+                    defender.ArmorDefense += 0;
                     break;
             }
+
 
             int defense = (int)((int)((defender.Defense + defender.ArmorDefense + staticBoostCategory4) * boostCategory4) * shellBoostCategory4);
 
