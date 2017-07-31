@@ -51,6 +51,10 @@ namespace OpenNos.Handler
         /// <param name="mutliTargetListPacket"></param>
         public void MultiTargetListHit(MultiTargetListPacket mutliTargetListPacket)
         {
+            if (!Session.HasCurrentMapInstance)
+            {
+                return;
+            }
             bool isMuted = Session.Character.MuteMessage();
             if (isMuted || Session.Character.IsVehicled)
             {
@@ -65,20 +69,10 @@ namespace OpenNos.Handler
             }
             if (mutliTargetListPacket.TargetsAmount > 0 && mutliTargetListPacket.TargetsAmount == mutliTargetListPacket.Targets.Count && mutliTargetListPacket.Targets != null)
             {
+                Session.Character.MTListTargetQueue.Clear();
                 foreach (MultiTargetListSubPacket subpacket in mutliTargetListPacket.Targets)
                 {
-                    List<CharacterSkill> skills = Session.Character.UseSp ? Session.Character.SkillsSp.GetAllItems() : Session.Character.Skills.GetAllItems();
-                    CharacterSkill ski = skills?.Find(s => s.Skill.CastId == (short)subpacket.TargetType - 1); // TODO: Find it!
-                    if (ski?.CanBeUsed() == true && Session.HasCurrentMapInstance)
-                    {
-                        MapMonster mon = Session.CurrentMapInstance.GetMonster(subpacket.TargetId);
-                        if (mon?.IsInRange(Session.Character.PositionX, Session.Character.PositionY, ski.Skill.Range) == true && mon.CurrentHp > 0)
-                        {
-                            Session.Character.LastSkillUse = DateTime.Now;
-                            mon.HitQueue.Enqueue(new HitRequest(TargetHitType.SpecialZoneHit, Session, ski.Skill));
-                        }
-                        Observable.Timer(TimeSpan.FromMilliseconds(ski.Skill.Cooldown * 100)).Subscribe(o => Session.SendPacket($"sr {(short)subpacket.TargetType - 1}")); // TODO: Find it!
-                    }
+                    Session.Character.MTListTargetQueue.Add(new MTListHitTarget(subpacket.TargetType, subpacket.TargetId));
                 }
             }
         }

@@ -128,6 +128,7 @@
     <Compile Include="Map\MapButton.cs" />
     <Compile Include="InstanceBag.cs" />
     <Compile Include="Map\MapInstancePortalHandler.cs" />
+    <Compile Include="Networking\MTListHitTarget.cs" />
     <Compile Include="NpcToSummon.cs" />
     <Compile Include="MonsterToSummon.cs" />
     <Compile Include="Packets\ClientPackets\BlDelPacket.cs" />

@@ -20,7 +20,7 @@ namespace OpenNos.GameObject
         #endregion
     }
 
-    [PacketHeader("multi_target_list_sub_packet")] // header will be ignored for serializing just sub list packets
+    [PacketHeader("mtlist_sub_packet")] // header will be ignored for serializing just sub list packets
     public class MultiTargetListSubPacket : PacketDefinition
     {
         [PacketIndex(0)]

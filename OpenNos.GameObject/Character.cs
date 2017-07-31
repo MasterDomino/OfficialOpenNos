@@ -17,11 +17,13 @@ using OpenNos.DAL;
 using OpenNos.Data;
 using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
+using OpenNos.GameObject.Networking;
 using OpenNos.GameObject.Packets.ServerPackets;
 using OpenNos.Master.Library.Client;
 using OpenNos.Master.Library.Data;
 using OpenNos.PathFinder;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -62,6 +64,8 @@ namespace OpenNos.GameObject
         #endregion
 
         #region Properties
+
+        public ThreadSafeGenericList<MTListHitTarget> MTListTargetQueue { get; set; }
 
         public AuthorityType Authority { get; set; }
 
