@@ -103,7 +103,6 @@ namespace OpenNos.GameObject
         {
             MapInstance = currentMapInstance;
             Initialize();
-            StartLife();
         }
 
         public override void Initialize()
@@ -114,8 +113,8 @@ namespace OpenNos.GameObject
             LastMove = DateTime.Now;
             IsHostile = Npc.IsHostile;
             FirstX = MapX;
-            EffectActivated = true;
             FirstY = MapY;
+            EffectActivated = true;
             EffectDelay = 4000;
             _movetime = ServerManager.Instance.RandomNumber(500, 3000);
             Path = new List<Node>();
@@ -135,9 +134,9 @@ namespace OpenNos.GameObject
             MapInstance.InstanceBag.NpcsKilled++;
             OnDeathEvents.ForEach(e =>
             {
-                if(e.EventActionType == EventActionType.THROWITEMS)
+                if (e.EventActionType == EventActionType.THROWITEMS)
                 {
-                    Tuple<int, short, byte, int, int> evt = (Tuple<int, short, byte, int, int>) e.Parameter;
+                    Tuple<int, short, byte, int, int> evt = (Tuple<int, short, byte, int, int>)e.Parameter;
                     e.Parameter = new Tuple<int, short, byte, int, int>(MapNpcId, evt.Item2, evt.Item3, evt.Item4, evt.Item5);
                 }
                 EventHelper.Instance.RunEvent(e);
@@ -279,16 +278,17 @@ namespace OpenNos.GameObject
                     if (IsMoving)
                     {
                         const short maxDistance = 5;
-                        if (Path.Count == 0 && distance > 1 && distance < maxDistance)
+                        int maxindex = Path.Count > Npc.Speed / 2 && Npc.Speed > 1 ? Npc.Speed / 2 : Path.Count;
+                        if ((Path.Count == 0 && distance > 1 && distance < maxDistance) || Path[maxindex - 1] == null)
                         {
                             short xoffset = (short)ServerManager.Instance.RandomNumber(-1, 1);
                             short yoffset = (short)ServerManager.Instance.RandomNumber(-1, 1);
                             //go to monster
                             Path = BestFirstSearch.FindPath(new GridPos { X = MapX, Y = MapY }, new GridPos { X = (short)(monster.MapX + xoffset), Y = (short)(monster.MapY + yoffset) }, MapInstance.Map.Grid);
+                            maxindex = Path.Count > Npc.Speed / 2 && Npc.Speed > 1 ? Npc.Speed / 2 : Path.Count;
                         }
                         if (DateTime.Now > LastMove && Npc.Speed > 0 && Path.Count > 0)
                         {
-                            int maxindex = Path.Count > Npc.Speed / 2 && Npc.Speed > 1 ? Npc.Speed / 2 : Path.Count;
                             short mapX = Path[maxindex - 1].X;
                             short mapY = Path[maxindex - 1].Y;
                             double waitingtime = Map.GetDistance(new MapCell { X = mapX, Y = mapY }, new MapCell { X = MapX, Y = MapY }) / (double)Npc.Speed;
