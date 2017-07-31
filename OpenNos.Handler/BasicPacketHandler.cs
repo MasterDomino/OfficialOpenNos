@@ -698,7 +698,7 @@ namespace OpenNos.Handler
                 targetSession.Character.GroupSentRequestCharacterIds.Remove(Session.Character.CharacterId);
 
                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("ACCEPTED_SHARE"), targetSession.Character.Name), 0));
-                if (Session.Character.Group.IsMemberOfGroup(pjoinPacket.CharacterId))
+                if (Session.Character?.Group?.IsMemberOfGroup(pjoinPacket.CharacterId) == true)
                 {
                     Session.Character.SetReturnPoint(targetSession.Character.Return.DefaultMapId, targetSession.Character.Return.DefaultX, targetSession.Character.Return.DefaultY);
                     targetSession.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("CHANGED_SHARE"), targetSession.Character.Name), 0));
