@@ -828,7 +828,7 @@ namespace OpenNos.Handler
                 }
                 else if (guriPacket.Type == 400)
                 {
-                    if (!int.TryParse(guriPacket.User.ToString(), out int mapNpcId) || !Session.HasCurrentMapInstance)
+                    if (!int.TryParse(guriPacket.Argument.ToString(), out int mapNpcId) || !Session.HasCurrentMapInstance)
                     {
                         return;
                     }
@@ -897,12 +897,43 @@ namespace OpenNos.Handler
                     const short baseVnum = 1623;
                     if (short.TryParse(guriPacket.Argument.ToString(), out short faction) && Session.Character.Inventory.CountItem(baseVnum + faction) > 0)
                     {
-                        Session.Character.Faction = faction;
-                        Session.Character.Inventory.RemoveItemAmount(baseVnum + faction);
-                        Session.SendPacket("scr 0 0 0 0 0 0 0");
-                        Session.SendPacket(Session.Character.GenerateFaction());
-                        Session.SendPacket(Session.Character.GenerateEff(4799 + faction));
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey($"GET_PROTECTION_POWER_{faction}"), 0));
+                        if (faction < 3)
+                        {
+                            if (Session.Character.Family != null)
+                            {
+                                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("IN_FAMILY"), 0));
+                            }
+                            Session.Character.Faction = faction;
+                            Session.Character.Inventory.RemoveItemAmount(baseVnum + faction);
+                            Session.SendPacket("scr 0 0 0 0 0 0 0");
+                            Session.SendPacket(Session.Character.GenerateFaction());
+                            Session.SendPacket(Session.Character.GenerateEff(4799 + faction));
+                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey($"GET_PROTECTION_POWER_{faction}"), 0));
+                        }
+                        else
+                        {
+                            if (Session.Character.Family == null || Session.Character.Family.FamilyCharacters.Where(s => s.Authority.Equals(FamilyAuthority.Head)).FirstOrDefault()?.CharacterId.Equals(Session.Character.CharacterId) != true)
+                            {
+                                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_FAMILY"), 0));
+                            }
+
+                            Session.Character.Faction = faction / 2;
+                            Session.Character.Inventory.RemoveItemAmount(baseVnum + faction);
+                            Session.SendPacket("scr 0 0 0 0 0 0 0");
+                            Session.SendPacket(Session.Character.GenerateFaction());
+                            Session.SendPacket(Session.Character.GenerateEff(4799 + faction / 2));
+                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey($"GET_PROTECTION_POWER_{faction / 2}"), 0));
+                            Session.Character.Save();
+                            ServerManager.Instance.FamilyRefresh(Session.Character.Family.FamilyId);
+                            CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+                            {
+                                DestinationCharacterId = Session.Character.Family.FamilyId,
+                                SourceCharacterId = 0,
+                                SourceWorldId = ServerManager.Instance.WorldId,
+                                Message = "fhis_stc",
+                                Type = MessageType.Family
+                            });
+                        }
                     }
                 }
                 else if (guriPacket.Type == 2)
@@ -937,6 +968,10 @@ namespace OpenNos.Handler
                         {
                             string message = string.Empty;
                             string[] valuesplit = guriPacket.Value?.Split(' ');
+                            if (valuesplit == null)
+                            {
+                                return;
+                            }
                             for (int i = 0; i < valuesplit.Length; i++)
                             {
                                 message += valuesplit[i] + "^";
@@ -958,8 +993,9 @@ namespace OpenNos.Handler
                     if (guriPacket.Argument == 3 && Session.Character.Inventory.CountItem(speakerVNum) > 0)
                     {
                         string message = $"<{Language.Instance.GetMessageFromKey("SPEAKER")}> [{Session.Character.Name}]:";
+                        int baseLength = message.Length;
                         string[] valuesplit = guriPacket.Value?.Split(' ');
-                        if(valuesplit == null)
+                        if (valuesplit == null)
                         {
                             return;
                         }
@@ -967,9 +1003,9 @@ namespace OpenNos.Handler
                         {
                             message += valuesplit[i] + " ";
                         }
-                        if (message.Length > 120)
+                        if (message.Length > 120 + baseLength)
                         {
-                            message = message.Substring(0, 120);
+                            message = message.Substring(0, 120 + baseLength);
                         }
 
                         message = message.Trim();
