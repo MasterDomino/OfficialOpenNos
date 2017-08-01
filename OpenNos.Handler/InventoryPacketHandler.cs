@@ -205,7 +205,7 @@ namespace OpenNos.Handler
         public void ExchangeList(string packet)
         {
             string[] packetsplit = packet.Split(' ');
-            if (!long.TryParse(packetsplit[1], out long gold))
+            if (!long.TryParse(packetsplit[2], out long gold))
             {
                 return;
             }
@@ -225,7 +225,7 @@ namespace OpenNos.Handler
                 return;
             }
 
-            for (int j = 5, i = 0; j <= packetsplit.Length && i < 10; j += 3, i++)
+            for (int j = 6, i = 0; j <= packetsplit.Length && i < 10; j += 3, i++)
             {
                 byte.TryParse(packetsplit[j - 3], out type[i]);
                 short.TryParse(packetsplit[j - 2], out slot[i]);
@@ -1671,7 +1671,7 @@ namespace OpenNos.Handler
             }
             ItemInstance inv = Session.Character.Inventory.LoadBySlotAndType(useItemPacket.Slot, useItemPacket.Type);
             string[] packetsplit = useItemPacket.OriginalContent.Split(' ', '^');
-            inv?.Item.Use(Session, ref inv, packetsplit[0][0] == '#' ? (byte)255 : (byte)0, packetsplit);
+            inv?.Item.Use(Session, ref inv, packetsplit[1][0] == '#' ? (byte)255 : (byte)0, packetsplit);
         }
 
         /// <summary>

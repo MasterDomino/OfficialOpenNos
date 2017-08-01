@@ -16,7 +16,6 @@ using OpenNos.Core;
 using OpenNos.DAL.EF.Helpers;
 using OpenNos.DAL.Interface;
 using OpenNos.Data;
-using OpenNos.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -84,7 +83,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        public IEnumerable<GeneralLogDTO> LoadByLogType(GeneralLogType logType, long? characterId)
+        public IEnumerable<GeneralLogDTO> LoadByLogType(string logType, long? characterId)
         {
             using (var context = DataAccessHelper.CreateContext())
             {
@@ -114,7 +113,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        public void WriteGeneralLog(long accountId, string ipAddress, long? characterId, GeneralLogType logType, string logData)
+        public void WriteGeneralLog(long accountId, string ipAddress, long? characterId, string logType, string logData)
         {
             try
             {

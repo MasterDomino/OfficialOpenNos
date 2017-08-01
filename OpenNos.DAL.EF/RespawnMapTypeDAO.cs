@@ -39,16 +39,9 @@ namespace OpenNos.DAL.EF
                     {
                         RespawnMapType entity = _mapper.Map<RespawnMapType>(RespawnMapType);
                         context.RespawnMapType.Add(entity);
-                        context.Configuration.AutoDetectChangesEnabled = true;
-                        try
-                        {
-                            context.SaveChanges();
-                        }
-                        catch
-                        {
-                            //Do nothing, it's to fix issues with parsing on newer packets
-                        }
                     }
+                    context.Configuration.AutoDetectChangesEnabled = true;
+                    context.SaveChanges();
                 }
             }
             catch (Exception e)
@@ -63,7 +56,7 @@ namespace OpenNos.DAL.EF
             {
                 using (var context = DataAccessHelper.CreateContext())
                 {
-                    int mapId = respawnMapType.DefaultMapId;
+                    short mapId = respawnMapType.DefaultMapId;
                     RespawnMapType entity = context.RespawnMapType.FirstOrDefault(c => c.DefaultMapId.Equals(mapId));
 
                     if (entity == null)
@@ -100,7 +93,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        public RespawnMapTypeDTO LoadByMapId(int mapId)
+        public RespawnMapTypeDTO LoadByMapId(short mapId)
         {
             try
             {

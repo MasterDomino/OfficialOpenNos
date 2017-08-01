@@ -907,7 +907,7 @@ Veux-tu le porter ?</value>
   <data name="ITEM_NOT_FOUND" xml:space="preserve">
     <value>L'objet que tu recherches est introuvable.</value>
   </data>
-  <data name="NPCMONSTER_NOT_FOUND" xml:space="preserve">
+  <data name="MONSTER_NOT_FOUND" xml:space="preserve">
     <value>Le monstre que tu recherches est introuvable.</value>
   </data>
   <data name="ADVENTURERS_CANT_USE" xml:space="preserve">

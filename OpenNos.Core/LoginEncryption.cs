@@ -31,43 +31,29 @@ namespace OpenNos.Core
 
         public static string GetPassword(string password)
         {
-            try
+            bool equal = password.Length % 2 == 0;
+            string str = equal ? password.Remove(0, 3) : password.Remove(0, 4);
+            string decpass = string.Empty;
+            for (int i = 0; i < str.Length; i += 2)
             {
-                int len = password.Length;
-                if (len > 3)
+                decpass += str[i];
+            }
+            if (decpass.Length % 2 != 0)
+            {
+                str = password.Remove(0, 2);
+                decpass = string.Empty;
+                for (int i = 0; i < str.Length; i += 2)
                 {
-                    string str = len % 2 == 0 ? password.Remove(0, 3) : password.Remove(0, 4);
-                    string decpass = string.Empty;
-                    for (int i = 0; i < str.Length; i += 2)
-                    {
-                        decpass += str[i];
-                    }
-                    if (decpass.Length % 2 != 0)
-                    {
-                        str = password.Remove(0, 2);
-                        for (int i = 0; i < str.Length; i += 2)
-                        {
-                            decpass += str[i];
-                        }
-                    }
-                    StringBuilder pass = new StringBuilder();
-                    for (int i = 0; i < decpass.Length; i += 2)
-                    {
-                        pass.Append(Convert.ToChar(Convert.ToUInt32(decpass.Substring(i, 2), 16)));
-                    }
-                    decpass = pass.ToString();
-                    return decpass;
-                }
-                else
-                {
-                    return string.Empty;
+                    decpass += str[i];
                 }
             }
-            catch (Exception ex)
+            StringBuilder temp = new StringBuilder();
+            for (int i = 0; i < decpass.Length; i += 2)
             {
-                Logger.Error(ex);
-                return string.Empty;
+                temp.Append(Convert.ToChar(Convert.ToUInt32(decpass.Substring(i, 2), 16)));
             }
+            decpass = temp.ToString();
+            return decpass;
         }
 
         public override string Decrypt(byte[] data, int sessionId = 0)
@@ -75,6 +61,7 @@ namespace OpenNos.Core
             try
             {
                 string decryptedPacket = string.Empty;
+
                 foreach (byte character in data)
                 {
                     if (character > 14)
@@ -95,18 +82,23 @@ namespace OpenNos.Core
             }
         }
 
+        public override string DecryptCustomParameter(byte[] data)
+        {
+            throw new NotImplementedException();
+        }
+
         public override byte[] Encrypt(string data)
         {
             try
             {
                 data += " ";
-                byte[] encrypted = Encoding.UTF8.GetBytes(data);
+                byte[] tmp = Encoding.UTF8.GetBytes(data);
                 for (int i = 0; i < data.Length; i++)
                 {
-                    encrypted[i] = Convert.ToByte(data[i] + 15);
+                    tmp[i] = Convert.ToByte(data[i] + 15);
                 }
-                encrypted[encrypted.Length - 1] = 25;
-                return encrypted;
+                tmp[tmp.Length - 1] = 25;
+                return tmp;
             }
             catch
             {

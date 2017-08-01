@@ -33,7 +33,7 @@ namespace OpenNos.DAL.EF
 
         #region Properties
 
-        public int DefaultMapId { get; set; }
+        public short DefaultMapId { get; set; }
 
         public short DefaultX { get; set; }
 

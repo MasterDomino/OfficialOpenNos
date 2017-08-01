@@ -45,7 +45,7 @@ namespace OpenNos.DAL.EF
         public byte[] Data { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int MapId { get; set; }
+        public short MapId { get; set; }
 
         public virtual ICollection<MapMonster> MapMonster { get; set; }
 

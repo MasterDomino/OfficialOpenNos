@@ -300,11 +300,6 @@ namespace OpenNos.GameObject
             return _monsters[mapMonsterId];
         }
 
-        public MapNpc GetNpc(long mapNpcId)
-        {
-            return _npcs[mapNpcId];
-        }
-
         // TODO: Fix, Seems glitchy.
         public int GetNextMonsterId()
         {
@@ -430,11 +425,6 @@ namespace OpenNos.GameObject
         public void RemoveMonster(MapMonster monsterToRemove)
         {
             _monsters.Remove(monsterToRemove.MapMonsterId);
-        }
-
-        public void RemoveNpc(MapNpc npcToRemove)
-        {
-            _npcs.Remove(npcToRemove.MapNpcId);
         }
 
         public void SpawnButton(MapButton parameter)

@@ -14,7 +14,6 @@
 
 using OpenNos.DAL.Interface;
 using OpenNos.Data;
-using OpenNos.Data.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,11 +23,6 @@ namespace OpenNos.DAL.Mock
     public class MapNpcDAO : BaseDAO<MapNpcDTO>, IMapNpcDAO
     {
         #region Methods
-
-        public DeleteResult DeleteById(int mapNpcId)
-        {
-            throw new NotImplementedException();
-        }
 
         public void Insert(List<MapNpcDTO> npcs)
         {
@@ -40,7 +34,7 @@ namespace OpenNos.DAL.Mock
             return Container.SingleOrDefault(n => n.MapNpcId == mapNpcId);
         }
 
-        public IEnumerable<MapNpcDTO> LoadFromMap(int mapId)
+        public IEnumerable<MapNpcDTO> LoadFromMap(short mapId)
         {
             return Container.Where(n => n.MapId == mapId);
         }

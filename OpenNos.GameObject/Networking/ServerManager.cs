@@ -62,7 +62,7 @@ namespace OpenNos.GameObject
 
         private long _lastGroupId;
 
-        private ThreadSafeSortedList<int, List<MapNpc>> _mapNpcs;
+        private ThreadSafeSortedList<short, List<MapNpc>> _mapNpcs;
 
         private ThreadSafeSortedList<short, List<DropDTO>> _monsterDrops;
 
@@ -381,14 +381,14 @@ namespace OpenNos.GameObject
             SpinWait.SpinUntil(() => !InBazaarRefreshMode);
         }
 
-        public void ChangeMap(long id, int? MapId = null, short? mapX = null, short? mapY = null)
+        public void ChangeMap(long id, short? MapId = null, short? mapX = null, short? mapY = null)
         {
             ClientSession session = GetSessionByCharacterId(id);
             if (session?.Character != null)
             {
                 if (MapId != null)
                 {
-                    session.Character.MapInstanceId = GetBaseMapInstanceIdByMapId((int)MapId);
+                    session.Character.MapInstanceId = GetBaseMapInstanceIdByMapId((short)MapId);
                 }
                 ChangeMapInstance(id, session.Character.MapInstanceId, mapX, mapY);
             }
@@ -453,6 +453,7 @@ namespace OpenNos.GameObject
                     session.SendPacket(session.Character.GeneratePairy());
                     session.SendPacket(session.Character.GeneratePinit());
                     session.SendPackets(session.Character.GeneratePst());
+                    session.SendPacket(session.Character.GenerateAct());
                     session.SendPacket(session.Character.GenerateScpStc());
                     if (session.Character.Group?.Raid != null && session.Character.Group.Raid.InstanceBag?.Lock == true)
                     {
@@ -478,6 +479,11 @@ namespace OpenNos.GameObject
                         session.SendPacket(session.CurrentMapInstance.InstanceBag.Clock.GetClock());
                     }
 
+                    // TODO: fix this
+                    if (session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.CleftOfDarkness))
+                    {
+                        session.SendPacket("bc 0 0 0");
+                    }
                     if (!session.Character.InvisibleGm)
                     {
                         Parallel.ForEach(session.Character.Mates.Where(m => m.IsTeamMember), mate =>
@@ -537,7 +543,7 @@ namespace OpenNos.GameObject
                 }
                 catch (Exception)
                 {
-                    Logger.Log.Warn(Language.Instance.GetMessageFromKey("CHARACTER_CHANGED_MAP"));
+                    Logger.Log.Warn("Character changed while changing map. Do not abuse Commands.");
                     session.Character.IsChangingMapInstance = false;
                 }
             }
@@ -548,7 +554,7 @@ namespace OpenNos.GameObject
             CommunicationServiceClient.Instance.UpdateFamily(ServerGroup, FamilyId);
         }
 
-        public MapInstance GenerateMapInstance(int MapId, MapInstanceType type, InstanceBag mapclock)
+        public MapInstance GenerateMapInstance(short MapId, MapInstanceType type, InstanceBag mapclock)
         {
             Map map = _maps.Find(m => m.MapId.Equals(MapId));
             if (map != null)
@@ -579,7 +585,7 @@ namespace OpenNos.GameObject
             return _skills;
         }
 
-        public Guid GetBaseMapInstanceIdByMapId(int MapId)
+        public Guid GetBaseMapInstanceIdByMapId(short MapId)
         {
             return _mapinstances.FirstOrDefault(s => s.Value?.Map.MapId == MapId && s.Value.MapInstanceType == MapInstanceType.BaseMapInstance).Key;
         }
@@ -950,7 +956,7 @@ namespace OpenNos.GameObject
             Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("CARDS_LOADED"), _skills.Count));
 
             // intialize mapnpcs
-            _mapNpcs = new ThreadSafeSortedList<int, List<MapNpc>>();
+            _mapNpcs = new ThreadSafeSortedList<short, List<MapNpc>>();
             Parallel.ForEach(DAOFactory.MapNpcDAO.LoadAll().GroupBy(t => t.MapId), mapNpcGrouping => _mapNpcs[mapNpcGrouping.Key] = mapNpcGrouping.Select(t => t as MapNpc).ToList());
             Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("MAPNPCS_LOADED"), _mapNpcs.GetAllItems().Sum(i => i.Count)));
 
@@ -959,7 +965,7 @@ namespace OpenNos.GameObject
                 int i = 0;
                 int monstercount = 0;
                 var mapPartitioner = Partitioner.Create(DAOFactory.MapDAO.LoadAll(), EnumerablePartitionerOptions.NoBuffering);
-                ThreadSafeSortedList<int, Map> _mapList = new ThreadSafeSortedList<int, Map>();
+                ThreadSafeSortedList<short, Map> _mapList = new ThreadSafeSortedList<short, Map>();
                 Parallel.ForEach(mapPartitioner, new ParallelOptions { MaxDegreeOfParallelism = 8 }, map =>
                 {
                     Guid guid = Guid.NewGuid();
@@ -1044,7 +1050,7 @@ namespace OpenNos.GameObject
             {
                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Session.Character.MinilandMessage.Replace(' ', '^'), 0));
                 Session.SendPacket(Session.Character.GenerateMlinfobr());
-                MinilandOwner.Character.GeneralLogs.Add(new GeneralLogDTO { AccountId = Session.Account.AccountId, CharacterId = Session.Character.CharacterId, IpAddress = Session.IpAddress, LogData = "World", LogType = GeneralLogType.MinilandJoined, Timestamp = DateTime.Now });
+                MinilandOwner.Character.GeneralLogs.Add(new GeneralLogDTO { AccountId = Session.Account.AccountId, CharacterId = Session.Character.CharacterId, IpAddress = Session.IpAddress, LogData = "Miniland", LogType = "World", Timestamp = DateTime.Now });
                 Session.SendPacket(MinilandOwner.Character.GenerateMinilandObjectForFriends());
             }
             else
@@ -1054,7 +1060,7 @@ namespace OpenNos.GameObject
             }
             MinilandOwner.Character.Mates.Where(s => !s.IsTeamMember).ToList().ForEach(s => Session.SendPacket(s.GenerateIn()));
             Session.SendPackets(MinilandOwner.Character.GetMinilandEffects());
-            Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MINILAND_VISITOR"), Session.Character.GeneralLogs.Count(s => s.LogType == GeneralLogType.MinilandJoined && s.Timestamp.Day == DateTime.Now.Day), Session.Character.GeneralLogs.Count(s => s.LogType == GeneralLogType.MinilandJoined)), 10));
+            Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MINILAND_VISITOR"), Session.Character.GeneralLogs.Count(s => s.LogData == "Miniland" && s.Timestamp.Day == DateTime.Now.Day), Session.Character.GeneralLogs.Count(s => s.LogData == "Miniland")), 10));
         }
 
         // Server

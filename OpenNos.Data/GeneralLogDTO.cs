@@ -12,7 +12,6 @@
  * GNU General Public License for more details.
  */
 
-using OpenNos.Domain;
 using System;
 
 namespace OpenNos.Data
@@ -31,7 +30,7 @@ namespace OpenNos.Data
 
         public long LogId { get; set; }
 
-        public GeneralLogType LogType { get; set; }
+        public string LogType { get; set; }
 
         public DateTime Timestamp { get; set; }
 

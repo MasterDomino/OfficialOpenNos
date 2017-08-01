@@ -50,16 +50,9 @@ namespace OpenNos.DAL.EF
                     {
                         NpcMonster entity = _mapper.Map<NpcMonster>(Item);
                         context.NpcMonster.Add(entity);
-                        context.Configuration.AutoDetectChangesEnabled = true;
-                        try
-                        {
-                            context.SaveChanges();
-                        }
-                        catch
-                        {
-                            //Do nothing, it's to fix issues with parsing on newer packets
-                        }
                     }
+                    context.Configuration.AutoDetectChangesEnabled = true;
+                    context.SaveChanges();
                 }
             }
             catch (Exception e)

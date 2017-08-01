@@ -700,15 +700,6 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Character changed while changing map. Do not abuse Commands..
-        /// </summary>
-        internal static string CHARACTER_CHANGED_MAP {
-            get {
-                return ResourceManager.GetString("CHARACTER_CHANGED_MAP", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to {0}({1}) logged in!.
         /// </summary>
         internal static string CHARACTER_FAMILY_LOGGED_IN {
@@ -1029,15 +1020,6 @@ namespace OpenNos.World.Resource {
         internal static string EFFECT_ACTIVATED {
             get {
                 return ResourceManager.GetString("EFFECT_ACTIVATED", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Effect of: {0} has been terminated!.
-        /// </summary>
-        internal static string EFFECT_TERMINATED {
-            get {
-                return ResourceManager.GetString("EFFECT_TERMINATED", resourceCulture);
             }
         }
         
@@ -2365,6 +2347,15 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Monster not found!.
+        /// </summary>
+        internal static string MONSTER_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("MONSTER_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Monster removed (MapMonsterId: {0}, Name: {1}, MapId: {2}, MapX: {3}, MapY: {4}).
         /// </summary>
         internal static string MONSTER_REMOVED {
@@ -2847,24 +2838,6 @@ namespace OpenNos.World.Resource {
         internal static string NOTICE_BAZAAR {
             get {
                 return ResourceManager.GetString("NOTICE_BAZAAR", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to NpcMonster not found!.
-        /// </summary>
-        internal static string NPCMONSTER_NOT_FOUND {
-            get {
-                return ResourceManager.GetString("NPCMONSTER_NOT_FOUND", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to NPC removed (MapNpcId: {0}, Name: {1}, MapId: {2}, MapX: {3}, MapY: {4}).
-        /// </summary>
-        internal static string NPCMONSTER_REMOVED {
-            get {
-                return ResourceManager.GetString("NPCMONSTER_REMOVED", resourceCulture);
             }
         }
         
@@ -3783,15 +3756,6 @@ namespace OpenNos.World.Resource {
         internal static string TS_TUTORIAL {
             get {
                 return ResourceManager.GetString("TS_TUTORIAL", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to You&apos;re under effect of: {0}.
-        /// </summary>
-        internal static string UNDER_EFFECT {
-            get {
-                return ResourceManager.GetString("UNDER_EFFECT", resourceCulture);
             }
         }
         

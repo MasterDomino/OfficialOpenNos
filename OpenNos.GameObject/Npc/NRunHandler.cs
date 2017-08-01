@@ -252,7 +252,9 @@ namespace OpenNos.GameObject
                         }
                         else
                         {
-                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NOT_ENOUGH_MONEY"),10));
+                            Session.SendPacket(
+                                Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NOT_ENOUGH_MONEY"),
+                                    10));
                         }
                     }
                     break;

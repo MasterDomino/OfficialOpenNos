@@ -29,12 +29,12 @@ namespace OpenNos.DAL.Mock
             throw new NotImplementedException();
         }
 
-        public MapTypeMapDTO LoadByMapAndMapType(int mapId, short maptypeId)
+        public MapTypeMapDTO LoadByMapAndMapType(short mapId, short maptypeId)
         {
             return Container.SingleOrDefault(m => m.MapId == mapId && m.MapTypeId == maptypeId);
         }
 
-        public IEnumerable<MapTypeMapDTO> LoadByMapId(int mapId)
+        public IEnumerable<MapTypeMapDTO> LoadByMapId(short mapId)
         {
             return Container.Where(m => m.MapId == mapId);
         }

@@ -25,7 +25,7 @@ namespace OpenNos.DAL.Interface
 
         void Insert(List<ScriptedInstanceDTO> scriptedInstances);
 
-        IEnumerable<ScriptedInstanceDTO> LoadByMap(int mapId);
+        IEnumerable<ScriptedInstanceDTO> LoadByMap(short mapId);
 
         #endregion
     }

@@ -32,7 +32,7 @@ namespace OpenNos.DAL.Interface
 
         MapMonsterDTO LoadById(int mapMonsterId);
 
-        IEnumerable<MapMonsterDTO> LoadFromMap(int mapId);
+        IEnumerable<MapMonsterDTO> LoadFromMap(short mapId);
 
         #endregion
     }

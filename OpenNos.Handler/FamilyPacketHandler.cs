@@ -183,7 +183,6 @@ namespace OpenNos.Handler
         [Packet("%Cridefamille")]
         public void FamilyCall(string packet)
         {
-            packet = "1 " + packet;
             if (Session.Character.Family != null && Session.Character.FamilyCharacter != null)
             {
                 if (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Assistant || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager && Session.Character.Family.ManagerCanShout) || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Head)
@@ -351,7 +350,6 @@ namespace OpenNos.Handler
         [Packet("%Rejetdefamille")]
         public void FamilyKick(string packet)
         {
-            packet = "1 " + packet;
             string[] packetsplit = packet.Split(' ');
             if (packetsplit.Length == 3)
             {
@@ -410,7 +408,6 @@ namespace OpenNos.Handler
         [Packet("%Congédefamille")]
         public void FamilyLeave(string packet)
         {
-            packet = "1 " + packet;
             string[] packetsplit = packet.Split(' ');
             if (packetsplit.Length == 2)
             {
@@ -588,7 +585,6 @@ namespace OpenNos.Handler
         [Packet("%Avertissement")]
         public void FamilyMessage(string packet)
         {
-            packet = "1 " + packet;
             if (Session.Character.Family != null && Session.Character.FamilyCharacter != null)
             {
                 if (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Assistant || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager && Session.Character.Family.ManagerCanShout) || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Head)
@@ -786,7 +782,6 @@ namespace OpenNos.Handler
         [Packet("%Invitationdefamille")]
         public void InviteFamily(string packet)
         {
-            packet = "1 " + packet;
             string[] packetsplit = packet.Split(' ');
             if (packetsplit.Length != 3)
             {
@@ -874,12 +869,9 @@ namespace OpenNos.Handler
                     });
 
                     Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateGidx());
-                    Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(), ReceiverType.AllExceptMe);
                     Session.SendPacket(Session.Character.GenerateFamilyMember());
                     Session.SendPacket(Session.Character.GenerateFamilyMemberMessage());
                     Session.SendPacket(Session.Character.GenerateFamilyMemberExp());
-                    Session.SendPacket(Session.Character.GenerateStatChar());
-                    Session.SendPacket(Session.Character.GenerateCInfo());
                 }
             }
         }
@@ -888,7 +880,6 @@ namespace OpenNos.Handler
         [Packet("%Sexe")]
         public void ResetSex(string packet)
         {
-            packet = "1 " + packet;
             string[] packetsplit = packet.Split(' ');
             if (packetsplit.Length != 3)
             {
@@ -935,7 +926,6 @@ namespace OpenNos.Handler
         [Packet("%Titre")]
         public void TitleChange(string packet)
         {
-            packet = "1 " + packet;
             if (Session.Character.Family != null && Session.Character.FamilyCharacter != null && Session.Character.FamilyCharacter.Authority == FamilyAuthority.Head)
             {
                 string[] packetsplit = packet.Split(' ');
@@ -970,7 +960,6 @@ namespace OpenNos.Handler
         [Packet("%Aujourd'hui")]
         public void TodayMessage(string packet)
         {
-            packet = "1 " + packet;
             if (Session.Character.Family != null && Session.Character.FamilyCharacter != null)
             {
                 string msg = string.Empty;

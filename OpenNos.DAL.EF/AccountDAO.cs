@@ -129,7 +129,7 @@ namespace OpenNos.DAL.EF
                         AccountId = accountId,
                         IpAddress = ipAddress,
                         Timestamp = DateTime.Now,
-                        LogType = logType,
+                        LogType = logType.ToString(),
                         LogData = logData,
                         CharacterId = characterId
                     };

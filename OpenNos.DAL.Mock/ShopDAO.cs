@@ -14,7 +14,6 @@
 
 using OpenNos.DAL.Interface;
 using OpenNos.Data;
-using OpenNos.Data.Enums;
 using System;
 using System.Collections.Generic;
 
@@ -23,11 +22,6 @@ namespace OpenNos.DAL.Mock
     public class ShopDAO : BaseDAO<ShopDTO>, IShopDAO
     {
         #region Methods
-
-        public DeleteResult DeleteById(int mapNpcId)
-        {
-            throw new NotImplementedException();
-        }
 
         public void Insert(List<ShopDTO> shops)
         {

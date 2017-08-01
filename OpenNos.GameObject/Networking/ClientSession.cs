@@ -155,6 +155,8 @@ namespace OpenNos.GameObject
 
         public bool IsOnMap => CurrentMapInstance != null;
 
+        public int LastPacketId { get; set; }
+
         public DateTime RegisterTime { get; internal set; }
 
         public int SessionId { get; set; }
@@ -245,7 +247,9 @@ namespace OpenNos.GameObject
 
         public void ReceivePacket(string packet, bool ignoreAuthority = false)
         {
-            TriggerHandler(packet.Split(' ')[0], packet, false, ignoreAuthority);
+            string header = packet.Split(' ')[0];
+            TriggerHandler(header, $"{LastPacketId} {packet}", false, ignoreAuthority);
+            LastPacketId++;
         }
 
         //[Obsolete("Primitive string operations will be removed in future, use PacketDefinition SendPacket instead. SendPacket with string parameter should only be used for debugging.")]
@@ -368,18 +372,31 @@ namespace OpenNos.GameObject
         {
             while (_receiveQueue.TryDequeue(out byte[] packetData))
             {
+                // determine first packet
                 if (_encryptor.HasCustomParameter && SessionId == 0)
                 {
-                    // sessionid decryption
-                    string packet = string.Empty;
-                    for (int i = 0; i < packetData.Length; i++)
+                    string sessionPacket = _encryptor.DecryptCustomParameter(packetData);
+                    string[] sessionParts = sessionPacket.Split(' ');
+                    if (sessionParts.Length == 0)
                     {
-                        packet += Convert.ToChar(packetData[i] - 0x0F).ToString();
+                        return;
                     }
-                    if (int.TryParse(packet, out int sessionId))
+                    if (!int.TryParse(sessionParts[0], out int packetId))
                     {
-                        SessionId = sessionId;
+                        Disconnect();
+                    }
+                    LastPacketId = packetId;
+
+                    // set the SessionId if Session Packet arrives
+                    if (sessionParts.Length < 2)
+                    {
+                        return;
+                    }
+                    if (int.TryParse(sessionParts[1].Split('\\').FirstOrDefault(), out int sessid))
+                    {
+                        SessionId = sessid;
                         Logger.Log.DebugFormat(Language.Instance.GetMessageFromKey("CLIENT_ARRIVED"), SessionId);
+
                         if (!_waitForPacketsAmount.HasValue)
                         {
                             TriggerHandler("OpenNos.EntryPoint", string.Empty, false);
@@ -388,24 +405,33 @@ namespace OpenNos.GameObject
                     return;
                 }
 
-                // login/game packet decryption
-                string[] packetSplit = null;
-                string decrypted = _encryptor.Decrypt(packetData, SessionId);
-                if (!_encryptor.HasCustomParameter)
-                {
-                    packetSplit = decrypted.Split(new[] { (char)0xFF }, StringSplitOptions.RemoveEmptyEntries);
-                }
-                else
-                {
-                    packetSplit = decrypted.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
-                }
-                foreach (string packet in packetSplit)
+                string packetConcatenated = _encryptor.Decrypt(packetData, SessionId);
+                foreach (string packet in packetConcatenated.Split(new[] { (char)0xFF }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     string packetstring = packet.Replace('^', ' ');
                     string[] packetsplit = packetstring.Split(' ');
 
                     if (_encryptor.HasCustomParameter)
                     {
+                        string nextRawPacketId = packetsplit[0];
+                        if (!int.TryParse(nextRawPacketId, out int nextPacketId) && nextPacketId != LastPacketId + 1)
+                        {
+                            Logger.Log.ErrorFormat(Language.Instance.GetMessageFromKey("CORRUPTED_KEEPALIVE"), _client.ClientId);
+                            _client.Disconnect();
+                            return;
+                        }
+                        if (nextPacketId == 0)
+                        {
+                            if (LastPacketId == ushort.MaxValue)
+                            {
+                                LastPacketId = nextPacketId;
+                            }
+                        }
+                        else
+                        {
+                            LastPacketId = nextPacketId;
+                        }
+
                         if (_waitForPacketsAmount.HasValue)
                         {
                             if (_waitForPacketList.Count != _waitForPacketsAmount - 1)
@@ -417,22 +443,22 @@ namespace OpenNos.GameObject
                                 _waitForPacketList.Add(packetstring);
                                 _waitForPacketsAmount = null;
                                 string queuedPackets = string.Join(" ", _waitForPacketList.ToArray());
-                                string header = queuedPackets.Split(' ', '^')[0];
+                                string header = queuedPackets.Split(' ', '^')[1];
                                 TriggerHandler(header, queuedPackets, true);
                                 _waitForPacketList.Clear();
                                 return;
                             }
                         }
-                        else if (packetsplit.Length > 0)
+                        else if (packetsplit.Length > 1)
                         {
-                            if (packetsplit[0].Length >= 1 && (packetsplit[0][0] == '/' || packetsplit[0][0] == ':' || packetsplit[0][0] == ';'))
+                            if (packetsplit[1].Length >= 1 && (packetsplit[1][0] == '/' || packetsplit[1][0] == ':' || packetsplit[1][0] == ';'))
                             {
-                                packetsplit[0] = packetsplit[0][0].ToString();
+                                packetsplit[1] = packetsplit[1][0].ToString();
                                 packetstring = packet.Insert(packet.IndexOf(' ') + 2, " ");
                             }
-                            if (packetsplit[0] != "0")
+                            if (packetsplit[1] != "0")
                             {
-                                TriggerHandler(packetsplit[0].Replace("#", string.Empty), packetstring, false);
+                                TriggerHandler(packetsplit[1].Replace("#", string.Empty), packetstring, false);
                             }
                         }
                     }
@@ -465,7 +491,7 @@ namespace OpenNos.GameObject
             {
                 return;
             }
-            if (message.MessageData.Length > 0 && message.MessageData.Length > 1)
+            if (message.MessageData.Length > 0 && message.MessageData.Length > 2)
             {
                 _receiveQueue.Enqueue(message.MessageData);
             }
@@ -513,7 +539,7 @@ namespace OpenNos.GameObject
                     {
                         // we need to wait for more
                         _waitForPacketsAmount = methodReference.HandlerMethodAttribute.Amount;
-                        _waitForPacketList.Add(packet != string.Empty ? packet : packetHeader);
+                        _waitForPacketList.Add(packet != string.Empty ? packet : $"1 {packetHeader} ");
                         return;
                     }
                     try
@@ -526,7 +552,7 @@ namespace OpenNos.GameObject
                                 //check for the correct authority
                                 if (!IsAuthenticated || (byte)methodReference.Authority <= (byte)Account.Authority || ignoreAuthority)
                                 {
-                                    PacketDefinition deserializedPacket = PacketFactory.Deserialize(packet, methodReference.PacketDefinitionParameterType, false);
+                                    PacketDefinition deserializedPacket = PacketFactory.Deserialize(packet, methodReference.PacketDefinitionParameterType, IsAuthenticated);
 
                                     if (deserializedPacket != null || methodReference.PassNonParseablePacket)
                                     {

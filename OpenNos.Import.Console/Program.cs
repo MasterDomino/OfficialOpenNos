@@ -235,12 +235,12 @@ namespace OpenNos.Import.Console
                     }
                 }
                 System.Console.WriteLine($"{Language.Instance.GetMessageFromKey("DONE")}");
-                System.Console.ReadKey();
+                Thread.Sleep(5000);
             }
             catch (FileNotFoundException)
             {
                 Logger.Log.Error(Language.Instance.GetMessageFromKey("AT_LEAST_ONE_FILE_MISSING"));
-                System.Console.ReadKey();
+                Thread.Sleep(5000);
             }
         }
 

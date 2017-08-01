@@ -37,16 +37,9 @@ namespace OpenNos.DAL.EF
                     {
                         ScriptedInstance entity = _mapper.Map<ScriptedInstance>(scriptedInstance);
                         context.ScriptedInstance.Add(entity);
-                        context.Configuration.AutoDetectChangesEnabled = true;
-                        try
-                        {
-                            context.SaveChanges();
-                        }
-                        catch
-                        {
-                            //Do nothing, it's to fix issues with parsing on newer packets
-                        }
                     }
+                    context.Configuration.AutoDetectChangesEnabled = true;
+                    context.SaveChanges();
                 }
             }
             catch (Exception e)
@@ -74,7 +67,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        public IEnumerable<ScriptedInstanceDTO> LoadByMap(int mapId)
+        public IEnumerable<ScriptedInstanceDTO> LoadByMap(short mapId)
         {
             using (var context = DataAccessHelper.CreateContext())
             {

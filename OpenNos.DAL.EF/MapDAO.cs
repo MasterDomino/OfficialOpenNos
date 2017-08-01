@@ -37,16 +37,9 @@ namespace OpenNos.DAL.EF
                     {
                         Map entity = _mapper.Map<Map>(Item);
                         context.Map.Add(entity);
-                        context.Configuration.AutoDetectChangesEnabled = true;
-                        try
-                        {
-                            context.SaveChanges();
-                        }
-                        catch
-                        {
-                            //Do nothing, it's to fix issues with parsing on newer packets
-                        }
                     }
+                    context.Configuration.AutoDetectChangesEnabled = true;
+                    context.SaveChanges();
                 }
             }
             catch (Exception e)
@@ -89,7 +82,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        public MapDTO LoadById(int mapId)
+        public MapDTO LoadById(short mapId)
         {
             try
             {

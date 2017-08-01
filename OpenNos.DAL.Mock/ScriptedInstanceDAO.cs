@@ -28,7 +28,7 @@ namespace OpenNos.DAL.Mock
             throw new NotImplementedException();
         }
 
-        public IEnumerable<ScriptedInstanceDTO> LoadByMap(int mapId)
+        public IEnumerable<ScriptedInstanceDTO> LoadByMap(short mapId)
         {
             throw new NotImplementedException();
         }

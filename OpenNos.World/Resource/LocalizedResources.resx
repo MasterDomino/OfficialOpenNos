@@ -922,8 +922,8 @@
   <data name="ITEM_NOT_FOUND" xml:space="preserve">
     <value>Item not found!</value>
   </data>
-  <data name="NPCMONSTER_NOT_FOUND" xml:space="preserve">
-    <value>NpcMonster not found!</value>
+  <data name="MONSTER_NOT_FOUND" xml:space="preserve">
+    <value>Monster not found!</value>
   </data>
   <data name="NOT_YOUR_ITEM" xml:space="preserve">
     <value>The item is not yours!</value>
@@ -1446,17 +1446,5 @@
   </data>
   <data name="GIFT_SENT" xml:space="preserve">
     <value>Gift has been sent!</value>
-  </data>
-  <data name="CHARACTER_CHANGED_MAP" xml:space="preserve">
-    <value>Character changed while changing map. Do not abuse Commands.</value>
-  </data>
-  <data name="NPCMONSTER_REMOVED" xml:space="preserve">
-    <value>NPC removed (MapNpcId: {0}, Name: {1}, MapId: {2}, MapX: {3}, MapY: {4})</value>
-  </data>
-  <data name="UNDER_EFFECT" xml:space="preserve">
-    <value>You're under effect of: {0}</value>
-  </data>
-  <data name="EFFECT_TERMINATED" xml:space="preserve">
-    <value>Effect of: {0} has been terminated!</value>
   </data>
 </root>

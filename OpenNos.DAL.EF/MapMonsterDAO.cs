@@ -69,17 +69,10 @@ namespace OpenNos.DAL.EF
                     foreach (MapMonsterDTO monster in mapMonsters)
                     {
                         MapMonster entity = _mapper.Map<MapMonster>(monster);
-                        context.Configuration.AutoDetectChangesEnabled = true;
                         context.MapMonster.Add(entity);
-                        try
-                        {
-                            context.SaveChanges();
-                        }
-                        catch
-                        {
-                            //Do nothing, it's to fix issues with parsing on newer packets
-                        }
                     }
+                    context.Configuration.AutoDetectChangesEnabled = true;
+                    context.SaveChanges();
                 }
             }
             catch (Exception e)
@@ -123,7 +116,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        public IEnumerable<MapMonsterDTO> LoadFromMap(int mapId)
+        public IEnumerable<MapMonsterDTO> LoadFromMap(short mapId)
         {
             using (var context = DataAccessHelper.CreateContext())
             {
