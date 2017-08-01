@@ -212,9 +212,22 @@ namespace OpenNos.Master.Server
             MSManager.Instance.ConnectedAccounts.Add(new AccountConnection(accountId, sessionId, ipAddress));
         }
 
-        public long[] RetrieveSessionListWithIp(string ipAddress)
+        public long[][] RetrieveOnlineCharacters(long characterId)
         {
-            return MSManager.Instance.ConnectedAccounts.GetAllItems().Where(s => s.IpAddress == ipAddress).Select(s => s.AccountId).ToArray();
+            List<AccountConnection> connections = MSManager.Instance.ConnectedAccounts.GetAllItems()
+                .Where(s => s.IpAddress == MSManager.Instance.ConnectedAccounts.GetAllItems().Find(f => f.CharacterId == characterId)?.IpAddress && s.CharacterId != 0).ToList();
+
+            long[][] result = new long[connections.Count][];
+
+            int i = 0;
+            foreach (AccountConnection acc in connections)
+            {
+                result[i] = new long[2];
+                result[i][0] = acc.CharacterId;
+                result[i][1] = acc.ConnectedWorld?.ChannelId ?? 0;
+                i++;
+            }
+            return result;
         }
 
         public int? RegisterWorldServer(SerializableWorldServer worldServer)

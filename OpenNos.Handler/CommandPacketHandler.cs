@@ -2718,19 +2718,23 @@ namespace OpenNos.Handler
                 Session.SendPacket(Session.Character.GenerateSay($"Warnings: {penaltyLogs.Count(s => s.Penalty == PenaltyType.Warning)}", 13));
                 Session.SendPacket(Session.Character.GenerateSay("----- ------- -----", 13));
             }
-            ClientSession session = ServerManager.Instance.GetSessionByCharacterName(character.Name);
-            if (session != null)
+
+            Session.SendPacket(Session.Character.GenerateSay("----- SESSION -----", 13));
+            foreach (long[] connection in CommunicationServiceClient.Instance.RetrieveOnlineCharacters(character.CharacterId))
             {
-                Session.SendPacket(Session.Character.GenerateSay("----- SESSION -----", 13));
-                string ipAddress = session.IpAddress;
-                Session.SendPacket(Session.Character.GenerateSay($"Current IP: {ipAddress}", 13));
-                foreach (int accountId in CommunicationServiceClient.Instance.RetrieveSessionListWithIp(ipAddress.Substring(6, ipAddress.LastIndexOf(':') - 6)))
+                if (connection != null)
                 {
-                    AccountDTO acc = DAOFactory.AccountDAO.LoadById(accountId);
-                    Session.SendPacket(Session.Character.GenerateSay($"AccountName: {acc.Name}", 13));
+                    CharacterDTO _character = DAOFactory.CharacterDAO.LoadById(connection[0]);
+                    if (_character != null)
+                    {
+                        Session.SendPacket(Session.Character.GenerateSay($"Character Name: {_character.Name}", 13));
+                        Session.SendPacket(Session.Character.GenerateSay($"ChannelId: {connection[1]}", 13));
+                        Session.SendPacket(Session.Character.GenerateSay("-----", 13));
+
+                    }
                 }
-                Session.SendPacket(Session.Character.GenerateSay("----- ------------ -----", 13));
             }
+            Session.SendPacket(Session.Character.GenerateSay("----- ------------ -----", 13));
         }
 
         #endregion

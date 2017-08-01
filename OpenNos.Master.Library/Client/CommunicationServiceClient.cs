@@ -182,9 +182,9 @@ namespace OpenNos.Master.Library.Client
             return _client.ServiceProxy.RetrieveServerStatistics();
         }
 
-        public long[] RetrieveSessionListWithIp(string ipAddress)
+        public long[][] RetrieveOnlineCharacters(long characterId)
         {
-            return _client.ServiceProxy.RetrieveSessionListWithIp(ipAddress);
+            return _client.ServiceProxy.RetrieveOnlineCharacters(characterId);
         }
 
         public int? SendMessageToCharacter(SCSCharacterMessage message)

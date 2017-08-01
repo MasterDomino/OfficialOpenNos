@@ -150,7 +150,7 @@ namespace OpenNos.Master.Library.Interface
         /// </summary>
         /// <param name="ipAddress">IpAddress to gather wanted SessionIds</param>
         /// <returns>List of SessionId</returns>
-        long[] RetrieveSessionListWithIp(string ipAddress);
+        long[][] RetrieveOnlineCharacters(long characterId);
 
         /// <summary>
         /// Sends a Message to a specific Character
