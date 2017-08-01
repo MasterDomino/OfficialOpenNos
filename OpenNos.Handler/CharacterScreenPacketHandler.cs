@@ -302,6 +302,11 @@ namespace OpenNos.Handler
             {
                 if (Session?.Account != null && !Session.HasSelectedCharacter && (DAOFactory.CharacterDAO.LoadBySlot(Session.Account.AccountId, selectPacket.Slot) is Character character))
                 {
+                    if (Session.Account.Authority > AuthorityType.User)
+                    {
+                        character.Invisible = true;
+                        character.InvisibleGm = true;
+                    }
                     character.GeneralLogs = DAOFactory.GeneralLogDAO.LoadByAccount(Session.Account.AccountId).Where(s => s.CharacterId == character.CharacterId).ToList();
                     character.MapInstanceId = ServerManager.Instance.GetBaseMapInstanceIdByMapId(character.MapId);
                     character.PositionX = character.MapX;
