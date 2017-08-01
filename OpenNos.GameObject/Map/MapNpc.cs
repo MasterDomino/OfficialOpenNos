@@ -279,6 +279,10 @@ namespace OpenNos.GameObject
                     {
                         const short maxDistance = 5;
                         int maxindex = Path.Count > Npc.Speed / 2 && Npc.Speed > 1 ? Npc.Speed / 2 : Path.Count;
+                        if (maxindex < 1)
+                        {
+                            maxindex = 1;
+                        }
                         if ((Path.Count == 0 && distance > 1 && distance < maxDistance) || Path[maxindex - 1] == null)
                         {
                             short xoffset = (short)ServerManager.Instance.RandomNumber(-1, 1);
