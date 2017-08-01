@@ -89,6 +89,9 @@ namespace OpenNos.Handler
             }
             if (Session.Character.CanFight && useSkillPacket != null)
             {
+                Session.Character.RemoveBuff(614);
+                Session.Character.RemoveBuff(615);
+                Session.Character.RemoveBuff(616);
                 bool isMuted = Session.Character.MuteMessage();
                 if (isMuted || Session.Character.IsVehicled || Session.Character.InvisibleGm)
                 {
