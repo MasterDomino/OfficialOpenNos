@@ -2049,14 +2049,25 @@ namespace OpenNos.Handler
             {
                 Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Sudo]CharacterName: {sudoPacket.CharacterName} CommandContents:{sudoPacket.CommandContents}");
 
-                ClientSession session = ServerManager.Instance.GetSessionByCharacterName(sudoPacket.CharacterName);
-                if (session != null && !string.IsNullOrWhiteSpace(sudoPacket.CommandContents))
+                if (sudoPacket.CharacterName == "*")
                 {
-                    session.ReceivePacket(sudoPacket.CommandContents, true);
+                    foreach (ClientSession sess in Session.CurrentMapInstance.Sessions)
+                    {
+                        sess.ReceivePacket(sudoPacket.CommandContents, true);
+                    }
                 }
                 else
                 {
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("USER_NOT_CONNECTED"), 0));
+                    ClientSession session = ServerManager.Instance.GetSessionByCharacterName(sudoPacket.CharacterName);
+
+                    if (session != null && !string.IsNullOrWhiteSpace(sudoPacket.CommandContents))
+                    {
+                        session.ReceivePacket(sudoPacket.CommandContents, true);
+                    }
+                    else
+                    {
+                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("USER_NOT_CONNECTED"), 0));
+                    }
                 }
             }
             else
