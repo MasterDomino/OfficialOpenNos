@@ -24,7 +24,7 @@ namespace OpenNos.PathFinder
 
         public static List<Node> FindPath(GridPos start, GridPos end, GridPos[,] Grid)
         {
-            if (Grid.GetLength(0) < start.X || Grid.GetLength(1) < start.Y || start.X < 0 || start.Y < 0)
+            if (Grid.GetLength(0) <= start.X || Grid.GetLength(1) <= start.Y || start.X < 0 || start.Y < 0)
             {
                 return new List<Node>();
             }
