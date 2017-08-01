@@ -13,6 +13,7 @@
  */
 
 using OpenNos.Data;
+using OpenNos.Domain;
 using System.Collections.Generic;
 
 namespace OpenNos.DAL.Interface
@@ -29,11 +30,11 @@ namespace OpenNos.DAL.Interface
 
         IEnumerable<GeneralLogDTO> LoadByAccount(long? accountId);
 
-        IEnumerable<GeneralLogDTO> LoadByLogType(string logType, long? characterId);
+        IEnumerable<GeneralLogDTO> LoadByLogType(GeneralLogType logType, long? characterId);
 
         void SetCharIdNull(long? characterId);
 
-        void WriteGeneralLog(long accountId, string ipAddress, long? characterId, string logType, string logData);
+        void WriteGeneralLog(long accountId, string ipAddress, long? characterId, GeneralLogType logType, string logData);
 
         #endregion
     }

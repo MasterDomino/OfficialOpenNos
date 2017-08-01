@@ -162,6 +162,7 @@
     <Compile Include="Packets\ClientPackets\SortOpenPacket.cs" />
     <Compile Include="Packets\ClientPackets\UseItemPacket.cs" />
     <Compile Include="Packets\CommandPackets\AddPartnerPacket.cs" />
+    <Compile Include="Packets\CommandPackets\BuffPacket.cs" />
     <Compile Include="Packets\CommandPackets\CreateItemPacket.cs" />
     <Compile Include="Packets\CommandPackets\InstanceMusicPacket.cs" />
     <Compile Include="Packets\CommandPackets\ItemRain.cs" />
@@ -224,7 +225,7 @@
     <Compile Include="Packets\CommandPackets\MorphPacket.cs" />
     <Compile Include="Packets\CommandPackets\PacketCallbackPacket.cs" />
     <Compile Include="Packets\CommandPackets\PositionPacket.cs" />
-    <Compile Include="Packets\CommandPackets\RemoveMobPacket.cs" />
+    <Compile Include="Packets\CommandPackets\RemoveNpcMonsterPacket.cs" />
     <Compile Include="Packets\CommandPackets\RemovePortalPacket.cs" />
     <Compile Include="Packets\CommandPackets\SearchItemPacket.cs" />
     <Compile Include="Packets\CommandPackets\SearchMonsterPacket.cs" />

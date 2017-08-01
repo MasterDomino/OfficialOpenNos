@@ -16,6 +16,7 @@ using OpenNos.Core;
 using OpenNos.DAL.EF.Helpers;
 using OpenNos.DAL.Interface;
 using OpenNos.Data;
+using OpenNos.Data.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,9 +38,16 @@ namespace OpenNos.DAL.EF
                     {
                         MapNpc entity = _mapper.Map<MapNpc>(Item);
                         context.MapNpc.Add(entity);
+                        context.Configuration.AutoDetectChangesEnabled = true;
+                        try
+                        {
+                            context.SaveChanges();
+                        }
+                        catch
+                        {
+                            //Do nothing, it's to fix issues with parsing on newer packets
+                        }
                     }
-                    context.Configuration.AutoDetectChangesEnabled = true;
-                    context.SaveChanges();
                 }
             }
             catch (Exception e)
@@ -78,6 +86,30 @@ namespace OpenNos.DAL.EF
             }
         }
 
+        public DeleteResult DeleteById(int mapNpcId)
+        {
+            try
+            {
+                using (var context = DataAccessHelper.CreateContext())
+                {
+                    MapNpc npc = context.MapNpc.First(i => i.MapNpcId.Equals(mapNpcId));
+
+                    if (npc != null)
+                    {
+                        context.MapNpc.Remove(npc);
+                        context.SaveChanges();
+                    }
+
+                    return DeleteResult.Deleted;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                return DeleteResult.Error;
+            }
+        }
+
         public MapNpcDTO LoadById(int mapNpcId)
         {
             try
@@ -94,7 +126,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        public IEnumerable<MapNpcDTO> LoadFromMap(short mapId)
+        public IEnumerable<MapNpcDTO> LoadFromMap(int mapId)
         {
             using (var context = DataAccessHelper.CreateContext())
             {

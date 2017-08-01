@@ -12,26 +12,36 @@
  * GNU General Public License for more details.
  */
 
-using OpenNos.DAL.Interface;
-using OpenNos.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Text;
 
-namespace OpenNos.DAL.Mock
+namespace OpenNos.Core
 {
-    public class MapDAO : BaseDAO<MapDTO>, IMapDAO
+    public class TestEncryption : EncryptionBase
     {
-        #region Methods
+        #region Instantiation
 
-        public void Insert(List<MapDTO> maps)
+        public TestEncryption() : base(true)
         {
-            throw new NotImplementedException();
         }
 
-        public MapDTO LoadById(int mapId)
+        public TestEncryption(bool hasCustomParameter) : base(hasCustomParameter)
         {
-            return Container.SingleOrDefault(c => c.MapId.Equals(mapId));
+        }
+
+        #endregion
+
+        #region Methods
+
+        public override string Decrypt(byte[] data, int sessionId = 0)
+        {
+            UTF8Encoding encoding = new UTF8Encoding();
+            return encoding.GetString(data);
+        }
+
+        public override byte[] Encrypt(string data)
+        {
+            UTF8Encoding encoding = new UTF8Encoding();
+            return encoding.GetBytes(data);
         }
 
         #endregion

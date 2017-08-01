@@ -37,9 +37,16 @@ namespace OpenNos.DAL.EF
                     {
                         Portal entity = _mapper.Map<Portal>(Item);
                         context.Portal.Add(entity);
+                        context.Configuration.AutoDetectChangesEnabled = true;
+                        try
+                        {
+                            context.SaveChanges();
+                        }
+                        catch
+                        {
+                            //Do nothing, it's to fix issues with parsing on newer packets
+                        }
                     }
-                    context.Configuration.AutoDetectChangesEnabled = true;
-                    context.SaveChanges();
                 }
             }
             catch (Exception e)
@@ -67,7 +74,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        public IEnumerable<PortalDTO> LoadByMap(short mapId)
+        public IEnumerable<PortalDTO> LoadByMap(int mapId)
         {
             using (var context = DataAccessHelper.CreateContext())
             {

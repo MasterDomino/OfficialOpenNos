@@ -5,12 +5,12 @@ using OpenNos.Domain;
 
 namespace OpenNos.GameObject.CommandPackets
 {
-    [PacketHeader("$RemoveMob", PassNonParseablePacket = true, Authority = AuthorityType.GameMaster)]
-    public class RemoveMobPacket : PacketDefinition
+    [PacketHeader("$RemoveNpcMonster", PassNonParseablePacket = true, Authority = AuthorityType.GameMaster)]
+    public class RemoveNpcMonster : PacketDefinition
     {
         public static string ReturnHelp()
         {
-            return "$RemoveMob";
+            return "$RemoveNpcMonster";
         }
     }
 }

@@ -344,9 +344,9 @@ namespace OpenNos.Handler
             short[] slot = new short[20];
             byte[] qty = new byte[20];
             string shopname = string.Empty;
-            if (packetsplit.Length > 2)
+            if (packetsplit.Length > 1)
             {
-                if (!short.TryParse(packetsplit[2], out short typePacket))
+                if (!short.TryParse(packetsplit[1], out short typePacket))
                 {
                     return;
                 }
@@ -381,7 +381,7 @@ namespace OpenNos.Handler
                     }
                     MapShop myShop = new MapShop();
 
-                    if (packetsplit.Length > 82)
+                    if (packetsplit.Length > 81)
                     {
                         short shopSlot = 0;
 
@@ -429,7 +429,7 @@ namespace OpenNos.Handler
                     {
                         if (!myShop.Items.Any(s => !s.ItemInstance.Item.IsSoldable || s.ItemInstance.IsBound))
                         {
-                            for (int i = 83; i < packetsplit.Length; i++)
+                            for (int i = 82; i < packetsplit.Length; i++)
                             {
                                 shopname += $"{packetsplit[i]} ";
                             }
@@ -608,18 +608,6 @@ namespace OpenNos.Handler
                     }
                 }
             }
-            /*
-            packet.Users.ForEach(u =>
-            {
-                Mate mate = Session.Character.Mates.FirstOrDefault(s => s.MateTransportId == u.UserId);
-                if (mate != null)
-                {
-                    mate.PositionX = u.UserX;
-                    mate.PositionY = u.UserY;
-                    Session.CurrentMapInstance.Broadcast($"mv 2 {u.UserId} { u.UserX} { u.UserY} {mate.Monster.Speed}");
-                }
-            });
-             */
         }
 
         /// <summary>

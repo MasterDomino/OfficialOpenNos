@@ -81,8 +81,8 @@ namespace OpenNos.Handler
                             JobLevel = 1,
                             Level = 1,
                             MapId = 1,
-                            MapX = (short)ServerManager.Instance.RandomNumber(78, 81),
-                            MapY = (short)ServerManager.Instance.RandomNumber(114, 118),
+                            MapX = (short)ServerManager.Instance.RandomNumber(11, 15),
+                            MapY = (short)ServerManager.Instance.RandomNumber(119, 123),
                             Mp = 221,
                             MaxMateCount = 10,
                             SpPoint = 10000,
@@ -195,7 +195,7 @@ namespace OpenNos.Handler
         /// </summary>
         /// <param name="packet"></param>
         /// <returns></returns>
-        [Packet("OpenNos.EntryPoint", 3)]
+        [Packet("OpenNos.EntryPoint", 5)]
         public void LoadCharacters(string packet)
         {
             string[] loginPacketParts = packet.Split(' ');
@@ -205,9 +205,9 @@ namespace OpenNos.Handler
             {
                 bool hasRegisteredAccountLogin = true;
                 AccountDTO account = null;
-                if (loginPacketParts.Length > 4)
+                if (loginPacketParts.Length > 1)
                 {
-                    account = DAOFactory.AccountDAO.LoadByName(loginPacketParts[4]);
+                    account = DAOFactory.AccountDAO.LoadByName(loginPacketParts[1]);
                 }
                 try
                 {
@@ -222,11 +222,11 @@ namespace OpenNos.Handler
                     Session.Disconnect();
                     return;
                 }
-                if (loginPacketParts.Length > 4 && hasRegisteredAccountLogin)
+                if (loginPacketParts.Length > 1 && hasRegisteredAccountLogin)
                 {
                     if (account != null)
                     {
-                        if (account.Password.ToLower().Equals(EncryptionBase.Sha512(loginPacketParts[6])))
+                        if (account.Password.ToLower().Equals(EncryptionBase.Sha512(loginPacketParts[2])))
                         {
                             Account accountobject = new Account
                             {
@@ -286,8 +286,7 @@ namespace OpenNos.Handler
                     petlist += $"{(i != 0 ? "." : string.Empty)}{(mates.Count > i ? $"{mates[i].Skin}.{mates[i].NpcMonsterVNum}" : "-1")}";
                 }
 
-                // 1 1 before long string of -1.-1 = act completion
-                Session.SendPacket($"clist {character.Slot} {character.Name} 0 {(byte)character.Gender} {(byte)character.HairStyle} {(byte)character.HairColor} 0 {(byte)character.Class} {character.Level} {character.HeroLevel} {equipment[(byte)EquipmentType.Hat]?.ItemVNum ?? -1}.{equipment[(byte)EquipmentType.Armor]?.ItemVNum ?? -1}.{equipment[(byte)EquipmentType.WeaponSkin]?.ItemVNum ?? (equipment[(byte)EquipmentType.MainWeapon]?.ItemVNum ?? -1)}.{equipment[(byte)EquipmentType.SecondaryWeapon]?.ItemVNum ?? -1}.{equipment[(byte)EquipmentType.Mask]?.ItemVNum ?? -1}.{equipment[(byte)EquipmentType.Fairy]?.ItemVNum ?? -1}.{equipment[(byte)EquipmentType.CostumeSuit]?.ItemVNum ?? -1}.{equipment[(byte)EquipmentType.CostumeHat]?.ItemVNum ?? -1} {character.JobLevel}  1 1 {petlist} {(equipment[(byte)EquipmentType.Hat]?.Item.IsColored == true ? equipment[(byte)EquipmentType.Hat].Design : 0)} 0");
+                Session.SendPacket($"clist {character.Slot} {character.Name} 0 {(byte)character.Gender} {(byte)character.HairStyle} {(byte)character.HairColor} 0 {(byte)character.Class} {character.Level} 0 0 0 0 {petlist} {(equipment[(byte)EquipmentType.Hat]?.Item.IsColored == true ? equipment[(byte)EquipmentType.Hat].Design : 0)} 0");
             }
             Session.SendPacket("clist_end");
         }
@@ -313,7 +312,7 @@ namespace OpenNos.Handler
                     character.PositionY = character.MapY;
                     character.Authority = Session.Account.Authority;
                     Session.SetCharacter(character);
-                    if (!Session.Character.GeneralLogs.Any(s => s.Timestamp == DateTime.Now && s.LogData == "World" && s.LogType == "Connection"))
+                    if (!Session.Character.GeneralLogs.Any(s => s.Timestamp == DateTime.Now && s.LogData == "World" && s.LogType == GeneralLogType.Connection))
                     {
                         Session.Character.SpAdditionPoint += Session.Character.SpPoint;
                         Session.Character.SpPoint = 10000;
@@ -340,7 +339,7 @@ namespace OpenNos.Handler
                         Session.Character.Mates.Add(mate);
                     });
                     Observable.Interval(TimeSpan.FromMilliseconds(300)).Subscribe(x => Session.Character.CharacterLife());
-                    Session.Character.GeneralLogs.Add(new GeneralLogDTO { AccountId = Session.Account.AccountId, CharacterId = Session.Character.CharacterId, IpAddress = Session.IpAddress, LogData = "World", LogType = "Connection", Timestamp = DateTime.Now });
+                    Session.Character.GeneralLogs.Add(new GeneralLogDTO { AccountId = Session.Account.AccountId, CharacterId = Session.Character.CharacterId, IpAddress = Session.IpAddress, LogData = "World", LogType = GeneralLogType.Connection, Timestamp = DateTime.Now });
                     Session.SendPacket("OK");
 
                     // Inform everyone about connected character
