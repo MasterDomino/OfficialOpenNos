@@ -570,11 +570,11 @@ namespace OpenNos.GameObject
                     break;
 
                 case -2:
-                    defender.ArmorDefense = (int)(defender.ArmorDefense * 0.15);
+                    defender.ArmorDefense += (int)(defender.ArmorDefense * 0.15);
                     break;
 
                 case -1:
-                    defender.ArmorDefense = (int)(defender.ArmorDefense * 0.1);
+                    defender.ArmorDefense += (int)(defender.ArmorDefense * 0.1);
                     break;
 
                 case 0:
