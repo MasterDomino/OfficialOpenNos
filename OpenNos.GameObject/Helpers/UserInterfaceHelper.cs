@@ -219,7 +219,7 @@ namespace OpenNos.GameObject.Helpers
         {
             if (packet == null)
             {
-
+                return string.Empty;
             }
             string itembazar = string.Empty;
 
