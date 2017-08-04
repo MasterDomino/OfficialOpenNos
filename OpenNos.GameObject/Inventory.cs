@@ -345,19 +345,25 @@ namespace OpenNos.GameObject
             Dictionary<InventoryType, int> place = new Dictionary<InventoryType, int>();
             foreach (IGrouping<short, ItemInstance> itemgroup in itemInstances.GroupBy(s => s.ItemVNum))
             {
-                InventoryType type = itemgroup.FirstOrDefault().Type;
-                List<ItemInstance> listitem = GetAllItems().Where(i => i.Type == type).ToList();
-                if (!place.ContainsKey(type))
+                if (itemgroup.FirstOrDefault()?.Type is InventoryType type)
                 {
-                    place.Add(type, (type != InventoryType.Miniland ? DEFAULT_BACKPACK_SIZE + (backPack * 12) : 50) - listitem.Count);
+                    List<ItemInstance> listitem = GetAllItems().Where(i => i.Type == type).ToList();
+                    if (!place.ContainsKey(type))
+                    {
+                        place.Add(type, (type != InventoryType.Miniland ? DEFAULT_BACKPACK_SIZE + (backPack * 12) : 50) - listitem.Count);
+                    }
+
+                    int amount = itemgroup.Sum(s => s.Amount);
+                    int rest = amount % (type == InventoryType.Equipment ? 1 : 99);
+                    bool needanotherslot = listitem.Where(s => s.ItemVNum == itemgroup.Key).Sum(s => MAX_ITEM_AMOUNT - s.Amount) <= rest;
+                    place[type] -= (amount / (type == InventoryType.Equipment ? 1 : 99)) + (needanotherslot ? 1 : 0);
+
+                    if (place[type] < 0)
+                    {
+                        return false;
+                    }
                 }
-
-                int amount = itemgroup.Sum(s => s.Amount);
-                int rest = amount % (type == InventoryType.Equipment ? 1 : 99);
-                bool needanotherslot = listitem.Where(s => s.ItemVNum == itemgroup.Key).Sum(s => MAX_ITEM_AMOUNT - s.Amount) <= rest;
-                place[itemgroup.FirstOrDefault().Type] -= (amount / (type == InventoryType.Equipment ? 1 : 99)) + (needanotherslot ? 1 : 0);
-
-                if (place[itemgroup.FirstOrDefault().Type] < 0)
+                else
                 {
                     return false;
                 }

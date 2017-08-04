@@ -29,50 +29,55 @@ namespace OpenNos.GameObject
 
         public void ApplyBCards(object session)
         {
+            Type type = session.GetType();
             switch ((BCardType.CardType)Type)
             {
                 case BCardType.CardType.Buff:
-                    if (session.GetType() == typeof(Character))
                     {
-                        if (ServerManager.Instance.RandomNumber() < FirstData)
+                        if (type == typeof(Character))
                         {
-                            (session as Character).AddBuff(new Buff(SecondData, (session as Character).Level));
+                            if (ServerManager.Instance.RandomNumber() < FirstData && session is Character character)
+                            {
+                                character.AddBuff(new Buff(SecondData, character.Level));
+                            }
                         }
-                    }
-                    else if (session.GetType() == typeof(MapMonster))
-                    {
-                        if (ServerManager.Instance.RandomNumber() < FirstData)
+                        else if (type == typeof(MapMonster))
                         {
-                            (session as MapMonster).AddBuff(new Buff(SecondData, (session as MapMonster).Monster.Level));
+                            if (ServerManager.Instance.RandomNumber() < FirstData && session is MapMonster mapMonster)
+                            {
+                                mapMonster.AddBuff(new Buff(SecondData, mapMonster.Monster.Level));
+                            }
                         }
-                    }
-                    else if (session.GetType() == typeof(MapNpc))
-                    {
-                    }
-                    else if (session.GetType() == typeof(Mate))
-                    {
+                        else if (type == typeof(MapNpc))
+                        {
+                        }
+                        else if (type == typeof(Mate))
+                        {
+                        }
                     }
                     break;
 
                 case BCardType.CardType.Move:
-                    if (session.GetType() == typeof(Character))
                     {
-                        (session as Character).LastSpeedChange = DateTime.Now;
-                        (session as Character).Session.SendPacket((session as Character).GenerateCond());
+                        if (type == typeof(Character) && session is Character character)
+                        {
+                            character.LastSpeedChange = DateTime.Now;
+                            character.Session.SendPacket(character.GenerateCond());
+                        }
                     }
                     break;
 
                 case BCardType.CardType.Summons:
-                    if (session.GetType() == typeof(Character))
+                    if (type == typeof(Character))
                     {
                     }
-                    else if (session.GetType() == typeof(MapMonster))
+                    else if (type == typeof(MapMonster))
                     {
                         List<MonsterToSummon> summonParameters = new List<MonsterToSummon>();
                         for (int i = 0; i < FirstData; i++)
                         {
-                            short x = (short)(ServerManager.Instance.RandomNumber(-3, 3) + (session as MapMonster).MapX);
-                            short y = (short)(ServerManager.Instance.RandomNumber(-3, 3) + (session as MapMonster).MapY);
+                            short x = (short)(ServerManager.Instance.RandomNumber(-3, 3) + (session as MapMonster)?.MapX);
+                            short y = (short)(ServerManager.Instance.RandomNumber(-3, 3) + (session as MapMonster)?.MapY);
                             summonParameters.Add(new MonsterToSummon((short)SecondData, new MapCell() { X = x, Y = y }, -1, true));
                         }
                         int rnd = ServerManager.Instance.RandomNumber();
@@ -81,21 +86,21 @@ namespace OpenNos.GameObject
                             switch (SubType)
                             {
                                 case 2:
-                                    EventHelper.Instance.RunEvent(new EventContainer((session as MapMonster).MapInstance, EventActionType.SPAWNMONSTERS, summonParameters));
+                                    EventHelper.Instance.RunEvent(new EventContainer((session as MapMonster)?.MapInstance, EventActionType.SPAWNMONSTERS, summonParameters));
                                     break;
                                 default:
-                                    if (!(session as MapMonster).OnDeathEvents.Any(s => s.EventActionType == EventActionType.SPAWNMONSTERS))
+                                    if ((session as MapMonster)?.OnDeathEvents.Any(s => s.EventActionType == EventActionType.SPAWNMONSTERS) == false)
                                     {
-                                        (session as MapMonster).OnDeathEvents.Add(new EventContainer((session as MapMonster).MapInstance, EventActionType.SPAWNMONSTERS, summonParameters));
+                                        (session as MapMonster)?.OnDeathEvents.Add(new EventContainer((session as MapMonster)?.MapInstance, EventActionType.SPAWNMONSTERS, summonParameters));
                                     }
                                     break;
                             }
                         }
                     }
-                    else if (session.GetType() == typeof(MapNpc))
+                    else if (type == typeof(MapNpc))
                     {
                     }
-                    else if (session.GetType() == typeof(Mate))
+                    else if (type == typeof(Mate))
                     {
                     }
                     break;
@@ -161,7 +166,7 @@ namespace OpenNos.GameObject
                     break;
 
                 case BCardType.CardType.HealingBurningAndCasting:
-                    if (session.GetType() == typeof(Character))
+                    if (type == typeof(Character))
                     {
                         Character chara = session as Character;
                         int bonus = 0;
@@ -209,17 +214,17 @@ namespace OpenNos.GameObject
                         }
                         chara.Session.SendPacket(chara.GenerateStat());
                     }
-                    else if (session.GetType() == typeof(MapMonster))
+                    else if (type == typeof(MapMonster))
                     {
                         if (ServerManager.Instance.RandomNumber() < FirstData)
                         {
-                            (session as MapMonster).AddBuff(new Buff(SecondData, (session as MapMonster).Monster.Level));
+                            (session as MapMonster)?.AddBuff(new Buff(SecondData, (byte)(session as MapMonster)?.Monster.Level));
                         }
                     }
-                    else if (session.GetType() == typeof(MapNpc))
+                    else if (type == typeof(MapNpc))
                     {
                     }
-                    else if (session.GetType() == typeof(Mate))
+                    else if (type == typeof(Mate))
                     {
                     }
                     break;
@@ -351,12 +356,11 @@ namespace OpenNos.GameObject
                     break;
 
                 case BCardType.CardType.MeditationSkill:
-                    if (session.GetType() == typeof(Character) && SubType.Equals((byte)AdditionalTypes.MeditationSkill.CausingChance / 10))
+                    if (type == typeof(Character) && SubType.Equals((byte)AdditionalTypes.MeditationSkill.CausingChance / 10))
                     {
                         if (ServerManager.Instance.RandomNumber() < FirstData)
                         {
                             Character character = (session as Character);
-
                             if (SkillVNum.HasValue)
                             {
                                 Skill skill = ServerManager.Instance.GetSkill(SkillVNum.Value);
@@ -379,10 +383,9 @@ namespace OpenNos.GameObject
                             }
                         }
                     }
-                    else if (session.GetType() == typeof(Character))
+                    else if (type == typeof(Character))
                     {
                         Character character = (session as Character);
-
                         switch (SubType)
                         {
                             case 2:

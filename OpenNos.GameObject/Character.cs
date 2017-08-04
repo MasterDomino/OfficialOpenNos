@@ -2004,7 +2004,7 @@ namespace OpenNos.GameObject
                     string info = string.Empty;
                     if (bz.Item.Item.Type == InventoryType.Equipment && bz.Item is WearableInstance)
                     {
-                        info = (bz.Item as WearableInstance).GenerateEInfo().Replace(' ', '^').Replace("e_info^", string.Empty);
+                        info = (bz.Item as WearableInstance)?.GenerateEInfo().Replace(' ', '^').Replace("e_info^", string.Empty);
                     }
                     if (packet.Filter == 0 || packet.Filter == Status)
                     {

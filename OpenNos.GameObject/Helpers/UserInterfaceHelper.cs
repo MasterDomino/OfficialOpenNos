@@ -488,8 +488,8 @@ namespace OpenNos.GameObject.Helpers
                 if (bzlink.Item.Item.Type == InventoryType.Equipment)
                 {
                     info = (bzlink.Item.Item.EquipmentSlot != EquipmentType.Sp ?
-                        (bzlink.Item as WearableInstance).GenerateEInfo() : bzlink.Item.Item.SpType == 0 && bzlink.Item.Item.ItemSubType == 4 ?
-                        (bzlink.Item as SpecialistInstance).GeneratePslInfo() : (bzlink.Item as SpecialistInstance).GenerateSlInfo()).Replace(' ', '^').Replace("slinfo^", string.Empty).Replace("e_info^", string.Empty);
+                        (bzlink.Item as WearableInstance)?.GenerateEInfo() : bzlink.Item.Item.SpType == 0 && bzlink.Item.Item.ItemSubType == 4 ?
+                        (bzlink.Item as SpecialistInstance)?.GeneratePslInfo() : (bzlink.Item as SpecialistInstance)?.GenerateSlInfo()).Replace(' ', '^').Replace("slinfo^", string.Empty).Replace("e_info^", string.Empty);
                 }
 
                 itembazar += $"{bzlink.BazaarItem.BazaarItemId}|{bzlink.BazaarItem.SellerId}|{bzlink.Owner}|{bzlink.Item.Item.VNum}|{bzlink.Item.Amount}|{(bzlink.BazaarItem.IsPackage ? 1 : 0)}|{bzlink.BazaarItem.Price}|{time}|2|0|{bzlink.Item.Rare}|{bzlink.Item.Upgrade}|{info} ";

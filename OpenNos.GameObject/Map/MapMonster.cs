@@ -686,7 +686,7 @@ namespace OpenNos.GameObject
             {
                 double time = (DateTime.Now - LastMove).TotalMilliseconds;
 
-                if (Path.Any()) // move back to initial position after following target
+                if (Path.Count > 0) // move back to initial position after following target
                 {
                     int timetowalk = 2000 / Monster.Speed;
                     if (time > timetowalk)
