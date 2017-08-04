@@ -196,13 +196,11 @@ namespace OpenNos.GameObject
                 if (MapInstance.Map.GetFreePosition(ref mapX, ref mapY, xpoint, ypoint))
                 {
                     double value = (xpoint + ypoint) / (double)(2 * Npc.Speed);
-                    Observable.Timer(TimeSpan.FromMilliseconds(1000 * value))
-                      .Subscribe(
-                          x =>
-                          {
-                              MapX = mapX;
-                              MapY = mapY;
-                          });
+                    Observable.Timer(TimeSpan.FromMilliseconds(1000 * value)).Subscribe(x =>
+                    {
+                        MapX = mapX;
+                        MapY = mapY;
+                    });
 
                     LastMove = DateTime.Now.AddSeconds(value);
                     MapInstance.Broadcast(new BroadcastPacket(null, GenerateMv2(), ReceiverType.All, xCoordinate: mapX, yCoordinate: mapY));
@@ -299,13 +297,11 @@ namespace OpenNos.GameObject
                             MapInstance.Broadcast(new BroadcastPacket(null, $"mv 2 {MapNpcId} {mapX} {mapY} {Npc.Speed}", ReceiverType.All, xCoordinate: mapX, yCoordinate: mapY));
                             LastMove = DateTime.Now.AddSeconds(waitingtime > 1 ? 1 : waitingtime);
 
-                            Observable.Timer(TimeSpan.FromMilliseconds((int)((waitingtime > 1 ? 1 : waitingtime) * 1000)))
-                            .Subscribe(
-                                x =>
-                                {
-                                    MapX = mapX;
-                                    MapY = mapY;
-                                });
+                            Observable.Timer(TimeSpan.FromMilliseconds((int)((waitingtime > 1 ? 1 : waitingtime) * 1000))).Subscribe(x =>
+                            {
+                                MapX = mapX;
+                                MapY = mapY;
+                            });
 
                             Path.RemoveRange(0, maxindex);
                         }

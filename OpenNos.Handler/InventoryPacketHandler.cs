@@ -401,7 +401,6 @@ namespace OpenNos.Handler
                                     Inventory inventory = targetSession.Character.Inventory;
 
                                     long gold = targetSession.Character.Gold;
-                                    int backpack = targetSession.Character.HaveBackpack() ? 1 : 0;
                                     long maxGold = ServerManager.Instance.MaxGold;
 
                                     if (targetExchange == null || Session.Character.ExchangeInfo == null)
@@ -419,11 +418,11 @@ namespace OpenNos.Handler
 
                                             bool @continue = true;
                                             bool goldmax = false;
-                                            if (!Session.Character.Inventory.EnoughPlace(targetExchange.ExchangeList, Session.Character.HaveBackpack() ? 1 : 0))
+                                            if (!Session.Character.Inventory.EnoughPlace(targetExchange.ExchangeList))
                                             {
                                                 @continue = false;
                                             }
-                                            if (!inventory.EnoughPlace(Session.Character.ExchangeInfo.ExchangeList, backpack))
+                                            if (!inventory.EnoughPlace(Session.Character.ExchangeInfo.ExchangeList))
                                             {
                                                 @continue = false;
                                             }

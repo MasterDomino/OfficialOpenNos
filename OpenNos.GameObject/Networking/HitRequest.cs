@@ -18,7 +18,7 @@ using System;
 
 namespace OpenNos.GameObject.Networking
 {
-    public class HitRequest : IEquatable<HitRequest>
+    public class HitRequest
     {
         #region Instantiation
 
@@ -74,13 +74,5 @@ namespace OpenNos.GameObject.Networking
 
         #endregion
 
-        #region Methods
-
-        public bool Equals(HitRequest other)
-        {
-            return other != null && other.HitTimestamp == HitTimestamp;
-        }
-
-        #endregion
     }
 }

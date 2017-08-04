@@ -136,8 +136,7 @@ namespace OpenNos.GameObject
                     }
                     session.SendPacket(session.Character.Family == null
                         ? $"qna #guri^750^{EffectValue} {Language.Instance.GetMessageFromKey($"ASK_CHANGE_FACTION{EffectValue}")}"
-                        : UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("IN_FAMILY"),
-                            0));
+                        : UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("IN_FAMILY"), 0));
                     break;
 
                 // wings

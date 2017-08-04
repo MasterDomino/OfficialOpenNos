@@ -41,14 +41,14 @@ namespace OpenNos.GameObject
                     {
                         if (ServerManager.Instance.RandomNumber() < FirstData && session is Character character)
                         {
-                            character.AddBuff(new Buff(SecondData, character.Level));
+                            character.AddBuff(new Buff((short)SecondData, character.Level));
                         }
                     }
                     else if (type == typeof(MapMonster))
                     {
                         if (ServerManager.Instance.RandomNumber() < FirstData && session is MapMonster mapMonster)
                         {
-                            mapMonster.AddBuff(new Buff(SecondData, mapMonster.Monster.Level));
+                            mapMonster.AddBuff(new Buff((short)SecondData, mapMonster.Monster.Level));
                         }
                     }
                     else if (type == typeof(MapNpc))
@@ -223,7 +223,7 @@ namespace OpenNos.GameObject
                     {
                         if (ServerManager.Instance.RandomNumber() < FirstData && session is MapMonster mapMonster)
                         {
-                            mapMonster.AddBuff(new Buff(SecondData, mapMonster.Monster.Level));
+                            mapMonster.AddBuff(new Buff((short)SecondData, mapMonster.Monster.Level));
                         }
                     }
                     else if (type == typeof(MapNpc))

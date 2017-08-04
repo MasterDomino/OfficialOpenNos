@@ -176,101 +176,50 @@ namespace OpenNos.GameObject
             switch (Item.Morph)
             {
                 case 2:
-                    stonevnum = 2514;
-                    break;
-
                 case 6:
-                    stonevnum = 2514;
-                    break;
-
                 case 9:
-                    stonevnum = 2514;
-                    break;
-
                 case 12:
                     stonevnum = 2514;
                     break;
 
                 case 3:
-                    stonevnum = 2515;
-                    break;
-
                 case 4:
-                    stonevnum = 2515;
-                    break;
-
                 case 14:
                     stonevnum = 2515;
                     break;
 
                 case 5:
-                    stonevnum = 2516;
-                    break;
-
                 case 11:
-                    stonevnum = 2516;
-                    break;
-
                 case 15:
                     stonevnum = 2516;
                     break;
 
                 case 10:
-                    stonevnum = 2517;
-                    break;
-
                 case 13:
-                    stonevnum = 2517;
-                    break;
-
                 case 7:
                     stonevnum = 2517;
                     break;
 
                 case 17:
-                    stonevnum = 2518;
-                    break;
-
                 case 18:
-                    stonevnum = 2518;
-                    break;
-
                 case 19:
                     stonevnum = 2518;
                     break;
 
                 case 20:
-                    stonevnum = 2519;
-                    break;
-
                 case 21:
-                    stonevnum = 2519;
-                    break;
-
                 case 22:
                     stonevnum = 2519;
                     break;
 
                 case 23:
-                    stonevnum = 2520;
-                    break;
-
                 case 24:
-                    stonevnum = 2520;
-                    break;
-
                 case 25:
                     stonevnum = 2520;
                     break;
 
                 case 26:
-                    stonevnum = 2521;
-                    break;
-
                 case 27:
-                    stonevnum = 2521;
-                    break;
-
                 case 28:
                     stonevnum = 2521;
                     break;

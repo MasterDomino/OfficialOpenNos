@@ -2279,13 +2279,13 @@ namespace OpenNos.GameObject
             DistanceRate = CharacterHelper.DistanceRate(Class, Level);
             DistanceCriticalRate = CharacterHelper.DistCriticalRate(Class, Level);
             DistanceCritical = CharacterHelper.DistCritical(Class, Level);
-            FireResistance = CharacterHelper.FireResistance(Class, Level) + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.FireIncreased)[0] + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
-            LightResistance = CharacterHelper.LightResistance(Class, Level) + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.LightIncreased)[0] + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
-            WaterResistance = CharacterHelper.WaterResistance(Class, Level) + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.WaterIncreased)[0] + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
-            DarkResistance = CharacterHelper.DarkResistance(Class, Level) + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.DarkIncreased)[0] + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
+            FireResistance = GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.FireIncreased)[0] + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
+            LightResistance = GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.LightIncreased)[0] + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
+            WaterResistance = GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.WaterIncreased)[0] + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
+            DarkResistance = GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.DarkIncreased)[0] + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
             Defence = CharacterHelper.Defence(Class, Level);
             DefenceRate = CharacterHelper.DefenceRate(Class, Level);
-            ElementRate = CharacterHelper.ElementRate(Class, Level);
+            ElementRate = 0;
             ElementRateSP = 0;
             DistanceDefence = CharacterHelper.DistanceDefence(Class, Level);
             DistanceDefenceRate = CharacterHelper.DistanceDefenceRate(Class, Level);
@@ -3525,94 +3525,82 @@ namespace OpenNos.GameObject
                         return false;
 
                     case ClassType.Adventurer:
-                        if (ski.Skill.Type == 1)
+                        if (ski.Skill.Type == 1 && Inventory != null)
                         {
-                            if (Inventory != null)
+                            WearableInstance wearable = Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.SecondaryWeapon, InventoryType.Wear);
+                            if (wearable != null)
                             {
-                                WearableInstance wearable = Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.SecondaryWeapon, InventoryType.Wear);
-                                if (wearable != null)
+                                if (wearable.Ammo > 0)
                                 {
-                                    if (wearable.Ammo > 0)
-                                    {
-                                        wearable.Ammo--;
-                                        return true;
-                                    }
-                                    if (Inventory.CountItem(2081) < 1)
-                                    {
-                                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_AMMO_ADVENTURER"), 10));
-                                        return false;
-                                    }
-                                    Inventory.RemoveItemAmount(2081);
-                                    wearable.Ammo = 100;
-                                    Session.SendPacket(GenerateSay(Language.Instance.GetMessageFromKey("AMMO_LOADED_ADVENTURER"), 10));
+                                    wearable.Ammo--;
                                     return true;
                                 }
-                                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_WEAPON"), 10));
-                                return false;
+                                if (Inventory.CountItem(2081) < 1)
+                                {
+                                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_AMMO_ADVENTURER"), 10));
+                                    return false;
+                                }
+                                Inventory.RemoveItemAmount(2081);
+                                wearable.Ammo = 100;
+                                Session.SendPacket(GenerateSay(Language.Instance.GetMessageFromKey("AMMO_LOADED_ADVENTURER"), 10));
+                                return true;
                             }
-                            return true;
+                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_WEAPON"), 10));
+                            return false;
                         }
                         return true;
 
                     case ClassType.Swordman:
-                        if (ski.Skill.Type == 1)
+                        if (ski.Skill.Type == 1 && Inventory != null)
                         {
-                            if (Inventory != null)
+                            WearableInstance inv = Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.SecondaryWeapon, InventoryType.Wear);
+                            if (inv != null)
                             {
-                                WearableInstance inv = Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.SecondaryWeapon, InventoryType.Wear);
-                                if (inv != null)
+                                if (inv.Ammo > 0)
                                 {
-                                    if (inv.Ammo > 0)
-                                    {
-                                        inv.Ammo--;
-                                        return true;
-                                    }
-                                    if (Inventory.CountItem(2082) < 1)
-                                    {
-                                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_AMMO_SWORDSMAN"), 10));
-                                        return false;
-                                    }
-
-                                    Inventory.RemoveItemAmount(2082);
-                                    inv.Ammo = 100;
-                                    Session.SendPacket(GenerateSay(Language.Instance.GetMessageFromKey("AMMO_LOADED_SWORDSMAN"), 10));
+                                    inv.Ammo--;
                                     return true;
                                 }
-                                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_WEAPON"), 10));
-                                return false;
+                                if (Inventory.CountItem(2082) < 1)
+                                {
+                                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_AMMO_SWORDSMAN"), 10));
+                                    return false;
+                                }
+
+                                Inventory.RemoveItemAmount(2082);
+                                inv.Ammo = 100;
+                                Session.SendPacket(GenerateSay(Language.Instance.GetMessageFromKey("AMMO_LOADED_SWORDSMAN"), 10));
+                                return true;
                             }
-                            return true;
+                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_WEAPON"), 10));
+                            return false;
                         }
                         return true;
 
                     case ClassType.Archer:
-                        if (ski.Skill.Type == 1)
+                        if (ski.Skill.Type == 1 && Inventory != null)
                         {
-                            if (Inventory != null)
+                            WearableInstance inv = Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.MainWeapon, InventoryType.Wear);
+                            if (inv != null)
                             {
-                                WearableInstance inv = Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.MainWeapon, InventoryType.Wear);
-                                if (inv != null)
+                                if (inv.Ammo > 0)
                                 {
-                                    if (inv.Ammo > 0)
-                                    {
-                                        inv.Ammo--;
-                                        return true;
-                                    }
-                                    if (Inventory.CountItem(2083) < 1)
-                                    {
-                                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_AMMO_ARCHER"), 10));
-                                        return false;
-                                    }
-
-                                    Inventory.RemoveItemAmount(2083);
-                                    inv.Ammo = 100;
-                                    Session.SendPacket(GenerateSay(Language.Instance.GetMessageFromKey("AMMO_LOADED_ARCHER"), 10));
+                                    inv.Ammo--;
                                     return true;
                                 }
-                                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_WEAPON"), 10));
-                                return false;
+                                if (Inventory.CountItem(2083) < 1)
+                                {
+                                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_AMMO_ARCHER"), 10));
+                                    return false;
+                                }
+
+                                Inventory.RemoveItemAmount(2083);
+                                inv.Ammo = 100;
+                                Session.SendPacket(GenerateSay(Language.Instance.GetMessageFromKey("AMMO_LOADED_ARCHER"), 10));
+                                return true;
                             }
-                            return true;
+                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_WEAPON"), 10));
+                            return false;
                         }
                         return true;
 
@@ -3889,8 +3877,7 @@ namespace OpenNos.GameObject
             {
                 actMultiplier = 5;
             }
-            int gold = (int)(lowBaseGold * ServerManager.Instance.GoldRate * actMultiplier * eqMultiplier);
-            return gold;
+            return (int)(lowBaseGold * ServerManager.Instance.GoldRate * actMultiplier * eqMultiplier);
         }
 
         private int GetHXP(NpcMonsterDTO monster, Group group)

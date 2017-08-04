@@ -36,11 +36,6 @@ namespace OpenNos.GameObject
             ShopSkills = ServerManager.Instance.GetShopSkillsByShopId(ShopId);
         }
 
-        public void Save()
-        {
-            throw new NotImplementedException();
-        }
-
         #endregion
     }
 }

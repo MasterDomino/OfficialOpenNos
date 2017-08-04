@@ -259,7 +259,7 @@ namespace OpenNos.GameObject
                         }
                         break;
                     case ReceiverType.AllExceptGroup:
-                        foreach (ClientSession session in Sessions.Where(s => s.SessionId != sentPacket.Sender.SessionId && (s.Character?.Group == null || (s.Character?.Group?.GroupId != sentPacket.Sender?.Character?.Group?.GroupId))))
+                        Parallel.ForEach(Sessions.Where(s => s.SessionId != sentPacket.Sender.SessionId && (s.Character?.Group == null || (s.Character?.Group?.GroupId != sentPacket.Sender?.Character?.Group?.GroupId))), session =>
                         {
                             if (session.HasSelectedCharacter)
                             {
@@ -275,7 +275,7 @@ namespace OpenNos.GameObject
                                     session.SendPacket(sentPacket.Packet);
                                 }
                             }
-                        }
+                        });
                         break;
                     case ReceiverType.AllInRange: // send to everyone which is in a range of 50x50
                         if (sentPacket.XCoordinate != 0 && sentPacket.YCoordinate != 0)
@@ -346,7 +346,10 @@ namespace OpenNos.GameObject
                         break;
 
                     case ReceiverType.Group:
-                        Parallel.ForEach(Sessions.Where(s => s.Character?.Group != null && sentPacket.Sender?.Character?.Group != null && s.Character.Group.GroupId == sentPacket.Sender.Character.Group.GroupId), session => session.SendPacket(sentPacket.Packet));
+                        foreach (ClientSession session in Sessions.Where(s => s.Character?.Group != null && sentPacket.Sender?.Character?.Group != null && s.Character.Group.GroupId == sentPacket.Sender.Character.Group.GroupId))
+                        {
+                            session.SendPacket(sentPacket.Packet);
+                        }
                         break;
 
                     case ReceiverType.Unknown:

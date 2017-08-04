@@ -127,8 +127,7 @@ namespace OpenNos.GameObject
 
         internal Family DeepCopy()
         {
-            Family clonedCharacter = (Family)MemberwiseClone();
-            return clonedCharacter;
+            return (Family)MemberwiseClone();
         }
 
         #endregion

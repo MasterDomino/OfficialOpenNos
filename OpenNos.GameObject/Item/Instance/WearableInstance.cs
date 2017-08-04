@@ -116,7 +116,7 @@ namespace OpenNos.GameObject
         {
             EquipmentType equipmentslot = Item.EquipmentSlot;
             ItemType itemType = Item.ItemType;
-            byte classe = Item.Class;
+            byte itemClass = Item.Class;
             byte subtype = Item.ItemSubType;
             DateTime test = ItemDeleteTime ?? DateTime.Now;
             long time = ItemDeleteTime != null ? (long)test.Subtract(DateTime.Now).TotalSeconds : 0;
@@ -131,28 +131,10 @@ namespace OpenNos.GameObject
                     switch (equipmentslot)
                     {
                         case EquipmentType.MainWeapon:
-                            switch (classe)
-                            {
-                                case 4:
-                                    return $"e_info 1 {ItemVNum} {Rare} {Upgrade} {(IsFixed ? 1 : 0)} {Item.LevelMinimum} {Item.DamageMinimum + DamageMinimum} {Item.DamageMaximum + DamageMaximum} {Item.HitRate + HitRate} {Item.CriticalLuckRate + CriticalLuckRate} {Item.CriticalRate + CriticalRate} {Ammo} {Item.MaximumAmmo} {Item.Price} -1 0 0 0"; // -1 = {ShellEffectValue} {FirstShell}...
-                                case 8:
-                                    return $"e_info 5 {ItemVNum} {Rare} {Upgrade} {(IsFixed ? 1 : 0)} {Item.LevelMinimum} {Item.DamageMinimum + DamageMinimum} {Item.DamageMaximum + DamageMaximum} {Item.HitRate + HitRate} {Item.CriticalLuckRate + CriticalLuckRate} {Item.CriticalRate + CriticalRate} {Ammo} {Item.MaximumAmmo} {Item.Price} -1 0 0 0";
+                            return $"e_info {(itemClass == 4 ? 1 : itemClass == 8 ? 5 : 0)} {ItemVNum} {Rare} {Upgrade} {(IsFixed ? 1 : 0)} {Item.LevelMinimum} {Item.DamageMinimum + DamageMinimum} {Item.DamageMaximum + DamageMaximum} {Item.HitRate + HitRate} {Item.CriticalLuckRate + CriticalLuckRate} {Item.CriticalRate + CriticalRate} {Ammo} {Item.MaximumAmmo} {Item.Price} -1 0 0 0";
 
-                                default:
-                                    return $"e_info 0 {ItemVNum} {Rare} {Upgrade} {(IsFixed ? 1 : 0)} {Item.LevelMinimum} {Item.DamageMinimum + DamageMinimum} {Item.DamageMaximum + DamageMaximum} {Item.HitRate + HitRate} {Item.CriticalLuckRate + CriticalLuckRate} {Item.CriticalRate + CriticalRate} {Ammo} {Item.MaximumAmmo} {Item.Price} -1 0 0 0";
-                            }
                         case EquipmentType.SecondaryWeapon:
-                            switch (classe)
-                            {
-                                case 1:
-                                    return $"e_info 1 {ItemVNum} {Rare} {Upgrade} {(IsFixed ? 1 : 0)} {Item.LevelMinimum} {Item.DamageMinimum + DamageMinimum} {Item.DamageMaximum + DamageMaximum} {Item.HitRate + HitRate} {Item.CriticalLuckRate + CriticalLuckRate} {Item.CriticalRate + CriticalRate} {Ammo} {Item.MaximumAmmo} {Item.Price} -1 0 0 0";
-
-                                case 2:
-                                    return $"e_info 1 {ItemVNum} {Rare} {Upgrade} {(IsFixed ? 1 : 0)} {Item.LevelMinimum} {Item.DamageMinimum + DamageMinimum} {Item.DamageMaximum + DamageMaximum} {Item.HitRate + HitRate} {Item.CriticalLuckRate + CriticalLuckRate} {Item.CriticalRate + CriticalRate} {Ammo} {Item.MaximumAmmo} {Item.Price} -1 0 0 0";
-
-                                default:
-                                    return $"e_info 0 {ItemVNum} {Rare} {Upgrade} {(IsFixed ? 1 : 0)} {Item.LevelMinimum} {Item.DamageMinimum + DamageMinimum} {Item.DamageMaximum + DamageMaximum} {Item.HitRate + HitRate} {Item.CriticalLuckRate + CriticalLuckRate} {Item.CriticalRate + CriticalRate} {Ammo} {Item.MaximumAmmo} {Item.Price} -1 0 0 0";
-                            }
+                            return $"e_info {(itemClass <= 2 ? 1 : 0)} {ItemVNum} {Rare} {Upgrade} {(IsFixed ? 1 : 0)} {Item.LevelMinimum} {Item.DamageMinimum + DamageMinimum} {Item.DamageMaximum + DamageMaximum} {Item.HitRate + HitRate} {Item.CriticalLuckRate + CriticalLuckRate} {Item.CriticalRate + CriticalRate} {Ammo} {Item.MaximumAmmo} {Item.Price} -1 0 0 0";
                     }
                     break;
 
@@ -192,8 +174,7 @@ namespace OpenNos.GameObject
                     {
                         BoxInstance specialist = (BoxInstance)this;
 
-                        // 0 = NOSMATE pearl 1= npc pearl 2 = sp box 3 = raid box 4 = VEHICLE pearl
-                        // 5 = fairy pearl
+                        // 1 = npc pearl 3 = raid box
                         switch (subtype)
                         {
                             case 0:
@@ -234,7 +215,7 @@ namespace OpenNos.GameObject
             _random = new Random();
         }
 
-        public void RarifyItem(ClientSession session, RarifyMode mode, RarifyProtection protection,bool isCommand = false)
+        public void RarifyItem(ClientSession session, RarifyMode mode, RarifyProtection protection, bool isCommand = false)
         {
             double raren2 = 80;
             double raren1 = 70;

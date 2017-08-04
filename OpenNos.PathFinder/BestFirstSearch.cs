@@ -60,7 +60,6 @@ namespace OpenNos.PathFinder
 
                 // get neigbours of the current node
                 List<Node> neighbors = GetNeighbors(grid, node, Grid);
-
                 for (int i = 0, l = neighbors.Count; i < l; ++i)
                 {
                     Node neighbor = neighbors[i];
@@ -175,8 +174,7 @@ namespace OpenNos.PathFinder
 
         public static List<Node> GetNeighbors(Node[,] Grid, Node node, GridPos[,] MapGrid)
         {
-            short x = node.X,
-                y = node.Y;
+            short x = node.X, y = node.Y;
             List<Node> neighbors = new List<Node>();
             bool s0 = false, d0 = false,
              s1 = false, d1 = false,

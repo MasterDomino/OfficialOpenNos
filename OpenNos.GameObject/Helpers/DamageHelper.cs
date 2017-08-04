@@ -582,7 +582,6 @@ namespace OpenNos.GameObject
                     break;
             }
 
-
             int defense = (int)((int)((defender.Defense + defender.ArmorDefense + staticBoostCategory4) * boostCategory4) * shellBoostCategory4);
 
             if (GetAttackerBenefitingBuffs(CardType.SpecialDefence, (byte)AdditionalTypes.SpecialDefence.AllDefenceNullified)[2] != 0
