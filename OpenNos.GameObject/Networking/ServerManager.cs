@@ -56,10 +56,9 @@ namespace OpenNos.GameObject
 
         private static readonly List<Card> _cards = new List<Card>();
 
-
         private static ServerManager _instance;
 
-        private static int seed = Environment.TickCount;
+        private static readonly int seed = Environment.TickCount;
 
         private List<DropDTO> _generalDrops;
 
