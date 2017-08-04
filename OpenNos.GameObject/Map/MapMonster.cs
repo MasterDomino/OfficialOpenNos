@@ -123,17 +123,14 @@ namespace OpenNos.GameObject
                 indicator.Start = DateTime.Now;
 
                 indicator.Card.BCards.ForEach(c => c.ApplyBCards(this));
-                Observable.Timer(TimeSpan.FromMilliseconds(indicator.Card.Duration * 100))
-                    .Subscribe(
-                        o =>
-                        {
-                            RemoveBuff(indicator.Card.CardId);
-                            if (indicator.Card.TimeoutBuff != 0 && ServerManager.Instance.RandomNumber()
-                                < indicator.Card.TimeoutBuffChance)
-                            {
-                                AddBuff(new Buff(indicator.Card.TimeoutBuff, Monster.Level));
-                            }
-                        });
+                Observable.Timer(TimeSpan.FromMilliseconds(indicator.Card.Duration * 100)).Subscribe(o =>
+                {
+                    RemoveBuff(indicator.Card.CardId);
+                    if (indicator.Card.TimeoutBuff != 0 && ServerManager.Instance.RandomNumber() < indicator.Card.TimeoutBuffChance)
+                    {
+                        AddBuff(new Buff(indicator.Card.TimeoutBuff, Monster.Level));
+                    }
+                });
             }
         }
 

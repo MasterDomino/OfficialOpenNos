@@ -30,30 +30,32 @@ namespace OpenNos.GameObject
         public void ApplyBCards(object session)
         {
             Type type = session.GetType();
+            if (type == null)
+            {
+                return;
+            }
             switch ((BCardType.CardType)Type)
             {
                 case BCardType.CardType.Buff:
+                    if (type == typeof(Character))
                     {
-                        if (type == typeof(Character))
+                        if (ServerManager.Instance.RandomNumber() < FirstData && session is Character character)
                         {
-                            if (ServerManager.Instance.RandomNumber() < FirstData && session is Character character)
-                            {
-                                character.AddBuff(new Buff(SecondData, character.Level));
-                            }
+                            character.AddBuff(new Buff(SecondData, character.Level));
                         }
-                        else if (type == typeof(MapMonster))
+                    }
+                    else if (type == typeof(MapMonster))
+                    {
+                        if (ServerManager.Instance.RandomNumber() < FirstData && session is MapMonster mapMonster)
                         {
-                            if (ServerManager.Instance.RandomNumber() < FirstData && session is MapMonster mapMonster)
-                            {
-                                mapMonster.AddBuff(new Buff(SecondData, mapMonster.Monster.Level));
-                            }
+                            mapMonster.AddBuff(new Buff(SecondData, mapMonster.Monster.Level));
                         }
-                        else if (type == typeof(MapNpc))
-                        {
-                        }
-                        else if (type == typeof(Mate))
-                        {
-                        }
+                    }
+                    else if (type == typeof(MapNpc))
+                    {
+                    }
+                    else if (type == typeof(Mate))
+                    {
                     }
                     break;
 
@@ -73,27 +75,29 @@ namespace OpenNos.GameObject
                     }
                     else if (type == typeof(MapMonster))
                     {
-                        List<MonsterToSummon> summonParameters = new List<MonsterToSummon>();
-                        for (int i = 0; i < FirstData; i++)
+                        if (session is MapMonster mapMonster)
                         {
-                            short x = (short)(ServerManager.Instance.RandomNumber(-3, 3) + (session as MapMonster)?.MapX);
-                            short y = (short)(ServerManager.Instance.RandomNumber(-3, 3) + (session as MapMonster)?.MapY);
-                            summonParameters.Add(new MonsterToSummon((short)SecondData, new MapCell() { X = x, Y = y }, -1, true));
-                        }
-                        int rnd = ServerManager.Instance.RandomNumber();
-                        if (rnd <= Math.Abs(ThirdData) || ThirdData == 0)
-                        {
-                            switch (SubType)
+                            List<MonsterToSummon> summonParameters = new List<MonsterToSummon>();
+                            for (int i = 0; i < FirstData; i++)
                             {
-                                case 2:
-                                    EventHelper.Instance.RunEvent(new EventContainer((session as MapMonster)?.MapInstance, EventActionType.SPAWNMONSTERS, summonParameters));
-                                    break;
-                                default:
-                                    if ((session as MapMonster)?.OnDeathEvents.Any(s => s.EventActionType == EventActionType.SPAWNMONSTERS) == false)
-                                    {
-                                        (session as MapMonster)?.OnDeathEvents.Add(new EventContainer((session as MapMonster)?.MapInstance, EventActionType.SPAWNMONSTERS, summonParameters));
-                                    }
-                                    break;
+                                short x = (short)(ServerManager.Instance.RandomNumber(-3, 3) + mapMonster.MapX);
+                                short y = (short)(ServerManager.Instance.RandomNumber(-3, 3) + mapMonster.MapY);
+                                summonParameters.Add(new MonsterToSummon((short)SecondData, new MapCell() { X = x, Y = y }, -1, true));
+                            }
+                            if (ServerManager.Instance.RandomNumber() <= Math.Abs(ThirdData) || ThirdData == 0)
+                            {
+                                switch (SubType)
+                                {
+                                    case 2:
+                                        EventHelper.Instance.RunEvent(new EventContainer(mapMonster.MapInstance, EventActionType.SPAWNMONSTERS, summonParameters));
+                                        break;
+                                    default:
+                                        if (mapMonster.OnDeathEvents.Any(s => s.EventActionType == EventActionType.SPAWNMONSTERS))
+                                        {
+                                            mapMonster.OnDeathEvents.Add(new EventContainer(mapMonster.MapInstance, EventActionType.SPAWNMONSTERS, summonParameters));
+                                        }
+                                        break;
+                                }
                             }
                         }
                     }
@@ -168,57 +172,58 @@ namespace OpenNos.GameObject
                 case BCardType.CardType.HealingBurningAndCasting:
                     if (type == typeof(Character))
                     {
-                        Character chara = session as Character;
-                        int bonus = 0;
-
-                        if (SubType == (byte)AdditionalTypes.HealingBurningAndCasting.RestoreHP / 10)
+                        if (session is Character character)
                         {
-                            if (IsLevelScaled)
+                            int bonus = 0;
+                            if (SubType == (byte)AdditionalTypes.HealingBurningAndCasting.RestoreHP / 10)
                             {
-                                bonus = chara.Level * FirstData;
+                                if (IsLevelScaled)
+                                {
+                                    bonus = character.Level * FirstData;
+                                }
+                                else
+                                {
+                                    bonus = FirstData;
+                                }
+                                if (character.Hp + bonus <= character.HPLoad())
+                                {
+                                    character.Hp += bonus;
+                                }
+                                else
+                                {
+                                    bonus = (int)character.HPLoad() - character.Hp;
+                                    character.Hp = (int)character.HPLoad();
+                                }
+                                character.Session.CurrentMapInstance?.Broadcast(character.Session, character.GenerateRc(bonus));
                             }
-                            else
+                            if (SubType == (byte)AdditionalTypes.HealingBurningAndCasting.RestoreMP / 10)
                             {
-                                bonus = FirstData;
+                                if (IsLevelScaled)
+                                {
+                                    bonus = character.Level * FirstData;
+                                }
+                                else
+                                {
+                                    bonus = FirstData;
+                                }
+                                if (character.Mp + bonus <= character.MPLoad())
+                                {
+                                    character.Mp += bonus;
+                                }
+                                else
+                                {
+                                    bonus = (int)character.MPLoad() - character.Mp;
+                                    character.Mp = (int)character.MPLoad();
+                                }
                             }
-                            if (chara.Hp + bonus <= chara.HPLoad())
-                            {
-                                chara.Hp += bonus;
-                            }
-                            else
-                            {
-                                bonus = (int)chara.HPLoad() - chara.Hp;
-                                chara.Hp = (int)chara.HPLoad();
-                            }
-                            chara.Session.CurrentMapInstance?.Broadcast(chara.Session, chara.GenerateRc(bonus));
+                            character.Session.SendPacket(character.GenerateStat());
                         }
-                        if (SubType == (byte)AdditionalTypes.HealingBurningAndCasting.RestoreMP / 10)
-                        {
-                            if (IsLevelScaled)
-                            {
-                                bonus = chara.Level * FirstData;
-                            }
-                            else
-                            {
-                                bonus = FirstData;
-                            }
-                            if (chara.Mp + bonus <= chara.MPLoad())
-                            {
-                                chara.Mp += bonus;
-                            }
-                            else
-                            {
-                                bonus = (int)chara.MPLoad() - chara.Mp;
-                                chara.Mp = (int)chara.MPLoad();
-                            }
-                        }
-                        chara.Session.SendPacket(chara.GenerateStat());
                     }
                     else if (type == typeof(MapMonster))
                     {
-                        if (ServerManager.Instance.RandomNumber() < FirstData)
+                        if (ServerManager.Instance.RandomNumber() < FirstData && session is MapMonster mapMonster)
                         {
-                            (session as MapMonster)?.AddBuff(new Buff(SecondData, (byte)(session as MapMonster)?.Monster.Level));
+                            mapMonster.AddBuff(new Buff(SecondData, mapMonster.Monster.Level));
                         }
                     }
                     else if (type == typeof(MapNpc))
@@ -356,20 +361,18 @@ namespace OpenNos.GameObject
                     break;
 
                 case BCardType.CardType.MeditationSkill:
-                    if (type == typeof(Character) && SubType.Equals((byte)AdditionalTypes.MeditationSkill.CausingChance / 10))
                     {
-                        if (ServerManager.Instance.RandomNumber() < FirstData)
+                        if (type == typeof(Character) && session is Character character)
                         {
-                            Character character = (session as Character);
-                            if (SkillVNum.HasValue)
+                            if (SkillVNum.HasValue && SubType.Equals((byte)AdditionalTypes.MeditationSkill.CausingChance / 10) && ServerManager.Instance.RandomNumber() < FirstData)
                             {
                                 Skill skill = ServerManager.Instance.GetSkill(SkillVNum.Value);
                                 Skill newSkill = ServerManager.Instance.GetSkill((short)SecondData);
                                 Observable.Timer(TimeSpan.FromMilliseconds(100)).Subscribe(observer =>
                                 {
-                                    foreach (QuicklistEntryDTO qe in character.QuicklistEntries.Where(s => s.Pos.Equals(skill.CastId)))
+                                    foreach (QuicklistEntryDTO quicklistEntry in character.QuicklistEntries.Where(s => s.Pos.Equals(skill.CastId)))
                                     {
-                                        character.Session.SendPacket($"qset {qe.Q1} {qe.Q2} {qe.Type}.{qe.Slot}.{newSkill.CastId}.0");
+                                        character.Session.SendPacket($"qset {quicklistEntry.Q1} {quicklistEntry.Q2} {quicklistEntry.Type}.{quicklistEntry.Slot}.{newSkill.CastId}.0");
                                     }
                                     character.Session.SendPacket($"mslot {newSkill.CastId} -1");
                                 });
@@ -381,22 +384,18 @@ namespace OpenNos.GameObject
                                     Observable.Timer(TimeSpan.FromMilliseconds((skill.Cooldown * 100) + 500)).Subscribe(observer => character.Session.SendPacket($"sr {skill.CastId}"));
                                 }
                             }
-                        }
-                    }
-                    else if (type == typeof(Character))
-                    {
-                        Character character = (session as Character);
-                        switch (SubType)
-                        {
-                            case 2:
-                                character.MeditationDictionary[(short)SecondData] = DateTime.Now.AddSeconds(4);
-                                break;
-                            case 3:
-                                character.MeditationDictionary[(short)SecondData] = DateTime.Now.AddSeconds(8);
-                                break;
-                            case 4:
-                                character.MeditationDictionary[(short)SecondData] = DateTime.Now.AddSeconds(12);
-                                break;
+                            switch (SubType)
+                            {
+                                case 2:
+                                    character.MeditationDictionary[(short)SecondData] = DateTime.Now.AddSeconds(4);
+                                    break;
+                                case 3:
+                                    character.MeditationDictionary[(short)SecondData] = DateTime.Now.AddSeconds(8);
+                                    break;
+                                case 4:
+                                    character.MeditationDictionary[(short)SecondData] = DateTime.Now.AddSeconds(12);
+                                    break;
+                            }
                         }
                     }
                     break;
@@ -457,7 +456,6 @@ namespace OpenNos.GameObject
 
                 default:
                     Logger.Error(new ArgumentOutOfRangeException($"Card Type {Type} not defined!"));
-                    //throw new ArgumentOutOfRangeException();
                     break;
             }
         }
