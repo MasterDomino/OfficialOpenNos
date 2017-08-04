@@ -217,7 +217,7 @@ namespace OpenNos.GameObject.Helpers
 
         public string GenerateRCBList(CBListPacket packet)
         {
-            if (packet == null)
+            if (packet == null || packet.ItemVNumFilter == null)
             {
                 return string.Empty;
             }
