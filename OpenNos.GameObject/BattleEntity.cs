@@ -48,6 +48,7 @@ namespace OpenNos.GameObject
                             weapon = character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.MainWeapon, InventoryType.Wear);
                         }
                         break;
+
                     case 1:
                         AttackType = AttackType.Range;
                         if (character.Class == ClassType.Adventurer || character.Class == ClassType.Swordman || character.Class == ClassType.Magician)
@@ -64,10 +65,12 @@ namespace OpenNos.GameObject
                             weapon = character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.MainWeapon, InventoryType.Wear);
                         }
                         break;
+
                     case 2:
                         AttackType = AttackType.Magical;
                         weapon = character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.MainWeapon, InventoryType.Wear);
                         break;
+
                     case 3:
                         weapon = character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.MainWeapon, InventoryType.Wear);
                         switch (character.Class)
@@ -84,6 +87,7 @@ namespace OpenNos.GameObject
                                 break;
                         }
                         break;
+
                     case 5:
                         AttackType = AttackType.Melee;
                         switch (character.Class)
@@ -109,9 +113,11 @@ namespace OpenNos.GameObject
                     case ClassType.Swordman:
                         AttackType = AttackType.Melee;
                         break;
+
                     case ClassType.Archer:
                         AttackType = AttackType.Range;
                         break;
+
                     case ClassType.Magician:
                         AttackType = AttackType.Magical;
                         break;
@@ -139,7 +145,6 @@ namespace OpenNos.GameObject
             RangeDefense = character.DistanceDefence;
             RangeDefenseDodge = character.DistanceDefenceRate;
             MagicalDefense = character.MagicalDefence;
-
             Element = character.Element;
             ElementRate = character.ElementRate + character.ElementRateSP;
         }
@@ -165,20 +170,7 @@ namespace OpenNos.GameObject
             ShadowResistance = mate.Monster.DarkResistance;
             PositionX = mate.PositionX;
             PositionY = mate.PositionY;
-
-            switch (mate.Monster.AttackClass)
-            {
-                case 0:
-                    AttackType = AttackType.Melee;
-                    break;
-                case 1:
-                    AttackType = AttackType.Range;
-                    break;
-                case 2:
-                    AttackType = AttackType.Magical;
-                    break;
-            }
-
+            AttackType = (AttackType)mate.Monster.AttackClass;
             DefenseUpgrade = mate.Defence;
             MeleeDefense = mate.MeleeDefense;
             MeleeDefenseDodge = mate.MeleeDefenseRate;
@@ -188,7 +180,6 @@ namespace OpenNos.GameObject
             ArmorMeleeDefense = mate.Monster.CloseDefence;
             ArmorRangeDefense = mate.Monster.DistanceDefence;
             ArmorMagicalDefense = mate.Monster.MagicDefence;
-
             Element = mate.Monster.Element;
             ElementRate = mate.Monster.ElementRate;
         }
@@ -214,20 +205,7 @@ namespace OpenNos.GameObject
             ShadowResistance = monster.Monster.DarkResistance;
             PositionX = monster.MapX;
             PositionY = monster.MapY;
-
-            switch (monster.Monster.AttackClass)
-            {
-                case 0:
-                    AttackType = AttackType.Melee;
-                    break;
-                case 1:
-                    AttackType = AttackType.Range;
-                    break;
-                case 2:
-                    AttackType = AttackType.Magical;
-                    break;
-            }
-
+            AttackType = (AttackType)monster.Monster.AttackClass;
             DefenseUpgrade = monster.Monster.DefenceUpgrade;
             MeleeDefense = monster.Monster.CloseDefence;
             MeleeDefenseDodge = monster.Monster.DefenceDodge;
@@ -237,7 +215,6 @@ namespace OpenNos.GameObject
             ArmorMeleeDefense = monster.Monster.CloseDefence;
             ArmorRangeDefense = monster.Monster.DistanceDefence;
             ArmorMagicalDefense = monster.Monster.MagicDefence;
-
             Element = monster.Monster.Element;
             ElementRate = monster.Monster.ElementRate;
         }
@@ -263,20 +240,7 @@ namespace OpenNos.GameObject
             ShadowResistance = npc.Npc.DarkResistance;
             PositionX = npc.MapX;
             PositionY = npc.MapY;
-
-            switch (npc.Npc.AttackClass)
-            {
-                case 0:
-                    AttackType = AttackType.Melee;
-                    break;
-                case 1:
-                    AttackType = AttackType.Range;
-                    break;
-                case 2:
-                    AttackType = AttackType.Magical;
-                    break;
-            }
-
+            AttackType = (AttackType)npc.Npc.AttackClass;
             DefenseUpgrade = npc.Npc.DefenceUpgrade;
             MeleeDefense = npc.Npc.CloseDefence;
             MeleeDefenseDodge = npc.Npc.DefenceDodge;
@@ -286,7 +250,6 @@ namespace OpenNos.GameObject
             ArmorMeleeDefense = npc.Npc.CloseDefence;
             ArmorRangeDefense = npc.Npc.DistanceDefence;
             ArmorMagicalDefense = npc.Npc.MagicDefence;
-
             Element = npc.Npc.Element;
             ElementRate = npc.Npc.ElementRate;
         }

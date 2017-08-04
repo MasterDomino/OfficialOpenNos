@@ -646,11 +646,6 @@ namespace OpenNos.GameObject.Helpers
             return point;
         }
 
-        internal static int DarkResistance(ClassType @class, byte level)
-        {
-            return 0;
-        }
-
         internal static int Defence(ClassType @class, byte level)
         {
             return _hitDef[(byte)@class, level];
@@ -686,21 +681,6 @@ namespace OpenNos.GameObject.Helpers
             return _criticalDistRate[(byte)@class, level];
         }
 
-        internal static int Element(ClassType @class, byte level)
-        {
-            return 0;
-        }
-
-        internal static int ElementRate(ClassType @class, byte level)
-        {
-            return 0;
-        }
-
-        internal static int FireResistance(ClassType @class, byte level)
-        {
-            return 0;
-        }
-
         internal static int HitCritical(ClassType @class, byte level)
         {
             return _criticalHit[(byte)@class, level];
@@ -714,16 +694,6 @@ namespace OpenNos.GameObject.Helpers
         internal static int HitRate(ClassType @class, byte level)
         {
             return _hitRate[(byte)@class, level];
-        }
-
-        internal static int LightResistance(ClassType @class, byte level)
-        {
-            return 0;
-        }
-
-        internal static int WaterResistance(ClassType @class, byte level)
-        {
-            return 0;
         }
 
         private static void LoadHeroXpData()

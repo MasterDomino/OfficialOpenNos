@@ -358,7 +358,7 @@ namespace OpenNos.GameObject
         public void MapClear()
         {
             Broadcast("mapclear");
-            GetMapItems().ForEach(s => Broadcast(s));
+            Parallel.ForEach(GetMapItems(), s => Broadcast(s));
         }
 
         public MapItem PutItem(InventoryType type, short slot, byte amount, ref ItemInstance inv, ClientSession session)
@@ -490,7 +490,7 @@ namespace OpenNos.GameObject
                 {
                     if (s.LastStart.AddSeconds(s.Delay) <= DateTime.Now)
                     {
-                        if(s.Offset == 0)
+                        if (s.Offset == 0)
                         {
                             s.Events.ForEach(e => EventHelper.Instance.RunEvent(e));
                         }
@@ -526,7 +526,7 @@ namespace OpenNos.GameObject
                 NpcMonster npcmonster = ServerManager.Instance.GetNpc(mon.VNum);
                 if (npcmonster != null)
                 {
-                    MapMonster monster = new MapMonster { MonsterVNum = npcmonster.NpcMonsterVNum, MapY = mon.SpawnCell.Y, MapX = mon.SpawnCell.X, MapId = Map.MapId, IsMoving = mon.IsMoving, MapMonsterId = GetNextMonsterId(), ShouldRespawn = false, Target = mon.Target, OnDeathEvents = mon.DeathEvents,OnNoticeEvents=mon.NoticingEvents, IsTarget = mon.IsTarget, IsBonus = mon.IsBonus, IsBoss = mon.IsBoss,NoticeRange = mon.NoticeRange };
+                    MapMonster monster = new MapMonster { MonsterVNum = npcmonster.NpcMonsterVNum, MapY = mon.SpawnCell.Y, MapX = mon.SpawnCell.X, MapId = Map.MapId, IsMoving = mon.IsMoving, MapMonsterId = GetNextMonsterId(), ShouldRespawn = false, Target = mon.Target, OnDeathEvents = mon.DeathEvents, OnNoticeEvents = mon.NoticingEvents, IsTarget = mon.IsTarget, IsBonus = mon.IsBonus, IsBoss = mon.IsBoss, NoticeRange = mon.NoticeRange };
                     monster.Initialize(this);
                     monster.IsHostile = mon.IsHostile;
                     AddMonster(monster);

@@ -21,9 +21,11 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace OpenNos.GameObject
 {
@@ -337,12 +339,12 @@ namespace OpenNos.GameObject
                                                             });
 
             // iterate thru each type in the given assembly
-            foreach (Type handlerType in handlerTypes)
+            Parallel.ForEach(handlerTypes, handlerType =>
             {
                 IPacketHandler handler = (IPacketHandler)Activator.CreateInstance(handlerType, this);
 
                 // include PacketDefinition
-                foreach (MethodInfo methodInfo in handlerType.GetMethods().Where(x => x.GetCustomAttributes(false).OfType<PacketAttribute>().Any() || x.GetParameters().FirstOrDefault()?.ParameterType.BaseType == typeof(PacketDefinition)))
+                Parallel.ForEach(handlerType.GetMethods().Where(x => x.GetCustomAttributes(false).OfType<PacketAttribute>().Any() || x.GetParameters().FirstOrDefault()?.ParameterType.BaseType == typeof(PacketDefinition)), methodInfo =>
                 {
                     List<PacketAttribute> packetAttributes = methodInfo.GetCustomAttributes(false).OfType<PacketAttribute>().ToList();
 
@@ -361,8 +363,8 @@ namespace OpenNos.GameObject
                             HandlerMethods.Add(methodReference.Identification, methodReference);
                         }
                     }
-                }
-            }
+                });
+            });
         }
 
         /// <summary>

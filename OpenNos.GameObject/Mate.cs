@@ -233,25 +233,18 @@ namespace OpenNos.GameObject
 
         public List<ItemInstance> GetInventory()
         {
-            List<ItemInstance> items = new List<ItemInstance>();
             switch (PetId)
             {
                 case 0:
-                    items = Owner.Inventory.GetAllItems().Where(s => s.Type == InventoryType.FirstPartnerInventory).ToList();
-                    break;
+                    return Owner.Inventory.GetAllItems().Where(s => s.Type == InventoryType.FirstPartnerInventory).ToList();
 
                 case 1:
-                    items = Owner.Inventory.GetAllItems().Where(s => s.Type == InventoryType.SecondPartnerInventory).ToList();
-                    break;
+                    return Owner.Inventory.GetAllItems().Where(s => s.Type == InventoryType.SecondPartnerInventory).ToList();
 
                 case 2:
-                    items = Owner.Inventory.GetAllItems().Where(s => s.Type == InventoryType.ThirdPartnerInventory).ToList();
-                    break;
-
-                default:
-                    break;
+                    return Owner.Inventory.GetAllItems().Where(s => s.Type == InventoryType.ThirdPartnerInventory).ToList();
             }
-            return items;
+            return new List<ItemInstance>();
         }
 
         public override void Initialize()

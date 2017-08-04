@@ -23,7 +23,6 @@ using OpenNos.Master.Library.Client;
 using OpenNos.Master.Library.Data;
 using OpenNos.PathFinder;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -37,9 +36,9 @@ namespace OpenNos.GameObject
     {
         #region Members
 
+        private readonly object _syncObj = new object();
         private Random _random;
         private byte _speed;
-        private readonly object _syncObj = new object();
 
         #endregion
 
@@ -55,6 +54,7 @@ namespace OpenNos.GameObject
             MinilandObjects = new List<MinilandObject>();
             Mates = new List<Mate>();
             LastMonsterAggro = DateTime.Now;
+            MTListTargetQueue = new ThreadSafeGenericList<MTListHitTarget>();
             EquipmentBCards = new ThreadSafeGenericList<BCard>();
             MeditationDictionary = new Dictionary<short, DateTime>();
             BuffObservables = new ThreadSafeSortedList<short, IDisposable>();
@@ -64,8 +64,6 @@ namespace OpenNos.GameObject
         #endregion
 
         #region Properties
-
-        public ThreadSafeGenericList<MTListHitTarget> MTListTargetQueue { get; set; }
 
         public AuthorityType Authority { get; set; }
 
@@ -160,8 +158,6 @@ namespace OpenNos.GameObject
 
         public bool InExchangeOrTrade => ExchangeInfo != null || Speed == 0;
 
-        public byte SkillComboCount { get; set; }
-
         public Inventory Inventory { get; set; }
 
         public bool Invisible { get; set; }
@@ -193,11 +189,11 @@ namespace OpenNos.GameObject
 
         public DateTime LastEffect { get; set; }
 
-        public DateTime LastMonsterAggro { get; set; }
-
         public DateTime LastHealth { get; set; }
 
         public DateTime LastMapObject { get; set; }
+
+        public DateTime LastMonsterAggro { get; set; }
 
         public int LastMonsterId { get; set; }
 
@@ -262,6 +258,8 @@ namespace OpenNos.GameObject
         public int MorphUpgrade { get; set; }
 
         public int MorphUpgrade2 { get; set; }
+
+        public ThreadSafeGenericList<MTListHitTarget> MTListTargetQueue { get; set; }
 
         public bool NoAttack { get; set; }
 
@@ -362,6 +360,8 @@ namespace OpenNos.GameObject
 
         public int Size { get; set; } = 10;
 
+        public byte SkillComboCount { get; set; }
+
         public ThreadSafeSortedList<int, CharacterSkill> Skills { get; private set; }
 
         public ThreadSafeSortedList<int, CharacterSkill> SkillsSp { get; set; }
@@ -457,15 +457,6 @@ namespace OpenNos.GameObject
                     Session.SendPacket(GenerateCond());
                 }
             }
-        }
-
-        public void UpdateBushFire()
-        {
-            Session.Character.BrushFire = BestFirstSearch.LoadBrushFire(new GridPos()
-            {
-                X = Session.Character.PositionX,
-                Y = Session.Character.PositionY
-            }, Session.CurrentMapInstance.Map.Grid);
         }
 
         public bool AddPet(Mate mate)
@@ -740,6 +731,7 @@ namespace OpenNos.GameObject
                             //else
                             //{
                             Session.SendPacket(GenerateStat());
+
                             //}
                         }
                     }
@@ -806,24 +798,31 @@ namespace OpenNos.GameObject
                             case 6:
                                 AddBuff(new Buff(387, Level), true);
                                 break;
+
                             case 7:
                                 AddBuff(new Buff(395, Level), true);
                                 break;
+
                             case 8:
                                 AddBuff(new Buff(396, Level), true);
                                 break;
+
                             case 9:
                                 AddBuff(new Buff(397, Level), true);
                                 break;
+
                             case 10:
                                 AddBuff(new Buff(398, Level), true);
                                 break;
+
                             case 11:
                                 AddBuff(new Buff(410, Level), true);
                                 break;
+
                             case 12:
                                 AddBuff(new Buff(411, Level), true);
                                 break;
+
                             case 13:
                                 AddBuff(new Buff(444, Level), true);
                                 break;
@@ -1091,7 +1090,7 @@ namespace OpenNos.GameObject
 
         public string GenerateAct()
         {
-            return $"act 6";
+            return "act 6";
         }
 
         public string GenerateAt()
@@ -1605,6 +1604,7 @@ namespace OpenNos.GameObject
                                 }
                             }
                         }
+
                         #endregion
 
                         #region gold drop
@@ -1937,6 +1937,40 @@ namespace OpenNos.GameObject
             return pktQs;
         }
 
+        public string GenerateRaid(int Type, bool Exit)
+        {
+            string result = string.Empty;
+            switch (Type)
+            {
+                case 0:
+                    result = "raid 0";
+                    Group?.Characters?.ForEach(s => result += $" {s.Character?.CharacterId}");
+                    break;
+
+                case 2:
+                    result = $"raid 2 {(Exit ? "-1" : $"{CharacterId}")}";
+                    break;
+
+                case 1:
+                    result = $"raid 1 {(Exit ? 0 : 1)}";
+                    break;
+
+                case 3:
+                    result = $"raid 3";
+                    Group?.Characters?.ForEach(s => result += $" {s.Character?.CharacterId}.{Math.Ceiling(s.Character.Hp / s.Character.HPLoad() * 100)}.{Math.Ceiling(s.Character.Mp / s.Character.MPLoad() * 100)}");
+                    break;
+
+                case 4:
+                    result = $"raid 4";
+                    break;
+
+                case 5:
+                    result = $"raid 5 1";
+                    break;
+            }
+            return result;
+        }
+
         public string GenerateRaidBf(byte type)
         {
             return $"raidbf 0 {type} 25 ";
@@ -1970,7 +2004,7 @@ namespace OpenNos.GameObject
                     string info = string.Empty;
                     if (bz.Item.Item.Type == InventoryType.Equipment && bz.Item is WearableInstance)
                     {
-                        info = (bz.Item as WearableInstance).GenerateEInfo().Replace(' ', '^').Replace("e_info^", string.Empty);
+                        info = (bz.Item as WearableInstance)?.GenerateEInfo().Replace(' ', '^').Replace("e_info^", string.Empty);
                     }
                     if (packet.Filter == 0 || packet.Filter == Status)
                     {
@@ -2245,13 +2279,13 @@ namespace OpenNos.GameObject
             DistanceRate = CharacterHelper.DistanceRate(Class, Level);
             DistanceCriticalRate = CharacterHelper.DistCriticalRate(Class, Level);
             DistanceCritical = CharacterHelper.DistCritical(Class, Level);
-            FireResistance = CharacterHelper.FireResistance(Class, Level) + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.FireIncreased)[0] + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
-            LightResistance = CharacterHelper.LightResistance(Class, Level) + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.LightIncreased)[0] + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
-            WaterResistance = CharacterHelper.WaterResistance(Class, Level) + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.WaterIncreased)[0] + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
-            DarkResistance = CharacterHelper.DarkResistance(Class, Level) + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.DarkIncreased)[0] + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
+            FireResistance = GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.FireIncreased)[0] + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
+            LightResistance = GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.LightIncreased)[0] + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
+            WaterResistance = GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.WaterIncreased)[0] + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
+            DarkResistance = GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.DarkIncreased)[0] + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
             Defence = CharacterHelper.Defence(Class, Level);
             DefenceRate = CharacterHelper.DefenceRate(Class, Level);
-            ElementRate = CharacterHelper.ElementRate(Class, Level);
+            ElementRate = 0;
             ElementRateSP = 0;
             DistanceDefence = CharacterHelper.DistanceDefence(Class, Level);
             DistanceDefenceRate = CharacterHelper.DistanceDefenceRate(Class, Level);
@@ -3134,6 +3168,45 @@ namespace OpenNos.GameObject
             }
         }
 
+        public void RemoveBuff(short id)
+        {
+            Buff indicator = Buff[id];
+            if (indicator != null)
+            {
+                if (indicator.StaticBuff)
+                {
+                    Session.SendPacket($"vb {indicator.Card.CardId} 0 {indicator.Card.Duration}");
+                    Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("EFFECT_TERMINATED"), Name), 11));
+                }
+                else
+                {
+                    Session.SendPacket($"bf 1 {CharacterId} 0.{indicator.Card.CardId}.0 {Level}");
+                    Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("EFFECT_TERMINATED"), Name), 20));
+                }
+
+                if (Buff[indicator.Card.CardId] != null)
+                {
+                    Buff.Remove(id);
+                }
+                if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.Move && !s.SubType.Equals((byte)AdditionalTypes.Move.MovementImpossible / 10)))
+                {
+                    LastSpeedChange = DateTime.Now;
+                    LoadSpeed();
+                    Session.SendPacket(GenerateCond());
+                }
+                if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.SpecialAttack && s.SubType.Equals((byte)AdditionalTypes.SpecialAttack.NoAttack / 10)))
+                {
+                    NoAttack = false;
+                    Session.SendPacket(GenerateCond());
+                }
+                if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.Move && s.SubType.Equals((byte)AdditionalTypes.Move.MovementImpossible / 10)))
+                {
+                    NoMove = false;
+                    Session.SendPacket(GenerateCond());
+                }
+            }
+        }
+
         public void RemoveVehicle()
         {
             SpecialistInstance sp = null;
@@ -3433,6 +3506,15 @@ namespace OpenNos.GameObject
             }
         }
 
+        public void UpdateBushFire()
+        {
+            Session.Character.BrushFire = BestFirstSearch.LoadBrushFire(new GridPos()
+            {
+                X = Session.Character.PositionX,
+                Y = Session.Character.PositionY
+            }, Session.CurrentMapInstance.Map.Grid);
+        }
+
         public bool WeaponLoaded(CharacterSkill ski)
         {
             if (ski != null)
@@ -3443,94 +3525,82 @@ namespace OpenNos.GameObject
                         return false;
 
                     case ClassType.Adventurer:
-                        if (ski.Skill.Type == 1)
+                        if (ski.Skill.Type == 1 && Inventory != null)
                         {
-                            if (Inventory != null)
+                            WearableInstance wearable = Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.SecondaryWeapon, InventoryType.Wear);
+                            if (wearable != null)
                             {
-                                WearableInstance wearable = Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.SecondaryWeapon, InventoryType.Wear);
-                                if (wearable != null)
+                                if (wearable.Ammo > 0)
                                 {
-                                    if (wearable.Ammo > 0)
-                                    {
-                                        wearable.Ammo--;
-                                        return true;
-                                    }
-                                    if (Inventory.CountItem(2081) < 1)
-                                    {
-                                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_AMMO_ADVENTURER"), 10));
-                                        return false;
-                                    }
-                                    Inventory.RemoveItemAmount(2081);
-                                    wearable.Ammo = 100;
-                                    Session.SendPacket(GenerateSay(Language.Instance.GetMessageFromKey("AMMO_LOADED_ADVENTURER"), 10));
+                                    wearable.Ammo--;
                                     return true;
                                 }
-                                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_WEAPON"), 10));
-                                return false;
+                                if (Inventory.CountItem(2081) < 1)
+                                {
+                                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_AMMO_ADVENTURER"), 10));
+                                    return false;
+                                }
+                                Inventory.RemoveItemAmount(2081);
+                                wearable.Ammo = 100;
+                                Session.SendPacket(GenerateSay(Language.Instance.GetMessageFromKey("AMMO_LOADED_ADVENTURER"), 10));
+                                return true;
                             }
-                            return true;
+                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_WEAPON"), 10));
+                            return false;
                         }
                         return true;
 
                     case ClassType.Swordman:
-                        if (ski.Skill.Type == 1)
+                        if (ski.Skill.Type == 1 && Inventory != null)
                         {
-                            if (Inventory != null)
+                            WearableInstance inv = Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.SecondaryWeapon, InventoryType.Wear);
+                            if (inv != null)
                             {
-                                WearableInstance inv = Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.SecondaryWeapon, InventoryType.Wear);
-                                if (inv != null)
+                                if (inv.Ammo > 0)
                                 {
-                                    if (inv.Ammo > 0)
-                                    {
-                                        inv.Ammo--;
-                                        return true;
-                                    }
-                                    if (Inventory.CountItem(2082) < 1)
-                                    {
-                                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_AMMO_SWORDSMAN"), 10));
-                                        return false;
-                                    }
-
-                                    Inventory.RemoveItemAmount(2082);
-                                    inv.Ammo = 100;
-                                    Session.SendPacket(GenerateSay(Language.Instance.GetMessageFromKey("AMMO_LOADED_SWORDSMAN"), 10));
+                                    inv.Ammo--;
                                     return true;
                                 }
-                                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_WEAPON"), 10));
-                                return false;
+                                if (Inventory.CountItem(2082) < 1)
+                                {
+                                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_AMMO_SWORDSMAN"), 10));
+                                    return false;
+                                }
+
+                                Inventory.RemoveItemAmount(2082);
+                                inv.Ammo = 100;
+                                Session.SendPacket(GenerateSay(Language.Instance.GetMessageFromKey("AMMO_LOADED_SWORDSMAN"), 10));
+                                return true;
                             }
-                            return true;
+                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_WEAPON"), 10));
+                            return false;
                         }
                         return true;
 
                     case ClassType.Archer:
-                        if (ski.Skill.Type == 1)
+                        if (ski.Skill.Type == 1 && Inventory != null)
                         {
-                            if (Inventory != null)
+                            WearableInstance inv = Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.MainWeapon, InventoryType.Wear);
+                            if (inv != null)
                             {
-                                WearableInstance inv = Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.MainWeapon, InventoryType.Wear);
-                                if (inv != null)
+                                if (inv.Ammo > 0)
                                 {
-                                    if (inv.Ammo > 0)
-                                    {
-                                        inv.Ammo--;
-                                        return true;
-                                    }
-                                    if (Inventory.CountItem(2083) < 1)
-                                    {
-                                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_AMMO_ARCHER"), 10));
-                                        return false;
-                                    }
-
-                                    Inventory.RemoveItemAmount(2083);
-                                    inv.Ammo = 100;
-                                    Session.SendPacket(GenerateSay(Language.Instance.GetMessageFromKey("AMMO_LOADED_ARCHER"), 10));
+                                    inv.Ammo--;
                                     return true;
                                 }
-                                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_WEAPON"), 10));
-                                return false;
+                                if (Inventory.CountItem(2083) < 1)
+                                {
+                                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_AMMO_ARCHER"), 10));
+                                    return false;
+                                }
+
+                                Inventory.RemoveItemAmount(2083);
+                                inv.Ammo = 100;
+                                Session.SendPacket(GenerateSay(Language.Instance.GetMessageFromKey("AMMO_LOADED_ARCHER"), 10));
+                                return true;
                             }
-                            return true;
+                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_WEAPON"), 10));
+                            return false;
                         }
                         return true;
 
@@ -3807,8 +3877,30 @@ namespace OpenNos.GameObject
             {
                 actMultiplier = 5;
             }
-            int gold = (int)(lowBaseGold * ServerManager.Instance.GoldRate * actMultiplier * eqMultiplier);
-            return gold;
+            return (int)(lowBaseGold * ServerManager.Instance.GoldRate * actMultiplier * eqMultiplier);
+        }
+
+        private int GetHXP(NpcMonsterDTO monster, Group group)
+        {
+            int partySize = 1;
+            float partyPenalty = 1f;
+
+            if (group != null)
+            {
+                int levelSum = group.Characters.GetAllItems().Sum(g => g.Character.Level);
+                partySize = group.CharacterCount;
+                partyPenalty = (6f / partySize) / levelSum;
+            }
+
+            int heroXp = (int)Math.Round(monster.HeroXp * CharacterHelper.ExperiencePenalty(Level, monster.Level) * ServerManager.Instance.HeroXpRate * MapInstance.XpRate);
+
+            // divide jobexp by multiplication of partyPenalty with level e.g. 57 * 0,014...
+            if (partySize > 1 && group != null)
+            {
+                heroXp = (int)Math.Round(heroXp / (HeroLevel * partyPenalty));
+            }
+
+            return heroXp;
         }
 
         private int GetJXP(NpcMonsterDTO monster, Group group)
@@ -3875,29 +3967,6 @@ namespace OpenNos.GameObject
             return xp;
         }
 
-        private int GetHXP(NpcMonsterDTO monster, Group group)
-        {
-            int partySize = 1;
-            float partyPenalty = 1f;
-
-            if (group != null)
-            {
-                int levelSum = group.Characters.GetAllItems().Sum(g => g.Character.Level);
-                partySize = group.CharacterCount;
-                partyPenalty = (6f / partySize) / levelSum;
-            }
-
-            int heroXp = (int)Math.Round(monster.HeroXp * CharacterHelper.ExperiencePenalty(Level, monster.Level) * ServerManager.Instance.HeroXpRate * MapInstance.XpRate);
-
-            // divide jobexp by multiplication of partyPenalty with level e.g. 57 * 0,014...
-            if (partySize > 1 && group != null)
-            {
-                heroXp = (int)Math.Round(heroXp / (HeroLevel * partyPenalty));
-            }
-
-            return heroXp;
-        }
-
         private int HealthHPLoad()
         {
             if (IsSitting)
@@ -3941,73 +4010,6 @@ namespace OpenNos.GameObject
             return CharacterHelper.XPData[Level - 1];
         }
 
-        public string GenerateRaid(int Type, bool Exit)
-        {
-            string result = string.Empty;
-            switch (Type)
-            {
-                case 0:
-                    result = "raid 0";
-                    Group?.Characters?.ForEach(s => result += $" {s.Character?.CharacterId}");
-                    break;
-                case 2:
-                    result = $"raid 2 {(Exit ? "-1" : $"{CharacterId}")}";
-                    break;
-                case 1:
-                    result = $"raid 1 {(Exit ? 0 : 1)}";
-                    break;
-                case 3:
-                    result = $"raid 3";
-                    Group?.Characters?.ForEach(s => result += $" {s.Character?.CharacterId}.{Math.Ceiling(s.Character.Hp / s.Character.HPLoad() * 100)}.{Math.Ceiling(s.Character.Mp / s.Character.MPLoad() * 100)}");
-                    break;
-                case 4:
-                    result = $"raid 4";
-                    break;
-                case 5:
-                    result = $"raid 5 1";
-                    break;
-            }
-            return result;
-        }
-
-        public void RemoveBuff(short id)
-        {
-            Buff indicator = Buff[id];
-            if (indicator != null)
-            {
-                if (indicator.StaticBuff)
-                {
-                    Session.SendPacket($"vb {indicator.Card.CardId} 0 {indicator.Card.Duration}");
-                    Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("EFFECT_TERMINATED"), Name), 11));
-                }
-                else
-                {
-                    Session.SendPacket($"bf 1 {CharacterId} 0.{indicator.Card.CardId}.0 {Level}");
-                    Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("EFFECT_TERMINATED"), Name), 20));
-                }
-
-                if (Buff[indicator.Card.CardId] != null)
-                {
-                    Buff.Remove(id);
-                }
-                if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.Move && !s.SubType.Equals((byte)AdditionalTypes.Move.MovementImpossible / 10)))
-                {
-                    LastSpeedChange = DateTime.Now;
-                    LoadSpeed();
-                    Session.SendPacket(GenerateCond());
-                }
-                if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.SpecialAttack && s.SubType.Equals((byte)AdditionalTypes.SpecialAttack.NoAttack / 10)))
-                {
-                    NoAttack = false;
-                    Session.SendPacket(GenerateCond());
-                }
-                if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.Move && s.SubType.Equals((byte)AdditionalTypes.Move.MovementImpossible / 10)))
-                {
-                    NoMove = false;
-                    Session.SendPacket(GenerateCond());
-                }
-            }
-        }
         #endregion
     }
 }

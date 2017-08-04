@@ -21,6 +21,7 @@ using OpenNos.PathFinder;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using static OpenNos.Domain.BCardType;
@@ -123,17 +124,14 @@ namespace OpenNos.GameObject
                 indicator.Start = DateTime.Now;
 
                 indicator.Card.BCards.ForEach(c => c.ApplyBCards(this));
-                Observable.Timer(TimeSpan.FromMilliseconds(indicator.Card.Duration * 100))
-                    .Subscribe(
-                        o =>
-                        {
-                            RemoveBuff(indicator.Card.CardId);
-                            if (indicator.Card.TimeoutBuff != 0 && ServerManager.Instance.RandomNumber()
-                                < indicator.Card.TimeoutBuffChance)
-                            {
-                                AddBuff(new Buff(indicator.Card.TimeoutBuff, Monster.Level));
-                            }
-                        });
+                Observable.Timer(TimeSpan.FromMilliseconds(indicator.Card.Duration * 100)).Subscribe(o =>
+                {
+                    RemoveBuff(indicator.Card.CardId);
+                    if (indicator.Card.TimeoutBuff != 0 && ServerManager.Instance.RandomNumber() < indicator.Card.TimeoutBuffChance)
+                    {
+                        AddBuff(new Buff(indicator.Card.TimeoutBuff, Monster.Level));
+                    }
+                });
             }
         }
 
@@ -345,7 +343,6 @@ namespace OpenNos.GameObject
                 int distance = Map.GetDistance(new MapCell() { X = targetSession.Character.PositionX, Y = targetSession.Character.PositionY }, new MapCell() { X = MapX, Y = MapY });
                 if (targetSession != null)
                 {
-
                     if (targetSession.Character.LastMonsterAggro.AddSeconds(5) < DateTime.Now || targetSession.Character.BrushFire == null)
                     {
                         targetSession.Character.UpdateBushFire();
@@ -686,7 +683,7 @@ namespace OpenNos.GameObject
             {
                 double time = (DateTime.Now - LastMove).TotalMilliseconds;
 
-                if (Path.Any()) // move back to initial position after following target
+                if (Path.Count > 0) // move back to initial position after following target
                 {
                     int timetowalk = 2000 / Monster.Speed;
                     if (time > timetowalk)

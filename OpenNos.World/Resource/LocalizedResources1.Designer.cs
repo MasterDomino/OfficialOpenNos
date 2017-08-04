@@ -403,6 +403,15 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} BazaarItems loaded!.
+        /// </summary>
+        internal static string BAZAAR_LOADED {
+            get {
+                return ResourceManager.GetString("BAZAAR_LOADED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bazaar Loaded!.
         /// </summary>
         internal static string BAZAR_LOADED {

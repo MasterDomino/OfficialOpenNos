@@ -26,9 +26,9 @@ namespace OpenNos.GameObject
 
         #region Instantiation
 
-        public Buff(int id, byte level)
+        public Buff(short id, byte level)
         {
-            Card = ServerManager.Instance.Cards.Find(s => s.CardId == id);
+            Card = ServerManager.Instance.GetCard(id);
             Level = level;
         }
 

@@ -1447,4 +1447,7 @@
   <data name="GIFT_SENT" xml:space="preserve">
     <value>Gift has been sent!</value>
   </data>
+  <data name="BAZAAR_LOADED" xml:space="preserve">
+    <value>{0} BazaarItems loaded!</value>
+  </data>
 </root>
