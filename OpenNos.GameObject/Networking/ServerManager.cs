@@ -52,7 +52,7 @@ namespace OpenNos.GameObject
 
         private static readonly List<Skill> _skills = new List<Skill>();
 
-        private static readonly ThreadLocal<Random> random = new ThreadLocal<Random>(() => new Random(Interlocked.Increment(ref seed)));
+        private static readonly CryptoRandom random = new CryptoRandom();
 
         private static ServerManager _instance;
 
@@ -1085,7 +1085,7 @@ namespace OpenNos.GameObject
 
         public int RandomNumber(int min = 0, int max = 100)
         {
-            return random.Value.Next(min, max);
+            return random.Next(min, max);
         }
 
         public void RefreshRanking()
