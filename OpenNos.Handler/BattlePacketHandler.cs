@@ -425,7 +425,7 @@ namespace OpenNos.Handler
                                     {
                                         if (Session.Character.Family == null || character.Character.Family == null || Session.Character.Family.FamilyId != character.Character.Family.FamilyId)
                                         {
-                                            if (Session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.Citadel))
+                                            if (Session.Character.MapInstance.Map.MapId != 130 && Session.Character.MapInstance.Map.MapId != 131)
                                             {
                                                 PVPHit(new HitRequest(TargetHitType.AOETargetHit, Session, ski.Skill), character);
                                             }
@@ -544,7 +544,7 @@ namespace OpenNos.Handler
                                                 {
                                                     if (Session.Character.Family == null || character.Character.Family == null || Session.Character.Family.FamilyId != character.Character.Family.FamilyId)
                                                     {
-                                                        if (Session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.Citadel))
+                                                        if (Session.Character.MapInstance.Map.MapId != 130 && Session.Character.MapInstance.Map.MapId != 131)
                                                         {
                                                             count++;
                                                             PVPHit(new HitRequest(TargetHitType.SingleTargetHitCombo, Session, ski.Skill, skillCombo: skillCombo), playerToAttack);
@@ -582,7 +582,7 @@ namespace OpenNos.Handler
                                             {
                                                 if (Session.Character.Family == null || playerToAttack.Character.Family == null || Session.Character.Family.FamilyId != playerToAttack.Character.Family.FamilyId)
                                                 {
-                                                    if (Session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.Citadel))
+                                                    if (Session.Character.MapInstance.Map.MapId != 130 && Session.Character.MapInstance.Map.MapId != 131)
                                                     {
                                                         PVPHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), playerToAttack);
                                                     }
@@ -630,7 +630,7 @@ namespace OpenNos.Handler
                                                 {
                                                     if (Session.Character.Family == null || character.Character.Family == null || Session.Character.Family.FamilyId != character.Character.Family.FamilyId)
                                                     {
-                                                        if (Session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.Citadel))
+                                                        if (Session.Character.MapInstance.Map.MapId != 130 && Session.Character.MapInstance.Map.MapId != 131)
                                                         {
                                                             PVPHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), character);
                                                         }
@@ -670,7 +670,7 @@ namespace OpenNos.Handler
                                             {
                                                 if (Session.Character.Family == null || playerToAttack.Character.Family == null || Session.Character.Family.FamilyId != playerToAttack.Character.Family.FamilyId)
                                                 {
-                                                    if (Session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.Citadel))
+                                                    if (Session.Character.MapInstance.Map.MapId != 130 && Session.Character.MapInstance.Map.MapId != 131)
                                                     {
                                                         PVPHit(new HitRequest(TargetHitType.SingleTargetHitCombo, Session, ski.Skill, skillCombo: skillCombo), playerToAttack);
                                                     }
@@ -732,7 +732,7 @@ namespace OpenNos.Handler
                                             {
                                                 if (Session.Character.Family == null || playerToAttack.Character.Family == null || Session.Character.Family.FamilyId != playerToAttack.Character.Family.FamilyId)
                                                 {
-                                                    if (Session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.Citadel))
+                                                    if (Session.Character.MapInstance.Map.MapId != 130 && Session.Character.MapInstance.Map.MapId != 131)
                                                     {
                                                         PVPHit(new HitRequest(TargetHitType.SingleTargetHit, Session, ski.Skill), playerToAttack);
                                                     }
@@ -970,7 +970,7 @@ namespace OpenNos.Handler
                             {
                                 if (Session.Character.Family == null || character.Character.Family == null || Session.Character.Family.FamilyId != character.Character.Family.FamilyId)
                                 {
-                                    if (Session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.Citadel))
+                                    if (Session.Character.MapInstance.Map.MapId != 130 && Session.Character.MapInstance.Map.MapId != 131)
                                     {
                                         PVPHit(new HitRequest(TargetHitType.ZoneHit, Session, characterSkill.Skill, x, y), character);
                                     }
