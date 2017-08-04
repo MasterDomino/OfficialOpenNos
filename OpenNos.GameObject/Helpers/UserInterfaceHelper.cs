@@ -217,6 +217,10 @@ namespace OpenNos.GameObject.Helpers
 
         public string GenerateRCBList(CBListPacket packet)
         {
+            if (packet == null)
+            {
+
+            }
             string itembazar = string.Empty;
 
             List<string> itemssearch = packet.ItemVNumFilter == "0" ? new List<string>() : packet.ItemVNumFilter.Split(' ').ToList();
@@ -487,11 +491,13 @@ namespace OpenNos.GameObject.Helpers
                 string info = string.Empty;
                 if (bzlink.Item.Item.Type == InventoryType.Equipment)
                 {
-                    info = (bzlink.Item.Item.EquipmentSlot != EquipmentType.Sp ?
-                        (bzlink.Item as WearableInstance)?.GenerateEInfo() : bzlink.Item.Item.SpType == 0 && bzlink.Item.Item.ItemSubType == 4 ?
-                        (bzlink.Item as SpecialistInstance)?.GeneratePslInfo() : (bzlink.Item as SpecialistInstance)?.GenerateSlInfo()).Replace(' ', '^').Replace("slinfo^", string.Empty).Replace("e_info^", string.Empty);
+                    if (bzlink.Item as WearableInstance != null)
+                    {
+                        info = (bzlink.Item.Item.EquipmentSlot != EquipmentType.Sp ?
+                            (bzlink.Item as WearableInstance).GenerateEInfo() : bzlink.Item.Item.SpType == 0 && bzlink.Item.Item.ItemSubType == 4 ?
+                            (bzlink.Item as SpecialistInstance).GeneratePslInfo() : (bzlink.Item as SpecialistInstance).GenerateSlInfo()).Replace(' ', '^').Replace("slinfo^", "").Replace("e_info^", "");
+                    }
                 }
-
                 itembazar += $"{bzlink.BazaarItem.BazaarItemId}|{bzlink.BazaarItem.SellerId}|{bzlink.Owner}|{bzlink.Item.Item.VNum}|{bzlink.Item.Amount}|{(bzlink.BazaarItem.IsPackage ? 1 : 0)}|{bzlink.BazaarItem.Price}|{time}|2|0|{bzlink.Item.Rare}|{bzlink.Item.Upgrade}|{info} ";
             }
 
@@ -501,7 +507,7 @@ namespace OpenNos.GameObject.Helpers
         public string GenerateRl(byte type)
         {
             string str = $"rl {type}";
-            ServerManager.Instance.GroupList.ForEach(s=>
+            ServerManager.Instance.GroupList.ForEach(s =>
             {
                 ClientSession leader = s.Characters.ElementAt(0);
                 str += $" {s.Raid.Id}.{s.Raid?.LevelMinimum}.{s.Raid?.LevelMaximum}.{leader.Character.Name}.{leader.Character.Level}.{(leader.Character.UseSp ? leader.Character.Morph : -1)}.{(byte)leader.Character.Class}.{(byte)leader.Character.Gender}.{s.CharacterCount}.{leader.Character.HeroLevel}";
