@@ -17,11 +17,13 @@ using OpenNos.DAL;
 using OpenNos.Data;
 using OpenNos.Domain;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace OpenNos.Import.Console
 {
@@ -77,7 +79,6 @@ namespace OpenNos.Import.Console
             BCardDTO bcard;
             List<BCardDTO> bcards = new List<BCardDTO>();
             string line;
-            int counter = 0;
             bool itemAreaBegin = false;
 
             using (StreamReader npcIdLangStream = new StreamReader(fileCardLang, Encoding.GetEncoding(1252)))
@@ -189,48 +190,46 @@ namespace OpenNos.Import.Console
                         if (DAOFactory.CardDAO.LoadById(card.CardId) == null)
                         {
                             cards.Add(card);
-                            counter++;
                         }
                         itemAreaBegin = false;
                     }
                 }
                 DAOFactory.CardDAO.Insert(cards);
                 DAOFactory.BCardDAO.Insert(bcards);
-                Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("CARDS_PARSED"), counter));
+                Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("CARDS_PARSED"), cards.Count));
             }
         }
 
         public void ImportMapNpcs()
         {
-            int npcCounter = 0;
             short map = 0;
             List<MapNpcDTO> npcs = new List<MapNpcDTO>();
-            List<int> npcMvPacketsList = new List<int>();
-            Dictionary<int, short> effPacketsDictionary = new Dictionary<int, short>();
+            ThreadSafeSortedList<int, int> npcMvPacketsList = new ThreadSafeSortedList<int, int>();
+            ThreadSafeSortedList<int, short> effPacketsDictionary = new ThreadSafeSortedList<int, short>();
 
-            foreach (string[] currentPacket in _packetList.Where(o => o[0].Equals("mv") && o[1].Equals("2")))
+            Parallel.ForEach(_packetList.Where(o => o[0].Equals("mv") && o[1].Equals("2")), currentPacket =>
             {
                 if (long.Parse(currentPacket[2]) > 20000)
                 {
-                    continue;
+                    return;
                 }
-                if (!npcMvPacketsList.Contains(int.Parse(currentPacket[2])))
+                if (!npcMvPacketsList.ContainsKey(int.Parse(currentPacket[2])))
                 {
-                    npcMvPacketsList.Add(int.Parse(currentPacket[2]));
+                    npcMvPacketsList[int.Parse(currentPacket[2])] = 1;
                 }
-            }
+            });
 
-            foreach (string[] currentPacket in _packetList.Where(o => o[0].Equals("eff") && o[1].Equals("2")))
+            Parallel.ForEach(_packetList.Where(o => o[0].Equals("eff") && o[1].Equals("2")), currentPacket =>
             {
                 if (long.Parse(currentPacket[2]) > 20000)
                 {
-                    continue;
+                    return;
                 }
                 if (!effPacketsDictionary.ContainsKey(int.Parse(currentPacket[2])))
                 {
-                    effPacketsDictionary.Add(int.Parse(currentPacket[2]), short.Parse(currentPacket[3]));
+                    effPacketsDictionary[int.Parse(currentPacket[2])] = short.Parse(currentPacket[3]);
                 }
-            }
+            });
 
             foreach (string[] currentPacket in _packetList.Where(o => o[0].Equals("in") || o[0].Equals("at")))
             {
@@ -258,7 +257,7 @@ namespace OpenNos.Import.Console
                         npctest.Effect = effPacketsDictionary[npctest.MapNpcId];
                     }
                     npctest.EffectDelay = 4750;
-                    npctest.IsMoving = npcMvPacketsList.Contains(npctest.MapNpcId);
+                    npctest.IsMoving = npcMvPacketsList.ContainsKey(npctest.MapNpcId);
                     npctest.Position = byte.Parse(currentPacket[6]);
                     npctest.Dialog = short.Parse(currentPacket[9]);
                     npctest.IsSitting = currentPacket[13] != "1";
@@ -268,13 +267,11 @@ namespace OpenNos.Import.Console
                     {
                         continue;
                     }
-
                     npcs.Add(npctest);
-                    npcCounter++;
                 }
             }
             DAOFactory.MapNpcDAO.Insert(npcs);
-            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("NPCS_PARSED"), npcCounter));
+            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("NPCS_PARSED"), npcs.Count));
         }
 
         public void ImportMaps()
@@ -282,13 +279,12 @@ namespace OpenNos.Import.Console
             string fileMapIdDat = $"{_folder}\\MapIDData.dat";
             string fileMapIdLang = $"{_folder}\\_code_{ConfigurationManager.AppSettings["Language"]}_MapIDData.txt";
             string folderMap = $"{_folder}\\map";
-            List<MapDTO> maps = new List<MapDTO>();
+            ThreadSafeSortedList<short, MapDTO> maps = new ThreadSafeSortedList<short, MapDTO>();
             Dictionary<int, string> dictionaryId = new Dictionary<int, string>();
             Dictionary<string, string> dictionaryIdLang = new Dictionary<string, string>();
-            Dictionary<int, int> dictionaryMusic = new Dictionary<int, int>();
+            ThreadSafeSortedList<int, int> dictionaryMusic = new ThreadSafeSortedList<int, int>();
 
             string line;
-            int i = 0;
             using (StreamReader mapIdStream = new StreamReader(fileMapIdDat, Encoding.GetEncoding(1252)))
             {
                 while ((line = mapIdStream.ReadLine()) != null)
@@ -322,16 +318,17 @@ namespace OpenNos.Import.Console
                 }
             }
 
-            foreach (string[] linesave in _packetList.Where(o => o[0].Equals("at")))
+            Parallel.ForEach(_packetList.Where(o => o[0].Equals("at")), linesave =>
             {
                 if (linesave.Length <= 7 || dictionaryMusic.ContainsKey(int.Parse(linesave[2])))
                 {
-                    continue;
+                    return;
                 }
-                dictionaryMusic.Add(int.Parse(linesave[2]), int.Parse(linesave[7]));
-            }
+                dictionaryMusic[int.Parse(linesave[2])] = int.Parse(linesave[7]);
+            });
 
-            foreach (FileInfo file in new DirectoryInfo(folderMap).GetFiles())
+            var mapPartitioner = Partitioner.Create(new DirectoryInfo(folderMap).GetFiles(), EnumerablePartitionerOptions.NoBuffering);
+            Parallel.ForEach(mapPartitioner, new ParallelOptions { MaxDegreeOfParallelism = 8 }, file =>
             {
                 string name = string.Empty;
                 int music = 0;
@@ -352,15 +349,15 @@ namespace OpenNos.Import.Console
                     Data = File.ReadAllBytes(file.FullName),
                     ShopAllowed = short.Parse(file.Name) == 147
                 };
-                if (DAOFactory.MapDAO.LoadById(map.MapId) != null)
+                if (DAOFactory.MapDAO.LoadById(map.MapId) != null && maps.ContainsKey(map.MapId))
                 {
-                    continue; // Map already exists in list
+                    return; // Map already exists in list
                 }
-                maps.Add(map);
-                i++;
-            }
-            DAOFactory.MapDAO.Insert(maps);
-            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("MAPS_PARSED"), i));
+                maps[map.MapId] = map;
+            });
+
+            DAOFactory.MapDAO.Insert(maps.GetAllItems());
+            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("MAPS_PARSED"), maps.Count));
         }
 
         public void ImportMapType()
@@ -778,19 +775,17 @@ namespace OpenNos.Import.Console
 
         public void ImportMonsters()
         {
-            int monsterCounter = 0;
             short map = 0;
-            List<int> mobMvPacketsList = new List<int>();
+            ThreadSafeSortedList<int, int> mobMvPacketsList = new ThreadSafeSortedList<int, int>();
             List<MapMonsterDTO> monsters = new List<MapMonsterDTO>();
 
-            foreach (string[] currentPacket in _packetList.Where(o => o[0].Equals("mv") && o[1].Equals("3")))
+            Parallel.ForEach(_packetList.Where(o => o[0].Equals("mv") && o[1].Equals("3")), currentPacket =>
             {
-                if (!mobMvPacketsList.Contains(int.Parse(currentPacket[2])))
+                if (!mobMvPacketsList.ContainsKey(int.Parse(currentPacket[2])))
                 {
-                    mobMvPacketsList.Add(int.Parse(currentPacket[2]));
+                    mobMvPacketsList[int.Parse(currentPacket[2])] = 1;
                 }
-            }
-
+            });
             foreach (string[] currentPacket in _packetList.Where(o => o[0].Equals("in") || o[0].Equals("at")))
             {
                 if (currentPacket.Length > 5 && currentPacket[0] == "at")
@@ -810,32 +805,29 @@ namespace OpenNos.Import.Console
                         Position = (byte)(currentPacket[6]?.Length == 0 ? 0 : byte.Parse(currentPacket[6])),
                         IsDisabled = false
                     };
-                    monster.IsMoving = mobMvPacketsList.Contains(monster.MapMonsterId);
-
+                    monster.IsMoving = mobMvPacketsList.ContainsKey(monster.MapMonsterId);
                     if (DAOFactory.NpcMonsterDAO.LoadByVNum(monster.MonsterVNum) == null || DAOFactory.MapMonsterDAO.LoadById(monster.MapMonsterId) != null || monsters.Count(i => i.MapMonsterId == monster.MapMonsterId) != 0)
                     {
                         continue;
                     }
-
                     monsters.Add(monster);
-                    monsterCounter++;
                 }
             }
-
             DAOFactory.MapMonsterDAO.Insert(monsters);
-            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("MONSTERS_PARSED"), monsterCounter));
+            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("MONSTERS_PARSED"), monsters.Count));
         }
 
         public void ImportNpcMonsterData()
         {
-            foreach (string[] currentPacket in _packetList.Where(o => o[0].Equals("e_info") && o[1].Equals("10")))
+            var npcMonsterDataPartitioner = Partitioner.Create(_packetList.Where(o => o[0].Equals("e_info") && o[1].Equals("10")), EnumerablePartitionerOptions.NoBuffering);
+            Parallel.ForEach(npcMonsterDataPartitioner, new ParallelOptions { MaxDegreeOfParallelism = 8 }, currentPacket =>
             {
                 if (currentPacket.Length > 25)
                 {
                     NpcMonsterDTO npcMonster = DAOFactory.NpcMonsterDAO.LoadByVNum(short.Parse(currentPacket[2]));
                     if (npcMonster == null)
                     {
-                        continue;
+                        return;
                     }
                     npcMonster.AttackClass = byte.Parse(currentPacket[5]);
                     npcMonster.AttackUpgrade = byte.Parse(currentPacket[7]);
@@ -858,7 +850,7 @@ namespace OpenNos.Import.Console
                     // TODO: BCard Buff parsing
                     DAOFactory.NpcMonsterDAO.InsertOrUpdate(ref npcMonster);
                 }
-            }
+            });
         }
 
         public void ImportNpcMonsters()
@@ -918,7 +910,6 @@ namespace OpenNos.Import.Console
             List<NpcMonsterSkillDTO> skills = new List<NpcMonsterSkillDTO>();
             string line;
             bool itemAreaBegin = false;
-            int counter = 0;
             long unknownData = 0;
             using (StreamReader npcIdLangStream = new StreamReader(fileNpcLang, Encoding.GetEncoding(1252)))
             {
@@ -1194,7 +1185,6 @@ namespace OpenNos.Import.Console
                         if (DAOFactory.NpcMonsterDAO.LoadByVNum(npc.NpcMonsterVNum) == null)
                         {
                             npcs.Add(npc);
-                            counter++;
                         }
                         for (int i = 2; i < currentLine.Length - 3; i += 3)
                         {
@@ -1221,7 +1211,7 @@ namespace OpenNos.Import.Console
                 DAOFactory.NpcMonsterDAO.Insert(npcs);
                 DAOFactory.NpcMonsterSkillDAO.Insert(skills);
                 DAOFactory.BCardDAO.Insert(monstercards);
-                Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("NPCMONSTERS_PARSED"), counter));
+                Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("NPCMONSTERS_PARSED"), npcs.Count));
             }
 
             // Act 1
@@ -1831,8 +1821,7 @@ namespace OpenNos.Import.Console
 
         public void ImportShopItems()
         {
-            List<ShopItemDTO> shopitems = new List<ShopItemDTO>();
-            int itemCounter = 0;
+            List<ShopItemDTO> shopItems = new List<ShopItemDTO>();
             byte type = 0;
             foreach (string[] currentPacket in _packetList.Where(o => o[0].Equals("n_inv") || o[0].Equals("shopping")))
             {
@@ -1843,11 +1832,10 @@ namespace OpenNos.Import.Console
                         for (int i = 5; i < currentPacket.Length; i++)
                         {
                             string[] item = currentPacket[i].Split('.');
-                            ShopItemDTO sitem = null;
-
+                            ShopItemDTO shopItem = null;
                             if (item.Length == 5)
                             {
-                                sitem = new ShopItemDTO
+                                shopItem = new ShopItemDTO
                                 {
                                     ShopId = DAOFactory.ShopDAO.LoadByNpc(short.Parse(currentPacket[2])).ShopId,
                                     Type = type,
@@ -1857,7 +1845,7 @@ namespace OpenNos.Import.Console
                             }
                             else if (item.Length == 6)
                             {
-                                sitem = new ShopItemDTO
+                                shopItem = new ShopItemDTO
                                 {
                                     ShopId = DAOFactory.ShopDAO.LoadByNpc(short.Parse(currentPacket[2])).ShopId,
                                     Type = type,
@@ -1867,14 +1855,11 @@ namespace OpenNos.Import.Console
                                     Upgrade = byte.Parse(item[4])
                                 };
                             }
-
-                            if (sitem == null || shopitems.Any(s => s.ItemVNum.Equals(sitem.ItemVNum) && s.ShopId.Equals(sitem.ShopId)) || DAOFactory.ShopItemDAO.LoadByShopId(sitem.ShopId).Any(s => s.ItemVNum.Equals(sitem.ItemVNum)))
+                            if (shopItem == null || shopItems.Any(s => s.ItemVNum.Equals(shopItem.ItemVNum) && s.ShopId.Equals(shopItem.ShopId)) || DAOFactory.ShopItemDAO.LoadByShopId(shopItem.ShopId).Any(s => s.ItemVNum.Equals(shopItem.ItemVNum)))
                             {
                                 continue;
                             }
-
-                            shopitems.Add(sitem);
-                            itemCounter++;
+                            shopItems.Add(shopItem);
                         }
                     }
                 }
@@ -1884,51 +1869,44 @@ namespace OpenNos.Import.Console
                 }
             }
 
-            DAOFactory.ShopItemDAO.Insert(shopitems);
-            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("SHOPITEMS_PARSED"), itemCounter));
+            DAOFactory.ShopItemDAO.Insert(shopItems);
+            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("SHOPITEMS_PARSED"), shopItems.Count));
         }
 
         public void ImportShops()
         {
-            int shopCounter = 0;
-            List<ShopDTO> shops = new List<ShopDTO>();
-            foreach (string[] currentPacket in _packetList.Where(o => o.Length > 6 && o[0].Equals("shop") && o[1].Equals("2")))
+            ThreadSafeSortedList<int, ShopDTO> shops = new ThreadSafeSortedList<int, ShopDTO>();
+            Parallel.ForEach(_packetList.Where(o => o.Length > 6 && o[0].Equals("shop") && o[1].Equals("2")), currentPacket =>
             {
                 MapNpcDTO npc = DAOFactory.MapNpcDAO.LoadById(short.Parse(currentPacket[2]));
-                if (npc == null)
+                if (npc != null)
                 {
-                    continue;
+                    string name = string.Empty;
+                    for (int j = 6; j < currentPacket.Length; j++)
+                    {
+                        name += $"{currentPacket[j]} ";
+                    }
+                    name = name.Trim();
+                    ShopDTO shop = new ShopDTO
+                    {
+                        Name = name,
+                        MapNpcId = npc.MapNpcId,
+                        MenuType = byte.Parse(currentPacket[4]),
+                        ShopType = byte.Parse(currentPacket[5])
+                    };
+                    if (DAOFactory.ShopDAO.LoadByNpc(npc.MapNpcId) == null && !shops.ContainsKey(npc.MapNpcId))
+                    {
+                        shops[shop.MapNpcId] = shop;
+                    }
                 }
-                string name = string.Empty;
-                for (int j = 6; j < currentPacket.Length; j++)
-                {
-                    name += $"{currentPacket[j]} ";
-                }
-                name = name.Trim();
-
-                ShopDTO shop = new ShopDTO
-                {
-                    Name = name,
-                    MapNpcId = npc.MapNpcId,
-                    MenuType = byte.Parse(currentPacket[4]),
-                    ShopType = byte.Parse(currentPacket[5])
-                };
-
-                if (DAOFactory.ShopDAO.LoadByNpc(npc.MapNpcId) == null && shops.All(s => s.MapNpcId != npc.MapNpcId))
-                {
-                    shops.Add(shop);
-                    shopCounter++;
-                }
-            }
-
-            DAOFactory.ShopDAO.Insert(shops);
-            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("SHOPS_PARSED"), shopCounter));
+            });
+            DAOFactory.ShopDAO.Insert(shops.GetAllItems());
+            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("SHOPS_PARSED"), shops.Count));
         }
 
         public void ImportShopSkills()
         {
-            List<ShopSkillDTO> shopskills = new List<ShopSkillDTO>();
-            int itemCounter = 0;
+            List<ShopSkillDTO> shopSkills = new List<ShopSkillDTO>();
             byte type = 0;
             foreach (string[] currentPacket in _packetList.Where(o => o[0].Equals("n_inv") || o[0].Equals("shopping")))
             {
@@ -1938,24 +1916,21 @@ namespace OpenNos.Import.Console
                     {
                         for (int i = 5; i < currentPacket.Length; i++)
                         {
-                            ShopSkillDTO sskill;
+                            ShopSkillDTO shopSkill;
                             if (!currentPacket[i].Contains("."))
                             {
-                                sskill = new ShopSkillDTO
+                                shopSkill = new ShopSkillDTO
                                 {
                                     ShopId = DAOFactory.ShopDAO.LoadByNpc(short.Parse(currentPacket[2])).ShopId,
                                     Type = type,
                                     Slot = (byte)(i - 5),
                                     SkillVNum = short.Parse(currentPacket[i])
                                 };
-
-                                if (shopskills.Any(s => s.SkillVNum.Equals(sskill.SkillVNum) && s.ShopId.Equals(sskill.ShopId)) || DAOFactory.ShopSkillDAO.LoadByShopId(sskill.ShopId).Any(s => s.SkillVNum.Equals(sskill.SkillVNum)))
+                                if (shopSkills.Any(s => s.SkillVNum.Equals(shopSkill.SkillVNum) && s.ShopId.Equals(shopSkill.ShopId)) || DAOFactory.ShopSkillDAO.LoadByShopId(shopSkill.ShopId).Any(s => s.SkillVNum.Equals(shopSkill.SkillVNum)))
                                 {
                                     continue;
                                 }
-
-                                shopskills.Add(sskill);
-                                itemCounter++;
+                                shopSkills.Add(shopSkill);
                             }
                         }
                     }
@@ -1966,8 +1941,8 @@ namespace OpenNos.Import.Console
                 }
             }
 
-            DAOFactory.ShopSkillDAO.Insert(shopskills);
-            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("SHOPSKILLS_PARSED"), itemCounter));
+            DAOFactory.ShopSkillDAO.Insert(shopSkills);
+            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("SHOPSKILLS_PARSED"), shopSkills.Count));
         }
 
         public void ImportSkills()
@@ -1981,7 +1956,6 @@ namespace OpenNos.Import.Console
             List<ComboDTO> Combo = new List<ComboDTO>();
             List<BCardDTO> skillCards = new List<BCardDTO>();
             string line;
-            int counter = 0;
             using (StreamReader skillIdLangStream = new StreamReader(fileSkillLang, Encoding.GetEncoding(1252)))
             {
                 while ((line = skillIdLangStream.ReadLine()) != null)
@@ -2243,14 +2217,13 @@ namespace OpenNos.Import.Console
                         if (DAOFactory.SkillDAO.LoadById(skill.SkillVNum) == null)
                         {
                             skills.Add(skill);
-                            counter++;
                         }
                     }
                 }
                 DAOFactory.SkillDAO.Insert(skills);
                 DAOFactory.ComboDAO.Insert(Combo);
                 DAOFactory.BCardDAO.Insert(skillCards);
-                Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("SKILLS_PARSED"), counter));
+                Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("SKILLS_PARSED"), skills.Count));
             }
         }
 
@@ -2380,8 +2353,6 @@ namespace OpenNos.Import.Console
             {
                 ItemDTO item = new ItemDTO();
                 bool itemAreaBegin = false;
-                int itemCounter = 0;
-
                 while ((line = npcIdStream.ReadLine()) != null)
                 {
                     string[] currentLine = line.Split('\t');
@@ -2401,7 +2372,6 @@ namespace OpenNos.Import.Console
                         if (DAOFactory.ItemDAO.LoadById(item.VNum) == null)
                         {
                             items.Add(item);
-                            itemCounter++;
                         }
                         item = new ItemDTO();
                         itemAreaBegin = false;
@@ -3311,9 +3281,6 @@ namespace OpenNos.Import.Console
                                         break;
 
                                     case 906:
-                                        item.Element = 3;
-                                        break;
-
                                     case 909:
                                         item.Element = 3;
                                         break;
@@ -3466,7 +3433,7 @@ namespace OpenNos.Import.Console
                 }
                 DAOFactory.ItemDAO.Insert(items);
                 DAOFactory.BCardDAO.Insert(itemCards);
-                Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("ITEMS_PARSED"), itemCounter));
+                Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("ITEMS_PARSED"), items.Count));
             }
         }
 
