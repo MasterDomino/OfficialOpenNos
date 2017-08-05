@@ -108,7 +108,7 @@
     <Compile Include="Threading\ThreadSafeGenericList.cs" />
     <Compile Include="Threading\ThreadSafeSortedList.cs" />
     <Compile Include="DelegateBuilder.cs" />
-    <Compile Include="LoginCryptography.cs" />
+    <Compile Include="Cryptography\LoginCryptography.cs" />
     <Compile Include="Networking\Communication\ScsServices\Client\IScsServiceClient.cs" />
     <Compile Include="Networking\Communication\ScsServices\Client\ScsServiceClient.cs" />
     <Compile Include="Networking\Communication\ScsServices\Client\ScsServiceClientBuilder.cs" />
@@ -170,7 +170,7 @@
     <Compile Include="Networking\Communication\Scs\Server\ServerClientEventArgs.cs" />
     <Compile Include="Networking\Communication\Scs\Server\Tcp\ScsTcpServer.cs" />
     <Compile Include="Language.cs" />
-    <Compile Include="CryptographyBase.cs" />
+    <Compile Include="Cryptography\CryptographyBase.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Handling\PacketAttribute.cs" />
     <Compile Include="Networking\WireProtocol.cs" />
@@ -183,7 +183,7 @@
     <Compile Include="SessionFactory.cs" />
     <Compile Include="Threading\SequentialItemProcessor.cs" />
     <Compile Include="Threading\Timer.cs" />
-    <Compile Include="WorldCryptography.cs" />
+    <Compile Include="Cryptography\WorldCryptography.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
