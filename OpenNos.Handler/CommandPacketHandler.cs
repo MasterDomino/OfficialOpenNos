@@ -107,7 +107,7 @@ namespace OpenNos.Handler
             if (sortPacket?.InventoryType.HasValue == true)
             {
                 Logger.LogEvent("USERCOMMAND", Session.GenerateIdentity(), $"[Sort]InventoryType: {sortPacket.InventoryType}");
-                if (sortPacket.InventoryType == InventoryType.Equipment && sortPacket.InventoryType == InventoryType.Etc && sortPacket.InventoryType == InventoryType.Main)
+                if (sortPacket.InventoryType == InventoryType.Equipment || sortPacket.InventoryType == InventoryType.Etc || sortPacket.InventoryType == InventoryType.Main)
                 {
                     Session.Character.Inventory.Reorder(Session, sortPacket.InventoryType.Value);
                 }
