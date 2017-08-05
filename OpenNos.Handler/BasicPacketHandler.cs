@@ -1582,7 +1582,7 @@ namespace OpenNos.Handler
         /// <param name="pstPacket"></param>
         public void SendMail(PstPacket pstPacket)
         {
-            if (pstPacket.Data != null)
+            if (pstPacket?.Data != null)
             {
                 CharacterDTO Receiver = DAOFactory.CharacterDAO.LoadByName(pstPacket.Receiver);
                 if (Receiver != null)
@@ -1762,7 +1762,7 @@ namespace OpenNos.Handler
                 return;
             }
             Session.CurrentMapInstance = Session.Character.MapInstance;
-            if (string.Equals(ConfigurationManager.AppSettings["SceneOnCreate"], "true", StringComparison.CurrentCultureIgnoreCase) &&   Session.Character.GeneralLogs.Count(s => s.LogType == "Connection") < 2)
+            if (string.Equals(ConfigurationManager.AppSettings["SceneOnCreate"], "true", StringComparison.CurrentCultureIgnoreCase) && Session.Character.GeneralLogs.Count(s => s.LogType == "Connection") < 2)
             {
                 Session.SendPacket("scene 40");
             }
