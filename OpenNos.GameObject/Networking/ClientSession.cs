@@ -35,7 +35,7 @@ namespace OpenNos.GameObject
 
         public bool HealthStop;
 
-        private static EncryptionBase _encryptor;
+        private static CryptographyBase _encryptor;
 
         private Character _character;
 
@@ -231,7 +231,7 @@ namespace OpenNos.GameObject
             return $"Account: {Account.Name}";
         }
 
-        public void Initialize(EncryptionBase encryptor, Type packetHandler, bool isWorldServer)
+        public void Initialize(CryptographyBase encryptor, Type packetHandler, bool isWorldServer)
         {
             _encryptor = encryptor;
             _client.Initialize(encryptor);

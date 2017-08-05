@@ -45,7 +45,7 @@ namespace OpenNos.Core
 
         void Disconnect();
 
-        void Initialize(EncryptionBase encryptor);
+        void Initialize(CryptographyBase encryptor);
 
         void SendPacket(string packet, byte priority = 10);
 

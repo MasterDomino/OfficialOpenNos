@@ -71,7 +71,7 @@ namespace OpenNos.Handler
             UserDTO user = new UserDTO
             {
                 Name = loginPacket.Name,
-                Password = ConfigurationManager.AppSettings["UseOldCrypto"] == "true" ? EncryptionBase.Sha512(LoginEncryption.GetPassword(loginPacket.Password)).ToUpper() : loginPacket.Password
+                Password = ConfigurationManager.AppSettings["UseOldCrypto"] == "true" ? CryptographyBase.Sha512(LoginCryptography.GetPassword(loginPacket.Password)).ToUpper() : loginPacket.Password
             };
             AccountDTO loadedAccount = DAOFactory.AccountDAO.LoadByName(user.Name);
             if (loadedAccount?.Password.ToUpper().Equals(user.Password) == true)

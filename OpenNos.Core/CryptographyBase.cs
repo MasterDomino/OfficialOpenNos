@@ -18,11 +18,11 @@ using System.Text;
 
 namespace OpenNos.Core
 {
-    public abstract class EncryptionBase
+    public abstract class CryptographyBase
     {
         #region Instantiation
 
-        protected EncryptionBase(bool hasCustomParameter)
+        protected CryptographyBase(bool hasCustomParameter)
         {
             HasCustomParameter = hasCustomParameter;
         }

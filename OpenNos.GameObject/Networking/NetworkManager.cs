@@ -22,13 +22,13 @@ using System.Linq;
 namespace OpenNos.GameObject
 {
     public class NetworkManager<EncryptorT> : SessionManager
-        where EncryptorT : EncryptionBase
+        where EncryptorT : CryptographyBase
     {
         #region Members
 
         private IDictionary<string, DateTime> _connectionLog;
         private readonly EncryptorT _encryptor;
-        private readonly EncryptionBase _fallbackEncryptor;
+        private readonly CryptographyBase _fallbackEncryptor;
         private readonly IScsServer _server;
 
         #endregion
@@ -41,7 +41,7 @@ namespace OpenNos.GameObject
 
             if (fallbackEncryptor != null)
             {
-                _fallbackEncryptor = (EncryptionBase)Activator.CreateInstance(fallbackEncryptor);
+                _fallbackEncryptor = (CryptographyBase)Activator.CreateInstance(fallbackEncryptor);
             }
 
             _server = ScsServerFactory.CreateServer(new ScsTcpEndPoint(ipAddress, port));

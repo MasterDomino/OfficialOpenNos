@@ -17,11 +17,11 @@ using System.Text;
 
 namespace OpenNos.Core
 {
-    public class LoginEncryption : EncryptionBase
+    public class LoginCryptography : CryptographyBase
     {
         #region Instantiation
 
-        public LoginEncryption() : base(false)
+        public LoginCryptography() : base(false)
         {
         }
 
@@ -91,14 +91,13 @@ namespace OpenNos.Core
         {
             try
             {
-                data += " ";
-                byte[] tmp = Encoding.UTF8.GetBytes(data);
-                for (int i = 0; i < data.Length; i++)
+                byte[] dataBytes = Encoding.Default.GetBytes(data);
+                for (int i = 0; i < dataBytes.Length; i++)
                 {
-                    tmp[i] = Convert.ToByte(data[i] + 15);
+                    dataBytes[i] = Convert.ToByte(dataBytes[i] + 15);
                 }
-                tmp[tmp.Length - 1] = 25;
-                return tmp;
+                dataBytes[dataBytes.Length - 1] = 25;
+                return dataBytes;
             }
             catch
             {

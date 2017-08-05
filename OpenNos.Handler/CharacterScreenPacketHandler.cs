@@ -173,7 +173,7 @@ namespace OpenNos.Handler
             {
                 return;
             }
-            if (account.Password.ToLower() == EncryptionBase.Sha512(characterDeletePacket.Password))
+            if (account.Password.ToLower() == CryptographyBase.Sha512(characterDeletePacket.Password))
             {
                 CharacterDTO character = DAOFactory.CharacterDAO.LoadBySlot(account.AccountId, characterDeletePacket.Slot);
                 if (character == null)
@@ -226,7 +226,7 @@ namespace OpenNos.Handler
                 {
                     if (account != null)
                     {
-                        if (account.Password.ToLower().Equals(EncryptionBase.Sha512(loginPacketParts[6])))
+                        if (account.Password.ToLower().Equals(CryptographyBase.Sha512(loginPacketParts[6])))
                         {
                             Account accountobject = new Account
                             {

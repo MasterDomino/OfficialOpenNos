@@ -78,7 +78,7 @@ namespace OpenNos.Login
                         // initialize PacketSerialization
                         PacketFactory.Initialize<WalkPacket>();
 
-                        NetworkManager<LoginEncryption> networkManager = new NetworkManager<LoginEncryption>("127.0.0.1", port, typeof(LoginPacketHandler), typeof(LoginEncryption), false);
+                        NetworkManager<LoginCryptography> networkManager = new NetworkManager<LoginCryptography>("127.0.0.1", port, typeof(LoginPacketHandler), typeof(LoginCryptography), false);
                     }
                     catch (Exception ex)
                     {

@@ -3,7 +3,7 @@ using System.Text;
 
 namespace OpenNos.Test
 {
-    public class TestEncryption : EncryptionBase
+    public class TestEncryption : CryptographyBase
     {
         #region Instantiation
 

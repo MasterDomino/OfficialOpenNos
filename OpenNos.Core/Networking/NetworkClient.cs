@@ -24,7 +24,7 @@ namespace OpenNos.Core
     {
         #region Members
 
-        private EncryptionBase _encryptor;
+        private CryptographyBase _encryptor;
         private object _session;
 
         #endregion
@@ -61,7 +61,7 @@ namespace OpenNos.Core
 
         #region Methods
 
-        public void Initialize(EncryptionBase encryptor)
+        public void Initialize(CryptographyBase encryptor)
         {
             _encryptor = encryptor;
         }

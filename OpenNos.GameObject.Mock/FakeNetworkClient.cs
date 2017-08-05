@@ -114,7 +114,7 @@ namespace OpenNos.GameObject.Mock
             return _clientSession;
         }
 
-        public void Initialize(EncryptionBase encryptor)
+        public void Initialize(CryptographyBase encryptor)
         {
             // nothing to do here
         }

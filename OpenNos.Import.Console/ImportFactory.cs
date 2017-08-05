@@ -55,7 +55,7 @@ namespace OpenNos.Import.Console
                 AccountId = 1,
                 Authority = AuthorityType.GameMaster,
                 Name = "admin",
-                Password = EncryptionBase.Sha512("test")
+                Password = CryptographyBase.Sha512("test")
             };
             DAOFactory.AccountDAO.InsertOrUpdate(ref acc1);
 
@@ -64,7 +64,7 @@ namespace OpenNos.Import.Console
                 AccountId = 2,
                 Authority = AuthorityType.User,
                 Name = "test",
-                Password = EncryptionBase.Sha512("test")
+                Password = CryptographyBase.Sha512("test")
             };
             DAOFactory.AccountDAO.InsertOrUpdate(ref acc2);
         }

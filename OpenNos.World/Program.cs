@@ -112,11 +112,11 @@ namespace OpenNos.World
             {
                 Logger.Log.Error("General Error", ex);
             }
-            NetworkManager<WorldEncryption> networkManager = null;
+            NetworkManager<WorldCryptography> networkManager = null;
             portloop:
             try
             {
-                networkManager = new NetworkManager<WorldEncryption>(ConfigurationManager.AppSettings["IPADDRESS"], port, typeof(CommandPacketHandler), typeof(LoginEncryption), true);
+                networkManager = new NetworkManager<WorldCryptography>(ConfigurationManager.AppSettings["IPADDRESS"], port, typeof(CommandPacketHandler), typeof(LoginCryptography), true);
             }
             catch (SocketException ex)
             {
