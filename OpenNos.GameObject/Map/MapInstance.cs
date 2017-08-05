@@ -501,7 +501,7 @@ namespace OpenNos.GameObject
             });
         }
 
-        internal List<int> SummonMonsters(List<MonsterToSummon> summonParameters)
+        internal ConcurrentBag<int> SummonMonsters(List<MonsterToSummon> summonParameters)
         {
             ConcurrentBag<int> ids = new ConcurrentBag<int>();
             Parallel.ForEach(summonParameters, npcMonster =>
@@ -517,10 +517,10 @@ namespace OpenNos.GameObject
                     ids.Add(mapMonster.MapMonsterId);
                 }
             });
-            return ids.ToList();
+            return ids;
         }
 
-        internal List<int> SummonNpcs(List<NpcToSummon> summonParameters)
+        internal ConcurrentBag<int> SummonNpcs(List<NpcToSummon> summonParameters)
         {
             ConcurrentBag<int> ids = new ConcurrentBag<int>();
             Parallel.ForEach(summonParameters, npcMonster =>
@@ -535,7 +535,7 @@ namespace OpenNos.GameObject
                     ids.Add(mapNpc.MapNpcId);
                 }
             });
-            return ids.ToList();
+            return ids;
         }
 
         protected override void Dispose(bool disposing)

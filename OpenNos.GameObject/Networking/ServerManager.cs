@@ -198,24 +198,29 @@ namespace OpenNos.GameObject
 
                 Session.SendPacket("eff_ob -1 -1 0 4269");
                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#revival^2 #revival^1 {Language.Instance.GetMessageFromKey("ASK_REVIVE_PVP")}"));
-                Task.Factory.StartNew(async () =>
-                {
-                    bool revive = true;
-                    for (int i = 1; i <= 30; i++)
-                    {
-                        await Task.Delay(1000).ConfigureAwait(false);
-                        if (Session.Character.Hp > 0)
-                        {
-                            revive = false;
-                            break;
-                        }
-                    }
-                    if (revive)
-                    {
-                        Instance.ReviveFirstPosition(Session.Character.CharacterId);
-                    }
-                });
+                ReviveTask(Session);
             }
+        }
+
+        private void ReviveTask(ClientSession Session)
+        {
+            Task.Factory.StartNew(async () =>
+            {
+                bool revive = true;
+                for (int i = 1; i <= 30; i++)
+                {
+                    await Task.Delay(1000).ConfigureAwait(false);
+                    if (Session.Character.Hp > 0)
+                    {
+                        revive = false;
+                        break;
+                    }
+                }
+                if (revive)
+                {
+                    Instance.ReviveFirstPosition(Session.Character.CharacterId);
+                }
+            });
         }
 
         // PacketHandler -> with Callback?
@@ -239,28 +244,6 @@ namespace OpenNos.GameObject
                 Session.SendPacket(Session.Character.GenerateCond());
                 Session.SendPackets(UserInterfaceHelper.Instance.GenerateVb());
 
-                // avoid copycat code
-                void reviveTask()
-                {
-                    Task.Factory.StartNew(async () =>
-                    {
-                        bool revive = true;
-                        for (int i = 1; i <= 30; i++)
-                        {
-                            await Task.Delay(1000).ConfigureAwait(false);
-                            if (Session.Character.Hp > 0)
-                            {
-                                revive = false;
-                                break;
-                            }
-                        }
-                        if (revive)
-                        {
-                            Instance.ReviveFirstPosition(Session.Character.CharacterId);
-                        }
-                    });
-                }
-
                 switch (Session.CurrentMapInstance.MapInstanceType)
                 {
                     case MapInstanceType.BaseMapInstance:
@@ -278,7 +261,7 @@ namespace OpenNos.GameObject
                         }
                         Session.SendPacket("eff_ob -1 -1 0 4269");
                         Session.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#revival^0 #revival^1 {(Session.Character.Level > 20 ? Language.Instance.GetMessageFromKey("ASK_REVIVE") : Language.Instance.GetMessageFromKey("ASK_REVIVE_FREE"))}"));
-                        reviveTask();
+                        ReviveTask(Session);
                         break;
 
                     case MapInstanceType.TimeSpaceInstance:
@@ -291,7 +274,7 @@ namespace OpenNos.GameObject
                         Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("YOU_HAVE_LIFE"), Session.CurrentMapInstance.InstanceBag.Lives - Session.CurrentMapInstance.InstanceBag.DeadList.Count + 1), 0));
                         Session.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#revival^1 #revival^1 {(Session.Character.Level > 10 ? Language.Instance.GetMessageFromKey("ASK_REVIVE_TS_LOW_LEVEL") : Language.Instance.GetMessageFromKey("ASK_REVIVE_TS"))}"));
                         Session.CurrentMapInstance.InstanceBag.DeadList.Add(Session.Character.CharacterId);
-                        reviveTask();
+                        ReviveTask(Session);
                         break;
 
                     case MapInstanceType.RaidInstance:
@@ -337,7 +320,7 @@ namespace OpenNos.GameObject
 
                     case MapInstanceType.LodInstance:
                         Session.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#revival^0 #revival^1 {Language.Instance.GetMessageFromKey("ASK_REVIVE_LOD")}"));
-                        reviveTask();
+                        ReviveTask(Session);
                         break;
 
                     default:
@@ -595,8 +578,7 @@ namespace OpenNos.GameObject
 
         public long GetNextGroupId()
         {
-            _lastGroupId++;
-            return _lastGroupId;
+            return ++_lastGroupId;
         }
 
         public NpcMonster GetNpc(short npcVNum)
@@ -872,7 +854,7 @@ namespace OpenNos.GameObject
             // initialize shops
             _shops = new ThreadSafeSortedList<int, Shop>();
             Parallel.ForEach(DAOFactory.ShopDAO.LoadAll(), shopGrouping => _shops[shopGrouping.MapNpcId] = shopGrouping as Shop);
-            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("SHOPS_LOADED"), _shops.GetAllItems().Count));
+            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("SHOPS_LOADED"), _shops.Count));
 
             // initialize teleporters
             _teleporters = new ThreadSafeSortedList<int, List<TeleporterDTO>>();

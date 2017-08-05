@@ -149,6 +149,7 @@ namespace OpenNos.Master.Library.Interface
         /// Generates list of sessionId for given IpAddress
         /// </summary>
         /// <param name="ipAddress">IpAddress to gather wanted SessionIds</param>
+        /// <param name="characterId"></param>
         /// <returns>List of SessionId</returns>
         long[][] RetrieveOnlineCharacters(long characterId);
 

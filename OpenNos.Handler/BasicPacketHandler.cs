@@ -912,7 +912,7 @@ namespace OpenNos.Handler
                         }
                         else
                         {
-                            if (Session.Character.Family == null || Session.Character.Family.FamilyCharacters.Where(s => s.Authority.Equals(FamilyAuthority.Head)).FirstOrDefault()?.CharacterId.Equals(Session.Character.CharacterId) != true)
+                            if (Session.Character.Family == null || Session.Character.Family.FamilyCharacters.Find(s => s.Authority.Equals(FamilyAuthority.Head))?.CharacterId.Equals(Session.Character.CharacterId) != true)
                             {
                                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_FAMILY"), 0));
                             }
@@ -921,7 +921,7 @@ namespace OpenNos.Handler
                             Session.Character.Inventory.RemoveItemAmount(baseVnum + faction);
                             Session.SendPacket("scr 0 0 0 0 0 0 0");
                             Session.SendPacket(Session.Character.GenerateFaction());
-                            Session.SendPacket(Session.Character.GenerateEff(4799 + faction / 2));
+                            Session.SendPacket(Session.Character.GenerateEff(4799 + (faction / 2)));
                             Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey($"GET_PROTECTION_POWER_{faction / 2}"), 0));
                             Session.Character.Save();
                             ServerManager.Instance.FamilyRefresh(Session.Character.Family.FamilyId);

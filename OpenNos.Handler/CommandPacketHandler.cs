@@ -104,7 +104,7 @@ namespace OpenNos.Handler
         /// <param name="sortPacket"></param>
         public void Sort(SortPacket sortPacket)
         {
-            if (sortPacket != null && sortPacket.InventoryType.HasValue)
+            if (sortPacket?.InventoryType.HasValue == true)
             {
                 Logger.LogEvent("USERCOMMAND", Session.GenerateIdentity(), $"[Sort]InventoryType: {sortPacket.InventoryType}");
                 if (sortPacket.InventoryType == InventoryType.Equipment && sortPacket.InventoryType == InventoryType.Etc && sortPacket.InventoryType == InventoryType.Main)
@@ -2760,7 +2760,6 @@ namespace OpenNos.Handler
                         Session.SendPacket(Session.Character.GenerateSay($"Character Name: {_character.Name}", 13));
                         Session.SendPacket(Session.Character.GenerateSay($"ChannelId: {connection[1]}", 13));
                         Session.SendPacket(Session.Character.GenerateSay("-----", 13));
-
                     }
                 }
             }
