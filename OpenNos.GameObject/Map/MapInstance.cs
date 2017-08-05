@@ -269,11 +269,8 @@ namespace OpenNos.GameObject
         {
             List<string> packets = new List<string>();
             Sessions.Where(s => s.Character?.InvisibleGm == false).ToList().ForEach(s => s.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m => packets.Add(m.GenerateIn())));
-
-            // TODO: Parallelize getting of items of mapinstance
             Portals.ForEach(s => packets.Add(s.GenerateGp()));
             ScriptedInstances.Where(s => s.Type == ScriptedInstanceType.TimeSpace).ToList().ForEach(s => packets.Add(s.GenerateWp()));
-
             Monsters.ForEach(s =>
             {
                 packets.Add(s.GenerateIn());
@@ -284,11 +281,7 @@ namespace OpenNos.GameObject
             });
             Npcs.ForEach(s => packets.Add(s.GenerateIn()));
             packets.AddRange(GenerateNPCShopOnMap());
-            foreach (MapItem session in DroppedList.GetAllItems())
-            {
-                packets.Add(session.GenerateIn());
-            }
-
+            DroppedList.GetAllItems().ForEach(s => packets.Add(s.GenerateIn()));
             Buttons.ForEach(s => packets.Add(s.GenerateIn()));
             packets.AddRange(GenerateUserShops());
             packets.AddRange(GeneratePlayerShopOnMap());
@@ -300,7 +293,6 @@ namespace OpenNos.GameObject
             return _monsters[mapMonsterId];
         }
 
-        // TODO: Fix, Seems glitchy.
         public int GetNextMonsterId()
         {
             int nextId = _mapMonsterIds.GetAllItems().Count > 0 ? _mapMonsterIds.GetAllItems().Last() + 1 : 1;
@@ -308,7 +300,6 @@ namespace OpenNos.GameObject
             return nextId;
         }
 
-        // TODO: Fix, Seems glitchy.
         public int GetNextNpcId()
         {
             int nextId = _mapNpcIds.GetAllItems().Count > 0 ? _mapNpcIds.GetAllItems().Last() + 1 : 1;
@@ -318,7 +309,6 @@ namespace OpenNos.GameObject
 
         public void LoadMonsters()
         {
-            // TODO: Parallelize, if possible.
             Parallel.ForEach(DAOFactory.MapMonsterDAO.LoadFromMap(Map.MapId).ToList(), monster =>
             {
                 MapMonster mapMonster = monster as MapMonster;
@@ -331,7 +321,6 @@ namespace OpenNos.GameObject
 
         public void LoadNpcs()
         {
-            // TODO: Parallelize, if possible.
             Parallel.ForEach(DAOFactory.MapNpcDAO.LoadFromMap(Map.MapId).ToList(), npc =>
             {
                 MapNpc mapNpc = npc as MapNpc;
@@ -344,15 +333,11 @@ namespace OpenNos.GameObject
 
         public void LoadPortals()
         {
-            var partitioner = Partitioner.Create(DAOFactory.PortalDAO.LoadByMap(Map.MapId), EnumerablePartitionerOptions.None);
-            ThreadSafeSortedList<int, Portal> _portalList = new ThreadSafeSortedList<int, Portal>();
-            Parallel.ForEach(partitioner, portal =>
+            foreach (Portal portal in DAOFactory.PortalDAO.LoadByMap(Map.MapId))
             {
-                Portal portal2 = portal as Portal;
-                portal2.SourceMapInstanceId = MapInstanceId;
-                _portalList[portal2.PortalId] = portal2;
-            });
-            Portals.AddRange(_portalList.GetAllItems());
+                portal.SourceMapInstanceId = MapInstanceId;
+                Portals.Add(portal);
+            }
         }
 
         public void MapClear()
@@ -409,7 +394,6 @@ namespace OpenNos.GameObject
             try
             {
                 List<MapItem> dropsToRemove = DroppedList.GetAllItems().Where(dl => dl.CreatedDate.AddMinutes(3) < DateTime.Now).ToList();
-
                 Parallel.ForEach(dropsToRemove, drop =>
                 {
                     Broadcast(drop.GenerateOut(drop.TransportId));
@@ -519,43 +503,39 @@ namespace OpenNos.GameObject
 
         internal List<int> SummonMonsters(List<MonsterToSummon> summonParameters)
         {
-            // TODO: Parallelize, if possible.
-            List<int> ids = new List<int>();
-            foreach (MonsterToSummon mon in summonParameters)
+            ConcurrentBag<int> ids = new ConcurrentBag<int>();
+            Parallel.ForEach(summonParameters, npcMonster =>
             {
-                NpcMonster npcmonster = ServerManager.Instance.GetNpc(mon.VNum);
+                NpcMonster npcmonster = ServerManager.Instance.GetNpc(npcMonster.VNum);
                 if (npcmonster != null)
                 {
-                    MapMonster monster = new MapMonster { MonsterVNum = npcmonster.NpcMonsterVNum, MapY = mon.SpawnCell.Y, MapX = mon.SpawnCell.X, MapId = Map.MapId, IsMoving = mon.IsMoving, MapMonsterId = GetNextMonsterId(), ShouldRespawn = false, Target = mon.Target, OnDeathEvents = mon.DeathEvents, OnNoticeEvents = mon.NoticingEvents, IsTarget = mon.IsTarget, IsBonus = mon.IsBonus, IsBoss = mon.IsBoss, NoticeRange = mon.NoticeRange };
-                    monster.Initialize(this);
-                    monster.IsHostile = mon.IsHostile;
-                    AddMonster(monster);
-                    Broadcast(monster.GenerateIn());
-                    ids.Add(monster.MapMonsterId);
+                    MapMonster mapMonster = new MapMonster { MonsterVNum = npcmonster.NpcMonsterVNum, MapY = npcMonster.SpawnCell.Y, MapX = npcMonster.SpawnCell.X, MapId = Map.MapId, IsMoving = npcMonster.IsMoving, MapMonsterId = GetNextMonsterId(), ShouldRespawn = false, Target = npcMonster.Target, OnDeathEvents = npcMonster.DeathEvents, OnNoticeEvents = npcMonster.NoticingEvents, IsTarget = npcMonster.IsTarget, IsBonus = npcMonster.IsBonus, IsBoss = npcMonster.IsBoss, NoticeRange = npcMonster.NoticeRange };
+                    mapMonster.Initialize(this);
+                    mapMonster.IsHostile = npcMonster.IsHostile;
+                    AddMonster(mapMonster);
+                    Broadcast(mapMonster.GenerateIn());
+                    ids.Add(mapMonster.MapMonsterId);
                 }
-            }
-
-            return ids;
+            });
+            return ids.ToList();
         }
 
         internal List<int> SummonNpcs(List<NpcToSummon> summonParameters)
         {
-            // TODO: Parallelize, if possible.
-            List<int> ids = new List<int>();
-            foreach (NpcToSummon mon in summonParameters)
+            ConcurrentBag<int> ids = new ConcurrentBag<int>();
+            Parallel.ForEach(summonParameters, npcMonster =>
             {
-                NpcMonster npcmonster = ServerManager.Instance.GetNpc(mon.VNum);
+                NpcMonster npcmonster = ServerManager.Instance.GetNpc(npcMonster.VNum);
                 if (npcmonster != null)
                 {
-                    MapNpc npc = new MapNpc { NpcVNum = npcmonster.NpcMonsterVNum, MapY = mon.SpawnCell.X, MapX = mon.SpawnCell.Y, MapId = Map.MapId, IsHostile = true, IsMoving = true, MapNpcId = GetNextNpcId(), Target = mon.Target, OnDeathEvents = mon.DeathEvents, IsMate = mon.IsMate, IsProtected = mon.IsProtected };
-                    npc.Initialize(this);
-                    AddNPC(npc);
-                    Broadcast(npc.GenerateIn());
-                    ids.Add(npc.MapNpcId);
+                    MapNpc mapNpc = new MapNpc { NpcVNum = npcmonster.NpcMonsterVNum, MapY = npcMonster.SpawnCell.X, MapX = npcMonster.SpawnCell.Y, MapId = Map.MapId, IsHostile = true, IsMoving = true, MapNpcId = GetNextNpcId(), Target = npcMonster.Target, OnDeathEvents = npcMonster.DeathEvents, IsMate = npcMonster.IsMate, IsProtected = npcMonster.IsProtected };
+                    mapNpc.Initialize(this);
+                    AddNPC(mapNpc);
+                    Broadcast(mapNpc.GenerateIn());
+                    ids.Add(mapNpc.MapNpcId);
                 }
-            }
-
-            return ids;
+            });
+            return ids.ToList();
         }
 
         protected override void Dispose(bool disposing)

@@ -29,6 +29,7 @@ namespace OpenNos.GameObject
 
         private const short DEFAULT_BACKPACK_SIZE = 48;
         private const byte MAX_ITEM_AMOUNT = 99;
+        private readonly object _lockObject = new object();
 
         #endregion
 
@@ -384,9 +385,7 @@ namespace OpenNos.GameObject
                 MoveItem(inventory, InventoryType.FamilyWareHouse, slot, amount, newSlot, out item, out itemdest);
                 itemdest.CharacterId = fhead.CharacterId;
                 DAOFactory.IteminstanceDAO.InsertOrUpdate(itemdest);
-                Owner.Session.SendPacket(item != null ? item.GenerateInventoryAdd()
-                    : UserInterfaceHelper.Instance.GenerateInventoryRemove(inventory, slot));
-
+                Owner.Session.SendPacket(item != null ? item.GenerateInventoryAdd() : UserInterfaceHelper.Instance.GenerateInventoryRemove(inventory, slot));
                 if (itemdest != null)
                 {
                     Owner.Session.SendPacket(itemdest.GenerateFStash());
@@ -411,11 +410,14 @@ namespace OpenNos.GameObject
             T retItem = null;
             try
             {
-                retItem = (T)GetAllItems().SingleOrDefault(i => i?.GetType().Equals(typeof(T)) == true && i.Slot == slot && i.Type == type);
+                lock (_lockObject)
+                {
+                    retItem = (T)GetAllItems().SingleOrDefault(i => i?.GetType().Equals(typeof(T)) == true && i.Slot == slot && i.Type == type);
+                }
             }
             catch (InvalidOperationException ioEx)
             {
-                Logger.Error(ioEx);
+                Logger.LogEventError("LoadBySlotAndType", Owner?.Session?.GenerateIdentity(), "MULTIPLE_ITEMS_IN_SLOT", ioEx);
                 bool isFirstItem = true;
                 foreach (ItemInstance item in GetAllItems().Where(i => i?.GetType().Equals(typeof(T)) == true && i.Slot == slot && i.Type == type))
                 {
@@ -425,10 +427,18 @@ namespace OpenNos.GameObject
                         isFirstItem = false;
                         continue;
                     }
-                    ItemInstance iteminstance = GetAllItems().Find(i => i?.GetType().Equals(typeof(T)) == true && i.Slot == slot && i.Type == type);
-                    if (iteminstance != null)
+                    ItemInstance itemInstance = GetAllItems().Find(i => i?.GetType().Equals(typeof(T)) == true && i.Slot == slot && i.Type == type);
+                    if (itemInstance != null)
                     {
-                        Remove(iteminstance.Id);
+                        short? freeSlot = GetFreeSlot(type);
+                        if (freeSlot.HasValue)
+                        {
+                            itemInstance.Slot = freeSlot.Value;
+                        }
+                        else
+                        {
+                            Remove(itemInstance.Id);
+                        }
                     }
                 }
             }
@@ -440,11 +450,14 @@ namespace OpenNos.GameObject
             ItemInstance retItem = null;
             try
             {
-                retItem = GetAllItems().SingleOrDefault(i => i.Slot.Equals(slot) && i.Type.Equals(type));
+                lock (_lockObject)
+                {
+                    retItem = GetAllItems().SingleOrDefault(i => i.Slot.Equals(slot) && i.Type.Equals(type));
+                }
             }
             catch (InvalidOperationException ioEx)
             {
-                Logger.Error(ioEx);
+                Logger.LogEventError("LoadBySlotAndType", Owner?.Session?.GenerateIdentity(), "MULTIPLE_ITEMS_IN_SLOT", ioEx);
                 bool isFirstItem = true;
                 foreach (ItemInstance item in GetAllItems().Where(i => i.Slot.Equals(slot) && i.Type.Equals(type)))
                 {
@@ -454,7 +467,19 @@ namespace OpenNos.GameObject
                         isFirstItem = false;
                         continue;
                     }
-                    Remove(GetAllItems().First(i => i.Slot.Equals(slot) && i.Type.Equals(type)).Id);
+                    ItemInstance itemInstance = GetAllItems().Find(i => i.Slot.Equals(slot) && i.Type.Equals(type));
+                    if (itemInstance != null)
+                    {
+                        short? freeSlot = GetFreeSlot(type);
+                        if (freeSlot.HasValue)
+                        {
+                            itemInstance.Slot = freeSlot.Value;
+                        }
+                        else
+                        {
+                            Remove(itemInstance.Id);
+                        }
+                    }
                 }
             }
             return retItem;
@@ -663,7 +688,12 @@ namespace OpenNos.GameObject
             }
         }
 
-        public void Reorder(ClientSession Session, InventoryType inventoryType)
+        /// <summary>
+        /// reorders item in given inventorytype
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="inventoryType"></param>
+        public void Reorder(ClientSession session, InventoryType inventoryType)
         {
             List<ItemInstance> itemsByInventoryType = new List<ItemInstance>();
             switch (inventoryType)
@@ -675,6 +705,10 @@ namespace OpenNos.GameObject
                 case InventoryType.Specialist:
                     itemsByInventoryType = GetAllItems().Where(s => s.Type == InventoryType.Specialist).OrderBy(s => s.Item.LevelJobMinimum).ToList();
                     break;
+
+                default:
+                    itemsByInventoryType = GetAllItems().Where(s => s.Type == inventoryType).OrderBy(s => s.Item.Price).ToList();
+                    break;
             }
             GenerateClearInventory(inventoryType);
             for (short i = 0; i < itemsByInventoryType.Count; i++)
@@ -682,7 +716,7 @@ namespace OpenNos.GameObject
                 ItemInstance item = itemsByInventoryType[i];
                 item.Slot = i;
                 this[item.Id].Slot = i;
-                Session.SendPacket(item.GenerateInventoryAdd());
+                session.SendPacket(item.GenerateInventoryAdd());
             }
         }
 
@@ -692,12 +726,12 @@ namespace OpenNos.GameObject
             {
                 if (itemInstance.Type == InventoryType.Specialist && !(itemInstance is SpecialistInstance))
                 {
-                    Logger.Error(new Exception("Cannot add an item of type Specialist without beeing a SpecialistInstance."));
+                    Logger.Error(new Exception("Cannot add an item of type Specialist without being a SpecialistInstance."));
                     return;
                 }
                 if ((itemInstance.Type == InventoryType.Equipment || itemInstance.Type == InventoryType.Wear) && !(itemInstance is WearableInstance))
                 {
-                    Logger.Error(new Exception("Cannot add an item of type Equipment or Wear without beeing a WearableInstance."));
+                    Logger.Error(new Exception("Cannot add an item of type Equipment or Wear without being a WearableInstance."));
                 }
             }
         }

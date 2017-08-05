@@ -42,19 +42,19 @@ namespace OpenNos.GameObject
 
         public bool ShutdownStop;
 
-        private static readonly List<Item> _items = new List<Item>();
+        private static readonly ConcurrentBag<Item> _items = new ConcurrentBag<Item>();
 
         private static readonly ConcurrentDictionary<Guid, MapInstance> _mapinstances = new ConcurrentDictionary<Guid, MapInstance>();
 
-        private static readonly List<Map> _maps = new List<Map>();
+        private static readonly ConcurrentBag<Map> _maps = new ConcurrentBag<Map>();
 
-        private static readonly List<NpcMonster> _npcs = new List<NpcMonster>();
+        private static readonly ConcurrentBag<NpcMonster> _npcs = new ConcurrentBag<NpcMonster>();
 
-        private static readonly List<Skill> _skills = new List<Skill>();
+        private static readonly ConcurrentBag<Skill> _skills = new ConcurrentBag<Skill>();
 
         private static readonly CryptoRandom random = new CryptoRandom();
 
-        private static readonly List<Card> _cards = new List<Card>();
+        private static readonly ConcurrentBag<Card> _cards = new ConcurrentBag<Card>();
 
         private static ServerManager _instance;
 
@@ -147,7 +147,7 @@ namespace OpenNos.GameObject
 
         public List<PenaltyLogDTO> PenaltyLogs { get; set; }
 
-        public List<ScriptedInstance> Raids { get; set; }
+        public ConcurrentBag<ScriptedInstance> Raids { get; set; }
 
         public List<Schedule> Schedules { get; set; }
 
@@ -527,9 +527,9 @@ namespace OpenNos.GameObject
             CommunicationServiceClient.Instance.UpdateFamily(ServerGroup, FamilyId);
         }
 
-        public MapInstance GenerateMapInstance(short MapId, MapInstanceType type, InstanceBag mapclock)
+        public MapInstance GenerateMapInstance(short mapId, MapInstanceType type, InstanceBag mapclock)
         {
-            Map map = _maps.Find(m => m.MapId.Equals(MapId));
+            Map map = _maps.FirstOrDefault(m => m.MapId.Equals(mapId));
             if (map != null)
             {
                 Guid guid = Guid.NewGuid();
@@ -580,7 +580,7 @@ namespace OpenNos.GameObject
 
         public Item GetItem(short vnum)
         {
-            return _items.Find(m => m.VNum.Equals(vnum));
+            return _items.FirstOrDefault(m => m.VNum.Equals(vnum));
         }
 
         public MapInstance GetMapInstance(Guid id)
@@ -601,7 +601,7 @@ namespace OpenNos.GameObject
 
         public NpcMonster GetNpc(short npcVNum)
         {
-            return _npcs.Find(m => m.NpcMonsterVNum.Equals(npcVNum));
+            return _npcs.FirstOrDefault(m => m.NpcMonsterVNum.Equals(npcVNum));
         }
 
         public T GetProperty<T>(string charName, string property)
@@ -641,12 +641,12 @@ namespace OpenNos.GameObject
 
         public Skill GetSkill(short skillVNum)
         {
-            return _skills.Find(m => m.SkillVNum.Equals(skillVNum));
+            return _skills.FirstOrDefault(m => m.SkillVNum.Equals(skillVNum));
         }
 
         public Card GetCard(short cardId)
         {
-            return _cards.Find(m => m.CardId.Equals(cardId));
+            return _cards.FirstOrDefault(m => m.CardId.Equals(cardId));
         }
 
         public T GetUserMethod<T>(long characterId, string methodName)
@@ -748,7 +748,6 @@ namespace OpenNos.GameObject
             Mails = DAOFactory.MailDAO.LoadAll().ToList();
 
             var itemPartitioner = Partitioner.Create(DAOFactory.ItemDAO.LoadAll(), EnumerablePartitionerOptions.NoBuffering);
-            ThreadSafeSortedList<short, Item> _item = new ThreadSafeSortedList<short, Item>();
             Parallel.ForEach(itemPartitioner, new ParallelOptions { MaxDegreeOfParallelism = 4 }, itemDTO =>
             {
                 switch (itemDTO.ItemType)
@@ -758,53 +757,52 @@ namespace OpenNos.GameObject
                     case ItemType.Fashion:
                     case ItemType.Specialist:
                     case ItemType.Weapon:
-                        _item[itemDTO.VNum] = new WearableItem(itemDTO);
+                        _items.Add(new WearableItem(itemDTO));
                         break;
 
                     case ItemType.Box:
-                        _item[itemDTO.VNum] = new BoxItem(itemDTO);
+                        _items.Add(new BoxItem(itemDTO));
                         break;
 
                     case ItemType.Shell:
                     case ItemType.Magical:
                     case ItemType.Event:
-                        _item[itemDTO.VNum] = new MagicalItem(itemDTO);
+                        _items.Add(new MagicalItem(itemDTO));
                         break;
 
                     case ItemType.Food:
-                        _item[itemDTO.VNum] = new FoodItem(itemDTO);
+                        _items.Add(new FoodItem(itemDTO));
                         break;
 
                     case ItemType.Potion:
-                        _item[itemDTO.VNum] = new PotionItem(itemDTO);
+                        _items.Add(new PotionItem(itemDTO));
                         break;
 
                     case ItemType.Production:
-                        _item[itemDTO.VNum] = new ProduceItem(itemDTO);
+                        _items.Add(new ProduceItem(itemDTO));
                         break;
 
                     case ItemType.Snack:
-                        _item[itemDTO.VNum] = new SnackItem(itemDTO);
+                        _items.Add(new SnackItem(itemDTO));
                         break;
 
                     case ItemType.Special:
-                        _item[itemDTO.VNum] = new SpecialItem(itemDTO);
+                        _items.Add(new SpecialItem(itemDTO));
                         break;
 
                     case ItemType.Teacher:
-                        _item[itemDTO.VNum] = new TeacherItem(itemDTO);
+                        _items.Add(new TeacherItem(itemDTO));
                         break;
 
                     case ItemType.Upgrade:
-                        _item[itemDTO.VNum] = new UpgradeItem(itemDTO);
+                        _items.Add(new UpgradeItem(itemDTO));
                         break;
 
                     default:
-                        _item[itemDTO.VNum] = new NoFunctionItem(itemDTO);
+                        _items.Add(new NoFunctionItem(itemDTO));
                         break;
                 }
             });
-            _items.AddRange(_item.GetAllItems());
             Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("ITEMS_LOADED"), _items.Count));
 
             // intialize monsterdrops
@@ -849,14 +847,13 @@ namespace OpenNos.GameObject
             Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("BAZAAR_LOADED"), BazaarList.Count));
 
             // initialize npcmonsters
-            ThreadSafeSortedList<short, NpcMonster> _npcMonsters = new ThreadSafeSortedList<short, NpcMonster>();
             Parallel.ForEach(DAOFactory.NpcMonsterDAO.LoadAll(), npcMonster =>
             {
-                _npcMonsters[npcMonster.NpcMonsterVNum] = npcMonster as NpcMonster;
-                _npcMonsters[npcMonster.NpcMonsterVNum].BCards = new List<BCard>();
-                DAOFactory.BCardDAO.LoadByNpcMonsterVNum(npcMonster.NpcMonsterVNum).ToList().ForEach(s => _npcMonsters[npcMonster.NpcMonsterVNum].BCards.Add((BCard)s));
+                NpcMonster npcMonsterObj = npcMonster as NpcMonster;
+                npcMonsterObj.BCards = new List<BCard>();
+                DAOFactory.BCardDAO.LoadByNpcMonsterVNum(npcMonster.NpcMonsterVNum).ToList().ForEach(s => npcMonsterObj.BCards.Add((BCard)s));
+                _npcs.Add(npcMonsterObj);
             });
-            _npcs.AddRange(_npcMonsters.GetAllItems());
             Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("NPCMONSTERS_LOADED"), _npcs.Count));
 
             // intialize recipes
@@ -885,28 +882,24 @@ namespace OpenNos.GameObject
             Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("TELEPORTERS_LOADED"), _teleporters.GetAllItems().Sum(i => i.Count)));
 
             // initialize skills
-            ThreadSafeSortedList<short, Skill> _skill = new ThreadSafeSortedList<short, Skill>();
             Parallel.ForEach(DAOFactory.SkillDAO.LoadAll(), skill =>
             {
                 Skill skillObj = skill as Skill;
                 skillObj.Combos.AddRange(DAOFactory.ComboDAO.LoadBySkillVnum(skillObj.SkillVNum).ToList());
                 skillObj.BCards = new List<BCard>();
                 DAOFactory.BCardDAO.LoadBySkillVNum(skillObj.SkillVNum).ToList().ForEach(o => skillObj.BCards.Add((BCard)o));
-                _skill[skillObj.SkillVNum] = skillObj;
+                _skills.Add(skillObj);
             });
-            _skills.AddRange(_skill.GetAllItems());
             Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("SKILLS_LOADED"), _skills.Count));
 
-            // initialize buffs
-            ThreadSafeSortedList<short, Card> _card = new ThreadSafeSortedList<short, Card>();
+            // initialize cards
             Parallel.ForEach(DAOFactory.CardDAO.LoadAll(), card =>
             {
                 Card cardObj = card as Card;
                 cardObj.BCards = new List<BCard>();
                 DAOFactory.BCardDAO.LoadByCardId(cardObj.CardId).ToList().ForEach(o => cardObj.BCards.Add((BCard)o));
-                _card[card.CardId] = cardObj;
+                _cards.Add(cardObj);
             });
-            _cards.AddRange(_card.GetAllItems());
             Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("CARDS_LOADED"), _cards.Count));
 
             // intialize mapnpcs
@@ -919,7 +912,6 @@ namespace OpenNos.GameObject
                 int i = 0;
                 int monstercount = 0;
                 var mapPartitioner = Partitioner.Create(DAOFactory.MapDAO.LoadAll(), EnumerablePartitionerOptions.NoBuffering);
-                ThreadSafeSortedList<short, Map> _mapList = new ThreadSafeSortedList<short, Map>();
                 Parallel.ForEach(mapPartitioner, new ParallelOptions { MaxDegreeOfParallelism = 8 }, map =>
                 {
                     Guid guid = Guid.NewGuid();
@@ -927,7 +919,7 @@ namespace OpenNos.GameObject
                     {
                         Music = map.Music
                     };
-                    _mapList[map.MapId] = mapinfo;
+                    _maps.Add(mapinfo);
                     MapInstance newMap = new MapInstance(mapinfo, guid, map.ShopAllowed, MapInstanceType.BaseMapInstance, new InstanceBag());
                     _mapinstances.TryAdd(guid, newMap);
 
@@ -948,7 +940,6 @@ namespace OpenNos.GameObject
                     monstercount += newMap.Monsters.Count;
                     i++;
                 });
-                _maps.AddRange(_mapList.GetAllItems());
                 if (i != 0)
                 {
                     Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("MAPS_LOADED"), i));
@@ -1367,7 +1358,7 @@ namespace OpenNos.GameObject
 
         private void LoadScriptedInstances()
         {
-            Raids = new List<ScriptedInstance>();
+            Raids = new ConcurrentBag<ScriptedInstance>();
             Parallel.ForEach(_mapinstances, map =>
             {
                 foreach (ScriptedInstance si in DAOFactory.ScriptedInstanceDAO.LoadByMap(map.Value.Map.MapId).ToList())

@@ -13,6 +13,7 @@
  */
 
 using OpenNos.Core;
+using OpenNos.Core.Handling;
 using OpenNos.DAL;
 using OpenNos.Data;
 using OpenNos.Domain;
@@ -94,6 +95,30 @@ namespace OpenNos.Handler
             else
             {
                 Session.SendPacket(Session.Character.GenerateSay(AddMonsterPacket.ReturnHelp(), 10));
+            }
+        }
+
+        /// <summary>
+        /// $Sort Command
+        /// </summary>
+        /// <param name="sortPacket"></param>
+        public void Sort(SortPacket sortPacket)
+        {
+            if (sortPacket != null && sortPacket.InventoryType.HasValue)
+            {
+                Logger.LogEvent("USERCOMMAND", Session.GenerateIdentity(), $"[Sort]InventoryType: {sortPacket.InventoryType}");
+                if (sortPacket.InventoryType == InventoryType.Equipment && sortPacket.InventoryType == InventoryType.Etc && sortPacket.InventoryType == InventoryType.Main)
+                {
+                    Session.Character.Inventory.Reorder(Session, sortPacket.InventoryType.Value);
+                }
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay(SortPacket.ReturnHelp(), 10));
+                foreach (string str in SortPacket.MoreHelp())
+                {
+                    Session.SendPacket(Session.Character.GenerateSay(str, 10));
+                }
             }
         }
 
@@ -2412,7 +2437,11 @@ namespace OpenNos.Handler
             }
         }
 
-        public void Unstuck(UnstuckPacket packet)
+        /// <summary>
+        /// $Unstuck Command
+        /// </summary>
+        /// <param name="unstuckPacket"></param>
+        public void Unstuck(UnstuckPacket unstuckPacket)
         {
             if (Session?.Character != null)
             {
@@ -2424,6 +2453,7 @@ namespace OpenNos.Handler
                 {
                     ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, Session.Character.MapInstanceId, Session.Character.PositionX, Session.Character.PositionY);
                     Session.SendPacket("cancel 2 0");
+                    Session.SendPacket("cancel 0 0");
                 }
             }
         }

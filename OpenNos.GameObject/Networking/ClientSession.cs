@@ -339,12 +339,12 @@ namespace OpenNos.GameObject
                                                             });
 
             // iterate thru each type in the given assembly
-            Parallel.ForEach(handlerTypes, handlerType =>
+            foreach (Type handlerType in handlerTypes)
             {
                 IPacketHandler handler = (IPacketHandler)Activator.CreateInstance(handlerType, this);
 
                 // include PacketDefinition
-                Parallel.ForEach(handlerType.GetMethods().Where(x => x.GetCustomAttributes(false).OfType<PacketAttribute>().Any() || x.GetParameters().FirstOrDefault()?.ParameterType.BaseType == typeof(PacketDefinition)), methodInfo =>
+                foreach (MethodInfo methodInfo in handlerType.GetMethods().Where(x => x.GetCustomAttributes(false).OfType<PacketAttribute>().Any() || x.GetParameters().FirstOrDefault()?.ParameterType.BaseType == typeof(PacketDefinition)))
                 {
                     List<PacketAttribute> packetAttributes = methodInfo.GetCustomAttributes(false).OfType<PacketAttribute>().ToList();
 
@@ -363,8 +363,8 @@ namespace OpenNos.GameObject
                             HandlerMethods.Add(methodReference.Identification, methodReference);
                         }
                     }
-                });
-            });
+                }
+            }
         }
 
         /// <summary>

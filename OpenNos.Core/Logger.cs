@@ -86,6 +86,19 @@ namespace OpenNos.Core
             }
         }
 
+        /// <summary>
+        /// Wraps up the error message with the Logging Event
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="logEvent"></param>
+        /// <param name="caller"></param>
+        /// <param name="data"></param>
+        /// <param name="ex"></param>
+        public static void LogEventError(string logEvent, string caller, string data, Exception ex)
+        {
+            Log?.Error($"[{logEvent}][{caller}]{data}", ex);
+        }
+
         public static void InitializeLogger(ILog log)
         {
             Log = log;

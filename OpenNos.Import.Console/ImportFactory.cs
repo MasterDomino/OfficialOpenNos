@@ -204,18 +204,17 @@ namespace OpenNos.Import.Console
         {
             short map = 0;
             List<MapNpcDTO> npcs = new List<MapNpcDTO>();
-            ThreadSafeSortedList<int, int> npcMvPacketsList = new ThreadSafeSortedList<int, int>();
             ThreadSafeSortedList<int, short> effPacketsDictionary = new ThreadSafeSortedList<int, short>();
-
+            ConcurrentBag<int> npcMvPacketsList = new ConcurrentBag<int>();
             Parallel.ForEach(_packetList.Where(o => o[0].Equals("mv") && o[1].Equals("2")), currentPacket =>
             {
                 if (long.Parse(currentPacket[2]) > 20000)
                 {
                     return;
                 }
-                if (!npcMvPacketsList.ContainsKey(int.Parse(currentPacket[2])))
+                if (!npcMvPacketsList.Contains(int.Parse(currentPacket[2])))
                 {
-                    npcMvPacketsList[int.Parse(currentPacket[2])] = 1;
+                    npcMvPacketsList.Add(int.Parse(currentPacket[2]));
                 }
             });
 
@@ -257,7 +256,7 @@ namespace OpenNos.Import.Console
                         npctest.Effect = effPacketsDictionary[npctest.MapNpcId];
                     }
                     npctest.EffectDelay = 4750;
-                    npctest.IsMoving = npcMvPacketsList.ContainsKey(npctest.MapNpcId);
+                    npctest.IsMoving = npcMvPacketsList.Contains(npctest.MapNpcId);
                     npctest.Position = byte.Parse(currentPacket[6]);
                     npctest.Dialog = short.Parse(currentPacket[9]);
                     npctest.IsSitting = currentPacket[13] != "1";
@@ -776,14 +775,14 @@ namespace OpenNos.Import.Console
         public void ImportMonsters()
         {
             short map = 0;
-            ThreadSafeSortedList<int, int> mobMvPacketsList = new ThreadSafeSortedList<int, int>();
+            ConcurrentBag<int> mobMvPacketsList = new ConcurrentBag<int>();
             List<MapMonsterDTO> monsters = new List<MapMonsterDTO>();
 
             Parallel.ForEach(_packetList.Where(o => o[0].Equals("mv") && o[1].Equals("3")), currentPacket =>
             {
-                if (!mobMvPacketsList.ContainsKey(int.Parse(currentPacket[2])))
+                if (!mobMvPacketsList.Contains(int.Parse(currentPacket[2])))
                 {
-                    mobMvPacketsList[int.Parse(currentPacket[2])] = 1;
+                    mobMvPacketsList.Add(int.Parse(currentPacket[2]));
                 }
             });
             foreach (string[] currentPacket in _packetList.Where(o => o[0].Equals("in") || o[0].Equals("at")))
@@ -805,7 +804,7 @@ namespace OpenNos.Import.Console
                         Position = (byte)(currentPacket[6]?.Length == 0 ? 0 : byte.Parse(currentPacket[6])),
                         IsDisabled = false
                     };
-                    monster.IsMoving = mobMvPacketsList.ContainsKey(monster.MapMonsterId);
+                    monster.IsMoving = mobMvPacketsList.Contains(monster.MapMonsterId);
                     if (DAOFactory.NpcMonsterDAO.LoadByVNum(monster.MonsterVNum) == null || DAOFactory.MapMonsterDAO.LoadById(monster.MapMonsterId) != null || monsters.Count(i => i.MapMonsterId == monster.MapMonsterId) != 0)
                     {
                         continue;

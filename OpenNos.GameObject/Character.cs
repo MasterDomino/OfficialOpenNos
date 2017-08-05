@@ -668,7 +668,7 @@ namespace OpenNos.GameObject
                         }
                         catch (Exception ex)
                         {
-                            Logger.Error(ex, "CharacterLife");
+                            Logger.Error(ex);
                         }
                     }
                     Mates.Where(s => s.CanPickUp).ToList().ForEach(s => Session.CurrentMapInstance?.Broadcast(s.GenerateEff(3007)));
@@ -731,7 +731,6 @@ namespace OpenNos.GameObject
                             //else
                             //{
                             Session.SendPacket(GenerateStat());
-
                             //}
                         }
                     }
@@ -877,7 +876,6 @@ namespace OpenNos.GameObject
                                     {
                                         return;
                                     }
-                                    Logger.Debug(GenerateIdentity(), specialist.ItemVNum.ToString());
                                     UseSp = false;
                                     LoadSpeed();
                                     Session.SendPacket(GenerateCond());
@@ -1730,7 +1728,7 @@ namespace OpenNos.GameObject
             {
                 specialist = Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear);
             }
-            return $"lev {Level} {(Level < 100 ? LevelXp : LevelXp / 100)} {(!UseSp || specialist == null ? JobLevel : specialist.SpLevel)} {(!UseSp || specialist == null ? JobLevelXp : specialist.XP)} {(Level<100?XPLoad():XPLoad()/100)} {(!UseSp || specialist == null ? JobXPLoad() : SPXPLoad())} {Reput} {GetCP()} {HeroXp} {HeroLevel} {HeroXPLoad()} 0";
+            return $"lev {Level} {(Level < 100 ? LevelXp : LevelXp / 100)} {(!UseSp || specialist == null ? JobLevel : specialist.SpLevel)} {(!UseSp || specialist == null ? JobLevelXp : specialist.XP)} {(Level < 100 ? XPLoad() : XPLoad() / 100)} {(!UseSp || specialist == null ? JobXPLoad() : SPXPLoad())} {Reput} {GetCP()} {HeroXp} {HeroLevel} {HeroXPLoad()} 0";
         }
 
         public string GenerateLevelUp()
