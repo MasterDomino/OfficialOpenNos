@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ALREADY_CONNECTED" xml:space="preserve">
-    <value>Account is already connected.</value>
+    <value>ไม่สามารถเชื่อมต่อกับ Server เนื่องจากมีการเชื่อมต่อ ID นี้ไว้อยู่แล้ว</value>
   </data>
   <data name="BANNED" xml:space="preserve">
-    <value>You have been banned. Reason {0}, until {1}</value>
+    <value>ID ถูกระงับ เนื่องจาก {0} ถึงถึง {1} กรุณาติดต่อทีมงาน</value>
   </data>
   <data name="CLIENT_CLOSED" xml:space="preserve">
     <value>Connection closed by Client.</value>
@@ -145,7 +145,7 @@
     <value>Forced Disconnecting of client {0}, too much connections.</value>
   </data>
   <data name="IDERROR" xml:space="preserve">
-    <value>Wrong Id or Password!</value>
+    <value>ไม่สามารถเชื่อมต่อกับ Server กรุณาตรวจสอบความถูกต้องของ ID และ Password</value>
   </data>
   <data name="MESSAGE_RECEIVED" xml:space="preserve">
     <value>Message received {0} on client {1}</value>
@@ -178,9 +178,18 @@
     <value>Connection closed.</value>
   </data>
   <data name="MAINTENANCE" xml:space="preserve">
-    <value>Server is currently under maintenance. Maintenance estimated time {0}</value>
+    <value>ไม่สามารถเชื่อมต่อกับ Server เนื่องจากอยู่ในระหว่างการปรับปรุง รายละเอียดการปรับปรุง :  {1} จนถึง {0}</value>
   </data>
   <data name="CORRUPT_PACKET" xml:space="preserve">
     <value>Packet with Header {0} is corrupt or PacketDefinition is invalid. Content: {1} </value>
+  </data>
+  <data name="API_INITIALIZED" xml:space="preserve">
+    <value>Master Server communication has been initialized.</value>
+  </data>
+  <data name="RETRY_CONNECTION" xml:space="preserve">
+    <value>Cannot connect to Master Server! Trying again in 5 seconds...</value>
+  </data>
+  <data name="NO_WORLDSERVERS" xml:space="preserve">
+    <value>404: No world servers found! please try again later.</value>
   </data>
 </root>

@@ -92,10 +92,10 @@ namespace OpenNos.Core
             try
             {
                 data += " ";
-                byte[] tmp = Encoding.UTF8.GetBytes(data);
+                byte[] tmp = Encoding.Default.GetBytes(data);
                 for (int i = 0; i < data.Length; i++)
                 {
-                    tmp[i] = Convert.ToByte(data[i] + 15);
+                    tmp[i] = Convert.ToByte(tmp[i] + 15);
                 }
                 tmp[tmp.Length - 1] = 25;
                 return tmp;
