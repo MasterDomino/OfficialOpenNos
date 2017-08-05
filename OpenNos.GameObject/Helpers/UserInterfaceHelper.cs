@@ -489,14 +489,11 @@ namespace OpenNos.GameObject.Helpers
             {
                 long time = (long)(bzlink.BazaarItem.DateStart.AddHours(bzlink.BazaarItem.Duration) - DateTime.Now).TotalMinutes;
                 string info = string.Empty;
-                if (bzlink.Item.Item.Type == InventoryType.Equipment)
+                if (bzlink.Item.Item.Type == InventoryType.Equipment && bzlink.Item is WearableInstance)
                 {
-                    if (bzlink.Item as WearableInstance != null)
-                    {
-                        info = (bzlink.Item.Item.EquipmentSlot != EquipmentType.Sp ?
-                            (bzlink.Item as WearableInstance).GenerateEInfo() : bzlink.Item.Item.SpType == 0 && bzlink.Item.Item.ItemSubType == 4 ?
-                            (bzlink.Item as SpecialistInstance).GeneratePslInfo() : (bzlink.Item as SpecialistInstance).GenerateSlInfo()).Replace(' ', '^').Replace("slinfo^", "").Replace("e_info^", "");
-                    }
+                    info = (bzlink.Item.Item.EquipmentSlot != EquipmentType.Sp ?
+                        (bzlink.Item as WearableInstance)?.GenerateEInfo() : bzlink.Item.Item.SpType == 0 && bzlink.Item.Item.ItemSubType == 4 ?
+                        (bzlink.Item as SpecialistInstance)?.GeneratePslInfo() : (bzlink.Item as SpecialistInstance)?.GenerateSlInfo()).Replace(' ', '^').Replace("slinfo^", "").Replace("e_info^", "");
                 }
                 itembazar += $"{bzlink.BazaarItem.BazaarItemId}|{bzlink.BazaarItem.SellerId}|{bzlink.Owner}|{bzlink.Item.Item.VNum}|{bzlink.Item.Amount}|{(bzlink.BazaarItem.IsPackage ? 1 : 0)}|{bzlink.BazaarItem.Price}|{time}|2|0|{bzlink.Item.Rare}|{bzlink.Item.Upgrade}|{info} ";
             }

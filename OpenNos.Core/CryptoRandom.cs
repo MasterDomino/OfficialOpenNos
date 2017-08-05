@@ -13,11 +13,15 @@ namespace OpenNos.Core
     /// </summary>
     public class CryptoRandom : Random
     {
-        private RNGCryptoServiceProvider _rng = new RNGCryptoServiceProvider();
+        private readonly RNGCryptoServiceProvider _rng = new RNGCryptoServiceProvider();
 
         private byte[] _buffer;
 
         private int _bufferPosition;
+
+        private readonly object _lockObject = new object();
+
+        private readonly object _lockObject2 = new object();
 
         /// <summary>
         /// Gets a value indicating whether this instance has random pool enabled.
@@ -25,7 +29,9 @@ namespace OpenNos.Core
         /// <value>
         ///     <c>true</c> if this instance has random pool enabled; otherwise, <c>false</c>.
         /// </value>
-        public bool IsRandomPoolEnabled { get; private set; }
+        public bool IsRandomPoolEnabled { get; }
+
+        public int IgnoredSeed { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CryptoRandom"/> class with.
@@ -41,7 +47,10 @@ namespace OpenNos.Core
         /// </summary>
         /// <param name="ignoredSeed">The ignored seed.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "ignoredSeed", Justification = "Cannot remove this parameter as we implement the full API of System.Random")]
-        public CryptoRandom(int ignoredSeed) : this(true) { }
+        public CryptoRandom(int ignoredSeed) : this(true)
+        {
+            IgnoredSeed = ignoredSeed;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CryptoRandom"/> class with
@@ -58,14 +67,14 @@ namespace OpenNos.Core
             if (IsRandomPoolEnabled)
             {
                 if (_buffer == null || _buffer.Length != 512)
+                {
                     _buffer = new byte[512];
+                }
             }
-            else
+            else if (_buffer == null || _buffer.Length != 4)
             {
-                if (_buffer == null || _buffer.Length != 4)
-                    _buffer = new byte[4];
+                _buffer = new byte[4];
             }
-
             _rng.GetBytes(_buffer);
             _bufferPosition = 0;
         }
@@ -95,8 +104,9 @@ namespace OpenNos.Core
         public override int Next(int maxValue)
         {
             if (maxValue < 0)
-                throw new ArgumentOutOfRangeException("maxValue");
-
+            {
+                throw new ArgumentOutOfRangeException(nameof(maxValue));
+            }
             return Next(0, maxValue);
         }
 
@@ -114,22 +124,23 @@ namespace OpenNos.Core
         public override int Next(int minValue, int maxValue)
         {
             if (minValue > maxValue)
-                throw new ArgumentOutOfRangeException("minValue");
-
+            {
+                throw new ArgumentOutOfRangeException(nameof(minValue));
+            }
             if (minValue == maxValue)
+            {
                 return minValue;
-
+            }
             long diff = maxValue - minValue;
-
             while (true)
             {
                 uint rand = GetRandomUInt32();
-
-                long max = 1 + (long)uint.MaxValue;
+                const long max = 1 + (long)uint.MaxValue;
                 long remainder = max % diff;
-
                 if (rand < max - remainder)
+                {
                     return (int)(minValue + (rand % diff));
+                }
             }
         }
 
@@ -154,22 +165,23 @@ namespace OpenNos.Core
         public override void NextBytes(byte[] buffer)
         {
             if (buffer == null)
-                throw new ArgumentNullException("buffer");
+            {
+                throw new ArgumentNullException(nameof(buffer));
+            }
 
-            lock (this)
+            lock (_lockObject)
             {
                 if (IsRandomPoolEnabled && _buffer == null)
+                {
                     InitBuffer();
+                }
 
                 // Can we fit the requested number of bytes in the buffer?
                 if (IsRandomPoolEnabled && _buffer.Length <= buffer.Length)
                 {
                     int count = buffer.Length;
-
                     EnsureRandomBuffer(count);
-
                     Buffer.BlockCopy(_buffer, _bufferPosition, buffer, 0, count);
-
                     _bufferPosition += count;
                 }
                 else
@@ -185,14 +197,11 @@ namespace OpenNos.Core
         /// </summary>
         private uint GetRandomUInt32()
         {
-            lock (this)
+            lock (_lockObject2)
             {
                 EnsureRandomBuffer(4);
-
                 uint rand = BitConverter.ToUInt32(_buffer, _bufferPosition);
-
                 _bufferPosition += 4;
-
                 return rand;
             }
         }
@@ -204,13 +213,17 @@ namespace OpenNos.Core
         private void EnsureRandomBuffer(int requiredBytes)
         {
             if (_buffer == null)
+            {
                 InitBuffer();
-
+            }
             if (requiredBytes > _buffer.Length)
-                throw new ArgumentOutOfRangeException("requiredBytes", "cannot be greater than random buffer");
-
+            {
+                throw new ArgumentOutOfRangeException(nameof(requiredBytes), "cannot be greater than random buffer");
+            }
             if ((_buffer.Length - _bufferPosition) < requiredBytes)
+            {
                 InitBuffer();
+            }
         }
     }
 }

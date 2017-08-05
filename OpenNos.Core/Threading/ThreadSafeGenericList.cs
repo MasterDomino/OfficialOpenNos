@@ -300,6 +300,22 @@ namespace OpenNos.Core
             }
         }
 
+        public void Remove(T match)
+        {
+            if (!_disposed)
+            {
+                Lock.EnterWriteLock();
+                try
+                {
+                    _list.Remove(match);
+                }
+                finally
+                {
+                    Lock.ExitWriteLock();
+                }
+            }
+        }
+
         public void Dispose()
         {
             if (!_disposed)

@@ -99,7 +99,7 @@ namespace OpenNos.GameObject
 
         public MapInstance ArenaInstance { get; private set; }
 
-        public List<BazaarItemLink> BazaarList { get; set; }
+        public ThreadSafeGenericList<BazaarItemLink> BazaarList { get; set; }
 
         public int ChannelId { get; set; }
 
@@ -826,9 +826,8 @@ namespace OpenNos.GameObject
             Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("MONSTERSKILLS_LOADED"), _monsterSkills.GetAllItems().Sum(i => i.Count)));
 
             // initialize bazaar
-            BazaarList = new List<BazaarItemLink>();
+            BazaarList = new ThreadSafeGenericList<BazaarItemLink>();
             var bazaarPartitioner = Partitioner.Create(DAOFactory.BazaarItemDAO.LoadAll(), EnumerablePartitionerOptions.NoBuffering);
-            ThreadSafeSortedList<long, BazaarItemLink> _bazaarItem = new ThreadSafeSortedList<long, BazaarItemLink>();
             Parallel.ForEach(bazaarPartitioner, new ParallelOptions { MaxDegreeOfParallelism = 8 }, bazaarItem =>
             {
                 BazaarItemLink item = new BazaarItemLink
@@ -841,9 +840,8 @@ namespace OpenNos.GameObject
                     item.Owner = chara.Name;
                     item.Item = (ItemInstance)DAOFactory.IteminstanceDAO.LoadById(bazaarItem.ItemInstanceId);
                 }
-                _bazaarItem[bazaarItem.BazaarItemId] = item;
+                BazaarList.Add(item);
             });
-            BazaarList.AddRange(_bazaarItem.GetAllItems());
             Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("BAZAAR_LOADED"), BazaarList.Count));
 
             // initialize npcmonsters
@@ -1424,7 +1422,7 @@ namespace OpenNos.GameObject
         {
             long BazaarId = (long)sender;
             BazaarItemDTO bzdto = DAOFactory.BazaarItemDAO.LoadById(BazaarId);
-            BazaarItemLink bzlink = BazaarList.Find(s => s.BazaarItem.BazaarItemId == BazaarId);
+            BazaarItemLink bzlink = BazaarList.FirstOrDefault(s => s.BazaarItem.BazaarItemId == BazaarId);
             lock (BazaarList)
             {
                 if (bzdto != null)
