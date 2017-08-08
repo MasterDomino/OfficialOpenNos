@@ -138,7 +138,7 @@ namespace OpenNos.GameObject
 
         public List<long> FriendRequestCharacters { get; set; }
 
-        public List<GeneralLogDTO> GeneralLogs { get; set; }
+        public ThreadSafeGenericList<GeneralLogDTO> GeneralLogs { get; set; }
 
         public bool GmPvtBlock { get; set; }
 
@@ -1789,12 +1789,12 @@ namespace OpenNos.GameObject
 
         public string GenerateMlinfo()
         {
-            return $"mlinfo 3800 {MinilandPoint} 100 {GeneralLogs.Count(s => s.LogData == "Miniland" && s.Timestamp.Day == DateTime.Now.Day)} {GeneralLogs.Count(s => s.LogData == "Miniland")} 10 {(byte)MinilandState} {Language.Instance.GetMessageFromKey("WELCOME_MUSIC_INFO")} {Language.Instance.GetMessageFromKey("MINILAND_WELCOME_MESSAGE")}";
+            return $"mlinfo 3800 {MinilandPoint} 100 {GeneralLogs.GetAllItems().Count(s => s.LogData == "Miniland" && s.Timestamp.Day == DateTime.Now.Day)} {GeneralLogs.GetAllItems().Count(s => s.LogData == "Miniland")} 10 {(byte)MinilandState} {Language.Instance.GetMessageFromKey("WELCOME_MUSIC_INFO")} {Language.Instance.GetMessageFromKey("MINILAND_WELCOME_MESSAGE")}";
         }
 
         public string GenerateMlinfobr()
         {
-            return $"mlinfobr 3800 {Name} {GeneralLogs.Count(s => s.LogData == "Miniland" && s.Timestamp.Day == DateTime.Now.Day)} {GeneralLogs.Count(s => s.LogData == "Miniland")} 25 {MinilandMessage.Replace(' ', '^')}";
+            return $"mlinfobr 3800 {Name} {GeneralLogs.GetAllItems().Count(s => s.LogData == "Miniland" && s.Timestamp.Day == DateTime.Now.Day)} {GeneralLogs.GetAllItems().Count(s => s.LogData == "Miniland")} 25 {MinilandMessage.Replace(' ', '^')}";
         }
 
         public string GenerateMloMg(MinilandObject mlobj, MinigamePacket packet)
@@ -3373,7 +3373,7 @@ namespace OpenNos.GameObject
                     DAOFactory.StaticBonusDAO.InsertOrUpdate(ref bonus2);
                 }
 
-                foreach (GeneralLogDTO general in GeneralLogs)
+                foreach (GeneralLogDTO general in GeneralLogs.GetAllItems())
                 {
                     if (!DAOFactory.GeneralLogDAO.IdAlreadySet(general.LogId))
                     {

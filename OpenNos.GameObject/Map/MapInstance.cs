@@ -66,8 +66,8 @@ namespace OpenNos.GameObject
             MapInstanceId = guid;
             ScriptedInstances = new List<ScriptedInstance>();
             OnCharacterDiscoveringMapEvents = new List<Tuple<EventContainer, List<long>>>();
-            OnMoveOnMapEvents = new List<EventContainer>();
-            OnAreaEntryEvents = new List<ZoneEvent>();
+            OnMoveOnMapEvents = new ThreadSafeGenericList<EventContainer>();
+            OnAreaEntryEvents = new ThreadSafeGenericList<ZoneEvent>();
             WaveEvents = new List<EventWave>();
             OnMapClean = new List<EventContainer>();
             _monsters = new ThreadSafeSortedList<long, MapMonster>();
@@ -146,9 +146,9 @@ namespace OpenNos.GameObject
 
         public List<EventContainer> OnMapClean { get; set; }
 
-        public List<EventContainer> OnMoveOnMapEvents { get; set; }
+        public ThreadSafeGenericList<EventContainer> OnMoveOnMapEvents { get; set; }
 
-        public List<ZoneEvent> OnAreaEntryEvents { get; set; }
+        public ThreadSafeGenericList<ZoneEvent> OnAreaEntryEvents { get; set; }
 
         public List<EventWave> WaveEvents { get; set; }
 

@@ -595,16 +595,15 @@ namespace OpenNos.Handler
             {
                 if (packetsplit.Length >= packet.Amount * 3)
                 {
-                    int PetId = int.Parse(packetsplit[i]);
-                    short PositionX = short.Parse(packetsplit[i + 1]);
-                    short PositionY = short.Parse(packetsplit[i + 2]);
-
-                    Mate mate = Session.Character.Mates.Find(s => s.MateTransportId == PetId);
-                    if (mate != null)
+                    if (int.TryParse(packetsplit[i], out int PetId) && short.TryParse(packetsplit[i + 1], out short PositionX) && short.TryParse(packetsplit[i + 1], out short PositionY))
                     {
-                        mate.PositionX = PositionX;
-                        mate.PositionY = PositionY;
-                        Session.CurrentMapInstance.Broadcast($"mv 2 {PetId} {PositionX} {PositionY} {mate.Monster.Speed}");
+                        Mate mate = Session.Character.Mates.Find(s => s.MateTransportId == PetId);
+                        if (mate != null)
+                        {
+                            mate.PositionX = PositionX;
+                            mate.PositionY = PositionY;
+                            Session.CurrentMapInstance.Broadcast($"mv 2 {PetId} {PositionX} {PositionY} {mate.Monster.Speed}");
+                        }
                     }
                 }
             }

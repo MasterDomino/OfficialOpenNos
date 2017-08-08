@@ -307,7 +307,8 @@ namespace OpenNos.Handler
                         character.Invisible = true;
                         character.InvisibleGm = true;
                     }
-                    character.GeneralLogs = DAOFactory.GeneralLogDAO.LoadByAccount(Session.Account.AccountId).Where(s => s.CharacterId == character.CharacterId).ToList();
+                    character.GeneralLogs = new ThreadSafeGenericList<GeneralLogDTO>();
+                    character.GeneralLogs.AddRange(DAOFactory.GeneralLogDAO.LoadByAccount(Session.Account.AccountId).Where(s => s.CharacterId == character.CharacterId).ToList());
                     character.MapInstanceId = ServerManager.Instance.GetBaseMapInstanceIdByMapId(character.MapId);
                     character.PositionX = character.MapX;
                     character.PositionY = character.MapY;

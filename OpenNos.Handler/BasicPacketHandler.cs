@@ -187,8 +187,8 @@ namespace OpenNos.Handler
                 long complimentedCharacterId = complimentPacket.CharacterId;
                 if (Session.Character.Level >= 30)
                 {
-                    GeneralLogDTO dto = Session.Character.GeneralLogs.LastOrDefault(s => s.LogData == "World" && s.LogType == "Connection");
-                    GeneralLogDTO lastcompliment = Session.Character.GeneralLogs.LastOrDefault(s => s.LogData == "World" && s.LogType == "Compliment");
+                    GeneralLogDTO dto = Session.Character.GeneralLogs.GetAllItems().LastOrDefault(s => s.LogData == "World" && s.LogType == "Connection");
+                    GeneralLogDTO lastcompliment = Session.Character.GeneralLogs.GetAllItems().LastOrDefault(s => s.LogData == "World" && s.LogType == "Compliment");
                     if (dto?.Timestamp.AddMinutes(60) <= DateTime.Now)
                     {
                         if (lastcompliment == null || lastcompliment.Timestamp.AddDays(1) <= DateTime.Now.Date)
@@ -1767,7 +1767,7 @@ namespace OpenNos.Handler
                 return;
             }
             Session.CurrentMapInstance = Session.Character.MapInstance;
-            if (string.Equals(ConfigurationManager.AppSettings["SceneOnCreate"], "true", StringComparison.CurrentCultureIgnoreCase) && Session.Character.GeneralLogs.Count(s => s.LogType == "Connection") < 2)
+            if (string.Equals(ConfigurationManager.AppSettings["SceneOnCreate"], "true", StringComparison.CurrentCultureIgnoreCase) && Session.Character.GeneralLogs.GetAllItems().Count(s => s.LogType == "Connection") < 2)
             {
                 Session.SendPacket("scene 40");
             }
@@ -1940,7 +1940,7 @@ namespace OpenNos.Handler
                         Session.SendPacket(Session.Character.GenerateCond());
                         Session.Character.LastMove = DateTime.Now;
 
-                        Session.CurrentMapInstance?.OnAreaEntryEvents?.Where(s => s.InZone(Session.Character.PositionX, Session.Character.PositionY)).ToList().ForEach(e => e.Events.ForEach(evt => EventHelper.Instance.RunEvent(evt)));
+                        Session.CurrentMapInstance?.OnAreaEntryEvents?.GetAllItems().Where(s => s.InZone(Session.Character.PositionX, Session.Character.PositionY)).ToList().ForEach(e => e.Events.ForEach(evt => EventHelper.Instance.RunEvent(evt)));
                         Session.CurrentMapInstance?.OnAreaEntryEvents?.RemoveAll(s => s.InZone(Session.Character.PositionX, Session.Character.PositionY));
 
                         Session.CurrentMapInstance?.OnMoveOnMapEvents?.ForEach(e => EventHelper.Instance.RunEvent(e));
