@@ -245,7 +245,7 @@ namespace OpenNos.Handler
         /// <param name="fInsPacket"></param>
         public void FriendAdd(FInsPacket fInsPacket)
         {
-            if (!Session.Character.IsFriendlistFull() || Session.Character.FriendRequestBlocked)
+            if (!Session.Character.IsFriendlistFull())
             {
                 long characterId = fInsPacket.CharacterId;
                 if (!Session.Character.IsFriendOfCharacter(characterId))
@@ -257,6 +257,11 @@ namespace OpenNos.Handler
                             ClientSession otherSession = ServerManager.Instance.GetSessionByCharacterId(characterId);
                             if (otherSession != null)
                             {
+                                if (otherSession.Character.FriendRequestBlocked)
+                                {
+                                    Session.SendPacket(Language.Instance.GetMessageFromKey("FRIEND_REJECTED"));
+                                }
+
                                 if (otherSession.Character.FriendRequestCharacters.Contains(Session.Character.CharacterId))
                                 {
                                     switch (fInsPacket.Type)
