@@ -418,9 +418,23 @@ namespace OpenNos.GameObject
 
                     Parallel.ForEach(session.CurrentMapInstance.Sessions.Where(s => s.Character?.InvisibleGm == false), visibleSession =>
                     {
-                        session.SendPacket(visibleSession.Character.GenerateIn());
-                        session.SendPacket(visibleSession.Character.GenerateGidx());
-                        visibleSession.Character.Mates.Where(m => m.IsTeamMember && m.CharacterId != session.Character.CharacterId).ToList().ForEach(mate => session.SendPacket(mate.GenerateIn()));
+                        if (!session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.Act4) || session.Character.Faction == visibleSession.Character.Faction)
+                        {
+                            session.SendPacket(visibleSession.Character.GenerateIn());
+                            session.SendPacket(visibleSession.Character.GenerateGidx());
+                            visibleSession.Character.Mates.Where(m => m.IsTeamMember && m.CharacterId != session.Character.CharacterId).ToList().ForEach(m =>
+                            {
+                                session.SendPacket(m.GenerateIn());
+                            });
+                        }
+                        else
+                        {
+                            session.SendPacket(visibleSession.Character.GenerateIn(true));
+                            visibleSession.Character.Mates.Where(m => m.IsTeamMember && m.CharacterId != session.Character.CharacterId).ToList().ForEach(m =>
+                            {
+                                session.SendPacket(m.GenerateIn(true));
+                            });
+                        }
                     });
 
                     session.SendPackets(session.CurrentMapInstance.GetMapItems());
@@ -446,10 +460,27 @@ namespace OpenNos.GameObject
                         {
                             mate.PositionX = (short)(session.Character.PositionX + (mate.MateType == MateType.Partner ? -1 : 1));
                             mate.PositionY = (short)(session.Character.PositionY + 1);
-                            session.CurrentMapInstance.Broadcast(mate.GenerateIn());
                         });
-                        session.CurrentMapInstance?.Broadcast(session, session.Character.GenerateIn(), ReceiverType.AllExceptMe);
-                        session.CurrentMapInstance?.Broadcast(session, session.Character.GenerateGidx(), ReceiverType.AllExceptMe);
+                        Parallel.ForEach(session.CurrentMapInstance.Sessions.Where(s => s.Character != null), s =>
+                        {
+                            if (!session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.Act4) || session.Character.Faction == s.Character.Faction)
+                            {
+                                s.SendPacket(session.Character.GenerateIn());
+                                s.SendPacket(session.Character.GenerateGidx());
+                                session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
+                                {
+                                    s.SendPacket(m.GenerateIn());
+                                });
+                            }
+                            else
+                            {
+                                s.SendPacket(session.Character.GenerateIn(true));
+                                session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
+                                {
+                                    s.SendPacket(m.GenerateIn(true));
+                                });
+                            }
+                        });
                     }
                     if (session.Character.Size != 10)
                     {
