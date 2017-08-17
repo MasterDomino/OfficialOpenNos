@@ -195,7 +195,7 @@ namespace OpenNos.GameObject
 
         public DateTime LastMonsterAggro { get; set; }
 
-        public int LastMonsterId { get; set; }
+        public int LastNpcMonsterId { get; set; }
 
         public DateTime LastMove { get; set; }
 
@@ -3185,12 +3185,12 @@ namespace OpenNos.GameObject
                 if (indicator.StaticBuff)
                 {
                     Session.SendPacket($"vb {indicator.Card.CardId} 0 {indicator.Card.Duration}");
-                    Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("EFFECT_TERMINATED"), Name), 11));
+                    Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("EFFECT_TERMINATED"), indicator.Card.Name), 11));
                 }
                 else
                 {
                     Session.SendPacket($"bf 1 {CharacterId} 0.{indicator.Card.CardId}.0 {Level}");
-                    Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("EFFECT_TERMINATED"), Name), 20));
+                    Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("EFFECT_TERMINATED"), indicator.Card.Name), 20));
                 }
 
                 if (Buff[indicator.Card.CardId] != null)

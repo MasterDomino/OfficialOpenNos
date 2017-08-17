@@ -443,6 +443,7 @@ namespace OpenNos.Handler
                             {
                                 return;
                             }
+                            Session.Character.LastNpcMonsterId = npc.MapNpcId;
                             Session.SendPacket($"st 2 {ncifPacket.TargetId} {npcinfo.Level} {npcinfo.HeroLevel} 100 100 50000 50000");
                         });
                         Parallel.ForEach(Session.CurrentMapInstance.Sessions, session =>
@@ -467,7 +468,7 @@ namespace OpenNos.Handler
                             {
                                 return;
                             }
-                            Session.Character.LastMonsterId = monster.MapMonsterId;
+                            Session.Character.LastNpcMonsterId = monster.MapMonsterId;
                             Session.SendPacket($"st 3 {ncifPacket.TargetId} {monsterinfo.Level} {monsterinfo.HeroLevel} {(int)((float)monster.CurrentHp / (float)monster.Monster.MaxHP * 100)} {(int)((float)monster.CurrentMp / (float)monster.Monster.MaxMP * 100)} {monster.CurrentHp} {monster.CurrentMp}{monster.Buff.GetAllItems().Aggregate(string.Empty, (current, buff) => current + $" {buff.Card.CardId}")}");
                         });
                     }

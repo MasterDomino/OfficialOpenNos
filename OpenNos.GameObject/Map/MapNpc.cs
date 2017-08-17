@@ -94,6 +94,11 @@ namespace OpenNos.GameObject
             return string.Empty;
         }
 
+        public string GenerateOut()
+        {
+            return $"out 2 {MapNpcId}";
+        }
+
         public string GetNpcDialog()
         {
             return $"npc_req 2 {MapNpcId} {Dialog}";
@@ -142,6 +147,21 @@ namespace OpenNos.GameObject
                 EventHelper.Instance.RunEvent(e);
             });
             OnDeathEvents.RemoveAll(s => s != null);
+        }
+
+        /// <summary>
+        /// Remove the current Target from Npc.
+        /// </summary>
+        internal void RemoveTarget()
+        {
+            if (Target != -1)
+            {
+                Path.Clear();
+                Target = -1;
+
+                //return to origin
+                Path = BestFirstSearch.FindPath(new Node { X = MapX, Y = MapY }, new Node { X = FirstX, Y = FirstY }, MapInstance.Map.Grid);
+            }
         }
 
         internal void StartLife()
@@ -285,6 +305,7 @@ namespace OpenNos.GameObject
                         {
                             short xoffset = (short)ServerManager.Instance.RandomNumber(-1, 1);
                             short yoffset = (short)ServerManager.Instance.RandomNumber(-1, 1);
+
                             //go to monster
                             Path = BestFirstSearch.FindPath(new GridPos { X = MapX, Y = MapY }, new GridPos { X = (short)(monster.MapX + xoffset), Y = (short)(monster.MapY + yoffset) }, MapInstance.Map.Grid);
                             maxindex = Path.Count > Npc.Speed / 2 && Npc.Speed > 1 ? Npc.Speed / 2 : Path.Count;
@@ -311,20 +332,6 @@ namespace OpenNos.GameObject
                         }
                     }
                 }
-            }
-        }
-
-        /// <summary>
-        /// Remove the current Target from Npc.
-        /// </summary>
-        internal void RemoveTarget()
-        {
-            if (Target != -1)
-            {
-                Path.Clear();
-                Target = -1;
-                //return to origin
-                Path = BestFirstSearch.FindPath(new Node { X = MapX, Y = MapY }, new Node { X = FirstX, Y = FirstY }, MapInstance.Map.Grid);
             }
         }
 

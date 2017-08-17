@@ -142,15 +142,13 @@ namespace OpenNos.GameObject
 
         public List<MapNpc> Npcs => _npcs.GetAllItems();
 
+        public ThreadSafeGenericList<ZoneEvent> OnAreaEntryEvents { get; set; }
+
         public List<Tuple<EventContainer, List<long>>> OnCharacterDiscoveringMapEvents { get; set; }
 
         public List<EventContainer> OnMapClean { get; set; }
 
         public ThreadSafeGenericList<EventContainer> OnMoveOnMapEvents { get; set; }
-
-        public ThreadSafeGenericList<ZoneEvent> OnAreaEntryEvents { get; set; }
-
-        public List<EventWave> WaveEvents { get; set; }
 
         public List<Portal> Portals { get; }
 
@@ -159,6 +157,8 @@ namespace OpenNos.GameObject
         public bool ShopAllowed { get; set; }
 
         public Dictionary<long, MapShop> UserShops { get; }
+
+        public List<EventWave> WaveEvents { get; set; }
 
         public int XpRate { get; set; }
 
@@ -307,6 +307,11 @@ namespace OpenNos.GameObject
             return nextId;
         }
 
+        public MapNpc GetNpc(long mapNpcId)
+        {
+            return _npcs[mapNpcId];
+        }
+
         public void LoadMonsters()
         {
             Parallel.ForEach(DAOFactory.MapMonsterDAO.LoadFromMap(Map.MapId).ToList(), monster =>
@@ -411,10 +416,37 @@ namespace OpenNos.GameObject
             _monsters.Remove(monsterToRemove.MapMonsterId);
         }
 
+        public void RemoveNpc(MapNpc npcToRemove)
+        {
+            _npcs.Remove(npcToRemove.MapNpcId);
+        }
+
         public void SpawnButton(MapButton parameter)
         {
             Buttons.Add(parameter);
             Broadcast(parameter.GenerateIn());
+        }
+
+        public void ThrowItems(Tuple<int, short, byte, int, int> parameter)
+        {
+            MapMonster mon = Monsters.Find(s => s.MapMonsterId == parameter.Item1) ?? Monsters.Find(s => s.MonsterVNum == parameter.Item1);
+            if (mon == null)
+            {
+                return;
+            }
+            short originX = mon.MapX;
+            short originY = mon.MapY;
+            short destX;
+            short destY;
+            int amount = ServerManager.Instance.RandomNumber(parameter.Item4, parameter.Item5);
+            for (int i = 0; i < parameter.Item3; i++)
+            {
+                destX = (short)(originX + ServerManager.Instance.RandomNumber(-10, 10));
+                destY = (short)(originY + ServerManager.Instance.RandomNumber(-10, 10));
+                MonsterMapItem droppedItem = new MonsterMapItem(destX, destY, parameter.Item2, amount);
+                DroppedList[droppedItem.TransportId] = droppedItem;
+                Broadcast($"throw {droppedItem.ItemVNum} {droppedItem.TransportId} {originX} {originY} {droppedItem.PositionX} {droppedItem.PositionY} {(droppedItem.GoldAmount > 1 ? droppedItem.GoldAmount : droppedItem.Amount)}");
+            }
         }
 
         internal void CreatePortal(Portal portal)
@@ -442,28 +474,6 @@ namespace OpenNos.GameObject
         internal void RemoveMonstersTarget(long characterId)
         {
             Parallel.ForEach(Monsters.Where(m => m.Target == characterId), monster => monster.RemoveTarget());
-        }
-
-        public void ThrowItems(Tuple<int, short, byte, int, int> parameter)
-        {
-            MapMonster mon = Monsters.Find(s => s.MapMonsterId == parameter.Item1) ?? Monsters.Find(s => s.MonsterVNum == parameter.Item1);
-            if (mon == null)
-            {
-                return;
-            }
-            short originX = mon.MapX;
-            short originY = mon.MapY;
-            short destX;
-            short destY;
-            int amount = ServerManager.Instance.RandomNumber(parameter.Item4, parameter.Item5);
-            for (int i = 0; i < parameter.Item3; i++)
-            {
-                destX = (short)(originX + ServerManager.Instance.RandomNumber(-10, 10));
-                destY = (short)(originY + ServerManager.Instance.RandomNumber(-10, 10));
-                MonsterMapItem droppedItem = new MonsterMapItem(destX, destY, parameter.Item2, amount);
-                DroppedList[droppedItem.TransportId] = droppedItem;
-                Broadcast($"throw {droppedItem.ItemVNum} {droppedItem.TransportId} {originX} {originY} {droppedItem.PositionX} {droppedItem.PositionY} {(droppedItem.GoldAmount > 1 ? droppedItem.GoldAmount : droppedItem.Amount)}");
-            }
         }
 
         internal void StartLife()

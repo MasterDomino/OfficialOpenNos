@@ -13,6 +13,7 @@
  */
 
 using OpenNos.Data;
+using OpenNos.Data.Enums;
 using System.Collections.Generic;
 
 namespace OpenNos.DAL.Interface
@@ -30,6 +31,8 @@ namespace OpenNos.DAL.Interface
         MapNpcDTO LoadById(int mapNpcId);
 
         IEnumerable<MapNpcDTO> LoadFromMap(short mapId);
+
+        DeleteResult DeleteById(int mapNpcId);
 
         #endregion
     }

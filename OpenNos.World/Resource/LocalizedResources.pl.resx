@@ -913,8 +913,8 @@
   <data name="ITEM_NOT_FOUND" xml:space="preserve">
     <value>Nie znaleziono takiego przedmiotu!</value>
   </data>
-  <data name="MONSTER_NOT_FOUND" xml:space="preserve">
-    <value>Nie znaleziono żadnych potworów z taką nazwą!</value>
+  <data name="NPCMONSTER_NOT_FOUND" xml:space="preserve">
+    <value>Nie znaleziono żadnego obiektu.</value>
   </data>
   <data name="ADVENTURERS_CANT_USE" xml:space="preserve">
     <value>Poszukiwacze przygód nie mogą tego używać!</value>
