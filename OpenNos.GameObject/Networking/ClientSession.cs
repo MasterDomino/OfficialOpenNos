@@ -550,7 +550,7 @@ namespace OpenNos.GameObject
                             if (methodReference.PacketDefinitionParameterType != null)
                             {
                                 //check for the correct authority
-                                if (!IsAuthenticated || (byte)methodReference.Authority <= (byte)Account.Authority || ignoreAuthority)
+                                if (!IsAuthenticated || Account.Authority >= methodReference.Authority || ignoreAuthority)
                                 {
                                     PacketDefinition deserializedPacket = PacketFactory.Deserialize(packet, methodReference.PacketDefinitionParameterType, IsAuthenticated);
 
