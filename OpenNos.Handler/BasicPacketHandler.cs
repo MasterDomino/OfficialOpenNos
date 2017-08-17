@@ -1936,7 +1936,10 @@ namespace OpenNos.Handler
                         {
                             Session.Character.UpdateBushFire();
                         }
-                        Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateMv());
+                        if (!Session.Character.InvisibleGm)
+                        {
+                            Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateMv());
+                        }
                         Session.SendPacket(Session.Character.GenerateCond());
                         Session.Character.LastMove = DateTime.Now;
 

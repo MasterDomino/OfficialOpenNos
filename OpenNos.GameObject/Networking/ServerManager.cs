@@ -422,18 +422,12 @@ namespace OpenNos.GameObject
                         {
                             session.SendPacket(visibleSession.Character.GenerateIn());
                             session.SendPacket(visibleSession.Character.GenerateGidx());
-                            visibleSession.Character.Mates.Where(m => m.IsTeamMember && m.CharacterId != session.Character.CharacterId).ToList().ForEach(m =>
-                            {
-                                session.SendPacket(m.GenerateIn());
-                            });
+                            visibleSession.Character.Mates.Where(m => m.IsTeamMember && m.CharacterId != session.Character.CharacterId).ToList().ForEach(m => session.SendPacket(m.GenerateIn()));
                         }
                         else
                         {
                             session.SendPacket(visibleSession.Character.GenerateIn(true));
-                            visibleSession.Character.Mates.Where(m => m.IsTeamMember && m.CharacterId != session.Character.CharacterId).ToList().ForEach(m =>
-                            {
-                                session.SendPacket(m.GenerateIn(true));
-                            });
+                            visibleSession.Character.Mates.Where(m => m.IsTeamMember && m.CharacterId != session.Character.CharacterId).ToList().ForEach(m => session.SendPacket(m.GenerateIn(true)));
                         }
                     });
 
@@ -467,18 +461,12 @@ namespace OpenNos.GameObject
                             {
                                 s.SendPacket(session.Character.GenerateIn());
                                 s.SendPacket(session.Character.GenerateGidx());
-                                session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
-                                {
-                                    s.SendPacket(m.GenerateIn());
-                                });
+                                session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m => s.SendPacket(m.GenerateIn()));
                             }
                             else
                             {
                                 s.SendPacket(session.Character.GenerateIn(true));
-                                session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
-                                {
-                                    s.SendPacket(m.GenerateIn(true));
-                                });
+                                session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m => s.SendPacket(m.GenerateIn(true)));
                             }
                         });
                     }
@@ -1035,8 +1023,11 @@ namespace OpenNos.GameObject
                 return;
             }
             session.SendPacket(UserInterfaceHelper.Instance.GenerateMapOut());
-            session.Character.Mates.Where(s => s.IsTeamMember).ToList().ForEach(s => session.CurrentMapInstance?.Broadcast(session, s.GenerateOut(), ReceiverType.AllExceptMe));
-            session.CurrentMapInstance?.Broadcast(session, session.Character.GenerateOut(), ReceiverType.AllExceptMe);
+            if (!session.Character.InvisibleGm)
+            {
+                session.Character.Mates.Where(s => s.IsTeamMember).ToList().ForEach(s => session.CurrentMapInstance?.Broadcast(session, s.GenerateOut(), ReceiverType.AllExceptMe));
+                session.CurrentMapInstance?.Broadcast(session, session.Character.GenerateOut(), ReceiverType.AllExceptMe);
+            }
         }
 
         public int RandomNumber(int min = 0, int max = 100)
