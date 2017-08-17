@@ -16,6 +16,7 @@ using System;
 
 namespace OpenNos.Core
 {
+    [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
     public class PacketIndexAttribute : Attribute
     {
         #region Instantiation

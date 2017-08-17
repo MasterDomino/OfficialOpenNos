@@ -73,7 +73,6 @@ namespace OpenNos.DAL.EF
             }
         }
 
-
         public MapNpcDTO Insert(MapNpcDTO npc)
         {
             try

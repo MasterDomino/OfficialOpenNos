@@ -81,7 +81,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messages
         /// <returns>A string to represents this object</returns>
         public override string ToString()
         {
-            int messageLength = MessageData == null ? 0 : MessageData.Length;
+            int messageLength = MessageData?.Length ?? 0;
             return string.IsNullOrEmpty(RepliedMessageId)
                        ? $"ScsRawDataMessage [{MessageId}]: {messageLength} bytes"
                        : $"ScsRawDataMessage [{MessageId}] Replied To [{RepliedMessageId}]: {messageLength} bytes";

@@ -83,7 +83,6 @@ namespace OpenNos.DAL.EF
             }
         }
 
-
         public ShopDTO Insert(ShopDTO shop)
         {
             try

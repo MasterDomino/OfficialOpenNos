@@ -171,7 +171,7 @@ namespace OpenNos.Core.Threading
 
             try
             {
-                Elapsed?.Invoke(this, new EventArgs());
+                Elapsed?.Invoke(this, EventArgs.Empty);
             }
             catch
             {
