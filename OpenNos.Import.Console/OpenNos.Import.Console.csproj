@@ -43,6 +43,7 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
     <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Label="SlowCheetah">
     <SlowCheetahToolsPath>$([System.IO.Path]::GetFullPath( $(MSBuildProjectDirectory)\..\packages\SlowCheetah.2.5.15\tools\))</SlowCheetahToolsPath>
@@ -53,14 +54,17 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'FR|AnyCPU'">
     <OutputPath>bin\FR\</OutputPath>
     <CodeAnalysisRuleSet />
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DE|AnyCPU'">
     <OutputPath>bin\DE\</OutputPath>
     <CodeAnalysisRuleSet />
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'PL|AnyCPU'">
     <OutputPath>bin\PL\</OutputPath>
     <CodeAnalysisRuleSet />
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <OutputPath>bin\Release\</OutputPath>
@@ -68,14 +72,17 @@
     <Optimize>true</Optimize>
     <DefineConstants>TRACE</DefineConstants>
     <CodeAnalysisRuleSet />
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'IT|AnyCPU'">
     <OutputPath>bin\IT\</OutputPath>
     <CodeAnalysisRuleSet />
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'TH|AnyCPU'">
     <OutputPath>bin\TH\</OutputPath>
     <CodeAnalysisRuleSet />
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>

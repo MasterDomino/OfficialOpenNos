@@ -24,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
     <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -34,6 +35,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet />
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <PlatformTarget>x64</PlatformTarget>
@@ -132,7 +134,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-	<Compile Include="Resource\LocalizedResources.th.Designer.cs">
+    <Compile Include="Resource\LocalizedResources.th.Designer.cs">
       <DependentUpon>LocalizedResources.th.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -161,8 +163,8 @@
       <DependentUpon>App.config</DependentUpon>
     </None>
     <None Include="App.TH.config">
-		<DependentUpon>App.config</DependentUpon>
-	</None>
+      <DependentUpon>App.config</DependentUpon>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -226,10 +228,10 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resource\LocalizedResources.th.resx">
-		<Generator>ResXFileCodeGenerator</Generator>
-		<LastGenOutput>LocalizedResources.th.Designer.cs</LastGenOutput>
-		<SubType>Designer</SubType>
-	</EmbeddedResource>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LocalizedResources.th.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="on-logo-icon.ico" />

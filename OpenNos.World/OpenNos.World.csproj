@@ -27,6 +27,7 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
     <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -38,6 +39,7 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
     <CodeAnalysisRuleSet />
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Label="SlowCheetah">
     <SlowCheetahToolsPath>$([System.IO.Path]::GetFullPath( $(MSBuildProjectDirectory)\..\packages\SlowCheetah.2.5.15\tools\))</SlowCheetahToolsPath>
@@ -55,6 +57,7 @@
     <CodeAnalysisRuleSet>
     </CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'PL|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -66,6 +69,7 @@
     <CodeAnalysisRuleSet>
     </CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DE|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -77,6 +81,7 @@
     <CodeAnalysisRuleSet>
     </CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'IT|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -88,6 +93,7 @@
     <CodeAnalysisRuleSet>
     </CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'TH|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -99,6 +105,7 @@
     <CodeAnalysisRuleSet>
     </CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>OpenNos.World.Program</StartupObject>
@@ -111,6 +118,7 @@
     <OutputPath>bin\x64\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <PlatformTarget>x64</PlatformTarget>

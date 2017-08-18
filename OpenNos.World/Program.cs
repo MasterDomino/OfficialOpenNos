@@ -142,7 +142,6 @@ namespace OpenNos.World
             {
                 Logger.Log.ErrorFormat("Could not retrieve ChannelId from Web API.");
                 Console.ReadKey();
-                return;
             }
         }
 
