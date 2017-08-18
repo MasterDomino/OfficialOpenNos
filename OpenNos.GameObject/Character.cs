@@ -57,6 +57,7 @@ namespace OpenNos.GameObject
             MTListTargetQueue = new ThreadSafeGenericList<MTListHitTarget>();
             EquipmentBCards = new ThreadSafeGenericList<BCard>();
             MeditationDictionary = new Dictionary<short, DateTime>();
+            Buff = new ThreadSafeSortedList<short, Buff>();
             BuffObservables = new ThreadSafeSortedList<short, IDisposable>();
             EquipmentBCards = new ThreadSafeGenericList<BCard>();
         }
