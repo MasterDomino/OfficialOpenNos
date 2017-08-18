@@ -316,7 +316,6 @@ namespace OpenNos.GameObject
             // register for servermanager
             ServerManager.Instance.RegisterSession(this);
             Character.SetSession(this);
-            Character.Buff = new ThreadSafeSortedList<short, Buff>();
         }
 
         private void ClearReceiveQueue()

@@ -59,7 +59,6 @@ namespace OpenNos.GameObject
             MeditationDictionary = new Dictionary<short, DateTime>();
             Buff = new ThreadSafeSortedList<short, Buff>();
             BuffObservables = new ThreadSafeSortedList<short, IDisposable>();
-            EquipmentBCards = new ThreadSafeGenericList<BCard>();
         }
 
         #endregion
