@@ -416,7 +416,7 @@ namespace OpenNos.GameObject
 
         public void AddBuff(Buff indicator, bool noMessage = false)
         {
-            if (!noMessage || !Buff.GetAllItems().Any(s => s.Card.CardId == indicator.Card.CardId))
+            if (indicator.Card != null && (!noMessage || !Buff.GetAllItems().Any(s => s.Card.CardId == indicator.Card.CardId)))
             {
                 Buff.Remove(indicator.Card.CardId);
                 Buff[indicator.Card.CardId] = indicator;
