@@ -14,10 +14,10 @@
 
 namespace OpenNos.Domain
 {
-    public enum AttackType : byte
+    public enum FactionType : byte
     {
-        Melee,
-        Range,
-        Magical
+        None = 0,
+        Angel = 1,
+        Demon = 2,
     }
 }

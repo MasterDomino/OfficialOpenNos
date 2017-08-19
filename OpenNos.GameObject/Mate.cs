@@ -197,7 +197,7 @@ namespace OpenNos.GameObject
             int _faction = 0;
             if (ServerManager.Instance.ChannelId == 51)
             {
-                _faction = Owner.Faction + 2;
+                _faction = (byte)Owner.Faction + 2;
             }
             return $"in 2 {NpcMonsterVNum} {MateTransportId} {(IsTeamMember ? PositionX : MapX)} {(IsTeamMember ? PositionY : MapY)} {Direction} {(int)(Hp / (float)MaxHp * 100)} {(int)(Mp / (float)MaxMp * 100)} 0 {_faction} 3 {CharacterId} 1 0 {(Skin != 0 ? Skin : -1)} {_name} 0 -1 0 0 0 0 0 0 0 0";
         }

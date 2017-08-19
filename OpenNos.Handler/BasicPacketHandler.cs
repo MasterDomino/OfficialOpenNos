@@ -901,20 +901,20 @@ namespace OpenNos.Handler
                 else if (guriPacket.Type == 750)
                 {
                     const short baseVnum = 1623;
-                    if (short.TryParse(guriPacket.Argument.ToString(), out short faction) && Session.Character.Inventory.CountItem(baseVnum + faction) > 0)
+                    if (Enum.TryParse(guriPacket.Argument.ToString(), out FactionType faction) && Session.Character.Inventory.CountItem(baseVnum + (byte)faction) > 0)
                     {
-                        if (faction < 3)
+                        if ((byte)faction < 3)
                         {
                             if (Session.Character.Family != null)
                             {
                                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("IN_FAMILY"), 0));
                             }
                             Session.Character.Faction = faction;
-                            Session.Character.Inventory.RemoveItemAmount(baseVnum + faction);
+                            Session.Character.Inventory.RemoveItemAmount(baseVnum + (byte)faction);
                             Session.SendPacket("scr 0 0 0 0 0 0 0");
                             Session.SendPacket(Session.Character.GenerateFaction());
-                            Session.SendPacket(Session.Character.GenerateEff(4799 + faction));
-                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey($"GET_PROTECTION_POWER_{faction}"), 0));
+                            Session.SendPacket(Session.Character.GenerateEff(4799 + (byte)faction));
+                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey($"GET_PROTECTION_POWER_{(byte)faction}"), 0));
                         }
                         else
                         {
@@ -923,12 +923,12 @@ namespace OpenNos.Handler
                                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_FAMILY"), 0));
                             }
 
-                            Session.Character.Faction = faction / 2;
-                            Session.Character.Inventory.RemoveItemAmount(baseVnum + faction);
+                            Session.Character.Faction = (FactionType)((byte)faction / 2);
+                            Session.Character.Inventory.RemoveItemAmount(baseVnum + (byte)faction);
                             Session.SendPacket("scr 0 0 0 0 0 0 0");
                             Session.SendPacket(Session.Character.GenerateFaction());
-                            Session.SendPacket(Session.Character.GenerateEff(4799 + (faction / 2)));
-                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey($"GET_PROTECTION_POWER_{faction / 2}"), 0));
+                            Session.SendPacket(Session.Character.GenerateEff(4799 + ((byte)faction / 2)));
+                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey($"GET_PROTECTION_POWER_{(byte)faction / 2}"), 0));
                             Session.Character.Save();
                             ServerManager.Instance.FamilyRefresh(Session.Character.Family.FamilyId);
                             CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()

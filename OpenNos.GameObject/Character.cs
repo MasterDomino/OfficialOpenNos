@@ -556,7 +556,7 @@ namespace OpenNos.GameObject
             Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("CLASS_CHANGED"), 0));
             Session.CurrentMapInstance?.Broadcast(GenerateEff(196), PositionX, PositionY);
             int faction = 1 + ServerManager.Instance.RandomNumber(0, 2);
-            Faction = faction;
+            Faction = (FactionType)faction;
             Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey($"GET_PROTECTION_POWER_{faction}"), 0));
             Session.SendPacket("scr 0 0 0 0 0 0");
             Session.SendPacket(GenerateFaction());
@@ -1259,7 +1259,7 @@ namespace OpenNos.GameObject
                     }
                 }
             }
-            return $"equip {weaponUpgrade}{weaponRare} {armorUpgrade}{armorRare}{eqlist}";
+            return $"equip {GenerateEqRareUpgradeForPacket()}{eqlist}";
         }
 
         public string GenerateExts()
@@ -1269,7 +1269,7 @@ namespace OpenNos.GameObject
 
         public string GenerateFaction()
         {
-            return $"fs {Faction}";
+            return $"fs {(byte)Faction}";
         }
 
         public string GenerateFamilyMember()
@@ -1512,7 +1512,7 @@ namespace OpenNos.GameObject
             int _faction = 0;
             if (ServerManager.Instance.ChannelId == 51)
             {
-                _faction = Faction + 2;
+                _faction = (byte)Faction + 2;
             }
             int color = (byte)HairColor;
             ItemInstance fairy = null;
@@ -1798,7 +1798,7 @@ namespace OpenNos.GameObject
             }
             else
             {
-                return $"rsfp 0 -1";
+                return "rsfp 0 -1";
             }
         }
 
@@ -1969,16 +1969,16 @@ namespace OpenNos.GameObject
                     break;
 
                 case 3:
-                    result = $"raid 3";
+                    result = "raid 3";
                     Group?.Characters?.ForEach(s => result += $" {s.Character?.CharacterId}.{Math.Ceiling(s.Character.Hp / s.Character.HPLoad() * 100)}.{Math.Ceiling(s.Character.Mp / s.Character.MPLoad() * 100)}");
                     break;
 
                 case 4:
-                    result = $"raid 4";
+                    result = "raid 4";
                     break;
 
                 case 5:
-                    result = $"raid 5 1";
+                    result = "raid 5 1";
                     break;
             }
             return result;
