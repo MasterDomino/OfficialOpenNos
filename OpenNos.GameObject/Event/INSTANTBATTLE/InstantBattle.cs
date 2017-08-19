@@ -114,7 +114,7 @@ namespace OpenNos.GameObject.Event
                             mapinstance.Item1.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("INSTANTBATTLE_SUCCEEDED"), 0));
                             foreach (ClientSession cli in mapinstance.Item1.Sessions.Where(s => s.Character != null).ToList())
                             {
-                                cli.Character.GetReput(cli.Character.Level * 50);
+                                cli.Character.SetReputation(cli.Character.Level * 50);
                                 cli.Character.Gold += cli.Character.Level * 1000;
                                 cli.Character.Gold = cli.Character.Gold > maxGold ? maxGold : cli.Character.Gold;
                                 cli.Character.SpAdditionPoint += cli.Character.Level * 100;

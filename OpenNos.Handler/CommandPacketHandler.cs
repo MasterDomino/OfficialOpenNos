@@ -605,7 +605,7 @@ namespace OpenNos.Handler
 
                 if (changeReputationPacket.Reputation > 0)
                 {
-                    Session.Character.Reput = changeReputationPacket.Reputation;
+                    Session.Character.Reputation = changeReputationPacket.Reputation;
                     Session.SendPacket(Session.Character.GenerateFd());
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("REP_CHANGED"), 0));
                     Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(), ReceiverType.AllExceptMe);
@@ -2724,7 +2724,7 @@ namespace OpenNos.Handler
             Session.SendPacket(Session.Character.GenerateSay($"MapId: {Session.CurrentMapInstance.Map.MapId}", 13));
             Session.SendPacket(Session.Character.GenerateSay($"MapX: {Session.Character.PositionX}", 13));
             Session.SendPacket(Session.Character.GenerateSay($"MapY: {Session.Character.PositionY}", 13));
-            Session.SendPacket(Session.Character.GenerateSay($"Reputation: {character.Reput}", 13));
+            Session.SendPacket(Session.Character.GenerateSay($"Reputation: {character.Reputation}", 13));
             Session.SendPacket(Session.Character.GenerateSay($"Dignity: {character.Dignity}", 13));
             Session.SendPacket(Session.Character.GenerateSay($"Rage: {character.RagePoint}", 13));
             Session.SendPacket(Session.Character.GenerateSay($"Compliment: {character.Compliment}", 13));

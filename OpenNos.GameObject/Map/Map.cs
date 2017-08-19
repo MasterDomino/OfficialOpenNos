@@ -78,10 +78,6 @@ namespace OpenNos.GameObject
 
         public int Music { get; set; }
 
-        /// <summary>
-        /// This list ONLY for READ access to MapMonster, you CANNOT MODIFY them here. Use
-        /// Add/RemoveMonster instead.
-        /// </summary>
         public string Name { get; set; }
 
         public bool ShopAllowed { get; set; }

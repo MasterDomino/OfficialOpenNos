@@ -283,7 +283,7 @@ namespace OpenNos.Handler
                             }
                             else
                             {
-                                if (Reputprice <= 0 || Reputprice > Session.Character.Reput)
+                                if (Reputprice <= 0 || Reputprice > Session.Character.Reputation)
                                 {
                                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateShopMemo(3, Language.Instance.GetMessageFromKey("NOT_ENOUGH_REPUT")));
                                     return;
@@ -320,7 +320,7 @@ namespace OpenNos.Handler
                                 else
                                 {
                                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateShopMemo(1, string.Format(Language.Instance.GetMessageFromKey("BUY_ITEM_VALID"), iteminfo.Name, amount)));
-                                    Session.Character.Reput -= Reputprice;
+                                    Session.Character.Reputation -= Reputprice;
                                     Session.SendPacket(Session.Character.GenerateFd());
                                     Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("REPUT_DECREASED"), 11));
                                 }

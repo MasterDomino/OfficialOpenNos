@@ -94,7 +94,7 @@ namespace OpenNos.GameObject
 
         public int DefenceRate { get; set; }
 
-        public int Direction { get; set; }
+        public byte Direction { get; set; }
 
         public int DistanceCritical { get; set; }
 
@@ -195,9 +195,9 @@ namespace OpenNos.GameObject
 
         public DateTime LastMonsterAggro { get; set; }
 
-        public int LastNpcMonsterId { get; set; }
-
         public DateTime LastMove { get; set; }
+
+        public int LastNpcMonsterId { get; set; }
 
         public int LastNRunId { get; set; }
 
@@ -408,7 +408,7 @@ namespace OpenNos.GameObject
 
         public int WareHouseSize { get; set; }
 
-        public int WaterResistance { get; private set; }
+        public int WaterResistance { get; set; }
 
         #endregion
 
@@ -731,6 +731,7 @@ namespace OpenNos.GameObject
                             //else
                             //{
                             Session.SendPacket(GenerateStat());
+
                             //}
                         }
                     }
@@ -1094,7 +1095,7 @@ namespace OpenNos.GameObject
         public string GenerateAt()
         {
             MapInstance mapForMusic = MapInstance;
-            return $"at {CharacterId} {MapInstance.Map.MapId} {PositionX} {PositionY} 2 0 {mapForMusic?.InstanceMusic ?? 0} -1";
+            return $"at {CharacterId} {MapInstance.Map.MapId} {PositionX} {PositionY} {Direction} 0 {mapForMusic?.InstanceMusic ?? 0} 2 -1";
         }
 
         public string GenerateBlinit()
@@ -1109,7 +1110,7 @@ namespace OpenNos.GameObject
 
         public string GenerateCInfo()
         {
-            return $"c_info {(Authority == AuthorityType.Moderator && !Undercover ? "[Support]" + Name : Name)} - -1 {(Family != null && !Undercover ? $"{Family.FamilyId} {Family.Name}({Language.Instance.GetMessageFromKey(FamilyCharacter.Authority.ToString().ToUpper())})" : "-1 -")} {CharacterId} {(Invisible ? 6 : Undercover ? (byte)AuthorityType.User : Authority < AuthorityType.User ? (byte)AuthorityType.User : (byte)Authority)} {(byte)Gender} {(byte)HairStyle} {(byte)HairColor} {(byte)Class} {(GetDignityIco() == 1 ? GetReputIco() : -GetDignityIco())} {(Authority == AuthorityType.Moderator ? 500 : Compliment)} {(UseSp || IsVehicled ? Morph : 0)} {(Invisible ? 1 : 0)} {Family?.FamilyLevel ?? 0} {(UseSp ? MorphUpgrade : 0)} {ArenaWinner}";
+            return $"c_info {(Authority == AuthorityType.Moderator && !Undercover ? "[Support]" + Name : Name)} - -1 {(Family != null && !Undercover ? $"{Family.FamilyId} {Family.Name}({Language.Instance.GetMessageFromKey(FamilyCharacter.Authority.ToString().ToUpper())})" : "-1 -")} {CharacterId} {(Invisible ? 6 : Undercover ? (byte)AuthorityType.User : Authority < AuthorityType.User ? (byte)AuthorityType.User : (byte)Authority)} {(byte)Gender} {(byte)HairStyle} {(byte)HairColor} {(byte)Class} {(GetDignityIco() == 1 ? GetReputationIco() : -GetDignityIco())} {(Authority == AuthorityType.Moderator ? 500 : Compliment)} {(UseSp || IsVehicled ? Morph : 0)} {(Invisible ? 1 : 0)} {Family?.FamilyLevel ?? 0} {(UseSp ? MorphUpgrade : 0)} {ArenaWinner}";
         }
 
         public string GenerateCMap()
@@ -1399,7 +1400,7 @@ namespace OpenNos.GameObject
 
         public string GenerateFd()
         {
-            return $"fd {Reput} {GetReputIco()} {(int)Dignity} {Math.Abs(GetDignityIco())}";
+            return $"fd {Reputation} {GetReputationIco()} {(int)Dignity} {Math.Abs(GetDignityIco())}";
         }
 
         public string GenerateFinfo(long? relatedCharacterLoggedId, bool isConnected)
@@ -1524,7 +1525,7 @@ namespace OpenNos.GameObject
                 }
                 fairy = Inventory.LoadBySlotAndType((byte)EquipmentType.Fairy, InventoryType.Wear);
             }
-            return $"in 1 {(Authority == AuthorityType.Moderator && !Undercover ? "[Support]" + _name : _name)} - {CharacterId} {PositionX} {PositionY} {Direction} {(Undercover ? (byte)AuthorityType.User : Authority < AuthorityType.User ? (byte)AuthorityType.User : (byte)Authority)} {(byte)Gender} {(byte)HairStyle} {color} {(byte)Class} {GenerateEqListForPacket()} {Math.Ceiling(Hp / HPLoad() * 100)} {Math.Ceiling(Mp / MPLoad() * 100)} {(IsSitting ? 1 : 0)} {(Group?.GroupType == GroupType.Group ? (Group?.GroupId ?? -1) : -1)} {(fairy != null && !Undercover ? 4 : 0)} {fairy?.Item.Element ?? 0} 0 {fairy?.Item.Morph ?? 0} 0 {(UseSp || IsVehicled ? Morph : 0)} {GenerateEqRareUpgradeForPacket()} {(!Undercover ? (foe ? -1 : Family?.FamilyId ?? -1) : -1)} {(!Undercover ? (foe ? _name : Family?.Name ?? "-") : "-")} {(GetDignityIco() == 1 ? GetReputIco() : -GetDignityIco())} {(Invisible ? 1 : 0)} {(UseSp ? MorphUpgrade : 0)} {_faction} {(UseSp ? MorphUpgrade2 : 0)} {Level} {Family?.FamilyLevel ?? 0} {ArenaWinner} {(Authority == AuthorityType.Moderator && !Undercover ? 500 : Compliment)} {Size} {HeroLevel}";
+            return $"in 1 {(Authority == AuthorityType.Moderator && !Undercover ? "[Support]" + _name : _name)} - {CharacterId} {PositionX} {PositionY} {Direction} {(Undercover ? (byte)AuthorityType.User : Authority < AuthorityType.User ? (byte)AuthorityType.User : (byte)Authority)} {(byte)Gender} {(byte)HairStyle} {color} {(byte)Class} {GenerateEqListForPacket()} {Math.Ceiling(Hp / HPLoad() * 100)} {Math.Ceiling(Mp / MPLoad() * 100)} {(IsSitting ? 1 : 0)} {(Group?.GroupType == GroupType.Group ? (Group?.GroupId ?? -1) : -1)} {(fairy != null && !Undercover ? 4 : 0)} {fairy?.Item.Element ?? 0} 0 {fairy?.Item.Morph ?? 0} 0 {(UseSp || IsVehicled ? Morph : 0)} {GenerateEqRareUpgradeForPacket()} {(!Undercover ? (foe ? -1 : Family?.FamilyId ?? -1) : -1)} {(!Undercover ? (foe ? _name : Family?.Name ?? "-") : "-")} {(GetDignityIco() == 1 ? GetReputationIco() : -GetDignityIco())} {(Invisible ? 1 : 0)} {(UseSp ? MorphUpgrade : 0)} {_faction} {(UseSp ? MorphUpgrade2 : 0)} {Level} {Family?.FamilyLevel ?? 0} {ArenaWinner} {(Authority == AuthorityType.Moderator && !Undercover ? 500 : Compliment)} {Size} {HeroLevel}";
         }
 
         public string GenerateInvisible()
@@ -1742,7 +1743,7 @@ namespace OpenNos.GameObject
             {
                 specialist = Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear);
             }
-            return $"lev {Level} {(Level < 100 ? LevelXp : LevelXp / 100)} {(!UseSp || specialist == null ? JobLevel : specialist.SpLevel)} {(!UseSp || specialist == null ? JobLevelXp : specialist.XP)} {(Level < 100 ? XPLoad() : XPLoad() / 100)} {(!UseSp || specialist == null ? JobXPLoad() : SPXPLoad())} {Reput} {GetCP()} {HeroXp} {HeroLevel} {HeroXPLoad()} 0";
+            return $"lev {Level} {(Level < 100 ? LevelXp : LevelXp / 100)} {(!UseSp || specialist == null ? JobLevel : specialist.SpLevel)} {(!UseSp || specialist == null ? JobLevelXp : specialist.XP)} {(Level < 100 ? XPLoad() : XPLoad() / 100)} {(!UseSp || specialist == null ? JobXPLoad() : SPXPLoad())} {Reputation} {GetCP()} {HeroXp} {HeroLevel} {HeroXPLoad()} 0";
         }
 
         public string GenerateLevelUp()
@@ -2062,7 +2063,7 @@ namespace OpenNos.GameObject
             // tc_info 0 name 0 0 0 0 -1 - 0 0 0 0 0 0 0 0 0 0 0 wins deaths reput 0 0 0 morph
             // talentwin talentlose capitul rankingpoints arenapoints 0 0 ispvpprimary ispvpsecondary
             // ispvparmor herolvl desc
-            return $"tc_info {Level} {Name} {fairy?.Item.Element ?? 0} {ElementRate} {(byte)Class} {(byte)Gender} {(Family != null ? $"{Family.FamilyId} {Family.Name}({Language.Instance.GetMessageFromKey(FamilyCharacter.Authority.ToString().ToUpper())})" : "-1 -")} {GetReputIco()} {GetDignityIco()} {(weapon != null ? 1 : 0)} {weapon?.Rare ?? 0} {weapon?.Upgrade ?? 0} {(weapon2 != null ? 1 : 0)} {weapon2?.Rare ?? 0} {weapon2?.Upgrade ?? 0} {(armor != null ? 1 : 0)} {armor?.Rare ?? 0} {armor?.Upgrade ?? 0} 0 0 {Reput} {Act4Kill} {Act4Dead} {Act4Points} {(UseSp ? Morph : 0)} {TalentWin} {TalentLose} {TalentSurrender} 0 {MasterPoints} {Compliment} 0 {(isPvpPrimary ? 1 : 0)} {(isPvpSecondary ? 1 : 0)} {(isPvpArmor ? 1 : 0)} {HeroLevel} {(string.IsNullOrEmpty(Biography) ? Language.Instance.GetMessageFromKey("NO_PREZ_MESSAGE") : Biography)}";
+            return $"tc_info {Level} {Name} {fairy?.Item.Element ?? 0} {ElementRate} {(byte)Class} {(byte)Gender} {(Family != null ? $"{Family.FamilyId} {Family.Name}({Language.Instance.GetMessageFromKey(FamilyCharacter.Authority.ToString().ToUpper())})" : "-1 -")} {GetReputationIco()} {GetDignityIco()} {(weapon != null ? 1 : 0)} {weapon?.Rare ?? 0} {weapon?.Upgrade ?? 0} {(weapon2 != null ? 1 : 0)} {weapon2?.Rare ?? 0} {weapon2?.Upgrade ?? 0} {(armor != null ? 1 : 0)} {armor?.Rare ?? 0} {armor?.Upgrade ?? 0} 0 0 {Reputation} {Act4Kill} {Act4Dead} {Act4Points} {(UseSp ? Morph : 0)} {TalentWin} {TalentLose} {TalentSurrender} 0 {MasterPoints} {Compliment} 0 {(isPvpPrimary ? 1 : 0)} {(isPvpSecondary ? 1 : 0)} {(isPvpArmor ? 1 : 0)} {HeroLevel} {(string.IsNullOrEmpty(Biography) ? Language.Instance.GetMessageFromKey("NO_PREZ_MESSAGE") : Biography)}";
         }
 
         public string GenerateRest()
@@ -2252,31 +2253,6 @@ namespace OpenNos.GameObject
         [SuppressMessage("Microsoft.StyleCop.CSharp.LayoutRules", "SA1503:CurlyBracketsMustNotBeOmitted", Justification = "Readability")]
         public string GenerateStatChar()
         {
-            int type = 0;
-            int type2 = 0;
-            switch (Class)
-            {
-                case (byte)ClassType.Adventurer:
-                    type = 0;
-                    type2 = 1;
-                    break;
-
-                case ClassType.Magician:
-                    type = 2;
-                    type2 = 1;
-                    break;
-
-                case ClassType.Swordman:
-                    type = 0;
-                    type2 = 1;
-                    break;
-
-                case ClassType.Archer:
-                    type = 1;
-                    type2 = 0;
-                    break;
-            }
-
             int weaponUpgrade = 0;
             int secondaryUpgrade = 0;
             int armorUpgrade = 0;
@@ -2464,7 +2440,7 @@ namespace OpenNos.GameObject
                     DistanceDefenceRate += item.DistanceDefenceDodge + item.Item.DistanceDefenceDodge;
                 }
             }
-            return $"sc {type} {weaponUpgrade} {MinHit} {MaxHit} {HitRate} {HitCriticalRate} {HitCritical} {type2} {secondaryUpgrade} {MinDistance} {MaxDistance} {DistanceRate} {DistanceCriticalRate} {DistanceCritical} {armorUpgrade} {Defence} {DefenceRate} {DistanceDefence} {DistanceDefenceRate} {MagicalDefence} {FireResistance} {WaterResistance} {LightResistance} {DarkResistance}";
+            return $"sc {Class - 1} {weaponUpgrade} {MinHit} {MaxHit} {HitRate} {HitCriticalRate} {HitCritical} {(Class == ClassType.Archer ? 1 : 0)} {secondaryUpgrade} {MinDistance} {MaxDistance} {DistanceRate} {DistanceCriticalRate} {DistanceCritical} {armorUpgrade} {Defence} {DefenceRate} {DistanceDefence} {DistanceDefenceRate} {MagicalDefence} {FireResistance} {WaterResistance} {LightResistance} {DarkResistance}";
         }
 
         public string GenerateStatInfo()
@@ -2663,19 +2639,12 @@ namespace OpenNos.GameObject
             return mlobjstring;
         }
 
-        public void GetReput(int val)
-        {
-            Reput += val;
-            Session.SendPacket(GenerateFd());
-            Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("REPUT_INCREASE"), val), 11));
-        }
-
         [SuppressMessage("Microsoft.StyleCop.CSharp.LayoutRules", "SA1503:CurlyBracketsMustNotBeOmitted", Justification = "Readability")]
-        public int GetReputIco()
+        public int GetReputationIco()
         {
-            if (Reput >= 5000001)
+            if (Reputation >= 5000001)
             {
-                switch (IsReputHero())
+                switch (IsReputationHero())
                 {
                     case 1:
                         return 28;
@@ -2693,32 +2662,32 @@ namespace OpenNos.GameObject
                         return 32;
                 }
             }
-            if (Reput <= 50) return 1;
-            if (Reput <= 150) return 2;
-            if (Reput <= 250) return 3;
-            if (Reput <= 500) return 4;
-            if (Reput <= 750) return 5;
-            if (Reput <= 1000) return 6;
-            if (Reput <= 2250) return 7;
-            if (Reput <= 3500) return 8;
-            if (Reput <= 5000) return 9;
-            if (Reput <= 9500) return 10;
-            if (Reput <= 19000) return 11;
-            if (Reput <= 25000) return 12;
-            if (Reput <= 40000) return 13;
-            if (Reput <= 60000) return 14;
-            if (Reput <= 85000) return 15;
-            if (Reput <= 115000) return 16;
-            if (Reput <= 150000) return 17;
-            if (Reput <= 190000) return 18;
-            if (Reput <= 235000) return 19;
-            if (Reput <= 285000) return 20;
-            if (Reput <= 350000) return 21;
-            if (Reput <= 500000) return 22;
-            if (Reput <= 1500000) return 23;
-            if (Reput <= 2500000) return 24;
-            if (Reput <= 3750000) return 25;
-            return Reput <= 5000000 ? 26 : 27;
+            if (Reputation <= 50) return 1;
+            if (Reputation <= 150) return 2;
+            if (Reputation <= 250) return 3;
+            if (Reputation <= 500) return 4;
+            if (Reputation <= 750) return 5;
+            if (Reputation <= 1000) return 6;
+            if (Reputation <= 2250) return 7;
+            if (Reputation <= 3500) return 8;
+            if (Reputation <= 5000) return 9;
+            if (Reputation <= 9500) return 10;
+            if (Reputation <= 19000) return 11;
+            if (Reputation <= 25000) return 12;
+            if (Reputation <= 40000) return 13;
+            if (Reputation <= 60000) return 14;
+            if (Reputation <= 85000) return 15;
+            if (Reputation <= 115000) return 16;
+            if (Reputation <= 150000) return 17;
+            if (Reputation <= 190000) return 18;
+            if (Reputation <= 235000) return 19;
+            if (Reputation <= 285000) return 20;
+            if (Reputation <= 350000) return 21;
+            if (Reputation <= 500000) return 22;
+            if (Reputation <= 1500000) return 23;
+            if (Reputation <= 2500000) return 24;
+            if (Reputation <= 3750000) return 25;
+            return Reputation <= 5000000 ? 26 : 27;
         }
 
         /// <summary>
@@ -2893,7 +2862,7 @@ namespace OpenNos.GameObject
             return Session.Account.PenaltyLogs.Any(s => s.Penalty == PenaltyType.Muted && s.DateEnd > DateTime.Now);
         }
 
-        public int IsReputHero()
+        public int IsReputationHero()
         {
             int i = 0;
             foreach (CharacterDTO characterDto in ServerManager.Instance.TopReputation)
@@ -3470,6 +3439,13 @@ namespace OpenNos.GameObject
                     Session.SendPacket(GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_GIFTED")} {mail.AttachmentAmount}", 12));
                 }
             }
+        }
+
+        public void SetReputation(int val)
+        {
+            Reputation += val;
+            Session.SendPacket(GenerateFd());
+            Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("REPUT_INCREASE"), val), 11));
         }
 
         public void SetRespawnPoint(short mapId, short mapX, short mapY)

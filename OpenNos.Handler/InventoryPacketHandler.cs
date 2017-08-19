@@ -1725,7 +1725,7 @@ namespace OpenNos.Handler
             WearableInstance fairy = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.Fairy, InventoryType.Wear);
             if (sp != null)
             {
-                if (Session.Character.GetReputIco() < sp.Item.ReputationMinimum)
+                if (Session.Character.GetReputationIco() < sp.Item.ReputationMinimum)
                 {
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("LOW_REP"), 0));
                     return;

@@ -241,14 +241,14 @@ namespace OpenNos.Handler
                         {
                             hitRequest.Session.Character.GetAct4Points(2);
                         }
-                        if (target.Character.Reput < 50000)
+                        if (target.Character.Reputation < 50000)
                         {
                             target.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("LOSE_REP"), 0), 11));
                         }
                         else
                         {
-                            target.Character.Reput -= target.Character.Level * 50;
-                            hitRequest.Session.Character.Reput += target.Character.Level * 50;
+                            target.Character.Reputation -= target.Character.Level * 50;
+                            hitRequest.Session.Character.Reputation += target.Character.Level * 50;
                             hitRequest.Session.SendPacket(hitRequest.Session.Character.GenerateLev());
                             target.SendPacket(target.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("LOSE_REP"), (short)(target.Character.Level * 50)), 11));
                         }

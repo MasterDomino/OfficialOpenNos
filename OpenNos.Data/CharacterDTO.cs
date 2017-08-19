@@ -110,7 +110,7 @@ namespace OpenNos.Data
 
         public long RagePoint { get; set; }
 
-        public long Reput { get; set; }
+        public long Reputation { get; set; }
 
         public byte Slot { get; set; }
 

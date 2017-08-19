@@ -35,8 +35,11 @@ namespace OpenNos.GameObject
         #endregion
 
         #region Properties
+
         public List<BCard> BCards { get; set; }
+
         public List<RollGeneratedItemDTO> RollGeneratedItems { get; set; }
+
         #endregion
 
         #region Methods

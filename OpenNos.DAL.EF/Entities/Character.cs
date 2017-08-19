@@ -166,7 +166,7 @@ namespace OpenNos.DAL.EF
 
         public long RagePoint { get; set; }
 
-        public long Reput { get; set; }
+        public long Reputation { get; set; }
 
         public virtual ICollection<Respawn> Respawn { get; set; }
 

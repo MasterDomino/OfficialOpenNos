@@ -74,11 +74,11 @@ namespace OpenNos.GameObject.Helpers
                     break;
 
                 case 2:
-                    familyordered = ServerManager.Instance.FamilyList.GetAllItems().OrderByDescending(s => s.FamilyCharacters.Sum(c => c.Character.Reput)).ToList();//use month instead log
+                    familyordered = ServerManager.Instance.FamilyList.GetAllItems().OrderByDescending(s => s.FamilyCharacters.Sum(c => c.Character.Reputation)).ToList();//use month instead log
                     break;
 
                 case 3:
-                    familyordered = ServerManager.Instance.FamilyList.GetAllItems().OrderByDescending(s => s.FamilyCharacters.Sum(c => c.Character.Reput)).ToList();
+                    familyordered = ServerManager.Instance.FamilyList.GetAllItems().OrderByDescending(s => s.FamilyCharacters.Sum(c => c.Character.Reputation)).ToList();
                     break;
             }
             int i = 0;
@@ -117,7 +117,7 @@ namespace OpenNos.GameObject.Helpers
                             break;
 
                         case 2:
-                            sum = fam.FamilyCharacters.Sum(c => c.Character.Reput);
+                            sum = fam.FamilyCharacters.Sum(c => c.Character.Reputation);
                             if (savecount != sum)
                             {
                                 rank++;
@@ -131,7 +131,7 @@ namespace OpenNos.GameObject.Helpers
                             break;
 
                         case 3:
-                            sum = fam.FamilyCharacters.Sum(c => c.Character.Reput);
+                            sum = fam.FamilyCharacters.Sum(c => c.Character.Reputation);
                             if (savecount != sum)
                             {
                                 rank++;

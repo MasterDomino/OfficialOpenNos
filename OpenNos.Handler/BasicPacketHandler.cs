@@ -1147,7 +1147,7 @@ namespace OpenNos.Handler
         {
             if (!string.IsNullOrEmpty(heroPacket.Message))
             {
-                if (Session.Character.IsReputHero() >= 3)
+                if (Session.Character.IsReputationHero() >= 3)
                 {
                     heroPacket.Message = heroPacket.Message.Trim();
                     ServerManager.Instance.Broadcast(Session, $"msg 5 [{Session.Character.Name}]:{heroPacket.Message}", ReceiverType.AllNoHeroBlocked);
@@ -1794,7 +1794,7 @@ namespace OpenNos.Handler
                 ServerManager.Instance.ChangeMap(Session.Character.CharacterId);
             }
             Session.SendPacket(Session.Character.GenerateSki());
-            Session.SendPacket($"fd {Session.Character.Reput} 0 {(int)Session.Character.Dignity} {Math.Abs(Session.Character.GetDignityIco())}");
+            Session.SendPacket($"fd {Session.Character.Reputation} 0 {(int)Session.Character.Dignity} {Math.Abs(Session.Character.GetDignityIco())}");
             Session.SendPacket(Session.Character.GenerateFd());
             Session.SendPacket("rage 0 250000");
             Session.SendPacket("rank_cool 0 0 18000");
@@ -1858,7 +1858,7 @@ namespace OpenNos.Handler
             }
             foreach (CharacterDTO character in ServerManager.Instance.TopReputation)
             {
-                flinit += $" {character.CharacterId}|{character.Level}|{character.HeroLevel}|{character.Reput}|{character.Name}";
+                flinit += $" {character.CharacterId}|{character.Level}|{character.HeroLevel}|{character.Reputation}|{character.Name}";
             }
             foreach (CharacterDTO character in ServerManager.Instance.TopPoints)
             {

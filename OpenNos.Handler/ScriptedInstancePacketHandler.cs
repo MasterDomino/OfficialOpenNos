@@ -61,7 +61,7 @@ namespace OpenNos.Handler
                 Guid mapInstanceId = ServerManager.Instance.GetBaseMapInstanceIdByMapId(Session.Character.MapId);
                 if (Session.Character.Timespace?.FirstMap.InstanceBag.EndState == 5)
                 {
-                    Session.Character.GetReput(Session.Character.Timespace.Reputation);
+                    Session.Character.SetReputation(Session.Character.Timespace.Reputation);
 
                     Session.Character.Gold = Session.Character.Gold + Session.Character.Timespace.Gold > ServerManager.Instance.MaxGold ? ServerManager.Instance.MaxGold : Session.Character.Gold + Session.Character.Timespace.Gold;
                     Session.SendPacket(Session.Character.GenerateGold());

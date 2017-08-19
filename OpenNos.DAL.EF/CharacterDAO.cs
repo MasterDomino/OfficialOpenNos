@@ -86,7 +86,7 @@ namespace OpenNos.DAL.EF
         {
             using (var context = DataAccessHelper.CreateContext())
             {
-                return context.Character.Where(c => c.Account.Authority == AuthorityType.User).OrderByDescending(c => c.Reput).Take(43).ToList().Select(c => _mapper.Map<CharacterDTO>(c)).ToList();
+                return context.Character.Where(c => c.Account.Authority == AuthorityType.User).OrderByDescending(c => c.Reputation).Take(43).ToList().Select(c => _mapper.Map<CharacterDTO>(c)).ToList();
             }
         }
 

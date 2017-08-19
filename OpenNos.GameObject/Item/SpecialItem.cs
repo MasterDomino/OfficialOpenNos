@@ -373,7 +373,7 @@ namespace OpenNos.GameObject
                     break;
 
                 case 69:
-                    session.Character.Reput += ReputPrice;
+                    session.Character.Reputation += ReputPrice;
                     session.SendPacket(session.Character.GenerateFd());
                     session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
                     break;

@@ -50,7 +50,7 @@ namespace OpenNos.Handler
             ClientSession sess = ServerManager.Instance.GetSessionByCharacterId(mJoinPacket.CharacterId);
             if (sess?.Character != null)
             {
-                if (sess.Character.MinilandState == MinilandState.OPEN)
+                if (sess.Character.MinilandState == MinilandState.Open)
                 {
                     ServerManager.Instance.JoinMiniland(Session, sess);
                 }
@@ -282,7 +282,7 @@ namespace OpenNos.Handler
             {
                 if (Session.Character.MinilandObjects.All(s => s.ItemInstanceId != minilandobject.Id))
                 {
-                    if (Session.Character.MinilandState == MinilandState.LOCK)
+                    if (Session.Character.MinilandState == MinilandState.Lock)
                     {
                         MinilandObject minilandobj = new MinilandObject
                         {
@@ -365,19 +365,19 @@ namespace OpenNos.Handler
 
                     switch (state)
                     {
-                        case MinilandState.PRIVATE:
+                        case MinilandState.Private:
                             Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("MINILAND_PRIVATE"), 0));
 
                             //Need to be review to permit one friend limit on the miniland
                             Session.Character.Miniland.Sessions.Where(s => s.Character != Session.Character).ToList().ForEach(s => ServerManager.Instance.ChangeMap(s.Character.CharacterId, s.Character.MapId, s.Character.MapX, s.Character.MapY));
                             break;
 
-                        case MinilandState.LOCK:
+                        case MinilandState.Lock:
                             Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("MINILAND_LOCK"), 0));
                             Session.Character.Miniland.Sessions.Where(s => s.Character != Session.Character).ToList().ForEach(s => ServerManager.Instance.ChangeMap(s.Character.CharacterId, s.Character.MapId, s.Character.MapX, s.Character.MapY));
                             break;
 
-                        case MinilandState.OPEN:
+                        case MinilandState.Open:
                             Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("MINILAND_PUBLIC"), 0));
                             break;
                     }
@@ -396,7 +396,7 @@ namespace OpenNos.Handler
             ItemInstance minilandobject = Session.Character.Inventory.LoadBySlotAndType<ItemInstance>(packet.Slot, InventoryType.Miniland);
             if (minilandobject != null)
             {
-                if (Session.Character.MinilandState == MinilandState.LOCK)
+                if (Session.Character.MinilandState == MinilandState.Lock)
                 {
                     MinilandObject minilandObject = Session.Character.MinilandObjects.Find(s => s.ItemInstanceId == minilandobject.Id);
                     if (minilandObject != null)
