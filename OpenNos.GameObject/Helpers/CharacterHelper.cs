@@ -472,7 +472,6 @@ namespace OpenNos.GameObject.Helpers
             return p * ((lvl / 5) + 1);
         }
 
-        [SuppressMessage("Microsoft.StyleCop.CSharp.LayoutRules", "SA1503:CurlyBracketsMustNotBeOmitted", Justification = "Easier to read")]
         public static int SlPoint(short spPoint, short mode)
         {
             try

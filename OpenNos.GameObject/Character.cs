@@ -1491,9 +1491,9 @@ namespace OpenNos.GameObject
             return $"gold {Gold} 0";
         }
 
-        public string GenerateIcon(int v1, int v2, short itemVNum)
+        public string GenerateIcon(int type, int value, short itemVNum)
         {
-            return $"icon {v1} {CharacterId} {v2} {itemVNum}";
+            return $"icon {type} {CharacterId} {value} {itemVNum}";
         }
 
         public string GenerateIdentity()
@@ -2250,7 +2250,6 @@ namespace OpenNos.GameObject
             return $"stat {Hp} {HPLoad()} {Mp} {MPLoad()} 0 {option}";
         }
 
-        [SuppressMessage("Microsoft.StyleCop.CSharp.LayoutRules", "SA1503:CurlyBracketsMustNotBeOmitted", Justification = "Readability")]
         public string GenerateStatChar()
         {
             int weaponUpgrade = 0;
@@ -2639,7 +2638,6 @@ namespace OpenNos.GameObject
             return mlobjstring;
         }
 
-        [SuppressMessage("Microsoft.StyleCop.CSharp.LayoutRules", "SA1503:CurlyBracketsMustNotBeOmitted", Justification = "Readability")]
         public int GetReputationIco()
         {
             if (Reputation >= 5000001)

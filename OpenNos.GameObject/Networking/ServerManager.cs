@@ -416,7 +416,7 @@ namespace OpenNos.GameObject
                         session.SendPacket(session.Character.Group.GeneraterRaidmbf(session));
                     }
 
-                    Parallel.ForEach(session.CurrentMapInstance.Sessions.Where(s => s.Character?.InvisibleGm == false), visibleSession =>
+                    Parallel.ForEach(session.CurrentMapInstance.Sessions.Where(s => s.Character?.InvisibleGm == false && s.Character.CharacterId != session.Character.CharacterId), visibleSession =>
                     {
                         if (!session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.Act4) || session.Character.Faction == visibleSession.Character.Faction)
                         {
@@ -455,7 +455,7 @@ namespace OpenNos.GameObject
                             mate.PositionX = (short)(session.Character.PositionX + (mate.MateType == MateType.Partner ? -1 : 1));
                             mate.PositionY = (short)(session.Character.PositionY + 1);
                         });
-                        Parallel.ForEach(session.CurrentMapInstance.Sessions.Where(s => s.Character != null), s =>
+                        Parallel.ForEach(session.CurrentMapInstance.Sessions.Where(s => s.Character != null && s.Character.CharacterId != session.Character.CharacterId), s =>
                         {
                             if (!session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.Act4) || session.Character.Faction == s.Character.Faction)
                             {
