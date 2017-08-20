@@ -2,7 +2,7 @@ namespace OpenNos.DAL.EF.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class Aphrodite61 : DbMigration
     {
         public override void Up()
@@ -20,9 +20,8 @@ namespace OpenNos.DAL.EF.Migrations
                 .PrimaryKey(t => t.ShellEffectId)
                 .ForeignKey("dbo.ItemInstance", t => t.ItemInstanceId)
                 .Index(t => t.ItemInstanceId);
-            
         }
-        
+
         public override void Down()
         {
             DropForeignKey("dbo.ShellEffect", "ItemInstanceId", "dbo.ItemInstance");

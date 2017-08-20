@@ -215,26 +215,12 @@
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.Client, Version=2.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.Client.2.2.2\lib\net45\Microsoft.AspNet.SignalR.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
-    <Reference Include="System.Data">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.XML" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System">
       <HintPath>..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.dll</HintPath>
     </Reference>
-    <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -325,10 +311,6 @@
     <ProjectReference Include="..\OpenNos.Data\OpenNos.Data.csproj">
       <Project>{f1071ded-3d92-4416-9b9c-8664441ade64}</Project>
       <Name>OpenNos.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OpenNos.Domain\OpenNos.Domain.csproj">
-      <Project>{20addddd-dad9-44f3-9beb-026c73090660}</Project>
-      <Name>OpenNos.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpenNos.GameObject\OpenNos.GameObject.csproj">
       <Project>{eadd17be-20a4-4589-830e-e41be9314928}</Project>

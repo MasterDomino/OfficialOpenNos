@@ -268,7 +268,7 @@ namespace OpenNos.GameObject
                 short toY = -1;
                 short toX = -1;
                 int toMap = -1;
-                Guid destmapInstanceId = default(Guid);
+                Guid destmapInstanceId = default;
                 if (!int.TryParse(mapevent.Attributes["Map"]?.Value, out mapid))
                 {
                     mapid = -1;
@@ -586,7 +586,7 @@ namespace OpenNos.GameObject
                             Type = short.Parse(mapevent?.Attributes["Type"].Value),
                             DestinationX = toX,
                             DestinationY = toY,
-                            DestinationMapId = (short)(destmapInstanceId == default(Guid) ? -1 : 0),
+                            DestinationMapId = (short)(destmapInstanceId == default ? -1 : 0),
                             SourceMapInstanceId = mapinstance.MapInstanceId,
                             DestinationMapInstanceId = destmapInstanceId,
                         };

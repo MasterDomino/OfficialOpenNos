@@ -110,7 +110,7 @@ namespace OpenNos.GameObject
 
         private short FirstY { get; set; }
         public bool NoAggresiveIcon { get; internal set; }
-        
+
         #endregion
 
         #region Methods

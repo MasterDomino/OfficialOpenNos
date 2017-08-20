@@ -63,7 +63,6 @@ namespace OpenNos.DAL.EF
                     if (entity == null)
                     {
                         return Insert(shelleffect, context);
-                        
                     }
                     return Update(entity, shelleffect, context);
                 }

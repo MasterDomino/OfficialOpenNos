@@ -92,7 +92,6 @@ namespace OpenNos.GameObject.Helpers
                         case EventType.MeteoriteGame:
                             MeteoriteGame.GenerateMeteoriteGame();
                             break;
-
                     }
                 });
             }

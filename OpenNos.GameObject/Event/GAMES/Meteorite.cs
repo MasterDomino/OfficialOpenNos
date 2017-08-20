@@ -5,9 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace OpenNos.GameObject.Event.GAMES
 {
@@ -30,33 +28,42 @@ namespace OpenNos.GameObject.Event.GAMES
             ServerManager.Instance.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("METEORITE_SECONDS"), 10), 1));
             Thread.Sleep(10 * 1000);
             ServerManager.Instance.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("METEORITE_STARTED"), 1));
-            ServerManager.Instance.Broadcast($"qnaml 100 #guri^506 The Meteorite Game is starting! Join now!");
+            ServerManager.Instance.Broadcast("qnaml 100 #guri^506 The Meteorite Game is starting! Join now!");
             ServerManager.Instance.EventInWaiting = true;
             Thread.Sleep(30 * 1000);
             ServerManager.Instance.Sessions.Where(s => s.Character?.IsWaitingForEvent == false).ToList().ForEach(s => s.SendPacket("esf"));
             ServerManager.Instance.EventInWaiting = false;
             IEnumerable<ClientSession> sessions = ServerManager.Instance.Sessions.Where(s => s.Character?.IsWaitingForEvent == true && s.Character.MapInstance.MapInstanceType == MapInstanceType.BaseMapInstance);
 
-            MapInstance map = null;
-            map = ServerManager.Instance.GenerateMapInstance(2004, MapInstanceType.NormalInstance, new InstanceBag());
-
-            foreach (ClientSession sess in sessions)
+            MapInstance map = ServerManager.Instance.GenerateMapInstance(2004, MapInstanceType.NormalInstance, new InstanceBag());
+            if (map != null)
             {
-                ServerManager.Instance.TeleportOnRandomPlaceInMap(sess, map.MapInstanceId);
+                foreach (ClientSession sess in sessions)
+                {
+                    ServerManager.Instance.TeleportOnRandomPlaceInMap(sess, map.MapInstanceId);
+                }
+
+                ServerManager.Instance.Sessions.Where(s => s.Character != null).ToList().ForEach(s => s.Character.IsWaitingForEvent = false);
+                ServerManager.Instance.StartedEvents.Remove(EventType.MeteoriteGame);
+
+                MeteoriteGameThread task = new MeteoriteGameThread();
+                Observable.Timer(TimeSpan.FromSeconds(10)).Subscribe(X => task.Run(map));
             }
-
-            ServerManager.Instance.Sessions.Where(s => s.Character != null).ToList().ForEach(s => s.Character.IsWaitingForEvent = false);
-            ServerManager.Instance.StartedEvents.Remove(EventType.MeteoriteGame);
-
-            MeteoriteGameThread task = new MeteoriteGameThread();
-            Observable.Timer(TimeSpan.FromSeconds(10)).Subscribe(X => task.Run(map));
-
-            #endregion
         }
+
+        #endregion
+
+        #region Classes
 
         public class MeteoriteGameThread
         {
-            MapInstance _map;
+            #region Members
+
+            private MapInstance _map;
+
+            #endregion
+
+            #region Methods
 
             public void Run(MapInstance map)
             {
@@ -70,7 +77,18 @@ namespace OpenNos.GameObject.Event.GAMES
                 //ended
             }
 
-            void RunRound(int number)
+            private IEnumerable<Tuple<short, int, short, short>> GenerateDrop(Map map, short vnum, int amountofdrop, int amount)
+            {
+                List<Tuple<short, int, short, short>> dropParameters = new List<Tuple<short, int, short, short>>();
+                for (int i = 0; i < amountofdrop; i++)
+                {
+                    MapCell cell = map.GetRandomPosition();
+                    dropParameters.Add(new Tuple<short, int, short, short>(vnum, amount, cell.X, cell.Y));
+                }
+                return dropParameters;
+            }
+
+            private void RunRound(int number)
             {
                 int amount = 120 + (60 * number);
 
@@ -82,7 +100,7 @@ namespace OpenNos.GameObject.Event.GAMES
                     i--;
                 }
                 Thread.Sleep(5000);
-                _map.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(String.Format(Language.Instance.GetMessageFromKey("METEORITE_ROUND"), number + 1), 0));
+                _map.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("METEORITE_ROUND"), number + 1), 0));
                 Thread.Sleep(5000);
 
                 // Your dropped reward
@@ -103,22 +121,9 @@ namespace OpenNos.GameObject.Event.GAMES
                 }
 
                 Thread.Sleep(30000);
-
-
             }
 
-            IEnumerable<Tuple<short, int, short, short>> GenerateDrop(Map map, short vnum, int amountofdrop, int amount)
-            {
-                List<Tuple<short, int, short, short>> dropParameters = new List<Tuple<short, int, short, short>>();
-                for (int i = 0; i < amountofdrop; i++)
-                {
-                    MapCell cell = map.GetRandomPosition();
-                    dropParameters.Add(new Tuple<short, int, short, short>(vnum, amount, cell.X, cell.Y));
-                }
-                return dropParameters;
-            }
-
-            void SpawnCircle(int round)
+            private void SpawnCircle(int round)
             {
                 if (_map != null)
                 {
@@ -153,6 +158,10 @@ namespace OpenNos.GameObject.Event.GAMES
                     });
                 }
             }
+
+            #endregion
         }
+
+        #endregion
     }
 }

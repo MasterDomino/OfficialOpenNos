@@ -947,7 +947,7 @@ namespace OpenNos.GameObject
             if (HasShopOpened && Session.HasCurrentMapInstance)
             {
                 KeyValuePair<long, MapShop> shop = Session.CurrentMapInstance.UserShops.FirstOrDefault(mapshop => mapshop.Value.OwnerId.Equals(CharacterId));
-                if (!shop.Equals(default(KeyValuePair<long, MapShop>)))
+                if (!shop.Equals(default))
                 {
                     Session.CurrentMapInstance.UserShops.Remove(shop.Key);
 

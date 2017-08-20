@@ -610,7 +610,7 @@ namespace OpenNos.GameObject
             ClientSession session = Sessions.FirstOrDefault(s => s.Character?.Name.Equals(charName) == true);
             if (session == null)
             {
-                return default(T);
+                return default;
             }
             return (T)session.Character.GetType().GetProperties().Single(pi => pi.Name == property).GetValue(session.Character, null);
         }
@@ -620,7 +620,7 @@ namespace OpenNos.GameObject
             ClientSession session = GetSessionByCharacterId(charId);
             if (session == null)
             {
-                return default(T);
+                return default;
             }
             return (T)session.Character.GetType().GetProperties().Single(pi => pi.Name == property).GetValue(session.Character, null);
         }
@@ -655,7 +655,7 @@ namespace OpenNos.GameObject
             ClientSession session = GetSessionByCharacterId(characterId);
             if (session == null)
             {
-                return default(T);
+                return default;
             }
             MethodInfo method = session.Character.GetType().GetMethod(methodName);
 
@@ -1052,7 +1052,7 @@ namespace OpenNos.GameObject
         public void RemoveMapInstance(Guid MapId)
         {
             KeyValuePair<Guid, MapInstance> map = _mapinstances.FirstOrDefault(s => s.Key == MapId);
-            if (!map.Equals(default(KeyValuePair<Guid, MapInstance>)))
+            if (!map.Equals(default))
             {
                 map.Value.Dispose();
                 ((IDictionary)_mapinstances).Remove(map.Key);
@@ -1173,7 +1173,7 @@ namespace OpenNos.GameObject
         public void TeleportOnRandomPlaceInMap(ClientSession Session, Guid guid)
         {
             MapInstance map = GetMapInstance(guid);
-            if (guid != default(Guid))
+            if (guid != default)
             {
                 MapCell pos = map.Map.GetRandomPosition();
                 ChangeMapInstance(Session.Character.CharacterId, guid, pos.X, pos.Y);
