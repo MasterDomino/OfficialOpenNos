@@ -17,6 +17,7 @@ using OpenNos.Data;
 using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace OpenNos.GameObject
@@ -530,6 +531,1091 @@ namespace OpenNos.GameObject
                         }
                     }
                     break;
+            }
+        }
+
+        public void SetShellEffects()
+        {
+            byte CNormCount = 0;
+            byte BNormCount = 0;
+            byte ANormCount = 0;
+            byte SNormCount = 0;
+            byte CBonusMax = 0;
+            byte BBonusMax = 0;
+            byte ABonusMax = 0;
+            byte SBonusMax = 0;
+            byte CPVPMax = 0;
+            byte BPVPMax = 0;
+            byte APVPMax = 0;
+            byte SPVPMax = 0;
+
+            byte ShellType = 0;
+            bool IsWeapon = true;
+
+            switch (ItemVNum)
+            {
+                case 589:
+                case 590:
+                case 591:
+                case 592:
+                case 593:
+                case 594:
+                case 595:
+                case 596:
+                case 597:
+                case 598:
+                    ShellType = 0;
+                    break;
+
+                case 565:
+                case 566:
+                case 567:
+                    ShellType = 1;
+                    break;
+
+                case 568:
+                case 569:
+                case 570:
+                    ShellType = 2;
+                    break;
+
+                case 571:
+                case 572:
+                case 573:
+                    ShellType = 3;
+                    break;
+
+                case 574:
+                case 575:
+                case 576:
+                    ShellType = 4;
+                    break;
+
+                case 599:
+                case 656:
+                case 657:
+                case 658:
+                case 659:
+                case 660:
+                case 661:
+                case 662:
+                case 663:
+                case 664:
+                    ShellType = 0;
+                    IsWeapon = false;
+                    break;
+
+                case 577:
+                case 578:
+                case 579:
+                    ShellType = 1;
+                    IsWeapon = false;
+                    break;
+                case 580:
+                case 581:
+                case 582:
+                    ShellType = 2;
+                    IsWeapon = false;
+                    break;
+                case 583:
+                case 584:
+                case 585:
+                    ShellType = 3;
+                    IsWeapon = false;
+                    break;
+                case 586:
+                case 587:
+                case 588:
+                    ShellType = 4;
+                    IsWeapon = false;
+                    break;
+            }
+
+            switch (Rare)
+            {
+                case 1:
+                    switch (ShellType)
+                    {
+                        case 0:
+                            CNormCount = 1;
+                            BNormCount = 0;
+                            ANormCount = 0;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 1:
+                            CNormCount = 1;
+                            BNormCount = 0;
+                            ANormCount = 0;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 2:
+                            CNormCount = 1;
+                            BNormCount = 0;
+                            ANormCount = 0;
+                            SNormCount = 0;
+                            CBonusMax = 1;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 3:
+                            CNormCount = 1;
+                            BNormCount = 0;
+                            ANormCount = 0;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 1;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 4:
+                            CNormCount = 1;
+                            BNormCount = 0;
+                            ANormCount = 0;
+                            SNormCount = 0;
+                            CBonusMax = 1;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 1;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                    }
+                    break;
+                case 2:
+                    switch (ShellType)
+                    {
+                        case 0:
+                            CNormCount = 2;
+                            BNormCount = 0;
+                            ANormCount = 0;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 1:
+                            CNormCount = 2;
+                            BNormCount = 0;
+                            ANormCount = 0;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 2:
+                            CNormCount = 1;
+                            BNormCount = 0;
+                            ANormCount = 0;
+                            SNormCount = 0;
+                            CBonusMax = 1;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 3:
+                            CNormCount = 1;
+                            BNormCount = 0;
+                            ANormCount = 0;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 2;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 4:
+                            CNormCount = 2;
+                            BNormCount = 0;
+                            ANormCount = 0;
+                            SNormCount = 0;
+                            CBonusMax = 1;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 1;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                    }
+                    break;
+                case 3:
+                    switch (ShellType)
+                    {
+                        case 0:
+                            CNormCount = 2;
+                            BNormCount = 1;
+                            ANormCount = 0;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 1:
+                            CNormCount = 2;
+                            BNormCount = 1;
+                            ANormCount = 0;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 2:
+                            CNormCount = 1;
+                            BNormCount = 1;
+                            ANormCount = 0;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 1;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 3:
+                            CNormCount = 1;
+                            BNormCount = 1;
+                            ANormCount = 0;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 1;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 4:
+                            CNormCount = 2;
+                            BNormCount = 2;
+                            ANormCount = 0;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 1;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                    }
+                    break;
+                case 4:
+                    switch (ShellType)
+                    {
+                        case 0:
+                            CNormCount = 2;
+                            BNormCount = 2;
+                            ANormCount = 0;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 1:
+                            CNormCount = 2;
+                            BNormCount = 2;
+                            ANormCount = 0;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 2:
+                            CNormCount = 1;
+                            BNormCount = 1;
+                            ANormCount = 0;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 1;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 3:
+                            CNormCount = 1;
+                            BNormCount = 1;
+                            ANormCount = 0;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 2;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 4:
+                            CNormCount = 2;
+                            BNormCount = 2;
+                            ANormCount = 0;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 1;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 1;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                    }
+                    break;
+                case 5:
+                    switch (ShellType)
+                    {
+                        case 0:
+                            CNormCount = 2;
+                            BNormCount = 2;
+                            ANormCount = 1;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 1:
+                            CNormCount = 2;
+                            BNormCount = 2;
+                            ANormCount = 1;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 2:
+                            CNormCount = 1;
+                            BNormCount = 1;
+                            ANormCount = 1;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 1;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 3:
+                            CNormCount = 1;
+                            BNormCount = 1;
+                            ANormCount = 1;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 2;
+                            APVPMax = 1;
+                            SPVPMax = 0;
+                            break;
+                        case 4:
+                            CNormCount = 2;
+                            BNormCount = 2;
+                            ANormCount = 1;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 1;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 1;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                    }
+                    break;
+                case 6:
+                    switch (ShellType)
+                    {
+                        case 0:
+                            CNormCount = 2;
+                            BNormCount = 2;
+                            ANormCount = 2;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 1:
+                            CNormCount = 2;
+                            BNormCount = 2;
+                            ANormCount = 2;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 2:
+                            CNormCount = 1;
+                            BNormCount = 1;
+                            ANormCount = 2;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 1;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 3:
+                            CNormCount = 1;
+                            BNormCount = 1;
+                            ANormCount = 2;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 2;
+                            APVPMax = 2;
+                            SPVPMax = 0;
+                            break;
+                        case 4:
+                            CNormCount = 2;
+                            BNormCount = 2;
+                            ANormCount = 2;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 1;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 1;
+                            APVPMax = 1;
+                            SPVPMax = 0;
+                            break;
+                    }
+                    break;
+                case 7:
+                    switch (ShellType)
+                    {
+                        case 0:
+                            CNormCount = 2;
+                            BNormCount = 2;
+                            ANormCount = 2;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 1:
+                            CNormCount = 2;
+                            BNormCount = 2;
+                            ANormCount = 2;
+                            SNormCount = 1;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 2:
+                            CNormCount = 1;
+                            BNormCount = 1;
+                            ANormCount = 2;
+                            SNormCount = 1;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 1;
+                            CPVPMax = 0;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 3:
+                            CNormCount = 1;
+                            BNormCount = 1;
+                            ANormCount = 2;
+                            SNormCount = 1;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 2;
+                            APVPMax = 2;
+                            SPVPMax = 2;
+                            break;
+                        case 4:
+                            CNormCount = 2;
+                            BNormCount = 2;
+                            ANormCount = 2;
+                            SNormCount = 1;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 1;
+                            CPVPMax = 0;
+                            BPVPMax = 1;
+                            APVPMax = 1;
+                            SPVPMax = 1;
+                            break;
+                    }
+                    break;
+                case 8:
+                    switch (ShellType)
+                    {
+                        case 0:
+                            CNormCount = 2;
+                            BNormCount = 2;
+                            ANormCount = 2;
+                            SNormCount = 0;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 1:
+                            CNormCount = 2;
+                            BNormCount = 2;
+                            ANormCount = 2;
+                            SNormCount = 2;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 2:
+                            CNormCount = 1;
+                            BNormCount = 1;
+                            ANormCount = 2;
+                            SNormCount = 2;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 2;
+                            CPVPMax = 0;
+                            BPVPMax = 0;
+                            APVPMax = 0;
+                            SPVPMax = 0;
+                            break;
+                        case 3:
+                            CNormCount = 1;
+                            BNormCount = 1;
+                            ANormCount = 2;
+                            SNormCount = 2;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 0;
+                            CPVPMax = 0;
+                            BPVPMax = 2;
+                            APVPMax = 2;
+                            SPVPMax = 3;
+                            break;
+                        case 4:
+                            CNormCount = 2;
+                            BNormCount = 2;
+                            ANormCount = 2;
+                            SNormCount = 2;
+                            CBonusMax = 0;
+                            BBonusMax = 0;
+                            ABonusMax = 0;
+                            SBonusMax = 2;
+                            CPVPMax = 0;
+                            BPVPMax = 1;
+                            APVPMax = 1;
+                            SPVPMax = 2;
+                            break;
+                    }
+                    break;
+            }
+
+            List<ShellEffectDTO> effectsList = new List<ShellEffectDTO>();
+
+            void AddEffect(ShellEffectLevelType levelType)
+            {
+                while (true)
+                {
+                    switch (levelType)
+                    {
+                        case ShellEffectLevelType.CNormal:
+                            {
+                                byte[] effects = new byte[] { };
+                                short[] minimum = new short[] { };
+                                short[] maximum = new short[] { };
+
+                                if (!IsWeapon)
+                                {
+                                    effects = new byte[] { };
+                                    minimum = new short[] { };
+                                    maximum = new short[] { };
+                                }
+
+                                int position = ServerManager.Instance.RandomNumber(0, effects.Length);
+                                byte effect = effects[position];
+                                short value = (short)ServerManager.Instance.RandomNumber(minimum[position], maximum[position]);
+
+                                if (effectsList.Any(s => s.Effect == effect))
+                                {
+                                    continue;
+                                }
+
+                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.CNormal, Effect = effect, Value = value, ItemInstanceId = Id });
+                                return;
+                            }
+
+                        case ShellEffectLevelType.BNormal:
+                            {
+                                byte[] effects = new byte[] { };
+                                short[] minimum = new short[] { };
+                                short[] maximum = new short[] { };
+
+                                if (!IsWeapon)
+                                {
+                                    effects = new byte[] { };
+                                    minimum = new short[] { };
+                                    maximum = new short[] { };
+                                }
+
+                                int position = ServerManager.Instance.RandomNumber(0, effects.Length);
+                                byte effect = effects[position];
+                                short value = (short)ServerManager.Instance.RandomNumber(minimum[position], maximum[position]);
+
+                                if (effectsList.Any(s => s.Effect == effect))
+                                {
+                                    continue;
+                                }
+
+                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.BNormal, Effect = effect, Value = value, ItemInstanceId = Id });
+                                return;
+                            }
+
+                        case ShellEffectLevelType.ANormal:
+                            {
+                                byte[] effects = new byte[] { };
+                                short[] minimum = new short[] { };
+                                short[] maximum = new short[] { };
+
+                                if (!IsWeapon)
+                                {
+                                    effects = new byte[] { };
+                                    minimum = new short[] { };
+                                    maximum = new short[] { };
+                                }
+
+                                int position = ServerManager.Instance.RandomNumber(0, effects.Length);
+                                byte effect = effects[position];
+                                short value = (short)ServerManager.Instance.RandomNumber(minimum[position], maximum[position]);
+
+                                if (effectsList.Any(s => s.Effect == effect))
+                                {
+                                    continue;
+                                }
+
+                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.ANormal, Effect = effect, Value = value, ItemInstanceId = Id });
+                                return;
+                            }
+
+                        case ShellEffectLevelType.SNormal:
+                            {
+                                byte[] effects = new byte[] { };
+                                short[] minimum = new short[] { };
+                                short[] maximum = new short[] { };
+
+                                if (!IsWeapon)
+                                {
+                                    effects = new byte[] { };
+                                    minimum = new short[] { };
+                                    maximum = new short[] { };
+                                }
+
+                                int position = ServerManager.Instance.RandomNumber(0, effects.Length);
+                                byte effect = effects[position];
+                                short value = (short)ServerManager.Instance.RandomNumber(minimum[position], maximum[position]);
+
+                                if (effectsList.Any(s => s.Effect == effect))
+                                {
+                                    continue;
+                                }
+
+                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.SNormal, Effect = effect, Value = value, ItemInstanceId = Id });
+                                return;
+                            }
+
+                        case ShellEffectLevelType.CBonus:
+                            {
+                                byte[] effects = new byte[] { };
+                                short[] minimum = new short[] { };
+                                short[] maximum = new short[] { };
+
+                                if (!IsWeapon)
+                                {
+                                    effects = new byte[] { };
+                                    minimum = new short[] { };
+                                    maximum = new short[] { };
+                                }
+
+                                int position = ServerManager.Instance.RandomNumber(0, effects.Length);
+                                byte effect = effects[position];
+                                short value = (short)ServerManager.Instance.RandomNumber(minimum[position], maximum[position]);
+
+                                if (effectsList.Any(s => s.Effect == effect))
+                                {
+                                    continue;
+                                }
+
+                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.CBonus, Effect = effect, Value = value, ItemInstanceId = Id });
+                                return;
+                            }
+
+                        case ShellEffectLevelType.BBonus:
+                            {
+                                byte[] effects = new byte[] { };
+                                short[] minimum = new short[] { };
+                                short[] maximum = new short[] { };
+
+                                if (!IsWeapon)
+                                {
+                                    effects = new byte[] { };
+                                    minimum = new short[] { };
+                                    maximum = new short[] { };
+                                }
+
+                                int position = ServerManager.Instance.RandomNumber(0, effects.Length);
+                                byte effect = effects[position];
+                                short value = (short)ServerManager.Instance.RandomNumber(minimum[position], maximum[position]);
+
+                                if (effectsList.Any(s => s.Effect == effect))
+                                {
+                                    continue;
+                                }
+
+                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.BBonus, Effect = effect, Value = value, ItemInstanceId = Id });
+                                return;
+                            }
+
+                        case ShellEffectLevelType.ABonus:
+                            {
+                                byte[] effects = new byte[] { };
+                                short[] minimum = new short[] { };
+                                short[] maximum = new short[] { };
+
+                                if (!IsWeapon)
+                                {
+                                    effects = new byte[] { };
+                                    minimum = new short[] { };
+                                    maximum = new short[] { };
+                                }
+
+                                int position = ServerManager.Instance.RandomNumber(0, effects.Length);
+                                byte effect = effects[position];
+                                short value = (short)ServerManager.Instance.RandomNumber(minimum[position], maximum[position]);
+
+                                if (effectsList.Any(s => s.Effect == effect))
+                                {
+                                    continue;
+                                }
+
+                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.ABonus, Effect = effect, Value = value, ItemInstanceId = Id });
+                                return;
+                            }
+
+                        case ShellEffectLevelType.SBonus:
+                            {
+                                byte[] effects = new byte[] { };
+                                short[] minimum = new short[] { };
+                                short[] maximum = new short[] { };
+
+                                if (!IsWeapon)
+                                {
+                                    effects = new byte[] { };
+                                    minimum = new short[] { };
+                                    maximum = new short[] { };
+                                }
+
+                                int position = ServerManager.Instance.RandomNumber(0, effects.Length);
+                                byte effect = effects[position];
+                                short value = (short)ServerManager.Instance.RandomNumber(minimum[position], maximum[position]);
+
+                                if (effectsList.Any(s => s.Effect == effect))
+                                {
+                                    continue;
+                                }
+
+                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.SBonus, Effect = effect, Value = value, ItemInstanceId = Id });
+                                return;
+                            }
+
+                        case ShellEffectLevelType.CPVP:
+                            {
+                                byte[] effects = new byte[] { };
+                                short[] minimum = new short[] { };
+                                short[] maximum = new short[] { };
+
+                                if (!IsWeapon)
+                                {
+                                    effects = new byte[] { };
+                                    minimum = new short[] { };
+                                    maximum = new short[] { };
+                                }
+
+                                int position = ServerManager.Instance.RandomNumber(0, effects.Length);
+                                byte effect = effects[position];
+                                short value = (short)ServerManager.Instance.RandomNumber(minimum[position], maximum[position]);
+
+                                if (effectsList.Any(s => s.Effect == effect))
+                                {
+                                    continue;
+                                }
+
+                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.CPVP, Effect = effect, Value = value, ItemInstanceId = Id });
+                                return;
+                            }
+
+                        case ShellEffectLevelType.BPVP:
+                            {
+                                byte[] effects = new byte[] { };
+                                short[] minimum = new short[] { };
+                                short[] maximum = new short[] { };
+
+                                if (!IsWeapon)
+                                {
+                                    effects = new byte[] { };
+                                    minimum = new short[] { };
+                                    maximum = new short[] { };
+                                }
+
+                                int position = ServerManager.Instance.RandomNumber(0, effects.Length);
+                                byte effect = effects[position];
+                                short value = (short)ServerManager.Instance.RandomNumber(minimum[position], maximum[position]);
+
+                                if (effectsList.Any(s => s.Effect == effect))
+                                {
+                                    continue;
+                                }
+
+                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.BPVP, Effect = effect, Value = value, ItemInstanceId = Id });
+                                return;
+                            }
+
+                        case ShellEffectLevelType.APVP:
+                            {
+                                byte[] effects = new byte[] { };
+                                short[] minimum = new short[] { };
+                                short[] maximum = new short[] { };
+
+                                if (!IsWeapon)
+                                {
+                                    effects = new byte[] { };
+                                    minimum = new short[] { };
+                                    maximum = new short[] { };
+                                }
+
+                                int position = ServerManager.Instance.RandomNumber(0, effects.Length);
+                                byte effect = effects[position];
+                                short value = (short)ServerManager.Instance.RandomNumber(minimum[position], maximum[position]);
+
+                                if (effectsList.Any(s => s.Effect == effect))
+                                {
+                                    continue;
+                                }
+
+                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.APVP, Effect = effect, Value = value, ItemInstanceId = Id });
+                                return;
+                            }
+
+                        case ShellEffectLevelType.SPVP:
+                            {
+                                byte[] effects = new byte[] { };
+                                short[] minimum = new short[] { };
+                                short[] maximum = new short[] { };
+
+                                if (!IsWeapon)
+                                {
+                                    effects = new byte[] { };
+                                    minimum = new short[] { };
+                                    maximum = new short[] { };
+                                }
+
+                                int position = ServerManager.Instance.RandomNumber(0, effects.Length);
+                                byte effect = effects[position];
+                                short value = (short)ServerManager.Instance.RandomNumber(minimum[position], maximum[position]);
+
+                                if (effectsList.Any(s => s.Effect == effect))
+                                {
+                                    continue;
+                                }
+
+                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.SPVP, Effect = effect, Value = value, ItemInstanceId = Id });
+                                return;
+                            }
+                    }
+                }
+            }
+
+            for (int i = 0; i < CNormCount; i++)
+            {
+                AddEffect(ShellEffectLevelType.CNormal);
+            }
+
+            for (int i = 0; i < BNormCount; i++)
+            {
+                AddEffect(ShellEffectLevelType.BNormal);
+            }
+
+            for (int i = 0; i < ANormCount; i++)
+            {
+                AddEffect(ShellEffectLevelType.ANormal);
+            }
+
+            for (int i = 0; i < SNormCount; i++)
+            {
+                AddEffect(ShellEffectLevelType.SNormal);
+            }
+
+            for (int i = 0; i < CBonusMax; i++)
+            {
+                AddEffect(ShellEffectLevelType.CBonus);
+            }
+
+            for (int i = 0; i < BBonusMax; i++)
+            {
+                AddEffect(ShellEffectLevelType.BBonus);
+            }
+
+            for (int i = 0; i < ABonusMax; i++)
+            {
+                AddEffect(ShellEffectLevelType.ABonus);
+            }
+
+            for (int i = 0; i < SBonusMax; i++)
+            {
+                AddEffect(ShellEffectLevelType.SBonus);
+            }
+
+            for (int i = 0; i < CPVPMax; i++)
+            {
+                AddEffect(ShellEffectLevelType.CPVP);
+            }
+
+            for (int i = 0; i < BPVPMax; i++)
+            {
+                AddEffect(ShellEffectLevelType.BPVP);
+            }
+
+            for (int i = 0; i < APVPMax; i++)
+            {
+                AddEffect(ShellEffectLevelType.APVP);
+            }
+
+            for (int i = 0; i < SPVPMax; i++)
+            {
+                AddEffect(ShellEffectLevelType.SPVP);
             }
         }
 
