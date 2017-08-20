@@ -39,6 +39,7 @@ namespace OpenNos.DAL.EF
                     if (deleteentities.Count != 0)
                     {
                         context.ShellEffect.RemoveRange(deleteentities);
+                        context.SaveChanges();
                     }
 
                     return DeleteResult.Deleted;
