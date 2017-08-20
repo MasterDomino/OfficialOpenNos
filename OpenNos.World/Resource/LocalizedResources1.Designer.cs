@@ -19,7 +19,7 @@ namespace OpenNos.World.Resource {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class LocalizedResources {
@@ -2262,6 +2262,42 @@ namespace OpenNos.World.Resource {
         internal static string MESSAGE_SENT_TO_CHARACTER {
             get {
                 return ResourceManager.GetString("MESSAGE_SENT_TO_CHARACTER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Meteorite Game will start in {0} minute(s)!.
+        /// </summary>
+        internal static string METEORITE_MINUTES {
+            get {
+                return ResourceManager.GetString("METEORITE_MINUTES", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Congratulations! You finished round {0} of the Meteorite Game. Get ready for the next round!.
+        /// </summary>
+        internal static string METEORITE_ROUND {
+            get {
+                return ResourceManager.GetString("METEORITE_ROUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Meteorite Game will start in {0} second(s)!.
+        /// </summary>
+        internal static string METEORITE_SECONDS {
+            get {
+                return ResourceManager.GetString("METEORITE_SECONDS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Meteorite Game started!.
+        /// </summary>
+        internal static string METEORITE_STARTED {
+            get {
+                return ResourceManager.GetString("METEORITE_STARTED", resourceCulture);
             }
         }
         

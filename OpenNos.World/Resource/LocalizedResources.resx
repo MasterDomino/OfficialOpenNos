@@ -1459,4 +1459,16 @@
   <data name="EFFECT_TERMINATED" xml:space="preserve">
     <value>Effect of: {0} has been terminated!</value>
   </data>
+  <data name="METEORITE_MINUTES" xml:space="preserve">
+    <value>The Meteorite Game will start in {0} minute(s)!</value>
+  </data>
+  <data name="METEORITE_ROUND" xml:space="preserve">
+    <value>Congratulations! You finished round {0} of the Meteorite Game. Get ready for the next round!</value>
+  </data>
+  <data name="METEORITE_SECONDS" xml:space="preserve">
+    <value>The Meteorite Game will start in {0} second(s)!</value>
+  </data>
+  <data name="METEORITE_STARTED" xml:space="preserve">
+    <value>The Meteorite Game started!</value>
+  </data>
 </root>

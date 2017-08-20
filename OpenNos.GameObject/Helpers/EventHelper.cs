@@ -15,6 +15,7 @@
 using OpenNos.Core;
 using OpenNos.Domain;
 using OpenNos.GameObject.Event;
+using OpenNos.GameObject.Event.GAMES;
 using OpenNos.PathFinder;
 using System;
 using System.Collections.Generic;
@@ -87,6 +88,11 @@ namespace OpenNos.GameObject.Helpers
                         case EventType.LODDH:
                             LOD.GenerateLod(35);
                             break;
+
+                        case EventType.MeteoriteGame:
+                            MeteoriteGame.GenerateMeteoriteGame();
+                            break;
+
                     }
                 });
             }

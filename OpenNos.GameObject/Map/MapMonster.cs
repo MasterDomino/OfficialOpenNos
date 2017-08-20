@@ -109,7 +109,8 @@ namespace OpenNos.GameObject
         private short FirstX { get; set; }
 
         private short FirstY { get; set; }
-
+        public bool NoAggresiveIcon { get; internal set; }
+        
         #endregion
 
         #region Methods
@@ -153,7 +154,7 @@ namespace OpenNos.GameObject
         {
             if (IsAlive && !IsDisabled)
             {
-                return $"in 3 {MonsterVNum} {MapMonsterId} {MapX} {MapY} {Position} {(int)((float)CurrentHp / (float)MaxHp * 100)} {(int)((float)CurrentMp / (float)MaxMp * 100)} 0 0 0 -1 {(Monster.NoAggresiveIcon ? (byte)InRespawnType.NoEffect : (byte)InRespawnType.TeleportationEffect)} 0 -1 - 0 -1 0 0 0 0 0 0 0 0";
+                return $"in 3 {MonsterVNum} {MapMonsterId} {MapX} {MapY} {Position} {(int)((float)CurrentHp / (float)MaxHp * 100)} {(int)((float)CurrentMp / (float)MaxMp * 100)} 0 0 0 -1 {(NoAggresiveIcon ? (byte)InRespawnType.NoEffect : (byte)InRespawnType.TeleportationEffect)} 0 -1 - 0 -1 0 0 0 0 0 0 0 0";
             }
             return string.Empty;
         }
@@ -216,6 +217,8 @@ namespace OpenNos.GameObject
             //        MaxMp *= 5;
             //    }
             //}
+
+            NoAggresiveIcon = Monster.NoAggresiveIcon;
 
             IsHostile = Monster.IsHostile;
             CurrentHp = MaxHp;
@@ -305,7 +308,7 @@ namespace OpenNos.GameObject
                     if (OnNoticeEvents.Count == 0 && MoveEvent == null)
                     {
                         Target = character.CharacterId;
-                        if (!Monster.NoAggresiveIcon)
+                        if (!NoAggresiveIcon)
                         {
                             character.Session.SendPacket(GenerateEff(5000));
                         }
