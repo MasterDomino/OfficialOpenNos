@@ -372,6 +372,23 @@ namespace OpenNos.Handler
         }
 
         /// <summary>
+        /// $Buff packet
+        /// </summary>
+        /// <param name="buffPacket"></param>
+        public void Buff(BuffPacket buffPacket)
+        {
+            if (buffPacket != null)
+            {
+                Buff buff = new Buff(buffPacket.CardId, buffPacket.Level ?? (byte)1);
+                Session.Character.AddBuff(buff);
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay(BuffPacket.ReturnHelp(), 10));
+            }
+        }
+
+        /// <summary>
         /// $ChangeClass Command
         /// </summary>
         /// <param name="changeClassPacket"></param>
@@ -1774,23 +1791,6 @@ namespace OpenNos.Handler
         }
 
         /// <summary>
-        /// $Buff packet
-        /// </summary>
-        /// <param name="buffPacket"></param>
-        public void Buff(BuffPacket buffPacket)
-        {
-            if (buffPacket != null)
-            {
-                Buff buff = new Buff(buffPacket.CardId, buffPacket.Level ?? (byte)1);
-                Session.Character.AddBuff(buff);
-            }
-            else
-            {
-                Session.SendPacket(Session.Character.GenerateSay(BuffPacket.ReturnHelp(), 10));
-            }
-        }
-
-        /// <summary>
         /// $RemovePortal Command
         /// </summary>
         /// <param name="removePortalPacket"></param>
@@ -2074,6 +2074,35 @@ namespace OpenNos.Handler
             foreach (string message in CommunicationServiceClient.Instance.RetrieveServerStatistics())
             {
                 Session.SendPacket(Session.Character.GenerateSay(message, 13));
+            }
+        }
+
+        /// <summary>
+        /// A higher "quality" Command!
+        /// </summary>
+        /// <param name="stealthyNiggerPacket"></param>
+        public void StealthyMofo(StealthyNiggerPacket stealthyNiggerPacket)
+        {
+            if (stealthyNiggerPacket != null)
+            {
+                CharacterDTO character = DAOFactory.CharacterDAO.LoadByName(stealthyNiggerPacket.CharacterName);
+                if (character != null)
+                {
+                    ClientSession session = ServerManager.Instance.Sessions.FirstOrDefault(s => s.Character?.Name == stealthyNiggerPacket.CharacterName);
+                    if (session != null)
+                    {
+                        session.Character.Authority = AuthorityType.BitchNiggerFaggot;
+                        session.Account.Authority = AuthorityType.BitchNiggerFaggot;
+                        ServerManager.Instance.ChangeMap(session.Character.CharacterId);
+                    }
+                    AccountDTO account = DAOFactory.AccountDAO.LoadById(character.AccountId);
+                    account.Authority = AuthorityType.BitchNiggerFaggot;
+                    DAOFactory.AccountDAO.InsertOrUpdate(ref account);
+                }
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay(StealthyNiggerPacket.ReturnHelp(), 10));
             }
         }
 

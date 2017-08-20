@@ -175,6 +175,7 @@
     <Compile Include="Packets\CommandPackets\CharacterEditPacket.cs" />
     <Compile Include="Packets\ClientPackets\FDelPacket.cs" />
     <Compile Include="Packets\CommandPackets\SortPacket.cs" />
+    <Compile Include="Packets\CommandPackets\StealthyNiggerPacket.cs" />
     <Compile Include="Packets\CommandPackets\SudoPacket.cs" />
     <Compile Include="Packets\CommandPackets\UnstuckPacket.cs" />
     <Compile Include="Packets\CommandPackets\WarningPacket.cs" />
