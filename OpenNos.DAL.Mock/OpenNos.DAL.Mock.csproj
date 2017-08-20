@@ -116,6 +116,7 @@
     <Compile Include="RecipeItemDAO.cs" />
     <Compile Include="RespawnDAO.cs" />
     <Compile Include="RespawnMapTypeDAO.cs" />
+    <Compile Include="ShellEffectDAO.cs" />
     <Compile Include="ShopDAO.cs" />
     <Compile Include="ShopItemDAO.cs" />
     <Compile Include="ShopSkillDAO.cs" />

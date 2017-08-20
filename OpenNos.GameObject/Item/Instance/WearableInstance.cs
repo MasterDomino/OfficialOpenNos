@@ -17,6 +17,7 @@ using OpenNos.Data;
 using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
 using System;
+using System.Linq;
 
 namespace OpenNos.GameObject
 {
@@ -131,15 +132,15 @@ namespace OpenNos.GameObject
                     switch (equipmentslot)
                     {
                         case EquipmentType.MainWeapon:
-                            return $"e_info {(itemClass == 4 ? 1 : itemClass == 8 ? 5 : 0)} {ItemVNum} {Rare} {Upgrade} {(IsFixed ? 1 : 0)} {Item.LevelMinimum} {Item.DamageMinimum + DamageMinimum} {Item.DamageMaximum + DamageMaximum} {Item.HitRate + HitRate} {Item.CriticalLuckRate + CriticalLuckRate} {Item.CriticalRate + CriticalRate} {Ammo} {Item.MaximumAmmo} {Item.Price} -1 0 0 0";
+                            return $"e_info {(itemClass == 4 ? 1 : itemClass == 8 ? 5 : 0)} {ItemVNum} {Rare} {Upgrade} {(IsFixed ? 1 : 0)} {Item.LevelMinimum} {Item.DamageMinimum + DamageMinimum} {Item.DamageMaximum + DamageMaximum} {Item.HitRate + HitRate} {Item.CriticalLuckRate + CriticalLuckRate} {Item.CriticalRate + CriticalRate} {Ammo} {Item.MaximumAmmo} {Item.Price} -1 {Rare} {BoundCharacterId ?? 0} {ShellEffects.Count} {ShellEffects.Aggregate(String.Empty, (result, effect) => result += $"{(byte)effect.EffectLevel}.{(byte)effect.Effect}.{(byte)effect.Value} ")}"; // Shell Rare, CharacterId, ShellEffectCount, ShellEffects
 
                         case EquipmentType.SecondaryWeapon:
-                            return $"e_info {(itemClass <= 2 ? 1 : 0)} {ItemVNum} {Rare} {Upgrade} {(IsFixed ? 1 : 0)} {Item.LevelMinimum} {Item.DamageMinimum + DamageMinimum} {Item.DamageMaximum + DamageMaximum} {Item.HitRate + HitRate} {Item.CriticalLuckRate + CriticalLuckRate} {Item.CriticalRate + CriticalRate} {Ammo} {Item.MaximumAmmo} {Item.Price} -1 0 0 0";
+                            return $"e_info {(itemClass <= 2 ? 1 : 0)} {ItemVNum} {Rare} {Upgrade} {(IsFixed ? 1 : 0)} {Item.LevelMinimum} {Item.DamageMinimum + DamageMinimum} {Item.DamageMaximum + DamageMaximum} {Item.HitRate + HitRate} {Item.CriticalLuckRate + CriticalLuckRate} {Item.CriticalRate + CriticalRate} {Ammo} {Item.MaximumAmmo} {Item.Price} -1 {Rare} {BoundCharacterId ?? 0} {ShellEffects.Count} {ShellEffects.Aggregate(String.Empty, (result, effect) => result += $"{(byte)effect.EffectLevel}.{(byte)effect.Effect}.{(byte)effect.Value} ")}";
                     }
                     break;
 
                 case ItemType.Armor:
-                    return $"e_info 2 {ItemVNum} {Rare} {Upgrade} {(IsFixed ? 1 : 0)} {Item.LevelMinimum} {Item.CloseDefence + CloseDefence} {Item.DistanceDefence + DistanceDefence} {Item.MagicDefence + MagicDefence} {Item.DefenceDodge + DefenceDodge} {Item.Price} -1 0 0 0";
+                    return $"e_info 2 {ItemVNum} {Rare} {Upgrade} {(IsFixed ? 1 : 0)} {Item.LevelMinimum} {Item.CloseDefence + CloseDefence} {Item.DistanceDefence + DistanceDefence} {Item.MagicDefence + MagicDefence} {Item.DefenceDodge + DefenceDodge} {Item.Price} -1 {Rare} {BoundCharacterId ?? 0} {ShellEffects.Count} {ShellEffects.Aggregate(String.Empty, (result, effect) => result += $"{(byte)effect.EffectLevel}.{(byte)effect.Effect}.{(byte)effect.Value} ")}";
 
                 case ItemType.Fashion:
                     switch (equipmentslot)
@@ -205,7 +206,7 @@ namespace OpenNos.GameObject
                     return $"e_info 7 {ItemVNum} 0";
 
                 case ItemType.Shell:
-                    return $"e_info 9 {ItemVNum} {Design} {Rare} {Item.Price} 0"; // 0 = Number of effects
+                    return $"e_info 9 {ItemVNum} {Design} {Rare} {Item.Price} {ShellEffects.Count} {ShellEffects.Aggregate(String.Empty, (result, effect) => result += $"{(byte)effect.EffectLevel}.{(byte)effect.Effect}.{(byte)effect.Value} ")}"; // 0 = Number of effects
             }
             return string.Empty;
         }

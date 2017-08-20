@@ -3279,6 +3279,14 @@ namespace OpenNos.GameObject
                         foreach (ItemInstance itemInstance in inventories.Where(s => s.Type != InventoryType.Bazaar && s.Type != InventoryType.FamilyWareHouse))
                         {
                             DAOFactory.IteminstanceDAO.InsertOrUpdate(itemInstance);
+
+                            if(itemInstance.ShellEffects != null)
+                            {
+                                foreach(ShellEffectDTO effect in itemInstance.ShellEffects)
+                                {
+                                    effect.ShellEffectId = DAOFactory.ShellEffectDAO.InsertOrUpdate(effect).ShellEffectId;
+                                }
+                            }
                         }
                     }
                 }

@@ -426,6 +426,7 @@
     <Compile Include="ItemInstanceDAO.cs" />
     <Compile Include="Entities\Shop.cs" />
     <Compile Include="RespawnMapTypeDAO.cs" />
+    <Compile Include="ShellEffectDAO.cs" />
     <Compile Include="ShopDAO.cs" />
     <Compile Include="Entities\ShopItem.cs" />
     <Compile Include="ShopItemDAO.cs" />

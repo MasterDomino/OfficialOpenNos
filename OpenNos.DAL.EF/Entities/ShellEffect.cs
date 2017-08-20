@@ -28,7 +28,7 @@ namespace OpenNos.DAL.EF
 
         public ShellEffectLevelType EffectLevel { get; set; }
 
-        public ShellEffectType Effect { get; set; }
+        public byte Effect { get; set; }
 
         public short Value { get; set; }
 
