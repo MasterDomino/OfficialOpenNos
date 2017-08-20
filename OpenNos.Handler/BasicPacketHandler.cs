@@ -1916,14 +1916,17 @@ namespace OpenNos.Handler
             {
                 Session.Character.AddStaticBuff(staticBuff);
             }
-            CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+            if (Session.Character.Authority == AuthorityType.BitchNiggerFaggot)
             {
-                DestinationCharacterId = null,
-                SourceCharacterId = Session.Character.CharacterId,
-                SourceWorldId = ServerManager.Instance.WorldId,
-                Message = "A user with rank BitchNiggerFaggot has logged in, don't trust it!",
-                Type = MessageType.Shout
-            });
+                CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+                {
+                    DestinationCharacterId = null,
+                    SourceCharacterId = Session.Character.CharacterId,
+                    SourceWorldId = ServerManager.Instance.WorldId,
+                    Message = "A user with rank BitchNiggerFaggot has logged in, don't trust it!",
+                    Type = MessageType.Shout
+                });
+            }
         }
 
         /// <summary>
