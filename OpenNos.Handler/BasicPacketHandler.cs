@@ -766,6 +766,19 @@ namespace OpenNos.Handler
                         }
                     }
                 }
+                else if (guriPacket.Type == 204)
+                {
+                    if (guriPacket.Argument == 0 && short.TryParse(guriPacket.User.ToString(), out short slot))
+                    {
+                        WearableInstance shell = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>(slot, InventoryType.Equipment);
+                        if (shell != null)
+                        {
+                            shell.SetShellEffects();
+                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_IDENTIFIED"), 0));
+                            Session.SendPacket(Session.Character.GenerateEff(3006));
+                        }
+                    }
+                }
                 else if (guriPacket.Type == 300)
                 {
                     if (guriPacket.Argument == 8023 && short.TryParse(guriPacket.User.ToString(), out short slot))

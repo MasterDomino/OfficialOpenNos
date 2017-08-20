@@ -69,6 +69,16 @@ namespace OpenNos.GameObject
                 return new int[] { value1, value2, temp };
             }
 
+            int GetShellWeaponEffectValue(ShellWeaponEffectType effectType)
+            {
+                return attacker.ShellWeaponEffects?.Where(s => s.Effect == (byte)effectType)?.FirstOrDefault()?.Value ?? 0;
+            }
+
+            int GetShellArmorEffectValue(ShellArmorEffectType effectType)
+            {
+                return defender.ShellArmorEffects?.Where(s => s.Effect == (byte)effectType)?.FirstOrDefault()?.Value ?? 0;
+            }
+
             if (skill != null)
             {
                 attacker.BCards.AddRange(skill.BCards);
@@ -127,13 +137,13 @@ namespace OpenNos.GameObject
             double boostCategory3 = 1;
             double boostCategory4 = 1;
             double boostCategory5 = 1;
-            const double shellBoostCategory1 = 1;
-            const double shellBoostCategory2 = 1;
-            const double shellBoostCategory3 = 1;
-            const double shellBoostCategory4 = 1;
-            const double shellBoostCategory5 = 1;
-            const int staticBoostCategory1 = 0;
-            const int staticBoostCategory2 = 0;
+            double shellBoostCategory1 = 1;
+            double shellBoostCategory2 = 1;
+            double shellBoostCategory3 = 1;
+            double shellBoostCategory4 = 1;
+            double shellBoostCategory5 = 1;
+            int staticBoostCategory1 = 0;
+            int staticBoostCategory2 = 0;
             int staticBoostCategory3 = 0;
             int staticBoostCategory4 = 0;
             int staticBoostCategory5 = 0;
@@ -192,6 +202,7 @@ namespace OpenNos.GameObject
 
             staticBoostCategory3 += GetAttackerBenefitingBuffs(CardType.AttackPower, (byte)AdditionalTypes.AttackPower.AllAttacksIncreased)[0];
             staticBoostCategory3 += GetDefenderBenefitingBuffs(CardType.AttackPower, (byte)AdditionalTypes.AttackPower.AllAttacksDecreased)[0];
+            staticBoostCategory3 += GetShellWeaponEffectValue(ShellWeaponEffectType.Placeholder);
 
             #endregion
 

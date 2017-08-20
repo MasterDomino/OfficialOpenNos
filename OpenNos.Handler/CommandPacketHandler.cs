@@ -134,6 +134,31 @@ namespace OpenNos.Handler
         }
 
         /// <summary>
+        /// $AddShellEffect Command
+        /// </summary>
+        /// <param name="addPetPacket"></param>
+        public void AddShellEffect(AddShellEffectPacket asePacket)
+        {
+            if (asePacket != null)
+            {
+                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[AddShellEffect]Slot: {asePacket.Slot} EffectLevel: {asePacket.EffectLevel} Effect: {asePacket.Effect} Value: {asePacket.Value}");
+                try
+                {
+                    ItemInstance instance = Session.Character.Inventory.LoadBySlotAndType(asePacket.Slot, InventoryType.Equipment);
+                    instance.ShellEffects.Add(new ShellEffectDTO() { EffectLevel = (ShellEffectLevelType)asePacket.EffectLevel, Effect = asePacket.Effect, Value = asePacket.Value, ItemInstanceId = instance.Id });
+                }
+                catch
+                {
+                    Session.SendPacket(Session.Character.GenerateSay(AddShellEffectPacket.ReturnHelp(), 10));
+                }
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay(AddShellEffectPacket.ReturnHelp(), 10));
+            }
+        }
+
+        /// <summary>
         /// $AddSkill Command
         /// </summary>
         /// <param name="addSkillPacket"></param>

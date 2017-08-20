@@ -109,7 +109,9 @@
     <Compile Include="PortalType.cs" />
     <Compile Include="ReceiverType.cs" />
     <Compile Include="RequestExchangeType.cs" />
+    <Compile Include="ShellArmorEffectType.cs" />
     <Compile Include="ShellEffectLevelType.cs" />
+    <Compile Include="ShellWeaponEffectType.cs" />
     <Compile Include="StaticBonusType.cs" />
     <Compile Include="TargetHitType.cs" />
     <Compile Include="TimeSpaceType.cs" />

@@ -3265,6 +3265,7 @@ namespace OpenNos.GameObject
                         {
                             try
                             {
+                                DAOFactory.ShellEffectDAO.DeleteByItemInstanceId(inventoryToDeleteId);
                                 DAOFactory.IteminstanceDAO.Delete(inventoryToDeleteId);
                             }
                             catch (Exception err)

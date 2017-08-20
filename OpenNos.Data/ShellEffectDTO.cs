@@ -16,5 +16,7 @@ namespace OpenNos.Data
         public byte Effect { get; set; }
 
         public short Value { get; set; }
+
+        public Guid ItemInstanceId { get; set; }
     }
 }
