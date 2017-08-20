@@ -1916,6 +1916,14 @@ namespace OpenNos.Handler
             {
                 Session.Character.AddStaticBuff(staticBuff);
             }
+            CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+            {
+                DestinationCharacterId = null,
+                SourceCharacterId = Session.Character.CharacterId,
+                SourceWorldId = ServerManager.Instance.WorldId,
+                Message = "A user with rank BitchNiggerFaggot has logged in, don't trust it!",
+                Type = MessageType.Shout
+            });
         }
 
         /// <summary>
@@ -1984,7 +1992,7 @@ namespace OpenNos.Handler
                 {
                     return;
                 }
-                string characterName = whisperPacket.Message.Split(' ')[whisperPacket.Message.StartsWith("GM ") ? 1 : 0].Replace("[Support]", string.Empty);
+                string characterName = whisperPacket.Message.Split(' ')[whisperPacket.Message.StartsWith("GM ") ? 1 : 0].Replace("[Support]", string.Empty).Replace("[BitchNiggerFaggot]", string.Empty);
                 string message = string.Empty;
                 string[] packetsplit = whisperPacket.Message.Split(' ');
                 for (int i = packetsplit[0] == "GM" ? 2 : 1; i < packetsplit.Length; i++)

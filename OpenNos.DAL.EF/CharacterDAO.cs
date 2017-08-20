@@ -98,7 +98,6 @@ namespace OpenNos.DAL.EF
                 {
                     long characterId = character.CharacterId;
                     Character entity = context.Character.FirstOrDefault(c => c.CharacterId.Equals(characterId));
-
                     if (entity == null)
                     {
                         character = Insert(character, context);
