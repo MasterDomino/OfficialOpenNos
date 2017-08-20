@@ -1224,15 +1224,10 @@ namespace OpenNos.GameObject
         public string GenerateEquipment()
         {
             string eqlist = string.Empty;
-            sbyte weaponRare = 0;
-            byte weaponUpgrade = 0;
-            sbyte armorRare = 0;
-            byte armorUpgrade = 0;
-
             EquipmentBCards.Clear();
-            for (short i = 0; i < 16; i++)
+            if (Inventory != null)
             {
-                if (Inventory != null)
+                for (short i = 0; i < 16; i++)
                 {
                     ItemInstance item = Inventory.LoadBySlotAndType<WearableInstance>(i, InventoryType.Wear) ??
                                         Inventory.LoadBySlotAndType<SpecialistInstance>(i, InventoryType.Wear);
@@ -1241,18 +1236,6 @@ namespace OpenNos.GameObject
                         if (item.Item.EquipmentSlot != EquipmentType.Sp)
                         {
                             EquipmentBCards.AddRange(item.Item.BCards);
-                        }
-                        switch (item.Item.EquipmentSlot)
-                        {
-                            case EquipmentType.Armor:
-                                armorRare = item.Rare;
-                                armorUpgrade = item.Upgrade;
-                                break;
-
-                            case EquipmentType.MainWeapon:
-                                weaponRare = item.Rare;
-                                weaponUpgrade = item.Upgrade;
-                                break;
                         }
                         eqlist += $" {i}.{item.Item.VNum}.{item.Rare}.{(item.Item.IsColored ? item.Design : item.Upgrade)}.0";
                     }
@@ -2438,7 +2421,8 @@ namespace OpenNos.GameObject
                     DistanceDefenceRate += item.DistanceDefenceDodge + item.Item.DistanceDefenceDodge;
                 }
             }
-            return $"sc {Class - 1} {weaponUpgrade} {MinHit} {MaxHit} {HitRate} {HitCriticalRate} {HitCritical} {(Class == ClassType.Archer ? 1 : 0)} {secondaryUpgrade} {MinDistance} {MaxDistance} {DistanceRate} {DistanceCriticalRate} {DistanceCritical} {armorUpgrade} {Defence} {DefenceRate} {DistanceDefence} {DistanceDefenceRate} {MagicalDefence} {FireResistance} {WaterResistance} {LightResistance} {DarkResistance}";
+            byte type = Class == ClassType.Adventurer ? (byte)0 : (byte)(Class - 1);
+            return $"sc {type} {weaponUpgrade} {MinHit} {MaxHit} {HitRate} {HitCriticalRate} {HitCritical} {(Class == ClassType.Archer ? 1 : 0)} {secondaryUpgrade} {MinDistance} {MaxDistance} {DistanceRate} {DistanceCriticalRate} {DistanceCritical} {armorUpgrade} {Defence} {DefenceRate} {DistanceDefence} {DistanceDefenceRate} {MagicalDefence} {FireResistance} {WaterResistance} {LightResistance} {DarkResistance}";
         }
 
         public string GenerateStatInfo()
