@@ -1263,7 +1263,20 @@ namespace OpenNos.GameObject
 
                                 if (!IsWeapon)
                                 {
-                                    effects = new byte[] { };
+                                    effects = new byte[]
+                                    {
+                                        (byte)ShellArmorEffectType.CloseDefence,
+                                        (byte)ShellArmorEffectType.DistanceDefence,
+                                        (byte)ShellArmorEffectType.MagicDefence,
+                                        (byte)ShellArmorEffectType.ReducedCritChanceRecive,
+                                        (byte)ShellArmorEffectType.ReducedStun,
+                                        (byte)ShellArmorEffectType.ReducedMinorBleeding,
+                                        (byte)ShellArmorEffectType.ReducedShock,
+                                        (byte)ShellArmorEffectType.ReducedPoisonParalysis,
+                                        (byte)ShellArmorEffectType.ReducedBlind,
+                                        (byte)ShellArmorEffectType.RecovryHPOnRest,
+                                        (byte)ShellArmorEffectType.RecoveryMPOnRest
+                                    };
                                     minimum = new short[] { };
                                     maximum = new short[] { };
                                 }
@@ -1311,7 +1324,24 @@ namespace OpenNos.GameObject
 
                                 if (!IsWeapon)
                                 {
-                                    effects = new byte[] { };
+                                    effects = new byte[]
+                                    {
+                                        (byte)ShellArmorEffectType.CloseDefence,
+                                        (byte)ShellArmorEffectType.DistanceDefence,
+                                        (byte)ShellArmorEffectType.MagicDefence,
+                                        (byte)ShellArmorEffectType.ReducedCritChanceRecive,
+                                        (byte)ShellArmorEffectType.ReducedBlind,
+                                        (byte)ShellArmorEffectType.RecovryHPOnRest,
+                                        (byte)ShellArmorEffectType.RecoveryMPOnRest,
+                                        (byte)ShellArmorEffectType.ReducedBleedingAndMinorBleeding,
+                                        (byte)ShellArmorEffectType.ReducedArmorDeBuff,
+                                        (byte)ShellArmorEffectType.ReducedFreeze,
+                                        (byte)ShellArmorEffectType.ReducedParalysis,
+                                        (byte)ShellArmorEffectType.IncreasedFireResistence,
+                                        (byte)ShellArmorEffectType.IncreasedWaterResistence,
+                                        (byte)ShellArmorEffectType.IncreasedLightResistence,
+                                        (byte)ShellArmorEffectType.IncreasedDarkResistence
+                                    };
                                     minimum = new short[] { };
                                     maximum = new short[] { };
                                 }
@@ -1352,7 +1382,22 @@ namespace OpenNos.GameObject
 
                                 if (!IsWeapon)
                                 {
-                                    effects = new byte[] { };
+                                    effects = new byte[]
+                                    {
+                                        (byte)ShellArmorEffectType.CloseDefence,
+                                        (byte)ShellArmorEffectType.DistanceDefence,
+                                        (byte)ShellArmorEffectType.MagicDefence,
+                                        (byte)ShellArmorEffectType.ReducedFreeze,
+                                        (byte)ShellArmorEffectType.ReducedParalysis,
+                                        (byte)ShellArmorEffectType.ReducedAllStun,
+                                        (byte)ShellArmorEffectType.ReducedAllBleedingType,
+                                        (byte)ShellArmorEffectType.RevoryHP,
+                                        (byte)ShellArmorEffectType.RecoveryMP,
+                                        (byte)ShellArmorEffectType.IncreasedFireResistence,
+                                        (byte)ShellArmorEffectType.IncreasedWaterResistence,
+                                        (byte)ShellArmorEffectType.IncreasedLightResistence,
+                                        (byte)ShellArmorEffectType.IncreasedDarkResistence
+                                    };
                                     minimum = new short[] { };
                                     maximum = new short[] { };
                                 }
@@ -1383,7 +1428,13 @@ namespace OpenNos.GameObject
 
                                 if (!IsWeapon)
                                 {
-                                    effects = new byte[] { };
+                                    effects = new byte[]
+                                    {
+                                        (byte)ShellArmorEffectType.PercentageTotalDefence,
+                                        (byte)ShellArmorEffectType.ReducedAllNegativeEffect,
+                                        (byte)ShellArmorEffectType.IncreasedAllResistence,
+                                        (byte)ShellArmorEffectType.RecoveryHPInDefence
+                                    };
                                     minimum = new short[] { };
                                     maximum = new short[] { };
                                 }
@@ -1413,7 +1464,11 @@ namespace OpenNos.GameObject
 
                                 if (!IsWeapon)
                                 {
-                                    effects = new byte[] { };
+                                    effects = new byte[]
+                                    {
+                                        (byte)ShellArmorEffectType.ReducedPrideLoss,
+                                        (byte)ShellArmorEffectType.ReducedProductionPointConsumed
+                                    };
                                     minimum = new short[] { };
                                     maximum = new short[] { };
                                 }
@@ -1443,7 +1498,12 @@ namespace OpenNos.GameObject
 
                                 if (!IsWeapon)
                                 {
-                                    effects = new byte[] { };
+                                    effects = new byte[]
+                                    {
+                                        (byte)ShellArmorEffectType.ReducedProductionPointConsumed,
+                                        (byte)ShellArmorEffectType.IncreasedProductionPossibility,
+                                        (byte)ShellArmorEffectType.IncreasedRecoveryItemSpeed
+                                    };
                                     minimum = new short[] { };
                                     maximum = new short[] { };
                                 }
@@ -1473,7 +1533,12 @@ namespace OpenNos.GameObject
 
                                 if (!IsWeapon)
                                 {
-                                    effects = new byte[] { };
+                                    effects = new byte[]
+                                    {
+                                        (byte)ShellArmorEffectType.ReducedProductionPointConsumed,
+                                        (byte)ShellArmorEffectType.IncreasedProductionPossibility,
+                                        (byte)ShellArmorEffectType.IncreasedRecoveryItemSpeed
+                                    };
                                     minimum = new short[] { };
                                     maximum = new short[] { };
                                 }
@@ -1503,7 +1568,12 @@ namespace OpenNos.GameObject
 
                                 if (!IsWeapon)
                                 {
-                                    effects = new byte[] { };
+                                    effects = new byte[]
+                                    {
+                                        (byte)ShellArmorEffectType.ReducedProductionPointConsumed,
+                                        (byte)ShellArmorEffectType.IncreasedProductionPossibility,
+                                        (byte)ShellArmorEffectType.IncreasedRecoveryItemSpeed
+                                    };
                                     minimum = new short[] { };
                                     maximum = new short[] { };
                                 }
@@ -1534,7 +1604,13 @@ namespace OpenNos.GameObject
 
                                 if (!IsWeapon)
                                 {
-                                    effects = new byte[] { };
+                                    effects = new byte[]
+                                    {
+                                        (byte)ShellArmorEffectType.PercentageAllPVPDefence,
+                                        (byte)ShellArmorEffectType.CloseDefenceDodgeInPVP,
+                                        (byte)ShellArmorEffectType.DistanceDefenceDodgeInPVP,
+                                        (byte)ShellArmorEffectType.IgnoreMagicDamage
+                                    };
                                     minimum = new short[] { };
                                     maximum = new short[] { };
                                 }
@@ -1568,7 +1644,13 @@ namespace OpenNos.GameObject
 
                                 if (!IsWeapon)
                                 {
-                                    effects = new byte[] { };
+                                    effects = new byte[]
+                                    {
+                                        (byte)ShellArmorEffectType.PercentageAllPVPDefence,
+                                        (byte)ShellArmorEffectType.CloseDefenceDodgeInPVP,
+                                        (byte)ShellArmorEffectType.DistanceDefenceDodgeInPVP,
+                                        (byte)ShellArmorEffectType.IgnoreMagicDamage
+                                    };
                                     minimum = new short[] { };
                                     maximum = new short[] { };
                                 }
@@ -1602,7 +1684,14 @@ namespace OpenNos.GameObject
 
                                 if (!IsWeapon)
                                 {
-                                    effects = new byte[] { };
+                                    effects = new byte[]
+                                    {
+                                        (byte)ShellArmorEffectType.PercentageAllPVPDefence,
+                                        (byte)ShellArmorEffectType.CloseDefenceDodgeInPVP,
+                                        (byte)ShellArmorEffectType.DistanceDefenceDodgeInPVP,
+                                        (byte)ShellArmorEffectType.IgnoreMagicDamage,
+                                        (byte)ShellArmorEffectType.ProtectMPInPVP
+                                    };
                                     minimum = new short[] { };
                                     maximum = new short[] { };
                                 }
@@ -1632,7 +1721,11 @@ namespace OpenNos.GameObject
 
                                 if (!IsWeapon)
                                 {
-                                    effects = new byte[] { };
+                                    effects = new byte[]
+                                    {
+                                        (byte)ShellArmorEffectType.PercentageAllPVPDefence,
+                                        (byte)ShellArmorEffectType.DodgeAllDamage
+                                    };
                                     minimum = new short[] { };
                                     maximum = new short[] { };
                                 }
