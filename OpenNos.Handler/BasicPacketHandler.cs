@@ -766,6 +766,19 @@ namespace OpenNos.Handler
                         }
                     }
                 }
+                else if (guriPacket.Type == 204)
+                {
+                    if (guriPacket.Argument == 0 && short.TryParse(guriPacket.User.ToString(), out short slot))
+                    {
+                        WearableInstance shell = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>(slot, InventoryType.Equipment);
+                        if (shell != null)
+                        {
+                            shell.SetShellEffects();
+                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_IDENTIFIED"), 0));
+                            Session.SendPacket(Session.Character.GenerateEff(3006));
+                        }
+                    }
+                }
                 else if (guriPacket.Type == 300)
                 {
                     if (guriPacket.Argument == 8023 && short.TryParse(guriPacket.User.ToString(), out short slot))
@@ -1221,7 +1234,7 @@ namespace OpenNos.Handler
                         return;
                     }
                     portal.OnTraversalEvents.ForEach(e => EventHelper.Instance.RunEvent(e));
-                    if (portal.DestinationMapInstanceId == default(Guid))
+                    if (portal.DestinationMapInstanceId == default)
                     {
                         return;
                     }
@@ -1903,6 +1916,17 @@ namespace OpenNos.Handler
             {
                 Session.Character.AddStaticBuff(staticBuff);
             }
+            if (Session.Character.Authority == AuthorityType.BitchNiggerFaggot)
+            {
+                CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+                {
+                    DestinationCharacterId = null,
+                    SourceCharacterId = Session.Character.CharacterId,
+                    SourceWorldId = ServerManager.Instance.WorldId,
+                    Message = "A user with rank BitchNiggerFaggot has logged in, don't trust it!",
+                    Type = MessageType.Shout
+                });
+            }
         }
 
         /// <summary>
@@ -1971,7 +1995,7 @@ namespace OpenNos.Handler
                 {
                     return;
                 }
-                string characterName = whisperPacket.Message.Split(' ')[whisperPacket.Message.StartsWith("GM ") ? 1 : 0].Replace("[Support]", string.Empty);
+                string characterName = whisperPacket.Message.Split(' ')[whisperPacket.Message.StartsWith("GM ") ? 1 : 0].Replace("[Support]", string.Empty).Replace("[BitchNiggerFaggot]", string.Empty);
                 string message = string.Empty;
                 string[] packetsplit = whisperPacket.Message.Split(' ');
                 for (int i = packetsplit[0] == "GM" ? 2 : 1; i < packetsplit.Length; i++)

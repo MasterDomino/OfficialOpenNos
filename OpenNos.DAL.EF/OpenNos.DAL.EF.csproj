@@ -70,8 +70,8 @@
     <CodeAnalysisRuleSet />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=6.0.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.6.0.2\lib\net45\AutoMapper.dll</HintPath>
+    <Reference Include="AutoMapper, Version=6.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.6.1.1\lib\net45\AutoMapper.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0-beta1\lib\net45\EntityFramework.dll</HintPath>
@@ -82,23 +82,11 @@
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Web.XmlTransform, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data">
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\MappingBaseDAO.cs" />
@@ -111,6 +99,8 @@
     <Compile Include="Entities\Mate.cs" />
     <Compile Include="Entities\ScriptedInstance.cs" />
     <Compile Include="Entities\BCard.cs" />
+    <Compile Include="Entities\ShellEffect.cs" />
+    <Compile Include="Entities\ShellEffectGeneration.cs" />
     <Compile Include="MaintenanceLogDAO.cs" />
     <Compile Include="Migrations\201706162134577_Aphrodite55.cs" />
     <Compile Include="Migrations\201706162134577_Aphrodite55.Designer.cs">
@@ -135,6 +125,14 @@
     <Compile Include="Migrations\201708191337447_Aphrodite60.cs" />
     <Compile Include="Migrations\201708191337447_Aphrodite60.Designer.cs">
       <DependentUpon>201708191337447_Aphrodite60.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201708201234459_Aphrodite61.cs" />
+    <Compile Include="Migrations\201708201234459_Aphrodite61.Designer.cs">
+      <DependentUpon>201708201234459_Aphrodite61.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201708211119579_Aphrodite62.cs" />
+    <Compile Include="Migrations\201708211119579_Aphrodite62.Designer.cs">
+      <DependentUpon>201708211119579_Aphrodite62.cs</DependentUpon>
     </Compile>
     <Compile Include="RollGeneratedItemDAO.cs" />
     <Compile Include="MateDAO.cs" />
@@ -421,6 +419,8 @@
     <Compile Include="ItemInstanceDAO.cs" />
     <Compile Include="Entities\Shop.cs" />
     <Compile Include="RespawnMapTypeDAO.cs" />
+    <Compile Include="ShellEffectDAO.cs" />
+    <Compile Include="ShellEffectGenerationDAO.cs" />
     <Compile Include="ShopDAO.cs" />
     <Compile Include="Entities\ShopItem.cs" />
     <Compile Include="ShopItemDAO.cs" />
@@ -657,6 +657,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201708191337447_Aphrodite60.resx">
       <DependentUpon>201708191337447_Aphrodite60.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708201234459_Aphrodite61.resx">
+      <DependentUpon>201708201234459_Aphrodite61.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708211119579_Aphrodite62.resx">
+      <DependentUpon>201708211119579_Aphrodite62.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

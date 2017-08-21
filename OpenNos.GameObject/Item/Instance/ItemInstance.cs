@@ -12,9 +12,12 @@
  * GNU General Public License for more details.
  */
 
+using OpenNos.DAL;
 using OpenNos.Data;
 using OpenNos.Domain;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenNos.GameObject
 {
@@ -24,6 +27,7 @@ namespace OpenNos.GameObject
 
         private readonly Random _random;
         private Item item;
+        private List<ShellEffectDTO> shelleffects;
 
         #endregion
 
@@ -59,6 +63,14 @@ namespace OpenNos.GameObject
             get
             {
                 return item ?? (item = ServerManager.Instance.GetItem(ItemVNum));
+            }
+        }
+
+        public List<ShellEffectDTO> ShellEffects
+        {
+            get
+            {
+                return shelleffects ?? (shelleffects = DAOFactory.ShellEffectDAO.LoadByItemInstanceId(Id).ToList());
             }
         }
 

@@ -64,16 +64,12 @@
     <CodeAnalysisRuleSet />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=6.0.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.6.0.2\lib\net45\AutoMapper.dll</HintPath>
+    <Reference Include="AutoMapper, Version=6.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.6.1.1\lib\net45\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -116,6 +112,8 @@
     <Compile Include="RecipeItemDAO.cs" />
     <Compile Include="RespawnDAO.cs" />
     <Compile Include="RespawnMapTypeDAO.cs" />
+    <Compile Include="ShellEffectDAO.cs" />
+    <Compile Include="ShellEffectGenerationDAO.cs" />
     <Compile Include="ShopDAO.cs" />
     <Compile Include="ShopItemDAO.cs" />
     <Compile Include="ShopSkillDAO.cs" />
@@ -125,14 +123,6 @@
     <Compile Include="TeleporterDAO.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OpenNos.Core\OpenNos.Core.csproj">
-      <Project>{C93A0A40-0551-4732-B594-171B87679AC1}</Project>
-      <Name>OpenNos.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OpenNos.DAL.EF\OpenNos.DAL.EF.csproj">
-      <Project>{4AECC47D-098A-4493-8E1E-D10EDBB7A189}</Project>
-      <Name>OpenNos.DAL.EF</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OpenNos.DAL.Interface\OpenNos.DAL.Interface.csproj">
       <Project>{175C851B-8DC8-43A5-AF93-AF32D106CD77}</Project>
       <Name>OpenNos.DAL.Interface</Name>

@@ -1,4 +1,5 @@
-﻿using OpenNos.Domain;
+﻿using OpenNos.Data;
+using OpenNos.Domain;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -129,6 +130,8 @@ namespace OpenNos.GameObject
                 AttackUpgrade = weapon.Upgrade;
                 WeaponDamageMinimum = weapon.DamageMinimum;
                 WeaponDamageMaximum = weapon.DamageMaximum;
+
+                ShellWeaponEffects = new List<ShellEffectDTO>(weapon.ShellEffects);
             }
 
             WearableInstance armor = character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.Armor, InventoryType.Wear);
@@ -138,6 +141,8 @@ namespace OpenNos.GameObject
                 ArmorMeleeDefense = armor.CloseDefence;
                 ArmorRangeDefense = armor.DistanceDefence;
                 ArmorMagicalDefense = armor.MagicDefence;
+
+                ShellArmorEffects = new List<ShellEffectDTO>(armor.ShellEffects);
             }
 
             MeleeDefense = character.Defence;
@@ -263,6 +268,10 @@ namespace OpenNos.GameObject
         public List<Buff> Buffs { get; set; }
 
         public List<BCard> BCards { get; set; }
+
+        public List<ShellEffectDTO> ShellArmorEffects { get; set; }
+
+        public List<ShellEffectDTO> ShellWeaponEffects { get; set; }
 
         public bool Invincible { get; set; }
 

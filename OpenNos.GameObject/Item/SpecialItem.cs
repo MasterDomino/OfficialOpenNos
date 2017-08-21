@@ -111,6 +111,10 @@ namespace OpenNos.GameObject
                     }
                     break;
 
+                case 666:
+                    session.SendPacket("guri 18 0");
+                    break;
+
                 //Atk/Def/HP/Exp potions
                 case 6600:
                     session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);

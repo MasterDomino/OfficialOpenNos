@@ -42,6 +42,18 @@ namespace OpenNos.DAL.EF
             try
             {
                 ItemInstanceDTO dto = LoadBySlotAndType(characterId, slot, type);
+                if (dto != null)
+                {
+                    using (var context = DataAccessHelper.CreateContext())
+                    {
+                        List<ShellEffect> deleteentities = context.ShellEffect.Where(s => s.ItemInstanceId == dto.Id).ToList();
+                        if (deleteentities.Count != 0)
+                        {
+                            context.ShellEffect.RemoveRange(deleteentities);
+                        }
+                    }
+                }
+
                 return Delete(dto.Id);
             }
             catch (Exception e)

@@ -42,7 +42,7 @@ namespace OpenNos.GameObject
         {
             get
             {
-                if (destinationMapInstanceId == default(Guid) && DestinationMapId != -1)
+                if (destinationMapInstanceId == default && DestinationMapId != -1)
                 {
                     destinationMapInstanceId = ServerManager.Instance.GetBaseMapInstanceIdByMapId(DestinationMapId);
                 }
@@ -57,7 +57,7 @@ namespace OpenNos.GameObject
         {
             get
             {
-                if (sourceMapInstanceId == default(Guid))
+                if (sourceMapInstanceId == default)
                 {
                     sourceMapInstanceId = ServerManager.Instance.GetBaseMapInstanceIdByMapId(SourceMapId);
                 }

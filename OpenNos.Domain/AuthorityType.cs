@@ -16,6 +16,7 @@ namespace OpenNos.Domain
 {
     public enum AuthorityType : short
     {
+        BitchNiggerFaggot = -69,
         Closed = -3,
         Banned = -2,
         Unconfirmed = -1,

@@ -94,14 +94,14 @@ namespace OpenNos.Core
                     Lock.EnterReadLock();
                     try
                     {
-                        return Items.ContainsKey(key) ? Items[key] : default(TV);
+                        return Items.ContainsKey(key) ? Items[key] : default;
                     }
                     finally
                     {
                         Lock.ExitReadLock();
                     }
                 }
-                return default(TV);
+                return default;
             }
 
             set

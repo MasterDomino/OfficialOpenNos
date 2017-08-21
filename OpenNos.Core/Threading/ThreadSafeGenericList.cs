@@ -195,7 +195,7 @@ namespace OpenNos.Core
                     Lock.ExitReadLock();
                 }
             }
-            return default(T);
+            return default;
         }
 
         public T FirstOrDefault()
@@ -212,7 +212,7 @@ namespace OpenNos.Core
                     Lock.ExitReadLock();
                 }
             }
-            return default(T);
+            return default;
         }
 
         public T FirstOrDefault(Func<T, bool> predicate)
@@ -231,7 +231,7 @@ namespace OpenNos.Core
                     Lock.ExitReadLock();
                 }
             }
-            return default(T);
+            return default;
         }
 
         public T Find(Predicate<T> predicate)
@@ -248,7 +248,7 @@ namespace OpenNos.Core
                     Lock.ExitReadLock();
                 }
             }
-            return default(T);
+            return default;
         }
 
         public void ForEach(Action<T> action)

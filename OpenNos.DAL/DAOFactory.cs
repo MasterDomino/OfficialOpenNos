@@ -68,6 +68,8 @@ namespace OpenNos.DAL
         private static IStaticBuffDAO _staticBuffDAO;
         private static ITeleporterDAO _teleporterDAO;
         private static IMaintenanceLogDAO _maintenanceLogDAO;
+        private static IShellEffectDAO _shelleffectDAO;
+        private static IShellEffectGenerationDAO _shelleffectgenerationDAO;
 
         #endregion
 
@@ -746,6 +748,46 @@ namespace OpenNos.DAL
                 }
 
                 return _respawnMapTypeDAO;
+            }
+        }
+
+        public static IShellEffectDAO ShellEffectDAO
+        {
+            get
+            {
+                if (_shelleffectDAO == null)
+                {
+                    if (_useMock)
+                    {
+                        _shelleffectDAO = new ShellEffectDAO();
+                    }
+                    else
+                    {
+                        _shelleffectDAO = new EF.ShellEffectDAO();
+                    }
+                }
+
+                return _shelleffectDAO;
+            }
+        }
+
+        public static IShellEffectGenerationDAO ShellEffectGenerationDAO
+        {
+            get
+            {
+                if (_shelleffectgenerationDAO == null)
+                {
+                    if (_useMock)
+                    {
+                        _shelleffectgenerationDAO = new ShellEffectGenerationDAO();
+                    }
+                    else
+                    {
+                        _shelleffectgenerationDAO = new EF.ShellEffectGenerationDAO();
+                    }
+                }
+
+                return _shelleffectgenerationDAO;
             }
         }
 
