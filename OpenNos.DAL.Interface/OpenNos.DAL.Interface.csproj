@@ -104,6 +104,7 @@
     <Compile Include="IRespawnDAO.cs" />
     <Compile Include="IRespawnMapTypeDAO.cs" />
     <Compile Include="IShellEffectDAO.cs" />
+    <Compile Include="IShellEffectGenerationDAO.cs" />
     <Compile Include="IShopDAO.cs" />
     <Compile Include="IShopItemDAO.cs" />
     <Compile Include="IItemInstanceDAO.cs" />
