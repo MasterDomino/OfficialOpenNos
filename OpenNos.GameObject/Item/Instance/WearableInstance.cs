@@ -1268,7 +1268,6 @@ namespace OpenNos.GameObject
                                 effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.CNormal, Effect = effect, Value = value, ItemInstanceId = Id });
                                 return;
                             }
-
                         case ShellEffectLevelType.BNormal:
                             {
                                 byte[] effects = new byte[] { };
@@ -1294,7 +1293,6 @@ namespace OpenNos.GameObject
                                 effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.BNormal, Effect = effect, Value = value, ItemInstanceId = Id });
                                 return;
                             }
-
                         case ShellEffectLevelType.ANormal:
                             {
                                 byte[] effects = new byte[] { };
@@ -1320,7 +1318,6 @@ namespace OpenNos.GameObject
                                 effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.ANormal, Effect = effect, Value = value, ItemInstanceId = Id });
                                 return;
                             }
-
                         case ShellEffectLevelType.SNormal:
                             {
                                 byte[] effects = new byte[] { };
@@ -1346,7 +1343,6 @@ namespace OpenNos.GameObject
                                 effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.SNormal, Effect = effect, Value = value, ItemInstanceId = Id });
                                 return;
                             }
-
                         case ShellEffectLevelType.CBonus:
                             {
                                 byte[] effects = new byte[] { };
@@ -1372,7 +1368,6 @@ namespace OpenNos.GameObject
                                 effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.CBonus, Effect = effect, Value = value, ItemInstanceId = Id });
                                 return;
                             }
-
                         case ShellEffectLevelType.BBonus:
                             {
                                 byte[] effects = new byte[] { };
@@ -1398,7 +1393,6 @@ namespace OpenNos.GameObject
                                 effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.BBonus, Effect = effect, Value = value, ItemInstanceId = Id });
                                 return;
                             }
-
                         case ShellEffectLevelType.ABonus:
                             {
                                 byte[] effects = new byte[] { };
@@ -1424,7 +1418,6 @@ namespace OpenNos.GameObject
                                 effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.ABonus, Effect = effect, Value = value, ItemInstanceId = Id });
                                 return;
                             }
-
                         case ShellEffectLevelType.SBonus:
                             {
                                 byte[] effects = new byte[] { };
@@ -1450,7 +1443,6 @@ namespace OpenNos.GameObject
                                 effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.SBonus, Effect = effect, Value = value, ItemInstanceId = Id });
                                 return;
                             }
-
                         case ShellEffectLevelType.CPVP:
                             {
                                 byte[] effects = new byte[] { };
@@ -1476,7 +1468,6 @@ namespace OpenNos.GameObject
                                 effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.CPVP, Effect = effect, Value = value, ItemInstanceId = Id });
                                 return;
                             }
-
                         case ShellEffectLevelType.BPVP:
                             {
                                 byte[] effects = new byte[] { };
@@ -1502,7 +1493,6 @@ namespace OpenNos.GameObject
                                 effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.BPVP, Effect = effect, Value = value, ItemInstanceId = Id });
                                 return;
                             }
-
                         case ShellEffectLevelType.APVP:
                             {
                                 byte[] effects = new byte[] { };
@@ -1528,7 +1518,6 @@ namespace OpenNos.GameObject
                                 effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.APVP, Effect = effect, Value = value, ItemInstanceId = Id });
                                 return;
                             }
-
                         case ShellEffectLevelType.SPVP:
                             {
                                 byte[] effects = new byte[] { };
