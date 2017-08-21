@@ -922,32 +922,32 @@ namespace OpenNos.Handler
                         MapMonster monsterToCatch = Session.CurrentMapInstance.GetMonster(targetId);
                         if (monsterToCatch != null && Session.Character.Mp >= skiup3.Skill.MpCost)
                         {
-                            if (Map.GetDistance(new MapCell { X = Session.Character.PositionX, Y = Session.Character.PositionY },
-                                                new MapCell { X = monsterToCatch.MapX, Y = monsterToCatch.MapY }) <= skiup3.Skill.Range + 1 + monsterToCatch.Monster.BasicArea)
+                            NpcMonster mateNpc = ServerManager.Instance.GetNpc(monsterToCatch.MonsterVNum);
+                            if (mateNpc != null)
                             {
-                                if (!Session.Character.HasGodMode)
+                                if (Map.GetDistance(new MapCell { X = Session.Character.PositionX, Y = Session.Character.PositionY },
+                                                new MapCell { X = monsterToCatch.MapX, Y = monsterToCatch.MapY }) <= skiup3.Skill.Range + 1 + monsterToCatch.Monster.BasicArea)
                                 {
-                                    Session.Character.Mp -= skiup3.Skill.MpCost;
-                                }
-                                monsterToCatch.Monster.BCards.Where(s => s.CastType == 1).ToList().ForEach(s => s.ApplyBCards(this));
-                                Session.SendPacket(Session.Character.GenerateStat());
-                                CharacterSkill characterSkillInfo = Session.Character.Skills.GetAllItems().OrderBy(o => o.SkillVNum).FirstOrDefault(s => s.Skill.UpgradeSkill == skiup3.Skill.SkillVNum && s.Skill.Effect > 0 && s.Skill.SkillType == 2);
-
-                                Session.CurrentMapInstance?.Broadcast($"ct 1 {Session.Character.CharacterId} 3 {monsterToCatch.MapMonsterId} {skiup3.Skill.CastAnimation} {characterSkillInfo?.Skill.CastEffect ?? skiup3.Skill.CastEffect} {skiup3.Skill.SkillVNum}");
-                                Session.Character.Skills.GetAllItems().Where(s => s.Id != skiup3.Id).ToList().ForEach(i => i.Hit = 0);
-                                bool canBeCatch = false;//TODO : Parse this value from monster.dat
-                                if (canBeCatch)
-                                {
-                                    if (monsterToCatch.IsAlive && monsterToCatch.CurrentHp <= (int)((double)monsterToCatch.MaxHp / 2))
+                                    if (!Session.Character.HasGodMode)
                                     {
-                                        if (monsterToCatch.Monster.Level < Session.Character.Level)
+                                        Session.Character.Mp -= skiup3.Skill.MpCost;
+                                    }
+                                    monsterToCatch.Monster.BCards.Where(s => s.CastType == 1).ToList().ForEach(s => s.ApplyBCards(this));
+                                    Session.SendPacket(Session.Character.GenerateStat());
+                                    CharacterSkill characterSkillInfo = Session.Character.Skills.GetAllItems().OrderBy(o => o.SkillVNum).FirstOrDefault(s => s.Skill.UpgradeSkill == skiup3.Skill.SkillVNum && s.Skill.Effect > 0 && s.Skill.SkillType == 2);
+
+                                    Session.CurrentMapInstance?.Broadcast($"ct 1 {Session.Character.CharacterId} 3 {monsterToCatch.MapMonsterId} {skiup3.Skill.CastAnimation} {characterSkillInfo?.Skill.CastEffect ?? skiup3.Skill.CastEffect} {skiup3.Skill.SkillVNum}");
+                                    Session.Character.Skills.GetAllItems().Where(s => s.Id != skiup3.Id).ToList().ForEach(i => i.Hit = 0);
+                                    bool canBeCatch = true;//TODO : Parse this value from monster.dat
+                                    if (canBeCatch)
+                                    {
+                                        if (monsterToCatch.IsAlive && monsterToCatch.CurrentHp <= (int)((double)monsterToCatch.MaxHp / 2))
                                         {
-                                            int[] chance = { 100, 80, 60, 40, 20, 0 };
-                                            int random = ServerManager.Instance.RandomNumber();
-                                            if (random < chance[ServerManager.Instance.RandomNumber(0,5)])//IDK the real chance T.T
+                                            if (monsterToCatch.Monster.Level < Session.Character.Level)
                                             {
-                                                NpcMonster mateNpc = ServerManager.Instance.GetNpc(monsterToCatch.MonsterVNum);
-                                                if (mateNpc != null)
+                                                int[] chance = { 100, 80, 60, 40, 20, 0 };
+                                                int random = ServerManager.Instance.RandomNumber();
+                                                if (random < chance[ServerManager.Instance.RandomNumber(0, 5)])//IDK the real chance T.T
                                                 {
                                                     Mate mate = new Mate(Session.Character, mateNpc, (byte)(monsterToCatch.Monster.Level - 5 >= 1 ? monsterToCatch.Monster.Level - 5 : monsterToCatch.Monster.Level), MateType.Pet);
                                                     if (Session.Character.CanAddPet(mate))
@@ -967,34 +967,34 @@ namespace OpenNos.Handler
                                                 }
                                                 else
                                                 {
-                                                    Session.SendPacket($"cancel 2 {targetId}");
+                                                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("CATCH_FAIL"), 0));
+                                                    Session.CurrentMapInstance?.Broadcast($"su 1 {Session.Character.CharacterId} 3 {monsterToCatch.MapMonsterId} -1 0 16 {skiup3.Skill.Effect} -1 -1 1 {(int)((float)monsterToCatch.CurrentHp / (float)monsterToCatch.MaxHp * 100)} 0 -1 {skiup3.Skill.SkillType - 1}");
                                                 }
                                             }
                                             else
                                             {
-                                                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("CATCH_FAIL"), 0));
-                                                Session.CurrentMapInstance?.Broadcast($"su 1 {Session.Character.CharacterId} 3 {monsterToCatch.MapMonsterId} -1 0 16 {skiup3.Skill.Effect} -1 -1 1 {(int)((float)monsterToCatch.CurrentHp / (float)monsterToCatch.MaxHp * 100)} 0 -1 {skiup3.Skill.SkillType - 1}");
+                                                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("LEVEL_LOW"), 0));
+                                                Session.SendPacket($"cancel 2 {targetId}");
                                             }
                                         }
                                         else
                                         {
-                                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("LEVEL_LOW"), 0));
+                                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("HP_LOW_50"), 0));
                                             Session.SendPacket($"cancel 2 {targetId}");
                                         }
                                     }
                                     else
                                     {
-                                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("HP_LOW_50"), 0));
+                                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("CANT_CATCH_THIS"), 0));
                                         Session.SendPacket($"cancel 2 {targetId}");
                                     }
+                                    Session.SendPacket($"sr -10 {castingId} {skiup3.Skill.Cooldown}");
+                                    Session.SendPacketAfter($"sr {castingId}", skiup3.Skill.Cooldown * 100);
                                 }
                                 else
                                 {
                                     Session.SendPacket($"cancel 2 {targetId}");
-                                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("CANT_CATCH_THIS"), 0));
                                 }
-                                Session.SendPacket($"sr -10 {castingId} {skiup3.Skill.Cooldown}");
-                                Session.SendPacketAfter($"sr {castingId}", skiup3.Skill.Cooldown * 100);
                             }
                             else
                             {
