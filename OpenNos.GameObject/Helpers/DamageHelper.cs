@@ -202,7 +202,7 @@ namespace OpenNos.GameObject
 
             staticBoostCategory3 += GetAttackerBenefitingBuffs(CardType.AttackPower, (byte)AdditionalTypes.AttackPower.AllAttacksIncreased)[0];
             staticBoostCategory3 += GetDefenderBenefitingBuffs(CardType.AttackPower, (byte)AdditionalTypes.AttackPower.AllAttacksDecreased)[0];
-            staticBoostCategory3 += GetShellWeaponEffectValue(ShellWeaponEffectType.Placeholder);
+            staticBoostCategory3 += GetShellWeaponEffectValue(ShellWeaponEffectType.DamageImproved);
 
             #endregion
 
