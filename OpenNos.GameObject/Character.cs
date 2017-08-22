@@ -38,6 +38,7 @@ namespace OpenNos.GameObject
         private readonly object _syncObj = new object();
         private Random _random;
         private byte _speed;
+        private int slhpbonus = 0;
 
         #endregion
 
@@ -2294,7 +2295,24 @@ namespace OpenNos.GameObject
                     DistanceDefence += specialist.DistanceDefence + (specialist.SpDefence * 10);
                     MagicalDefence += specialist.MagicDefence + (specialist.SpDefence * 10);
 
-                    int point = CharacterHelper.SlPoint(specialist.SlDamage, 0);
+                    WearableInstance mainWeapon = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.MainWeapon, InventoryType.Wear);
+                    WearableInstance secondaryWeapon = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.MainWeapon, InventoryType.Wear);
+                    List<ShellEffectDTO> effects = new List<ShellEffectDTO>();
+                    if (mainWeapon.ShellEffects != null)
+                    {
+                        effects.AddRange(mainWeapon.ShellEffects);
+                    }
+                    if (secondaryWeapon.ShellEffects != null)
+                    {
+                        effects.AddRange(secondaryWeapon.ShellEffects);
+                    }
+
+                    int GetShellWeaponEffectValue(ShellWeaponEffectType effectType)
+                    {
+                        return effects?.Where(s => s.Effect == (byte)effectType)?.OrderByDescending(s => s.Value)?.FirstOrDefault()?.Value ?? 0;
+                    }
+
+                    int point = CharacterHelper.SlPoint(specialist.SlDamage, 0) + GetShellWeaponEffectValue(ShellWeaponEffectType.SLDamage) + GetShellWeaponEffectValue(ShellWeaponEffectType.SLGlobal);
 
                     int p = 0;
                     if (point <= 10)
@@ -2321,14 +2339,14 @@ namespace OpenNos.GameObject
                         p = 890 + 16;
                     else if (point <= 97)
                         p = 906 + ((point - 95) * 17);
-                    else if (point <= 100)
+                    else if (point > 97)
                         p = 940 + ((point - 97) * 20);
                     MaxHit += p;
                     MinHit += p;
                     MaxDistance += p;
                     MinDistance += p;
 
-                    point = CharacterHelper.SlPoint(specialist.SlDefence, 1);
+                    point = CharacterHelper.SlPoint(specialist.SlDefence, 1) + GetShellWeaponEffectValue(ShellWeaponEffectType.SLDefence) + GetShellWeaponEffectValue(ShellWeaponEffectType.SLGlobal);
                     p = 0;
                     if (point <= 10)
                         p = point;
@@ -2348,13 +2366,13 @@ namespace OpenNos.GameObject
                         p = 280 + ((point - 70) * 8);
                     else if (point <= 90)
                         p = 360 + ((point - 80) * 9);
-                    else if (point <= 100)
+                    else if (point > 90)
                         p = 450 + ((point - 90) * 10);
                     Defence += p;
                     MagicalDefence += p;
                     DistanceDefence += p;
 
-                    point = CharacterHelper.SlPoint(specialist.SlElement, 2);
+                    point = CharacterHelper.SlPoint(specialist.SlElement, 2) + GetShellWeaponEffectValue(ShellWeaponEffectType.SLElement) + GetShellWeaponEffectValue(ShellWeaponEffectType.SLGlobal);
                     if (point <= 50)
                     {
                         p = point;
@@ -2364,6 +2382,8 @@ namespace OpenNos.GameObject
                         p = 50 + ((point - 50) * 2);
                     }
                     ElementRateSP += p;
+
+                    slhpbonus = GetShellWeaponEffectValue(ShellWeaponEffectType.SLHP) + GetShellWeaponEffectValue(ShellWeaponEffectType.SLGlobal);
                 }
             }
 
@@ -2775,7 +2795,7 @@ namespace OpenNos.GameObject
                     Inventory?.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear);
                 if (specialist != null)
                 {
-                    int point = CharacterHelper.SlPoint(specialist.SlHP, 3);
+                    int point = CharacterHelper.SlPoint(specialist.SlHP, 3) + slhpbonus;
 
                     if (point <= 50)
                     {
