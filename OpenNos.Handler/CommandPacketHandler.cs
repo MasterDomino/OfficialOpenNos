@@ -1410,7 +1410,7 @@ namespace OpenNos.Handler
             if (Session.Character.InvisibleGm)
             {
                 Session.Character.Mates.Where(s => s.IsTeamMember).ToList().ForEach(s => Session.CurrentMapInstance?.Broadcast(s.GenerateOut()));
-                Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateOut(), ReceiverType.AllExceptMe);
+                Session.CurrentMapInstance?.Broadcast(Session, StaticPacketHelper.Out(1, Session.Character.CharacterId), ReceiverType.AllExceptMe);
             }
             else
             {
@@ -1774,7 +1774,7 @@ namespace OpenNos.Handler
                 {
                     if (monster.IsAlive)
                     {
-                        Session.CurrentMapInstance.Broadcast(monster.GenerateOut());
+                        Session.CurrentMapInstance.Broadcast(StaticPacketHelper.Out(3, monster.MapMonsterId));
                         Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MONSTER_REMOVED"), monster.MapMonsterId, monster.Monster.Name, monster.MapId, monster.MapX, monster.MapY), 12));
                         Session.CurrentMapInstance.RemoveMonster(monster);
                         if (DAOFactory.MapMonsterDAO.LoadById(monster.MapMonsterId) != null)
@@ -1791,7 +1791,7 @@ namespace OpenNos.Handler
                 {
                     if (!npc.IsMate && !npc.IsDisabled && !npc.IsProtected)
                     {
-                        Session.CurrentMapInstance.Broadcast(npc.GenerateOut());
+                        Session.CurrentMapInstance.Broadcast(StaticPacketHelper.Out(2, npc.MapNpcId));
                         Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("NPCMONSTER_REMOVED"), npc.MapNpcId, npc.Npc.Name, npc.MapId, npc.MapX, npc.MapY), 12));
                         Session.CurrentMapInstance.RemoveNpc(npc);
                         if (DAOFactory.ShopDAO.LoadByNpc(npc.MapNpcId) != null)
@@ -2515,7 +2515,7 @@ namespace OpenNos.Handler
                 else
                 {
                     ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, Session.Character.MapInstanceId, Session.Character.PositionX, Session.Character.PositionY);
-                    Session.SendPacket("cancel 2 0");
+                    Session.SendPacket(StaticPacketHelper.Cancel(2));
                 }
             }
         }

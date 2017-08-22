@@ -1963,7 +1963,7 @@ namespace OpenNos.Handler
                         }
                         if (!Session.Character.InvisibleGm)
                         {
-                            Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateMv());
+                            Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.Move(1, Session.Character.CharacterId, Session.Character.MapX, Session.Character.MapY, Session.Character.Speed));
                         }
                         Session.SendPacket(Session.Character.GenerateCond());
                         Session.Character.LastMove = DateTime.Now;

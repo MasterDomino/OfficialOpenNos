@@ -185,7 +185,7 @@ namespace OpenNos.GameObject
                 monster.CurrentHp = 0;
                 monster.CurrentMp = 0;
                 monster.Death = DateTime.Now;
-                Broadcast(monster.GenerateOut());
+                Broadcast(StaticPacketHelper.Out(3, monster.MapMonsterId));
             });
         }
 

@@ -94,11 +94,6 @@ namespace OpenNos.GameObject
             return string.Empty;
         }
 
-        public string GenerateOut()
-        {
-            return $"out 2 {MapNpcId}";
-        }
-
         public string GetNpcDialog()
         {
             return $"npc_req 2 {MapNpcId} {Dialog}";
@@ -179,11 +174,6 @@ namespace OpenNos.GameObject
             }
         }
 
-        private string GenerateMv2()
-        {
-            return $"mv 2 {MapNpcId} {MapX} {MapY} {Npc.Speed}";
-        }
-
         private void NpcLife()
         {
             double time = (DateTime.Now - LastEffect).TotalMilliseconds;
@@ -221,9 +211,8 @@ namespace OpenNos.GameObject
                         MapX = mapX;
                         MapY = mapY;
                     });
-
                     LastMove = DateTime.Now.AddSeconds(value);
-                    MapInstance.Broadcast(new BroadcastPacket(null, GenerateMv2(), ReceiverType.All, xCoordinate: mapX, yCoordinate: mapY));
+                    MapInstance.Broadcast(new BroadcastPacket(null, PacketFactory.Serialize(StaticPacketHelper.Move(2, MapNpcId, MapX, MapY, Npc.Speed)), ReceiverType.All, xCoordinate: mapX, yCoordinate: mapY));
                 }
             }
             if (Target == -1)
@@ -315,7 +304,7 @@ namespace OpenNos.GameObject
                             short mapX = Path[maxindex - 1].X;
                             short mapY = Path[maxindex - 1].Y;
                             double waitingtime = Map.GetDistance(new MapCell { X = mapX, Y = mapY }, new MapCell { X = MapX, Y = MapY }) / (double)Npc.Speed;
-                            MapInstance.Broadcast(new BroadcastPacket(null, $"mv 2 {MapNpcId} {mapX} {mapY} {Npc.Speed}", ReceiverType.All, xCoordinate: mapX, yCoordinate: mapY));
+                            MapInstance.Broadcast(new BroadcastPacket(null, PacketFactory.Serialize(StaticPacketHelper.Move(2, MapNpcId, MapX, MapY, Npc.Speed)), ReceiverType.All, xCoordinate: mapX, yCoordinate: mapY));
                             LastMove = DateTime.Now.AddSeconds(waitingtime > 1 ? 1 : waitingtime);
 
                             Observable.Timer(TimeSpan.FromMilliseconds((int)((waitingtime > 1 ? 1 : waitingtime) * 1000))).Subscribe(x =>

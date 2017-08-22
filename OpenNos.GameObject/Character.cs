@@ -1689,15 +1689,13 @@ namespace OpenNos.GameObject
                                     }
 
                                     // delayed Drop
-                                    Observable.Timer(TimeSpan.FromMilliseconds(500))
-                                          .Subscribe(
-                                          o =>
-                                          {
-                                              if (Session.HasCurrentMapInstance)
-                                              {
-                                                  Session.CurrentMapInstance.DropItemByMonster(dropOwner, drop2, monsterToAttack.MapX, monsterToAttack.MapY);
-                                              }
-                                          });
+                                    Observable.Timer(TimeSpan.FromMilliseconds(500)).Subscribe(o =>
+                                    {
+                                        if (Session.HasCurrentMapInstance)
+                                        {
+                                            Session.CurrentMapInstance.DropItemByMonster(dropOwner, drop2, monsterToAttack.MapX, monsterToAttack.MapY);
+                                        }
+                                    });
                                 }
                             }
                         }
@@ -1826,26 +1824,9 @@ namespace OpenNos.GameObject
             return $"mlo_mg {packet.MinigameVNum} {MinilandPoint} 0 0 {mlobj.ItemInstance.DurabilityPoint} {mlobj.ItemInstance.Item.MinilandObjectPoint}";
         }
 
-        public MovePacket GenerateMv()
-        {
-            return new MovePacket
-            {
-                CharacterId = CharacterId,
-                MapX = PositionX,
-                MapY = PositionY,
-                Speed = Speed,
-                MoveType = 1
-            };
-        }
-
         public string GenerateNpcDialog(int value)
         {
             return $"npc_req 1 {CharacterId} {value}";
-        }
-
-        public string GenerateOut()
-        {
-            return $"out 1 {CharacterId}";
         }
 
         public string GeneratePairy()

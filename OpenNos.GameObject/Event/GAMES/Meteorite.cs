@@ -153,7 +153,7 @@ namespace OpenNos.GameObject.Event.GAMES
                                 Observable.Timer(TimeSpan.FromMilliseconds(1000)).Subscribe(o => ServerManager.Instance.AskRevive(character.CharacterId));
                             }
                             _map.RemoveMonster(circle);
-                            _map.Broadcast(circle.GenerateOut());
+                            _map.Broadcast(StaticPacketHelper.Out(3, circle.MapMonsterId));
                         }
                     });
                 }

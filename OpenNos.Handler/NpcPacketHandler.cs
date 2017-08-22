@@ -602,7 +602,7 @@ namespace OpenNos.Handler
                         {
                             mate.PositionX = PositionX;
                             mate.PositionY = PositionY;
-                            Session.CurrentMapInstance.Broadcast($"mv 2 {PetId} {PositionX} {PositionY} {mate.Monster.Speed}");
+                            Session.CurrentMapInstance.Broadcast(StaticPacketHelper.Move(2, PetId, PositionX, PositionY, mate.Monster.Speed));
                         }
                     }
                 }

@@ -58,12 +58,12 @@ namespace OpenNos.Handler
             bool isMuted = Session.Character.MuteMessage();
             if (isMuted || Session.Character.IsVehicled)
             {
-                Session.SendPacket("cancel 0 0");
+                Session.SendPacket(StaticPacketHelper.Cancel());
                 return;
             }
             if ((DateTime.Now - Session.Character.LastTransform).TotalSeconds < 3)
             {
-                Session.SendPacket("cancel 0 0");
+                Session.SendPacket(StaticPacketHelper.Cancel());
                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("CANT_ATTACKNOW"), 0));
                 return;
             }
@@ -95,7 +95,7 @@ namespace OpenNos.Handler
                 bool isMuted = Session.Character.MuteMessage();
                 if (isMuted || Session.Character.IsVehicled || Session.Character.InvisibleGm)
                 {
-                    Session.SendPacket("cancel 0 0");
+                    Session.SendPacket(StaticPacketHelper.Cancel());
                     return;
                 }
                 if (useSkillPacket.MapX.HasValue && useSkillPacket.MapY.HasValue)
@@ -164,18 +164,18 @@ namespace OpenNos.Handler
                         }
                         else
                         {
-                            Session.SendPacket("cancel 2 0");
+                            Session.SendPacket(StaticPacketHelper.Cancel(2));
                         }
                         break;
 
                     default:
-                        Session.SendPacket("cancel 2 0");
+                        Session.SendPacket(StaticPacketHelper.Cancel(2));
                         return;
                 }
             }
             else
             {
-                Session.SendPacket("cancel 2 0");
+                Session.SendPacket(StaticPacketHelper.Cancel(2));
             }
         }
 
@@ -188,13 +188,13 @@ namespace OpenNos.Handler
             bool isMuted = Session.Character.MuteMessage();
             if (isMuted || Session.Character.IsVehicled)
             {
-                Session.SendPacket("cancel 0 0");
+                Session.SendPacket(StaticPacketHelper.Cancel());
             }
             else
             {
                 if (Session.Character.LastTransform.AddSeconds(3) > DateTime.Now)
                 {
-                    Session.SendPacket("cancel 0 0");
+                    Session.SendPacket(StaticPacketHelper.Cancel());
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("CANT_ATTACK"), 0));
                     return;
                 }
@@ -352,7 +352,7 @@ namespace OpenNos.Handler
             else
             {
                 // monster already has been killed, send cancel
-                hitRequest.Session.SendPacket($"cancel 2 {target.Character.CharacterId}");
+                hitRequest.Session.SendPacket(StaticPacketHelper.Cancel(2, target.Character.CharacterId));
             }
         }
 
@@ -361,7 +361,7 @@ namespace OpenNos.Handler
             bool _shouldCancel = true;
             if ((DateTime.Now - Session.Character.LastTransform).TotalSeconds < 3)
             {
-                Session.SendPacket("cancel 0 0");
+                Session.SendPacket(StaticPacketHelper.Cancel());
                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("CANT_ATTACK"), 0));
                 return;
             }
@@ -378,7 +378,7 @@ namespace OpenNos.Handler
                 {
                     if (!Session.Character.WeaponLoaded(ski) || !ski.CanBeUsed())
                     {
-                        Session.SendPacket($"cancel 2 {targetId}");
+                        Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                         return;
                     }
                     foreach (BCard bc in ski.Skill.BCards.Where(s => s.Type.Equals((byte)BCardType.CardType.MeditationSkill)))
@@ -414,7 +414,7 @@ namespace OpenNos.Handler
                             }
                             if (Session.HasCurrentMapInstance)
                             {
-                                Session.CurrentMapInstance.Broadcast($"su 1 {Session.Character.CharacterId} 1 {Session.Character.CharacterId} {ski.Skill.SkillVNum} {ski.Skill.Cooldown} {ski.Skill.AttackAnimation} {skillinfo?.Skill.Effect ?? ski.Skill.Effect} {Session.Character.PositionX} {Session.Character.PositionY} 1 {(int)((double)Session.Character.Hp / Session.Character.HPLoad() * 100)} 0 -2 {ski.Skill.SkillType - 1}");
+                                Session.CurrentMapInstance.Broadcast(StaticPacketHelper.SkillUsed(1, Session.Character.CharacterId, 1, Session.Character.CharacterId, ski.Skill.SkillVNum, ski.Skill.Cooldown, ski.Skill.AttackAnimation, skillinfo?.Skill.Effect ?? ski.Skill.Effect, Session.Character.PositionX, Session.Character.PositionY, true, (int)((double)Session.Character.Hp / Session.Character.HPLoad() * 100), 0, -2, (byte)(ski.Skill.SkillType - 1)));
                                 if (ski.Skill.TargetRange != 0 && Session.HasCurrentMapInstance)
                                 {
                                     foreach (ClientSession character in ServerManager.Instance.Sessions.Where(s => s.CurrentMapInstance == Session.CurrentMapInstance && s.Character.CharacterId != Session.Character.CharacterId && s.Character.IsInRange(Session.Character.PositionX, Session.Character.PositionY, ski.Skill.TargetRange)))
@@ -445,7 +445,7 @@ namespace OpenNos.Handler
                                         }
                                         else
                                         {
-                                            Session.SendPacket($"cancel 2 {targetId}");
+                                            Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                         }
                                     }
                                     foreach (MapMonster mon in Session.CurrentMapInstance.GetListMonsterInRange(Session.Character.PositionX, Session.Character.PositionY, ski.Skill.TargetRange).Where(s => s.CurrentHp > 0))
@@ -458,14 +458,14 @@ namespace OpenNos.Handler
                         else if (ski.Skill.TargetType == 2 && ski.Skill.HitType == 0)
                         {
                             Session.CurrentMapInstance?.Broadcast($"ct 1 {Session.Character.CharacterId} 1 {Session.Character.CharacterId} {ski.Skill.CastAnimation} {ski.Skill.CastEffect} {ski.Skill.SkillVNum}");
-                            Session.CurrentMapInstance?.Broadcast($"su 1 {Session.Character.CharacterId} 1 {targetId} {ski.Skill.SkillVNum} {ski.Skill.Cooldown} {ski.Skill.AttackAnimation} {ski.Skill.Effect} {Session.Character.PositionX} {Session.Character.PositionY} 1 {(int)((double)Session.Character.Hp / Session.Character.HPLoad() * 100)} 0 -1 {ski.Skill.SkillType - 1}");
+                            Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.SkillUsed(1, Session.Character.CharacterId, 1, targetId, ski.Skill.SkillVNum, ski.Skill.Cooldown, ski.Skill.AttackAnimation, ski.Skill.Effect, Session.Character.PositionX, Session.Character.PositionY, true, (int)((double)Session.Character.Hp / Session.Character.HPLoad() * 100), 0, -1, (byte)(ski.Skill.SkillType - 1)));
                             ClientSession target = ServerManager.Instance.GetSessionByCharacterId(targetId) ?? Session;
                             ski.Skill.BCards.Where(s => !s.Type.Equals((byte)BCardType.CardType.MeditationSkill)).ToList().ForEach(s => s.ApplyBCards(target.Character));
                         }
                         else if (ski.Skill.TargetType == 1 && ski.Skill.HitType != 1)
                         {
                             Session.CurrentMapInstance?.Broadcast($"ct 1 {Session.Character.CharacterId} 1 {Session.Character.CharacterId} {ski.Skill.CastAnimation} {ski.Skill.CastEffect} {ski.Skill.SkillVNum}");
-                            Session.CurrentMapInstance?.Broadcast($"su 1 {Session.Character.CharacterId} 1 {Session.Character.CharacterId} {ski.Skill.SkillVNum} {ski.Skill.Cooldown} {ski.Skill.AttackAnimation} {ski.Skill.Effect} {Session.Character.PositionX} {Session.Character.PositionY} 1 {(int)((double)Session.Character.Hp / Session.Character.HPLoad() * 100)} 0 -1 {ski.Skill.SkillType - 1}");
+                            Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.SkillUsed(1, Session.Character.CharacterId, 1, Session.Character.CharacterId, ski.Skill.SkillVNum, ski.Skill.Cooldown, ski.Skill.AttackAnimation, ski.Skill.Effect, Session.Character.PositionX, Session.Character.PositionY, true, (int)((double)Session.Character.Hp / Session.Character.HPLoad() * 100), 0, -1, (byte)(ski.Skill.SkillType - 1)));
                             switch (ski.Skill.HitType)
                             {
                                 case 2:
@@ -568,7 +568,7 @@ namespace OpenNos.Handler
                                                 }
                                                 if (playerToAttack.Character.Hp <= 0 || count == 0)
                                                 {
-                                                    Session.SendPacket($"cancel 2 {targetId}");
+                                                    Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                 }
                                             }
                                             else
@@ -586,12 +586,12 @@ namespace OpenNos.Handler
                                                         }
                                                         else
                                                         {
-                                                            Session.SendPacket($"cancel 2 {targetId}");
+                                                            Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        Session.SendPacket($"cancel 2 {targetId}");
+                                                        Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                     }
                                                 }
                                                 else if (Session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
@@ -602,7 +602,7 @@ namespace OpenNos.Handler
                                                     }
                                                     else
                                                     {
-                                                        Session.SendPacket($"cancel 2 {targetId}");
+                                                        Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                     }
                                                 }
                                                 else if (Session.CurrentMapInstance?.IsPVP == true)
@@ -613,12 +613,12 @@ namespace OpenNos.Handler
                                                     }
                                                     else
                                                     {
-                                                        Session.SendPacket($"cancel 2 {targetId}");
+                                                        Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    Session.SendPacket($"cancel 2 {targetId}");
+                                                    Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                 }
 
                                                 //hit all other monsters
@@ -651,7 +651,7 @@ namespace OpenNos.Handler
                                                 }
                                                 if (playerToAttack.Character.Hp <= 0)
                                                 {
-                                                    Session.SendPacket($"cancel 2 {targetId}");
+                                                    Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                 }
                                             }
                                         }
@@ -674,12 +674,12 @@ namespace OpenNos.Handler
                                                         }
                                                         else
                                                         {
-                                                            Session.SendPacket($"cancel 2 {targetId}");
+                                                            Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        Session.SendPacket($"cancel 2 {targetId}");
+                                                        Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                     }
                                                 }
                                                 else if (Session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
@@ -690,7 +690,7 @@ namespace OpenNos.Handler
                                                     }
                                                     else
                                                     {
-                                                        Session.SendPacket($"cancel 2 {targetId}");
+                                                        Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                     }
                                                 }
                                                 else if (Session.CurrentMapInstance?.IsPVP == true)
@@ -704,7 +704,7 @@ namespace OpenNos.Handler
                                                         }
                                                         else
                                                         {
-                                                            Session.SendPacket($"cancel 2 {targetId}");
+                                                            Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                         }
                                                     }
                                                     else
@@ -715,13 +715,13 @@ namespace OpenNos.Handler
                                                         }
                                                         else
                                                         {
-                                                            Session.SendPacket($"cancel 2 {targetId}");
+                                                            Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                         }
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    Session.SendPacket($"cancel 2 {targetId}");
+                                                    Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                 }
                                             }
                                             else
@@ -736,12 +736,12 @@ namespace OpenNos.Handler
                                                         }
                                                         else
                                                         {
-                                                            Session.SendPacket($"cancel 2 {targetId}");
+                                                            Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        Session.SendPacket($"cancel 2 {targetId}");
+                                                        Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                     }
                                                 }
                                                 else if (Session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
@@ -752,7 +752,7 @@ namespace OpenNos.Handler
                                                     }
                                                     else
                                                     {
-                                                        Session.SendPacket($"cancel 2 {targetId}");
+                                                        Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                     }
                                                 }
                                                 else if (Session.CurrentMapInstance?.IsPVP == true)
@@ -763,24 +763,24 @@ namespace OpenNos.Handler
                                                     }
                                                     else
                                                     {
-                                                        Session.SendPacket($"cancel 2 {targetId}");
+                                                        Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    Session.SendPacket($"cancel 2 {targetId}");
+                                                    Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                 }
                                             }
                                         }
                                     }
                                     else
                                     {
-                                        Session.SendPacket($"cancel 2 {targetId}");
+                                        Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                     }
                                 }
                                 else
                                 {
-                                    Session.SendPacket($"cancel 2 {targetId}");
+                                    Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                 }
                             }
                             else
@@ -839,11 +839,11 @@ namespace OpenNos.Handler
                                                 }
                                                 else
                                                 {
-                                                    Session.SendPacket($"cancel 2 {targetId}");
+                                                    Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                 }
                                                 if (!monsterToAttack.IsAlive)
                                                 {
-                                                    Session.SendPacket($"cancel 2 {targetId}");
+                                                    Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                 }
                                             }
                                             else
@@ -863,11 +863,11 @@ namespace OpenNos.Handler
                                                 }
                                                 else
                                                 {
-                                                    Session.SendPacket($"cancel 2 {targetId}");
+                                                    Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                 }
                                                 if (!monsterToAttack.IsAlive)
                                                 {
-                                                    Session.SendPacket($"cancel 2 {targetId}");
+                                                    Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                 }
                                             }
                                         }
@@ -890,24 +890,24 @@ namespace OpenNos.Handler
                                     }
                                     else
                                     {
-                                        Session.SendPacket($"cancel 2 {targetId}");
+                                        Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                     }
                                 }
                                 else
                                 {
-                                    Session.SendPacket($"cancel 2 {targetId}");
+                                    Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                 }
                             }
                         }
                         else
                         {
-                            Session.SendPacket($"cancel 2 {targetId}");
+                            Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                         }
                         Session.SendPacketAfter($"sr {castingId}", ski.Skill.Cooldown * 100);
                     }
                     else
                     {
-                        Session.SendPacket($"cancel 2 {targetId}");
+                        Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                         Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NOT_ENOUGH_MP"), 10));
                     }
                 }
@@ -919,7 +919,7 @@ namespace OpenNos.Handler
             }
             else
             {
-                Session.SendPacket($"cancel 2 {targetId}");
+                Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
             }
 
             if ((castingId != 0 && castingId < 11 && _shouldCancel) || Session.Character.SkillComboCount > 7)
@@ -973,11 +973,11 @@ namespace OpenNos.Handler
                                                     skill.LastUse = DateTime.Now;
                                                     Session.CurrentMapInstance?.Broadcast($"su 1 {Session.Character.CharacterId} 3 {monsterToCatch.MapMonsterId} -1 0 15 {skill.Skill.Effect} -1 -1 1 {(int)((float)monsterToCatch.CurrentHp / (float)monsterToCatch.MaxHp * 100)} 0 -1 {skill.Skill.SkillType - 1}");
                                                     Session.SendPacket(Session.Character.GenerateEff(197));
-                                                    Session.CurrentMapInstance?.Broadcast(monsterToCatch.GenerateOut());
+                                                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.Out(3, monsterToCatch.MapMonsterId));
                                                 }
                                                 else
                                                 {
-                                                    Session.SendPacket($"cancel 2 {targetId}");
+                                                    Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                     Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("PET_SLOT_FULL"), 10));
                                                 }
                                             }
@@ -990,47 +990,47 @@ namespace OpenNos.Handler
                                         else
                                         {
                                             Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("LEVEL_LOW"), 0));
-                                            Session.SendPacket($"cancel 2 {targetId}");
+                                            Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                         }
                                     }
                                     else
                                     {
                                         Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("HP_LOW_50"), 0));
-                                        Session.SendPacket($"cancel 2 {targetId}");
+                                        Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                     }
                                 }
                                 else
                                 {
                                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("CANT_CATCH_THIS"), 0));
-                                    Session.SendPacket($"cancel 2 {targetId}");
+                                    Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                 }
                                 Session.SendPacket($"sr -10 {castingId} {skill.Skill.Cooldown}");
                                 Session.SendPacketAfter($"sr {castingId}", skill.Skill.Cooldown * 100);
                             }
                             else
                             {
-                                Session.SendPacket($"cancel 2 {targetId}");
+                                Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                             }
                         }
                         else
                         {
-                            Session.SendPacket($"cancel 2 {targetId}");
+                            Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                         }
                     }
                     else
                     {
-                        Session.SendPacket($"cancel 2 {targetId}");
+                        Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                         Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NOT_ENOUGH_MP"), 10));
                     }
                 }
                 else
                 {
-                    Session.SendPacket($"cancel 2 {targetId}");
+                    Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                 }
             }
             else
             {
-                Session.SendPacket($"cancel 2 {targetId}");
+                Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
             }
         }
 
@@ -1040,7 +1040,7 @@ namespace OpenNos.Handler
             CharacterSkill characterSkill = skills.Find(s => s.Skill.CastId == Castingid);
             if (!Session.Character.WeaponLoaded(characterSkill) || !Session.HasCurrentMapInstance)
             {
-                Session.SendPacket("cancel 2 0");
+                Session.SendPacket(StaticPacketHelper.Cancel(2));
                 return;
             }
 
@@ -1103,12 +1103,12 @@ namespace OpenNos.Handler
                 else
                 {
                     Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NOT_ENOUGH_MP"), 10));
-                    Session.SendPacket("cancel 2 0");
+                    Session.SendPacket(StaticPacketHelper.Cancel(2));
                 }
             }
             else
             {
-                Session.SendPacket("cancel 2 0");
+                Session.SendPacket(StaticPacketHelper.Cancel(2));
             }
         }
 

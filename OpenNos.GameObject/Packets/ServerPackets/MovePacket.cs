@@ -13,7 +13,7 @@ namespace OpenNos.GameObject.Packets.ServerPackets
         public byte MoveType { get; set; }
 
         [PacketIndex(1)]
-        public long CharacterId { get; set; }
+        public long CallerId { get; set; }
 
         [PacketIndex(2)]
         public short MapX { get; set; }
