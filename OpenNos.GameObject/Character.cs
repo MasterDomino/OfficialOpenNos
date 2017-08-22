@@ -475,11 +475,11 @@ namespace OpenNos.GameObject
 
         public void AddPetWithSkill(Mate mate)
         {
-            bool isUsingMate = false;
+            bool isUsingMate = true;
             Mate teammate = Session.Character.Mates.Where(s => s.IsTeamMember).FirstOrDefault(s => s.MateType == mate.MateType);
             if (teammate == null)
             {
-                isUsingMate = true;
+                isUsingMate = false;
                 mate.IsTeamMember = true;
             }
             Session.SendPacket($"ctl 2 {mate.MateTransportId} 3");
@@ -555,7 +555,7 @@ namespace OpenNos.GameObject
             Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), Name), 12));
         }
 
-        public bool CanAddPet(Mate mate)
+        public bool CanAddMate(Mate mate)
         {
             return mate.MateType == MateType.Pet ? MaxMateCount > Mates.Count : 3 > Mates.Count(s => s.MateType == MateType.Partner);
         }
