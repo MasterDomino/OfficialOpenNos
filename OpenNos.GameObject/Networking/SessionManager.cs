@@ -14,6 +14,7 @@
 
 using OpenNos.Core;
 using OpenNos.Domain;
+using OpenNos.GameObject.Helpers;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
@@ -87,7 +88,7 @@ namespace OpenNos.GameObject
                 if (IsWorldServer && session.HasSelectedCharacter)
                 {
                     session.Character.Mates.Where(s => s.IsTeamMember).ToList().ForEach(s => session.CurrentMapInstance?.Broadcast(session, s.GenerateOut(), ReceiverType.AllExceptMe));
-                    session.CurrentMapInstance?.Broadcast(session, session.Character.GenerateOut(), ReceiverType.AllExceptMe);
+                    session.CurrentMapInstance?.Broadcast(session, StaticPacketHelper.Out(1, session.Character.CharacterId), ReceiverType.AllExceptMe);
                 }
 
                 session.Destroy();

@@ -1410,7 +1410,7 @@ namespace OpenNos.Handler
             if (Session.Character.InvisibleGm)
             {
                 Session.Character.Mates.Where(s => s.IsTeamMember).ToList().ForEach(s => Session.CurrentMapInstance?.Broadcast(s.GenerateOut()));
-                Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateOut(), ReceiverType.AllExceptMe);
+                Session.CurrentMapInstance?.Broadcast(Session, StaticPacketHelper.Out(1, Session.Character.CharacterId), ReceiverType.AllExceptMe);
             }
             else
             {
@@ -1507,24 +1507,23 @@ namespace OpenNos.Handler
 
                 string name = killPacket.CharacterName;
                 long? id = ServerManager.Instance.GetProperty<long?>(name, nameof(Character.CharacterId));
-
-                if (id != null)
+                if (id.HasValue)
                 {
                     bool hasGodMode = ServerManager.Instance.GetProperty<bool>(name, nameof(Character.HasGodMode));
                     if (hasGodMode)
                     {
                         return;
                     }
-                    int? Hp = ServerManager.Instance.GetProperty<int?>((long)id, nameof(Character.Hp));
-                    if (Hp == 0)
+                    int? Hp = ServerManager.Instance.GetProperty<int?>(id.Value, nameof(Character.Hp));
+                    if (Hp == 0 || !Hp.HasValue)
                     {
                         return;
                     }
-                    ServerManager.Instance.SetProperty((long)id, nameof(Character.Hp), 0);
-                    ServerManager.Instance.SetProperty((long)id, nameof(Character.LastDefence), DateTime.Now);
-                    Session.CurrentMapInstance?.Broadcast($"su 1 {Session.Character.CharacterId} 1 {id} 1114 4 11 4260 0 0 0 0 60000 3 0");
+                    ServerManager.Instance.SetProperty(id.Value, nameof(Character.Hp), 0);
+                    ServerManager.Instance.SetProperty(id.Value, nameof(Character.LastDefence), DateTime.Now);
+                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.SkillUsed(1, Session.Character.CharacterId, 1, id.Value, 1114, 4, 11, 4260, 0, 0, false, 0, 60000, 3, 0));
                     Session.CurrentMapInstance?.Broadcast(null, ServerManager.Instance.GetUserMethod<string>((long)id, nameof(Character.GenerateStat)), ReceiverType.OnlySomeone, string.Empty, (long)id);
-                    ServerManager.Instance.AskRevive((long)id);
+                    ServerManager.Instance.AskRevive(id.Value);
                     Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
                 }
                 else
@@ -1774,7 +1773,7 @@ namespace OpenNos.Handler
                 {
                     if (monster.IsAlive)
                     {
-                        Session.CurrentMapInstance.Broadcast(monster.GenerateOut());
+                        Session.CurrentMapInstance.Broadcast(StaticPacketHelper.Out(3, monster.MapMonsterId));
                         Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MONSTER_REMOVED"), monster.MapMonsterId, monster.Monster.Name, monster.MapId, monster.MapX, monster.MapY), 12));
                         Session.CurrentMapInstance.RemoveMonster(monster);
                         if (DAOFactory.MapMonsterDAO.LoadById(monster.MapMonsterId) != null)
@@ -1791,7 +1790,7 @@ namespace OpenNos.Handler
                 {
                     if (!npc.IsMate && !npc.IsDisabled && !npc.IsProtected)
                     {
-                        Session.CurrentMapInstance.Broadcast(npc.GenerateOut());
+                        Session.CurrentMapInstance.Broadcast(StaticPacketHelper.Out(2, npc.MapNpcId));
                         Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("NPCMONSTER_REMOVED"), npc.MapNpcId, npc.Npc.Name, npc.MapId, npc.MapX, npc.MapY), 12));
                         Session.CurrentMapInstance.RemoveNpc(npc);
                         if (DAOFactory.ShopDAO.LoadByNpc(npc.MapNpcId) != null)
@@ -2515,7 +2514,7 @@ namespace OpenNos.Handler
                 else
                 {
                     ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, Session.Character.MapInstanceId, Session.Character.PositionX, Session.Character.PositionY);
-                    Session.SendPacket("cancel 2 0");
+                    Session.SendPacket(StaticPacketHelper.Cancel(2));
                 }
             }
         }

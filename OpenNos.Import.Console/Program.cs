@@ -242,7 +242,7 @@ namespace OpenNos.Import.Console
                         factory.ImportRecipe();
                     }
                 }
-                System.Console.WriteLine($"{Language.Instance.GetMessageFromKey("DONE")}");
+                System.Console.WriteLine(Language.Instance.GetMessageFromKey("DONE"));
                 System.Console.ReadKey();
             }
             catch (FileNotFoundException)
