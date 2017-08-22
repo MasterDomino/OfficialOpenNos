@@ -912,7 +912,7 @@ namespace OpenNos.Handler
                     }
                 }
                 CharacterSkill characterSkill = skills.Find(s => s.Skill?.CastId == castingId && s.Skill?.UpgradeSkill == 3);
-                if (characterSkill != null && characterSkill.SkillVNum == 209)
+                if (characterSkill != null && (characterSkill.SkillVNum == 209 || characterSkill.SkillVNum == 235 || characterSkill.SkillVNum == 236 || characterSkill.SkillVNum == 237))
                 {
                     Catch(characterSkill, targetId, castingId);
                 }
