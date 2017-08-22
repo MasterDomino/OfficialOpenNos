@@ -53,6 +53,10 @@ namespace OpenNos.DAL.EF
 
         public short BasicSkill { get; set; }
 
+        public virtual ICollection<BCard> BCards { get; set; }
+
+        public bool Catch { get; set; }
+
         public short CloseDefence { get; set; }
 
         public short Concentrate { get; set; }
@@ -135,8 +139,6 @@ namespace OpenNos.DAL.EF
         public short WaterResistance { get; set; }
 
         public int XP { get; set; }
-
-        public virtual ICollection<BCard> BCards { get; set; }
 
         #endregion
     }
