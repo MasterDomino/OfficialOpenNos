@@ -3279,6 +3279,7 @@ namespace OpenNos.GameObject
                             {
                                 foreach (ShellEffectDTO effect in itemInstance.ShellEffects)
                                 {
+                                    effect.ItemInstanceId = itemInstance.Id;
                                     effect.ShellEffectId = DAOFactory.ShellEffectDAO.InsertOrUpdate(effect).ShellEffectId;
                                 }
                             }
