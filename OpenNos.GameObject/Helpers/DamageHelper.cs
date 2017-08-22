@@ -487,7 +487,7 @@ namespace OpenNos.GameObject
                             break;
                     }
 
-                    multiplier += GetShellArmorEffectValue(ShellArmorEffectType.DodgeAllDamage) / 100D;
+                    multiplier += GetShellArmorEffectValue(ShellArmorEffectType.DodgeAllAttacksInPVP) / 100D;
                 }
 
                 if (multiplier > 5)

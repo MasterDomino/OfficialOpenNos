@@ -156,6 +156,7 @@
     <Compile Include="Packets\CommandPackets\AddPartnerPacket.cs" />
     <Compile Include="Packets\CommandPackets\AddShellEffectPacket.cs" />
     <Compile Include="Packets\CommandPackets\BuffPacket.cs" />
+    <Compile Include="Packets\CommandPackets\CloneItemPacket.cs" />
     <Compile Include="Packets\CommandPackets\CreateItemPacket.cs" />
     <Compile Include="Packets\CommandPackets\InstanceMusicPacket.cs" />
     <Compile Include="Packets\CommandPackets\ItemRain.cs" />

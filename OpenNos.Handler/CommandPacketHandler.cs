@@ -2232,6 +2232,28 @@ namespace OpenNos.Handler
         }
 
         /// <summary>
+        /// $Clone Command
+        /// </summary>
+        public void CloneItem(CloneItemPacket cloneItemPacket)
+        {
+            if (cloneItemPacket != null)
+            {
+                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Clone]Slot: {cloneItemPacket.Slot}");
+                ItemInstance item = Session.Character.Inventory.LoadBySlotAndType(cloneItemPacket.Slot, InventoryType.Equipment);
+                if (item != null)
+                {
+                    item = item.DeepCopy();
+                    item.Id = Guid.NewGuid();
+                    Session.Character.Inventory.AddToInventory(item);
+                }
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay(CloneItemPacket.ReturnHelp(), 10));
+            }
+        }
+
+        /// <summary>
         /// $SummonNPC Command
         /// </summary>
         /// <param name="summonNPCPacket"></param>
