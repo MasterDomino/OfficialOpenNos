@@ -557,11 +557,7 @@ namespace OpenNos.GameObject
 
         public bool CanAddPet(Mate mate)
         {
-            if (mate.MateType == MateType.Pet ? MaxMateCount > Mates.Count : 3 > Mates.Count(s => s.MateType == MateType.Partner))
-            {
-                return true;
-            }
-            return false;
+            return mate.MateType == MateType.Pet ? MaxMateCount > Mates.Count : 3 > Mates.Count(s => s.MateType == MateType.Partner);
         }
 
         public void ChangeClass(ClassType characterClass)
