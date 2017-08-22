@@ -137,13 +137,13 @@ namespace OpenNos.GameObject
             double boostCategory3 = 1;
             double boostCategory4 = 1;
             double boostCategory5 = 1;
-            const double shellBoostCategory1 = 1;
-            const double shellBoostCategory2 = 1;
-            const double shellBoostCategory3 = 1;
-            const double shellBoostCategory4 = 1;
-            const double shellBoostCategory5 = 1;
-            const int staticBoostCategory1 = 0;
-            const int staticBoostCategory2 = 0;
+            double shellBoostCategory1 = 1;
+            double shellBoostCategory2 = 1;
+            double shellBoostCategory3 = 1;
+            double shellBoostCategory4 = 1;
+            double shellBoostCategory5 = 1;
+            int staticBoostCategory1 = 0;
+            int staticBoostCategory2 = 0;
             int staticBoostCategory3 = 0;
             int staticBoostCategory4 = 0;
             int staticBoostCategory5 = 0;
@@ -466,35 +466,17 @@ namespace OpenNos.GameObject
             #region Morale and Dodge
 
             attacker.Morale -= defender.Morale;
-
+            double chance = 0;
             if (attacker.AttackType != AttackType.Magical)
             {
                 int hitrate = attacker.Hitrate + attacker.Morale;
                 double multiplier = defender.Dodge / (hitrate > 1 ? hitrate : 1);
 
-                if ((attacker.EntityType == EntityType.Player || attacker.EntityType == EntityType.Mate) && (defender.EntityType == EntityType.Player || defender.EntityType == EntityType.Mate))
-                {
-                    switch (attacker.AttackType)
-                    {
-                        case AttackType.Melee:
-                            multiplier += GetShellArmorEffectValue(ShellArmorEffectType.CloseDefenceDodgeInPVP) / 100D;
-                            break;
-                        case AttackType.Range:
-                            multiplier += GetShellArmorEffectValue(ShellArmorEffectType.DistanceDefenceDodgeInPVP) / 100D;
-                            break;
-                        case AttackType.Magical:
-                            multiplier += GetShellArmorEffectValue(ShellArmorEffectType.IgnoreMagicDamage) / 100D;
-                            break;
-                    }
-
-                    multiplier += GetShellArmorEffectValue(ShellArmorEffectType.DodgeAllDamage) / 100D;
-                }
-
                 if (multiplier > 5)
                 {
                     multiplier = 5;
                 }
-                double chance = (-0.25 * Math.Pow(multiplier, 3)) - (0.57 * Math.Pow(multiplier, 2)) + (25.3 * multiplier) - 1.41;
+                chance = (-0.25 * Math.Pow(multiplier, 3)) - (0.57 * Math.Pow(multiplier, 2)) + (25.3 * multiplier) - 1.41;
                 if (chance <= 1)
                 {
                     chance = 1;
@@ -503,11 +485,30 @@ namespace OpenNos.GameObject
                 //{
                 //    chance = 10;
                 //}
-                if (!defender.Invincible && ServerManager.Instance.RandomNumber() < chance)
+            }
+            int bonus = 0;
+            if ((attacker.EntityType == EntityType.Player || attacker.EntityType == EntityType.Mate) && (defender.EntityType == EntityType.Player || defender.EntityType == EntityType.Mate))
+            {
+                switch (attacker.AttackType)
                 {
-                    hitMode = 1;
-                    return 0;
+                    case AttackType.Melee:
+                        bonus += GetShellArmorEffectValue(ShellArmorEffectType.CloseDefenceDodgeInPVP);
+                        break;
+                    case AttackType.Range:
+                        bonus += GetShellArmorEffectValue(ShellArmorEffectType.DistanceDefenceDodgeInPVP);
+                        break;
+                    case AttackType.Magical:
+                        bonus += GetShellArmorEffectValue(ShellArmorEffectType.IgnoreMagicDamage);
+                        break;
                 }
+
+                bonus += GetShellArmorEffectValue(ShellArmorEffectType.DodgeAllDamage);
+            }
+
+            if (!defender.Invincible && ServerManager.Instance.RandomNumber() - bonus < chance)
+            {
+                hitMode = 1;
+                return 0;
             }
 
             #endregion
