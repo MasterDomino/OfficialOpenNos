@@ -966,7 +966,7 @@ namespace OpenNos.Handler
                                             if (random < chance[ServerManager.Instance.RandomNumber(0, 5)]) // IDK the real chance T.T
                                             {
                                                 Mate mate = new Mate(Session.Character, mateNpc, (byte)(monsterToCatch.Monster.Level - 5 >= 1 ? monsterToCatch.Monster.Level - 5 : monsterToCatch.Monster.Level), MateType.Pet);
-                                                if (Session.Character.CanAddPet(mate))
+                                                if (Session.Character.CanAddMate(mate))
                                                 {
                                                     Session.Character.AddPetWithSkill(mate);
                                                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("CATCH_SUCCESS"), 0));
