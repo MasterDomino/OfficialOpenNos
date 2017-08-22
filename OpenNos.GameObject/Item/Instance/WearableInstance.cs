@@ -1274,7 +1274,7 @@ namespace OpenNos.GameObject
                                         (byte)ShellArmorEffectType.ReducedShock,
                                         (byte)ShellArmorEffectType.ReducedPoisonParalysis,
                                         (byte)ShellArmorEffectType.ReducedBlind,
-                                        (byte)ShellArmorEffectType.RecovryHPOnRest,
+                                        (byte)ShellArmorEffectType.RecoveryHPOnRest,
                                         (byte)ShellArmorEffectType.RecoveryMPOnRest
                                     };
                                     minimum = new short[] { };
@@ -1331,7 +1331,7 @@ namespace OpenNos.GameObject
                                         (byte)ShellArmorEffectType.MagicDefence,
                                         (byte)ShellArmorEffectType.ReducedCritChanceRecive,
                                         (byte)ShellArmorEffectType.ReducedBlind,
-                                        (byte)ShellArmorEffectType.RecovryHPOnRest,
+                                        (byte)ShellArmorEffectType.RecoveryHPOnRest,
                                         (byte)ShellArmorEffectType.RecoveryMPOnRest,
                                         (byte)ShellArmorEffectType.ReducedBleedingAndMinorBleeding,
                                         (byte)ShellArmorEffectType.ReducedArmorDeBuff,
@@ -1391,7 +1391,7 @@ namespace OpenNos.GameObject
                                         (byte)ShellArmorEffectType.ReducedParalysis,
                                         (byte)ShellArmorEffectType.ReducedAllStun,
                                         (byte)ShellArmorEffectType.ReducedAllBleedingType,
-                                        (byte)ShellArmorEffectType.RevoryHP,
+                                        (byte)ShellArmorEffectType.RecoveryHP,
                                         (byte)ShellArmorEffectType.RecoveryMP,
                                         (byte)ShellArmorEffectType.IncreasedFireResistence,
                                         (byte)ShellArmorEffectType.IncreasedWaterResistence,
@@ -1724,7 +1724,7 @@ namespace OpenNos.GameObject
                                     effects = new byte[]
                                     {
                                         (byte)ShellArmorEffectType.PercentageAllPVPDefence,
-                                        (byte)ShellArmorEffectType.DodgeAllDamage
+                                        (byte)ShellArmorEffectType.DodgeAllAttacksInPVP
                                     };
                                     minimum = new short[] { };
                                     maximum = new short[] { };

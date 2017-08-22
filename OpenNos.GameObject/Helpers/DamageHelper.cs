@@ -502,7 +502,7 @@ namespace OpenNos.GameObject
                         break;
                 }
 
-                bonus += GetShellArmorEffectValue(ShellArmorEffectType.DodgeAllDamage);
+                bonus += GetShellArmorEffectValue(ShellArmorEffectType.DodgeAllAttacksInPVP);
             }
 
             if (!defender.Invincible && ServerManager.Instance.RandomNumber() - bonus < chance)
