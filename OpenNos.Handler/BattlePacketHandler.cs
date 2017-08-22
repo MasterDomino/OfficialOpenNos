@@ -938,7 +938,7 @@ namespace OpenNos.Handler
 
                                     Session.CurrentMapInstance?.Broadcast($"ct 1 {Session.Character.CharacterId} 3 {monsterToCatch.MapMonsterId} {skiup3.Skill.CastAnimation} {characterSkillInfo?.Skill.CastEffect ?? skiup3.Skill.CastEffect} {skiup3.Skill.SkillVNum}");
                                     Session.Character.Skills.GetAllItems().Where(s => s.Id != skiup3.Id).ToList().ForEach(i => i.Hit = 0);
-                                    bool canBeCatch = true;//TODO : Parse this value from monster.dat
+                                    bool canBeCatch = false;//TODO : Parse this value from monster.dat
                                     if (canBeCatch)
                                     {
                                         if (monsterToCatch.IsAlive && monsterToCatch.CurrentHp <= (int)((double)monsterToCatch.MaxHp / 2))
