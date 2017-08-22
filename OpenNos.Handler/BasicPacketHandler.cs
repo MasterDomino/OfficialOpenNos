@@ -510,215 +510,218 @@ namespace OpenNos.Handler
         /// <param name="pjoinPacket"></param>
         public void GroupJoin(PJoinPacket pjoinPacket)
         {
-            bool createNewGroup = true;
-            ClientSession targetSession = ServerManager.Instance.GetSessionByCharacterId(pjoinPacket.CharacterId);
-
-            if (targetSession == null && !pjoinPacket.RequestType.Equals(GroupRequestType.Sharing))
+            if (pjoinPacket != null)
             {
-                return;
-            }
+                bool createNewGroup = true;
+                ClientSession targetSession = ServerManager.Instance.GetSessionByCharacterId(pjoinPacket.CharacterId);
 
-            if (pjoinPacket.RequestType.Equals(GroupRequestType.Requested) || pjoinPacket.RequestType.Equals(GroupRequestType.Invited))
-            {
-                if (pjoinPacket.CharacterId == 0)
+                if (targetSession == null && !pjoinPacket.RequestType.Equals(GroupRequestType.Sharing))
                 {
                     return;
                 }
-                if (ServerManager.Instance.IsCharactersGroupFull(pjoinPacket.CharacterId))
-                {
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("GROUP_FULL")));
-                    return;
-                }
 
-                if (ServerManager.Instance.IsCharacterMemberOfGroup(pjoinPacket.CharacterId)
-                    && ServerManager.Instance.IsCharacterMemberOfGroup(Session.Character.CharacterId))
+                if (pjoinPacket.RequestType.Equals(GroupRequestType.Requested) || pjoinPacket.RequestType.Equals(GroupRequestType.Invited))
                 {
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("ALREADY_IN_GROUP")));
-                    return;
-                }
-
-                if (Session.Character.CharacterId != pjoinPacket.CharacterId && targetSession != null)
-                {
-                    if (Session.Character.IsBlockedByCharacter(pjoinPacket.CharacterId))
+                    if (pjoinPacket.CharacterId == 0)
                     {
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("BLACKLIST_BLOCKED")));
+                        return;
+                    }
+                    if (ServerManager.Instance.IsCharactersGroupFull(pjoinPacket.CharacterId))
+                    {
+                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("GROUP_FULL")));
                         return;
                     }
 
-                    if (targetSession.Character.GroupRequestBlocked)
+                    if (ServerManager.Instance.IsCharacterMemberOfGroup(pjoinPacket.CharacterId)
+                        && ServerManager.Instance.IsCharacterMemberOfGroup(Session.Character.CharacterId))
                     {
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("GROUP_BLOCKED"), 0));
+                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("ALREADY_IN_GROUP")));
+                        return;
                     }
-                    else
+
+                    if (Session.Character.CharacterId != pjoinPacket.CharacterId && targetSession != null)
                     {
-                        // save sent group request to current character
-                        Session.Character.GroupSentRequestCharacterIds.Add(targetSession.Character.CharacterId);
-                        if (Session.Character.Group == null || Session.Character.Group.GroupType == GroupType.Group)
+                        if (Session.Character.IsBlockedByCharacter(pjoinPacket.CharacterId))
                         {
-                            if (targetSession?.Character?.Group == null || targetSession?.Character?.Group.GroupType == GroupType.Group)
+                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("BLACKLIST_BLOCKED")));
+                            return;
+                        }
+
+                        if (targetSession.Character.GroupRequestBlocked)
+                        {
+                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("GROUP_BLOCKED"), 0));
+                        }
+                        else
+                        {
+                            // save sent group request to current character
+                            Session.Character.GroupSentRequestCharacterIds.Add(targetSession.Character.CharacterId);
+                            if (Session.Character.Group == null || Session.Character.Group.GroupType == GroupType.Group)
                             {
-                                Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("GROUP_REQUEST"), targetSession.Character.Name)));
-                                targetSession.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#pjoin^3^{ Session.Character.CharacterId} #pjoin^4^{Session.Character.CharacterId} {string.Format(Language.Instance.GetMessageFromKey("INVITED_YOU"), Session.Character.Name)}"));
+                                if (targetSession?.Character?.Group == null || targetSession?.Character?.Group.GroupType == GroupType.Group)
+                                {
+                                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("GROUP_REQUEST"), targetSession.Character.Name)));
+                                    targetSession.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#pjoin^3^{ Session.Character.CharacterId} #pjoin^4^{Session.Character.CharacterId} {string.Format(Language.Instance.GetMessageFromKey("INVITED_YOU"), Session.Character.Name)}"));
+                                }
+                                else
+                                {
+                                    //can't invite raid member
+                                }
                             }
                             else
                             {
-                                //can't invite raid member
+                                targetSession.SendPacket($"qna #rd^1^{Session.Character.CharacterId}^1 {string.Format(Language.Instance.GetMessageFromKey("INVITED_YOU_RAID"), Session.Character.Name)}");
                             }
                         }
-                        else
-                        {
-                            targetSession.SendPacket($"qna #rd^1^{Session.Character.CharacterId}^1 {string.Format(Language.Instance.GetMessageFromKey("INVITED_YOU_RAID"), Session.Character.Name)}");
-                        }
                     }
                 }
-            }
-            else if (pjoinPacket.RequestType.Equals(GroupRequestType.Sharing))
-            {
-                if (Session.Character.Group != null)
+                else if (pjoinPacket.RequestType.Equals(GroupRequestType.Sharing))
                 {
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("GROUP_SHARE_INFO")));
-                    Session.Character.Group.Characters.GetAllItems().Where(s => s.Character.CharacterId != Session.Character.CharacterId).ToList().ForEach(s =>
+                    if (Session.Character.Group != null)
                     {
-                        s.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#pjoin^6^{ Session.Character.CharacterId} #pjoin^7^{Session.Character.CharacterId} {string.Format(Language.Instance.GetMessageFromKey("INVITED_YOU_SHARE"), Session.Character.Name)}"));
-                        Session.Character.GroupSentRequestCharacterIds.Add(s.Character.CharacterId);
-                    });
-                }
-            }
-            else if (pjoinPacket.RequestType.Equals(GroupRequestType.Accepted))
-            {
-                if (!targetSession.Character.GroupSentRequestCharacterIds.Contains(Session.Character.CharacterId))
-                {
-                    return;
-                }
-                try
-                {
-                    targetSession.Character.GroupSentRequestCharacterIds.Remove(Session.Character.CharacterId);
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error(ex, "GroupJoin");
-                }
-                if (ServerManager.Instance.IsCharacterMemberOfGroup(Session.Character.CharacterId)
-                    && ServerManager.Instance.IsCharacterMemberOfGroup(pjoinPacket.CharacterId))
-                {
-                    // everyone is in group, return
-                    return;
-                }
-
-                if (ServerManager.Instance.IsCharactersGroupFull(pjoinPacket.CharacterId)
-                    || ServerManager.Instance.IsCharactersGroupFull(Session.Character.CharacterId))
-                {
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("GROUP_FULL")));
-                    targetSession.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("GROUP_FULL")));
-                    return;
-                }
-
-                // get group and add to group
-                if (ServerManager.Instance.IsCharacterMemberOfGroup(Session.Character.CharacterId))
-                {
-                    // target joins source
-                    Group currentGroup = ServerManager.Instance.GetGroupByCharacterId(Session.Character.CharacterId);
-
-                    if (currentGroup != null)
-                    {
-                        currentGroup.JoinGroup(targetSession);
-                        targetSession.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("JOINED_GROUP"), 10));
-                        createNewGroup = false;
+                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("GROUP_SHARE_INFO")));
+                        Session.Character.Group.Characters.GetAllItems().Where(s => s.Character.CharacterId != Session.Character.CharacterId).ToList().ForEach(s =>
+                        {
+                            s.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#pjoin^6^{ Session.Character.CharacterId} #pjoin^7^{Session.Character.CharacterId} {string.Format(Language.Instance.GetMessageFromKey("INVITED_YOU_SHARE"), Session.Character.Name)}"));
+                            Session.Character.GroupSentRequestCharacterIds.Add(s.Character.CharacterId);
+                        });
                     }
                 }
-                else if (ServerManager.Instance.IsCharacterMemberOfGroup(pjoinPacket.CharacterId))
+                else if (pjoinPacket.RequestType.Equals(GroupRequestType.Accepted))
                 {
-                    // source joins target
-                    Group currentGroup = ServerManager.Instance.GetGroupByCharacterId(pjoinPacket.CharacterId);
-
-                    if (currentGroup != null)
+                    if (!targetSession.Character.GroupSentRequestCharacterIds.Contains(Session.Character.CharacterId))
                     {
-                        createNewGroup = false;
-                        if (currentGroup.GroupType == GroupType.Group)
+                        return;
+                    }
+                    try
+                    {
+                        targetSession.Character.GroupSentRequestCharacterIds.Remove(Session.Character.CharacterId);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error(ex, "GroupJoin");
+                    }
+                    if (ServerManager.Instance.IsCharacterMemberOfGroup(Session.Character.CharacterId)
+                        && ServerManager.Instance.IsCharacterMemberOfGroup(pjoinPacket.CharacterId))
+                    {
+                        // everyone is in group, return
+                        return;
+                    }
+
+                    if (ServerManager.Instance.IsCharactersGroupFull(pjoinPacket.CharacterId)
+                        || ServerManager.Instance.IsCharactersGroupFull(Session.Character.CharacterId))
+                    {
+                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("GROUP_FULL")));
+                        targetSession.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("GROUP_FULL")));
+                        return;
+                    }
+
+                    // get group and add to group
+                    if (ServerManager.Instance.IsCharacterMemberOfGroup(Session.Character.CharacterId))
+                    {
+                        // target joins source
+                        Group currentGroup = ServerManager.Instance.GetGroupByCharacterId(Session.Character.CharacterId);
+
+                        if (currentGroup != null)
                         {
-                            currentGroup.JoinGroup(Session);
+                            currentGroup.JoinGroup(targetSession);
+                            targetSession.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("JOINED_GROUP"), 10));
+                            createNewGroup = false;
                         }
-                        else
+                    }
+                    else if (ServerManager.Instance.IsCharacterMemberOfGroup(pjoinPacket.CharacterId))
+                    {
+                        // source joins target
+                        Group currentGroup = ServerManager.Instance.GetGroupByCharacterId(pjoinPacket.CharacterId);
+
+                        if (currentGroup != null)
                         {
-                            Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("RAID_JOIN"), Session.Character.Name), 10));
-                            if (Session.Character.Level > currentGroup.Raid?.LevelMaximum || Session.Character.Level < currentGroup.Raid?.LevelMinimum)
+                            createNewGroup = false;
+                            if (currentGroup.GroupType == GroupType.Group)
                             {
-                                Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("RAID_LEVEL_INCORRECT"), 10));
-                                if (Session.Character.Level >= currentGroup.Raid?.LevelMaximum + 10 /* && AlreadySuccededToday*/)
+                                currentGroup.JoinGroup(Session);
+                            }
+                            else
+                            {
+                                Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("RAID_JOIN"), Session.Character.Name), 10));
+                                if (Session.Character.Level > currentGroup.Raid?.LevelMaximum || Session.Character.Level < currentGroup.Raid?.LevelMinimum)
                                 {
-                                    //modal 1 ALREADY_SUCCEDED_AS_ASSISTANT
+                                    Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("RAID_LEVEL_INCORRECT"), 10));
+                                    if (Session.Character.Level >= currentGroup.Raid?.LevelMaximum + 10 /* && AlreadySuccededToday*/)
+                                    {
+                                        //modal 1 ALREADY_SUCCEDED_AS_ASSISTANT
+                                    }
                                 }
-                            }
 
-                            currentGroup.JoinGroup(Session);
-                            Session.SendPacket(Session.Character.GenerateRaid(1, false));
-                            currentGroup.Characters.ForEach(s =>
-                            {
-                                s.SendPacket(currentGroup.GenerateRdlst());
-                                s.SendPacket(s.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("JOIN_TEAM"), Session.Character.Name), 10));
-                                s.SendPacket(s.Character.GenerateRaid(0, false));
-                            });
+                                currentGroup.JoinGroup(Session);
+                                Session.SendPacket(Session.Character.GenerateRaid(1, false));
+                                currentGroup.Characters.ForEach(s =>
+                                {
+                                    s.SendPacket(currentGroup.GenerateRdlst());
+                                    s.SendPacket(s.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("JOIN_TEAM"), Session.Character.Name), 10));
+                                    s.SendPacket(s.Character.GenerateRaid(0, false));
+                                });
+                            }
                         }
                     }
-                }
 
-                if (createNewGroup)
-                {
-                    Group group = new Group()
+                    if (createNewGroup)
                     {
-                        GroupType = GroupType.Group
-                    };
-                    group.JoinGroup(pjoinPacket.CharacterId);
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("GROUP_JOIN"), targetSession.Character.Name), 10));
-                    group.JoinGroup(Session.Character.CharacterId);
-                    ServerManager.Instance.AddGroup(group);
-                    targetSession.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("GROUP_ADMIN")));
+                        Group group = new Group()
+                        {
+                            GroupType = GroupType.Group
+                        };
+                        group.JoinGroup(pjoinPacket.CharacterId);
+                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("GROUP_JOIN"), targetSession.Character.Name), 10));
+                        group.JoinGroup(Session.Character.CharacterId);
+                        ServerManager.Instance.AddGroup(group);
+                        targetSession.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("GROUP_ADMIN")));
 
-                    // set back reference to group
-                    Session.Character.Group = group;
-                    targetSession.Character.Group = group;
+                        // set back reference to group
+                        Session.Character.Group = group;
+                        targetSession.Character.Group = group;
+                    }
+                    if (Session.Character.Group.GroupType == GroupType.Group)
+                    {
+                        // player join group
+                        ServerManager.Instance.UpdateGroup(pjoinPacket.CharacterId);
+                        Session.CurrentMapInstance?.Broadcast(Session.Character.GeneratePidx());
+                    }
                 }
-                if (Session.Character.Group.GroupType == GroupType.Group)
+                else if (pjoinPacket.RequestType == GroupRequestType.Declined)
                 {
-                    // player join group
-                    ServerManager.Instance.UpdateGroup(pjoinPacket.CharacterId);
-                    Session.CurrentMapInstance?.Broadcast(Session.Character.GeneratePidx());
-                }
-            }
-            else if (pjoinPacket.RequestType == GroupRequestType.Declined)
-            {
-                if (!targetSession.Character.GroupSentRequestCharacterIds.Contains(Session.Character.CharacterId))
-                {
-                    return;
-                }
-                targetSession.Character.GroupSentRequestCharacterIds.Remove(Session.Character.CharacterId);
+                    if (!targetSession.Character.GroupSentRequestCharacterIds.Contains(Session.Character.CharacterId))
+                    {
+                        return;
+                    }
+                    targetSession.Character.GroupSentRequestCharacterIds.Remove(Session.Character.CharacterId);
 
-                targetSession.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("REFUSED_GROUP_REQUEST"), Session.Character.Name), 10));
-            }
-            else if (pjoinPacket.RequestType == GroupRequestType.AcceptedShare)
-            {
-                if (!targetSession.Character.GroupSentRequestCharacterIds.Contains(Session.Character.CharacterId))
-                {
-                    return;
+                    targetSession.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("REFUSED_GROUP_REQUEST"), Session.Character.Name), 10));
                 }
-                targetSession.Character.GroupSentRequestCharacterIds.Remove(Session.Character.CharacterId);
+                else if (pjoinPacket.RequestType == GroupRequestType.AcceptedShare)
+                {
+                    if (!targetSession.Character.GroupSentRequestCharacterIds.Contains(Session.Character.CharacterId))
+                    {
+                        return;
+                    }
+                    targetSession.Character.GroupSentRequestCharacterIds.Remove(Session.Character.CharacterId);
 
-                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("ACCEPTED_SHARE"), targetSession.Character.Name), 0));
-                if (Session.Character?.Group?.IsMemberOfGroup(pjoinPacket.CharacterId) == true)
-                {
-                    Session.Character.SetReturnPoint(targetSession.Character.Return.DefaultMapId, targetSession.Character.Return.DefaultX, targetSession.Character.Return.DefaultY);
-                    targetSession.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("CHANGED_SHARE"), targetSession.Character.Name), 0));
+                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("ACCEPTED_SHARE"), targetSession.Character.Name), 0));
+                    if (Session.Character?.Group?.IsMemberOfGroup(pjoinPacket.CharacterId) == true)
+                    {
+                        Session.Character.SetReturnPoint(targetSession.Character.Return.DefaultMapId, targetSession.Character.Return.DefaultX, targetSession.Character.Return.DefaultY);
+                        targetSession.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("CHANGED_SHARE"), targetSession.Character.Name), 0));
+                    }
                 }
-            }
-            else if (pjoinPacket.RequestType == GroupRequestType.DeclinedShare)
-            {
-                if (!targetSession.Character.GroupSentRequestCharacterIds.Contains(Session.Character.CharacterId))
+                else if (pjoinPacket.RequestType == GroupRequestType.DeclinedShare)
                 {
-                    return;
-                }
-                targetSession.Character.GroupSentRequestCharacterIds.Remove(Session.Character.CharacterId);
+                    if (!targetSession.Character.GroupSentRequestCharacterIds.Contains(Session.Character.CharacterId))
+                    {
+                        return;
+                    }
+                    targetSession.Character.GroupSentRequestCharacterIds.Remove(Session.Character.CharacterId);
 
-                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("REFUSED_SHARE"), 0));
+                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("REFUSED_SHARE"), 0));
+                }
             }
         }
 
