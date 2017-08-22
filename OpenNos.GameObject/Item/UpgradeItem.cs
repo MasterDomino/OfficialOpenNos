@@ -59,7 +59,7 @@ namespace OpenNos.GameObject
                                     if (equip?.IsFixed == true)
                                     {
                                         equip.IsFixed = false;
-                                        session.SendPacket(session.Character.GenerateEff(3003));
+                                        session.SendPacket(StaticPacketHelper.GenerateEff(1, session.Character.CharacterId,3003));
                                         session.SendPacket(UserInterfaceHelper.Instance.GenerateGuri(17, 1, session.Character.CharacterId, SlotEquip));
                                         session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("ITEM_UNFIXED"), 12));
                                         isUsed = true;

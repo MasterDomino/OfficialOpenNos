@@ -381,7 +381,7 @@ namespace OpenNos.GameObject
                                 if (skill.CastId > 10)
                                 {
                                     // HACK this way
-                                    Observable.Timer(TimeSpan.FromMilliseconds((skill.Cooldown * 100) + 500)).Subscribe(observer => character.Session.SendPacket($"sr {skill.CastId}"));
+                                    Observable.Timer(TimeSpan.FromMilliseconds((skill.Cooldown * 100) + 500)).Subscribe(observer => character.Session.SendPacket(StaticPacketHelper.SkillReset(skill.CastId)));
                                 }
                             }
                             switch (SubType)

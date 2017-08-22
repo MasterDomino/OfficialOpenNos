@@ -34,7 +34,7 @@ namespace OpenNos.GameObject
 
         public void Regenerate(ClientSession session, Item item)
         {
-            session.SendPacket(session.Character.GenerateEff(6000));
+            session.SendPacket(Helpers.StaticPacketHelper.GenerateEff(1, session.Character.CharacterId,6000));
             session.Character.SnackAmount++;
             session.Character.MaxSnack = 0;
             session.Character.SnackHp += item.Hp / 5;

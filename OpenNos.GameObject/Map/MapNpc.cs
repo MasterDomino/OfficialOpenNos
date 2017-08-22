@@ -74,16 +74,6 @@ namespace OpenNos.GameObject
 
         #region Methods
 
-        public EffectPacket GenerateEff(int effectid)
-        {
-            return new EffectPacket
-            {
-                EffectType = 2,
-                CharacterId = MapNpcId,
-                Id = effectid
-            };
-        }
-
         public string GenerateIn(InRespawnType respawnType = InRespawnType.NoEffect)
         {
             NpcMonster npcinfo = ServerManager.Instance.GetNpc(NpcVNum);
@@ -181,11 +171,11 @@ namespace OpenNos.GameObject
             {
                 if (IsMate || IsProtected)
                 {
-                    MapInstance.Broadcast(GenerateEff(825), MapX, MapY);
+                    MapInstance.Broadcast(StaticPacketHelper.GenerateEff(2, MapNpcId, 825), MapX, MapY);
                 }
                 if (Effect > 0 && EffectActivated)
                 {
-                    MapInstance.Broadcast(GenerateEff(Effect), MapX, MapY);
+                    MapInstance.Broadcast(StaticPacketHelper.GenerateEff(2, MapNpcId, Effect), MapX, MapY);
                 }
                 LastEffect = DateTime.Now;
             }
@@ -257,7 +247,7 @@ namespace OpenNos.GameObject
 
                         if (npcMonsterSkill != null && npcMonsterSkill.Skill.CastEffect != 0)
                         {
-                            MapInstance.Broadcast(GenerateEff(Effect));
+                            MapInstance.Broadcast(StaticPacketHelper.GenerateEff(2, MapNpcId, Effect));
                         }
                         monster.CurrentHp -= damage;
                         MapInstance.Broadcast(npcMonsterSkill != null

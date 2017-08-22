@@ -172,16 +172,6 @@ namespace OpenNos.GameObject
             return $"c_mode 2 {MateTransportId} {morphId} 0 0";
         }
 
-        public EffectPacket GenerateEff(int effectid)
-        {
-            return new EffectPacket
-            {
-                EffectType = 2,
-                CharacterId = MateTransportId,
-                Id = effectid
-            };
-        }
-
         public string GenerateEInfo()
         {
             return $"e_info 10 {NpcMonsterVNum} {Level} {Monster.Element} {Monster.AttackClass} {Monster.ElementRate} {Monster.AttackUpgrade} {Monster.DamageMinimum} {Monster.DamageMaximum} {Monster.Concentrate} {Monster.CriticalChance} {Monster.CriticalRate} {Monster.DefenceUpgrade} {Monster.CloseDefence} {Monster.DefenceDodge} {Monster.DistanceDefence} {Monster.DistanceDefenceDodge} {Monster.MagicDefence} {Monster.FireResistance} {Monster.WaterResistance} {Monster.LightResistance} {Monster.DarkResistance} {Monster.MaxHP} {Monster.MaxMP} -1 {Name.Replace(' ', '^')}";

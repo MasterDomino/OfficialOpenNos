@@ -755,14 +755,14 @@ namespace OpenNos.Handler
                 {
                     if (guriPacket.User == Session.Character.CharacterId)
                     {
-                        Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateEff(guriPacket.Data + 4099), ReceiverType.AllNoEmoBlocked);
+                        Session.CurrentMapInstance?.Broadcast(Session, StaticPacketHelper.GenerateEff(1, Session.Character.CharacterId, guriPacket.Data + 4099), ReceiverType.AllNoEmoBlocked);
                     }
                     else if (int.TryParse(guriPacket.User.ToString(), out int mateTransportId))
                     {
                         Mate mate = Session.Character.Mates.Find(s => s.MateTransportId == mateTransportId);
                         if (mate != null)
                         {
-                            Session.CurrentMapInstance?.Broadcast(Session, mate.GenerateEff(guriPacket.Data + 4099), ReceiverType.AllNoEmoBlocked);
+                            Session.CurrentMapInstance?.Broadcast(Session, StaticPacketHelper.GenerateEff(2, mate.MateTransportId, guriPacket.Data + 4099), ReceiverType.AllNoEmoBlocked);
                         }
                     }
                 }
@@ -775,7 +775,7 @@ namespace OpenNos.Handler
                         {
                             shell.SetShellEffects();
                             Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_IDENTIFIED"), 0));
-                            Session.SendPacket(Session.Character.GenerateEff(3006));
+                            Session.SendPacket(StaticPacketHelper.GenerateEff(1, Session.Character.CharacterId, 3006));
                         }
                     }
                 }
@@ -926,7 +926,7 @@ namespace OpenNos.Handler
                             Session.Character.Inventory.RemoveItemAmount(baseVnum + (byte)faction);
                             Session.SendPacket("scr 0 0 0 0 0 0 0");
                             Session.SendPacket(Session.Character.GenerateFaction());
-                            Session.SendPacket(Session.Character.GenerateEff(4799 + (byte)faction));
+                            Session.SendPacket(StaticPacketHelper.GenerateEff(1, Session.Character.CharacterId, 4799 + (byte)faction));
                             Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey($"GET_PROTECTION_POWER_{(byte)faction}"), 0));
                         }
                         else
@@ -940,7 +940,7 @@ namespace OpenNos.Handler
                             Session.Character.Inventory.RemoveItemAmount(baseVnum + (byte)faction);
                             Session.SendPacket("scr 0 0 0 0 0 0 0");
                             Session.SendPacket(Session.Character.GenerateFaction());
-                            Session.SendPacket(Session.Character.GenerateEff(4799 + ((byte)faction / 2)));
+                            Session.SendPacket(StaticPacketHelper.GenerateEff(1, Session.Character.CharacterId, 4799 + ((byte)faction / 2)));
                             Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey($"GET_PROTECTION_POWER_{(byte)faction / 2}"), 0));
                             Session.Character.Save();
                             ServerManager.Instance.FamilyRefresh(Session.Character.Family.FamilyId);

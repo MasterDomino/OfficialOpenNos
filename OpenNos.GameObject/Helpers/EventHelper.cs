@@ -205,8 +205,11 @@ namespace OpenNos.GameObject.Helpers
 
                     case EventActionType.EFFECT:
                         short evt3 = (short)evt.Parameter;
-                        monster.LastEffect = DateTime.Now;
-                        evt.MapInstance.Broadcast(monster?.GenerateEff(evt3));
+                        if (monster != null)
+                        {
+                            monster.LastEffect = DateTime.Now;
+                            evt.MapInstance.Broadcast(StaticPacketHelper.GenerateEff(3, monster.MapMonsterId, evt3));
+                        }
                         break;
 
                     case EventActionType.CONTROLEMONSTERINRANGE:

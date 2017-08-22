@@ -136,8 +136,7 @@ namespace OpenNos.GameObject.Event.GAMES
                     circle.NoAggresiveIcon = true;
                     _map.AddMonster(circle);
                     _map.Broadcast(circle.GenerateIn());
-                    _map.Broadcast($"eff 3 {circleId} 4660");
-
+                    _map.Broadcast(StaticPacketHelper.GenerateEff(3, circleId, 4660));
                     Observable.Timer(TimeSpan.FromSeconds(4)).Subscribe(observer =>
                     {
                         if (_map != null)

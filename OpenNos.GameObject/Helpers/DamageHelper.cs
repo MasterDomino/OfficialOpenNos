@@ -1,4 +1,5 @@
 ﻿using OpenNos.Domain;
+using OpenNos.GameObject.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -222,7 +223,7 @@ namespace OpenNos.GameObject
                 boostCategory3 += soft[1] / 100D;
                 if (attacker.EntityType.Equals(EntityType.Player) && attacker.Session != null)
                 {
-                    attacker.Session.CurrentMapInstance.Broadcast(attacker.Session.Character.GenerateEff(15));
+                    attacker.Session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(1, attacker.Session.Character.CharacterId, 15));
                 }
             }
 
@@ -259,7 +260,7 @@ namespace OpenNos.GameObject
                 boostCategory3 += soft[1] / 100D;
                 if (attacker.EntityType.Equals(EntityType.Player) && attacker.Session != null)
                 {
-                    attacker.Session.CurrentMapInstance.Broadcast(attacker.Session.Character.GenerateEff(15));
+                    attacker.Session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(1, attacker.Session.Character.CharacterId, 15));
                 }
             }
 

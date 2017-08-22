@@ -2,32 +2,9 @@
 
 namespace OpenNos.GameObject.Helpers
 {
-    public class StaticPacketHelper
+    public static class StaticPacketHelper
     {
-        #region Members
-
-        private static StaticPacketHelper instance;
-
-        #endregion
-
-        #region Properties
-
-        public static StaticPacketHelper Instance
-        {
-            get
-            {
-                return instance ?? (instance = new StaticPacketHelper());
-            }
-        }
-
-        #endregion
-
         #region Methods
-
-        public static string Out(byte type, long callerId)
-        {
-            return $"out {type} {callerId}";
-        }
 
         public static string Cancel(byte type = 0, long callerId = 0)
         {
@@ -39,9 +16,14 @@ namespace OpenNos.GameObject.Helpers
             return $"ct {type} {callerId} {secondaryType} {targetId} {castAnimation} {castEffect} {skillVNum}";
         }
 
-        public static string SkillUsed(byte type, long callerId, byte secondaryType, long targetId, short skillVNum, short cooldown, short attackAnimation, short skillEffect, short x, short y, bool isAlive, int health, int damage, int hitmode, byte skillType)
+        public static EffectPacket GenerateEff(byte effectType, long callerId, int effectId)
         {
-            return $"su {type} {callerId} {secondaryType} {targetId} {skillVNum} {cooldown} {attackAnimation} {skillEffect} {x} {y} {(isAlive ? 1 : 0)} {health} {damage} {hitmode} {skillType}";
+            return new EffectPacket
+            {
+                EffectType = effectType,
+                CallerId = callerId,
+                EffectId = effectId
+            };
         }
 
         public static MovePacket Move(byte type, long callerId, short x, short y, byte speed)
@@ -54,6 +36,21 @@ namespace OpenNos.GameObject.Helpers
                 Speed = speed,
                 MoveType = type
             };
+        }
+
+        public static string Out(byte type, long callerId)
+        {
+            return $"out {type} {callerId}";
+        }
+
+        public static string SkillReset(int castId)
+        {
+            return $"sr {castId}";
+        }
+
+        public static string SkillUsed(byte type, long callerId, byte secondaryType, long targetId, short skillVNum, short cooldown, short attackAnimation, short skillEffect, short x, short y, bool isAlive, int health, int damage, int hitmode, byte skillType)
+        {
+            return $"su {type} {callerId} {secondaryType} {targetId} {skillVNum} {cooldown} {attackAnimation} {skillEffect} {x} {y} {(isAlive ? 1 : 0)} {health} {damage} {hitmode} {skillType}";
         }
 
         #endregion

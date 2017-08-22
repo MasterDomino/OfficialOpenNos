@@ -50,8 +50,8 @@ namespace OpenNos.GameObject
                             return;
                         }
                         mate.Level++;
-                        session.CurrentMapInstance?.Broadcast(mate.GenerateEff(8), mate.PositionX, mate.PositionY);
-                        session.CurrentMapInstance?.Broadcast(mate.GenerateEff(198), mate.PositionX, mate.PositionY);
+                        session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(2, mate.MateTransportId, 8), mate.PositionX, mate.PositionY);
+                        session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(2, mate.MateTransportId, 198), mate.PositionX, mate.PositionY);
                     }
                     break;
 
@@ -69,8 +69,8 @@ namespace OpenNos.GameObject
                         if (mate?.CanPickUp == false)
                         {
                             session.Character.Inventory.RemoveItemAmount(inv.ItemVNum, 1);
-                            session.CurrentMapInstance.Broadcast(mate.GenerateEff(5));
-                            session.CurrentMapInstance.Broadcast(mate.GenerateEff(5002));
+                            session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(2, mate.MateTransportId, 5));
+                            session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(2, mate.MateTransportId, 5002));
                             mate.CanPickUp = true;
                             session.SendPackets(session.Character.GenerateScP());
                             session.SendPacket(
