@@ -163,11 +163,13 @@ namespace OpenNos.GameObject
             boostCategory1 += GetAttackerBenefitingBuffs(CardType.Damage, (byte)AdditionalTypes.Damage.DamageIncreased)[0] / 100D;
             boostCategory1 += GetAttackerBenefitingBuffs(CardType.Item, (byte)AdditionalTypes.Item.AttackIncreased)[0] / 100D;
             boostCategory1 += GetDefenderBenefitingBuffs(CardType.Item, (byte)AdditionalTypes.Item.DefenceIncreased)[0] / 100D;
+            shellBoostCategory1 += GetShellWeaponEffectValue(ShellWeaponEffectType.PercentageTotalDamage) / 100D;
 
             if ((attacker.EntityType == EntityType.Player || attacker.EntityType == EntityType.Mate) && (defender.EntityType == EntityType.Player || defender.EntityType == EntityType.Mate))
             {
                 boostCategory1 += GetAttackerBenefitingBuffs(CardType.SpecialisationBuffResistance, (byte)AdditionalTypes.SpecialisationBuffResistance.IncreaseDamageInPVP)[0] / 100D;
                 boostCategory1 += GetAttackerBenefitingBuffs(CardType.LeonaPassiveSkill, (byte)AdditionalTypes.LeonaPassiveSkill.AttackIncreasedInPVP)[0] / 100D;
+                shellBoostCategory1 += GetShellWeaponEffectValue(ShellWeaponEffectType.PercentageDamageInPVP) / 100D;
             }
 
             #endregion
@@ -241,11 +243,14 @@ namespace OpenNos.GameObject
 
             boostCategory4 += GetDefenderBenefitingBuffs(CardType.DodgeAndDefencePercent, (byte)AdditionalTypes.DodgeAndDefencePercent.DefenceIncreased)[0] / 100D;
             boostCategory4 += GetAttackerBenefitingBuffs(CardType.DodgeAndDefencePercent, (byte)AdditionalTypes.DodgeAndDefencePercent.DefenceReduced)[0] / 100D;
+            shellBoostCategory4 += GetShellArmorEffectValue(ShellArmorEffectType.PercentageTotalDefence) / 100D;
 
             if ((attacker.EntityType == EntityType.Player || attacker.EntityType == EntityType.Mate) && (defender.EntityType == EntityType.Player || defender.EntityType == EntityType.Mate))
             {
                 boostCategory4 += GetDefenderBenefitingBuffs(CardType.LeonaPassiveSkill, (byte)AdditionalTypes.LeonaPassiveSkill.DefenceIncreasedInPVP)[0] / 100D;
                 boostCategory4 += GetAttackerBenefitingBuffs(CardType.LeonaPassiveSkill, (byte)AdditionalTypes.LeonaPassiveSkill.DefenceDecreasedInPVP)[0] / 100D;
+                shellBoostCategory4 -= GetShellWeaponEffectValue(ShellWeaponEffectType.ReducesPercentageEnemyDefenceInPVP) / 100D;
+                shellBoostCategory4 += GetShellArmorEffectValue(ShellArmorEffectType.PercentageAllPVPDefence) / 100D;
             }
 
             int[] def = GetAttackerBenefitingBuffs(CardType.Block, (byte)AdditionalTypes.Block.ChanceAllIncreased);
@@ -268,6 +273,7 @@ namespace OpenNos.GameObject
 
             staticBoostCategory5 += GetAttackerBenefitingBuffs(CardType.Element, (byte)AdditionalTypes.Element.AllIncreased)[0];
             staticBoostCategory5 += GetDefenderBenefitingBuffs(CardType.Element, (byte)AdditionalTypes.Element.AllDecreased)[0];
+            staticBoostCategory5 += GetShellWeaponEffectValue(ShellWeaponEffectType.IncreasedElementalProperties);
 
             #endregion
 
@@ -291,6 +297,7 @@ namespace OpenNos.GameObject
                     boostCategory1 += GetDefenderBenefitingBuffs(CardType.Damage, (byte)AdditionalTypes.Damage.MeleeDecreased)[0] / 100D;
                     staticBoostCategory3 += GetAttackerBenefitingBuffs(CardType.AttackPower, (byte)AdditionalTypes.AttackPower.MeleeAttacksIncreased)[0];
                     staticBoostCategory3 += GetDefenderBenefitingBuffs(CardType.AttackPower, (byte)AdditionalTypes.AttackPower.MeleeAttacksDecreased)[0];
+                    staticBoostCategory4 += GetShellArmorEffectValue(ShellArmorEffectType.CloseDefence);
                     break;
 
                 case AttackType.Range:
@@ -299,6 +306,7 @@ namespace OpenNos.GameObject
                     boostCategory1 += GetDefenderBenefitingBuffs(CardType.Damage, (byte)AdditionalTypes.Damage.RangedDecreased)[0] / 100D;
                     staticBoostCategory3 += GetAttackerBenefitingBuffs(CardType.AttackPower, (byte)AdditionalTypes.AttackPower.MeleeAttacksIncreased)[0];
                     staticBoostCategory3 += GetDefenderBenefitingBuffs(CardType.AttackPower, (byte)AdditionalTypes.AttackPower.MeleeAttacksDecreased)[0];
+                    staticBoostCategory4 += GetShellArmorEffectValue(ShellArmorEffectType.DistanceDefence);
                     break;
 
                 case AttackType.Magical:
@@ -307,6 +315,7 @@ namespace OpenNos.GameObject
                     boostCategory1 += GetDefenderBenefitingBuffs(CardType.Damage, (byte)AdditionalTypes.Damage.MagicalDecreased)[0] / 100D;
                     staticBoostCategory3 += GetAttackerBenefitingBuffs(CardType.AttackPower, (byte)AdditionalTypes.AttackPower.MeleeAttacksIncreased)[0];
                     staticBoostCategory3 += GetDefenderBenefitingBuffs(CardType.AttackPower, (byte)AdditionalTypes.AttackPower.MeleeAttacksDecreased)[0];
+                    staticBoostCategory4 += GetShellArmorEffectValue(ShellArmorEffectType.MagicDefence);
                     break;
             }
 
@@ -337,6 +346,14 @@ namespace OpenNos.GameObject
                     defender.FireResistance += GetAttackerBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.AllDecreased)[0];
                     defender.FireResistance += GetDefenderBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.FireIncreased)[0];
                     defender.FireResistance += GetAttackerBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.FireDecreased)[0];
+                    if ((attacker.EntityType == EntityType.Player || attacker.EntityType == EntityType.Mate) && (defender.EntityType == EntityType.Player || defender.EntityType == EntityType.Mate))
+                    {
+                        defender.FireResistance -= GetShellWeaponEffectValue(ShellWeaponEffectType.ReducesEnemyFireResistanceInPVP);
+                        defender.FireResistance -= GetShellWeaponEffectValue(ShellWeaponEffectType.ReducesEnemyAllResistancesInPVP);
+                    }
+                    defender.FireResistance += GetShellArmorEffectValue(ShellArmorEffectType.IncreasedFireResistence);
+                    defender.FireResistance += GetShellArmorEffectValue(ShellArmorEffectType.IncreasedAllResistence);
+                    staticBoostCategory5 += GetShellWeaponEffectValue(ShellWeaponEffectType.IncreasedFireProperties);
                     boostCategory5 += GetAttackerBenefitingBuffs(CardType.IncreaseDamage, (byte)AdditionalTypes.IncreaseDamage.FireIncreased)[0] / 100D;
                     staticBoostCategory5 += GetAttackerBenefitingBuffs(CardType.Element, (byte)AdditionalTypes.Element.FireIncreased)[0];
                     staticBoostCategory5 += GetDefenderBenefitingBuffs(CardType.Element, (byte)AdditionalTypes.Element.FireDecreased)[0];
@@ -351,6 +368,14 @@ namespace OpenNos.GameObject
                     defender.WaterResistance += GetAttackerBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.AllDecreased)[0];
                     defender.WaterResistance += GetDefenderBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.WaterIncreased)[0];
                     defender.WaterResistance += GetAttackerBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.WaterDecreased)[0];
+                    if ((attacker.EntityType == EntityType.Player || attacker.EntityType == EntityType.Mate) && (defender.EntityType == EntityType.Player || defender.EntityType == EntityType.Mate))
+                    {
+                        defender.FireResistance -= GetShellWeaponEffectValue(ShellWeaponEffectType.ReducesEnemyWaterResistanceInPVP);
+                        defender.FireResistance -= GetShellWeaponEffectValue(ShellWeaponEffectType.ReducesEnemyAllResistancesInPVP);
+                    }
+                    defender.FireResistance += GetShellArmorEffectValue(ShellArmorEffectType.IncreasedWaterResistence);
+                    defender.FireResistance += GetShellArmorEffectValue(ShellArmorEffectType.IncreasedAllResistence);
+                    staticBoostCategory5 += GetShellWeaponEffectValue(ShellWeaponEffectType.IncreasedWaterProperties);
                     boostCategory5 += GetAttackerBenefitingBuffs(CardType.IncreaseDamage, (byte)AdditionalTypes.IncreaseDamage.WaterIncreased)[0] / 100D;
                     staticBoostCategory5 += GetAttackerBenefitingBuffs(CardType.Element, (byte)AdditionalTypes.Element.WaterIncreased)[0];
                     staticBoostCategory5 += GetDefenderBenefitingBuffs(CardType.Element, (byte)AdditionalTypes.Element.WaterDecreased)[0];
@@ -365,6 +390,14 @@ namespace OpenNos.GameObject
                     defender.LightResistance += GetAttackerBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.AllDecreased)[0];
                     defender.LightResistance += GetDefenderBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.LightIncreased)[0];
                     defender.LightResistance += GetAttackerBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.LightDecreased)[0];
+                    if ((attacker.EntityType == EntityType.Player || attacker.EntityType == EntityType.Mate) && (defender.EntityType == EntityType.Player || defender.EntityType == EntityType.Mate))
+                    {
+                        defender.FireResistance -= GetShellWeaponEffectValue(ShellWeaponEffectType.ReducesEnemyLightResistanceInPVP);
+                        defender.FireResistance -= GetShellWeaponEffectValue(ShellWeaponEffectType.ReducesEnemyAllResistancesInPVP);
+                    }
+                    defender.FireResistance += GetShellArmorEffectValue(ShellArmorEffectType.IncreasedLightResistence);
+                    defender.FireResistance += GetShellArmorEffectValue(ShellArmorEffectType.IncreasedAllResistence);
+                    staticBoostCategory5 += GetShellWeaponEffectValue(ShellWeaponEffectType.IncreasedLightProperties);
                     boostCategory5 += GetAttackerBenefitingBuffs(CardType.IncreaseDamage, (byte)AdditionalTypes.IncreaseDamage.LightIncreased)[0] / 100D;
                     staticBoostCategory5 += GetAttackerBenefitingBuffs(CardType.Element, (byte)AdditionalTypes.Element.LightIncreased)[0];
                     staticBoostCategory5 += GetDefenderBenefitingBuffs(CardType.Element, (byte)AdditionalTypes.Element.Light5Decreased)[0];
@@ -379,6 +412,14 @@ namespace OpenNos.GameObject
                     defender.ShadowResistance += GetAttackerBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.AllDecreased)[0];
                     defender.ShadowResistance += GetDefenderBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.DarkIncreased)[0];
                     defender.ShadowResistance += GetAttackerBenefitingBuffs(CardType.EnemyElementResistance, (byte)AdditionalTypes.EnemyElementResistance.DarkDecreased)[0];
+                    if ((attacker.EntityType == EntityType.Player || attacker.EntityType == EntityType.Mate) && (defender.EntityType == EntityType.Player || defender.EntityType == EntityType.Mate))
+                    {
+                        defender.FireResistance -= GetShellWeaponEffectValue(ShellWeaponEffectType.ReducesEnemyDarkResistanceInPVP);
+                        defender.FireResistance -= GetShellWeaponEffectValue(ShellWeaponEffectType.ReducesEnemyAllResistancesInPVP);
+                    }
+                    defender.FireResistance += GetShellArmorEffectValue(ShellArmorEffectType.IncreasedDarkResistence);
+                    defender.FireResistance += GetShellArmorEffectValue(ShellArmorEffectType.IncreasedAllResistence);
+                    staticBoostCategory5 += GetShellWeaponEffectValue(ShellWeaponEffectType.IncreasedDarkProperties);
                     boostCategory5 += GetAttackerBenefitingBuffs(CardType.IncreaseDamage, (byte)AdditionalTypes.IncreaseDamage.DarkIncreased)[0] / 100D;
                     staticBoostCategory5 += GetAttackerBenefitingBuffs(CardType.Element, (byte)AdditionalTypes.Element.DarkIncreased)[0];
                     staticBoostCategory5 += GetDefenderBenefitingBuffs(CardType.Element, (byte)AdditionalTypes.Element.DarkDecreased)[0];
@@ -430,6 +471,25 @@ namespace OpenNos.GameObject
             {
                 int hitrate = attacker.Hitrate + attacker.Morale;
                 double multiplier = defender.Dodge / (hitrate > 1 ? hitrate : 1);
+
+                if ((attacker.EntityType == EntityType.Player || attacker.EntityType == EntityType.Mate) && (defender.EntityType == EntityType.Player || defender.EntityType == EntityType.Mate))
+                {
+                    switch (attacker.AttackType)
+                    {
+                        case AttackType.Melee:
+                            multiplier += GetShellArmorEffectValue(ShellArmorEffectType.CloseDefenceDodgeInPVP) / 100D;
+                            break;
+                        case AttackType.Range:
+                            multiplier += GetShellArmorEffectValue(ShellArmorEffectType.DistanceDefenceDodgeInPVP) / 100D;
+                            break;
+                        case AttackType.Magical:
+                            multiplier += GetShellArmorEffectValue(ShellArmorEffectType.IgnoreMagicDamage) / 100D;
+                            break;
+                    }
+
+                    multiplier += GetShellArmorEffectValue(ShellArmorEffectType.DodgeAllDamage) / 100D;
+                }
+
                 if (multiplier > 5)
                 {
                     multiplier = 5;
@@ -617,6 +677,10 @@ namespace OpenNos.GameObject
             #endregion
 
             #region Crit Damage
+
+            attacker.CritChance += GetShellWeaponEffectValue(ShellWeaponEffectType.CriticalChance);
+            attacker.CritChance -= GetShellArmorEffectValue(ShellArmorEffectType.ReducedCritChanceRecive);
+            attacker.CritRate += GetShellWeaponEffectValue(ShellWeaponEffectType.CriticalDamage);
 
             if (ServerManager.Instance.RandomNumber() < attacker.CritChance && attacker.AttackType != AttackType.Magical)
             {
