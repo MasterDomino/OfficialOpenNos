@@ -252,20 +252,17 @@ namespace OpenNos.GameObject
                         if (npcMonsterSkill != null)
                         {
                             npcMonsterSkill.LastSkillUse = DateTime.Now;
-                            MapInstance.Broadcast($"ct 2 {MapNpcId} 3 {Target} {npcMonsterSkill.Skill.CastAnimation} {npcMonsterSkill.Skill.CastEffect} {npcMonsterSkill.Skill.SkillVNum}");
+                            MapInstance.Broadcast(StaticPacketHelper.CastOnTarget(2, MapNpcId, 3, Target, npcMonsterSkill.Skill.CastAnimation, npcMonsterSkill.Skill.CastEffect, npcMonsterSkill.Skill.SkillVNum));
                         }
 
                         if (npcMonsterSkill != null && npcMonsterSkill.Skill.CastEffect != 0)
                         {
                             MapInstance.Broadcast(GenerateEff(Effect));
                         }
-
                         monster.CurrentHp -= damage;
-
                         MapInstance.Broadcast(npcMonsterSkill != null
-                            ? $"su 2 {MapNpcId} 3 {Target} {npcMonsterSkill.SkillVNum} {npcMonsterSkill.Skill.Cooldown} {npcMonsterSkill.Skill.AttackAnimation} {npcMonsterSkill.Skill.Effect} 0 0 {(monster.CurrentHp > 0 ? 1 : 0)} {(int)((double)monster.CurrentHp / monster.Monster.MaxHP * 100)} {damage} {hitmode} 0"
-                            : $"su 2 {MapNpcId} 3 {Target} 0 {Npc.BasicCooldown} 11 {Npc.BasicSkill} 0 0 {(monster.CurrentHp > 0 ? 1 : 0)} {(int)((double)monster.CurrentHp / monster.Monster.MaxHP * 100)} {damage} {hitmode} 0");
-
+                            ? StaticPacketHelper.SkillUsed(2, MapNpcId, 3, Target, npcMonsterSkill.SkillVNum, npcMonsterSkill.Skill.Cooldown, npcMonsterSkill.Skill.AttackAnimation, npcMonsterSkill.Skill.Effect, 0, 0, monster.CurrentHp > 0, (int)((float)monster.CurrentHp / (float)monster.Monster.MaxHP * 100), damage, hitmode, 0)
+                            : StaticPacketHelper.SkillUsed(2, MapNpcId, 3, Target, 0, Npc.BasicCooldown, 11, Npc.BasicSkill, 0, 0, monster.CurrentHp > 0, (int)((float)monster.CurrentHp / (float)monster.Monster.MaxHP * 100), damage, hitmode, 0));
                         LastEffect = DateTime.Now;
                         if (monster.CurrentHp < 1)
                         {

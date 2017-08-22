@@ -34,6 +34,11 @@ namespace OpenNos.GameObject.Helpers
             return $"cancel {type} {callerId}";
         }
 
+        public static string CastOnTarget(byte type, long callerId, byte secondaryType, long targetId, short castAnimation, short castEffect, short skillVNum)
+        {
+            return $"ct {type} {callerId} {secondaryType} {targetId} {castAnimation} {castEffect} {skillVNum}";
+        }
+
         public static string SkillUsed(byte type, long callerId, byte secondaryType, long targetId, short skillVNum, short cooldown, short attackAnimation, short skillEffect, short x, short y, bool isAlive, int health, int damage, int hitmode, byte skillType)
         {
             return $"su {type} {callerId} {secondaryType} {targetId} {skillVNum} {cooldown} {attackAnimation} {skillEffect} {x} {y} {(isAlive ? 1 : 0)} {health} {damage} {hitmode} {skillType}";

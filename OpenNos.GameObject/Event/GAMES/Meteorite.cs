@@ -142,7 +142,7 @@ namespace OpenNos.GameObject.Event.GAMES
                     {
                         if (_map != null)
                         {
-                            _map.Broadcast($"su 3 {circleId} 3 {circleId} 1220 220 0 4983 {cell.X} {cell.Y} 1 0 65535 0 0");
+                            _map.Broadcast(StaticPacketHelper.SkillUsed(3, circleId, 3, circleId, 1220, 220, 0, 4983, cell.X, cell.Y, true, 0, 65535, 0, 0));
                             foreach (Character character in _map.GetCharactersInRange(cell.X, cell.Y, 2))
                             {
                                 if (_map.Sessions.Count() < 4)

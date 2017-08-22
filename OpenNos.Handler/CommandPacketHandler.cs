@@ -1507,24 +1507,23 @@ namespace OpenNos.Handler
 
                 string name = killPacket.CharacterName;
                 long? id = ServerManager.Instance.GetProperty<long?>(name, nameof(Character.CharacterId));
-
-                if (id != null)
+                if (id.HasValue)
                 {
                     bool hasGodMode = ServerManager.Instance.GetProperty<bool>(name, nameof(Character.HasGodMode));
                     if (hasGodMode)
                     {
                         return;
                     }
-                    int? Hp = ServerManager.Instance.GetProperty<int?>((long)id, nameof(Character.Hp));
-                    if (Hp == 0)
+                    int? Hp = ServerManager.Instance.GetProperty<int?>(id.Value, nameof(Character.Hp));
+                    if (Hp == 0 || !Hp.HasValue)
                     {
                         return;
                     }
-                    ServerManager.Instance.SetProperty((long)id, nameof(Character.Hp), 0);
-                    ServerManager.Instance.SetProperty((long)id, nameof(Character.LastDefence), DateTime.Now);
-                    Session.CurrentMapInstance?.Broadcast($"su 1 {Session.Character.CharacterId} 1 {id} 1114 4 11 4260 0 0 0 0 60000 3 0");
+                    ServerManager.Instance.SetProperty(id.Value, nameof(Character.Hp), 0);
+                    ServerManager.Instance.SetProperty(id.Value, nameof(Character.LastDefence), DateTime.Now);
+                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.SkillUsed(1, Session.Character.CharacterId, 1, id.Value, 1114, 4, 11, 4260, 0, 0, false, 0, 60000, 3, 0));
                     Session.CurrentMapInstance?.Broadcast(null, ServerManager.Instance.GetUserMethod<string>((long)id, nameof(Character.GenerateStat)), ReceiverType.OnlySomeone, string.Empty, (long)id);
-                    ServerManager.Instance.AskRevive((long)id);
+                    ServerManager.Instance.AskRevive(id.Value);
                     Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
                 }
                 else
