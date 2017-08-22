@@ -1245,13 +1245,38 @@ namespace OpenNos.GameObject
                     {
                         case ShellEffectLevelType.CNormal:
                             {
-                                byte[] effects = new byte[] { };
+                                byte[] effects = new byte[]
+                                {
+                                    (byte)ShellWeaponEffectType.DamageImproved,
+                                    (byte)ShellWeaponEffectType.DamageIncreasedtothePlant,
+                                    (byte)ShellWeaponEffectType.DamageIncreasedtotheAnimal,
+                                    (byte)ShellWeaponEffectType.DamageIncreasedtotheEnemy,
+                                    (byte)ShellWeaponEffectType.CriticalChance,
+                                    (byte)ShellWeaponEffectType.CriticalDamage,
+                                    (byte)ShellWeaponEffectType.AntiMagicDisorder,
+                                    (byte)ShellWeaponEffectType.ReducedMPConsume,
+                                    (byte)ShellWeaponEffectType.Blackout,
+                                    (byte)ShellWeaponEffectType.MinorBleeding,
+                                };
                                 short[] minimum = new short[] { };
                                 short[] maximum = new short[] { };
 
                                 if (!IsWeapon)
                                 {
-                                    effects = new byte[] { };
+                                    effects = new byte[]
+                                    {
+                                        (byte)ShellArmorEffectType.CloseDefence,
+                                        (byte)ShellArmorEffectType.DistanceDefence,
+                                        (byte)ShellArmorEffectType.MagicDefence,
+                                        (byte)ShellArmorEffectType.ReducedCritChanceRecive,
+                                        (byte)ShellArmorEffectType.ReducedStun,
+                                        (byte)ShellArmorEffectType.ReducedMinorBleeding,
+                                        (byte)ShellArmorEffectType.ReducedShock,
+                                        (byte)ShellArmorEffectType.ReducedPoisonParalysis,
+                                        (byte)ShellArmorEffectType.ReducedBlind,
+                                        (byte)ShellArmorEffectType.RecovryHPOnRest,
+                                        (byte)ShellArmorEffectType.RecoveryMPOnRest
+                                    };
                                     minimum = new short[] { };
                                     maximum = new short[] { };
                                 }
@@ -1270,13 +1295,53 @@ namespace OpenNos.GameObject
                             }
                         case ShellEffectLevelType.BNormal:
                             {
-                                byte[] effects = new byte[] { };
+                                byte[] effects = new byte[]
+                                {
+                                    (byte)ShellWeaponEffectType.DamageImproved,
+                                    (byte)ShellWeaponEffectType.DamageIncreasedtothePlant,
+                                    (byte)ShellWeaponEffectType.DamageIncreasedtotheAnimal,
+                                    (byte)ShellWeaponEffectType.DamageIncreasedtotheEnemy,
+                                    (byte)ShellWeaponEffectType.DamageIncreasedtotheUnDead,
+                                    (byte)ShellWeaponEffectType.DamageincreasedtotheSmallMonster,
+                                    (byte)ShellWeaponEffectType.CriticalChance,
+                                    (byte)ShellWeaponEffectType.CriticalDamage,
+                                    (byte)ShellWeaponEffectType.ReducedMPConsume,
+                                    (byte)ShellWeaponEffectType.Freeze,
+                                    (byte)ShellWeaponEffectType.Bleeding,
+                                    (byte)ShellWeaponEffectType.IncreasedFireProperties,
+                                    (byte)ShellWeaponEffectType.IncreasedWaterProperties,
+                                    (byte)ShellWeaponEffectType.IncreasedLightProperties,
+                                    (byte)ShellWeaponEffectType.IncreasedDarkProperties,
+                                    (byte)ShellWeaponEffectType.SLDamage,
+                                    (byte)ShellWeaponEffectType.SLDefence,
+                                    (byte)ShellWeaponEffectType.SLElement,
+                                    (byte)ShellWeaponEffectType.SLHP,
+                                    (byte)ShellWeaponEffectType.HPRecoveryForKilling,
+                                    (byte)ShellWeaponEffectType.MPRecoveryForKilling
+                                };
                                 short[] minimum = new short[] { };
                                 short[] maximum = new short[] { };
 
                                 if (!IsWeapon)
                                 {
-                                    effects = new byte[] { };
+                                    effects = new byte[]
+                                    {
+                                        (byte)ShellArmorEffectType.CloseDefence,
+                                        (byte)ShellArmorEffectType.DistanceDefence,
+                                        (byte)ShellArmorEffectType.MagicDefence,
+                                        (byte)ShellArmorEffectType.ReducedCritChanceRecive,
+                                        (byte)ShellArmorEffectType.ReducedBlind,
+                                        (byte)ShellArmorEffectType.RecovryHPOnRest,
+                                        (byte)ShellArmorEffectType.RecoveryMPOnRest,
+                                        (byte)ShellArmorEffectType.ReducedBleedingAndMinorBleeding,
+                                        (byte)ShellArmorEffectType.ReducedArmorDeBuff,
+                                        (byte)ShellArmorEffectType.ReducedFreeze,
+                                        (byte)ShellArmorEffectType.ReducedParalysis,
+                                        (byte)ShellArmorEffectType.IncreasedFireResistence,
+                                        (byte)ShellArmorEffectType.IncreasedWaterResistence,
+                                        (byte)ShellArmorEffectType.IncreasedLightResistence,
+                                        (byte)ShellArmorEffectType.IncreasedDarkResistence
+                                    };
                                     minimum = new short[] { };
                                     maximum = new short[] { };
                                 }
@@ -1295,13 +1360,44 @@ namespace OpenNos.GameObject
                             }
                         case ShellEffectLevelType.ANormal:
                             {
-                                byte[] effects = new byte[] { };
+                                byte[] effects = new byte[]
+                                {
+                                    (byte)ShellWeaponEffectType.DamageImproved,
+                                    (byte)ShellWeaponEffectType.DamageIncreasedtotheUnDead,
+                                    (byte)ShellWeaponEffectType.DamageincreasedtotheSmallMonster,
+                                    (byte)ShellWeaponEffectType.HeavyBleeding,
+                                    (byte)ShellWeaponEffectType.IncreasedFireProperties,
+                                    (byte)ShellWeaponEffectType.IncreasedWaterProperties,
+                                    (byte)ShellWeaponEffectType.IncreasedLightProperties,
+                                    (byte)ShellWeaponEffectType.IncreasedDarkProperties,
+                                    (byte)ShellWeaponEffectType.SLDamage,
+                                    (byte)ShellWeaponEffectType.SLDefence,
+                                    (byte)ShellWeaponEffectType.SLElement,
+                                    (byte)ShellWeaponEffectType.SLHP,
+                                    (byte)ShellWeaponEffectType.HPRecoveryForKilling,
+                                    (byte)ShellWeaponEffectType.MPRecoveryForKilling
+                                };
                                 short[] minimum = new short[] { };
                                 short[] maximum = new short[] { };
 
                                 if (!IsWeapon)
                                 {
-                                    effects = new byte[] { };
+                                    effects = new byte[]
+                                    {
+                                        (byte)ShellArmorEffectType.CloseDefence,
+                                        (byte)ShellArmorEffectType.DistanceDefence,
+                                        (byte)ShellArmorEffectType.MagicDefence,
+                                        (byte)ShellArmorEffectType.ReducedFreeze,
+                                        (byte)ShellArmorEffectType.ReducedParalysis,
+                                        (byte)ShellArmorEffectType.ReducedAllStun,
+                                        (byte)ShellArmorEffectType.ReducedAllBleedingType,
+                                        (byte)ShellArmorEffectType.RevoryHP,
+                                        (byte)ShellArmorEffectType.RecoveryMP,
+                                        (byte)ShellArmorEffectType.IncreasedFireResistence,
+                                        (byte)ShellArmorEffectType.IncreasedWaterResistence,
+                                        (byte)ShellArmorEffectType.IncreasedLightResistence,
+                                        (byte)ShellArmorEffectType.IncreasedDarkResistence
+                                    };
                                     minimum = new short[] { };
                                     maximum = new short[] { };
                                 }
@@ -1320,13 +1416,25 @@ namespace OpenNos.GameObject
                             }
                         case ShellEffectLevelType.SNormal:
                             {
-                                byte[] effects = new byte[] { };
+                                byte[] effects = new byte[]
+                                {
+                                    (byte)ShellWeaponEffectType.PercentageTotalDamage,
+                                    (byte)ShellWeaponEffectType.DamageincreasedtotheBigMonster,
+                                    (byte)ShellWeaponEffectType.IncreasedElementalProperties,
+                                    (byte)ShellWeaponEffectType.SLGlobal,
+                                };
                                 short[] minimum = new short[] { };
                                 short[] maximum = new short[] { };
 
                                 if (!IsWeapon)
                                 {
-                                    effects = new byte[] { };
+                                    effects = new byte[]
+                                    {
+                                        (byte)ShellArmorEffectType.PercentageTotalDefence,
+                                        (byte)ShellArmorEffectType.ReducedAllNegativeEffect,
+                                        (byte)ShellArmorEffectType.IncreasedAllResistence,
+                                        (byte)ShellArmorEffectType.RecoveryHPInDefence
+                                    };
                                     minimum = new short[] { };
                                     maximum = new short[] { };
                                 }
@@ -1345,13 +1453,22 @@ namespace OpenNos.GameObject
                             }
                         case ShellEffectLevelType.CBonus:
                             {
-                                byte[] effects = new byte[] { };
+                                byte[] effects = new byte[]
+                                {
+                                    (byte)ShellWeaponEffectType.GainMoreGold,
+                                    (byte)ShellWeaponEffectType.GainMoreXP,
+                                    (byte)ShellWeaponEffectType.GainMoreCXP
+                                };
                                 short[] minimum = new short[] { };
                                 short[] maximum = new short[] { };
 
                                 if (!IsWeapon)
                                 {
-                                    effects = new byte[] { };
+                                    effects = new byte[]
+                                    {
+                                        (byte)ShellArmorEffectType.ReducedPrideLoss,
+                                        (byte)ShellArmorEffectType.ReducedProductionPointConsumed
+                                    };
                                     minimum = new short[] { };
                                     maximum = new short[] { };
                                 }
@@ -1370,13 +1487,23 @@ namespace OpenNos.GameObject
                             }
                         case ShellEffectLevelType.BBonus:
                             {
-                                byte[] effects = new byte[] { };
+                                byte[] effects = new byte[]
+                                {
+                                    (byte)ShellWeaponEffectType.GainMoreGold,
+                                    (byte)ShellWeaponEffectType.GainMoreXP,
+                                    (byte)ShellWeaponEffectType.GainMoreCXP
+                                };
                                 short[] minimum = new short[] { };
                                 short[] maximum = new short[] { };
 
                                 if (!IsWeapon)
                                 {
-                                    effects = new byte[] { };
+                                    effects = new byte[]
+                                    {
+                                        (byte)ShellArmorEffectType.ReducedProductionPointConsumed,
+                                        (byte)ShellArmorEffectType.IncreasedProductionPossibility,
+                                        (byte)ShellArmorEffectType.IncreasedRecoveryItemSpeed
+                                    };
                                     minimum = new short[] { };
                                     maximum = new short[] { };
                                 }
@@ -1395,13 +1522,23 @@ namespace OpenNos.GameObject
                             }
                         case ShellEffectLevelType.ABonus:
                             {
-                                byte[] effects = new byte[] { };
+                                byte[] effects = new byte[]
+                                {
+                                    (byte)ShellWeaponEffectType.GainMoreGold,
+                                    (byte)ShellWeaponEffectType.GainMoreXP,
+                                    (byte)ShellWeaponEffectType.GainMoreCXP
+                                };
                                 short[] minimum = new short[] { };
                                 short[] maximum = new short[] { };
 
                                 if (!IsWeapon)
                                 {
-                                    effects = new byte[] { };
+                                    effects = new byte[]
+                                    {
+                                        (byte)ShellArmorEffectType.ReducedProductionPointConsumed,
+                                        (byte)ShellArmorEffectType.IncreasedProductionPossibility,
+                                        (byte)ShellArmorEffectType.IncreasedRecoveryItemSpeed
+                                    };
                                     minimum = new short[] { };
                                     maximum = new short[] { };
                                 }
@@ -1420,13 +1557,23 @@ namespace OpenNos.GameObject
                             }
                         case ShellEffectLevelType.SBonus:
                             {
-                                byte[] effects = new byte[] { };
+                                byte[] effects = new byte[]
+                                {
+                                    (byte)ShellWeaponEffectType.GainMoreGold,
+                                    (byte)ShellWeaponEffectType.GainMoreXP,
+                                    (byte)ShellWeaponEffectType.GainMoreCXP
+                                };
                                 short[] minimum = new short[] { };
                                 short[] maximum = new short[] { };
 
                                 if (!IsWeapon)
                                 {
-                                    effects = new byte[] { };
+                                    effects = new byte[]
+                                    {
+                                        (byte)ShellArmorEffectType.ReducedProductionPointConsumed,
+                                        (byte)ShellArmorEffectType.IncreasedProductionPossibility,
+                                        (byte)ShellArmorEffectType.IncreasedRecoveryItemSpeed
+                                    };
                                     minimum = new short[] { };
                                     maximum = new short[] { };
                                 }
@@ -1445,13 +1592,25 @@ namespace OpenNos.GameObject
                             }
                         case ShellEffectLevelType.CPVP:
                             {
-                                byte[] effects = new byte[] { };
+                                byte[] effects = new byte[]
+                                {
+                                    (byte)ShellWeaponEffectType.PercentageDamageInPVP,
+                                    (byte)ShellWeaponEffectType.ReducesPercentageEnemyDefenceInPVP,
+                                    (byte)ShellWeaponEffectType.PVPDamageAt15Percent,
+                                    (byte)ShellWeaponEffectType.ReducesEnemyMPInPVP,
+                                };
                                 short[] minimum = new short[] { };
                                 short[] maximum = new short[] { };
 
                                 if (!IsWeapon)
                                 {
-                                    effects = new byte[] { };
+                                    effects = new byte[]
+                                    {
+                                        (byte)ShellArmorEffectType.PercentageAllPVPDefence,
+                                        (byte)ShellArmorEffectType.CloseDefenceDodgeInPVP,
+                                        (byte)ShellArmorEffectType.DistanceDefenceDodgeInPVP,
+                                        (byte)ShellArmorEffectType.IgnoreMagicDamage
+                                    };
                                     minimum = new short[] { };
                                     maximum = new short[] { };
                                 }
@@ -1470,13 +1629,28 @@ namespace OpenNos.GameObject
                             }
                         case ShellEffectLevelType.BPVP:
                             {
-                                byte[] effects = new byte[] { };
+                                byte[] effects = new byte[]
+                                {
+                                    (byte)ShellWeaponEffectType.PercentageDamageInPVP,
+                                    (byte)ShellWeaponEffectType.ReducesPercentageEnemyDefenceInPVP,
+                                    (byte)ShellWeaponEffectType.ReducesEnemyMPInPVP,
+                                    (byte)ShellWeaponEffectType.ReducesEnemyFireResistanceInPVP,
+                                    (byte)ShellWeaponEffectType.ReducesEnemyWaterResistanceInPVP,
+                                    (byte)ShellWeaponEffectType.ReducesEnemyLightResistanceInPVP,
+                                    (byte)ShellWeaponEffectType.ReducesEnemyDarkResistanceInPVP
+                                };
                                 short[] minimum = new short[] { };
                                 short[] maximum = new short[] { };
 
                                 if (!IsWeapon)
                                 {
-                                    effects = new byte[] { };
+                                    effects = new byte[]
+                                    {
+                                        (byte)ShellArmorEffectType.PercentageAllPVPDefence,
+                                        (byte)ShellArmorEffectType.CloseDefenceDodgeInPVP,
+                                        (byte)ShellArmorEffectType.DistanceDefenceDodgeInPVP,
+                                        (byte)ShellArmorEffectType.IgnoreMagicDamage
+                                    };
                                     minimum = new short[] { };
                                     maximum = new short[] { };
                                 }
@@ -1495,13 +1669,29 @@ namespace OpenNos.GameObject
                             }
                         case ShellEffectLevelType.APVP:
                             {
-                                byte[] effects = new byte[] { };
+                                byte[] effects = new byte[]
+                                {
+                                    (byte)ShellWeaponEffectType.PercentageDamageInPVP,
+                                    (byte)ShellWeaponEffectType.ReducesPercentageEnemyDefenceInPVP,
+                                    (byte)ShellWeaponEffectType.ReducesEnemyMPInPVP,
+                                    (byte)ShellWeaponEffectType.ReducesEnemyFireResistanceInPVP,
+                                    (byte)ShellWeaponEffectType.ReducesEnemyWaterResistanceInPVP,
+                                    (byte)ShellWeaponEffectType.ReducesEnemyLightResistanceInPVP,
+                                    (byte)ShellWeaponEffectType.ReducesEnemyDarkResistanceInPVP
+                                };
                                 short[] minimum = new short[] { };
                                 short[] maximum = new short[] { };
 
                                 if (!IsWeapon)
                                 {
-                                    effects = new byte[] { };
+                                    effects = new byte[]
+                                    {
+                                        (byte)ShellArmorEffectType.PercentageAllPVPDefence,
+                                        (byte)ShellArmorEffectType.CloseDefenceDodgeInPVP,
+                                        (byte)ShellArmorEffectType.DistanceDefenceDodgeInPVP,
+                                        (byte)ShellArmorEffectType.IgnoreMagicDamage,
+                                        (byte)ShellArmorEffectType.ProtectMPInPVP
+                                    };
                                     minimum = new short[] { };
                                     maximum = new short[] { };
                                 }
@@ -1520,13 +1710,22 @@ namespace OpenNos.GameObject
                             }
                         case ShellEffectLevelType.SPVP:
                             {
-                                byte[] effects = new byte[] { };
+                                byte[] effects = new byte[]
+                                {
+                                    (byte)ShellWeaponEffectType.PercentageDamageInPVP,
+                                    (byte)ShellWeaponEffectType.ReducesPercentageEnemyDefenceInPVP,
+                                    (byte)ShellWeaponEffectType.ReducesEnemyAllResistancesInPVP
+                                };
                                 short[] minimum = new short[] { };
                                 short[] maximum = new short[] { };
 
                                 if (!IsWeapon)
                                 {
-                                    effects = new byte[] { };
+                                    effects = new byte[]
+                                    {
+                                        (byte)ShellArmorEffectType.PercentageAllPVPDefence,
+                                        (byte)ShellArmorEffectType.DodgeAllDamage
+                                    };
                                     minimum = new short[] { };
                                     maximum = new short[] { };
                                 }

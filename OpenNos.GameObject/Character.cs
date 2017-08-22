@@ -473,6 +473,28 @@ namespace OpenNos.GameObject
             return false;
         }
 
+        public void AddPetWithSkill(Mate mate)
+        {
+            bool isUsingMate = false;
+            Mate teammate = Session.Character.Mates.Where(s => s.IsTeamMember).FirstOrDefault(s => s.MateType == mate.MateType);
+            if (teammate == null)
+            {
+                isUsingMate = true;
+                mate.IsTeamMember = true;
+            }
+            Session.SendPacket($"ctl 2 {mate.MateTransportId} 3");
+            Mates.Add(mate);
+            Session.SendPacket(UserInterfaceHelper.Instance.GeneratePClear());
+            Session.SendPackets(GenerateScP());
+            if (isUsingMate)
+            {
+                MapInstance.Broadcast(mate.GenerateIn());
+                Session.SendPacket(GeneratePinit());
+                Session.SendPacket(UserInterfaceHelper.Instance.GeneratePClear());
+                Session.SendPackets(GenerateScP());
+            }
+        }
+
         public void AddRelation(long characterId, CharacterRelationType Relation)
         {
             CharacterRelationDTO addRelation = new CharacterRelationDTO
@@ -531,6 +553,15 @@ namespace OpenNos.GameObject
 
             Session.SendPacket($"vb {bf.Card.CardId} 1 {bf.RemainingTime * 10}");
             Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), Name), 12));
+        }
+
+        public bool CanAddPet(Mate mate)
+        {
+            if (mate.MateType == MateType.Pet ? MaxMateCount > Mates.Count : 3 > Mates.Count(s => s.MateType == MateType.Partner))
+            {
+                return true;
+            }
+            return false;
         }
 
         public void ChangeClass(ClassType characterClass)
@@ -1885,7 +1916,7 @@ namespace OpenNos.GameObject
                     str += $" 1|{groupSessionForId.Character.CharacterId}|{i}|{groupSessionForId.Character.Level}|{groupSessionForId.Character.Name}|0|{(byte)groupSessionForId.Character.Gender}|{(byte)groupSessionForId.Character.Class}|{(groupSessionForId.Character.UseSp ? groupSessionForId.Character.Morph : 0)}|{groupSessionForId.Character.HeroLevel}";
                 }
             }
-            return $"pinit {i}{str}";
+            return $"pinit {i} {str}";
         }
 
         public string GeneratePlayerFlag(long pflag)
