@@ -13,9 +13,6 @@
  */
 
 using OpenNos.Domain;
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OpenNos.DAL.EF
 {
@@ -23,18 +20,17 @@ namespace OpenNos.DAL.EF
     {
         #region Properties
 
-        [Key]
-        public long ShellEffectGenerationId { get; set; }
-
-        public byte Rare { get; set; }
+        public byte Effect { get; set; }
 
         public ShellEffectLevelType EffectLevel { get; set; }
 
-        public byte Effect { get; set; }
+        public byte MaximumValue { get; set; }
 
         public byte MinimumValue { get; set; }
 
-        public byte MaximumValue { get; set; }
+        public byte Rare { get; set; }
+
+        public long ShellEffectGenerationId { get; set; }
 
         #endregion
     }

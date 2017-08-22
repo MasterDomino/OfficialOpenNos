@@ -1087,6 +1087,7 @@ namespace OpenNos.Import.Console
                     }
                     else if (currentLine.Length > 4 && currentLine[1] == "PETINFO")
                     {
+                        npc.Catch = byte.Parse(currentLine[1]) > 0;
                         if (npc.VNumRequired == 0 && (unknownData == -2147481593 || unknownData == -2147481599 || unknownData == -1610610681))
                         {
                             npc.VNumRequired = short.Parse(currentLine[2]);

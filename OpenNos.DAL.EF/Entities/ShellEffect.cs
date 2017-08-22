@@ -14,8 +14,6 @@
 
 using OpenNos.Domain;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace OpenNos.DAL.EF
 {
@@ -23,18 +21,17 @@ namespace OpenNos.DAL.EF
     {
         #region Properties
 
-        [Key]
-        public long ShellEffectId { get; set; }
+        public byte Effect { get; set; }
 
         public ShellEffectLevelType EffectLevel { get; set; }
 
-        public byte Effect { get; set; }
-
-        public short Value { get; set; }
+        public virtual ItemInstance ItemInstance { get; set; }
 
         public Guid ItemInstanceId { get; set; }
 
-        public virtual ItemInstance ItemInstance { get; set; }
+        public long ShellEffectId { get; set; }
+
+        public short Value { get; set; }
 
         #endregion
     }

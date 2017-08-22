@@ -1,17 +1,16 @@
 ﻿using OpenNos.Data;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OpenNos.DAL.Interface
 {
     public interface IShellEffectGenerationDAO
     {
-        IEnumerable<ShellEffectGenerationDTO> LoadAll();
+        #region Methods
 
         ShellEffectGenerationDTO InsertOrUpdate(ShellEffectGenerationDTO shelleffect);
 
+        IEnumerable<ShellEffectGenerationDTO> LoadAll();
+
+        #endregion
     }
 }

@@ -136,16 +136,16 @@ namespace OpenNos.Handler
         /// <summary>
         /// $AddShellEffect Command
         /// </summary>
-        /// <param name="addPetPacket"></param>
-        public void AddShellEffect(AddShellEffectPacket asePacket)
+        /// <param name="addShellEffectPacket"></param>
+        public void AddShellEffect(AddShellEffectPacket addShellEffectPacket)
         {
-            if (asePacket != null)
+            if (addShellEffectPacket != null)
             {
-                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[AddShellEffect]Slot: {asePacket.Slot} EffectLevel: {asePacket.EffectLevel} Effect: {asePacket.Effect} Value: {asePacket.Value}");
+                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[AddShellEffect]Slot: {addShellEffectPacket.Slot} EffectLevel: {addShellEffectPacket.EffectLevel} Effect: {addShellEffectPacket.Effect} Value: {addShellEffectPacket.Value}");
                 try
                 {
-                    ItemInstance instance = Session.Character.Inventory.LoadBySlotAndType(asePacket.Slot, InventoryType.Equipment);
-                    instance.ShellEffects.Add(new ShellEffectDTO() { EffectLevel = (ShellEffectLevelType)asePacket.EffectLevel, Effect = asePacket.Effect, Value = asePacket.Value, ItemInstanceId = instance.Id });
+                    ItemInstance instance = Session.Character.Inventory.LoadBySlotAndType(addShellEffectPacket.Slot, InventoryType.Equipment);
+                    instance.ShellEffects.Add(new ShellEffectDTO() { EffectLevel = (ShellEffectLevelType)addShellEffectPacket.EffectLevel, Effect = addShellEffectPacket.Effect, Value = addShellEffectPacket.Value, ItemInstanceId = instance.Id });
                 }
                 catch
                 {

@@ -85,9 +85,17 @@ namespace OpenNos.Import.Console
                         folder += str + " ";
                     }
                 }
-                ImportFactory factory = new ImportFactory(folder);
-                factory.ImportPackets();
+                ImportFactory factory = null;
+                if (!string.IsNullOrWhiteSpace(folder))
+                {
+                    factory = new ImportFactory(folder);
+                }
+                else
+                {
+                    factory = new ImportFactory(assembly.Location + "\\parser");
+                }
 
+                factory.ImportPackets();
                 if (key.KeyChar != 'n')
                 {
                     factory.ImportMaps();

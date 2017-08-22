@@ -34,6 +34,8 @@ namespace OpenNos.Data
 
         public short BasicSkill { get; set; }
 
+        public bool Catch { get; set; }
+
         public short CloseDefence { get; set; }
 
         public short Concentrate { get; set; }
