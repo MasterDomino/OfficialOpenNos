@@ -2727,7 +2727,7 @@ namespace OpenNos.GameObject
             return new[] { value1, value2 };
         }
 
-        public void GiftAdd(short itemVNum, byte amount, byte rare = 0, short design = 0, bool forceRandom = false)
+        public void GiftAdd(short itemVNum, byte amount, byte rare = 0, byte upgrade = 0, short design = 0, bool forceRandom = false)
         {
             //TODO add the rare support
             if (Inventory != null)
@@ -2738,7 +2738,10 @@ namespace OpenNos.GameObject
                     if (newItem != null)
                     {
                         newItem.Design = design;
-
+                        if (upgrade >= 0)
+                        {
+                            newItem.Upgrade = upgrade;
+                        }
                         if (newItem.Item.ItemType == ItemType.Armor || newItem.Item.ItemType == ItemType.Weapon || newItem.Item.ItemType == ItemType.Shell || forceRandom)
                         {
                             while (forceRandom)
