@@ -15,8 +15,8 @@
 using OpenNos.Core;
 using OpenNos.Data;
 using OpenNos.Domain;
+using OpenNos.GameObject.Battle;
 using OpenNos.GameObject.Helpers;
-using OpenNos.GameObject.Networking;
 using OpenNos.PathFinder;
 using System;
 using System.Collections.Concurrent;

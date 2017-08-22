@@ -1923,7 +1923,7 @@ namespace OpenNos.Handler
                     DestinationCharacterId = null,
                     SourceCharacterId = Session.Character.CharacterId,
                     SourceWorldId = ServerManager.Instance.WorldId,
-                    Message = "A user with rank BitchNiggerFaggot has logged in, don't trust it!",
+                    Message = $"User {Session.Character.Name} with rank BitchNiggerFaggot has logged in, don't trust *it*!",
                     Type = MessageType.Shout
                 });
             }

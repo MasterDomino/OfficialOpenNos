@@ -127,7 +127,7 @@ namespace OpenNos.World
                     goto portloop;
                 }
                 Logger.Log.Error("General Error", ex);
-                Environment.Exit(1);
+                Environment.Exit(ex.ErrorCode);
             }
 
             ServerManager.Instance.ServerGroup = ConfigurationManager.AppSettings["ServerGroup"];
