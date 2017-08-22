@@ -34,7 +34,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet />
+    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
@@ -42,6 +42,7 @@
     <OutputPath>bin\x64\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <PlatformTarget>x64</PlatformTarget>
@@ -49,19 +50,22 @@
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <CodeAnalysisRuleSet />
+    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
-    <CodeAnalysisRuleSet />
+    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoMapper, Version=6.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
@@ -115,7 +119,7 @@
     <Compile Include="Map\MapButton.cs" />
     <Compile Include="InstanceBag.cs" />
     <Compile Include="Map\MapInstancePortalHandler.cs" />
-    <Compile Include="Networking\MTListHitTarget.cs" />
+    <Compile Include="Battle\MTListHitTarget.cs" />
     <Compile Include="NpcToSummon.cs" />
     <Compile Include="MonsterToSummon.cs" />
     <Compile Include="Packets\ClientPackets\BlDelPacket.cs" />
@@ -258,7 +262,7 @@
     <Compile Include="Map\MapMonster.cs" />
     <Compile Include="MonsterMapItem.cs" />
     <Compile Include="Networking\BroadcastableBase.cs" />
-    <Compile Include="Networking\HitRequest.cs" />
+    <Compile Include="Battle\HitRequest.cs" />
     <Compile Include="Networking\SessionManager.cs" />
     <Compile Include="Networking\TransportFactory.cs" />
     <Compile Include="NpcMonsterSkill.cs" />

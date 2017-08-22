@@ -53,36 +53,36 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'FR|AnyCPU'">
     <OutputPath>bin\FR\</OutputPath>
-    <CodeAnalysisRuleSet />
-    <LangVersion>latest</LangVersion>
+    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DE|AnyCPU'">
     <OutputPath>bin\DE\</OutputPath>
-    <CodeAnalysisRuleSet />
-    <LangVersion>latest</LangVersion>
+    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'PL|AnyCPU'">
     <OutputPath>bin\PL\</OutputPath>
-    <CodeAnalysisRuleSet />
-    <LangVersion>latest</LangVersion>
+    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <OutputPath>bin\Release\</OutputPath>
     <Prefer32Bit>false</Prefer32Bit>
     <Optimize>true</Optimize>
     <DefineConstants>TRACE</DefineConstants>
-    <CodeAnalysisRuleSet />
-    <LangVersion>latest</LangVersion>
+    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'IT|AnyCPU'">
     <OutputPath>bin\IT\</OutputPath>
-    <CodeAnalysisRuleSet />
-    <LangVersion>latest</LangVersion>
+    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'TH|AnyCPU'">
     <OutputPath>bin\TH\</OutputPath>
-    <CodeAnalysisRuleSet />
-    <LangVersion>latest</LangVersion>
+    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>
@@ -96,11 +96,13 @@
     <OutputPath>bin\x64\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'FR|x64'">
     <PlatformTarget>x64</PlatformTarget>
     <OutputPath>bin\x64\FR\</OutputPath>
-    <CodeAnalysisRuleSet />
+    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DE|x64'">
     <PlatformTarget>x64</PlatformTarget>
@@ -110,7 +112,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'PL|x64'">
     <PlatformTarget>x64</PlatformTarget>
     <OutputPath>bin\x64\PL\</OutputPath>
-    <CodeAnalysisRuleSet />
+    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <PlatformTarget>x64</PlatformTarget>
@@ -118,54 +121,63 @@
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'IT|x64'">
     <PlatformTarget>x64</PlatformTarget>
     <OutputPath>bin\x64\IT\</OutputPath>
-    <CodeAnalysisRuleSet />
+    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'TH|x64'">
     <PlatformTarget>x64</PlatformTarget>
     <OutputPath>bin\x64\TH\</OutputPath>
-    <CodeAnalysisRuleSet />
+    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <CodeAnalysisRuleSet />
-  </PropertyGroup>
+    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+	<LangVersion>latest</LangVersion>
+	</PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'FR|x86'">
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\FR\</OutputPath>
-    <CodeAnalysisRuleSet />
+    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DE|x86'">
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\DE\</OutputPath>
-    <CodeAnalysisRuleSet />
+    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'PL|x86'">
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\PL\</OutputPath>
-    <CodeAnalysisRuleSet />
+    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
-    <CodeAnalysisRuleSet />
+    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'IT|x86'">
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\IT\</OutputPath>
-    <CodeAnalysisRuleSet />
+    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'TH|x86'">
     <PlatformTarget>x86</PlatformTarget>
-    <OutputPath>bin\x86\TH\</OutputPath>
-    <CodeAnalysisRuleSet />
+    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">

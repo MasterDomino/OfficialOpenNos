@@ -167,14 +167,16 @@ namespace OpenNos.GameObject.Helpers
                                 break;
                         }
                         break;
+
                     case EventActionType.REGISTERWAVE:
                         evt.MapInstance.WaveEvents.Add((EventWave)evt.Parameter);
                         break;
+
                     case EventActionType.SETAREAENTRY:
                         ZoneEvent even2 = (ZoneEvent)evt.Parameter;
                         evt.MapInstance.OnAreaEntryEvents.Add(even2);
-
                         break;
+
                     case EventActionType.REMOVEMONSTERLOCKER:
                         EventContainer evt2 = (EventContainer)evt.Parameter;
                         if (evt.MapInstance.InstanceBag.MonsterLocker.Current > 0)
@@ -252,6 +254,7 @@ namespace OpenNos.GameObject.Helpers
                         evt.MapInstance.InstanceBag.ButtonLocker.Current = Convert.ToByte(evt.Parameter);
                         evt.MapInstance.InstanceBag.ButtonLocker.Initial = Convert.ToByte(evt.Parameter);
                         break;
+
                     case EventActionType.SCRIPTEND:
                         switch (evt.MapInstance.MapInstanceType)
                         {
@@ -278,6 +281,7 @@ namespace OpenNos.GameObject.Helpers
                                     evt.MapInstance.Broadcast($"score  {evt.MapInstance.InstanceBag.EndState} {point} 27 47 18 {si.DrawItems.Count} {evt.MapInstance.InstanceBag.MonstersKilled} { si.NpcAmount - evt.MapInstance.InstanceBag.NpcsKilled} {evt.MapInstance.InstanceBag.RoomsVisited} {perfection} 1 1");
                                 }
                                 break;
+
                             case MapInstanceType.RaidInstance:
                                 evt.MapInstance.InstanceBag.EndState = (byte)evt.Parameter;
                                 client = evt.MapInstance.Sessions.FirstOrDefault();
@@ -297,7 +301,7 @@ namespace OpenNos.GameObject.Helpers
                                                 const byte rare = 0;
 
                                                 //TODO add random rarity for some object
-                                                sess.Character.GiftAdd(gift.VNum, gift.Amount, rare, gift.Design, gift.IsRandomRare);
+                                                sess.Character.GiftAdd(gift.VNum, gift.Amount, rare, 0, gift.Design, gift.IsRandomRare);
                                             }
                                         }
                                         Logger.LogEvent("RAID_SUCCESS", grp.Characters.ElementAt(0).Character.Name, $"RaidId: {grp.GroupId}");

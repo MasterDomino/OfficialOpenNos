@@ -14,7 +14,7 @@
 
 using OpenNos.Domain;
 
-namespace OpenNos.GameObject.Networking
+namespace OpenNos.GameObject.Battle
 {
     public class MTListHitTarget
     {

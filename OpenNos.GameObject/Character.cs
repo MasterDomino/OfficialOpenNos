@@ -16,8 +16,8 @@ using OpenNos.Core;
 using OpenNos.DAL;
 using OpenNos.Data;
 using OpenNos.Domain;
+using OpenNos.GameObject.Battle;
 using OpenNos.GameObject.Helpers;
-using OpenNos.GameObject.Networking;
 using OpenNos.GameObject.Packets.ServerPackets;
 using OpenNos.Master.Library.Client;
 using OpenNos.Master.Library.Data;
@@ -475,11 +475,11 @@ namespace OpenNos.GameObject
 
         public void AddPetWithSkill(Mate mate)
         {
-            bool isUsingMate = false;
+            bool isUsingMate = true;
             Mate teammate = Session.Character.Mates.Where(s => s.IsTeamMember).FirstOrDefault(s => s.MateType == mate.MateType);
             if (teammate == null)
             {
-                isUsingMate = true;
+                isUsingMate = false;
                 mate.IsTeamMember = true;
             }
             Session.SendPacket($"ctl 2 {mate.MateTransportId} 3");
@@ -555,7 +555,7 @@ namespace OpenNos.GameObject
             Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), Name), 12));
         }
 
-        public bool CanAddPet(Mate mate)
+        public bool CanAddMate(Mate mate)
         {
             return mate.MateType == MateType.Pet ? MaxMateCount > Mates.Count : 3 > Mates.Count(s => s.MateType == MateType.Partner);
         }
@@ -2727,7 +2727,7 @@ namespace OpenNos.GameObject
             return new[] { value1, value2 };
         }
 
-        public void GiftAdd(short itemVNum, byte amount, byte rare = 0, short design = 0, bool forceRandom = false)
+        public void GiftAdd(short itemVNum, byte amount, byte rare = 0, byte upgrade = 0, short design = 0, bool forceRandom = false)
         {
             //TODO add the rare support
             if (Inventory != null)
@@ -2738,7 +2738,10 @@ namespace OpenNos.GameObject
                     if (newItem != null)
                     {
                         newItem.Design = design;
-
+                        if (upgrade >= 0)
+                        {
+                            newItem.Upgrade = upgrade;
+                        }
                         if (newItem.Item.ItemType == ItemType.Armor || newItem.Item.ItemType == ItemType.Weapon || newItem.Item.ItemType == ItemType.Shell || forceRandom)
                         {
                             while (forceRandom)

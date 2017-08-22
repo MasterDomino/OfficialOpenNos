@@ -62,7 +62,7 @@ namespace OpenNos.Handler
             Logger.LogEvent("CREATECHARCTER", Session.GenerateIdentity(), $"[CreateCharacter]Name: {characterCreatePacket.Name} Slot: {characterCreatePacket.Slot} Gender: {characterCreatePacket.Gender} HairStyle: {characterCreatePacket.HairStyle} HairColor: {characterCreatePacket.HairColor}");
             if (characterCreatePacket.Slot <= 2 && DAOFactory.CharacterDAO.LoadBySlot(accountId, characterCreatePacket.Slot) == null && characterCreatePacket.Name.Length > 3 && characterCreatePacket.Name.Length < 15)
             {
-                Regex rg = new Regex(@"^[\u0021-\u007E\u00A1-\u00AC\u00AE-\u00FF\u4E00-\u9FA5\u0E01-\u0E3A\u0E3F-\u0E5B\u002E]*$");
+                Regex rg = new Regex(@"^[A-Za-z0-9_äÄöÖüÜß~*<>°+-.!_-Ð™¤£±†‡×ßø^\S]+$");
                 if (rg.Matches(characterCreatePacket.Name).Count == 1)
                 {
                     if (DAOFactory.CharacterDAO.LoadByName(characterCreatePacket.Name) == null)

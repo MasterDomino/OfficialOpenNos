@@ -92,7 +92,7 @@ namespace OpenNos.Import.Console
                 }
                 else
                 {
-                    factory = new ImportFactory(assembly.Location + "\\parser");
+                    factory = new ImportFactory(Directory.GetCurrentDirectory() + "\\parser");
                 }
 
                 factory.ImportPackets();

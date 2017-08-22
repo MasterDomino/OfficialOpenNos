@@ -16,7 +16,7 @@ using OpenNos.Data;
 using OpenNos.Domain;
 using System;
 
-namespace OpenNos.GameObject.Networking
+namespace OpenNos.GameObject.Battle
 {
     public class HitRequest
     {
