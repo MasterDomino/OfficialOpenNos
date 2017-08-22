@@ -14,6 +14,7 @@
 
 using OpenNos.Core;
 using OpenNos.Core.Handling;
+using OpenNos.Data;
 using OpenNos.Domain;
 using OpenNos.GameObject;
 using OpenNos.GameObject.Helpers;
@@ -1022,10 +1023,27 @@ namespace OpenNos.Handler
                 specialistInstance.SlElement += specialistElement;
                 specialistInstance.SlHP += specialistHealpoints;
 
-                int slElement = CharacterHelper.SlPoint(specialistInstance.SlElement, 2);
-                int slHp = CharacterHelper.SlPoint(specialistInstance.SlHP, 3);
-                int slDefence = CharacterHelper.SlPoint(specialistInstance.SlDefence, 1);
-                int slHit = CharacterHelper.SlPoint(specialistInstance.SlDamage, 0);
+                WearableInstance mainWeapon = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.MainWeapon, InventoryType.Wear);
+                WearableInstance secondaryWeapon = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.MainWeapon, InventoryType.Wear);
+                List<ShellEffectDTO> effects = new List<ShellEffectDTO>();
+                if (mainWeapon.ShellEffects != null)
+                {
+                    effects.AddRange(mainWeapon.ShellEffects);
+                }
+                if (secondaryWeapon.ShellEffects != null)
+                {
+                    effects.AddRange(secondaryWeapon.ShellEffects);
+                }
+
+                int GetShellWeaponEffectValue(ShellWeaponEffectType effectType)
+                {
+                    return effects?.Where(s => s.Effect == (byte)effectType)?.OrderByDescending(s => s.Value)?.FirstOrDefault()?.Value ?? 0;
+                }
+
+                int slElement = CharacterHelper.SlPoint(specialistInstance.SlElement, 2) + GetShellWeaponEffectValue(ShellWeaponEffectType.SLElement) + GetShellWeaponEffectValue(ShellWeaponEffectType.SLGlobal);
+                int slHp = CharacterHelper.SlPoint(specialistInstance.SlHP, 3) + GetShellWeaponEffectValue(ShellWeaponEffectType.SLHP) + GetShellWeaponEffectValue(ShellWeaponEffectType.SLGlobal);
+                int slDefence = CharacterHelper.SlPoint(specialistInstance.SlDefence, 1) + GetShellWeaponEffectValue(ShellWeaponEffectType.SLDefence) + GetShellWeaponEffectValue(ShellWeaponEffectType.SLGlobal);
+                int slHit = CharacterHelper.SlPoint(specialistInstance.SlDamage, 0) + GetShellWeaponEffectValue(ShellWeaponEffectType.SLDamage) + GetShellWeaponEffectValue(ShellWeaponEffectType.SLGlobal);
 
                 #region slHit
 
