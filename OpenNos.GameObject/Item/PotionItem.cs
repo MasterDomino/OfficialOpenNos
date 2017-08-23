@@ -47,7 +47,7 @@ namespace OpenNos.GameObject
                     {
                         return;
                     }
-                    session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     if ((int)session.Character.HPLoad() - session.Character.Hp < Hp)
                     {
                         session.CurrentMapInstance?.Broadcast(session.Character.GenerateRc((int)session.Character.HPLoad() - session.Character.Hp));

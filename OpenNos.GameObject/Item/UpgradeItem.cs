@@ -91,7 +91,7 @@ namespace OpenNos.GameObject
                             }
                             else
                             {
-                                session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                                session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                             }
                         }
                         else

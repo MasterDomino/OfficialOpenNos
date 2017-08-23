@@ -106,7 +106,7 @@ namespace OpenNos.GameObject
                         }
                         Thread workerThread = new Thread(() => Regenerate(session, item));
                         workerThread.Start();
-                        session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
                     else
                     {

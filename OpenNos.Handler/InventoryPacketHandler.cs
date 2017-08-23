@@ -988,7 +988,7 @@ namespace OpenNos.Handler
                 holder.Upgrade = specialist.Upgrade;
                 holder.XP = specialist.XP;
                 Session.SendPacket("shop_end 2");
-                Session.Character.Inventory.RemoveItemAmountFromInventory(1, specialist.Id);
+                Session.Character.Inventory.RemoveItemFromInventory(specialist.Id);
             }
         }
 
@@ -1728,7 +1728,7 @@ namespace OpenNos.Handler
             item2.Id = Guid.NewGuid();
             item2.Amount = withdrawPacket.Amount;
             Logger.LogEvent("STASH_WITHDRAW", Session.GenerateIdentity(), $"[Withdraw]OldIIId: {previousInventory.Id} NewIIId: {item2.Id} Amount: {withdrawPacket.Amount} PartnerBackpack: {withdrawPacket.PetBackpack}");
-            Session.Character.Inventory.RemoveItemAmountFromInventory(withdrawPacket.Amount, previousInventory.Id);
+            Session.Character.Inventory.RemoveItemFromInventory(previousInventory.Id, withdrawPacket.Amount);
             Session.Character.Inventory.AddToInventory(item2, item2.Item.Type);
             previousInventory = Session.Character.Inventory.LoadBySlotAndType(withdrawPacket.Slot, withdrawPacket.PetBackpack ? InventoryType.PetWarehouse : InventoryType.Warehouse);
             Session.SendPacket(withdrawPacket.PetBackpack ? UserInterfaceHelper.Instance.GeneratePStashRemove(withdrawPacket.Slot) : UserInterfaceHelper.Instance.GenerateStashRemove(withdrawPacket.Slot));
@@ -1829,7 +1829,7 @@ namespace OpenNos.Handler
                 ItemInstance invtemp = sourceSession.Character.Inventory.GetItemInstanceById(item.Id);
                 if (invtemp?.Amount >= item.Amount)
                 {
-                    sourceSession.Character.Inventory.RemoveItemAmountFromInventory(item.Amount, invtemp.Id);
+                    sourceSession.Character.Inventory.RemoveItemFromInventory(invtemp.Id, item.Amount);
                 }
                 else
                 {

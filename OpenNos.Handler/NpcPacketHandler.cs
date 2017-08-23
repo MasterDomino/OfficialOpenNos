@@ -682,7 +682,7 @@ namespace OpenNos.Handler
                 Session.Character.Gold += price * amount;
                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateShopMemo(1, string.Format(Language.Instance.GetMessageFromKey("SELL_ITEM_VALIDE"), inv.Item.Name, amount)));
 
-                Session.Character.Inventory.RemoveItemAmountFromInventory(amount, inv.Id);
+                Session.Character.Inventory.RemoveItemFromInventory(inv.Id, amount);
                 Session.SendPacket(Session.Character.GenerateGold());
             }
             else
@@ -908,7 +908,7 @@ namespace OpenNos.Handler
             if (shopitem.ItemInstance.Type != InventoryType.Equipment)
             {
                 // remove sold amount of items
-                shopOwnerSession.Character.Inventory.RemoveItemAmountFromInventory(amount, id);
+                shopOwnerSession.Character.Inventory.RemoveItemFromInventory(id, amount);
 
                 // remove sold amount from sellamount
                 shopitem.SellAmount -= amount;

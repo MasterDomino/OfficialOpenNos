@@ -52,6 +52,7 @@ namespace OpenNos.GameObject
                         mate.Level++;
                         session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Npc, mate.MateTransportId, 8), mate.PositionX, mate.PositionY);
                         session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Npc, mate.MateTransportId, 198), mate.PositionX, mate.PositionY);
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
                     break;
 
@@ -59,6 +60,7 @@ namespace OpenNos.GameObject
                     if (int.TryParse(packetsplit[3], out x1) && session.Character.Mates.Any(s => s.MateTransportId == x1))
                     {
                         session.SendPacket(UserInterfaceHelper.Instance.GenerateGuri(10, 1, x1, 2));
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
                     break;
 
@@ -68,14 +70,12 @@ namespace OpenNos.GameObject
                         Mate mate = session.Character.Mates.Find(s => s.MateTransportId == x1 && s.MateType == MateType.Pet);
                         if (mate?.CanPickUp == false)
                         {
-                            session.Character.Inventory.RemoveItemAmount(inv.ItemVNum, 1);
                             session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Npc, mate.MateTransportId, 5));
                             session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Npc, mate.MateTransportId, 5002));
                             mate.CanPickUp = true;
                             session.SendPackets(session.Character.GenerateScP());
-                            session.SendPacket(
-                                session.Character.GenerateSay(
-                                    Language.Instance.GetMessageFromKey("PET_CAN_PICK_UP"), 10));
+                            session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("PET_CAN_PICK_UP"), 10));
+                            session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                         }
                     }
                     break;
@@ -86,11 +86,11 @@ namespace OpenNos.GameObject
                         Mate mate = session.Character.Mates.Find(s => s.MateTransportId == x1);
                         if (mate?.IsSummonable == false)
                         {
-                            session.Character.Inventory.RemoveItemAmount(inv.ItemVNum, 1);
                             mate.IsSummonable = true;
                             session.SendPackets(session.Character.GenerateScP());
                             session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PET_SUMMONABLE"), mate.Name), 10));
                             session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PET_SUMMONABLE"), mate.Name), 0));
+                            session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                         }
                     }
                     break;
@@ -108,8 +108,8 @@ namespace OpenNos.GameObject
                                 session.SendPacket(UserInterfaceHelper.Instance.GeneratePClear());
                                 session.SendPackets(session.Character.GenerateScP());
                                 session.SendPackets(session.Character.GenerateScN());
-                                session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
                                 session.CurrentMapInstance?.Broadcast(mate.GenerateOut());
+                                session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                             }
                             else
                             {
@@ -133,7 +133,7 @@ namespace OpenNos.GameObject
                                 session.SendPacket(UserInterfaceHelper.Instance.GeneratePClear());
                                 session.SendPackets(session.Character.GenerateScP());
                                 session.SendPackets(session.Character.GenerateScN());
-                                session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                                session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                                 session.CurrentMapInstance?.Broadcast(mate.GenerateOut());
                             }
                             else

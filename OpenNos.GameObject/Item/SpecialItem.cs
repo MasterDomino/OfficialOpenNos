@@ -49,7 +49,7 @@ namespace OpenNos.GameObject
                         session.Character.SpAdditionPoint = 1000000;
                     }
                     session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("SP_POINTSADDED"), EffectValue), 0));
-                    session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     session.SendPacket(session.Character.GenerateSpPoint());
                     break;
 
@@ -65,7 +65,7 @@ namespace OpenNos.GameObject
                         session.Character.SpPoint = 10000;
                     }
                     session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("SP_POINTSADDEDBOTH"), EffectValue, EffectValue * 3), 0));
-                    session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     session.SendPacket(session.Character.GenerateSpPoint());
                     break;
 
@@ -76,7 +76,7 @@ namespace OpenNos.GameObject
                         return;
                     }
                     ItemInstance raidSeal = session.Character.Inventory.LoadBySlotAndType<ItemInstance>(inv.Slot, InventoryType.Main);
-                    session.Character.Inventory.RemoveItemAmountFromInventory(1, raidSeal.Id);
+                    session.Character.Inventory.RemoveItemFromInventory(raidSeal.Id);
 
                     ScriptedInstance raid = ServerManager.Instance.Raids.FirstOrDefault(s => s.RequieredItems.Any(obj => obj.VNum == raidSeal.ItemVNum))?.GetClone();
                     if (raid != null)
@@ -107,7 +107,7 @@ namespace OpenNos.GameObject
                     {
                         mate.Skin = Morph;
                         session.SendPacket(mate.GenerateCMode(mate.Skin));
-                        session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
                     break;
 
@@ -117,11 +117,11 @@ namespace OpenNos.GameObject
 
                 //Atk/Def/HP/Exp potions
                 case 6600:
-                    session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     break;
 
                 case 208:
-                    session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     session.Character.AddStaticBuff(new StaticBuffDTO() { CardId = 121 });
                     break;
 
@@ -210,7 +210,7 @@ namespace OpenNos.GameObject
                             session.CurrentMapInstance?.Broadcast(session.Character.GenerateCMode());
                             session.SendPacket(session.Character.GenerateStat());
                             session.SendPacket(session.Character.GenerateStatChar());
-                            session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                            session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                         }
                     }
                     else
@@ -239,7 +239,7 @@ namespace OpenNos.GameObject
                         else
                         {
                             session.Character.ChangeSex();
-                            session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                            session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                         }
                     }
                     else
@@ -326,7 +326,7 @@ namespace OpenNos.GameObject
                             int item = ServerManager.Instance.RandomNumber(0, 42);
                             session.Character.GiftAdd(vnums[item], counts[item]);
                         }
-                        session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
                     else if (session.HasCurrentMapInstance && session.CurrentMapInstance.Map.MapTypes.All(m => m.MapTypeId != (short)MapTypeEnum.Act4))
                     {
@@ -356,7 +356,7 @@ namespace OpenNos.GameObject
                         monster.Initialize(session.CurrentMapInstance);
                         session.CurrentMapInstance.AddMonster(monster);
                         session.CurrentMapInstance.Broadcast(monster.GenerateIn());
-                        session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
                     break;
 
@@ -367,19 +367,19 @@ namespace OpenNos.GameObject
                         {
                             session.Character.GiftAdd((short)(1894 + ServerManager.Instance.RandomNumber(0, 10)), 1);
                         }
-                        session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
                     else
                     {
                         session.Character.GiftAdd((short)EffectValue, 1);
-                        session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
                     break;
 
                 case 69:
                     session.Character.Reputation += ReputPrice;
                     session.SendPacket(session.Character.GenerateFd());
-                    session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     break;
 
                 case 1003:
@@ -391,7 +391,7 @@ namespace OpenNos.GameObject
                             DateEnd = DateTime.Now.AddDays(EffectValue),
                             StaticBonusType = StaticBonusType.BazaarMedalGold
                         });
-                        session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                         session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("EFFECT_ACTIVATED"), Name), 12));
                     }
                     break;
@@ -405,7 +405,7 @@ namespace OpenNos.GameObject
                             DateEnd = DateTime.Now.AddDays(EffectValue),
                             StaticBonusType = StaticBonusType.BazaarMedalSilver
                         });
-                        session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                         session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("EFFECT_ACTIVATED"), Name), 12));
                     }
                     break;
@@ -419,7 +419,7 @@ namespace OpenNos.GameObject
                             DateEnd = DateTime.Now.AddDays(EffectValue),
                             StaticBonusType = StaticBonusType.BackPack
                         });
-                        session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                         session.SendPacket(session.Character.GenerateExts());
                         session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("EFFECT_ACTIVATED"), Name), 12));
                     }
@@ -434,7 +434,7 @@ namespace OpenNos.GameObject
                     {
                         session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("GET_PET_PLACES"), 10));
                         session.SendPacket(session.Character.GenerateScpStc());
-                        session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
                     break;
 
@@ -447,7 +447,7 @@ namespace OpenNos.GameObject
                             DateEnd = DateTime.Now.AddDays(EffectValue),
                             StaticBonusType = StaticBonusType.PetBasket
                         });
-                        session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                         session.SendPacket(session.Character.GenerateExts());
                         session.SendPacket("ib 1278 1");
                         session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("EFFECT_ACTIVATED"), Name), 12));
@@ -463,7 +463,7 @@ namespace OpenNos.GameObject
                             DateEnd = DateTime.Now.AddDays(EffectValue),
                             StaticBonusType = StaticBonusType.PetBackPack
                         });
-                        session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                         session.SendPacket(session.Character.GenerateExts());
                         session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("EFFECT_ACTIVATED"), Name), 12));
                     }

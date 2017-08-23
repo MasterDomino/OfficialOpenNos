@@ -1071,7 +1071,7 @@ namespace OpenNos.Handler
                         if (mount != null && pearl != null)
                         {
                             pearl.HoldingVNum = mount.ItemVNum;
-                            Session.Character.Inventory.RemoveItemAmountFromInventory(1, mount.Id);
+                            Session.Character.Inventory.RemoveItemFromInventory(mount.Id);
                         }
                     }
                 }
@@ -1085,7 +1085,7 @@ namespace OpenNos.Handler
                         {
                             pearl.HoldingVNum = fairy.ItemVNum;
                             pearl.ElementRate = fairy.ElementRate;
-                            Session.Character.Inventory.RemoveItemAmountFromInventory(1, fairy.Id);
+                            Session.Character.Inventory.RemoveItemFromInventory(fairy.Id);
                         }
                     }
                 }

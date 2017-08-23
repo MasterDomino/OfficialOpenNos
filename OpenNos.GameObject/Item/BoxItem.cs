@@ -91,7 +91,7 @@ namespace OpenNos.GameObject
                                             design = (byte)ServerManager.Instance.RandomNumber(50, 81);
                                         }
                                         session.Character.GiftAdd(rollitem.ItemGeneratedVNum, rollitem.ItemGeneratedAmount, (byte)rare, design);
-                                        session.Character.Inventory.RemoveItemAmountFromInventory(1, box.Id);
+                                        session.Character.Inventory.RemoveItemFromInventory(box.Id);
                                         return;
                                         //newInv = session.Character.Inventory.AddNewToInventory(rollitem.ItemGeneratedVNum, amount: rollitem.ItemGeneratedAmount, Design: design, Rare: rare);
                                         //if (newInv.Count > 0)
@@ -105,7 +105,7 @@ namespace OpenNos.GameObject
                                         //        newInv.Where(s => s != null).ToList()
                                         //            .ForEach(s => session.SendPacket(s.GenerateInventoryAdd()));
                                         //        session.Character.Inventory
-                                        //            .RemoveItemAmountFromInventory(1, box.Id);
+                                        //            .RemoveItemAmountFromInventory(box.Id);
                                         //    }
                                         //}
                                     }
@@ -140,7 +140,7 @@ namespace OpenNos.GameObject
                                     };
                                     if (session.Character.AddPet(mate))
                                     {
-                                        session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                                         session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("PET_LEAVE_BEAD")));
                                     }
                                 }
@@ -162,7 +162,7 @@ namespace OpenNos.GameObject
                             Mate mate = new Mate(session.Character, heldMonster, LevelMinimum, ItemSubType == 1 ? MateType.Partner : MateType.Pet);
                             if (session.Character.AddPet(mate))
                             {
-                                session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                                session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                                 session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("PET_LEAVE_BEAD")));
                             }
                         }
@@ -218,7 +218,7 @@ namespace OpenNos.GameObject
                                             session.SendPacket(session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {specialist.Item.Name} + {specialist.Upgrade}", 12));
                                             newInv.ForEach(s => session.SendPacket(specialist.GenerateInventoryAdd()));
                                         }
-                                        session.Character.Inventory.RemoveItemAmountFromInventory(1, box.Id);
+                                        session.Character.Inventory.RemoveItemFromInventory(box.Id);
                                     }
                                 }
                                 else
@@ -256,7 +256,7 @@ namespace OpenNos.GameObject
                                             session.SendPacket(session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {fairy.Item.Name} ({fairy.ElementRate}%)", 12));
                                             newInv.ForEach(s => session.SendPacket(fairy.GenerateInventoryAdd()));
                                         }
-                                        session.Character.Inventory.RemoveItemAmountFromInventory(1, box.Id);
+                                        session.Character.Inventory.RemoveItemFromInventory(box.Id);
                                     }
                                 }
                                 else
@@ -285,7 +285,7 @@ namespace OpenNos.GameObject
                                     {
                                         session.SendPacket(session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {newInv[0].Item.Name} x 1)", 12));
                                         newInv.ForEach(s => session.SendPacket(s.GenerateInventoryAdd()));
-                                        session.Character.Inventory.RemoveItemAmountFromInventory(1, box.Id);
+                                        session.Character.Inventory.RemoveItemFromInventory(box.Id);
                                     }
                                 }
                                 else

@@ -47,7 +47,7 @@ namespace OpenNos.GameObject
                         {
                             session.CurrentMapInstance?.Broadcast(UserInterfaceHelper.Instance.GenerateGuri(19, 1, session.Character.CharacterId, MappingHelper.GuriItemEffects[EffectValue]), session.Character.MapX, session.Character.MapY);
                         }
-                        session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
                     break;
 
@@ -88,7 +88,7 @@ namespace OpenNos.GameObject
                                             {
                                                 ServerManager.Instance.ChangeMap(session.Character.CharacterId, respawn.DefaultMapId, (short)(respawn.DefaultX + ServerManager.Instance.RandomNumber(-5, 5)), (short)(respawn.DefaultY + ServerManager.Instance.RandomNumber(-5, 5)));
                                             }
-                                            session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                                            session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                                             break;
 
                                         case 4:
@@ -97,7 +97,7 @@ namespace OpenNos.GameObject
                                             {
                                                 ServerManager.Instance.ChangeMap(session.Character.CharacterId, respawnObj.DefaultMapId, (short)(respawnObj.DefaultX + ServerManager.Instance.RandomNumber(-5, 5)), (short)(respawnObj.DefaultY + ServerManager.Instance.RandomNumber(-5, 5)));
                                             }
-                                            session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                                            session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                                             break;
                                     }
                                 }
@@ -125,7 +125,7 @@ namespace OpenNos.GameObject
                                             {
                                                 ServerManager.Instance.ChangeMap(session.Character.CharacterId, respawn.DefaultMapId, respawn.DefaultX, respawn.DefaultY);
                                             }
-                                            session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                                            session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                                             break;
                                     }
                                 }
@@ -139,7 +139,7 @@ namespace OpenNos.GameObject
                                 else
                                 {
                                     ServerManager.Instance.JoinMiniland(session, session);
-                                    session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                                 }
                                 break;
                         }
@@ -175,7 +175,7 @@ namespace OpenNos.GameObject
                         session.SendPacket(session.Character.GenerateEq());
                         session.CurrentMapInstance?.Broadcast(session, session.Character.GenerateIn());
                         session.CurrentMapInstance?.Broadcast(session, session.Character.GenerateGidx());
-                        session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
                     break;
 
@@ -192,7 +192,7 @@ namespace OpenNos.GameObject
                         session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId,49 - (byte)session.Character.Faction));
                         session.CurrentMapInstance?.Broadcast(session, session.Character.GenerateIn(), ReceiverType.AllExceptMe);
                         session.CurrentMapInstance?.Broadcast(session, session.Character.GenerateGidx(), ReceiverType.AllExceptMe);
-                        session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
                     else if (EffectValue == 2000 && session.Character.Dignity < 100 && !session.Character.IsVehicled)
                     {
@@ -201,7 +201,7 @@ namespace OpenNos.GameObject
                         session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId,49 - (byte)session.Character.Faction));
                         session.CurrentMapInstance?.Broadcast(session, session.Character.GenerateIn(), ReceiverType.AllExceptMe);
                         session.CurrentMapInstance?.Broadcast(session, session.Character.GenerateGidx(), ReceiverType.AllExceptMe);
-                        session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
                     break;
 
@@ -233,7 +233,7 @@ namespace OpenNos.GameObject
                             session.SendPacket(session.Character.GenerateEquipment());
                             session.CurrentMapInstance?.Broadcast(session, session.Character.GenerateIn());
                             session.CurrentMapInstance?.Broadcast(session, session.Character.GenerateGidx());
-                            session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                            session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                         }
                         else
                         {

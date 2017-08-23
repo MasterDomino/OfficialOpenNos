@@ -669,7 +669,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        public void RemoveItemAmountFromInventory(byte amount, Guid id)
+        public void RemoveItemFromInventory(Guid id, byte amount = 1)
         {
             if (Owner != null)
             {
