@@ -145,7 +145,7 @@ namespace OpenNos.GameObject
         {
             if (IsAlive && !IsDisabled)
             {
-                return $"in 3 {MonsterVNum} {MapMonsterId} {MapX} {MapY} {Position} {(int)((float)CurrentHp / (float)MaxHp * 100)} {(int)((float)CurrentMp / (float)MaxMp * 100)} 0 0 0 -1 {(NoAggresiveIcon ? (byte)InRespawnType.NoEffect : (byte)InRespawnType.TeleportationEffect)} 0 -1 - 0 -1 0 0 0 0 0 0 0 0";
+                return StaticPacketHelper.In(UserType.Monster, MonsterVNum, MapMonsterId, MapX, MapY, Position, (int)((float)CurrentHp / (float)MaxHp * 100), (int)((float)CurrentMp / (float)MaxMp * 100), 0, NoAggresiveIcon ? InRespawnType.NoEffect: InRespawnType.TeleportationEffect, false);
             }
             return string.Empty;
         }

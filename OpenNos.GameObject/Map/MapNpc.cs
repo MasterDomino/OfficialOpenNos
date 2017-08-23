@@ -76,10 +76,9 @@ namespace OpenNos.GameObject
 
         public string GenerateIn(InRespawnType respawnType = InRespawnType.NoEffect)
         {
-            NpcMonster npcinfo = ServerManager.Instance.GetNpc(NpcVNum);
-            if (npcinfo != null && !IsDisabled)
+            if (!IsDisabled)
             {
-                return $"in 2 {NpcVNum} {MapNpcId} {MapX} {MapY} {Position} 100 100 {Dialog} 0 0 -1 {respawnType} {(IsSitting ? 1 : 0)} -1 - 0 -1 0 0 0 0 0 0 0 0";
+                return StaticPacketHelper.In(UserType.Npc, NpcVNum, MapNpcId, MapX, MapY, Position, 100, 100, Dialog, respawnType, IsSitting);
             }
             return string.Empty;
         }

@@ -55,19 +55,6 @@ namespace OpenNos.GameObject
             }
         }
 
-        public override long TransportId
-        {
-            get
-            {
-                return base.TransportId;
-            }
-
-            set
-            {
-                // cannot set TransportId
-            }
-        }
-
         #endregion
 
         #region Methods

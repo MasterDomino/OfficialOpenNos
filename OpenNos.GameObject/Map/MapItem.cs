@@ -12,6 +12,7 @@
  * GNU General Public License for more details.
  */
 
+using OpenNos.GameObject.Helpers;
 using System;
 
 namespace OpenNos.GameObject
@@ -22,6 +23,7 @@ namespace OpenNos.GameObject
 
         protected ItemInstance _itemInstance;
         private long _transportId;
+        private readonly object _lockObject = new object();
 
         #endregion
 
@@ -53,17 +55,17 @@ namespace OpenNos.GameObject
         {
             get
             {
-                if (_transportId == 0)
+                lock (_lockObject)
                 {
-                    // create transportId thru factory
-                    // TODO: Review has some problems, aka. issue corresponding to weird/multiple/missplaced drops
-                    _transportId = TransportFactory.Instance.GenerateTransportId();
+                    if (_transportId == 0)
+                    {
+                        _transportId = TransportFactory.Instance.GenerateTransportId();
+                    }
+                    return _transportId;
                 }
-
-                return _transportId;
             }
 
-            set
+            private set
             {
                 if (value != _transportId)
                 {
@@ -78,7 +80,7 @@ namespace OpenNos.GameObject
 
         public string GenerateIn()
         {
-            return $"in 9 {ItemVNum} {TransportId} {PositionX} {PositionY} {(this is MonsterMapItem && ((MonsterMapItem)this).GoldAmount > 1 ? ((MonsterMapItem)this).GoldAmount : Amount)} 0 0 -1";
+            return StaticPacketHelper.In(Domain.UserType.Object, ItemVNum, TransportId, PositionX, PositionY, this is MonsterMapItem monsterMapItem && monsterMapItem.GoldAmount > 1 ? monsterMapItem.GoldAmount : Amount, 0, 0, 0, 0, false);
         }
 
         public abstract ItemInstance GetItemInstance();
