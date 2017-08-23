@@ -198,7 +198,7 @@ namespace OpenNos.GameObject
                         {
                             Parallel.ForEach(Sessions, session =>
                             {
-                                if (session.HasSelectedCharacter)
+                                if (session?.HasSelectedCharacter == true)
                                 {
                                     if (sentPacket.Sender != null)
                                     {
@@ -219,7 +219,7 @@ namespace OpenNos.GameObject
                     case ReceiverType.AllExceptMe: // send to everyone except the sender
                         if (sentPacket.Packet.StartsWith("out"))
                         {
-                            foreach (ClientSession session in Sessions.Where(s => s.SessionId != sentPacket.Sender.SessionId))
+                            foreach (ClientSession session in Sessions.Where(s => s?.SessionId != sentPacket.Sender.SessionId))
                             {
                                 if (session.HasSelectedCharacter)
                                 {
@@ -239,9 +239,9 @@ namespace OpenNos.GameObject
                         }
                         else
                         {
-                            Parallel.ForEach(Sessions.Where(s => s.SessionId != sentPacket.Sender.SessionId), session =>
+                            Parallel.ForEach(Sessions.Where(s => s?.SessionId != sentPacket.Sender.SessionId), session =>
                             {
-                                if (session.HasSelectedCharacter)
+                                if (session?.HasSelectedCharacter == true)
                                 {
                                     if (sentPacket.Sender != null)
                                     {
@@ -259,9 +259,9 @@ namespace OpenNos.GameObject
                         }
                         break;
                     case ReceiverType.AllExceptGroup:
-                        Parallel.ForEach(Sessions.Where(s => s.SessionId != sentPacket.Sender.SessionId && (s.Character?.Group == null || (s.Character?.Group?.GroupId != sentPacket.Sender?.Character?.Group?.GroupId))), session =>
+                        Parallel.ForEach(Sessions.Where(s => s?.SessionId != sentPacket.Sender.SessionId && (s.Character?.Group == null || (s.Character?.Group?.GroupId != sentPacket.Sender?.Character?.Group?.GroupId))), session =>
                         {
-                            if (session.HasSelectedCharacter)
+                            if (session?.HasSelectedCharacter == true)
                             {
                                 if (sentPacket.Sender != null)
                                 {
@@ -280,9 +280,9 @@ namespace OpenNos.GameObject
                     case ReceiverType.AllInRange: // send to everyone which is in a range of 50x50
                         if (sentPacket.XCoordinate != 0 && sentPacket.YCoordinate != 0)
                         {
-                            Parallel.ForEach(Sessions.Where(s => s.Character.IsInRange(sentPacket.XCoordinate, sentPacket.YCoordinate)), session =>
+                            Parallel.ForEach(Sessions.Where(s => s?.Character.IsInRange(sentPacket.XCoordinate, sentPacket.YCoordinate) == true), session =>
                             {
-                                if (session.HasSelectedCharacter)
+                                if (session?.HasSelectedCharacter == true)
                                 {
                                     if (sentPacket.Sender != null)
                                     {
@@ -326,9 +326,9 @@ namespace OpenNos.GameObject
                         break;
 
                     case ReceiverType.AllNoEmoBlocked:
-                        Parallel.ForEach(Sessions.Where(s => !s.Character.EmoticonsBlocked), session =>
+                        Parallel.ForEach(Sessions.Where(s => s?.Character.EmoticonsBlocked == false), session =>
                         {
-                            if (session.HasSelectedCharacter && !sentPacket.Sender.Character.IsBlockedByCharacter(session.Character.CharacterId))
+                            if (session?.HasSelectedCharacter == true && !sentPacket.Sender.Character.IsBlockedByCharacter(session.Character.CharacterId))
                             {
                                 session.SendPacket(sentPacket.Packet);
                             }
@@ -336,9 +336,9 @@ namespace OpenNos.GameObject
                         break;
 
                     case ReceiverType.AllNoHeroBlocked:
-                        Parallel.ForEach(Sessions.Where(s => !s.Character.HeroChatBlocked), session =>
+                        Parallel.ForEach(Sessions.Where(s => s?.Character.HeroChatBlocked == false), session =>
                         {
-                            if (session.HasSelectedCharacter && !sentPacket.Sender.Character.IsBlockedByCharacter(session.Character.CharacterId))
+                            if (session?.HasSelectedCharacter == true && !sentPacket.Sender.Character.IsBlockedByCharacter(session.Character.CharacterId))
                             {
                                 session.SendPacket(sentPacket.Packet);
                             }
