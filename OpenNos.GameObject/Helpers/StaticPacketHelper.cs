@@ -1,4 +1,5 @@
-﻿using OpenNos.GameObject.Packets.ServerPackets;
+﻿using OpenNos.Domain;
+using OpenNos.GameObject.Packets.ServerPackets;
 
 namespace OpenNos.GameObject.Helpers
 {
@@ -11,12 +12,12 @@ namespace OpenNos.GameObject.Helpers
             return $"cancel {type} {callerId}";
         }
 
-        public static string CastOnTarget(byte type, long callerId, byte secondaryType, long targetId, short castAnimation, short castEffect, short skillVNum)
+        public static string CastOnTarget(UserType type, long callerId, byte secondaryType, long targetId, short castAnimation, short castEffect, short skillVNum)
         {
-            return $"ct {type} {callerId} {secondaryType} {targetId} {castAnimation} {castEffect} {skillVNum}";
+            return $"ct {(byte)type} {callerId} {secondaryType} {targetId} {castAnimation} {castEffect} {skillVNum}";
         }
 
-        public static EffectPacket GenerateEff(byte effectType, long callerId, int effectId)
+        public static EffectPacket GenerateEff(UserType effectType, long callerId, int effectId)
         {
             return new EffectPacket
             {
@@ -26,7 +27,7 @@ namespace OpenNos.GameObject.Helpers
             };
         }
 
-        public static MovePacket Move(byte type, long callerId, short positionX, short positionY, byte speed)
+        public static MovePacket Move(UserType type, long callerId, short positionX, short positionY, byte speed)
         {
             return new MovePacket
             {
@@ -38,9 +39,9 @@ namespace OpenNos.GameObject.Helpers
             };
         }
 
-        public static string Out(byte type, long callerId)
+        public static string Out(UserType type, long callerId)
         {
-            return $"out {type} {callerId}";
+            return $"out {(byte)type} {callerId}";
         }
 
         public static string SkillReset(int castId)
@@ -48,9 +49,9 @@ namespace OpenNos.GameObject.Helpers
             return $"sr {castId}";
         }
 
-        public static string SkillUsed(byte type, long callerId, byte secondaryType, long targetId, short skillVNum, short cooldown, short attackAnimation, short skillEffect, short x, short y, bool isAlive, int health, int damage, int hitmode, byte skillType)
+        public static string SkillUsed(UserType type, long callerId, byte secondaryType, long targetId, short skillVNum, short cooldown, short attackAnimation, short skillEffect, short x, short y, bool isAlive, int health, int damage, int hitmode, byte skillType)
         {
-            return $"su {type} {callerId} {secondaryType} {targetId} {skillVNum} {cooldown} {attackAnimation} {skillEffect} {x} {y} {(isAlive ? 1 : 0)} {health} {damage} {hitmode} {skillType}";
+            return $"su {(byte)type} {callerId} {secondaryType} {targetId} {skillVNum} {cooldown} {attackAnimation} {skillEffect} {x} {y} {(isAlive ? 1 : 0)} {health} {damage} {hitmode} {skillType}";
         }
 
         #endregion

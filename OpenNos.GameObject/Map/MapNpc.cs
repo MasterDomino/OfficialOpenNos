@@ -171,11 +171,11 @@ namespace OpenNos.GameObject
             {
                 if (IsMate || IsProtected)
                 {
-                    MapInstance.Broadcast(StaticPacketHelper.GenerateEff(2, MapNpcId, 825), MapX, MapY);
+                    MapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Npc, MapNpcId, 825), MapX, MapY);
                 }
                 if (Effect > 0 && EffectActivated)
                 {
-                    MapInstance.Broadcast(StaticPacketHelper.GenerateEff(2, MapNpcId, Effect), MapX, MapY);
+                    MapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Npc, MapNpcId, Effect), MapX, MapY);
                 }
                 LastEffect = DateTime.Now;
             }
@@ -202,7 +202,7 @@ namespace OpenNos.GameObject
                         MapY = mapY;
                     });
                     LastMove = DateTime.Now.AddSeconds(value);
-                    MapInstance.Broadcast(new BroadcastPacket(null, PacketFactory.Serialize(StaticPacketHelper.Move(2, MapNpcId, MapX, MapY, Npc.Speed)), ReceiverType.All, xCoordinate: mapX, yCoordinate: mapY));
+                    MapInstance.Broadcast(new BroadcastPacket(null, PacketFactory.Serialize(StaticPacketHelper.Move(UserType.Npc, MapNpcId, MapX, MapY, Npc.Speed)), ReceiverType.All, xCoordinate: mapX, yCoordinate: mapY));
                 }
             }
             if (Target == -1)
@@ -242,17 +242,17 @@ namespace OpenNos.GameObject
                         if (npcMonsterSkill != null)
                         {
                             npcMonsterSkill.LastSkillUse = DateTime.Now;
-                            MapInstance.Broadcast(StaticPacketHelper.CastOnTarget(2, MapNpcId, 3, Target, npcMonsterSkill.Skill.CastAnimation, npcMonsterSkill.Skill.CastEffect, npcMonsterSkill.Skill.SkillVNum));
+                            MapInstance.Broadcast(StaticPacketHelper.CastOnTarget(UserType.Npc, MapNpcId, 3, Target, npcMonsterSkill.Skill.CastAnimation, npcMonsterSkill.Skill.CastEffect, npcMonsterSkill.Skill.SkillVNum));
                         }
 
                         if (npcMonsterSkill != null && npcMonsterSkill.Skill.CastEffect != 0)
                         {
-                            MapInstance.Broadcast(StaticPacketHelper.GenerateEff(2, MapNpcId, Effect));
+                            MapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Npc, MapNpcId, Effect));
                         }
                         monster.CurrentHp -= damage;
                         MapInstance.Broadcast(npcMonsterSkill != null
-                            ? StaticPacketHelper.SkillUsed(2, MapNpcId, 3, Target, npcMonsterSkill.SkillVNum, npcMonsterSkill.Skill.Cooldown, npcMonsterSkill.Skill.AttackAnimation, npcMonsterSkill.Skill.Effect, 0, 0, monster.CurrentHp > 0, (int)((float)monster.CurrentHp / (float)monster.Monster.MaxHP * 100), damage, hitmode, 0)
-                            : StaticPacketHelper.SkillUsed(2, MapNpcId, 3, Target, 0, Npc.BasicCooldown, 11, Npc.BasicSkill, 0, 0, monster.CurrentHp > 0, (int)((float)monster.CurrentHp / (float)monster.Monster.MaxHP * 100), damage, hitmode, 0));
+                            ? StaticPacketHelper.SkillUsed(UserType.Npc, MapNpcId, 3, Target, npcMonsterSkill.SkillVNum, npcMonsterSkill.Skill.Cooldown, npcMonsterSkill.Skill.AttackAnimation, npcMonsterSkill.Skill.Effect, 0, 0, monster.CurrentHp > 0, (int)((float)monster.CurrentHp / (float)monster.Monster.MaxHP * 100), damage, hitmode, 0)
+                            : StaticPacketHelper.SkillUsed(UserType.Npc, MapNpcId, 3, Target, 0, Npc.BasicCooldown, 11, Npc.BasicSkill, 0, 0, monster.CurrentHp > 0, (int)((float)monster.CurrentHp / (float)monster.Monster.MaxHP * 100), damage, hitmode, 0));
                         LastEffect = DateTime.Now;
                         if (monster.CurrentHp < 1)
                         {
@@ -291,7 +291,7 @@ namespace OpenNos.GameObject
                             short mapX = Path[maxindex - 1].X;
                             short mapY = Path[maxindex - 1].Y;
                             double waitingtime = Map.GetDistance(new MapCell { X = mapX, Y = mapY }, new MapCell { X = MapX, Y = MapY }) / (double)Npc.Speed;
-                            MapInstance.Broadcast(new BroadcastPacket(null, PacketFactory.Serialize(StaticPacketHelper.Move(2, MapNpcId, MapX, MapY, Npc.Speed)), ReceiverType.All, xCoordinate: mapX, yCoordinate: mapY));
+                            MapInstance.Broadcast(new BroadcastPacket(null, PacketFactory.Serialize(StaticPacketHelper.Move(UserType.Npc, MapNpcId, MapX, MapY, Npc.Speed)), ReceiverType.All, xCoordinate: mapX, yCoordinate: mapY));
                             LastMove = DateTime.Now.AddSeconds(waitingtime > 1 ? 1 : waitingtime);
 
                             Observable.Timer(TimeSpan.FromMilliseconds((int)((waitingtime > 1 ? 1 : waitingtime) * 1000))).Subscribe(x =>

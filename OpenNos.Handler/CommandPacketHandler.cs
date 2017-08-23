@@ -520,8 +520,8 @@ namespace OpenNos.Handler
                     Session.SendPacket(Session.Character.GenerateStatChar());
                     Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(), ReceiverType.AllExceptMe);
                     Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(), ReceiverType.AllExceptMe);
-                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(1, Session.Character.CharacterId, 6), Session.Character.PositionX, Session.Character.PositionY);
-                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(1, Session.Character.CharacterId, 198), Session.Character.PositionX, Session.Character.PositionY);
+                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId, 6), Session.Character.PositionX, Session.Character.PositionY);
+                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId, 198), Session.Character.PositionX, Session.Character.PositionY);
                 }
                 else
                 {
@@ -553,7 +553,7 @@ namespace OpenNos.Handler
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("JOBLEVEL_CHANGED"), 0));
                     Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(), ReceiverType.AllExceptMe);
                     Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(), ReceiverType.AllExceptMe);
-                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(1, Session.Character.CharacterId,8), Session.Character.PositionX, Session.Character.PositionY);
+                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId,8), Session.Character.PositionX, Session.Character.PositionY);
                     Session.Character.Skills[(short)(200 + (20 * (byte)Session.Character.Class))] = new CharacterSkill
                     {
                         SkillVNum = (short)(200 + (20 * (byte)Session.Character.Class)),
@@ -608,8 +608,8 @@ namespace OpenNos.Handler
                     Session.SendPacket(Session.Character.GenerateLev());
                     Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(), ReceiverType.AllExceptMe);
                     Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(), ReceiverType.AllExceptMe);
-                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(1, Session.Character.CharacterId,6), Session.Character.PositionX, Session.Character.PositionY);
-                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(1, Session.Character.CharacterId,198), Session.Character.PositionX, Session.Character.PositionY);
+                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId,6), Session.Character.PositionX, Session.Character.PositionY);
+                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId,198), Session.Character.PositionX, Session.Character.PositionY);
                     ServerManager.Instance.UpdateGroup(Session.Character.CharacterId);
                     if (Session.Character.Family != null)
                     {
@@ -689,7 +689,7 @@ namespace OpenNos.Handler
                         Session.Character.Skills.GetAllItems().ForEach(s => s.LastUse = DateTime.Now.AddDays(-1));
                         Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(), ReceiverType.AllExceptMe);
                         Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(), ReceiverType.AllExceptMe);
-                        Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(1, Session.Character.CharacterId,8), Session.Character.PositionX, Session.Character.PositionY);
+                        Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId,8), Session.Character.PositionX, Session.Character.PositionY);
                     }
                     else
                     {
@@ -1080,7 +1080,7 @@ namespace OpenNos.Handler
             {
                 Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Effect]EffectId: {effectCommandpacket.EffectId}");
 
-                Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(1, Session.Character.CharacterId,effectCommandpacket.EffectId), Session.Character.PositionX, Session.Character.PositionY);
+                Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId,effectCommandpacket.EffectId), Session.Character.PositionX, Session.Character.PositionY);
             }
             else
             {
@@ -1410,7 +1410,7 @@ namespace OpenNos.Handler
             if (Session.Character.InvisibleGm)
             {
                 Session.Character.Mates.Where(s => s.IsTeamMember).ToList().ForEach(s => Session.CurrentMapInstance?.Broadcast(s.GenerateOut()));
-                Session.CurrentMapInstance?.Broadcast(Session, StaticPacketHelper.Out(1, Session.Character.CharacterId), ReceiverType.AllExceptMe);
+                Session.CurrentMapInstance?.Broadcast(Session, StaticPacketHelper.Out(UserType.Player, Session.Character.CharacterId), ReceiverType.AllExceptMe);
             }
             else
             {
@@ -1521,7 +1521,7 @@ namespace OpenNos.Handler
                     }
                     ServerManager.Instance.SetProperty(id.Value, nameof(Character.Hp), 0);
                     ServerManager.Instance.SetProperty(id.Value, nameof(Character.LastDefence), DateTime.Now);
-                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.SkillUsed(1, Session.Character.CharacterId, 1, id.Value, 1114, 4, 11, 4260, 0, 0, false, 0, 60000, 3, 0));
+                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.SkillUsed(UserType.Player, Session.Character.CharacterId, 1, id.Value, 1114, 4, 11, 4260, 0, 0, false, 0, 60000, 3, 0));
                     Session.CurrentMapInstance?.Broadcast(null, ServerManager.Instance.GetUserMethod<string>((long)id, nameof(Character.GenerateStat)), ReceiverType.OnlySomeone, string.Empty, (long)id);
                     ServerManager.Instance.AskRevive(id.Value);
                     Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
@@ -1773,7 +1773,7 @@ namespace OpenNos.Handler
                 {
                     if (monster.IsAlive)
                     {
-                        Session.CurrentMapInstance.Broadcast(StaticPacketHelper.Out(3, monster.MapMonsterId));
+                        Session.CurrentMapInstance.Broadcast(StaticPacketHelper.Out(UserType.Monster, monster.MapMonsterId));
                         Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MONSTER_REMOVED"), monster.MapMonsterId, monster.Monster.Name, monster.MapId, monster.MapX, monster.MapY), 12));
                         Session.CurrentMapInstance.RemoveMonster(monster);
                         if (DAOFactory.MapMonsterDAO.LoadById(monster.MapMonsterId) != null)
@@ -1790,7 +1790,7 @@ namespace OpenNos.Handler
                 {
                     if (!npc.IsMate && !npc.IsDisabled && !npc.IsProtected)
                     {
-                        Session.CurrentMapInstance.Broadcast(StaticPacketHelper.Out(2, npc.MapNpcId));
+                        Session.CurrentMapInstance.Broadcast(StaticPacketHelper.Out(UserType.Npc, npc.MapNpcId));
                         Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("NPCMONSTER_REMOVED"), npc.MapNpcId, npc.Npc.Name, npc.MapId, npc.MapX, npc.MapY), 12));
                         Session.CurrentMapInstance.RemoveNpc(npc);
                         if (DAOFactory.ShopDAO.LoadByNpc(npc.MapNpcId) != null)

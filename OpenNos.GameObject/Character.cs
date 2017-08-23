@@ -579,23 +579,23 @@ namespace OpenNos.GameObject
             Session.SendPacket(GenerateTit());
             Session.SendPacket(GenerateStat());
             Session.CurrentMapInstance?.Broadcast(Session, GenerateEq());
-            Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(1, CharacterId, 8), PositionX, PositionY);
+            Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 8), PositionX, PositionY);
             Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("CLASS_CHANGED"), 0));
-            Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(1, CharacterId, 196), PositionX, PositionY);
+            Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 196), PositionX, PositionY);
             int faction = 1 + ServerManager.Instance.RandomNumber(0, 2);
             Faction = (FactionType)faction;
             Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey($"GET_PROTECTION_POWER_{faction}"), 0));
             Session.SendPacket("scr 0 0 0 0 0 0");
             Session.SendPacket(GenerateFaction());
             Session.SendPacket(GenerateStatChar());
-            Session.SendPacket(StaticPacketHelper.GenerateEff(1, CharacterId, 4799 + faction));
+            Session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 4799 + faction));
             Session.SendPacket(GenerateCond());
             Session.SendPacket(GenerateLev());
             Session.CurrentMapInstance?.Broadcast(Session, GenerateCMode());
             Session.CurrentMapInstance?.Broadcast(Session, GenerateIn(), ReceiverType.AllExceptMe);
             Session.CurrentMapInstance?.Broadcast(Session, GenerateGidx(), ReceiverType.AllExceptMe);
-            Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(1, CharacterId, 6), PositionX, PositionY);
-            Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(1, CharacterId, 198), PositionX, PositionY);
+            Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 6), PositionX, PositionY);
+            Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 198), PositionX, PositionY);
             foreach (CharacterSkill skill in Skills.GetAllItems())
             {
                 if (skill.SkillVNum >= 200)
@@ -646,7 +646,7 @@ namespace OpenNos.GameObject
             Session.CurrentMapInstance?.Broadcast(Session, GenerateIn(), ReceiverType.AllExceptMe);
             Session.CurrentMapInstance?.Broadcast(Session, GenerateGidx(), ReceiverType.AllExceptMe);
             Session.CurrentMapInstance?.Broadcast(GenerateCMode());
-            Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(1, CharacterId, 196), PositionX, PositionY);
+            Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 196), PositionX, PositionY);
         }
 
         public void CharacterLife()
@@ -663,7 +663,7 @@ namespace OpenNos.GameObject
             {
                 if (CurrentMinigame != 0 && LastEffect.AddSeconds(3) <= DateTime.Now)
                 {
-                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(1, CharacterId, CurrentMinigame));
+                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, CurrentMinigame));
                     LastEffect = DateTime.Now;
                 }
 
@@ -679,26 +679,26 @@ namespace OpenNos.GameObject
                     {
                         if (amulet.ItemVNum == 4503 || amulet.ItemVNum == 4504)
                         {
-                            Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(1, CharacterId, amulet.Item.EffectValue + (Class == ClassType.Adventurer ? 0 : (byte)Class - 1)), PositionX, PositionY);
+                            Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, amulet.Item.EffectValue + (Class == ClassType.Adventurer ? 0 : (byte)Class - 1)), PositionX, PositionY);
                         }
                         else
                         {
-                            Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(1, CharacterId, amulet.Item.EffectValue), PositionX, PositionY);
+                            Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, amulet.Item.EffectValue), PositionX, PositionY);
                         }
                     }
                     if (Group != null && (Group.GroupType == GroupType.Team || Group.GroupType == GroupType.BigTeam || Group.GroupType == GroupType.GiantTeam))
                     {
                         try
                         {
-                            Session.CurrentMapInstance?.Broadcast(Session, StaticPacketHelper.GenerateEff(1, CharacterId, 828 + (Group.IsLeader(Session) ? 1 : 0)), ReceiverType.AllExceptGroup);
-                            Session.CurrentMapInstance?.Broadcast(Session, StaticPacketHelper.GenerateEff(1, CharacterId, 830 + (Group.IsLeader(Session) ? 1 : 0)), ReceiverType.Group);
+                            Session.CurrentMapInstance?.Broadcast(Session, StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 828 + (Group.IsLeader(Session) ? 1 : 0)), ReceiverType.AllExceptGroup);
+                            Session.CurrentMapInstance?.Broadcast(Session, StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 830 + (Group.IsLeader(Session) ? 1 : 0)), ReceiverType.Group);
                         }
                         catch (Exception ex)
                         {
                             Logger.Error(ex);
                         }
                     }
-                    Mates.Where(s => s.CanPickUp).ToList().ForEach(s => Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(2, s.MateTransportId, 3007)));
+                    Mates.Where(s => s.CanPickUp).ToList().ForEach(s => Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Npc, s.MateTransportId, 3007)));
                     LastEffect = DateTime.Now;
                 }
 
@@ -767,7 +767,7 @@ namespace OpenNos.GameObject
                 {
                     if (MeditationDictionary.ContainsKey(534) && MeditationDictionary[534] < DateTime.Now)
                     {
-                        Session.SendPacket(StaticPacketHelper.GenerateEff(1, CharacterId, 4344));
+                        Session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 4344));
                         AddBuff(new Buff(534, Level));
                         if (BuffObservables.ContainsKey(533))
                         {
@@ -779,7 +779,7 @@ namespace OpenNos.GameObject
                     }
                     else if (MeditationDictionary.ContainsKey(533) && MeditationDictionary[533] < DateTime.Now)
                     {
-                        Session.SendPacket(StaticPacketHelper.GenerateEff(1, CharacterId, 4343));
+                        Session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 4343));
                         AddBuff(new Buff(533, Level));
                         if (BuffObservables.ContainsKey(532))
                         {
@@ -791,7 +791,7 @@ namespace OpenNos.GameObject
                     }
                     else if (MeditationDictionary.ContainsKey(532) && MeditationDictionary[532] < DateTime.Now)
                     {
-                        Session.SendPacket(StaticPacketHelper.GenerateEff(1, CharacterId, 4343));
+                        Session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 4343));
                         AddBuff(new Buff(532, Level));
                         if (BuffObservables.ContainsKey(534))
                         {
@@ -3085,7 +3085,7 @@ namespace OpenNos.GameObject
             Logger.LogEvent("GAMBLE", Session.GenerateIdentity(), $"Type: SUCCESS IIId: {item.Id} ItemVnum: {item.ItemVNum} Rare: {item.Rare}");
             Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("RARIFY_SUCCESS"), item.Rare), 12));
             Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("RARIFY_SUCCESS"), item.Rare), 0));
-            MapInstance.Broadcast(StaticPacketHelper.GenerateEff(1, CharacterId, 3005), PositionX, PositionY);
+            MapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 3005), PositionX, PositionY);
             Session.SendPacket("shop_end 1");
         }
 
@@ -3667,7 +3667,7 @@ namespace OpenNos.GameObject
                     Hp = (int)HPLoad();
                     Mp = (int)MPLoad();
                     Session.SendPacket(GenerateStat());
-                    Session.SendPacket(StaticPacketHelper.GenerateEff(1, CharacterId, 5));
+                    Session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 5));
                 }
 
                 if (Inventory != null)
@@ -3759,8 +3759,8 @@ namespace OpenNos.GameObject
                     }
                     Session.SendPacket(GenerateLevelUp());
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("LEVELUP"), 0));
-                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(1, CharacterId, 6), PositionX, PositionY);
-                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(1, CharacterId, 198), PositionX, PositionY);
+                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 6), PositionX, PositionY);
+                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 198), PositionX, PositionY);
                     ServerManager.Instance.UpdateGroup(CharacterId);
                 }
 
@@ -3812,8 +3812,8 @@ namespace OpenNos.GameObject
                     Session.SendPacket(GenerateLevelUp());
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("JOB_LEVELUP"), 0));
                     LearnAdventurerSkill();
-                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(1, CharacterId, 8), PositionX, PositionY);
-                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(1, CharacterId, 198), PositionX, PositionY);
+                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 8), PositionX, PositionY);
+                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 198), PositionX, PositionY);
                 }
                 if (specialist != null)
                 {
@@ -3837,8 +3837,8 @@ namespace OpenNos.GameObject
                         Session.SendPackets(GenerateQuicklist());
 
                         Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("SP_LEVELUP"), 0));
-                        Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(1, CharacterId, 8), PositionX, PositionY);
-                        Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(1, CharacterId, 198), PositionX, PositionY);
+                        Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 8), PositionX, PositionY);
+                        Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 198), PositionX, PositionY);
                     }
                 }
                 experience = HeroXPLoad();
@@ -3857,8 +3857,8 @@ namespace OpenNos.GameObject
                     Session.SendPacket(GenerateStat());
                     Session.SendPacket(GenerateLevelUp());
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("HERO_LEVELUP"), 0));
-                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(1, CharacterId, 8), PositionX, PositionY);
-                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(1, CharacterId, 198), PositionX, PositionY);
+                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 8), PositionX, PositionY);
+                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 198), PositionX, PositionY);
                 }
                 Session.SendPacket(GenerateLev());
             }

@@ -275,7 +275,7 @@ namespace OpenNos.GameObject
                                     session.Character.MorphUpgrade = 0;
                                     session.Character.MorphUpgrade2 = 0;
                                     session.Character.Morph = Morph + (byte)session.Character.Gender;
-                                    session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(1, session.Character.CharacterId,196), session.Character.MapX, session.Character.MapY);
+                                    session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId,196), session.Character.MapX, session.Character.MapY);
                                     session.CurrentMapInstance?.Broadcast(session.Character.GenerateCMode());
                                     session.SendPacket(session.Character.GenerateCond());
                                     session.Character.LastSpeedChange = DateTime.Now;

@@ -223,7 +223,7 @@ namespace OpenNos.GameObject
                 boostCategory3 += soft[1] / 100D;
                 if (attacker.EntityType.Equals(EntityType.Player) && attacker.Session != null)
                 {
-                    attacker.Session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(1, attacker.Session.Character.CharacterId, 15));
+                    attacker.Session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, attacker.Session.Character.CharacterId, 15));
                 }
             }
 
@@ -260,7 +260,7 @@ namespace OpenNos.GameObject
                 boostCategory3 += soft[1] / 100D;
                 if (attacker.EntityType.Equals(EntityType.Player) && attacker.Session != null)
                 {
-                    attacker.Session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(1, attacker.Session.Character.CharacterId, 15));
+                    attacker.Session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, attacker.Session.Character.CharacterId, 15));
                 }
             }
 

@@ -88,7 +88,7 @@ namespace OpenNos.GameObject
                 if (IsWorldServer && session.HasSelectedCharacter)
                 {
                     session.Character.Mates.Where(s => s.IsTeamMember).ToList().ForEach(s => session.CurrentMapInstance?.Broadcast(session, s.GenerateOut(), ReceiverType.AllExceptMe));
-                    session.CurrentMapInstance?.Broadcast(session, StaticPacketHelper.Out(1, session.Character.CharacterId), ReceiverType.AllExceptMe);
+                    session.CurrentMapInstance?.Broadcast(session, StaticPacketHelper.Out(UserType.Player, session.Character.CharacterId), ReceiverType.AllExceptMe);
                 }
 
                 session.Destroy();

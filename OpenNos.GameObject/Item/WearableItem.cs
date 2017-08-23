@@ -188,7 +188,7 @@ namespace OpenNos.GameObject
 
                         if (EquipmentSlot == EquipmentType.Amulet)
                         {
-                            session.SendPacket(StaticPacketHelper.GenerateEff(1, session.Character.CharacterId,39));
+                            session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId,39));
                             inv.BoundCharacterId = session.Character.CharacterId;
                         }
                     }

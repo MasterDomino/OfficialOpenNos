@@ -35,7 +35,7 @@ namespace OpenNos.GameObject
 
         public void Regenerate(ClientSession session, Item item)
         {
-            session.SendPacket(StaticPacketHelper.GenerateEff(1, session.Character.CharacterId, 6000));
+            session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 6000));
             session.Character.FoodAmount++;
             session.Character.MaxFood = 0;
             session.Character.FoodHp += item.Hp / 5;

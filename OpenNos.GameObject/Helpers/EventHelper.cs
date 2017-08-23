@@ -208,7 +208,7 @@ namespace OpenNos.GameObject.Helpers
                         if (monster != null)
                         {
                             monster.LastEffect = DateTime.Now;
-                            evt.MapInstance.Broadcast(StaticPacketHelper.GenerateEff(3, monster.MapMonsterId, evt3));
+                            evt.MapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Monster, monster.MapMonsterId, evt3));
                         }
                         break;
 
