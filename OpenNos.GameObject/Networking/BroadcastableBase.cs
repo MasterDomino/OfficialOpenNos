@@ -182,7 +182,7 @@ namespace OpenNos.GameObject
                                 {
                                     if (sentPacket.Sender != null)
                                     {
-                                        if (!sentPacket.Sender.Character.IsBlockedByCharacter(session.Character.CharacterId))
+                                        if (!sentPacket.Sender?.Character.IsBlockedByCharacter(session.Character.CharacterId) == true)
                                         {
                                             session.SendPacket(sentPacket.Packet);
                                         }
@@ -202,7 +202,7 @@ namespace OpenNos.GameObject
                                 {
                                     if (sentPacket.Sender != null)
                                     {
-                                        if (!sentPacket.Sender.Character.IsBlockedByCharacter(session.Character.CharacterId))
+                                        if (!sentPacket.Sender?.Character.IsBlockedByCharacter(session.Character.CharacterId) == true)
                                         {
                                             session.SendPacket(sentPacket.Packet);
                                         }
@@ -219,7 +219,7 @@ namespace OpenNos.GameObject
                     case ReceiverType.AllExceptMe: // send to everyone except the sender
                         if (sentPacket.Packet.StartsWith("out"))
                         {
-                            foreach (ClientSession session in Sessions.Where(s => s?.SessionId != sentPacket.Sender.SessionId))
+                            foreach (ClientSession session in Sessions.Where(s => s?.SessionId != sentPacket.Sender?.SessionId))
                             {
                                 if (session.HasSelectedCharacter)
                                 {
@@ -239,7 +239,7 @@ namespace OpenNos.GameObject
                         }
                         else
                         {
-                            Parallel.ForEach(Sessions.Where(s => s?.SessionId != sentPacket.Sender.SessionId), session =>
+                            Parallel.ForEach(Sessions.Where(s => s?.SessionId != sentPacket.Sender?.SessionId), session =>
                             {
                                 if (session?.HasSelectedCharacter == true)
                                 {
@@ -259,7 +259,7 @@ namespace OpenNos.GameObject
                         }
                         break;
                     case ReceiverType.AllExceptGroup:
-                        Parallel.ForEach(Sessions.Where(s => s?.SessionId != sentPacket.Sender.SessionId && (s.Character?.Group == null || (s.Character?.Group?.GroupId != sentPacket.Sender?.Character?.Group?.GroupId))), session =>
+                        Parallel.ForEach(Sessions.Where(s => s?.SessionId != sentPacket.Sender?.SessionId && (s.Character?.Group == null || (s.Character?.Group?.GroupId != sentPacket.Sender?.Character?.Group?.GroupId))), session =>
                         {
                             if (session?.HasSelectedCharacter == true)
                             {
@@ -328,7 +328,7 @@ namespace OpenNos.GameObject
                     case ReceiverType.AllNoEmoBlocked:
                         Parallel.ForEach(Sessions.Where(s => s?.Character.EmoticonsBlocked == false), session =>
                         {
-                            if (session?.HasSelectedCharacter == true && !sentPacket.Sender.Character.IsBlockedByCharacter(session.Character.CharacterId))
+                            if (session?.HasSelectedCharacter == true && !sentPacket.Sender?.Character.IsBlockedByCharacter(session.Character.CharacterId) == true)
                             {
                                 session.SendPacket(sentPacket.Packet);
                             }
@@ -338,7 +338,7 @@ namespace OpenNos.GameObject
                     case ReceiverType.AllNoHeroBlocked:
                         Parallel.ForEach(Sessions.Where(s => s?.Character.HeroChatBlocked == false), session =>
                         {
-                            if (session?.HasSelectedCharacter == true && !sentPacket.Sender.Character.IsBlockedByCharacter(session.Character.CharacterId))
+                            if (session?.HasSelectedCharacter == true && !sentPacket.Sender?.Character.IsBlockedByCharacter(session.Character.CharacterId) == true)
                             {
                                 session.SendPacket(sentPacket.Packet);
                             }
