@@ -56,10 +56,6 @@ namespace OpenNos.GameObject
 
         public int CurrentMp { get; set; }
 
-        public int MaxHp { get; set; }
-
-        public int MaxMp { get; set; }
-
         public IDictionary<long, long> DamageList { get; private set; }
 
         public DateTime Death { get; set; }
@@ -71,8 +67,6 @@ namespace OpenNos.GameObject
         public bool IsBonus { get; set; }
 
         public bool IsBoss { get; set; }
-
-        public byte NoticeRange { get; set; }
 
         public bool IsHostile { get; set; }
 
@@ -88,13 +82,21 @@ namespace OpenNos.GameObject
 
         public MapInstance MapInstance { get; set; }
 
+        public int MaxHp { get; set; }
+
+        public int MaxMp { get; set; }
+
         public NpcMonster Monster { get; private set; }
+
+        public ZoneEvent MoveEvent { get; set; }
+
+        public bool NoAggresiveIcon { get; internal set; }
+
+        public byte NoticeRange { get; set; }
 
         public List<EventContainer> OnDeathEvents { get; set; }
 
         public List<EventContainer> OnNoticeEvents { get; set; }
-
-        public ZoneEvent MoveEvent { get; set; }
 
         public List<Node> Path { get; set; }
 
@@ -109,7 +111,6 @@ namespace OpenNos.GameObject
         private short FirstX { get; set; }
 
         private short FirstY { get; set; }
-        public bool NoAggresiveIcon { get; internal set; }
 
         #endregion
 
@@ -135,9 +136,9 @@ namespace OpenNos.GameObject
             }
         }
 
-        private void RemoveBuff(short id)
+        public string GenerateBoss()
         {
-            Buff.Remove(id);
+            return $"rboss 3 {MapMonsterId} {CurrentHp} {MaxHp}";
         }
 
         public string GenerateIn()
@@ -147,11 +148,6 @@ namespace OpenNos.GameObject
                 return $"in 3 {MonsterVNum} {MapMonsterId} {MapX} {MapY} {Position} {(int)((float)CurrentHp / (float)MaxHp * 100)} {(int)((float)CurrentMp / (float)MaxMp * 100)} 0 0 0 -1 {(NoAggresiveIcon ? (byte)InRespawnType.NoEffect : (byte)InRespawnType.TeleportationEffect)} 0 -1 - 0 -1 0 0 0 0 0 0 0 0";
             }
             return string.Empty;
-        }
-
-        public string GenerateSay(string message, int type)
-        {
-            return $"say 3 {MapMonsterId} {type} {message}";
         }
 
         public void Initialize(MapInstance currentMapInstance)
@@ -313,6 +309,7 @@ namespace OpenNos.GameObject
             {
                 Path.Clear();
                 Target = -1;
+
                 //return to origin
                 Path = BestFirstSearch.FindPath(new Node { X = MapX, Y = MapY }, new Node { X = FirstX, Y = FirstY }, MapInstance.Map.Grid);
             }
@@ -418,7 +415,7 @@ namespace OpenNos.GameObject
                         short onyxY = (short)(hitRequest.Session.Character.PositionY + 2);
                         int onyxId = MapInstance.GetNextMonsterId();
                         MapMonster onyx = new MapMonster() { MonsterVNum = 2371, MapX = onyxX, MapY = onyxY, MapMonsterId = onyxId, IsHostile = false, IsMoving = false, ShouldRespawn = false };
-                        MapInstance.Broadcast($"guri 31 1 {hitRequest.Session.Character.CharacterId} {onyxX} {onyxY}");
+                        MapInstance.Broadcast(UserInterfaceHelper.Instance.GenerateGuri(31, 1, hitRequest.Session.Character.CharacterId, onyxX, onyxY));
                         onyx.Initialize(MapInstance);
                         MapInstance.AddMonster(onyx);
                         MapInstance.Broadcast(onyx.GenerateIn());
@@ -570,6 +567,7 @@ namespace OpenNos.GameObject
                     Respawn();
                 }
             }
+
             // normal movement
             else if (Target == -1)
             {
@@ -647,11 +645,6 @@ namespace OpenNos.GameObject
             }
         }
 
-        public string GenerateBoss()
-        {
-            return $"rboss 3 {MapMonsterId} {CurrentHp} {MaxHp}";
-        }
-
         private void Move()
         {
             // Normal Move Mode
@@ -718,6 +711,11 @@ namespace OpenNos.GameObject
                 }
             }
             HostilityTarget();
+        }
+
+        private void RemoveBuff(short id)
+        {
+            Buff.Remove(id);
         }
 
         private void Respawn()

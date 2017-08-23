@@ -154,24 +154,27 @@ namespace OpenNos.GameObject.Helpers
             return $"f_stash {GenerateRemovePacket(slot)}";
         }
 
-        public string GenerateGuri(byte type, byte argument, long CharacterId, int value = 0)
+        public string GenerateGuri(byte type, byte argument, long callerId, int value = 0, int value2 = 0)
         {
             switch (type)
             {
                 case 2:
-                    return $"guri 2 {argument} {CharacterId}";
+                    return $"guri 2 {argument} {callerId}";
 
                 case 6:
-                    return $"guri 6 1 {CharacterId} 0 0";
+                    return $"guri 6 1 {callerId} 0 0";
 
                 case 10:
-                    return $"guri 10 {argument} {value} {CharacterId}";
+                    return $"guri 10 {argument} {value} {callerId}";
 
                 case 15:
                     return $"guri 15 {argument} 0 0";
 
+                case 31:
+                    return $"guri 31 {argument} {callerId} {value} {value2}";
+
                 default:
-                    return $"guri {type} {argument} {CharacterId} {value}";
+                    return $"guri {type} {argument} {callerId} {value}";
             }
         }
 

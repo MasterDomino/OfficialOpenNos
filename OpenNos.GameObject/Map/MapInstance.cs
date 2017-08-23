@@ -401,7 +401,7 @@ namespace OpenNos.GameObject
                 List<MapItem> dropsToRemove = DroppedList.GetAllItems().Where(dl => dl.CreatedDate.AddMinutes(3) < DateTime.Now).ToList();
                 Parallel.ForEach(dropsToRemove, drop =>
                 {
-                    Broadcast(drop.GenerateOut(drop.TransportId));
+                    Broadcast(StaticPacketHelper.Out(UserType.Object, drop.TransportId));
                     DroppedList.Remove(drop.TransportId);
                 });
             }
