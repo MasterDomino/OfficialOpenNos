@@ -276,7 +276,7 @@ namespace OpenNos.GameObject
                         {
                             maxindex = 1;
                         }
-                        if ((Path.Count == 0 && distance > 1 && distance < maxDistance) || Path[maxindex - 1] == null)
+                        if ((Path.Count == 0 && distance >= 1 && distance < maxDistance) || (Path.Count >= maxindex && maxindex > 0 && Path[maxindex - 1] == null))
                         {
                             short xoffset = (short)ServerManager.Instance.RandomNumber(-1, 1);
                             short yoffset = (short)ServerManager.Instance.RandomNumber(-1, 1);
