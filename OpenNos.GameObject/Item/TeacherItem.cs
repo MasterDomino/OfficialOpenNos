@@ -113,8 +113,7 @@ namespace OpenNos.GameObject
                             }
                             else
                             {
-                                session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(
-                                    Language.Instance.GetMessageFromKey("PET_IN_TEAM_UNRELEASABLE"), 0));
+                                session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("PET_IN_TEAM_UNRELEASABLE"), 0));
                             }
                         }
                     }

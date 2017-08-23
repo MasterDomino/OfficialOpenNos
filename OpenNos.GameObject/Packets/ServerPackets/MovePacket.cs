@@ -17,10 +17,10 @@ namespace OpenNos.GameObject.Packets.ServerPackets
         public long CallerId { get; set; }
 
         [PacketIndex(2)]
-        public short MapX { get; set; }
+        public short PositionX { get; set; }
 
         [PacketIndex(3)]
-        public short MapY { get; set; }
+        public short PositionY { get; set; }
 
         [PacketIndex(4)]
         public byte Speed { get; set; }

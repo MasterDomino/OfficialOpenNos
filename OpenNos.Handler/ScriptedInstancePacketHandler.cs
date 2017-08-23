@@ -262,7 +262,7 @@ namespace OpenNos.Handler
             MapButton button = Session.CurrentMapInstance.Buttons.Find(s => s.MapButtonId == packet.ButtonId);
             if (button != null)
             {
-                Session.CurrentMapInstance.Broadcast(button.GenerateOut());
+                Session.CurrentMapInstance.Broadcast(StaticPacketHelper.Out(UserType.Object, button.MapButtonId));
                 button.RunAction();
                 Session.CurrentMapInstance.Broadcast(button.GenerateIn());
             }

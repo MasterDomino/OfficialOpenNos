@@ -36,19 +36,19 @@ namespace OpenNos.GameObject
         {
         }
 
-        public Mate(Character owner, NpcMonster npcMonster, byte level, MateType matetype)
+        public Mate(Character owner, NpcMonster npcMonster, byte level, MateType mateType)
         {
             NpcMonsterVNum = npcMonster.NpcMonsterVNum;
             Monster = npcMonster;
             Hp = npcMonster.MaxHP;
             Mp = npcMonster.MaxMP;
             Name = npcMonster.Name;
-            MateType = matetype;
+            MateType = mateType;
             Level = level;
             Loyalty = 1000;
-            PositionY = (short)(owner.PositionY + 1);
+            PositionY = (short)(owner.PositionY + (mateType == MateType.Partner ? -1 : 1));
             PositionX = (short)(owner.PositionX + 1);
-            MapX = (short)(owner.PositionX + 1);
+            MapX = (short)(owner.PositionX + (mateType == MateType.Partner ? -1 : 1));
             MapY = (short)(owner.PositionY + 1);
             Direction = 2;
             CharacterId = owner.CharacterId;
@@ -189,7 +189,7 @@ namespace OpenNos.GameObject
             {
                 _faction = (byte)Owner.Faction + 2;
             }
-            return $"in 2 {NpcMonsterVNum} {MateTransportId} {(IsTeamMember ? PositionX : MapX)} {(IsTeamMember ? PositionY : MapY)} {Direction} {(int)(Hp / (float)MaxHp * 100)} {(int)(Mp / (float)MaxMp * 100)} 0 {_faction} 3 {CharacterId} 1 0 {(Skin != 0 ? Skin : -1)} {_name} 0 -1 0 0 0 0 0 0 0 0";
+            return $"in 2 {NpcMonsterVNum} {MateTransportId} {(IsTeamMember ? PositionX : MapX)} {(IsTeamMember ? PositionY : MapY)} {Direction} {(int)((float)Hp / (float)MaxHp * 100)} {(int)((float)Mp / (float)MaxMp * 100)} 0 {_faction} 3 {CharacterId} 1 0 {(Skin != 0 ? Skin : -1)} {_name} {(byte)MateType} {(MateType == MateType.Partner ? 1 : -1)} 0 0 0 0 0 0 0 0";
         }
 
         public string GenerateOut()

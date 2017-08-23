@@ -47,12 +47,7 @@ namespace OpenNos.GameObject
 
         public string GenerateIn()
         {
-            return $"in 9 {(State ? EnabledVNum : DisabledVNum)} {MapButtonId} {PositionX} {PositionY} 1 0 0 0";
-        }
-
-        public string GenerateOut()
-        {
-            return $"out 9 {MapButtonId}";
+            return StaticPacketHelper.In(Domain.UserType.Object, State ? EnabledVNum : DisabledVNum, MapButtonId, PositionX, PositionY, 1, 0, 0, 0, 0, false);
         }
 
         public void RunAction()

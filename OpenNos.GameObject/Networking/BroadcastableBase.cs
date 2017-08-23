@@ -61,9 +61,9 @@ namespace OpenNos.GameObject
 
         #region Methods
 
-        public void Broadcast(string packet)
+        public void Broadcast(string packet, ReceiverType receiver = ReceiverType.All)
         {
-            Broadcast(null, packet);
+            Broadcast(null, packet, receiver);
         }
 
         public void Broadcast(string packet, int xRangeCoordinate, int yRangeCoordinate)
@@ -71,9 +71,9 @@ namespace OpenNos.GameObject
             Broadcast(new BroadcastPacket(null, packet, ReceiverType.AllInRange, xCoordinate: xRangeCoordinate, yCoordinate: yRangeCoordinate));
         }
 
-        public void Broadcast(PacketDefinition packet)
+        public void Broadcast(PacketDefinition packet, ReceiverType receiver = ReceiverType.All)
         {
-            Broadcast(null, packet);
+            Broadcast(null, packet, receiver);
         }
 
         public void Broadcast(PacketDefinition packet, int xRangeCoordinate, int yRangeCoordinate)

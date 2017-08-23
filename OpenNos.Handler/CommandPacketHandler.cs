@@ -1414,7 +1414,7 @@ namespace OpenNos.Handler
             }
             else
             {
-                Session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m => Session.CurrentMapInstance?.Broadcast(m.GenerateIn()));
+                Session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m => Session.CurrentMapInstance?.Broadcast(m.GenerateIn(), ReceiverType.AllExceptMe));
                 Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(), ReceiverType.AllExceptMe);
                 Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(), ReceiverType.AllExceptMe);
             }
@@ -2293,19 +2293,19 @@ namespace OpenNos.Handler
                         }
                         if (Session.HasCurrentMapInstance)
                         {
-                            MapNpc monster = new MapNpc
+                            MapNpc npc = new MapNpc
                             {
                                 NpcVNum = summonNPCPacket.NpcMonsterVNum,
                                 MapY = Session.Character.PositionY,
                                 MapX = Session.Character.PositionX,
                                 MapId = Session.Character.MapInstance.Map.MapId,
-                                Position = (byte)Session.Character.Direction,
+                                Position = Session.Character.Direction,
                                 IsMoving = summonNPCPacket.IsMoving,
                                 MapNpcId = Session.CurrentMapInstance.GetNextMonsterId()
                             };
-                            monster.Initialize(Session.CurrentMapInstance);
-                            Session.CurrentMapInstance.AddNPC(monster);
-                            Session.CurrentMapInstance.Broadcast(monster.GenerateIn());
+                            npc.Initialize(Session.CurrentMapInstance);
+                            Session.CurrentMapInstance.AddNPC(npc);
+                            Session.CurrentMapInstance.Broadcast(npc.GenerateIn());
                         }
                     }
                 }

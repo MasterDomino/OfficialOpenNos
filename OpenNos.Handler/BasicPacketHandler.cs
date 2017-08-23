@@ -972,8 +972,8 @@ namespace OpenNos.Handler
                         if (mate != null)
                         {
                             mate.Name = guriPacket.Value;
-                            Session.CurrentMapInstance.Broadcast(mate.GenerateOut());
-                            Session.CurrentMapInstance.Broadcast(mate.GenerateIn());
+                            Session.CurrentMapInstance?.Broadcast(mate.GenerateOut(), ReceiverType.AllExceptMe);
+                            Session.CurrentMapInstance?.Broadcast(mate.GenerateIn());
                             Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("NEW_NAME_PET")));
                             Session.SendPacket(Session.Character.GeneratePinit());
                             Session.SendPackets(Session.Character.GeneratePst());

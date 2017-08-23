@@ -171,21 +171,17 @@ namespace OpenNos.GameObject
                             break;
 
                         case 9:
-                            if (mate != null)
+                            if (mate != null && Session.Character.Level >= mate.Level)
                             {
-                                if (Session.Character.Level >= mate.Level)
-                                {
-                                    mate.PositionX = (short)(Session.Character.PositionX + 1);
-                                }
+                                mate.PositionX = (short)(Session.Character.PositionX + (mate.MateType == MateType.Partner ? -1 : 1));
                                 mate.PositionY = (short)(Session.Character.PositionY + 1);
                                 mate.IsTeamMember = true;
-                                Session.CurrentMapInstance.Broadcast(mate.GenerateIn());
+                                Session.CurrentMapInstance?.Broadcast(mate.GenerateIn());
                             }
                             else
                             {
                                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("PET_HIGHER_LEVEL"), 0));
                             }
-
                             break;
                     }
                     Session.SendPacket(Session.Character.GeneratePinit());
@@ -356,7 +352,7 @@ namespace OpenNos.GameObject
                     break;
 
                 case 301:
-                        tp = npc?.Teleporters?.FirstOrDefault(s => s.Index == packet.Type);
+                    tp = npc?.Teleporters?.FirstOrDefault(s => s.Index == packet.Type);
                     if (tp != null)
                     {
                         ServerManager.Instance.ChangeMap(Session.Character.CharacterId, tp.MapId, tp.MapX, tp.MapY);

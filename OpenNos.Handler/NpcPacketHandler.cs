@@ -587,38 +587,23 @@ namespace OpenNos.Handler
         /// <summary>
         /// ptctl packet
         /// </summary>
-        /// <param name="packet"></param>
-        public void PetMove(PtCtlPacket packet)
+        /// <param name="ptCtlPacket"></param>
+        public void PetMove(PtCtlPacket ptCtlPacket)
         {
-            string[] packetsplit = packet.PacketEnd.Split(' ');
-            for (int i = 0; i < packet.Amount * 3; i += 3)
+            string[] packetsplit = ptCtlPacket.PacketEnd.Split(' ');
+            for (int i = 0; i < ptCtlPacket.Amount * 3; i += 3)
             {
-                if (packetsplit.Length >= packet.Amount * 3)
+                if (packetsplit.Length >= ptCtlPacket.Amount * 3 && int.TryParse(packetsplit[i], out int petId) && short.TryParse(packetsplit[i + 1], out short positionX) && short.TryParse(packetsplit[i + 2], out short positionY))
                 {
-                    if (int.TryParse(packetsplit[i], out int PetId) && short.TryParse(packetsplit[i + 1], out short PositionX) && short.TryParse(packetsplit[i + 1], out short PositionY))
+                    Mate mate = Session.Character.Mates.Find(s => s.MateTransportId == petId);
+                    if (mate != null)
                     {
-                        Mate mate = Session.Character.Mates.Find(s => s.MateTransportId == PetId);
-                        if (mate != null)
-                        {
-                            mate.PositionX = PositionX;
-                            mate.PositionY = PositionY;
-                            Session.CurrentMapInstance.Broadcast(StaticPacketHelper.Move(UserType.Npc, PetId, PositionX, PositionY, mate.Monster.Speed));
-                        }
+                        mate.PositionX = positionX;
+                        mate.PositionY = positionY;
+                        Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.Move(UserType.Npc, petId, positionX, positionY, mate.Monster.Speed));
                     }
                 }
             }
-            /*
-            packet.Users.ForEach(u =>
-            {
-                Mate mate = Session.Character.Mates.FirstOrDefault(s => s.MateTransportId == u.UserId);
-                if (mate != null)
-                {
-                    mate.PositionX = u.UserX;
-                    mate.PositionY = u.UserY;
-                    Session.CurrentMapInstance.Broadcast($"mv 2 {u.UserId} { u.UserX} { u.UserY} {mate.Monster.Speed}");
-                }
-            });
-             */
         }
 
         /// <summary>
@@ -634,7 +619,7 @@ namespace OpenNos.Handler
             Mate mate = Session.Character.Mates.Find(s => s.MateTransportId == sayPPacket.PetId);
             if (mate != null)
             {
-                Session.CurrentMapInstance.Broadcast(mate.GenerateSay(sayPPacket.Message, 2));
+                Session.CurrentMapInstance.Broadcast(StaticPacketHelper.Say((byte)UserType.Npc, mate.MateTransportId, 2, sayPPacket.Message));
             }
         }
 
@@ -859,7 +844,7 @@ namespace OpenNos.Handler
                 }
                 else if (npc.Npc.MaxHP == 0 && npc.Npc.Drops.All(s => s.MonsterVNum == null) && npc.Npc.Race == 8 && (npc.Npc.RaceType == 7 || npc.Npc.RaceType == 5))
                 {
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateDelay(5000, 1, $"#guri^710^162^85^{npc.MapNpcId}")); // #guri^710^X^Y^MapNpcId
+                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateDelay(5000, 1, $"#guri^710^{npc.MapX}^{npc.MapY}^{npc.MapNpcId}")); // #guri^710^DestinationX^DestinationY^MapNpcId
                 }
                 else if (!string.IsNullOrEmpty(npc.GetNpcDialog()))
                 {

@@ -351,7 +351,7 @@ namespace OpenNos.GameObject
         }
 
         // Both partly
-        public void ChangeMapInstance(long id, Guid MapInstanceId, int? mapX = null, int? mapY = null)
+        public void ChangeMapInstance(long id, Guid MapInstanceId, short? mapX = null, short? mapY = null)
         {
             ClientSession session = GetSessionByCharacterId(id);
             if (session?.Character != null && !session.Character.IsChangingMapInstance)
@@ -383,14 +383,19 @@ namespace OpenNos.GameObject
                         session.Character.MapId = session.Character.MapInstance.Map.MapId;
                         if (mapX != null && mapY != null)
                         {
-                            session.Character.MapX = (short)mapX;
-                            session.Character.MapY = (short)mapY;
+                            session.Character.MapX = mapX.Value;
+                            session.Character.MapY = mapY.Value;
                         }
                     }
                     if (mapX != null && mapY != null)
                     {
-                        session.Character.PositionX = (short)mapX;
-                        session.Character.PositionY = (short)mapY;
+                        session.Character.PositionX = mapX.Value;
+                        session.Character.PositionY = mapY.Value;
+                        foreach (Mate mate in session.Character.Mates.Where(m => m.IsTeamMember))
+                        {
+                            mate.PositionX = (short)(mapX.Value + (mate.MateType == MateType.Partner ? -1 : 1));
+                            mate.PositionY = (short)(mapY.Value + 1);
+                        }
                     }
 
                     session.CurrentMapInstance = session.Character.MapInstance;
@@ -450,11 +455,6 @@ namespace OpenNos.GameObject
                     }
                     if (!session.Character.InvisibleGm)
                     {
-                        Parallel.ForEach(session.Character.Mates.Where(m => m.IsTeamMember), mate =>
-                        {
-                            mate.PositionX = (short)(session.Character.PositionX + (mate.MateType == MateType.Partner ? -1 : 1));
-                            mate.PositionY = (short)(session.Character.PositionY + 1);
-                        });
                         Parallel.ForEach(session.CurrentMapInstance.Sessions.Where(s => s.Character != null && s.Character.CharacterId != session.Character.CharacterId), s =>
                         {
                             if (!session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.Act4) || session.Character.Faction == s.Character.Faction)

@@ -50,11 +50,11 @@ namespace OpenNos.GameObject.Helpers
         {
             return new MovePacket
             {
+                MoveType = type,
                 CallerId = callerId,
-                MapX = positionX,
-                MapY = positionY,
-                Speed = speed,
-                MoveType = type
+                PositionX = positionX,
+                PositionY = positionY,
+                Speed = speed
             };
         }
 

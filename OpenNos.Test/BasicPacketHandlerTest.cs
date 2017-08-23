@@ -88,8 +88,8 @@ namespace OpenNos.Test
             string mvPacket = HandlerTestHelper.WaitForPacket(client, "mv");
             MovePacket movePacket = PacketFactory.Deserialize<MovePacket>(mvPacket);
 
-            Assert.AreEqual(walkPacket.XCoordinate, movePacket.MapX);
-            Assert.AreEqual(walkPacket.YCoordinate, movePacket.MapY);
+            Assert.AreEqual(walkPacket.XCoordinate, movePacket.PositionX);
+            Assert.AreEqual(walkPacket.YCoordinate, movePacket.PositionY);
             Assert.AreEqual(walkPacket.Speed, movePacket.Speed);
 
             HandlerTestHelper.ShutdownTestingEnvironment();
