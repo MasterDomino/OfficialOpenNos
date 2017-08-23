@@ -2288,11 +2288,11 @@ namespace OpenNos.GameObject
                     WearableInstance mainWeapon = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.MainWeapon, InventoryType.Wear);
                     WearableInstance secondaryWeapon = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.MainWeapon, InventoryType.Wear);
                     List<ShellEffectDTO> effects = new List<ShellEffectDTO>();
-                    if (mainWeapon.ShellEffects != null)
+                    if (mainWeapon?.ShellEffects != null)
                     {
                         effects.AddRange(mainWeapon.ShellEffects);
                     }
-                    if (secondaryWeapon.ShellEffects != null)
+                    if (secondaryWeapon?.ShellEffects != null)
                     {
                         effects.AddRange(secondaryWeapon.ShellEffects);
                     }
