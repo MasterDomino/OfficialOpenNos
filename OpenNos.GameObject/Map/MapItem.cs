@@ -51,7 +51,7 @@ namespace OpenNos.GameObject
 
         public short PositionY { get; set; }
 
-        public virtual long TransportId
+        public long TransportId
         {
             get
             {
