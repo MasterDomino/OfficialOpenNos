@@ -42,7 +42,7 @@ namespace OpenNos.GameObject
                 case 0:
                     if (ItemType == ItemType.Event)
                     {
-                        session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId,EffectValue));
+                        session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, EffectValue));
                         if (MappingHelper.GuriItemEffects.ContainsKey(EffectValue))
                         {
                             session.CurrentMapInstance?.Broadcast(UserInterfaceHelper.Instance.GenerateGuri(19, 1, session.Character.CharacterId, MappingHelper.GuriItemEffects[EffectValue]), session.Character.MapX, session.Character.MapY);
@@ -189,7 +189,7 @@ namespace OpenNos.GameObject
                             session.Character.Dignity = 100;
                         }
                         session.SendPacket(session.Character.GenerateFd());
-                        session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId,49 - (byte)session.Character.Faction));
+                        session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 49 - (byte)session.Character.Faction));
                         session.CurrentMapInstance?.Broadcast(session, session.Character.GenerateIn(), ReceiverType.AllExceptMe);
                         session.CurrentMapInstance?.Broadcast(session, session.Character.GenerateGidx(), ReceiverType.AllExceptMe);
                         session.Character.Inventory.RemoveItemFromInventory(inv.Id);
@@ -198,7 +198,7 @@ namespace OpenNos.GameObject
                     {
                         session.Character.Dignity = 100;
                         session.SendPacket(session.Character.GenerateFd());
-                        session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId,49 - (byte)session.Character.Faction));
+                        session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 49 - (byte)session.Character.Faction));
                         session.CurrentMapInstance?.Broadcast(session, session.Character.GenerateIn(), ReceiverType.AllExceptMe);
                         session.CurrentMapInstance?.Broadcast(session, session.Character.GenerateGidx(), ReceiverType.AllExceptMe);
                         session.Character.Inventory.RemoveItemFromInventory(inv.Id);
@@ -257,6 +257,7 @@ namespace OpenNos.GameObject
                             });
                             delay += 100;
                         }
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
                     break;
 

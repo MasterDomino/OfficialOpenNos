@@ -640,11 +640,11 @@ namespace OpenNos.GameObject
             destinationInventory = LoadBySlotAndType(destinationSlot, desttype);
         }
 
-        public void RemoveItemAmount(int vnum, short amount = 1)
+        public void RemoveItemAmount(int vnum, int amount = 1)
         {
             if (Owner != null)
             {
-                byte remainingAmount = amount;
+                int remainingAmount = amount;
 
                 foreach (ItemInstance inventory in GetAllItems().Where(s => s.ItemVNum == vnum && s.Type != InventoryType.Wear && s.Type != InventoryType.Bazaar && s.Type != InventoryType.Warehouse && s.Type != InventoryType.PetWarehouse && s.Type != InventoryType.FamilyWareHouse).OrderBy(i => i.Slot))
                 {
@@ -653,7 +653,7 @@ namespace OpenNos.GameObject
                         if (inventory.Amount > remainingAmount)
                         {
                             // amount completely removed
-                            inventory.Amount -= remainingAmount;
+                            inventory.Amount -= (byte)remainingAmount;
                             remainingAmount = 0;
                             Owner.Session.SendPacket(inventory.GenerateInventoryAdd());
                         }

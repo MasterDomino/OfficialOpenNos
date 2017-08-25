@@ -1874,29 +1874,29 @@ namespace OpenNos.GameObject
             }
             if (Upgrade < 10)
             {
-                short[] upfail;
-                short[] upfix;
+                byte[] upfail;
+                byte[] upfix;
                 int[] goldprice;
                 short[] cella;
-                short[] gem;
+                byte[] gem;
 
                 if (Rare >= 8)
                 {
-                    upfix = new short[] { 50, 40, 70, 65, 80, 90, 95, 97, 98, 99 };
-                    upfail = new short[] { 50, 40, 60, 50, 60, 70, 75, 77, 83, 89 };
+                    upfix = new byte[] { 50, 40, 70, 65, 80, 90, 95, 97, 98, 99 };
+                    upfail = new byte[] { 50, 40, 60, 50, 60, 70, 75, 77, 83, 89 };
 
                     goldprice = new[] { 5000, 15000, 30000, 100000, 300000, 800000, 1500000, 4000000, 7000000, 10000000 };
                     cella = new short[] { 40, 100, 160, 240, 320, 440, 560, 760, 960, 1200 };
-                    gem = new short[] { 2, 2, 4, 4, 6, 2, 2, 4, 4, 6 };
+                    gem = new byte[] { 2, 2, 4, 4, 6, 2, 2, 4, 4, 6 };
                 }
                 else
                 {
-                    upfix = new short[] { 0, 0, 10, 15, 20, 20, 20, 20, 15, 14 };
-                    upfail = new short[] { 0, 0, 0, 5, 20, 40, 60, 70, 80, 85 };
+                    upfix = new byte[] { 0, 0, 10, 15, 20, 20, 20, 20, 15, 14 };
+                    upfail = new byte[] { 0, 0, 0, 5, 20, 40, 60, 70, 80, 85 };
 
                     goldprice = new[] { 500, 1500, 3000, 10000, 30000, 80000, 150000, 400000, 700000, 1000000 };
                     cella = new short[] { 20, 50, 80, 120, 160, 220, 280, 380, 480, 600 };
-                    gem = new short[] { 1, 1, 2, 2, 3, 1, 1, 2, 2, 3 };
+                    gem = new byte[] { 1, 1, 2, 2, 3, 1, 1, 2, 2, 3 };
                 }
 
                 const short cellaVnum = 1014;
