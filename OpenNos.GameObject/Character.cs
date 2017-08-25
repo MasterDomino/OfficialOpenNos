@@ -3080,15 +3080,6 @@ namespace OpenNos.GameObject
             return false;
         }
 
-        public void NotifyRarifyResult(ItemInstance item)
-        {
-            Logger.LogEvent("GAMBLE", Session.GenerateIdentity(), $"Type: SUCCESS IIId: {item.Id} ItemVnum: {item.ItemVNum} Rare: {item.Rare}");
-            Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("RARIFY_SUCCESS"), item.Rare), 12));
-            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("RARIFY_SUCCESS"), item.Rare), 0));
-            MapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 3005), PositionX, PositionY);
-            Session.SendPacket("shop_end 1");
-        }
-
         public string OpenFamilyWarehouse()
         {
             if (Family == null || Family.WarehouseSize == 0)

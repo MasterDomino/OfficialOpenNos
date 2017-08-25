@@ -219,17 +219,7 @@ namespace OpenNos.GameObject
 
         public void RarifyItem(ClientSession session, RarifyMode mode, RarifyProtection protection, bool isCommand = false)
         {
-            double raren2 = 80;
-            double raren1 = 70;
-            double rare0 = 60;
-            double rare1 = 40;
-            double rare2 = 30;
-            double rare3 = 15;
-            double rare4 = 10;
-            double rare5 = 5;
-            double rare6 = 3;
-            double rare7 = 2;
-            double rare8 = 1;
+            byte[] rare = { 80, 70, 60, 40, 30, 15, 10, 5, 3, 2, 1 };
             const short goldprice = 500;
             const double reducedpricefactor = 0.5;
             const double reducedchancefactor = 1.1;
@@ -244,9 +234,9 @@ namespace OpenNos.GameObject
             }
             if (mode != RarifyMode.Drop || Item.ItemType == ItemType.Shell)
             {
-                raren2 = 0;
-                raren1 = 0;
-                rare0 = 0;
+                rare[0] = 0;
+                rare[1] = 0;
+                rare[2] = 0;
                 rnd = ServerManager.Instance.RandomNumber(0, 80);
             }
             else
@@ -255,17 +245,10 @@ namespace OpenNos.GameObject
             }
             if (protection == RarifyProtection.RedAmulet)
             {
-                raren2 = raren1 * reducedchancefactor;
-                raren1 *= reducedchancefactor;
-                rare0 *= reducedchancefactor;
-                rare1 *= reducedchancefactor;
-                rare2 *= reducedchancefactor;
-                rare3 *= reducedchancefactor;
-                rare4 *= reducedchancefactor;
-                rare5 *= reducedchancefactor;
-                rare6 *= reducedchancefactor;
-                rare7 *= reducedchancefactor;
-                rare8 *= reducedchancefactor;
+                for (byte i = 0; i < rare.Length; i++)
+                {
+                    rare[i] = (byte)(rare[i] * reducedchancefactor);
+                }
             }
             if (session != null)
             {
@@ -320,110 +303,65 @@ namespace OpenNos.GameObject
                         throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
                 }
             }
-            if (Item.IsHeroic && protection == RarifyProtection.Scroll && rnd < rare8 && !(protection == RarifyProtection.Scroll && Rare >= 8))
+
+            void rarify(sbyte rarity)
             {
-                Rare = 8;
+                Rare = rarity;
                 if (mode != RarifyMode.Drop)
                 {
-                    session?.Character.NotifyRarifyResult(this);
-                }
-                SetRarityPoint();
-                ItemInstance inventory = session?.Character.Inventory.GetItemInstanceById(Id);
-                if (inventory != null)
-                {
-                    session.SendPacket(inventory.GenerateInventoryAdd());
-                }
-                return;
-            }
-            if (rnd < rare7 && !(protection == RarifyProtection.Scroll && Rare >= 7))
-            {
-                Rare = 7;
-                if (mode != RarifyMode.Drop)
-                {
-                    session?.Character.NotifyRarifyResult(this);
+                    Logger.LogEvent("GAMBLE", session.GenerateIdentity(), $"[RarifyItem]Protection: {protection.ToString()} IIId: {Id} ItemVnum: {ItemVNum} Result: Success");
+
+                    session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("RARIFY_SUCCESS"), Rare), 12));
+                    session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("RARIFY_SUCCESS"), Rare), 0));
+                    session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 3005), session.Character.PositionX, session.Character.PositionY);
+                    session.SendPacket("shop_end 1");
                 }
                 SetRarityPoint();
             }
-            else if (rnd < rare6 && !(protection == RarifyProtection.Scroll && Rare >= 6))
+
+            if (rnd < rare[10] && Item.IsHeroic && protection == RarifyProtection.Scroll && !(protection == RarifyProtection.Scroll && Rare >= 8))
             {
-                Rare = 6;
-                if (mode != RarifyMode.Drop)
-                {
-                    session?.Character.NotifyRarifyResult(this);
-                }
-                SetRarityPoint();
+                rarify(8);
             }
-            else if (rnd < rare5 && !(protection == RarifyProtection.Scroll && Rare >= 5))
+            if (rnd < rare[9] && !(protection == RarifyProtection.Scroll && Rare >= 7))
             {
-                Rare = 5;
-                if (mode != RarifyMode.Drop)
-                {
-                    session?.Character.NotifyRarifyResult(this);
-                }
-                SetRarityPoint();
+                rarify(7);
             }
-            else if (rnd < rare4 && !(protection == RarifyProtection.Scroll && Rare >= 4))
+            else if (rnd < rare[8] && !(protection == RarifyProtection.Scroll && Rare >= 6))
             {
-                Rare = 4;
-                if (mode != RarifyMode.Drop)
-                {
-                    session?.Character.NotifyRarifyResult(this);
-                }
-                SetRarityPoint();
+                rarify(6);
             }
-            else if (rnd < rare3 && !(protection == RarifyProtection.Scroll && Rare >= 3))
+            else if (rnd < rare[7] && !(protection == RarifyProtection.Scroll && Rare >= 5))
             {
-                Rare = 3;
-                if (mode != RarifyMode.Drop)
-                {
-                    session?.Character.NotifyRarifyResult(this);
-                }
-                SetRarityPoint();
+                rarify(5);
             }
-            else if (rnd < rare2 && !(protection == RarifyProtection.Scroll && Rare >= 2))
+            else if (rnd < rare[6] && !(protection == RarifyProtection.Scroll && Rare >= 4))
             {
-                Rare = 2;
-                if (mode != RarifyMode.Drop)
-                {
-                    session?.Character.NotifyRarifyResult(this);
-                }
-                SetRarityPoint();
+                rarify(4);
             }
-            else if (rnd < rare1 && !(protection == RarifyProtection.Scroll && Rare >= 1))
+            else if (rnd < rare[5] && !(protection == RarifyProtection.Scroll && Rare >= 3))
             {
-                Rare = 1;
-                if (mode != RarifyMode.Drop)
-                {
-                    session?.Character.NotifyRarifyResult(this);
-                }
-                SetRarityPoint();
+                rarify(3);
             }
-            else if (rnd < rare0 && !(protection == RarifyProtection.Scroll && Rare >= 0))
+            else if (rnd < rare[4] && !(protection == RarifyProtection.Scroll && Rare >= 2))
             {
-                Rare = 0;
-                if (mode != RarifyMode.Drop)
-                {
-                    session?.Character.NotifyRarifyResult(this);
-                }
-                SetRarityPoint();
+                rarify(2);
             }
-            else if (rnd < raren1 && !(protection == RarifyProtection.Scroll && Rare >= -1))
+            else if (rnd < rare[3] && !(protection == RarifyProtection.Scroll && Rare >= 1))
             {
-                Rare = -1;
-                if (mode != RarifyMode.Drop)
-                {
-                    session?.Character.NotifyRarifyResult(this);
-                }
-                SetRarityPoint();
+                rarify(1);
             }
-            else if (rnd < raren2 && !(protection == RarifyProtection.Scroll && Rare >= -2))
+            else if (rnd < rare[2] && !(protection == RarifyProtection.Scroll && Rare >= 0))
             {
-                Rare = -2;
-                if (mode != RarifyMode.Drop)
-                {
-                    session?.Character.NotifyRarifyResult(this);
-                }
-                SetRarityPoint();
+                rarify(0);
+            }
+            else if (rnd < rare[1] && !(protection == RarifyProtection.Scroll && Rare >= -1))
+            {
+                rarify(-1);
+            }
+            else if (rnd < rare[0] && !(protection == RarifyProtection.Scroll && Rare >= -2))
+            {
+                rarify(-2);
             }
             else if (mode != RarifyMode.Drop && session != null)
             {
@@ -611,18 +549,21 @@ namespace OpenNos.GameObject
                     ShellType = 1;
                     IsWeapon = false;
                     break;
+
                 case 580:
                 case 581:
                 case 582:
                     ShellType = 2;
                     IsWeapon = false;
                     break;
+
                 case 583:
                 case 584:
                 case 585:
                     ShellType = 3;
                     IsWeapon = false;
                     break;
+
                 case 586:
                 case 587:
                 case 588:
@@ -650,6 +591,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 1:
                             CNormCount = 1;
                             BNormCount = 0;
@@ -664,6 +606,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 2:
                             CNormCount = 1;
                             BNormCount = 0;
@@ -678,6 +621,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 3:
                             CNormCount = 1;
                             BNormCount = 0;
@@ -692,6 +636,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 4:
                             CNormCount = 1;
                             BNormCount = 0;
@@ -708,6 +653,7 @@ namespace OpenNos.GameObject
                             break;
                     }
                     break;
+
                 case 2:
                     switch (ShellType)
                     {
@@ -725,6 +671,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 1:
                             CNormCount = 2;
                             BNormCount = 0;
@@ -739,6 +686,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 2:
                             CNormCount = 1;
                             BNormCount = 0;
@@ -753,6 +701,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 3:
                             CNormCount = 1;
                             BNormCount = 0;
@@ -767,6 +716,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 4:
                             CNormCount = 2;
                             BNormCount = 0;
@@ -783,6 +733,7 @@ namespace OpenNos.GameObject
                             break;
                     }
                     break;
+
                 case 3:
                     switch (ShellType)
                     {
@@ -800,6 +751,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 1:
                             CNormCount = 2;
                             BNormCount = 1;
@@ -814,6 +766,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 2:
                             CNormCount = 1;
                             BNormCount = 1;
@@ -828,6 +781,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 3:
                             CNormCount = 1;
                             BNormCount = 1;
@@ -842,6 +796,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 4:
                             CNormCount = 2;
                             BNormCount = 2;
@@ -858,6 +813,7 @@ namespace OpenNos.GameObject
                             break;
                     }
                     break;
+
                 case 4:
                     switch (ShellType)
                     {
@@ -875,6 +831,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 1:
                             CNormCount = 2;
                             BNormCount = 2;
@@ -889,6 +846,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 2:
                             CNormCount = 1;
                             BNormCount = 1;
@@ -903,6 +861,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 3:
                             CNormCount = 1;
                             BNormCount = 1;
@@ -917,6 +876,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 4:
                             CNormCount = 2;
                             BNormCount = 2;
@@ -933,6 +893,7 @@ namespace OpenNos.GameObject
                             break;
                     }
                     break;
+
                 case 5:
                     switch (ShellType)
                     {
@@ -950,6 +911,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 1:
                             CNormCount = 2;
                             BNormCount = 2;
@@ -964,6 +926,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 2:
                             CNormCount = 1;
                             BNormCount = 1;
@@ -978,6 +941,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 3:
                             CNormCount = 1;
                             BNormCount = 1;
@@ -992,6 +956,7 @@ namespace OpenNos.GameObject
                             APVPMax = 1;
                             SPVPMax = 0;
                             break;
+
                         case 4:
                             CNormCount = 2;
                             BNormCount = 2;
@@ -1008,6 +973,7 @@ namespace OpenNos.GameObject
                             break;
                     }
                     break;
+
                 case 6:
                     switch (ShellType)
                     {
@@ -1025,6 +991,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 1:
                             CNormCount = 2;
                             BNormCount = 2;
@@ -1039,6 +1006,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 2:
                             CNormCount = 1;
                             BNormCount = 1;
@@ -1053,6 +1021,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 3:
                             CNormCount = 1;
                             BNormCount = 1;
@@ -1067,6 +1036,7 @@ namespace OpenNos.GameObject
                             APVPMax = 2;
                             SPVPMax = 0;
                             break;
+
                         case 4:
                             CNormCount = 2;
                             BNormCount = 2;
@@ -1083,6 +1053,7 @@ namespace OpenNos.GameObject
                             break;
                     }
                     break;
+
                 case 7:
                     switch (ShellType)
                     {
@@ -1100,6 +1071,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 1:
                             CNormCount = 2;
                             BNormCount = 2;
@@ -1114,6 +1086,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 2:
                             CNormCount = 1;
                             BNormCount = 1;
@@ -1128,6 +1101,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 3:
                             CNormCount = 1;
                             BNormCount = 1;
@@ -1142,6 +1116,7 @@ namespace OpenNos.GameObject
                             APVPMax = 2;
                             SPVPMax = 2;
                             break;
+
                         case 4:
                             CNormCount = 2;
                             BNormCount = 2;
@@ -1158,6 +1133,7 @@ namespace OpenNos.GameObject
                             break;
                     }
                     break;
+
                 case 8:
                     switch (ShellType)
                     {
@@ -1175,6 +1151,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 1:
                             CNormCount = 2;
                             BNormCount = 2;
@@ -1189,6 +1166,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 2:
                             CNormCount = 1;
                             BNormCount = 1;
@@ -1203,6 +1181,7 @@ namespace OpenNos.GameObject
                             APVPMax = 0;
                             SPVPMax = 0;
                             break;
+
                         case 3:
                             CNormCount = 1;
                             BNormCount = 1;
@@ -1217,6 +1196,7 @@ namespace OpenNos.GameObject
                             APVPMax = 2;
                             SPVPMax = 3;
                             break;
+
                         case 4:
                             CNormCount = 2;
                             BNormCount = 2;
@@ -2005,8 +1985,6 @@ namespace OpenNos.GameObject
                         break;
                 }
                 WearableInstance wearable = session.Character.Inventory.LoadByItemInstance<WearableInstance>(Id);
-                ItemInstance inventory = session.Character.Inventory.GetItemInstanceById(Id);
-
                 int rnd = ServerManager.Instance.RandomNumber();
                 if (Rare == 8)
                 {
@@ -2022,7 +2000,7 @@ namespace OpenNos.GameObject
                         }
                         else
                         {
-                            session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId,3004), session.Character.MapX, session.Character.MapY);
+                            session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 3004), session.Character.MapX, session.Character.MapY);
                             session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("SCROLL_PROTECT_USED"), 11));
                             session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADE_FAILED_ITEM_SAVED"), 0));
                         }
@@ -2031,7 +2009,7 @@ namespace OpenNos.GameObject
                     {
                         Logger.LogEvent("UPGRADE_ITEM", session.GenerateIdentity(), $"[UpgradeItem]ItemType: {wearable.Item.ItemType} Protection: {protection.ToString()} IIId: {Id} Upgrade: {wearable.Upgrade} Result: Fixed");
 
-                        session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId,3004), session.Character.MapX, session.Character.MapY);
+                        session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 3004), session.Character.MapX, session.Character.MapY);
                         wearable.IsFixed = true;
                         session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("UPGRADE_FIXED"), 11));
                         session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADE_FIXED"), 0));
@@ -2040,7 +2018,7 @@ namespace OpenNos.GameObject
                     {
                         Logger.LogEvent("UPGRADE_ITEM", session.GenerateIdentity(), $"[UpgradeItem]ItemType: {wearable.Item.ItemType} Protection: {protection.ToString()} IIId: {Id} Upgrade: {wearable.Upgrade} Result: Success");
 
-                        session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId,3005), session.Character.MapX, session.Character.MapY);
+                        session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 3005), session.Character.MapX, session.Character.MapY);
                         session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("UPGRADE_SUCCESS"), 12));
                         session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADE_SUCCESS"), 0));
                         wearable.Upgrade++;
@@ -2057,7 +2035,7 @@ namespace OpenNos.GameObject
                     {
                         Logger.LogEvent("UPGRADE_ITEM", session.GenerateIdentity(), $"[UpgradeItem]ItemType: {wearable.Item.ItemType} Protection: {protection.ToString()} IIId: {Id} Upgrade: {wearable.Upgrade} Result: Fixed");
 
-                        session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId,3004), session.Character.MapX, session.Character.MapY);
+                        session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 3004), session.Character.MapX, session.Character.MapY);
                         wearable.IsFixed = true;
                         session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("UPGRADE_FIXED"), 11));
                         session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADE_FIXED"), 0));
@@ -2074,7 +2052,7 @@ namespace OpenNos.GameObject
                         }
                         else
                         {
-                            session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId,3004), session.Character.MapX, session.Character.MapY);
+                            session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 3004), session.Character.MapX, session.Character.MapY);
                             session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("SCROLL_PROTECT_USED"), 11));
                             session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADE_FAILED_ITEM_SAVED"), 0));
                         }
@@ -2083,7 +2061,7 @@ namespace OpenNos.GameObject
                     {
                         Logger.LogEvent("UPGRADE_ITEM", session.GenerateIdentity(), $"[UpgradeItem]ItemType: {wearable.Item.ItemType} Protection: {protection.ToString()} IIId: {Id} Upgrade: {wearable.Upgrade} Result: Success");
 
-                        session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId,3005), session.Character.MapX, session.Character.MapY);
+                        session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 3005), session.Character.MapX, session.Character.MapY);
                         session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("UPGRADE_SUCCESS"), 12));
                         session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADE_SUCCESS"), 0));
                         wearable.Upgrade++;
