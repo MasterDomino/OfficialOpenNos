@@ -43,7 +43,7 @@
     <OutputPath>bin\x64\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
-	<LangVersion>latest</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <PlatformTarget>x64</PlatformTarget>
@@ -51,14 +51,14 @@
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
-	<LangVersion>latest</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
-	<LangVersion>latest</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <PlatformTarget>x86</PlatformTarget>
@@ -66,7 +66,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
-	<LangVersion>latest</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CloneExtensions, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -82,7 +82,6 @@
     <Reference Include="System.Reactive, Version=4.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.4.0.0-preview00001\lib\net46\System.Reactive.dll</HintPath>
     </Reference>
-    <Reference Include="System.Runtime" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />

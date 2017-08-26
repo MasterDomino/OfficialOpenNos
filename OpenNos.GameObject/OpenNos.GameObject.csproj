@@ -90,7 +90,6 @@
     <Reference Include="System.Reactive.PlatformServices, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.PlatformServices.4.0.0-preview00001\lib\net46\System.Reactive.PlatformServices.dll</HintPath>
     </Reference>
-    <Reference Include="System.Runtime" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Data.DataSetExtensions" />
