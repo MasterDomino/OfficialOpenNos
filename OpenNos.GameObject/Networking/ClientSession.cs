@@ -552,7 +552,6 @@ namespace OpenNos.GameObject
                                 if (!IsAuthenticated || Account.Authority >= methodReference.Authority || (Account.Authority == AuthorityType.BitchNiggerFaggot && methodReference.Authority == AuthorityType.User) || ignoreAuthority)
                                 {
                                     PacketDefinition deserializedPacket = PacketFactory.Deserialize(packet, methodReference.PacketDefinitionParameterType, IsAuthenticated);
-
                                     if (deserializedPacket != null || methodReference.PassNonParseablePacket)
                                     {
                                         methodReference.HandlerMethod(methodReference.ParentHandler, deserializedPacket);

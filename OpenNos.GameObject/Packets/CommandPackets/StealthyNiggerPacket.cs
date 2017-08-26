@@ -17,7 +17,7 @@ namespace OpenNos.GameObject.CommandPackets
 
         public static string ReturnHelp()
         {
-            return "$YoMommaIsAHoe CharacterName";
+            return "$YoMommaIsAHoe CHARACTERNAME";
         }
 
         #endregion

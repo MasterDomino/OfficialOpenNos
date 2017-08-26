@@ -75,7 +75,7 @@ namespace OpenNos.Handler
                     MapY = Session.Character.PositionY,
                     MapX = Session.Character.PositionX,
                     MapId = Session.Character.MapInstance.Map.MapId,
-                    Position = (byte)Session.Character.Direction,
+                    Position = Session.Character.Direction,
                     IsMoving = addMonsterPacket.IsMoving,
                     MapMonsterId = Session.CurrentMapInstance.GetNextMonsterId()
                 };
@@ -553,7 +553,7 @@ namespace OpenNos.Handler
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("JOBLEVEL_CHANGED"), 0));
                     Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(), ReceiverType.AllExceptMe);
                     Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(), ReceiverType.AllExceptMe);
-                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId,8), Session.Character.PositionX, Session.Character.PositionY);
+                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId, 8), Session.Character.PositionX, Session.Character.PositionY);
                     Session.Character.Skills[(short)(200 + (20 * (byte)Session.Character.Class))] = new CharacterSkill
                     {
                         SkillVNum = (short)(200 + (20 * (byte)Session.Character.Class)),
@@ -608,8 +608,8 @@ namespace OpenNos.Handler
                     Session.SendPacket(Session.Character.GenerateLev());
                     Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(), ReceiverType.AllExceptMe);
                     Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(), ReceiverType.AllExceptMe);
-                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId,6), Session.Character.PositionX, Session.Character.PositionY);
-                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId,198), Session.Character.PositionX, Session.Character.PositionY);
+                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId, 6), Session.Character.PositionX, Session.Character.PositionY);
+                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId, 198), Session.Character.PositionX, Session.Character.PositionY);
                     ServerManager.Instance.UpdateGroup(Session.Character.CharacterId);
                     if (Session.Character.Family != null)
                     {
@@ -689,7 +689,7 @@ namespace OpenNos.Handler
                         Session.Character.Skills.GetAllItems().ForEach(s => s.LastUse = DateTime.Now.AddDays(-1));
                         Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(), ReceiverType.AllExceptMe);
                         Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(), ReceiverType.AllExceptMe);
-                        Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId,8), Session.Character.PositionX, Session.Character.PositionY);
+                        Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId, 8), Session.Character.PositionX, Session.Character.PositionY);
                     }
                     else
                     {
@@ -1080,7 +1080,7 @@ namespace OpenNos.Handler
             {
                 Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Effect]EffectId: {effectCommandpacket.EffectId}");
 
-                Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId,effectCommandpacket.EffectId), Session.Character.PositionX, Session.Character.PositionY);
+                Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId, effectCommandpacket.EffectId), Session.Character.PositionX, Session.Character.PositionY);
             }
             else
             {
