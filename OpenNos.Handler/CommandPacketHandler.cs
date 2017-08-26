@@ -835,7 +835,7 @@ namespace OpenNos.Handler
             Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), "[Help]");
 
             // get commands
-            List<Type> classes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(t => t.GetTypes()).Where(t => t.IsClass && t.Namespace == "OpenNos.GameObject.CommandPackets").ToList();
+            List<Type> classes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(t => t.GetTypes()).Where(t => t.IsClass && t.Namespace == "OpenNos.GameObject.CommandPackets" && (((PacketHeaderAttribute)Array.Find(t.GetCustomAttributes(true), ca => ca.GetType().Equals(typeof(PacketHeaderAttribute))))?.Authority ?? AuthorityType.User) <= Session.Account.Authority).ToList();
             List<string> messages = new List<string>();
             foreach (Type type in classes)
             {
