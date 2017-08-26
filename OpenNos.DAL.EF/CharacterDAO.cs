@@ -62,7 +62,7 @@ namespace OpenNos.DAL.EF
         {
             using (var context = DataAccessHelper.CreateContext())
             {
-                return context.Character.Where(c => c.Account.Authority == AuthorityType.User).OrderByDescending(c => c.Compliment).Take(30).ToList().Select(c => _mapper.Map<CharacterDTO>(c)).ToList();
+                return context.Character.Where(c => c.Account.Authority == AuthorityType.User && !c.Account.PenaltyLog.Any(l => l.Penalty == PenaltyType.Banned)).OrderByDescending(c => c.Compliment).Take(30).ToList().Select(c => _mapper.Map<CharacterDTO>(c)).ToList();
             }
         }
 
@@ -74,7 +74,7 @@ namespace OpenNos.DAL.EF
         {
             using (var context = DataAccessHelper.CreateContext())
             {
-                return context.Character.Where(c => c.Account.Authority == AuthorityType.User).OrderByDescending(c => c.Act4Points).Take(30).ToList().Select(c => _mapper.Map<CharacterDTO>(c)).ToList();
+                return context.Character.Where(c => c.Account.Authority == AuthorityType.User && !c.Account.PenaltyLog.Any(l => l.Penalty == PenaltyType.Banned)).OrderByDescending(c => c.Act4Points).Take(30).ToList().Select(c => _mapper.Map<CharacterDTO>(c)).ToList();
             }
         }
 
@@ -86,7 +86,7 @@ namespace OpenNos.DAL.EF
         {
             using (var context = DataAccessHelper.CreateContext())
             {
-                return context.Character.Where(c => c.Account.Authority == AuthorityType.User).OrderByDescending(c => c.Reputation).Take(43).ToList().Select(c => _mapper.Map<CharacterDTO>(c)).ToList();
+                return context.Character.Where(c => c.Account.Authority == AuthorityType.User && !c.Account.PenaltyLog.Any(l => l.Penalty == PenaltyType.Banned)).OrderByDescending(c => c.Reputation).Take(43).ToList().Select(c => _mapper.Map<CharacterDTO>(c)).ToList();
             }
         }
 
