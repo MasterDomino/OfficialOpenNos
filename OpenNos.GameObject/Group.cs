@@ -89,7 +89,7 @@ namespace OpenNos.GameObject
         {
             List<string> str = new List<string>();
             int i = 0;
-            foreach (ClientSession session in Characters.GetAllItems())
+            Characters.GetAllItems().ForEach(session =>
             {
                 if (session == player)
                 {
@@ -101,7 +101,7 @@ namespace OpenNos.GameObject
                 {
                     str.Add($"pst 1 {session.Character.CharacterId} {++i} {(int)(session.Character.Hp / session.Character.HPLoad() * 100)} {(int)(session.Character.Mp / session.Character.MPLoad() * 100)} {session.Character.HPLoad()} {session.Character.MPLoad()} {(byte)session.Character.Class} {(byte)session.Character.Gender} {(session.Character.UseSp ? session.Character.Morph : 0)}{session.Character.Buff.GetAllItems().Aggregate(string.Empty, (current, buff) => current + $" {buff.Card.CardId}")}");
                 }
-            }
+            });
             return str;
         }
 
@@ -183,7 +183,7 @@ namespace OpenNos.GameObject
             session.Character.Group = null;
             if (IsLeader(session) && GroupType != GroupType.Group && Characters.Count > 1)
             {
-                Characters.ForEach(s => s.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("TEAM_LEADER_CHANGE"), Characters.ElementAt(0).Character?.Name), 0)));
+                Characters.GetAllItems().ForEach(s => s.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("TEAM_LEADER_CHANGE"), Characters.ElementAt(0).Character?.Name), 0)));
             }
             Characters.RemoveAll(s => s?.Character.CharacterId == session.Character.CharacterId);
         }
