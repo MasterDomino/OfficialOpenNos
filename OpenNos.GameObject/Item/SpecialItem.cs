@@ -12,7 +12,6 @@
  * GNU General Public License for more details.
  */
 
-using CloneExtensions;
 using OpenNos.Core;
 using OpenNos.Data;
 using OpenNos.Domain;
@@ -78,7 +77,7 @@ namespace OpenNos.GameObject
                     ItemInstance raidSeal = session.Character.Inventory.LoadBySlotAndType<ItemInstance>(inv.Slot, InventoryType.Main);
                     session.Character.Inventory.RemoveItemFromInventory(raidSeal.Id);
 
-                    ScriptedInstance raid = ServerManager.Instance.Raids.FirstOrDefault(s => s.RequieredItems.Any(obj => obj.VNum == raidSeal.ItemVNum))?.GetClone();
+                    ScriptedInstance raid = ServerManager.Instance.Raids.FirstOrDefault(s => s.RequieredItems.Any(obj => obj.VNum == raidSeal.ItemVNum))?.Copy();
                     if (raid != null)
                     {
                         Group group = new Group()
