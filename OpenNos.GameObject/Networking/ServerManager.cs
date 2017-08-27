@@ -1025,7 +1025,7 @@ namespace OpenNos.GameObject
             session.SendPacket(UserInterfaceHelper.Instance.GenerateMapOut());
             if (!session.Character.InvisibleGm)
             {
-                session.Character.Mates.Where(s => s.IsTeamMember).ToList().ForEach(s => session.CurrentMapInstance?.Broadcast(session, StaticPacketHelper.Out(UserType.Player, s.CharacterId), ReceiverType.AllExceptMe));
+                session.Character.Mates.Where(s => s.IsTeamMember).ToList().ForEach(s => session.CurrentMapInstance?.Broadcast(session, StaticPacketHelper.Out(UserType.Npc, s.MateTransportId), ReceiverType.AllExceptMe));
                 session.CurrentMapInstance?.Broadcast(session, StaticPacketHelper.Out(UserType.Player, session.Character.CharacterId), ReceiverType.AllExceptMe);
             }
         }
