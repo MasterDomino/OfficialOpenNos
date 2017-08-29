@@ -36,7 +36,7 @@ namespace OpenNos.GameObject.Event.GAMES
             ServerManager.Instance.EventInWaiting = false;
             IEnumerable<ClientSession> sessions = ServerManager.Instance.Sessions.Where(s => s.Character?.IsWaitingForEvent == true && s.Character.MapInstance.MapInstanceType == MapInstanceType.BaseMapInstance);
 
-            MapInstance map = ServerManager.Instance.GenerateMapInstance(2004, MapInstanceType.NormalInstance, new InstanceBag());
+            MapInstance map = ServerManager.Instance.GenerateMapInstance(2004, MapInstanceType.EventGameInstance, new InstanceBag());
             if (map != null)
             {
                 foreach (ClientSession sess in sessions)
