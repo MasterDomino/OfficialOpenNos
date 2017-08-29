@@ -288,7 +288,14 @@ namespace OpenNos.GameObject
                         {
                             Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("YOU_HAVE_LIFE_RAID"), 2 - Session.CurrentMapInstance.InstanceBag.DeadList.Count(s => s == Session.Character.CharacterId))));
                             Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("RAID_MEMBER_DEAD"), Session.Character.Name)));
-                            Session.Character.Group?.Raid?.InstanceBag.DeadList.Add(Session.Character.CharacterId);
+                            try
+                            {
+                                Session.Character.Group?.Raid?.InstanceBag.DeadList.Add(Session.Character.CharacterId);
+                            }
+                            catch (IndexOutOfRangeException ex)
+                            {
+                                Logger.Error(ex);
+                            }
                             Session.Character.Group?.Characters.ForEach(session =>
                             {
                                 session.SendPacket(session.Character.Group.GeneraterRaidmbf(session));
