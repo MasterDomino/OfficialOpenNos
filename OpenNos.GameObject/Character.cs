@@ -1542,7 +1542,7 @@ namespace OpenNos.GameObject
                 if (logs.Count <= 5 && !logs.Any(s => s.AccountId.Equals(Session.Account.AccountId)))
                 {
                     CharacterDTO character = DAOFactory.CharacterDAO.LoadById(referrerId);
-                    if (character == null)
+                    if (character == null || character.Level < 70)
                     {
                         return;
                     }
