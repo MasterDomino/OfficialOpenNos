@@ -851,10 +851,10 @@ namespace OpenNos.Handler
             // send messages
             if (messages != null)
             {
+                messages.Sort();
                 if (helpPacket.Contents == "*" || string.IsNullOrEmpty(helpPacket.Contents))
                 {
                     Session.SendPacket(Session.Character.GenerateSay("-------------Commands Info-------------", 11));
-                    messages.Sort();
                     foreach (string message in messages)
                     {
                         Session.SendPacket(Session.Character.GenerateSay(message, 12));
@@ -863,7 +863,10 @@ namespace OpenNos.Handler
                 else
                 {
                     Session.SendPacket(Session.Character.GenerateSay("-------------Command Info-------------", 11));
-                    Session.SendPacket(Session.Character.GenerateSay(messages.Find(s => s.ToLower().Contains(helpPacket.Contents.ToLower())), 12));
+                    foreach (string message in messages.Where(s => s.ToLower().Contains(helpPacket.Contents.ToLower())))
+                    {
+                        Session.SendPacket(Session.Character.GenerateSay(message, 12));
+                    }
                 }
                 Session.SendPacket(Session.Character.GenerateSay("-----------------------------------------------", 11));
             }
