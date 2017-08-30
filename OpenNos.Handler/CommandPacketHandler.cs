@@ -2054,6 +2054,30 @@ namespace OpenNos.Handler
         }
 
         /// <summary>
+        /// $Sort Command
+        /// </summary>
+        /// <param name="sortPacket"></param>
+        public void Sort(SortPacket sortPacket)
+        {
+            if (sortPacket?.InventoryType.HasValue == true)
+            {
+                Logger.LogEvent("USERCOMMAND", Session.GenerateIdentity(), $"[Sort]InventoryType: {sortPacket.InventoryType}");
+                if (sortPacket.InventoryType == InventoryType.Equipment || sortPacket.InventoryType == InventoryType.Etc || sortPacket.InventoryType == InventoryType.Main)
+                {
+                    Session.Character.Inventory.Reorder(Session, sortPacket.InventoryType.Value);
+                }
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay(SortPacket.ReturnHelp(), 10));
+                foreach (string str in SortPacket.MoreHelp())
+                {
+                    Session.SendPacket(Session.Character.GenerateSay(str, 10));
+                }
+            }
+        }
+
+        /// <summary>
         /// $Speed Command
         /// </summary>
         /// <param name="speedPacket"></param>
@@ -2727,6 +2751,14 @@ namespace OpenNos.Handler
             }
         }
 
+        /// <summary>
+        /// private add portal command
+        /// </summary>
+        /// <param name="destinationMapId"></param>
+        /// <param name="destinationX"></param>
+        /// <param name="destinationY"></param>
+        /// <param name="type"></param>
+        /// <param name="insertToDatabase"></param>
         private void AddPortal(short destinationMapId, short destinationX, short destinationY, short type, bool insertToDatabase)
         {
             if (Session.HasCurrentMapInstance)
@@ -2750,6 +2782,12 @@ namespace OpenNos.Handler
             }
         }
 
+        /// <summary>
+        /// private ban method
+        /// </summary>
+        /// <param name="characterName"></param>
+        /// <param name="duration"></param>
+        /// <param name="reason"></param>
         private void BanMethod(string characterName, int duration, string reason)
         {
             CharacterDTO character = DAOFactory.CharacterDAO.LoadByName(characterName);
