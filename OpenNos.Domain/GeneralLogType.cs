@@ -18,6 +18,7 @@ namespace OpenNos.Domain
     {
         Connection,
         Promotion,
-        Demotion
+        Demotion,
+        ReferralProgram
     }
 }

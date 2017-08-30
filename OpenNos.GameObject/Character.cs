@@ -1533,6 +1533,32 @@ namespace OpenNos.GameObject
             return $"cl {CharacterId} {(Invisible ? 1 : 0)} {(InvisibleGm ? 1 : 0)}";
         }
 
+        public void GetReferrerReward()
+        {
+            long referrerId = Session.Account.ReferrerId;
+            if (Level >= 70 && referrerId != 0)
+            {
+                List<GeneralLogDTO> logs = DAOFactory.GeneralLogDAO.LoadByLogType("ReferralProgram", null).Where(g => g.IpAddress.Equals(Session.IpAddress.Split(':')[1].Replace("//", ""))).ToList();
+                if (logs.Count <= 5 && !logs.Any(s => s.AccountId.Equals(Session.Account.AccountId)))
+                {
+                    CharacterDTO character = DAOFactory.CharacterDAO.LoadById(referrerId);
+                    if (character == null)
+                    {
+                        return;
+                    }
+                    AccountDTO referrer = DAOFactory.AccountDAO.LoadById(character.AccountId);
+                    if (referrer != null && !CharacterId.Equals(referrerId) && !AccountId.Equals(character.AccountId) && !referrer.RegistrationIP.Equals(Session.Account.RegistrationIP))
+                    {
+                        Logger.LogEvent("REFERRERREWARD", Session.GenerateIdentity(), $"AccountId: {AccountId} ReferrerId: {referrerId}");
+                        DAOFactory.AccountDAO.WriteGeneralLog(AccountId, Session.IpAddress, CharacterId, GeneralLogType.ReferralProgram, $"AccountId: {AccountId} ReferrerId: {referrerId}");
+                        // send gifts like you want
+                        //SendGift(CharacterId, 5910, 1, 0, 0, false);
+                        //SendGift(referrerId, 5910, 1, 0, 0, false);
+                    }
+                }
+            }
+        }
+
         public void GenerateKillBonus(MapMonster monsterToAttack)
         {
             lock (_syncObj)
@@ -3754,6 +3780,7 @@ namespace OpenNos.GameObject
                         }
                     }
                     Session.SendPacket(GenerateLevelUp());
+                    GetReferrerReward();
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("LEVELUP"), 0));
                     Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 6), PositionX, PositionY);
                     Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 198), PositionX, PositionY);
