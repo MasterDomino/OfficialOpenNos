@@ -141,7 +141,7 @@ namespace OpenNos.Handler
         {
             if (addPortalPacket != null)
             {
-                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[PortalTo]DestinationMapId: {addPortalPacket.DestinationMapId} DestinationMapX: {addPortalPacket.DestinationX} DestinationY: {addPortalPacket.DestinationY}");
+                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[AddPortal]DestinationMapId: {addPortalPacket.DestinationMapId} DestinationMapX: {addPortalPacket.DestinationX} DestinationY: {addPortalPacket.DestinationY}");
 
                 AddPortal(addPortalPacket.DestinationMapId, addPortalPacket.DestinationX, addPortalPacket.DestinationY, addPortalPacket.PortalType == null ? (short)-1 : (short)addPortalPacket.PortalType, true);
             }
