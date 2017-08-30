@@ -1569,7 +1569,7 @@ namespace OpenNos.GameObject
                             if (x < 4)
                             {
                                 double rndamount = ServerManager.Instance.RandomNumber() * random.NextDouble();
-                                double divider = levelDifference <= 5 && levelDifference >= -5 ? 1D : (levelDifference - 5) * 2D;
+                                double divider = levelDifference >= 10 ? (levelDifference - 9) * 1.2D : levelDifference <= -10 ? (levelDifference + 9) * 1.2D : 1D;
                                 if (rndamount <= (double)drop.DropChance * dropRate / 5000.000 / divider)
                                 {
                                     x++;
