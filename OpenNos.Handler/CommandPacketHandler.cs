@@ -134,6 +134,24 @@ namespace OpenNos.Handler
         }
 
         /// <summary>
+        /// $AddPortal Command
+        /// </summary>
+        /// <param name="addPortalPacket"></param>
+        public void AddPortal(AddPortalPacket addPortalPacket)
+        {
+            if (addPortalPacket != null)
+            {
+                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[PortalTo]DestinationMapId: {addPortalPacket.DestinationMapId} DestinationMapX: {addPortalPacket.DestinationX} DestinationY: {addPortalPacket.DestinationY}");
+
+                AddPortal(addPortalPacket.DestinationMapId, addPortalPacket.DestinationX, addPortalPacket.DestinationY, addPortalPacket.PortalType == null ? (short)-1 : (short)addPortalPacket.PortalType, true);
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay(AddPortalPacket.ReturnHelp(), 10));
+            }
+        }
+
+        /// <summary>
         /// $AddShellEffect Command
         /// </summary>
         /// <param name="addShellEffectPacket"></param>
@@ -827,6 +845,29 @@ namespace OpenNos.Handler
         }
 
         /// <summary>
+        /// $Clone Command
+        /// </summary>
+        /// <param name="cloneItemPacket"></param>
+        public void CloneItem(CloneItemPacket cloneItemPacket)
+        {
+            if (cloneItemPacket != null)
+            {
+                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Clone]Slot: {cloneItemPacket.Slot}");
+                ItemInstance item = Session.Character.Inventory.LoadBySlotAndType(cloneItemPacket.Slot, InventoryType.Equipment);
+                if (item != null)
+                {
+                    item = item.DeepCopy();
+                    item.Id = Guid.NewGuid();
+                    Session.Character.Inventory.AddToInventory(item);
+                }
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay(CloneItemPacket.ReturnHelp(), 10));
+            }
+        }
+
+        /// <summary>
         /// $Help Command
         /// </summary>
         /// <param name="helpPacket"></param>
@@ -970,39 +1011,6 @@ namespace OpenNos.Handler
             else
             {
                 Session.SendPacket(Session.Character.GenerateSay(CreateItemPacket.ReturnHelp(), 10));
-            }
-        }
-
-        /// <summary>
-        /// $PortalTo Command
-        /// </summary>
-        /// <param name="portalToPacket"></param>
-        public void CreatePortal(PortalToPacket portalToPacket)
-        {
-            if (portalToPacket != null)
-            {
-                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[PortalTo]DestinationMapId: {portalToPacket.DestinationMapId} DestinationMapX: {portalToPacket.DestinationX} DestinationY: {portalToPacket.DestinationY}");
-
-                if (Session.HasCurrentMapInstance)
-                {
-                    Portal portal = new Portal
-                    {
-                        SourceMapId = Session.Character.MapId,
-                        SourceX = Session.Character.PositionX,
-                        SourceY = Session.Character.PositionY,
-                        DestinationMapId = portalToPacket.DestinationMapId,
-                        DestinationX = portalToPacket.DestinationX,
-                        DestinationY = portalToPacket.DestinationY,
-                        Type = portalToPacket.PortalType == null ? (short)-1 : (short)portalToPacket.PortalType
-                    };
-                    DAOFactory.PortalDAO.Insert(portal);
-                    Session.CurrentMapInstance.Portals.Add(portal);
-                    Session.CurrentMapInstance?.Broadcast(portal.GenerateGp());
-                }
-            }
-            else
-            {
-                Session.SendPacket(Session.Character.GenerateSay(PortalToPacket.ReturnHelp(), 10));
             }
         }
 
@@ -1687,6 +1695,24 @@ namespace OpenNos.Handler
         }
 
         /// <summary>
+        /// $PortalTo Command
+        /// </summary>
+        /// <param name="portalToPacket"></param>
+        public void PortalTo(PortalToPacket portalToPacket)
+        {
+            if (portalToPacket != null)
+            {
+                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[PortalTo]DestinationMapId: {portalToPacket.DestinationMapId} DestinationMapX: {portalToPacket.DestinationX} DestinationY: {portalToPacket.DestinationY}");
+
+                AddPortal(portalToPacket.DestinationMapId, portalToPacket.DestinationX, portalToPacket.DestinationY, portalToPacket.PortalType == null ? (short)-1 : (short)portalToPacket.PortalType, false);
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay(PortalToPacket.ReturnHelp(), 10));
+            }
+        }
+
+        /// <summary>
         /// $Position Command
         /// </summary>
         /// <param name="positionPacket"></param>
@@ -2235,29 +2261,6 @@ namespace OpenNos.Handler
         }
 
         /// <summary>
-        /// $Clone Command
-        /// </summary>
-        /// <param name="cloneItemPacket"></param>
-        public void CloneItem(CloneItemPacket cloneItemPacket)
-        {
-            if (cloneItemPacket != null)
-            {
-                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Clone]Slot: {cloneItemPacket.Slot}");
-                ItemInstance item = Session.Character.Inventory.LoadBySlotAndType(cloneItemPacket.Slot, InventoryType.Equipment);
-                if (item != null)
-                {
-                    item = item.DeepCopy();
-                    item.Id = Guid.NewGuid();
-                    Session.Character.Inventory.AddToInventory(item);
-                }
-            }
-            else
-            {
-                Session.SendPacket(Session.Character.GenerateSay(CloneItemPacket.ReturnHelp(), 10));
-            }
-        }
-
-        /// <summary>
         /// $SummonNPC Command
         /// </summary>
         /// <param name="summonNPCPacket"></param>
@@ -2721,6 +2724,29 @@ namespace OpenNos.Handler
             else
             {
                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_IN_MINILAND"), 0));
+            }
+        }
+
+        private void AddPortal(short destinationMapId, short destinationX, short destinationY, short type, bool insertToDatabase)
+        {
+            if (Session.HasCurrentMapInstance)
+            {
+                Portal portal = new Portal
+                {
+                    SourceMapId = Session.Character.MapId,
+                    SourceX = Session.Character.PositionX,
+                    SourceY = Session.Character.PositionY,
+                    DestinationMapId = destinationMapId,
+                    DestinationX = destinationX,
+                    DestinationY = destinationY,
+                    Type = type
+                };
+                if (insertToDatabase)
+                {
+                    DAOFactory.PortalDAO.Insert(portal);
+                }
+                Session.CurrentMapInstance.Portals.Add(portal);
+                Session.CurrentMapInstance?.Broadcast(portal.GenerateGp());
             }
         }
 
