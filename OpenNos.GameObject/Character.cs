@@ -1556,7 +1556,8 @@ namespace OpenNos.GameObject
                 // end owner set
                 if (Session.HasCurrentMapInstance && (Group == null || Group.GroupType == GroupType.Group))
                 {
-                    List<DropDTO> droplist = monsterToAttack.Monster.Drops.Where(s => Session.CurrentMapInstance.Map.MapTypes.Any(m => m.MapTypeId == s.MapTypeId) || s.MapTypeId == null).ToList();
+                    int levelDifference = Session.Character.Level - monsterToAttack.Monster.Level;
+                    List<DropDTO> droplist = monsterToAttack.Monster.Drops.Where(s => (levelDifference <= 15 && levelDifference >= -15) && (Session.CurrentMapInstance.Map.MapTypes.Any(m => m.MapTypeId == s.MapTypeId) || s.MapTypeId == null)).ToList();
                     if (monsterToAttack.Monster.MonsterType != MonsterType.Special)
                     {
                         #region item drop
@@ -1568,7 +1569,8 @@ namespace OpenNos.GameObject
                             if (x < 4)
                             {
                                 double rndamount = ServerManager.Instance.RandomNumber() * random.NextDouble();
-                                if (rndamount <= (double)drop.DropChance * dropRate / 5000.000)
+                                double divider = levelDifference <= 5 && levelDifference >= -5 ? 1D : (levelDifference - 5) * 2D;
+                                if (rndamount <= (double)drop.DropChance * dropRate / 5000.000 / divider)
                                 {
                                     x++;
                                     if (Session.CurrentMapInstance != null)
