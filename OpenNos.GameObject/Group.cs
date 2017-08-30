@@ -108,10 +108,14 @@ namespace OpenNos.GameObject
         public string GenerateRdlst()
         {
             string result = string.Empty;
-            if (Raid != null)
+            result = $"rdlst{((GroupType == GroupType.GiantTeam) ? "f" : string.Empty)} {Raid.LevelMinimum} {Raid.LevelMaximum} 0";
+            try
             {
-                result = $"rdlst{((GroupType == GroupType.GiantTeam) ? "f" : string.Empty)} {Raid.LevelMinimum} {Raid.LevelMaximum} 0";
-                Characters.GetAllItems().ForEach(session => result += $" {session.Character.Level}.{(session.Character.UseSp || session.Character.IsVehicled ? session.Character.Morph : -1)}.{(short)session.Character.Class}.{Raid.InstanceBag?.DeadList?.Count(s => s == session.Character.CharacterId) ?? 0}.{session.Character.Name}.{(short)session.Character.Gender}.{session.Character.CharacterId}.{session.Character.HeroLevel}");
+                Characters.GetAllItems().ForEach(session => result += $" {session.Character.Level}.{(session.Character.UseSp || session.Character.IsVehicled ? session.Character.Morph : -1)}.{(short)session.Character.Class}.{Raid?.InstanceBag.DeadList.Count(s => s == session.Character.CharacterId) ?? 0}.{session.Character.Name}.{(short)session.Character.Gender}.{session.Character.CharacterId}.{session.Character.HeroLevel}");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "GenerateRdlst");
             }
             return result;
         }

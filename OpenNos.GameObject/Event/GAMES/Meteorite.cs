@@ -3,6 +3,7 @@ using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
@@ -35,7 +36,7 @@ namespace OpenNos.GameObject.Event.GAMES
             ServerManager.Instance.EventInWaiting = false;
             IEnumerable<ClientSession> sessions = ServerManager.Instance.Sessions.Where(s => s.Character?.IsWaitingForEvent == true && s.Character.MapInstance.MapInstanceType == MapInstanceType.BaseMapInstance);
 
-            MapInstance map = ServerManager.Instance.GenerateMapInstance(2004, MapInstanceType.NormalInstance, new InstanceBag());
+            MapInstance map = ServerManager.Instance.GenerateMapInstance(2004, MapInstanceType.EventGameInstance, new InstanceBag());
             if (map != null)
             {
                 foreach (ClientSession sess in sessions)
@@ -65,9 +66,93 @@ namespace OpenNos.GameObject.Event.GAMES
 
             #region Methods
 
+            private void RemoveSP(ClientSession Session, short vnum)
+            {
+                if (Session?.HasSession == true)
+                {
+                    if (Session.Character.IsVehicled)
+                    {
+                        return;
+                    }
+                    List<BuffType> bufftodisable = new List<BuffType>
+                {
+                    BuffType.Bad,
+                    BuffType.Good,
+                    BuffType.Neutral
+                };
+                    Session.Character.DisableBuffs(bufftodisable);
+                    Session.Character.EquipmentBCards.RemoveAll(s => s.ItemVNum.Equals(vnum));
+                    Session.Character.UseSp = false;
+                    Session.Character.LoadSpeed();
+                    Session.SendPacket(Session.Character.GenerateCond());
+                    Session.SendPacket(Session.Character.GenerateLev());
+                    Session.Character.SpCooldown = 30;
+                    if (Session.Character?.SkillsSp != null)
+                    {
+                        foreach (CharacterSkill ski in Session.Character.SkillsSp.GetAllItems().Where(s => !s.CanBeUsed()))
+                        {
+                            short time = ski.Skill.Cooldown;
+                            double temp = (ski.LastUse - DateTime.Now).TotalMilliseconds + (time * 100);
+                            temp /= 1000;
+                            Session.Character.SpCooldown = temp > Session.Character.SpCooldown ? (int)temp : Session.Character.SpCooldown;
+                        }
+                    }
+                    Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("STAY_TIME"), Session.Character.SpCooldown), 11));
+                    Session.SendPacket($"sd {Session.Character.SpCooldown}");
+                    Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateCMode());
+                    Session.CurrentMapInstance?.Broadcast(UserInterfaceHelper.Instance.GenerateGuri(6, 1, Session.Character.CharacterId), Session.Character.PositionX, Session.Character.PositionY);
+
+                    // ms_c
+                    Session.SendPacket(Session.Character.GenerateSki());
+                    Session.SendPackets(Session.Character.GenerateQuicklist());
+                    Session.SendPacket(Session.Character.GenerateStat());
+                    Session.SendPacket(Session.Character.GenerateStatChar());
+
+                    Logger.LogEvent("CHARACTER_SPECIALIST_RETURN", Session.GenerateIdentity(), $"SpCooldown: {Session.Character.SpCooldown}");
+
+                    Observable.Timer(TimeSpan.FromMilliseconds(Session.Character.SpCooldown * 1000)).Subscribe(o =>
+                    {
+                        Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("TRANSFORM_DISAPPEAR"), 11));
+                        Session.SendPacket("sd 0");
+                    });
+                }
+            }
+
+
             public void Run(MapInstance map)
             {
                 _map = map;
+
+                foreach (ClientSession sess in _map.Sessions)
+                {
+                    ServerManager.Instance.TeleportOnRandomPlaceInMap(sess, map.MapInstanceId);
+                    if (sess.Character.IsVehicled)
+                    {
+                        sess.Character.RemoveVehicle();
+                    }
+                    if (sess.Character.UseSp)
+                    {
+                        double currentRunningSeconds = (DateTime.Now - Process.GetCurrentProcess().StartTime.AddSeconds(-50)).TotalSeconds;
+
+                        sess.Character.LastSp = currentRunningSeconds;
+                        SpecialistInstance specialist = sess.Character.Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear);
+                        if (specialist != null)
+                        {
+                            RemoveSP(sess, specialist.ItemVNum);
+                        }
+                    }
+
+                    sess.Character.Speed = 12;
+                    sess.Character.IsVehicled = true;
+                    sess.Character.Morph = 1156;
+                    sess.Character.ArenaWinner = 0;
+                    sess.Character.MorphUpgrade = 0;
+                    sess.Character.MorphUpgrade2 = 0;
+                    sess.SendPacket(sess.Character.GenerateCond());
+                    sess.Character.LastSpeedChange = DateTime.Now;
+                    sess.CurrentMapInstance?.Broadcast(sess.Character.GenerateCMode());
+                }
+
                 int i = 0;
                 while (_map?.Sessions?.Any() == true)
                 {
@@ -137,7 +222,7 @@ namespace OpenNos.GameObject.Event.GAMES
                     _map.AddMonster(circle);
                     _map.Broadcast(circle.GenerateIn());
                     _map.Broadcast(StaticPacketHelper.GenerateEff(UserType.Monster, circleId, 4660));
-                    Observable.Timer(TimeSpan.FromSeconds(4)).Subscribe(observer =>
+                    Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe(observer =>
                     {
                         if (_map != null)
                         {
@@ -148,6 +233,7 @@ namespace OpenNos.GameObject.Event.GAMES
                                 {
                                     // Your reward for the last three living players
                                 }
+                                character.RemoveVehicle();
                                 character.GetDamage(655350);
                                 Observable.Timer(TimeSpan.FromMilliseconds(1000)).Subscribe(o => ServerManager.Instance.AskRevive(character.CharacterId));
                             }

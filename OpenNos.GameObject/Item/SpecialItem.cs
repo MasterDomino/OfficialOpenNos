@@ -249,6 +249,10 @@ namespace OpenNos.GameObject
 
                 // vehicles
                 case 1000:
+                    if (ServerManager.Instance.ChannelId == 51 || session.CurrentMapInstance?.MapInstanceType == MapInstanceType.EventGameInstance)
+                    {
+                        return;
+                    }
                     if (Morph > 0)
                     {
                         if (Option == 0 && !session.Character.IsVehicled)
