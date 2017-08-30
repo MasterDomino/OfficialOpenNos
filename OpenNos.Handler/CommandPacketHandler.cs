@@ -2420,7 +2420,6 @@ namespace OpenNos.Handler
                     if (targetSession?.Character.IsChangingMapInstance == false)
                     {
                         targetSession.Character.Dispose();
-                        targetSession.Character.IsSitting = false;
                         ServerManager.Instance.ChangeMapInstance(targetSession.Character.CharacterId, Session.Character.MapInstanceId, (short)(Session.Character.PositionX + 1), (short)(Session.Character.PositionY + 1));
                     }
                     else

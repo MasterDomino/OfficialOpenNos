@@ -377,6 +377,7 @@ namespace OpenNos.GameObject
                     // cleanup sending queue to avoid sending uneccessary packets to it
                     session.ClearLowPriorityQueue();
 
+                    session.Character.IsSitting = false;
                     session.Character.MapInstanceId = MapInstanceId;
                     if (session.Character.MapInstance.MapInstanceType == MapInstanceType.BaseMapInstance)
                     {
