@@ -1536,7 +1536,7 @@ namespace OpenNos.GameObject
         public void GetReferrerReward()
         {
             long referrerId = Session.Account.ReferrerId;
-            if (Level >= 70 && referrerId != 0)
+            if (Level >= 70 && referrerId != 0 && !CharacterId.Equals(referrerId))
             {
                 List<GeneralLogDTO> logs = DAOFactory.GeneralLogDAO.LoadByLogType("ReferralProgram", null).Where(g => g.IpAddress.Equals(Session.Account.RegistrationIP.Split(':')[1].Replace("//", ""))).ToList();
                 if (logs.Count <= 5)
@@ -1547,10 +1547,10 @@ namespace OpenNos.GameObject
                         return;
                     }
                     AccountDTO referrer = DAOFactory.AccountDAO.LoadById(character.AccountId);
-                    if (referrer != null && !CharacterId.Equals(referrerId) && !AccountId.Equals(character.AccountId))
+                    if (referrer != null && !AccountId.Equals(character.AccountId))
                     {
                         Logger.LogEvent("REFERRERREWARD", Session.GenerateIdentity(), $"AccountId: {AccountId} ReferrerId: {referrerId}");
-                        DAOFactory.AccountDAO.WriteGeneralLog(AccountId, Session.Account.RegistrationIP, CharacterId, GeneralLogType.ReferralProgram, $"AccountId: {AccountId} ReferrerId: {referrerId}");
+                        DAOFactory.AccountDAO.WriteGeneralLog(AccountId, Session.Account.RegistrationIP, CharacterId, GeneralLogType.ReferralProgram, $"ReferrerId: {referrerId}");
                         // send gifts like you want
                         //SendGift(CharacterId, 5910, 1, 0, 0, false);
                         //SendGift(referrerId, 5910, 1, 0, 0, false);
