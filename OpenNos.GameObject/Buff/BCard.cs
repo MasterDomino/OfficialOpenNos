@@ -27,9 +27,10 @@ namespace OpenNos.GameObject
     {
         #region Methods
 
-        public void ApplyBCards(object session)
+        public void ApplyBCards(object session, object sender = null)
         {
             Type type = session.GetType();
+            int antibuff = 0;
             if (type == null)
             {
                 return;
@@ -37,27 +38,42 @@ namespace OpenNos.GameObject
             switch ((BCardType.CardType)Type)
             {
                 case BCardType.CardType.Buff:
-                    if (type == typeof(Character))
                     {
-                        if (ServerManager.Instance.RandomNumber() < FirstData && session is Character character)
+                        if (type == typeof(Character) && session is Character character)
                         {
-                            character.AddBuff(new Buff((short)SecondData, character.Level));
+                            Buff buff = new Buff((short)SecondData, character.Level);
+                            if (sender != null)
+                            {
+                                Type sType = sender.GetType();
+                                if (sType != null)
+                                {
+                                    if (sType == typeof(Character))
+                                    {
+                                        //Todo: Get anti stats from BCard
+                                        
+                                    }
+                                }
+                            }
+                            if (ServerManager.Instance.RandomNumber() < FirstData)
+                            {
+                                character.AddBuff(buff);
+                            }
                         }
-                    }
-                    else if (type == typeof(MapMonster))
-                    {
-                        if (ServerManager.Instance.RandomNumber() < FirstData && session is MapMonster mapMonster)
+                        else if (type == typeof(MapMonster))
                         {
-                            mapMonster.AddBuff(new Buff((short)SecondData, mapMonster.Monster.Level));
+                            if (ServerManager.Instance.RandomNumber() < FirstData && session is MapMonster mapMonster)
+                            {
+                                mapMonster.AddBuff(new Buff((short)SecondData, mapMonster.Monster.Level));
+                            }
                         }
+                        else if (type == typeof(MapNpc))
+                        {
+                        }
+                        else if (type == typeof(Mate))
+                        {
+                        }
+                        break;
                     }
-                    else if (type == typeof(MapNpc))
-                    {
-                    }
-                    else if (type == typeof(Mate))
-                    {
-                    }
-                    break;
 
                 case BCardType.CardType.Move:
                     {

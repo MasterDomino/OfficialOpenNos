@@ -33,6 +33,8 @@ namespace OpenNos.GameObject
 
         private int _movetime;
         private Random _random;
+        private bool NoMove;
+        private bool NoAttack;
 
         #endregion
 
@@ -133,6 +135,14 @@ namespace OpenNos.GameObject
                         AddBuff(new Buff(indicator.Card.TimeoutBuff, Monster.Level));
                     }
                 });
+                if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.SpecialAttack && s.SubType.Equals((byte)AdditionalTypes.SpecialAttack.NoAttack / 10)))
+                {
+                    NoAttack = true;
+                }
+                if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.Move && s.SubType.Equals((byte)AdditionalTypes.Move.MovementImpossible / 10)))
+                {
+                    NoMove = true;
+                }
             }
         }
 
@@ -321,7 +331,7 @@ namespace OpenNos.GameObject
         /// <param name="targetSession">The TargetSession to follow</param>
         private void FollowTarget(ClientSession targetSession)
         {
-            if (IsMoving)
+            if (IsMoving && !NoMove)
             {
                 const short maxDistance = 22;
                 int distance = Map.GetDistance(new MapCell() { X = targetSession.Character.PositionX, Y = targetSession.Character.PositionY }, new MapCell() { X = MapX, Y = MapY });
@@ -408,7 +418,8 @@ namespace OpenNos.GameObject
 
                     // calculate damage
                     bool onyxWings = false;
-                    int damage = DamageHelper.Instance.CalculateDamage(new BattleEntity(hitRequest.Session.Character, hitRequest.Skill), new BattleEntity(this), hitRequest.Skill, ref hitmode, ref onyxWings);
+                    BattleEntity battleEntity = new BattleEntity(hitRequest.Session.Character, hitRequest.Skill);
+                    int damage = DamageHelper.Instance.CalculateDamage(battleEntity, new BattleEntity(this), hitRequest.Skill, ref hitmode, ref onyxWings);
                     if (onyxWings)
                     {
                         short onyxX = (short)(hitRequest.Session.Character.PositionX + 2);
@@ -427,7 +438,67 @@ namespace OpenNos.GameObject
                             MapInstance.Broadcast(StaticPacketHelper.Out(UserType.Monster, onyx.MapMonsterId));
                         });
                     }
-                    hitRequest.Skill.BCards.Where(s => s.Type.Equals((byte)CardType.Buff)).ToList().ForEach(s => s.ApplyBCards(this));
+                    hitRequest.Skill.BCards.Where(s => s.Type.Equals((byte)CardType.Buff)).ToList().ForEach(s => s.ApplyBCards(this, hitRequest.Session));
+                    foreach (ShellEffectDTO shell in battleEntity.ShellWeaponEffects)
+                    {
+                        switch (shell.Effect)
+                        {
+                            case (byte)ShellWeaponEffectType.Blackout:
+                                {
+                                    Buff buff = new Buff(7, battleEntity.Level);
+                                    if (ServerManager.Instance.RandomNumber() < shell.Value)
+                                    {
+                                        AddBuff(buff);
+                                    }
+                                    break;
+                                }
+                            case (byte)ShellWeaponEffectType.DeadlyBlackout:
+                                {
+                                    Buff buff = new Buff(66, battleEntity.Level);
+                                    if (ServerManager.Instance.RandomNumber() < shell.Value)
+                                    {
+                                        AddBuff(buff);
+                                    }
+                                    break;
+                                }
+                            case (byte)ShellWeaponEffectType.MinorBleeding:
+                                {
+                                    Buff buff = new Buff(1, battleEntity.Level);
+                                    if (ServerManager.Instance.RandomNumber() < shell.Value)
+                                    {
+                                        AddBuff(buff);
+                                    }
+                                    break;
+                                }
+                            case (byte)ShellWeaponEffectType.Bleeding:
+                                {
+                                    Buff buff = new Buff(21, battleEntity.Level);
+                                    if (ServerManager.Instance.RandomNumber() < shell.Value)
+                                    {
+                                        AddBuff(buff);
+                                    }
+                                    break;
+                                }
+                            case (byte)ShellWeaponEffectType.HeavyBleeding:
+                                {
+                                    Buff buff = new Buff(42, battleEntity.Level);
+                                    if (ServerManager.Instance.RandomNumber() < shell.Value)
+                                    {
+                                        AddBuff(buff);
+                                    }
+                                    break;
+                                }
+                            case (byte)ShellWeaponEffectType.Freeze:
+                                {
+                                    Buff buff = new Buff(27, battleEntity.Level);
+                                    if (ServerManager.Instance.RandomNumber() < shell.Value)
+                                    {
+                                        AddBuff(buff);
+                                    }
+                                    break;
+                                }
+                        }
+                    }
                     if (DamageList.ContainsKey(hitRequest.Session.Character.CharacterId))
                     {
                         DamageList[hitRequest.Session.Character.CharacterId] += damage;
@@ -643,12 +714,13 @@ namespace OpenNos.GameObject
                     }
                 }
             }
+
         }
 
         private void Move()
         {
             // Normal Move Mode
-            if (Monster == null || !IsAlive)
+            if (Monster == null || !IsAlive || NoMove)
             {
                 return;
             }
@@ -715,7 +787,20 @@ namespace OpenNos.GameObject
 
         private void RemoveBuff(short id)
         {
-            Buff.Remove(id);
+            Buff indicator = Buff[id];
+
+            if (indicator != null)
+            {
+                Buff.Remove(id);
+                if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.SpecialAttack && s.SubType.Equals((byte)AdditionalTypes.SpecialAttack.NoAttack / 10)))
+                {
+                    NoAttack = false;
+                }
+                if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.Move && s.SubType.Equals((byte)AdditionalTypes.Move.MovementImpossible / 10)))
+                {
+                    NoMove = false;
+                }
+            }
         }
 
         private void Respawn()
@@ -741,7 +826,7 @@ namespace OpenNos.GameObject
         /// <param name="npcMonsterSkill"></param>
         private void TargetHit(ClientSession targetSession, NpcMonsterSkill npcMonsterSkill)
         {
-            if (Monster != null && ((DateTime.Now - LastSkill).TotalMilliseconds >= 1000 + (Monster.BasicCooldown * 200) || npcMonsterSkill != null))
+            if (Monster != null && ((DateTime.Now - LastSkill).TotalMilliseconds >= 1000 + (Monster.BasicCooldown * 200) || npcMonsterSkill != null) && !NoAttack)
             {
                 int hitmode = 0;
                 bool onyxWings = false;

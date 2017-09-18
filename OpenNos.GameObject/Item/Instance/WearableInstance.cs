@@ -207,7 +207,7 @@ namespace OpenNos.GameObject
                     return $"e_info 7 {ItemVNum} 0";
 
                 case ItemType.Shell:
-                    return $"e_info 9 {ItemVNum} {Design} {Rare} {Item.Price} {ShellEffects.Count} {ShellEffects.Aggregate(string.Empty, (result, effect) => result += $"{(byte)effect.EffectLevel}.{effect.Effect}.{(byte)effect.Value} ")}"; // 0 = Number of effects
+                    return $"e_info 9 {ItemVNum} {Upgrade} {Rare} {Item.Price} {ShellEffects.Count} {ShellEffects.Aggregate(string.Empty, (result, effect) => result += $"{(byte)effect.EffectLevel}.{effect.Effect}.{(byte)effect.Value} ")}"; // 0 = Number of effects
             }
             return string.Empty;
         }
@@ -217,7 +217,7 @@ namespace OpenNos.GameObject
             _random = new Random();
         }
 
-        public void RarifyItem(ClientSession session, RarifyMode mode, RarifyProtection protection, bool isCommand = false)
+        public void RarifyItem(ClientSession session, RarifyMode mode, RarifyProtection protection, bool isCommand = false, byte forceRare = 0)
         {
             byte[] rare = { 80, 70, 60, 40, 30, 15, 10, 5, 3, 2, 1 };
             const short goldprice = 500;
@@ -317,6 +317,12 @@ namespace OpenNos.GameObject
                     session.SendPacket("shop_end 1");
                 }
                 SetRarityPoint();
+            }
+
+            if(forceRare != 0)
+            {
+                rarify((sbyte)forceRare);
+                return;
             }
 
             if (rnd < rare[10] && Item.IsHeroic && protection == RarifyProtection.Scroll && !(protection == RarifyProtection.Scroll && Rare >= 8))
@@ -1217,10 +1223,65 @@ namespace OpenNos.GameObject
 
             List<ShellEffectDTO> effectsList = new List<ShellEffectDTO>();
 
+            if (!IsWeapon && SPVPMax == 3)
+            {
+                SPVPMax = 2;
+            }
+
+            short CalculateEffect(short maximum)
+            {
+                if(maximum == 0)
+                {
+                    return 1;
+                }
+                else
+                {
+                    double multiplier = 0;
+                    switch (Rare)
+                    {
+                        case 0:
+                        case 1:
+                        case 2:
+                            multiplier = 0.6;
+                            break;
+                        case 3:
+                            multiplier = 0.65;
+                            break;
+                        case 4:
+                            multiplier = 0.75;
+                            break;
+                        case 5:
+                            multiplier = 0.85;
+                            break;
+                        case 6:
+                            multiplier = 0.95;
+                            break;
+                        case 7:
+                        case 8:
+                            multiplier = 1;
+                            break;
+                    }
+
+                    short min = (short)((maximum / 80D) * (Upgrade - 20) * multiplier);
+                    short max = (short)((maximum / 80D) * Upgrade * multiplier);
+                    if (min == 0)
+                    {
+                        min = 1;
+                    }
+                    if (max <= min)
+                    {
+                        max = (short)(min + 1);
+                    }
+                    return (short)ServerManager.Instance.RandomNumber(min, max);
+                }
+            }
+
             void AddEffect(ShellEffectLevelType levelType)
             {
-                while (true)
+                int i = 0;
+                while (i<10)
                 {
+                    i++;
                     switch (levelType)
                     {
                         case ShellEffectLevelType.CNormal:
@@ -1238,8 +1299,7 @@ namespace OpenNos.GameObject
                                     (byte)ShellWeaponEffectType.Blackout,
                                     (byte)ShellWeaponEffectType.MinorBleeding,
                                 };
-                                short[] minimum = new short[] { };
-                                short[] maximum = new short[] { };
+                                short[] maximum = new short[] { 80, 8, 8, 8, 10, 50, 0, 10, 4, 4 };
 
                                 if (!IsWeapon)
                                 {
@@ -1257,13 +1317,12 @@ namespace OpenNos.GameObject
                                         (byte)ShellArmorEffectType.RecoveryHPOnRest,
                                         (byte)ShellArmorEffectType.RecoveryMPOnRest
                                     };
-                                    minimum = new short[] { };
-                                    maximum = new short[] { };
+                                    maximum = new short[] { 55, 55, 55, 8, 30, 30, 45, 15, 30, 48, 48 };
                                 }
 
                                 int position = ServerManager.Instance.RandomNumber(0, effects.Length);
                                 byte effect = effects[position];
-                                short value = (short)ServerManager.Instance.RandomNumber(minimum[position], maximum[position]);
+                                short value = CalculateEffect(maximum[position]);
 
                                 if (effectsList.Any(s => s.Effect == effect))
                                 {
@@ -1299,8 +1358,7 @@ namespace OpenNos.GameObject
                                     (byte)ShellWeaponEffectType.HPRecoveryForKilling,
                                     (byte)ShellWeaponEffectType.MPRecoveryForKilling
                                 };
-                                short[] minimum = new short[] { };
-                                short[] maximum = new short[] { };
+                                short[] maximum = new short[] { 120, 16, 16, 16, 8, 8, 16, 75, 20, 4, 4, 61, 61, 61, 61, 10, 10, 10, 10, 150, 150 };
 
                                 if (!IsWeapon)
                                 {
@@ -1322,13 +1380,12 @@ namespace OpenNos.GameObject
                                         (byte)ShellArmorEffectType.IncreasedLightResistence,
                                         (byte)ShellArmorEffectType.IncreasedDarkResistence
                                     };
-                                    minimum = new short[] { };
-                                    maximum = new short[] { };
+                                    maximum = new short[] { 95, 95, 95, 13, 40, 85, 85, 27, 42, 38, 27, 8, 8, 8, 8 };
                                 }
 
                                 int position = ServerManager.Instance.RandomNumber(0, effects.Length);
                                 byte effect = effects[position];
-                                short value = (short)ServerManager.Instance.RandomNumber(minimum[position], maximum[position]);
+                                short value = CalculateEffect(maximum[position]);
 
                                 if (effectsList.Any(s => s.Effect == effect))
                                 {
@@ -1357,8 +1414,7 @@ namespace OpenNos.GameObject
                                     (byte)ShellWeaponEffectType.HPRecoveryForKilling,
                                     (byte)ShellWeaponEffectType.MPRecoveryForKilling
                                 };
-                                short[] minimum = new short[] { };
-                                short[] maximum = new short[] { };
+                                short[] maximum = new short[] { 160, 16, 16, 1, 125, 125, 125, 125, 15, 15, 15, 15, 175, 175 };
 
                                 if (!IsWeapon)
                                 {
@@ -1378,13 +1434,12 @@ namespace OpenNos.GameObject
                                         (byte)ShellArmorEffectType.IncreasedLightResistence,
                                         (byte)ShellArmorEffectType.IncreasedDarkResistence
                                     };
-                                    minimum = new short[] { };
-                                    maximum = new short[] { };
+                                    maximum = new short[] { 160, 160, 160, 43, 35, 40, 40, 80, 80, 16, 16, 16, 16 };
                                 }
 
                                 int position = ServerManager.Instance.RandomNumber(0, effects.Length);
                                 byte effect = effects[position];
-                                short value = (short)ServerManager.Instance.RandomNumber(minimum[position], maximum[position]);
+                                short value = CalculateEffect(maximum[position]);
 
                                 if (effectsList.Any(s => s.Effect == effect))
                                 {
@@ -1403,8 +1458,7 @@ namespace OpenNos.GameObject
                                     (byte)ShellWeaponEffectType.IncreasedElementalProperties,
                                     (byte)ShellWeaponEffectType.SLGlobal,
                                 };
-                                short[] minimum = new short[] { };
-                                short[] maximum = new short[] { };
+                                short[] maximum = new short[] { 20, 25, 140, 9 };
 
                                 if (!IsWeapon)
                                 {
@@ -1415,13 +1469,12 @@ namespace OpenNos.GameObject
                                         (byte)ShellArmorEffectType.IncreasedAllResistence,
                                         (byte)ShellArmorEffectType.RecoveryHPInDefence
                                     };
-                                    minimum = new short[] { };
-                                    maximum = new short[] { };
+                                    maximum = new short[] { 20, 33, 22, 56 };
                                 }
 
                                 int position = ServerManager.Instance.RandomNumber(0, effects.Length);
                                 byte effect = effects[position];
-                                short value = (short)ServerManager.Instance.RandomNumber(minimum[position], maximum[position]);
+                                short value = CalculateEffect(maximum[position]);
 
                                 if (effectsList.Any(s => s.Effect == effect))
                                 {
@@ -1439,8 +1492,7 @@ namespace OpenNos.GameObject
                                     (byte)ShellWeaponEffectType.GainMoreXP,
                                     (byte)ShellWeaponEffectType.GainMoreCXP
                                 };
-                                short[] minimum = new short[] { };
-                                short[] maximum = new short[] { };
+                                short[] maximum = new short[] { 7, 4, 4 };
 
                                 if (!IsWeapon)
                                 {
@@ -1449,13 +1501,12 @@ namespace OpenNos.GameObject
                                         (byte)ShellArmorEffectType.ReducedPrideLoss,
                                         (byte)ShellArmorEffectType.ReducedProductionPointConsumed
                                     };
-                                    minimum = new short[] { };
-                                    maximum = new short[] { };
+                                    maximum = new short[] { 45, 43 };
                                 }
 
                                 int position = ServerManager.Instance.RandomNumber(0, effects.Length);
                                 byte effect = effects[position];
-                                short value = (short)ServerManager.Instance.RandomNumber(minimum[position], maximum[position]);
+                                short value = CalculateEffect(maximum[position]);
 
                                 if (effectsList.Any(s => s.Effect == effect))
                                 {
@@ -1473,8 +1524,7 @@ namespace OpenNos.GameObject
                                     (byte)ShellWeaponEffectType.GainMoreXP,
                                     (byte)ShellWeaponEffectType.GainMoreCXP
                                 };
-                                short[] minimum = new short[] { };
-                                short[] maximum = new short[] { };
+                                short[] maximum = new short[] { 13, 6, 6 };
 
                                 if (!IsWeapon)
                                 {
@@ -1484,13 +1534,12 @@ namespace OpenNos.GameObject
                                         (byte)ShellArmorEffectType.IncreasedProductionPossibility,
                                         (byte)ShellArmorEffectType.IncreasedRecoveryItemSpeed
                                     };
-                                    minimum = new short[] { };
-                                    maximum = new short[] { };
+                                    maximum = new short[] { 56, 47, 21 };
                                 }
 
                                 int position = ServerManager.Instance.RandomNumber(0, effects.Length);
                                 byte effect = effects[position];
-                                short value = (short)ServerManager.Instance.RandomNumber(minimum[position], maximum[position]);
+                                short value = CalculateEffect(maximum[position]);
 
                                 if (effectsList.Any(s => s.Effect == effect))
                                 {
@@ -1508,8 +1557,7 @@ namespace OpenNos.GameObject
                                     (byte)ShellWeaponEffectType.GainMoreXP,
                                     (byte)ShellWeaponEffectType.GainMoreCXP
                                 };
-                                short[] minimum = new short[] { };
-                                short[] maximum = new short[] { };
+                                short[] maximum = new short[] { 28, 12, 12 };
 
                                 if (!IsWeapon)
                                 {
@@ -1519,13 +1567,12 @@ namespace OpenNos.GameObject
                                         (byte)ShellArmorEffectType.IncreasedProductionPossibility,
                                         (byte)ShellArmorEffectType.IncreasedRecoveryItemSpeed
                                     };
-                                    minimum = new short[] { };
-                                    maximum = new short[] { };
+                                    maximum = new short[] { 60, 60, 46 };
                                 }
 
                                 int position = ServerManager.Instance.RandomNumber(0, effects.Length);
                                 byte effect = effects[position];
-                                short value = (short)ServerManager.Instance.RandomNumber(minimum[position], maximum[position]);
+                                short value = CalculateEffect(maximum[position]);
 
                                 if (effectsList.Any(s => s.Effect == effect))
                                 {
@@ -1543,8 +1590,7 @@ namespace OpenNos.GameObject
                                     (byte)ShellWeaponEffectType.GainMoreXP,
                                     (byte)ShellWeaponEffectType.GainMoreCXP
                                 };
-                                short[] minimum = new short[] { };
-                                short[] maximum = new short[] { };
+                                short[] maximum = new short[] { 40, 18, 18 };
 
                                 if (!IsWeapon)
                                 {
@@ -1554,13 +1600,12 @@ namespace OpenNos.GameObject
                                         (byte)ShellArmorEffectType.IncreasedProductionPossibility,
                                         (byte)ShellArmorEffectType.IncreasedRecoveryItemSpeed
                                     };
-                                    minimum = new short[] { };
-                                    maximum = new short[] { };
+                                    maximum = new short[] { 60, 75, 55 };
                                 }
 
                                 int position = ServerManager.Instance.RandomNumber(0, effects.Length);
                                 byte effect = effects[position];
-                                short value = (short)ServerManager.Instance.RandomNumber(minimum[position], maximum[position]);
+                                short value = CalculateEffect(maximum[position]);
 
                                 if (effectsList.Any(s => s.Effect == effect))
                                 {
@@ -1579,8 +1624,7 @@ namespace OpenNos.GameObject
                                     (byte)ShellWeaponEffectType.PVPDamageAt15Percent,
                                     (byte)ShellWeaponEffectType.ReducesEnemyMPInPVP,
                                 };
-                                short[] minimum = new short[] { };
-                                short[] maximum = new short[] { };
+                                short[] maximum = new short[] { 8, 8, 54, 12 };
 
                                 if (!IsWeapon)
                                 {
@@ -1591,13 +1635,12 @@ namespace OpenNos.GameObject
                                         (byte)ShellArmorEffectType.DistanceDefenceDodgeInPVP,
                                         (byte)ShellArmorEffectType.IgnoreMagicDamage
                                     };
-                                    minimum = new short[] { };
-                                    maximum = new short[] { };
+                                    maximum = new short[] { 9, 4, 4, 4 };
                                 }
 
                                 int position = ServerManager.Instance.RandomNumber(0, effects.Length);
                                 byte effect = effects[position];
-                                short value = (short)ServerManager.Instance.RandomNumber(minimum[position], maximum[position]);
+                                short value = CalculateEffect(maximum[position]);
 
                                 if (effectsList.Any(s => s.Effect == effect))
                                 {
@@ -1619,8 +1662,7 @@ namespace OpenNos.GameObject
                                     (byte)ShellWeaponEffectType.ReducesEnemyLightResistanceInPVP,
                                     (byte)ShellWeaponEffectType.ReducesEnemyDarkResistanceInPVP
                                 };
-                                short[] minimum = new short[] { };
-                                short[] maximum = new short[] { };
+                                short[] maximum = new short[] { 12, 12, 20, 6, 6, 6, 6 };
 
                                 if (!IsWeapon)
                                 {
@@ -1631,13 +1673,12 @@ namespace OpenNos.GameObject
                                         (byte)ShellArmorEffectType.DistanceDefenceDodgeInPVP,
                                         (byte)ShellArmorEffectType.IgnoreMagicDamage
                                     };
-                                    minimum = new short[] { };
-                                    maximum = new short[] { };
+                                    maximum = new short[] { 11, 6, 6, 6 };
                                 }
 
                                 int position = ServerManager.Instance.RandomNumber(0, effects.Length);
                                 byte effect = effects[position];
-                                short value = (short)ServerManager.Instance.RandomNumber(minimum[position], maximum[position]);
+                                short value = CalculateEffect(maximum[position]);
 
                                 if (effectsList.Any(s => s.Effect == effect))
                                 {
@@ -1659,8 +1700,7 @@ namespace OpenNos.GameObject
                                     (byte)ShellWeaponEffectType.ReducesEnemyLightResistanceInPVP,
                                     (byte)ShellWeaponEffectType.ReducesEnemyDarkResistanceInPVP
                                 };
-                                short[] minimum = new short[] { };
-                                short[] maximum = new short[] { };
+                                short[] maximum = new short[] { 17, 17, 42, 15, 15, 15, 15 };
 
                                 if (!IsWeapon)
                                 {
@@ -1672,13 +1712,12 @@ namespace OpenNos.GameObject
                                         (byte)ShellArmorEffectType.IgnoreMagicDamage,
                                         (byte)ShellArmorEffectType.ProtectMPInPVP
                                     };
-                                    minimum = new short[] { };
-                                    maximum = new short[] { };
+                                    maximum = new short[] { 20, 12, 12, 12, 0 };
                                 }
 
                                 int position = ServerManager.Instance.RandomNumber(0, effects.Length);
                                 byte effect = effects[position];
-                                short value = (short)ServerManager.Instance.RandomNumber(minimum[position], maximum[position]);
+                                short value = CalculateEffect(maximum[position]);
 
                                 if (effectsList.Any(s => s.Effect == effect))
                                 {
@@ -1696,8 +1735,7 @@ namespace OpenNos.GameObject
                                     (byte)ShellWeaponEffectType.ReducesPercentageEnemyDefenceInPVP,
                                     (byte)ShellWeaponEffectType.ReducesEnemyAllResistancesInPVP
                                 };
-                                short[] minimum = new short[] { };
-                                short[] maximum = new short[] { };
+                                short[] maximum = new short[] { 35, 35, 17 };
 
                                 if (!IsWeapon)
                                 {
@@ -1706,13 +1744,12 @@ namespace OpenNos.GameObject
                                         (byte)ShellArmorEffectType.PercentageAllPVPDefence,
                                         (byte)ShellArmorEffectType.DodgeAllAttacksInPVP
                                     };
-                                    minimum = new short[] { };
-                                    maximum = new short[] { };
+                                    maximum = new short[] { 32, 16 };
                                 }
 
                                 int position = ServerManager.Instance.RandomNumber(0, effects.Length);
                                 byte effect = effects[position];
-                                short value = (short)ServerManager.Instance.RandomNumber(minimum[position], maximum[position]);
+                                short value = CalculateEffect(maximum[position]);
 
                                 if (effectsList.Any(s => s.Effect == effect))
                                 {
@@ -1766,14 +1803,9 @@ namespace OpenNos.GameObject
                 AddEffect(ShellEffectLevelType.SBonus);
             }
 
-            for (int i = 0; i < CPVPMax; i++)
+            for (int i = 0; i < SPVPMax; i++)
             {
-                AddEffect(ShellEffectLevelType.CPVP);
-            }
-
-            for (int i = 0; i < BPVPMax; i++)
-            {
-                AddEffect(ShellEffectLevelType.BPVP);
+                AddEffect(ShellEffectLevelType.SPVP);
             }
 
             for (int i = 0; i < APVPMax; i++)
@@ -1781,10 +1813,18 @@ namespace OpenNos.GameObject
                 AddEffect(ShellEffectLevelType.APVP);
             }
 
-            for (int i = 0; i < SPVPMax; i++)
+            for (int i = 0; i < BPVPMax; i++)
             {
-                AddEffect(ShellEffectLevelType.SPVP);
+                AddEffect(ShellEffectLevelType.BPVP);
             }
+
+            for (int i = 0; i < CPVPMax; i++)
+            {
+                AddEffect(ShellEffectLevelType.CPVP);
+            }
+
+            ShellEffects.Clear();
+            ShellEffects.AddRange(effectsList);
         }
 
         public void Sum(ClientSession session, WearableInstance itemToSum)

@@ -40,6 +40,29 @@ namespace OpenNos.GameObject
             {
                 // airwaves - eventitems
                 case 0:
+                    if (inv.Item.ItemType == ItemType.Shell)
+                    {
+                        if (inv.ShellEffects.Count != 0 && packetsplit.Length > 9 && byte.TryParse(packetsplit[9], out byte islot))
+                        {
+                            ItemInstance item = session.Character.Inventory.LoadBySlotAndType(islot, InventoryType.Equipment);
+
+                            if (item != null && (item.Item.ItemType == ItemType.Weapon || item.Item.ItemType == ItemType.Armor) && item.Item.LevelMinimum >= inv.Upgrade && item.Rare >= inv.Rare && !item.Item.IsHeroic)
+                            {
+                                if(item.ShellEffects.Count > 0 && ServerManager.Instance.RandomNumber() < 50)
+                                {
+                                    session.Character.DeleteItemByItemInstanceId(inv.Id);
+                                    session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_APPLY_FAIL"), 0));
+                                    return;
+                                }
+                                item.ShellEffects.Clear();
+                                item.ShellEffects.AddRange(inv.ShellEffects);
+                                session.Character.DeleteItemByItemInstanceId(inv.Id);
+                                session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_APPLY_SUCCESS"), 0));
+                            }
+                        }
+                        return;
+                    }
+
                     if (ItemType == ItemType.Event)
                     {
                         session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, EffectValue));

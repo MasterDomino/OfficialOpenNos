@@ -2756,7 +2756,7 @@ namespace OpenNos.GameObject
             return new[] { value1, value2 };
         }
 
-        public void GiftAdd(short itemVNum, byte amount, byte rare = 0, byte upgrade = 0, short design = 0, bool forceRandom = false)
+        public void GiftAdd(short itemVNum, byte amount, byte rare = 0, byte upgrade = 0, short design = 0, bool forceRandom = false, byte minRare = 0)
         {
             //TODO add the rare support
             if (Inventory != null)
@@ -2767,20 +2767,39 @@ namespace OpenNos.GameObject
                     if (newItem != null)
                     {
                         newItem.Design = design;
-                        if (upgrade >= 0)
-                        {
-                            newItem.Upgrade = upgrade;
-                        }
+
                         if (newItem.Item.ItemType == ItemType.Armor || newItem.Item.ItemType == ItemType.Weapon || newItem.Item.ItemType == ItemType.Shell || forceRandom)
                         {
-                            while (forceRandom)
+                            if (rare != 0 && !forceRandom)
                             {
-                                ((WearableInstance)newItem).RarifyItem(Session, RarifyMode.Drop, RarifyProtection.None);
-                                newItem.Upgrade = newItem.Item.BasicUpgrade;
-                                if (newItem.Rare >= 0)
+                                try
                                 {
-                                    break;
+                                    ((WearableInstance)newItem).RarifyItem(Session, RarifyMode.Drop, RarifyProtection.None);
+                                    newItem.Upgrade = newItem.Item.BasicUpgrade;
                                 }
+                                catch
+                                {
+
+                                }
+                            }
+                            else
+                            {
+                                do
+                                {
+                                    try
+                                    {
+                                        ((WearableInstance)newItem).RarifyItem(Session, RarifyMode.Drop, RarifyProtection.None);
+                                        newItem.Upgrade = newItem.Item.BasicUpgrade;
+                                        if (newItem.Rare >= minRare)
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    catch
+                                    {
+
+                                    }
+                                } while (forceRandom);
                             }
                         }
 
@@ -2798,7 +2817,7 @@ namespace OpenNos.GameObject
                         {
                             Session.SendPacket(GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {newItem.Item.Name} x {amount}", 10));
                         }
-                        else if (MailList.Count <= 40)
+                        else if (MailList.Count <= 40 && design == 0)
                         {
                             SendGift(CharacterId, itemVNum, amount, newItem.Rare, newItem.Upgrade, false);
                             Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("ITEM_ACQUIRED_BY_THE_GIANT_MONSTER"), 0));
