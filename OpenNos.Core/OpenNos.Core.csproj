@@ -80,6 +80,7 @@
     <Compile Include="CryptoRandom.cs" />
     <Compile Include="Extension.cs" />
     <Compile Include="Handling\HandlerMethodReference.cs" />
+    <Compile Include="Networking\Communication\Scs\Communication\Messages\ScsPingMessage.cs" />
     <Compile Include="Networking\INetworkClient.cs" />
     <Compile Include="Handling\IPacketHandler.cs" />
     <Compile Include="Networking\NetworkClient.cs" />
@@ -128,7 +129,6 @@
     <Compile Include="Networking\Communication\Scs\Communication\EndPoints\Tcp\ScsTcpEndPoint.cs" />
     <Compile Include="Networking\Communication\Scs\Communication\Messages\IScsMessage.cs" />
     <Compile Include="Networking\Communication\Scs\Communication\Messages\MessageEventArgs.cs" />
-    <Compile Include="Networking\Communication\Scs\Communication\Messages\PingMessage.cs" />
     <Compile Include="Networking\Communication\Scs\Communication\Messages\ScsMessage.cs" />
     <Compile Include="Networking\Communication\Scs\Communication\Messages\ScsRawDataMessage.cs" />
     <Compile Include="Networking\Communication\Scs\Communication\Messages\ScsTextMessage.cs" />
