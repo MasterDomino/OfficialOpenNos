@@ -14,6 +14,7 @@
 
 using OpenNos.Core;
 using OpenNos.Data;
+using OpenNos.Data.Interfaces;
 using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
 using System;
@@ -22,7 +23,7 @@ using System.Linq;
 
 namespace OpenNos.GameObject
 {
-    public class WearableInstance : ItemInstance, IWearableInstance
+    public class WearableInstance : ItemInstance, IWearableInstanceDTO
     {
         #region Members
 

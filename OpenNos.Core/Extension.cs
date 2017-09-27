@@ -72,14 +72,14 @@ namespace OpenNos.Core
         private static object InternalCopy(object originalObject, IDictionary<object, object> visited)
         {
             if (originalObject == null) return null;
-            var typeToReflect = originalObject.GetType();
+            Type typeToReflect = originalObject.GetType();
             if (IsPrimitive(typeToReflect)) return originalObject;
             if (visited.ContainsKey(originalObject)) return visited[originalObject];
             if (typeof(Delegate).IsAssignableFrom(typeToReflect)) return null;
-            var cloneObject = CloneMethod.Invoke(originalObject, null);
+            object cloneObject = CloneMethod.Invoke(originalObject, null);
             if (typeToReflect.IsArray)
             {
-                var arrayType = typeToReflect.GetElementType();
+                Type arrayType = typeToReflect.GetElementType();
                 if (IsPrimitive(arrayType))
                 {
                     Array clonedArray = (Array)cloneObject;
@@ -107,8 +107,8 @@ namespace OpenNos.Core
             {
                 if (filter != null && !filter(fieldInfo)) continue;
                 if (IsPrimitive(fieldInfo.FieldType)) continue;
-                var originalFieldValue = fieldInfo.GetValue(originalObject);
-                var clonedFieldValue = InternalCopy(originalFieldValue, visited);
+                object originalFieldValue = fieldInfo.GetValue(originalObject);
+                object clonedFieldValue = InternalCopy(originalFieldValue, visited);
                 fieldInfo.SetValue(cloneObject, clonedFieldValue);
             }
         }

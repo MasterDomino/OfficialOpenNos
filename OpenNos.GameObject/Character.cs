@@ -2440,9 +2440,9 @@ namespace OpenNos.GameObject
             {
                 armorUpgrade = armor.Upgrade;
                 Defence += armor.CloseDefence + armor.Item.CloseDefence;
-                DistanceDefence += armor.DistanceDefence + armor.Item.DistanceDefence;
-                MagicalDefence += armor.MagicDefence + armor.Item.MagicDefence;
                 DefenceRate += armor.DefenceDodge + armor.Item.DefenceDodge;
+                MagicalDefence += armor.MagicDefence + armor.Item.MagicDefence;
+                DistanceDefence += armor.DistanceDefence + armor.Item.DistanceDefence;
                 DistanceDefenceRate += armor.DistanceDefenceDodge + armor.Item.DistanceDefenceDodge;
             }
 
@@ -2466,6 +2466,7 @@ namespace OpenNos.GameObject
                     DarkResistance += item.DarkResistance + item.Item.DarkResistance;
                     Defence += item.CloseDefence + item.Item.CloseDefence;
                     DefenceRate += item.DefenceDodge + item.Item.DefenceDodge;
+                    MagicalDefence += item.MagicDefence + item.Item.MagicDefence;
                     DistanceDefence += item.DistanceDefence + item.Item.DistanceDefence;
                     DistanceDefenceRate += item.DistanceDefenceDodge + item.Item.DistanceDefenceDodge;
                 }
@@ -2612,10 +2613,7 @@ namespace OpenNos.GameObject
             return icoDignity;
         }
 
-        public List<Portal> GetExtraPortal()
-        {
-            return MapInstancePortalHandler.GenerateMinilandEntryPortals(MapInstance.Map.MapId, Miniland.MapInstanceId);
-        }
+        public List<Portal> GetExtraPortal() => MapInstancePortalHandler.GenerateMinilandEntryPortals(MapInstance.Map.MapId, Miniland.MapInstanceId);
 
         public List<string> GetFamilyHistory()
         {

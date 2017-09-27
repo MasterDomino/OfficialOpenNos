@@ -12,39 +12,29 @@
  * GNU General Public License for more details.
  */
 
-namespace OpenNos.Data
+using System.Collections.Generic;
+
+namespace OpenNos.GameObject
 {
-    public interface ISpecialistInstance : IWearableInstance
+    public class ZoneEvent
     {
         #region Properties
 
-        short SlDamage { get; set; }
+        public short X { get; set; }
 
-        short SlDefence { get; set; }
+        public short Y { get; set; }
 
-        short SlElement { get; set; }
+        public short Range { get; set; }
 
-        short SlHP { get; set; }
+        public List<EventContainer> Events { get; set; }
 
-        byte SpDamage { get; set; }
+        public ZoneEvent()
+        {
+            Events = new List<EventContainer>();
+            Range = 1;
+        }
 
-        byte SpDark { get; set; }
-
-        byte SpDefence { get; set; }
-
-        byte SpElement { get; set; }
-
-        byte SpFire { get; set; }
-
-        byte SpHP { get; set; }
-
-        byte SpLevel { get; set; }
-
-        byte SpLight { get; set; }
-
-        byte SpStoneUpgrade { get; set; }
-
-        byte SpWater { get; set; }
+        public bool InZone(short positionX, short positionY) => positionX <= X + Range && positionX >= X - Range && positionY <= Y + Range && positionY >= Y - Range;
 
         #endregion
     }

@@ -12,32 +12,13 @@
  * GNU General Public License for more details.
  */
 
-using System.Collections.Generic;
-
-namespace OpenNos.GameObject
+namespace OpenNos.Data.Interfaces
 {
-    public class ZoneEvent
+    public interface IBoxInstanceDTO : ISpecialistInstanceDTO
     {
         #region Properties
 
-        public short X { get; set; }
-
-        public short Y { get; set; }
-
-        public short Range { get; set; }
-
-        public List<EventContainer> Events { get; set; }
-
-        public ZoneEvent()
-        {
-            Events = new List<EventContainer>();
-            Range = 1;
-        }
-
-        public bool InZone(short positionX, short positionY)
-        {
-            return positionX <= X + Range && positionX >= X - Range && positionY <= Y + Range && positionY >= Y - Range ;
-        }
+        short HoldingVNum { get; set; }
 
         #endregion
     }

@@ -12,12 +12,12 @@
  * GNU General Public License for more details.
  */
 
-using OpenNos.Data;
+using OpenNos.Data.Interfaces;
 using System;
 
 namespace OpenNos.GameObject
 {
-    public class BoxInstance : SpecialistInstance, IBoxInstance
+    public class BoxInstance : SpecialistInstance, IBoxInstanceDTO
     {
         #region Members
 

@@ -12,15 +12,39 @@
  * GNU General Public License for more details.
  */
 
-using OpenNos.Data.Interfaces;
-
-namespace OpenNos.Data
+namespace OpenNos.Data.Interfaces
 {
-    public class BoxItemDTO : SpecialistInstanceDTO, IBoxInstanceDTO
+    public interface ISpecialistInstanceDTO : IWearableInstanceDTO
     {
         #region Properties
 
-        public short HoldingVNum { get; set; }
+        short SlDamage { get; set; }
+
+        short SlDefence { get; set; }
+
+        short SlElement { get; set; }
+
+        short SlHP { get; set; }
+
+        byte SpDamage { get; set; }
+
+        byte SpDark { get; set; }
+
+        byte SpDefence { get; set; }
+
+        byte SpElement { get; set; }
+
+        byte SpFire { get; set; }
+
+        byte SpHP { get; set; }
+
+        byte SpLevel { get; set; }
+
+        byte SpLight { get; set; }
+
+        byte SpStoneUpgrade { get; set; }
+
+        byte SpWater { get; set; }
 
         #endregion
     }

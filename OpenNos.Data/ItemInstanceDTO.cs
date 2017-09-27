@@ -12,12 +12,13 @@
  * GNU General Public License for more details.
  */
 
+using OpenNos.Data.Interfaces;
 using OpenNos.Domain;
 using System;
 
 namespace OpenNos.Data
 {
-    public class ItemInstanceDTO : SynchronizableBaseDTO, IItemInstance
+    public class ItemInstanceDTO : SynchronizableBaseDTO, IItemInstanceDTO
     {
         #region Properties
 

@@ -6,7 +6,7 @@ using OpenNos.Domain;
 namespace OpenNos.GameObject.CommandPackets
 {
     [PacketHeader("$ArenaWinner", PassNonParseablePacket = true, Authority = AuthorityType.GameMaster)]
-    public class ArenaWinner : PacketDefinition
+    public class ArenaWinnerPacket : PacketDefinition
     {
         public static string ReturnHelp()
         {
