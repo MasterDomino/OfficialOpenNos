@@ -1610,6 +1610,10 @@ namespace OpenNos.Handler
                 if (Receiver != null)
                 {
                     string[] datasplit = pstPacket.Data.Split(' ');
+                    if (datasplit.Length < 2)
+                    {
+                        return;
+                    }
                     WearableInstance headWearable = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.Hat, InventoryType.Wear);
                     byte color = headWearable?.Item.IsColored == true ? (byte)headWearable.Design : (byte)Session.Character.HairColor;
                     MailDTO mailcopy = new MailDTO
