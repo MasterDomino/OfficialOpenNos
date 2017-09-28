@@ -303,14 +303,33 @@ namespace OpenNos.Handler
                                 }
                             }
 
-                            List<ItemInstance> newItem = Session.Character.Inventory.AddNewToInventory(shopItem.ItemVNum, amount, Rare: rare, Upgrade: shopItem.Upgrade, Design: shopItem.Color);
-                            if (newItem.Count == 0)
+                            List<ItemInstance> newItems = Session.Character.Inventory.AddNewToInventory(shopItem.ItemVNum, amount, Rare: rare, Upgrade: shopItem.Upgrade, Design: shopItem.Color);
+                            if (newItems.Count == 0)
                             {
                                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateShopMemo(3, Language.Instance.GetMessageFromKey("NOT_ENOUGH_PLACE")));
                                 return;
                             }
-                            if (newItem.Count > 0)
+                            if (newItems.Count > 0)
                             {
+                                foreach (WearableInstance wearableInst in newItems)
+                                {
+                                    switch (wearableInst.Item.EquipmentSlot)
+                                    {
+                                        case EquipmentType.Armor:
+                                        case EquipmentType.MainWeapon:
+                                        case EquipmentType.SecondaryWeapon:
+                                            wearableInst.SetRarityPoint();
+                                            break;
+
+                                        case EquipmentType.Boots:
+                                        case EquipmentType.Gloves:
+                                            wearableInst.FireResistance = (short)(wearableInst.Item.FireResistance * shopItem.Upgrade);
+                                            wearableInst.DarkResistance = (short)(wearableInst.Item.DarkResistance * shopItem.Upgrade);
+                                            wearableInst.LightResistance = (short)(wearableInst.Item.LightResistance * shopItem.Upgrade);
+                                            wearableInst.WaterResistance = (short)(wearableInst.Item.WaterResistance * shopItem.Upgrade);
+                                            break;
+                                    }
+                                }
                                 if (iteminfo.ReputPrice == 0)
                                 {
                                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateShopMemo(1, string.Format(Language.Instance.GetMessageFromKey("BUY_ITEM_VALID"), iteminfo.Name, amount)));
