@@ -23,20 +23,11 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public void Insert(List<CardDTO> cards)
-        {
-            throw new NotImplementedException();
-        }
+        public void Insert(List<CardDTO> cards) => throw new NotImplementedException();
 
-        public CardDTO Insert(ref CardDTO card)
-        {
-            throw new NotImplementedException();
-        }
+        public CardDTO Insert(ref CardDTO card) => throw new NotImplementedException();
 
-        public CardDTO LoadById(short cardId)
-        {
-            throw new NotImplementedException();
-        }
+        public CardDTO LoadById(short cardId) => throw new NotImplementedException();
 
         #endregion
     }

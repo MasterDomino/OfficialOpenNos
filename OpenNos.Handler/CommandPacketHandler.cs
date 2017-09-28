@@ -35,10 +35,7 @@ namespace OpenNos.Handler
     {
         #region Instantiation
 
-        public CommandPacketHandler(ClientSession session)
-        {
-            Session = session;
-        }
+        public CommandPacketHandler(ClientSession session) => Session = session;
 
         #endregion
 

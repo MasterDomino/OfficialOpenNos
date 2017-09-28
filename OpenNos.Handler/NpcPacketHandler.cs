@@ -29,10 +29,7 @@ namespace OpenNos.Handler
     {
         #region Instantiation
 
-        public NpcPacketHandler(ClientSession session)
-        {
-            Session = session;
-        }
+        public NpcPacketHandler(ClientSession session) => Session = session;
 
         #endregion
 
@@ -549,7 +546,10 @@ namespace OpenNos.Handler
                             string rece = $"m_list 3 {rec.Amount}";
                             foreach (RecipeItemDTO ite in rec.Items)
                             {
-                                if (ite.Amount > 0) rece += $" {ite.ItemVNum} {ite.Amount}";
+                                if (ite.Amount > 0)
+                                {
+                                    rece += $" {ite.ItemVNum} {ite.Amount}";
+                                }
                             }
                             rece += " -1";
                             Session.SendPacket(rece);

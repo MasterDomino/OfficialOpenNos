@@ -46,13 +46,7 @@ namespace OpenNos.Core
 
         #region Properties
 
-        public static Language Instance
-        {
-            get
-            {
-                return instance ?? (instance = new Language());
-            }
-        }
+        public static Language Instance => instance ?? (instance = new Language());
 
         #endregion
 

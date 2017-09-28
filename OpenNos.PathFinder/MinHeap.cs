@@ -26,13 +26,7 @@ namespace OpenNos.PathFinder
 
         #region Properties
 
-        public int Count
-        {
-            get
-            {
-                return array.Count;
-            }
-        }
+        public int Count => array.Count;
 
         #endregion
 

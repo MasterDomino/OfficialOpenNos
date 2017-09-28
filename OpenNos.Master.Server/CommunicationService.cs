@@ -129,10 +129,7 @@ namespace OpenNos.Master.Server
             }
         }
 
-        public int? GetChannelIdByWorldId(Guid worldId)
-        {
-            return MSManager.Instance.WorldServers.Find(w => w.Id == worldId)?.ChannelId;
-        }
+        public int? GetChannelIdByWorldId(Guid worldId) => MSManager.Instance.WorldServers.Find(w => w.Id == worldId)?.ChannelId;
 
         public bool IsAccountConnected(long accountId)
         {

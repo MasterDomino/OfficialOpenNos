@@ -23,25 +23,13 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public DeleteResult Delete(long bazaarItemId)
-        {
-            throw new NotImplementedException();
-        }
+        public DeleteResult Delete(long bazaarItemId) => throw new NotImplementedException();
 
-        public SaveResult InsertOrUpdate(ref BazaarItemDTO bazaarItem)
-        {
-            throw new NotImplementedException();
-        }
+        public SaveResult InsertOrUpdate(ref BazaarItemDTO bazaarItem) => throw new NotImplementedException();
 
-        public BazaarItemDTO LoadById(long bazaarItemId)
-        {
-            throw new NotImplementedException();
-        }
+        public BazaarItemDTO LoadById(long bazaarItemId) => throw new NotImplementedException();
 
-        public void RemoveOutDated()
-        {
-            throw new NotImplementedException();
-        }
+        public void RemoveOutDated() => throw new NotImplementedException();
 
         #endregion
     }

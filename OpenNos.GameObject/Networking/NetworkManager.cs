@@ -61,13 +61,7 @@ namespace OpenNos.GameObject
 
         #region Properties
 
-        private IDictionary<string, DateTime> ConnectionLog
-        {
-            get
-            {
-                return _connectionLog ?? (_connectionLog = new Dictionary<string, DateTime>());
-            }
-        }
+        private IDictionary<string, DateTime> ConnectionLog => _connectionLog ?? (_connectionLog = new Dictionary<string, DateTime>());
 
         #endregion
 
@@ -120,15 +114,9 @@ namespace OpenNos.GameObject
             return true;
         }
 
-        private void OnServerClientConnected(object sender, ServerClientEventArgs e)
-        {
-            AddSession(e.Client as NetworkClient);
-        }
+        private void OnServerClientConnected(object sender, ServerClientEventArgs e) => AddSession(e.Client as NetworkClient);
 
-        private void OnServerClientDisconnected(object sender, ServerClientEventArgs e)
-        {
-            RemoveSession(e.Client as NetworkClient);
-        }
+        private void OnServerClientDisconnected(object sender, ServerClientEventArgs e) => RemoveSession(e.Client as NetworkClient);
 
         #endregion
     }

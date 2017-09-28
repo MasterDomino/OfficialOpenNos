@@ -32,15 +32,9 @@ namespace OpenNos.DAL.Mock
             return DeleteResult.Deleted;
         }
 
-        public IEnumerable<CharacterSkillDTO> LoadByCharacterId(long characterId)
-        {
-            return Container.Where(c => c.CharacterId == characterId).Select(e => MapEntity(e));
-        }
+        public IEnumerable<CharacterSkillDTO> LoadByCharacterId(long characterId) => Container.Where(c => c.CharacterId == characterId).Select(e => MapEntity(e));
 
-        public IEnumerable<Guid> LoadKeysByCharacterId(long characterId)
-        {
-            return Container.Where(c => c.CharacterId == characterId).Select(c => c.Id);
-        }
+        public IEnumerable<Guid> LoadKeysByCharacterId(long characterId) => Container.Where(c => c.CharacterId == characterId).Select(c => c.Id);
 
         #endregion
     }

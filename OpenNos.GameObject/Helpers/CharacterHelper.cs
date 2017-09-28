@@ -399,30 +399,15 @@ namespace OpenNos.GameObject.Helpers
             }
         }
 
-        public static int MagicalDefence(ClassType @class, byte level)
-        {
-            return _magicalDef[(byte)@class, level];
-        }
+        public static int MagicalDefence(ClassType @class, byte level) => _magicalDef[(byte)@class, level];
 
-        public static int MaxDistance(ClassType @class, byte level)
-        {
-            return _maxDist[(byte)@class, level];
-        }
+        public static int MaxDistance(ClassType @class, byte level) => _maxDist[(byte)@class, level];
 
-        public static int MaxHit(ClassType @class, byte level)
-        {
-            return _maxHit[(byte)@class, level];
-        }
+        public static int MaxHit(ClassType @class, byte level) => _maxHit[(byte)@class, level];
 
-        public static int MinDistance(ClassType @class, byte level)
-        {
-            return _minDist[(byte)@class, level];
-        }
+        public static int MinDistance(ClassType @class, byte level) => _minDist[(byte)@class, level];
 
-        public static int MinHit(ClassType @class, byte level)
-        {
-            return _minHit[(int)@class, level];
-        }
+        public static int MinHit(ClassType @class, byte level) => _minHit[(int)@class, level];
 
         public static int RarityPoint(short rarity, short lvl)
         {
@@ -481,82 +466,154 @@ namespace OpenNos.GameObject.Helpers
                 {
                     case 0:
                         if (spPoint <= 10)
+                        {
                             point = spPoint;
+                        }
                         else if (spPoint <= 28)
+                        {
                             point = 10 + ((spPoint - 10) / 2);
+                        }
                         else if (spPoint <= 88)
+                        {
                             point = 19 + ((spPoint - 28) / 3);
+                        }
                         else if (spPoint <= 168)
+                        {
                             point = 39 + ((spPoint - 88) / 4);
+                        }
                         else if (spPoint <= 268)
+                        {
                             point = 59 + ((spPoint - 168) / 5);
+                        }
                         else if (spPoint <= 334)
+                        {
                             point = 79 + ((spPoint - 268) / 6);
+                        }
                         else if (spPoint <= 383)
+                        {
                             point = 90 + ((spPoint - 334) / 7);
+                        }
                         else if (spPoint <= 391)
+                        {
                             point = 97 + ((spPoint - 383) / 8);
+                        }
                         else if (spPoint <= 400)
+                        {
                             point = 98 + ((spPoint - 391) / 9);
+                        }
                         else if (spPoint <= 410)
+                        {
                             point = 99 + ((spPoint - 400) / 10);
+                        }
+
                         break;
 
                     case 2:
                         if (spPoint <= 20)
+                        {
                             point = spPoint;
+                        }
                         else if (spPoint <= 40)
+                        {
                             point = 20 + ((spPoint - 20) / 2);
+                        }
                         else if (spPoint <= 70)
+                        {
                             point = 30 + ((spPoint - 40) / 3);
+                        }
                         else if (spPoint <= 110)
+                        {
                             point = 40 + ((spPoint - 70) / 4);
+                        }
                         else if (spPoint <= 210)
+                        {
                             point = 50 + ((spPoint - 110) / 5);
+                        }
                         else if (spPoint <= 270)
+                        {
                             point = 70 + ((spPoint - 210) / 6);
+                        }
                         else if (spPoint <= 410)
+                        {
                             point = 80 + ((spPoint - 270) / 7);
+                        }
+
                         break;
 
                     case 1:
                         if (spPoint <= 10)
+                        {
                             point = spPoint;
+                        }
                         else if (spPoint <= 48)
+                        {
                             point = 10 + ((spPoint - 10) / 2);
+                        }
                         else if (spPoint <= 81)
+                        {
                             point = 29 + ((spPoint - 48) / 3);
+                        }
                         else if (spPoint <= 161)
+                        {
                             point = 40 + ((spPoint - 81) / 4);
+                        }
                         else if (spPoint <= 236)
+                        {
                             point = 60 + ((spPoint - 161) / 5);
+                        }
                         else if (spPoint <= 290)
+                        {
                             point = 75 + ((spPoint - 236) / 6);
+                        }
                         else if (spPoint <= 360)
+                        {
                             point = 84 + ((spPoint - 290) / 7);
+                        }
                         else if (spPoint <= 400)
+                        {
                             point = 97 + ((spPoint - 360) / 8);
+                        }
                         else if (spPoint <= 410)
+                        {
                             point = 99 + ((spPoint - 400) / 10);
+                        }
+
                         break;
 
                     case 3:
                         if (spPoint <= 10)
+                        {
                             point = spPoint;
+                        }
                         else if (spPoint <= 50)
+                        {
                             point = 10 + ((spPoint - 10) / 2);
+                        }
                         else if (spPoint <= 110)
+                        {
                             point = 30 + ((spPoint - 50) / 3);
+                        }
                         else if (spPoint <= 150)
+                        {
                             point = 50 + ((spPoint - 110) / 4);
+                        }
                         else if (spPoint <= 200)
+                        {
                             point = 60 + ((spPoint - 150) / 5);
+                        }
                         else if (spPoint <= 260)
+                        {
                             point = 70 + ((spPoint - 200) / 6);
+                        }
                         else if (spPoint <= 330)
+                        {
                             point = 80 + ((spPoint - 260) / 7);
+                        }
                         else if (spPoint <= 410)
+                        {
                             point = 90 + ((spPoint - 330) / 8);
+                        }
+
                         break;
                 }
                 return point;
@@ -645,55 +702,25 @@ namespace OpenNos.GameObject.Helpers
             return point;
         }
 
-        internal static int Defence(ClassType @class, byte level)
-        {
-            return _hitDef[(byte)@class, level];
-        }
+        internal static int Defence(ClassType @class, byte level) => _hitDef[(byte)@class, level];
 
-        internal static int DefenceRate(ClassType @class, byte level)
-        {
-            return _hitDodge[(byte)@class, level];
-        }
+        internal static int DefenceRate(ClassType @class, byte level) => _hitDodge[(byte)@class, level];
 
-        internal static int DistanceDefence(ClassType @class, byte level)
-        {
-            return _distDef[(byte)@class, level];
-        }
+        internal static int DistanceDefence(ClassType @class, byte level) => _distDef[(byte)@class, level];
 
-        internal static int DistanceDefenceRate(ClassType @class, byte level)
-        {
-            return _distDodge[(byte)@class, level];
-        }
+        internal static int DistanceDefenceRate(ClassType @class, byte level) => _distDodge[(byte)@class, level];
 
-        internal static int DistanceRate(ClassType @class, byte level)
-        {
-            return _distRate[(byte)@class, level];
-        }
+        internal static int DistanceRate(ClassType @class, byte level) => _distRate[(byte)@class, level];
 
-        internal static int DistCritical(ClassType @class, byte level)
-        {
-            return _criticalDist[(byte)@class, level];
-        }
+        internal static int DistCritical(ClassType @class, byte level) => _criticalDist[(byte)@class, level];
 
-        internal static int DistCriticalRate(ClassType @class, byte level)
-        {
-            return _criticalDistRate[(byte)@class, level];
-        }
+        internal static int DistCriticalRate(ClassType @class, byte level) => _criticalDistRate[(byte)@class, level];
 
-        internal static int HitCritical(ClassType @class, byte level)
-        {
-            return _criticalHit[(byte)@class, level];
-        }
+        internal static int HitCritical(ClassType @class, byte level) => _criticalHit[(byte)@class, level];
 
-        internal static int HitCriticalRate(ClassType @class, byte level)
-        {
-            return _criticalHitRate[(byte)@class, level];
-        }
+        internal static int HitCriticalRate(ClassType @class, byte level) => _criticalHitRate[(byte)@class, level];
 
-        internal static int HitRate(ClassType @class, byte level)
-        {
-            return _hitRate[(byte)@class, level];
-        }
+        internal static int HitRate(ClassType @class, byte level) => _hitRate[(byte)@class, level];
 
         private static void LoadHeroXpData()
         {

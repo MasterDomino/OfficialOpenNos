@@ -10,15 +10,13 @@ using System.Linq;
 
 namespace OpenNos.DAL.EF
 {
-    public abstract class SynchronizableBaseDAO<TEntity, TDTO> : MappingBaseDAO<TEntity, TDTO>, ISynchronizableBaseDAO<TDTO>
-        where TDTO : SynchronizableBaseDTO
-        where TEntity : SynchronizableBaseEntity
+    public abstract class SynchronizableBaseDAO<TEntity, TDTO> : MappingBaseDAO<TEntity, TDTO>, ISynchronizableBaseDAO<TDTO> where TEntity : SynchronizableBaseEntity where TDTO : SynchronizableBaseDTO
     {
         #region Methods
 
         public virtual DeleteResult Delete(Guid id)
         {
-            using (var context = DataAccessHelper.CreateContext())
+            using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 TEntity entity = context.Set<TEntity>().FirstOrDefault(i => i.Id == id);
                 if (entity != null)
@@ -36,7 +34,7 @@ namespace OpenNos.DAL.EF
             try
             {
                 IList<TDTO> results = new List<TDTO>();
-                using (var context = DataAccessHelper.CreateContext())
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     foreach (TDTO dto in dtos)
                     {
@@ -57,7 +55,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     return InsertOrUpdate(context, dto);
                 }
@@ -71,7 +69,7 @@ namespace OpenNos.DAL.EF
 
         public TDTO LoadById(Guid id)
         {
-            using (var context = DataAccessHelper.CreateContext())
+            using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 return _mapper.Map<TDTO>(context.Set<TEntity>().FirstOrDefault(i => i.Id.Equals(id)));
             }
@@ -99,10 +97,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        protected virtual TEntity MapEntity(TDTO dto)
-        {
-            return _mapper.Map<TEntity>(dto);
-        }
+        protected virtual TEntity MapEntity(TDTO dto) => _mapper.Map<TEntity>(dto);
 
         protected virtual TDTO Update(TEntity entity, TDTO inventory, OpenNosContext context)
         {

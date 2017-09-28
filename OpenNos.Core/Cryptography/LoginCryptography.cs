@@ -82,10 +82,7 @@ namespace OpenNos.Core
             }
         }
 
-        public override string DecryptCustomParameter(byte[] data)
-        {
-            throw new NotImplementedException();
-        }
+        public override string DecryptCustomParameter(byte[] data) => throw new NotImplementedException();
 
         public override byte[] Encrypt(string data)
         {

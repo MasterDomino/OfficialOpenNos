@@ -7,10 +7,7 @@ namespace OpenNos.DAL.EF.Migrations
     {
         #region Instantiation
 
-        public Configuration()
-        {
-            AutomaticMigrationsEnabled = false;
-        }
+        public Configuration() => AutomaticMigrationsEnabled = false;
 
         #endregion
     }

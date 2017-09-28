@@ -29,32 +29,17 @@ namespace OpenNos.GameObject.Helpers
 
         #region Properties
 
-        public static UserInterfaceHelper Instance
-        {
-            get
-            {
-                return instance ?? (instance = new UserInterfaceHelper());
-            }
-        }
+        public static UserInterfaceHelper Instance => instance ?? (instance = new UserInterfaceHelper());
 
         #endregion
 
         #region Methods
 
-        public string GenerateSay(string message, int type, long callerId = 0)
-        {
-            return $"say 1 {callerId} {type} {message}";
-        }
+        public string GenerateSay(string message, int type, long callerId = 0) => $"say 1 {callerId} {type} {message}";
 
-        public string GenerateDelay(int delay, int type, string argument)
-        {
-            return $"delay {delay} {type} {argument}";
-        }
+        public string GenerateDelay(int delay, int type, string argument) => $"delay {delay} {type} {argument}";
 
-        public string GenerateDialog(string dialog)
-        {
-            return $"dlg {dialog}";
-        }
+        public string GenerateDialog(string dialog) => $"dlg {dialog}";
 
         public string GenerateFrank(byte type)
         {
@@ -149,10 +134,7 @@ namespace OpenNos.GameObject.Helpers
             return packet;
         }
 
-        public string GenerateFStashRemove(short slot)
-        {
-            return $"f_stash {GenerateRemovePacket(slot)}";
-        }
+        public string GenerateFStashRemove(short slot) => $"f_stash {GenerateRemovePacket(slot)}";
 
         public string GenerateGuri(byte type, byte argument, long callerId, int value = 0, int value2 = 0)
         {
@@ -178,45 +160,21 @@ namespace OpenNos.GameObject.Helpers
             }
         }
 
-        public string GenerateInbox(string value)
-        {
-            return $"inbox {value}";
-        }
+        public string GenerateInbox(string value) => $"inbox {value}";
 
-        public string GenerateInfo(string message)
-        {
-            return $"info {message}";
-        }
+        public string GenerateInfo(string message) => $"info {message}";
 
-        public string GenerateInventoryRemove(InventoryType Type, short Slot)
-        {
-            return $"ivn {(byte)Type} {GenerateRemovePacket(Slot)}";
-        }
+        public string GenerateInventoryRemove(InventoryType Type, short Slot) => $"ivn {(byte)Type} {GenerateRemovePacket(Slot)}";
 
-        public string GenerateMapOut()
-        {
-            return "mapout";
-        }
+        public string GenerateMapOut() => "mapout";
 
-        public string GenerateModal(string message, int type)
-        {
-            return $"modal {type} {message}";
-        }
+        public string GenerateModal(string message, int type) => $"modal {type} {message}";
 
-        public string GenerateMsg(string message, int type)
-        {
-            return $"msg {type} {message}";
-        }
+        public string GenerateMsg(string message, int type) => $"msg {type} {message}";
 
-        public string GeneratePClear()
-        {
-            return "p_clear";
-        }
+        public string GeneratePClear() => "p_clear";
 
-        public string GeneratePStashRemove(short slot)
-        {
-            return $"pstash {GenerateRemovePacket(slot)}";
-        }
+        public string GeneratePStashRemove(short slot) => $"pstash {GenerateRemovePacket(slot)}";
 
         public string GenerateRCBList(CBListPacket packet)
         {
@@ -515,30 +473,15 @@ namespace OpenNos.GameObject.Helpers
             return str;
         }
 
-        public string GenerateRemovePacket(short slot)
-        {
-            return $"{slot}.-1.0.0.0";
-        }
+        public string GenerateRemovePacket(short slot) => $"{slot}.-1.0.0.0";
 
-        public string GenerateRp(int mapid, int x, int y, string param)
-        {
-            return $"rp {mapid} {x} {y} {param}";
-        }
+        public string GenerateRp(int mapid, int x, int y, string param) => $"rp {mapid} {x} {y} {param}";
 
-        public string GenerateShopMemo(int type, string message)
-        {
-            return $"s_memo {type} {message}";
-        }
+        public string GenerateShopMemo(int type, string message) => $"s_memo {type} {message}";
 
-        public string GenerateStashRemove(short slot)
-        {
-            return $"stash {GenerateRemovePacket(slot)}";
-        }
+        public string GenerateStashRemove(short slot) => $"stash {GenerateRemovePacket(slot)}";
 
-        public IEnumerable<string> GenerateVb()
-        {
-            return new[] { "vb 340 0 0", "vb 339 0 0", "vb 472 0 0", "vb 471 0 0" };
-        }
+        public IEnumerable<string> GenerateVb() => new[] { "vb 340 0 0", "vb 339 0 0", "vb 472 0 0", "vb 471 0 0" };
 
         #endregion
     }

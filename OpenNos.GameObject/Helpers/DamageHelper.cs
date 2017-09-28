@@ -11,13 +11,7 @@ namespace OpenNos.GameObject
     {
         private static DamageHelper instance;
 
-        public static DamageHelper Instance
-        {
-            get
-            {
-                return instance ?? (instance = new DamageHelper());
-            }
-        }
+        public static DamageHelper Instance => instance ?? (instance = new DamageHelper());
 
         /// <summary>
         /// Calculates the damage attacker inflicts defender
@@ -592,7 +586,10 @@ namespace OpenNos.GameObject
 
                 default:
                     if (attacker.AttackUpgrade > 0)
+                    {
                         weaponDamage *= attacker.AttackUpgrade / 5;
+                    }
+
                     break;
             }
 
@@ -607,7 +604,10 @@ namespace OpenNos.GameObject
             {
                 default:
                     if (attacker.AttackUpgrade < 0)
+                    {
                         defender.ArmorDefense += defender.ArmorDefense / 5;
+                    }
+
                     break;
 
                 case -10:

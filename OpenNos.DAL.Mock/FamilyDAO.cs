@@ -22,30 +22,15 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public DeleteResult Delete(long familyId)
-        {
-            return DeleteResult.Deleted;
-        }
+        public DeleteResult Delete(long familyId) => DeleteResult.Deleted;
 
-        public SaveResult InsertOrUpdate(ref FamilyDTO family)
-        {
-            return SaveResult.Inserted;
-        }
+        public SaveResult InsertOrUpdate(ref FamilyDTO family) => SaveResult.Inserted;
 
-        public FamilyDTO LoadByCharacterId(long characterId)
-        {
-            return null;
-        }
+        public FamilyDTO LoadByCharacterId(long characterId) => null;
 
-        public FamilyDTO LoadById(long familyId)
-        {
-            return null;
-        }
+        public FamilyDTO LoadById(long familyId) => null;
 
-        public FamilyDTO LoadByName(string name)
-        {
-            return null;
-        }
+        public FamilyDTO LoadByName(string name) => null;
 
         #endregion
     }

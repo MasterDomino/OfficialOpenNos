@@ -27,10 +27,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels
         /// Creates a new CommunicationChannelEventArgs object.
         /// </summary>
         /// <param name="channel">Communication channel that is associated with this event</param>
-        public CommunicationChannelEventArgs(ICommunicationChannel channel)
-        {
-            Channel = channel;
-        }
+        public CommunicationChannelEventArgs(ICommunicationChannel channel) => Channel = channel;
 
         #endregion
 

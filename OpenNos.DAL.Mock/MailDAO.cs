@@ -42,10 +42,7 @@ namespace OpenNos.DAL.Mock
             return SaveResult.Inserted;
         }
 
-        public MailDTO LoadById(long mailId)
-        {
-            return Container.SingleOrDefault(m => m.MailId == mailId);
-        }
+        public MailDTO LoadById(long mailId) => Container.SingleOrDefault(m => m.MailId == mailId);
 
         #endregion
     }

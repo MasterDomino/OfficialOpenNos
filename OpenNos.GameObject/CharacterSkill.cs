@@ -53,22 +53,13 @@ namespace OpenNos.GameObject
             get; set;
         }
 
-        public Skill Skill
-        {
-            get
-            {
-                return skill ?? (skill = ServerManager.Instance.GetSkill(SkillVNum));
-            }
-        }
+        public Skill Skill => skill ?? (skill = ServerManager.Instance.GetSkill(SkillVNum));
 
         #endregion
 
         #region Methods
 
-        public bool CanBeUsed()
-        {
-            return Skill != null && LastUse.AddMilliseconds(Skill.Cooldown * 100) < DateTime.Now;
-        }
+        public bool CanBeUsed() => Skill != null && LastUse.AddMilliseconds(Skill.Cooldown * 100) < DateTime.Now;
 
         #endregion
     }

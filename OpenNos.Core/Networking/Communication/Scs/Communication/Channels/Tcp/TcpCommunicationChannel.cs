@@ -107,13 +107,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         /// <summary>
         /// Gets the endpoint of remote application.
         /// </summary>
-        public override ScsEndPoint RemoteEndPoint
-        {
-            get
-            {
-                return _remoteEndPoint;
-            }
-        }
+        public override ScsEndPoint RemoteEndPoint => _remoteEndPoint;
 
         #endregion
 

@@ -27,10 +27,7 @@ namespace OpenNos.GameObject
         {
         }
 
-        protected Item(ItemDTO item)
-        {
-            InitializeItem(item);
-        }
+        protected Item(ItemDTO item) => InitializeItem(item);
 
         #endregion
 

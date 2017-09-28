@@ -23,10 +23,7 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public IEnumerable<CellonOptionDTO> GetOptionsByWearableInstanceId(Guid wearableInstanceId)
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<CellonOptionDTO> GetOptionsByWearableInstanceId(Guid wearableInstanceId) => throw new NotImplementedException();
 
         #endregion
     }

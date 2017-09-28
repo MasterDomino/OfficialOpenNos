@@ -101,7 +101,7 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Service
         /// Throws ArgumentNullException if service argument is null
         /// </exception>
         /// <exception cref="Exception">Throws Exception if service is already added before</exception>
-        public void AddService<TServiceInterface, TServiceClass>(TServiceClass service) where TServiceClass : ScsService, TServiceInterface where TServiceInterface : class
+        public void AddService<TServiceInterface, TServiceClass>(TServiceClass service) where TServiceInterface : class where TServiceClass : ScsService, TServiceInterface
         {
             if (service == null)
             {
@@ -133,26 +133,17 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Service
         /// </summary>
         /// <typeparam name="TServiceInterface">Service interface type</typeparam>
         /// <returns>True: removed. False: no service object with this interface</returns>
-        public bool RemoveService<TServiceInterface>() where TServiceInterface : class
-        {
-            return _serviceObjects.Remove(typeof(TServiceInterface).Name);
-        }
+        public bool RemoveService<TServiceInterface>() where TServiceInterface : class => _serviceObjects.Remove(typeof(TServiceInterface).Name);
 
         /// <summary>
         /// Starts service application.
         /// </summary>
-        public void Start()
-        {
-            _scsServer.Start();
-        }
+        public void Start() => _scsServer.Start();
 
         /// <summary>
         /// Stops service application.
         /// </summary>
-        public void Stop()
-        {
-            _scsServer.Stop();
-        }
+        public void Stop() => _scsServer.Stop();
 
         protected virtual void Dispose(bool disposing)
         {

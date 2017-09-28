@@ -77,6 +77,16 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
 
         #region Methods
 
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+                _disposed = true;
+            }
+        }
+
         /// <summary>
         /// Starts the server.
         /// </summary>
@@ -106,23 +116,25 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
         /// <returns></returns>
         protected abstract IConnectionListener CreateConnectionListener();
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Clients.Dispose();
+            }
+        }
+
         /// <summary>
         /// Raises ClientConnected event.
         /// </summary>
         /// <param name="client">Connected client</param>
-        protected virtual void OnClientConnected(IScsServerClient client)
-        {
-            ClientConnected?.Invoke(this, new ServerClientEventArgs(client));
-        }
+        protected virtual void OnClientConnected(IScsServerClient client) => ClientConnected?.Invoke(this, new ServerClientEventArgs(client));
 
         /// <summary>
         /// Raises ClientDisconnected event.
         /// </summary>
         /// <param name="client">Disconnected client</param>
-        protected virtual void OnClientDisconnected(IScsServerClient client)
-        {
-            ClientDisconnected?.Invoke(this, new ServerClientEventArgs(client));
-        }
+        protected virtual void OnClientDisconnected(IScsServerClient client) => ClientDisconnected?.Invoke(this, new ServerClientEventArgs(client));
 
         /// <summary>
         /// Handles Disconnected events of all connected clients.
@@ -153,24 +165,6 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
             Clients[client.ClientId] = client;
             OnClientConnected(client);
             e.Channel.Start();
-        }
-
-        public void Dispose()
-        {
-            if (!_disposed)
-            {
-                Dispose(true);
-                GC.SuppressFinalize(this);
-                _disposed = true;
-            }
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                Clients.Dispose();
-            }
         }
 
         #endregion

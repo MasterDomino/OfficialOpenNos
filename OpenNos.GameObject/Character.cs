@@ -118,13 +118,7 @@ namespace OpenNos.GameObject
 
         public Family Family { get; set; }
 
-        public FamilyCharacterDTO FamilyCharacter
-        {
-            get
-            {
-                return Family?.FamilyCharacters.Find(s => s.CharacterId == CharacterId);
-            }
-        }
+        public FamilyCharacterDTO FamilyCharacter => Family?.FamilyCharacters.Find(s => s.CharacterId == CharacterId);
 
         public List<long> FamilyInviteCharacters { get; set; }
 
@@ -556,10 +550,7 @@ namespace OpenNos.GameObject
             Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), Name), 12));
         }
 
-        public bool CanAddMate(Mate mate)
-        {
-            return mate.MateType == MateType.Pet ? MaxMateCount > Mates.Count : 3 > Mates.Count(s => s.MateType == MateType.Partner);
-        }
+        public bool CanAddMate(Mate mate) => mate.MateType == MateType.Pet ? MaxMateCount > Mates.Count : 3 > Mates.Count(s => s.MateType == MateType.Partner);
 
         public void ChangeClass(ClassType characterClass)
         {
@@ -994,15 +985,9 @@ namespace OpenNos.GameObject
             }
         }
 
-        public void Dance()
-        {
-            IsDancing = !IsDancing;
-        }
+        public void Dance() => IsDancing = !IsDancing;
 
-        public Character DeepCopy()
-        {
-            return (Character)MemberwiseClone();
-        }
+        public Character DeepCopy() => (Character)MemberwiseClone();
 
         public void DeleteBlackList(long characterId)
         {
@@ -1114,10 +1099,7 @@ namespace OpenNos.GameObject
             FriendRequestCharacters.Clear();
         }
 
-        public string GenerateAct()
-        {
-            return "act 6";
-        }
+        public string GenerateAct() => "act 6";
 
         public string GenerateAt()
         {
@@ -1135,25 +1117,13 @@ namespace OpenNos.GameObject
             return result;
         }
 
-        public string GenerateCInfo()
-        {
-            return $"c_info {(Authority == AuthorityType.Moderator && !Undercover ? "[Support]" + Name : Authority == AuthorityType.BitchNiggerFaggot ? Name + "[BitchNiggerFaggot]" : Name)} - -1 {(Family != null && !Undercover ? $"{Family.FamilyId} {Family.Name}({Language.Instance.GetMessageFromKey(FamilyCharacter.Authority.ToString().ToUpper())})" : "-1 -")} {CharacterId} {(Invisible ? 6 : Undercover ? (byte)AuthorityType.User : Authority < AuthorityType.User ? (byte)AuthorityType.User : (byte)Authority)} {(byte)Gender} {(byte)HairStyle} {(byte)HairColor} {(byte)Class} {(GetDignityIco() == 1 ? GetReputationIco() : -GetDignityIco())} {(Authority == AuthorityType.Moderator ? 500 : Compliment)} {(UseSp || IsVehicled ? Morph : 0)} {(Invisible ? 1 : 0)} {Family?.FamilyLevel ?? 0} {(UseSp ? MorphUpgrade : 0)} {ArenaWinner}";
-        }
+        public string GenerateCInfo() => $"c_info {(Authority == AuthorityType.Moderator && !Undercover ? "[Support]" + Name : Authority == AuthorityType.BitchNiggerFaggot ? Name + "[BitchNiggerFaggot]" : Name)} - -1 {(Family != null && !Undercover ? $"{Family.FamilyId} {Family.Name}({Language.Instance.GetMessageFromKey(FamilyCharacter.Authority.ToString().ToUpper())})" : "-1 -")} {CharacterId} {(Invisible ? 6 : Undercover ? (byte)AuthorityType.User : Authority < AuthorityType.User ? (byte)AuthorityType.User : (byte)Authority)} {(byte)Gender} {(byte)HairStyle} {(byte)HairColor} {(byte)Class} {(GetDignityIco() == 1 ? GetReputationIco() : -GetDignityIco())} {(Authority == AuthorityType.Moderator ? 500 : Compliment)} {(UseSp || IsVehicled ? Morph : 0)} {(Invisible ? 1 : 0)} {Family?.FamilyLevel ?? 0} {(UseSp ? MorphUpgrade : 0)} {ArenaWinner}";
 
-        public string GenerateCMap()
-        {
-            return $"c_map 0 {MapInstance.Map.MapId} {(MapInstance.MapInstanceType != MapInstanceType.BaseMapInstance ? 1 : 0)}";
-        }
+        public string GenerateCMap() => $"c_map 0 {MapInstance.Map.MapId} {(MapInstance.MapInstanceType != MapInstanceType.BaseMapInstance ? 1 : 0)}";
 
-        public string GenerateCMode()
-        {
-            return $"c_mode 1 {CharacterId} {(UseSp || IsVehicled ? Morph : 0)} {(UseSp ? MorphUpgrade : 0)} {(UseSp ? MorphUpgrade2 : 0)} {ArenaWinner}";
-        }
+        public string GenerateCMode() => $"c_mode 1 {CharacterId} {(UseSp || IsVehicled ? Morph : 0)} {(UseSp ? MorphUpgrade : 0)} {(UseSp ? MorphUpgrade2 : 0)} {ArenaWinner}";
 
-        public string GenerateCond()
-        {
-            return $"cond 1 {CharacterId} {(NoAttack ? 1 : 0)} {(NoMove ? 1 : 0)} {Speed}";
-        }
+        public string GenerateCond() => $"cond 1 {CharacterId} {(NoAttack ? 1 : 0)} {(NoMove ? 1 : 0)} {Speed}";
 
         public void GenerateDignity(NpcMonster monsterinfo)
         {
@@ -1170,10 +1140,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        public string GenerateDir()
-        {
-            return $"dir 1 {CharacterId} {Direction}";
-        }
+        public string GenerateDir() => $"dir 1 {CharacterId} {Direction}";
 
         public string GenerateEq()
         {
@@ -1262,15 +1229,9 @@ namespace OpenNos.GameObject
             return $"equip {GenerateEqRareUpgradeForPacket()}{eqlist}";
         }
 
-        public string GenerateExts()
-        {
-            return $"exts 0 {48 + ((HaveBackpack() ? 1 : 0) * 12)} {48 + ((HaveBackpack() ? 1 : 0) * 12)} {48 + ((HaveBackpack() ? 1 : 0) * 12)}";
-        }
+        public string GenerateExts() => $"exts 0 {48 + ((HaveBackpack() ? 1 : 0) * 12)} {48 + ((HaveBackpack() ? 1 : 0) * 12)} {48 + ((HaveBackpack() ? 1 : 0) * 12)}";
 
-        public string GenerateFaction()
-        {
-            return $"fs {(byte)Faction}";
-        }
+        public string GenerateFaction() => $"fs {(byte)Faction}";
 
         public string GenerateFamilyMember()
         {
@@ -1398,10 +1359,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        public string GenerateFd()
-        {
-            return $"fd {Reputation} {GetReputationIco()} {(int)Dignity} {Math.Abs(GetDignityIco())}";
-        }
+        public string GenerateFd() => $"fd {Reputation} {GetReputationIco()} {(int)Dignity} {Math.Abs(GetDignityIco())}";
 
         public string GenerateFinfo(long? relatedCharacterLoggedId, bool isConnected)
         {
@@ -1441,15 +1399,9 @@ namespace OpenNos.GameObject
             return stash;
         }
 
-        public string GenerateGender()
-        {
-            return $"p_sex {(byte)Gender}";
-        }
+        public string GenerateGender() => $"p_sex {(byte)Gender}";
 
-        public string GenerateGet(long id)
-        {
-            return $"get 1 {CharacterId} {id} 0";
-        }
+        public string GenerateGet(long id) => $"get 1 {CharacterId} {id} 0";
 
         public string GenerateGExp()
         {
@@ -1461,10 +1413,7 @@ namespace OpenNos.GameObject
             return str;
         }
 
-        public string GenerateGidx()
-        {
-            return Family != null ? $"gidx 1 {CharacterId} {Family.FamilyId} {Family.Name}({Language.Instance.GetMessageFromKey(Family.FamilyCharacters.Find(s => s.CharacterId == CharacterId)?.Authority.ToString().ToUpper())}) {Family.FamilyLevel}" : $"gidx 1 {CharacterId} -1 - 0";
-        }
+        public string GenerateGidx() => Family != null ? $"gidx 1 {CharacterId} {Family.FamilyId} {Family.Name}({Language.Instance.GetMessageFromKey(Family.FamilyCharacters.Find(s => s.CharacterId == CharacterId)?.Authority.ToString().ToUpper())}) {Family.FamilyLevel}" : $"gidx 1 {CharacterId} -1 - 0";
 
         public string GenerateGInfo()
         {
@@ -1486,20 +1435,11 @@ namespace OpenNos.GameObject
             return string.Empty;
         }
 
-        public string GenerateGold()
-        {
-            return $"gold {Gold} 0";
-        }
+        public string GenerateGold() => $"gold {Gold} 0";
 
-        public string GenerateIcon(int type, int value, short itemVNum)
-        {
-            return $"icon {type} {CharacterId} {value} {itemVNum}";
-        }
+        public string GenerateIcon(int type, int value, short itemVNum) => $"icon {type} {CharacterId} {value} {itemVNum}";
 
-        public string GenerateIdentity()
-        {
-            return $"Character: {Name}";
-        }
+        public string GenerateIdentity() => $"Character: {Name}";
 
         public string GenerateIn(bool foe = false)
         {
@@ -1528,10 +1468,7 @@ namespace OpenNos.GameObject
             return $"in 1 {(Authority == AuthorityType.Moderator && !Undercover ? "[Support]" + _name : Authority == AuthorityType.BitchNiggerFaggot ? _name + "[BitchNiggerFaggot]" : _name)} - {CharacterId} {PositionX} {PositionY} {Direction} {(Undercover ? (byte)AuthorityType.User : Authority < AuthorityType.User ? (byte)AuthorityType.User : (byte)Authority)} {(byte)Gender} {(byte)HairStyle} {color} {(byte)Class} {GenerateEqListForPacket()} {Math.Ceiling(Hp / HPLoad() * 100)} {Math.Ceiling(Mp / MPLoad() * 100)} {(IsSitting ? 1 : 0)} {(Group?.GroupType == GroupType.Group ? (Group?.GroupId ?? -1) : -1)} {(fairy != null && !Undercover ? 4 : 0)} {fairy?.Item.Element ?? 0} 0 {fairy?.Item.Morph ?? 0} 0 {(UseSp || IsVehicled ? Morph : 0)} {GenerateEqRareUpgradeForPacket()} {(!Undercover ? (foe ? -1 : Family?.FamilyId ?? -1) : -1)} {(!Undercover ? (foe ? _name : Family?.Name ?? "-") : "-")} {(GetDignityIco() == 1 ? GetReputationIco() : -GetDignityIco())} {(Invisible ? 1 : 0)} {(UseSp ? MorphUpgrade : 0)} {_faction} {(UseSp ? MorphUpgrade2 : 0)} {Level} {Family?.FamilyLevel ?? 0} {ArenaWinner} {(Authority == AuthorityType.Moderator && !Undercover ? 500 : Compliment)} {Size} {HeroLevel}";
         }
 
-        public string GenerateInvisible()
-        {
-            return $"cl {CharacterId} {(Invisible ? 1 : 0)} {(InvisibleGm ? 1 : 0)}";
-        }
+        public string GenerateInvisible() => $"cl {CharacterId} {(Invisible ? 1 : 0)} {(InvisibleGm ? 1 : 0)}";
 
         public void GetReferrerReward()
         {
@@ -1814,10 +1751,7 @@ namespace OpenNos.GameObject
             return mlobjstring;
         }
 
-        public string GenerateMinilandPoint()
-        {
-            return $"mlpt {MinilandPoint} 100";
-        }
+        public string GenerateMinilandPoint() => $"mlpt {MinilandPoint} 100";
 
         public string GenerateMinimapPosition()
         {
@@ -1831,25 +1765,13 @@ namespace OpenNos.GameObject
             }
         }
 
-        public string GenerateMlinfo()
-        {
-            return $"mlinfo 3800 {MinilandPoint} 100 {GeneralLogs.GetAllItems().Count(s => s.LogData == "Miniland" && s.Timestamp.Day == DateTime.Now.Day)} {GeneralLogs.GetAllItems().Count(s => s.LogData == "Miniland")} 10 {(byte)MinilandState} {Language.Instance.GetMessageFromKey("WELCOME_MUSIC_INFO")} {Language.Instance.GetMessageFromKey("MINILAND_WELCOME_MESSAGE")}";
-        }
+        public string GenerateMlinfo() => $"mlinfo 3800 {MinilandPoint} 100 {GeneralLogs.GetAllItems().Count(s => s.LogData == "Miniland" && s.Timestamp.Day == DateTime.Now.Day)} {GeneralLogs.GetAllItems().Count(s => s.LogData == "Miniland")} 10 {(byte)MinilandState} {Language.Instance.GetMessageFromKey("WELCOME_MUSIC_INFO")} {Language.Instance.GetMessageFromKey("MINILAND_WELCOME_MESSAGE")}";
 
-        public string GenerateMlinfobr()
-        {
-            return $"mlinfobr 3800 {Name} {GeneralLogs.GetAllItems().Count(s => s.LogData == "Miniland" && s.Timestamp.Day == DateTime.Now.Day)} {GeneralLogs.GetAllItems().Count(s => s.LogData == "Miniland")} 25 {MinilandMessage.Replace(' ', '^')}";
-        }
+        public string GenerateMlinfobr() => $"mlinfobr 3800 {Name} {GeneralLogs.GetAllItems().Count(s => s.LogData == "Miniland" && s.Timestamp.Day == DateTime.Now.Day)} {GeneralLogs.GetAllItems().Count(s => s.LogData == "Miniland")} 25 {MinilandMessage.Replace(' ', '^')}";
 
-        public string GenerateMloMg(MinilandObject mlobj, MinigamePacket packet)
-        {
-            return $"mlo_mg {packet.MinigameVNum} {MinilandPoint} 0 0 {mlobj.ItemInstance.DurabilityPoint} {mlobj.ItemInstance.Item.MinilandObjectPoint}";
-        }
+        public string GenerateMloMg(MinilandObject mlobj, MinigamePacket packet) => $"mlo_mg {packet.MinigameVNum} {MinilandPoint} 0 0 {mlobj.ItemInstance.DurabilityPoint} {mlobj.ItemInstance.Item.MinilandObjectPoint}";
 
-        public string GenerateNpcDialog(int value)
-        {
-            return $"npc_req 1 {CharacterId} {value}";
-        }
+        public string GenerateNpcDialog(int value) => $"npc_req 1 {CharacterId} {value}";
 
         public string GeneratePairy()
         {
@@ -1871,10 +1793,7 @@ namespace OpenNos.GameObject
                 : $"pairy 1 {CharacterId} 0 0 0 0";
         }
 
-        public string GenerateParcel(MailDTO mail)
-        {
-            return mail.AttachmentVNum != null ? $"parcel 1 1 {MailList.First(s => s.Value.MailId == mail.MailId).Key} {(mail.Title == "NOSMALL" ? 1 : 4)} 0 {mail.Date.ToString("yyMMddHHmm")} {mail.Title} {mail.AttachmentVNum} {mail.AttachmentAmount} {(byte)ServerManager.Instance.GetItem((short)mail.AttachmentVNum).Type}" : string.Empty;
-        }
+        public string GenerateParcel(MailDTO mail) => mail.AttachmentVNum != null ? $"parcel 1 1 {MailList.First(s => s.Value.MailId == mail.MailId).Key} {(mail.Title == "NOSMALL" ? 1 : 4)} 0 {mail.Date.ToString("yyMMddHHmm")} {mail.Title} {mail.AttachmentVNum} {mail.AttachmentAmount} {(byte)ServerManager.Instance.GetItem((short)mail.AttachmentVNum).Type}" : string.Empty;
 
         public string GeneratePidx(bool isLeaveGroup = false)
         {
@@ -1918,10 +1837,7 @@ namespace OpenNos.GameObject
             return $"pinit {i} {str}";
         }
 
-        public string GeneratePlayerFlag(long pflag)
-        {
-            return $"pflag 1 {CharacterId} {pflag}";
-        }
+        public string GeneratePlayerFlag(long pflag) => $"pflag 1 {CharacterId} {pflag}";
 
         public string GeneratePost(MailDTO mail, byte type)
         {
@@ -1942,10 +1858,7 @@ namespace OpenNos.GameObject
             return $"post 5 {type} {MailList.First(s => s.Value == mailDTO).Key} 0 0 {(byte)mailDTO.SenderClass} {(byte)mailDTO.SenderGender} {mailDTO.SenderMorphId} {(byte)mailDTO.SenderHairStyle} {(byte)mailDTO.SenderHairColor} {mailDTO.EqPacket} {sender.Name} {mailDTO.Title} {mailDTO.Message}";
         }
 
-        public List<string> GeneratePst()
-        {
-            return Mates.Where(s => s.IsTeamMember).OrderByDescending(s => s.MateType).Select(mate => $"pst 2 {mate.MateTransportId} {(mate.MateType == MateType.Partner ? "0" : "1")} {mate.Hp / mate.MaxHp * 100} {mate.Mp / mate.MaxMp * 100} {mate.Hp} {mate.Mp} 0 0 0").ToList();
-        }
+        public List<string> GeneratePst() => Mates.Where(s => s.IsTeamMember).OrderByDescending(s => s.MateType).Select(mate => $"pst 2 {mate.MateTransportId} {(mate.MateType == MateType.Partner ? "0" : "1")} {mate.Hp / mate.MaxHp * 100} {mate.Mp / mate.MaxMp * 100} {mate.Hp} {mate.Mp} 0 0 0").ToList();
 
         public string GeneratePStashAll()
         {
@@ -2003,15 +1916,9 @@ namespace OpenNos.GameObject
             return result;
         }
 
-        public string GenerateRaidBf(byte type)
-        {
-            return $"raidbf 0 {type} 25 ";
-        }
+        public string GenerateRaidBf(byte type) => $"raidbf 0 {type} 25 ";
 
-        public string GenerateRc(int characterHealth)
-        {
-            return $"rc 1 {CharacterId} {characterHealth} 0";
-        }
+        public string GenerateRc(int characterHealth) => $"rc 1 {CharacterId} {characterHealth} 0";
 
         public string GenerateRCSList(CSListPacket packet)
         {
@@ -2085,10 +1992,7 @@ namespace OpenNos.GameObject
             return $"tc_info {Level} {Name} {fairy?.Item.Element ?? 0} {ElementRate} {(byte)Class} {(byte)Gender} {(Family != null ? $"{Family.FamilyId} {Family.Name}({Language.Instance.GetMessageFromKey(FamilyCharacter.Authority.ToString().ToUpper())})" : "-1 -")} {GetReputationIco()} {GetDignityIco()} {(weapon != null ? 1 : 0)} {weapon?.Rare ?? 0} {weapon?.Upgrade ?? 0} {(weapon2 != null ? 1 : 0)} {weapon2?.Rare ?? 0} {weapon2?.Upgrade ?? 0} {(armor != null ? 1 : 0)} {armor?.Rare ?? 0} {armor?.Upgrade ?? 0} {Act4Kill} {Act4Dead} {Reputation} 0 0 0 {(UseSp ? Morph : 0)} {TalentWin} {TalentLose} {TalentSurrender} 0 {MasterPoints} {Compliment} {Act4Points} {(isPvpPrimary ? 1 : 0)} {(isPvpSecondary ? 1 : 0)} {(isPvpArmor ? 1 : 0)} {HeroLevel} {(string.IsNullOrEmpty(Biography) ? Language.Instance.GetMessageFromKey("NO_PREZ_MESSAGE") : Biography)}";
         }
 
-        public string GenerateRest()
-        {
-            return $"rest 1 {CharacterId} {(IsSitting ? 1 : 0)}";
-        }
+        public string GenerateRest() => $"rest 1 {CharacterId} {(IsSitting ? 1 : 0)}";
 
         public string GenerateRevive()
         {
@@ -2096,15 +2000,9 @@ namespace OpenNos.GameObject
             return $"revive 1 {CharacterId} {(lives > 0 ? lives : 0)}";
         }
 
-        public string GenerateSay(string message, int type, bool ignoreNickname = false)
-        {
-            return $"say {(ignoreNickname ? 2 : 1)} {CharacterId} {type} {message}";
-        }
+        public string GenerateSay(string message, int type, bool ignoreNickname = false) => $"say {(ignoreNickname ? 2 : 1)} {CharacterId} {type} {message}";
 
-        public string GenerateScal()
-        {
-            return $"char_sc 1 {CharacterId} {Size}";
-        }
+        public string GenerateScal() => $"char_sc 1 {CharacterId} {Size}";
 
         public List<string> GenerateScN()
         {
@@ -2132,20 +2030,11 @@ namespace OpenNos.GameObject
             return list;
         }
 
-        public string GenerateScpStc()
-        {
-            return $"sc_p_stc {MaxMateCount / 10}";
-        }
+        public string GenerateScpStc() => $"sc_p_stc {MaxMateCount / 10}";
 
-        public string GenerateShop(string shopname)
-        {
-            return $"shop 1 {CharacterId} 1 3 0 {shopname}";
-        }
+        public string GenerateShop(string shopname) => $"shop 1 {CharacterId} 1 3 0 {shopname}";
 
-        public string GenerateShopEnd()
-        {
-            return $"shop 1 {CharacterId} 0 0";
-        }
+        public string GenerateShopEnd() => $"shop 1 {CharacterId} 0 0";
 
         public string GenerateSki()
         {
@@ -2168,15 +2057,9 @@ namespace OpenNos.GameObject
             return $"ski {skibase}{generatedSkills}";
         }
 
-        public string GenerateSpk(object message, int type)
-        {
-            return $"spk 1 {CharacterId} {type} {Name} {message}";
-        }
+        public string GenerateSpk(object message, int type) => $"spk 1 {CharacterId} {type} {Name} {message}";
 
-        public string GenerateSpPoint()
-        {
-            return $"sp {SpAdditionPoint} 1000000 {SpPoint} 10000";
-        }
+        public string GenerateSpPoint() => $"sp {SpAdditionPoint} 1000000 {SpPoint} 10000";
 
         [Obsolete("GenerateStartupInventory should be used only on startup, for refreshing an inventory slot please use GenerateInventoryAdd instead.")]
         public void GenerateStartupInventory()
@@ -2344,31 +2227,58 @@ namespace OpenNos.GameObject
 
                     int p = 0;
                     if (point <= 10)
+                    {
                         p = point * 5;
+                    }
                     else if (point <= 20)
+                    {
                         p = 50 + ((point - 10) * 6);
+                    }
                     else if (point <= 30)
+                    {
                         p = 110 + ((point - 20) * 7);
+                    }
                     else if (point <= 40)
+                    {
                         p = 180 + ((point - 30) * 8);
+                    }
                     else if (point <= 50)
+                    {
                         p = 260 + ((point - 40) * 9);
+                    }
                     else if (point <= 60)
+                    {
                         p = 350 + ((point - 50) * 10);
+                    }
                     else if (point <= 70)
+                    {
                         p = 450 + ((point - 60) * 11);
+                    }
                     else if (point <= 80)
+                    {
                         p = 560 + ((point - 70) * 13);
+                    }
                     else if (point <= 90)
+                    {
                         p = 690 + ((point - 80) * 14);
+                    }
                     else if (point <= 94)
+                    {
                         p = 830 + ((point - 90) * 15);
+                    }
                     else if (point <= 95)
+                    {
                         p = 890 + 16;
+                    }
                     else if (point <= 97)
+                    {
                         p = 906 + ((point - 95) * 17);
+                    }
                     else if (point > 97)
+                    {
                         p = 940 + ((point - 97) * 20);
+                    }
+
                     MaxHit += p;
                     MinHit += p;
                     MaxDistance += p;
@@ -2377,25 +2287,46 @@ namespace OpenNos.GameObject
                     point = CharacterHelper.SlPoint(specialist.SlDefence, 1) + GetShellWeaponEffectValue(ShellWeaponEffectType.SLDefence) + GetShellWeaponEffectValue(ShellWeaponEffectType.SLGlobal);
                     p = 0;
                     if (point <= 10)
+                    {
                         p = point;
+                    }
                     else if (point <= 20)
+                    {
                         p = 10 + ((point - 10) * 2);
+                    }
                     else if (point <= 30)
+                    {
                         p = 30 + ((point - 20) * 3);
+                    }
                     else if (point <= 40)
+                    {
                         p = 60 + ((point - 30) * 4);
+                    }
                     else if (point <= 50)
+                    {
                         p = 100 + ((point - 40) * 5);
+                    }
                     else if (point <= 60)
+                    {
                         p = 150 + ((point - 50) * 6);
+                    }
                     else if (point <= 70)
+                    {
                         p = 210 + ((point - 60) * 7);
+                    }
                     else if (point <= 80)
+                    {
                         p = 280 + ((point - 70) * 8);
+                    }
                     else if (point <= 90)
+                    {
                         p = 360 + ((point - 80) * 9);
+                    }
                     else if (point > 90)
+                    {
                         p = 450 + ((point - 90) * 10);
+                    }
+
                     Defence += p;
                     MagicalDefence += p;
                     DistanceDefence += p;
@@ -2482,10 +2413,7 @@ namespace OpenNos.GameObject
             return $"sc {type} {weaponUpgrade} {MinHit} {MaxHit} {HitRate} {HitCriticalRate} {HitCritical} {(Class == ClassType.Archer ? 1 : 0)} {secondaryUpgrade} {MinDistance} {MaxDistance} {DistanceRate} {DistanceCriticalRate} {DistanceCritical} {armorUpgrade} {Defence} {DefenceRate} {DistanceDefence} {DistanceDefenceRate} {MagicalDefence} {FireResistance} {WaterResistance} {LightResistance} {DarkResistance}";
         }
 
-        public string GenerateStatInfo()
-        {
-            return $"st 1 {CharacterId} {Level} {HeroLevel} {(int)(Hp / (float)HPLoad() * 100)} {(int)(Mp / (float)MPLoad() * 100)} {Hp} {Mp}{Buff.GetAllItems().Aggregate(string.Empty, (current, buff) => current + $" {buff.Card.CardId}")}";
-        }
+        public string GenerateStatInfo() => $"st 1 {CharacterId} {Level} {HeroLevel} {(int)(Hp / (float)HPLoad() * 100)} {(int)(Mp / (float)MPLoad() * 100)} {Hp} {Mp}{Buff.GetAllItems().Aggregate(string.Empty, (current, buff) => current + $" {buff.Card.CardId}")}";
 
         public TalkPacket GenerateTalk(string message)
         {
@@ -2496,15 +2424,9 @@ namespace OpenNos.GameObject
             };
         }
 
-        public string GenerateTit()
-        {
-            return $"tit {Language.Instance.GetMessageFromKey(Class == (byte)ClassType.Adventurer ? ClassType.Adventurer.ToString().ToUpper() : Class == ClassType.Swordman ? ClassType.Swordman.ToString().ToUpper() : Class == ClassType.Archer ? ClassType.Archer.ToString().ToUpper() : ClassType.Magician.ToString().ToUpper())} {Name}";
-        }
+        public string GenerateTit() => $"tit {Language.Instance.GetMessageFromKey(Class == (byte)ClassType.Adventurer ? ClassType.Adventurer.ToString().ToUpper() : Class == ClassType.Swordman ? ClassType.Swordman.ToString().ToUpper() : Class == ClassType.Archer ? ClassType.Archer.ToString().ToUpper() : ClassType.Magician.ToString().ToUpper())} {Name}";
 
-        public string GenerateTp()
-        {
-            return $"tp 1 {CharacterId} {PositionX} {PositionY} 0";
-        }
+        public string GenerateTp() => $"tp 1 {CharacterId} {PositionX} {PositionY} 0";
 
         public void GetAct4Points(int point)
         {
@@ -2653,10 +2575,7 @@ namespace OpenNos.GameObject
             return new List<string>();
         }
 
-        public IEnumerable<string> GetMinilandEffects()
-        {
-            return MinilandObjects.Select(mp => mp.GenerateMinilandEffect(false)).ToList();
-        }
+        public IEnumerable<string> GetMinilandEffects() => MinilandObjects.Select(mp => mp.GenerateMinilandEffect(false)).ToList();
 
         public string GetMinilandObjectList()
         {
@@ -2697,31 +2616,131 @@ namespace OpenNos.GameObject
                         return 32;
                 }
             }
-            if (Reputation <= 50) return 1;
-            if (Reputation <= 150) return 2;
-            if (Reputation <= 250) return 3;
-            if (Reputation <= 500) return 4;
-            if (Reputation <= 750) return 5;
-            if (Reputation <= 1000) return 6;
-            if (Reputation <= 2250) return 7;
-            if (Reputation <= 3500) return 8;
-            if (Reputation <= 5000) return 9;
-            if (Reputation <= 9500) return 10;
-            if (Reputation <= 19000) return 11;
-            if (Reputation <= 25000) return 12;
-            if (Reputation <= 40000) return 13;
-            if (Reputation <= 60000) return 14;
-            if (Reputation <= 85000) return 15;
-            if (Reputation <= 115000) return 16;
-            if (Reputation <= 150000) return 17;
-            if (Reputation <= 190000) return 18;
-            if (Reputation <= 235000) return 19;
-            if (Reputation <= 285000) return 20;
-            if (Reputation <= 350000) return 21;
-            if (Reputation <= 500000) return 22;
-            if (Reputation <= 1500000) return 23;
-            if (Reputation <= 2500000) return 24;
-            if (Reputation <= 3750000) return 25;
+            if (Reputation <= 50)
+            {
+                return 1;
+            }
+
+            if (Reputation <= 150)
+            {
+                return 2;
+            }
+
+            if (Reputation <= 250)
+            {
+                return 3;
+            }
+
+            if (Reputation <= 500)
+            {
+                return 4;
+            }
+
+            if (Reputation <= 750)
+            {
+                return 5;
+            }
+
+            if (Reputation <= 1000)
+            {
+                return 6;
+            }
+
+            if (Reputation <= 2250)
+            {
+                return 7;
+            }
+
+            if (Reputation <= 3500)
+            {
+                return 8;
+            }
+
+            if (Reputation <= 5000)
+            {
+                return 9;
+            }
+
+            if (Reputation <= 9500)
+            {
+                return 10;
+            }
+
+            if (Reputation <= 19000)
+            {
+                return 11;
+            }
+
+            if (Reputation <= 25000)
+            {
+                return 12;
+            }
+
+            if (Reputation <= 40000)
+            {
+                return 13;
+            }
+
+            if (Reputation <= 60000)
+            {
+                return 14;
+            }
+
+            if (Reputation <= 85000)
+            {
+                return 15;
+            }
+
+            if (Reputation <= 115000)
+            {
+                return 16;
+            }
+
+            if (Reputation <= 150000)
+            {
+                return 17;
+            }
+
+            if (Reputation <= 190000)
+            {
+                return 18;
+            }
+
+            if (Reputation <= 235000)
+            {
+                return 19;
+            }
+
+            if (Reputation <= 285000)
+            {
+                return 20;
+            }
+
+            if (Reputation <= 350000)
+            {
+                return 21;
+            }
+
+            if (Reputation <= 500000)
+            {
+                return 22;
+            }
+
+            if (Reputation <= 1500000)
+            {
+                return 23;
+            }
+
+            if (Reputation <= 2500000)
+            {
+                return 24;
+            }
+
+            if (Reputation <= 3750000)
+            {
+                return 25;
+            }
+
             return Reputation <= 5000000 ? 26 : 27;
         }
 
@@ -2806,10 +2825,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        public bool HaveBackpack()
-        {
-            return StaticBonusList.Any(s => s.StaticBonusType == StaticBonusType.BackPack);
-        }
+        public bool HaveBackpack() => StaticBonusList.Any(s => s.StaticBonusType == StaticBonusType.BackPack);
 
         public double HPLoad()
         {
@@ -2863,25 +2879,13 @@ namespace OpenNos.GameObject
             CommunicationServiceClient.Instance.RefreshPenalty(log.PenaltyLogId);
         }
 
-        public bool IsBlockedByCharacter(long characterId)
-        {
-            return CharacterRelations.Any(b => b.RelationType == CharacterRelationType.Blocked && b.CharacterId.Equals(characterId) && characterId != CharacterId);
-        }
+        public bool IsBlockedByCharacter(long characterId) => CharacterRelations.Any(b => b.RelationType == CharacterRelationType.Blocked && b.CharacterId.Equals(characterId) && characterId != CharacterId);
 
-        public bool IsBlockingCharacter(long characterId)
-        {
-            return CharacterRelations.Any(c => c.RelationType == CharacterRelationType.Blocked && c.RelatedCharacterId.Equals(characterId));
-        }
+        public bool IsBlockingCharacter(long characterId) => CharacterRelations.Any(c => c.RelationType == CharacterRelationType.Blocked && c.RelatedCharacterId.Equals(characterId));
 
-        public bool IsFriendlistFull()
-        {
-            return CharacterRelations.Where(s => s.RelationType == CharacterRelationType.Friend).ToList().Count >= 80;
-        }
+        public bool IsFriendlistFull() => CharacterRelations.Where(s => s.RelationType == CharacterRelationType.Friend).ToList().Count >= 80;
 
-        public bool IsFriendOfCharacter(long characterId)
-        {
-            return CharacterRelations.Any(c => c.RelationType == CharacterRelationType.Friend && (c.RelatedCharacterId.Equals(characterId) || c.CharacterId.Equals(characterId)));
-        }
+        public bool IsFriendOfCharacter(long characterId) => CharacterRelations.Any(c => c.RelationType == CharacterRelationType.Friend && (c.RelatedCharacterId.Equals(characterId) || c.CharacterId.Equals(characterId)));
 
         /// <summary>
         /// Checks if the current character is in range of the given position
@@ -2890,15 +2894,9 @@ namespace OpenNos.GameObject
         /// <param name="yCoordinate">The y coordinate of the object to check.</param>
         /// <param name="range">The range of the coordinates to be maximal distanced.</param>
         /// <returns>True if the object is in Range, False if not.</returns>
-        public bool IsInRange(int xCoordinate, int yCoordinate, int range = 50)
-        {
-            return Math.Abs(PositionX - xCoordinate) <= range && Math.Abs(PositionY - yCoordinate) <= range;
-        }
+        public bool IsInRange(int xCoordinate, int yCoordinate, int range = 50) => Math.Abs(PositionX - xCoordinate) <= range && Math.Abs(PositionY - yCoordinate) <= range;
 
-        public bool IsMuted()
-        {
-            return Session.Account.PenaltyLogs.Any(s => s.Penalty == PenaltyType.Muted && s.DateEnd > DateTime.Now);
-        }
+        public bool IsMuted() => Session.Account.PenaltyLogs.Any(s => s.Penalty == PenaltyType.Muted && s.DateEnd > DateTime.Now);
 
         public int IsReputationHero()
         {
@@ -3673,10 +3671,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        internal void SetSession(ClientSession clientSession)
-        {
-            Session = clientSession;
-        }
+        internal void SetSession(ClientSession clientSession) => Session = clientSession;
 
         private void GenerateXp(MapMonster monster, bool isMonsterOwner)
         {
@@ -4013,15 +4008,9 @@ namespace OpenNos.GameObject
             return (DateTime.Now - LastDefence).TotalSeconds > 4 ? CharacterHelper.MPHealthStand[(byte)Class] : 0;
         }
 
-        private double HeroXPLoad()
-        {
-            return HeroLevel == 0 ? 1 : CharacterHelper.HeroXpData[HeroLevel - 1];
-        }
+        private double HeroXPLoad() => HeroLevel == 0 ? 1 : CharacterHelper.HeroXpData[HeroLevel - 1];
 
-        private double JobXPLoad()
-        {
-            return Class == (byte)ClassType.Adventurer ? CharacterHelper.FirstJobXPData[JobLevel - 1] : CharacterHelper.SecondJobXPData[JobLevel - 1];
-        }
+        private double JobXPLoad() => Class == (byte)ClassType.Adventurer ? CharacterHelper.FirstJobXPData[JobLevel - 1] : CharacterHelper.SecondJobXPData[JobLevel - 1];
 
         private double SPXPLoad()
         {
@@ -4033,10 +4022,7 @@ namespace OpenNos.GameObject
             return specialist != null ? CharacterHelper.SPXPData[specialist.SpLevel == 0 ? 0 : specialist.SpLevel - 1] : 0;
         }
 
-        private double XPLoad()
-        {
-            return CharacterHelper.XPData[Level - 1];
-        }
+        private double XPLoad() => CharacterHelper.XPData[Level - 1];
 
         #endregion
     }

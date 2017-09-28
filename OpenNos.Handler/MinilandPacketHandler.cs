@@ -26,10 +26,7 @@ namespace OpenNos.Handler
     {
         #region Instantiation
 
-        public MinilandPacketHandler(ClientSession session)
-        {
-            Session = session;
-        }
+        public MinilandPacketHandler(ClientSession session) => Session = session;
 
         #endregion
 

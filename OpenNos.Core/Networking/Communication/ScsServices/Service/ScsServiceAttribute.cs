@@ -27,10 +27,7 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Service
         /// <summary>
         /// Creates a new ScsServiceAttribute object.
         /// </summary>
-        public ScsServiceAttribute()
-        {
-            Version = "NO_VERSION";
-        }
+        public ScsServiceAttribute() => Version = "NO_VERSION";
 
         #endregion
 

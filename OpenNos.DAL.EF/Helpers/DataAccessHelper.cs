@@ -57,10 +57,7 @@ namespace OpenNos.DAL.EF.Helpers
         /// <summary>
         /// Creates new instance of database context.
         /// </summary>
-        public static OpenNosContext CreateContext()
-        {
-            return new OpenNosContext();
-        }
+        public static OpenNosContext CreateContext() => new OpenNosContext();
 
         /// <summary>
         /// Disposes the current instance of database context.
@@ -76,7 +73,7 @@ namespace OpenNos.DAL.EF.Helpers
 
         public static bool Initialize()
         {
-            using (var context = CreateContext())
+            using (OpenNosContext context = CreateContext())
             {
                 try
                 {

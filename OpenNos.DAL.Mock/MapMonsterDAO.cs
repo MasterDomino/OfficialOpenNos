@@ -25,30 +25,15 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public DeleteResult DeleteById(int mapMonsterId)
-        {
-            throw new NotImplementedException();
-        }
+        public DeleteResult DeleteById(int mapMonsterId) => throw new NotImplementedException();
 
-        public bool DoesMonsterExist(int mapMonsterId)
-        {
-            throw new NotImplementedException();
-        }
+        public bool DoesMonsterExist(int mapMonsterId) => throw new NotImplementedException();
 
-        public new void Insert(IEnumerable<MapMonsterDTO> mapMonsters)
-        {
-            throw new NotImplementedException();
-        }
+        public new void Insert(IEnumerable<MapMonsterDTO> mapMonsters) => throw new NotImplementedException();
 
-        public MapMonsterDTO LoadById(int mapMonsterId)
-        {
-            return Container.SingleOrDefault(m => m.MapMonsterId == mapMonsterId);
-        }
+        public MapMonsterDTO LoadById(int mapMonsterId) => Container.SingleOrDefault(m => m.MapMonsterId == mapMonsterId);
 
-        public IEnumerable<MapMonsterDTO> LoadFromMap(short mapId)
-        {
-            return Container.Where(m => m.MapId == mapId);
-        }
+        public IEnumerable<MapMonsterDTO> LoadFromMap(short mapId) => Container.Where(m => m.MapId == mapId);
 
         #endregion
     }

@@ -39,21 +39,9 @@ namespace OpenNos.Core
 
         #region Properties
 
-        public string IpAddress
-        {
-            get
-            {
-                return RemoteEndPoint.ToString();
-            }
-        }
+        public string IpAddress => RemoteEndPoint.ToString();
 
-        public bool IsConnected
-        {
-            get
-            {
-                return CommunicationState == CommunicationStates.Connected;
-            }
-        }
+        public bool IsConnected => CommunicationState == CommunicationStates.Connected;
 
         public bool IsDisposing { get; set; }
 
@@ -61,10 +49,7 @@ namespace OpenNos.Core
 
         #region Methods
 
-        public void Initialize(CryptographyBase encryptor)
-        {
-            _encryptor = encryptor;
-        }
+        public void Initialize(CryptographyBase encryptor) => _encryptor = encryptor;
 
         public void SendPacket(string packet, byte priority = 10)
         {
@@ -75,10 +60,7 @@ namespace OpenNos.Core
             }
         }
 
-        public void SendPacketFormat(string packet, params object[] param)
-        {
-            SendPacket(string.Format(packet, param));
-        }
+        public void SendPacketFormat(string packet, params object[] param) => SendPacket(string.Format(packet, param));
 
         public void SendPackets(IEnumerable<string> packets, byte priority = 10)
         {
@@ -89,10 +71,7 @@ namespace OpenNos.Core
             }
         }
 
-        public void SetClientSession(object clientSession)
-        {
-            _session = clientSession;
-        }
+        public void SetClientSession(object clientSession) => _session = clientSession;
 
         #endregion
     }

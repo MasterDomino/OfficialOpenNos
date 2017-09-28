@@ -23,40 +23,19 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public void Insert(List<BCardDTO> cards)
-        {
-            throw new NotImplementedException();
-        }
+        public void Insert(List<BCardDTO> cards) => throw new NotImplementedException();
 
-        public BCardDTO Insert(ref BCardDTO cardObject)
-        {
-            throw new NotImplementedException();
-        }
+        public BCardDTO Insert(ref BCardDTO cardObject) => throw new NotImplementedException();
 
-        public BCardDTO LoadById(short cardId)
-        {
-            throw new NotImplementedException();
-        }
+        public BCardDTO LoadById(short cardId) => throw new NotImplementedException();
 
-        public IEnumerable<BCardDTO> LoadByCardId(short cardId)
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<BCardDTO> LoadByCardId(short cardId) => throw new NotImplementedException();
 
-        public IEnumerable<BCardDTO> LoadByItemVNum(short vNum)
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<BCardDTO> LoadByItemVNum(short vNum) => throw new NotImplementedException();
 
-        public IEnumerable<BCardDTO> LoadByNpcMonsterVNum(short vNum)
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<BCardDTO> LoadByNpcMonsterVNum(short vNum) => throw new NotImplementedException();
 
-        public IEnumerable<BCardDTO> LoadBySkillVNum(short vNum)
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<BCardDTO> LoadBySkillVNum(short vNum) => throw new NotImplementedException();
 
         #endregion
     }

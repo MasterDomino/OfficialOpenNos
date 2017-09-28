@@ -24,30 +24,15 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public DeleteResult DeleteById(int mapNpcId)
-        {
-            throw new NotImplementedException();
-        }
+        public DeleteResult DeleteById(int mapNpcId) => throw new NotImplementedException();
 
-        public void Insert(List<ShopDTO> shops)
-        {
-            throw new NotImplementedException();
-        }
+        public void Insert(List<ShopDTO> shops) => throw new NotImplementedException();
 
-        public new ShopDTO Insert(ShopDTO shop)
-        {
-            throw new NotImplementedException();
-        }
+        public new ShopDTO Insert(ShopDTO shop) => throw new NotImplementedException();
 
-        public ShopDTO LoadById(int shopId)
-        {
-            throw new NotImplementedException();
-        }
+        public ShopDTO LoadById(int shopId) => throw new NotImplementedException();
 
-        public ShopDTO LoadByNpc(int mapNpcId)
-        {
-            throw new NotImplementedException();
-        }
+        public ShopDTO LoadByNpc(int mapNpcId) => throw new NotImplementedException();
 
         #endregion
     }

@@ -30,25 +30,13 @@ namespace OpenNos.DAL.Mock
 
         #region Methods
 
-        public void Insert(List<NpcMonsterSkillDTO> skills)
-        {
-            throw new NotImplementedException();
-        }
+        public void Insert(List<NpcMonsterSkillDTO> skills) => throw new NotImplementedException();
 
-        public NpcMonsterSkillDTO Insert(ref NpcMonsterSkillDTO npcMonsterSkill)
-        {
-            throw new NotImplementedException();
-        }
+        public NpcMonsterSkillDTO Insert(ref NpcMonsterSkillDTO npcMonsterSkill) => throw new NotImplementedException();
 
-        public new List<NpcMonsterSkillDTO> LoadAll()
-        {
-            return _mockContainer.ToList();
-        }
+        public new List<NpcMonsterSkillDTO> LoadAll() => _mockContainer.ToList();
 
-        public IEnumerable<NpcMonsterSkillDTO> LoadByNpcMonster(short npcId)
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<NpcMonsterSkillDTO> LoadByNpcMonster(short npcId) => throw new NotImplementedException();
 
         #endregion
     }

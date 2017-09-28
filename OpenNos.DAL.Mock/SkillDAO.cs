@@ -24,15 +24,9 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public void Insert(List<SkillDTO> skills)
-        {
-            throw new NotImplementedException();
-        }
+        public void Insert(List<SkillDTO> skills) => throw new NotImplementedException();
 
-        public SkillDTO LoadById(short skillId)
-        {
-            return Container.SingleOrDefault(s => s.SkillVNum == skillId);
-        }
+        public SkillDTO LoadById(short skillId) => Container.SingleOrDefault(s => s.SkillVNum == skillId);
 
         #endregion
     }

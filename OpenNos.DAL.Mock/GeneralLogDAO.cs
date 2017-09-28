@@ -24,30 +24,15 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public bool IdAlreadySet(long id)
-        {
-            return Container.Any(gl => gl.LogId == id);
-        }
+        public bool IdAlreadySet(long id) => Container.Any(gl => gl.LogId == id);
 
-        public IEnumerable<GeneralLogDTO> LoadByAccount(long? accountId)
-        {
-            return Container.Where(c => c.AccountId == accountId).Select(e => MapEntity(e));
-        }
+        public IEnumerable<GeneralLogDTO> LoadByAccount(long? accountId) => Container.Where(c => c.AccountId == accountId).Select(e => MapEntity(e));
 
-        public IEnumerable<GeneralLogDTO> LoadByLogType(string logType, long? characterId)
-        {
-            return Enumerable.Empty<GeneralLogDTO>().Select(e => MapEntity(e));
-        }
+        public IEnumerable<GeneralLogDTO> LoadByLogType(string logType, long? characterId) => Enumerable.Empty<GeneralLogDTO>().Select(e => MapEntity(e));
 
-        public void SetCharIdNull(long? characterId)
-        {
-            throw new NotImplementedException();
-        }
+        public void SetCharIdNull(long? characterId) => throw new NotImplementedException();
 
-        public void WriteGeneralLog(long accountId, string ipAddress, long? characterId, string logType, string logData)
-        {
-            throw new NotImplementedException();
-        }
+        public void WriteGeneralLog(long accountId, string ipAddress, long? characterId, string logType, string logData) => throw new NotImplementedException();
 
         #endregion
     }

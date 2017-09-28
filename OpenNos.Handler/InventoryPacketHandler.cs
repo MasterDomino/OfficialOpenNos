@@ -32,10 +32,7 @@ namespace OpenNos.Handler
     {
         #region Instantiation
 
-        public InventoryPacketHandler(ClientSession session)
-        {
-            Session = session;
-        }
+        public InventoryPacketHandler(ClientSession session) => Session = session;
 
         #endregion
 

@@ -23,20 +23,11 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public new TeleporterDTO Insert(TeleporterDTO teleporter)
-        {
-            throw new NotImplementedException();
-        }
+        public new TeleporterDTO Insert(TeleporterDTO teleporter) => throw new NotImplementedException();
 
-        public TeleporterDTO LoadById(short teleporterId)
-        {
-            throw new NotImplementedException();
-        }
+        public TeleporterDTO LoadById(short teleporterId) => throw new NotImplementedException();
 
-        public IEnumerable<TeleporterDTO> LoadFromNpc(int npcId)
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<TeleporterDTO> LoadFromNpc(int npcId) => throw new NotImplementedException();
 
         #endregion
     }

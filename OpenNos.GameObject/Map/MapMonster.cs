@@ -136,10 +136,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        public string GenerateBoss()
-        {
-            return $"rboss 3 {MapMonsterId} {CurrentHp} {MaxHp}";
-        }
+        public string GenerateBoss() => $"rboss 3 {MapMonsterId} {CurrentHp} {MaxHp}";
 
         public string GenerateIn()
         {
@@ -713,10 +710,7 @@ namespace OpenNos.GameObject
             HostilityTarget();
         }
 
-        private void RemoveBuff(short id)
-        {
-            Buff.Remove(id);
-        }
+        private void RemoveBuff(short id) => Buff.Remove(id);
 
         private void Respawn()
         {

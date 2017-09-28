@@ -21,9 +21,6 @@ namespace OpenNos.DAL.EF.Migrations
                 .PrimaryKey(t => t.Id);
         }
 
-        public override void Down()
-        {
-            DropTable("dbo.ShellEffectGeneration");
-        }
+        public override void Down() => DropTable("dbo.ShellEffectGeneration");
     }
 }

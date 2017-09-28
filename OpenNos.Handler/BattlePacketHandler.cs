@@ -30,10 +30,7 @@ namespace OpenNos.Handler
     {
         #region Instantiation
 
-        public BattlePacketHandler(ClientSession session)
-        {
-            Session = session;
-        }
+        public BattlePacketHandler(ClientSession session) => Session = session;
 
         #endregion
 

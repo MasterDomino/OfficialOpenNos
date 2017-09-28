@@ -35,20 +35,14 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messages
         /// Creates a new ScsRawDataMessage object with MessageData property.
         /// </summary>
         /// <param name="messageData">Message data that is being transmitted</param>
-        public ScsRawDataMessage(byte[] messageData)
-        {
-            MessageData = messageData;
-        }
+        public ScsRawDataMessage(byte[] messageData) => MessageData = messageData;
 
         /// <summary>
         /// Creates a new reply ScsRawDataMessage object with MessageData property.
         /// </summary>
         /// <param name="messageData">Message data that is being transmitted</param>
         /// <param name="repliedMessageId">Replied message id if this is a reply for a message.</param>
-        public ScsRawDataMessage(byte[] messageData, string repliedMessageId) : this(messageData)
-        {
-            RepliedMessageId = repliedMessageId;
-        }
+        public ScsRawDataMessage(byte[] messageData, string repliedMessageId) : this(messageData) => RepliedMessageId = repliedMessageId;
 
         #endregion
 
@@ -65,15 +59,9 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messages
 
         #region Methods
 
-        public int CompareTo(object obj)
-        {
-            return CompareTo((ScsRawDataMessage)obj);
-        }
+        public int CompareTo(object obj) => CompareTo((ScsRawDataMessage)obj);
 
-        public int CompareTo(ScsRawDataMessage other)
-        {
-            return Priority.CompareTo(other.Priority);
-        }
+        public int CompareTo(ScsRawDataMessage other) => Priority.CompareTo(other.Priority);
 
         /// <summary>
         /// Creates a string to represents this object.

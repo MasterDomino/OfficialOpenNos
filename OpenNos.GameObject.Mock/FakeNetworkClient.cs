@@ -65,19 +65,10 @@ namespace OpenNos.GameObject.Mock
                 return _clientId;
             }
 
-            set
-            {
-                _clientId = value;
-            }
+            set => _clientId = value;
         }
 
-        public string IpAddress
-        {
-            get
-            {
-                return "127.0.0.1";
-            }
-        }
+        public string IpAddress => "127.0.0.1";
 
         public bool IsConnected { get; private set; }
 
@@ -87,32 +78,17 @@ namespace OpenNos.GameObject.Mock
 
         public Queue<string> SentPackets { get; }
 
-        public ClientSession Session
-        {
-            get
-            {
-                return GetClientSession();
-            }
-        }
+        public ClientSession Session => GetClientSession();
 
         #endregion
 
         #region Methods
 
-        public async Task ClearLowPriorityQueue()
-        {
-            await Task.CompletedTask;
-        }
+        public async Task ClearLowPriorityQueue() => await Task.CompletedTask;
 
-        public void Disconnect()
-        {
-            IsConnected = false;
-        }
+        public void Disconnect() => IsConnected = false;
 
-        public ClientSession GetClientSession()
-        {
-            return _clientSession;
-        }
+        public ClientSession GetClientSession() => _clientSession;
 
         public void Initialize(CryptographyBase encryptor)
         {
@@ -136,20 +112,11 @@ namespace OpenNos.GameObject.Mock
         /// Send a packet to the Server as the Fake client receives it and triggers a Handler method.
         /// </summary>
         /// <param name="packet">Packet created thru PacketFactory.</param>
-        public void ReceivePacket(PacketDefinition packet)
-        {
-            ReceivePacket(PacketFactory.Serialize(packet));
-        }
+        public void ReceivePacket(PacketDefinition packet) => ReceivePacket(PacketFactory.Serialize(packet));
 
-        public void SendPacket(string packet, byte priority = 10)
-        {
-            SentPackets.Enqueue(packet);
-        }
+        public void SendPacket(string packet, byte priority = 10) => SentPackets.Enqueue(packet);
 
-        public void SendPacketFormat(string packet, params object[] param)
-        {
-            SentPackets.Enqueue(string.Format(packet, param));
-        }
+        public void SendPacketFormat(string packet, params object[] param) => SentPackets.Enqueue(string.Format(packet, param));
 
         public void SendPackets(IEnumerable<string> packets, byte priority = 10)
         {
@@ -159,10 +126,7 @@ namespace OpenNos.GameObject.Mock
             }
         }
 
-        public void SetClientSession(object clientSession)
-        {
-            _clientSession = (ClientSession)clientSession;
-        }
+        public void SetClientSession(object clientSession) => _clientSession = (ClientSession)clientSession;
 
         #endregion
     }

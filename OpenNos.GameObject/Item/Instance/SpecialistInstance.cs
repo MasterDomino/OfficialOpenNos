@@ -35,10 +35,7 @@ namespace OpenNos.GameObject
 
         #region Instantiation
 
-        public SpecialistInstance()
-        {
-            _random = new Random();
-        }
+        public SpecialistInstance() => _random = new Random();
 
         public SpecialistInstance(Guid id)
         {

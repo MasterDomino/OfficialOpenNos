@@ -6,9 +6,6 @@ namespace OpenNos.DAL.Mock
 {
     public class MaintenanceLogDAO : BaseDAO<MaintenanceLogDTO>, IMaintenanceLogDAO
     {
-        public MaintenanceLogDTO LoadFirst()
-        {
-            throw new NotImplementedException();
-        }
+        public MaintenanceLogDTO LoadFirst() => throw new NotImplementedException();
     }
 }

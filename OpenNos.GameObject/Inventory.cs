@@ -35,10 +35,7 @@ namespace OpenNos.GameObject
 
         #region Instantiation
 
-        public Inventory(Character Character)
-        {
-            Owner = Character;
-        }
+        public Inventory(Character Character) => Owner = Character;
 
         #endregion
 
@@ -90,10 +87,7 @@ namespace OpenNos.GameObject
             return newItem;
         }
 
-        public int BackpackSize()
-        {
-            return DEFAULT_BACKPACK_SIZE + ((Owner.HaveBackpack() ? 1 : 0) * 12);
-        }
+        public int BackpackSize() => DEFAULT_BACKPACK_SIZE + ((Owner.HaveBackpack() ? 1 : 0) * 12);
 
         public ItemInstance AddIntoBazaarInventory(InventoryType inventory, byte slot, byte amount)
         {
@@ -273,15 +267,9 @@ namespace OpenNos.GameObject
             return CanAddItem(type);
         }
 
-        public int CountItem(int itemVNum)
-        {
-            return GetAllItems().Where(s => s.ItemVNum == itemVNum && s.Type != InventoryType.FamilyWareHouse && s.Type != InventoryType.Bazaar && s.Type != InventoryType.Warehouse && s.Type != InventoryType.PetWarehouse).Sum(i => i.Amount);
-        }
+        public int CountItem(int itemVNum) => GetAllItems().Where(s => s.ItemVNum == itemVNum && s.Type != InventoryType.FamilyWareHouse && s.Type != InventoryType.Bazaar && s.Type != InventoryType.Warehouse && s.Type != InventoryType.PetWarehouse).Sum(i => i.Amount);
 
-        public int CountItemInAnInventory(InventoryType inv)
-        {
-            return GetAllItems().Count(s => s.Type == inv);
-        }
+        public int CountItemInAnInventory(InventoryType inv) => GetAllItems().Count(s => s.Type == inv);
 
         public Tuple<short, InventoryType> DeleteById(Guid id)
         {
@@ -395,20 +383,11 @@ namespace OpenNos.GameObject
             }
         }
 
-        public ItemInstance GetItemInstanceById(Guid id)
-        {
-            return this[id];
-        }
+        public ItemInstance GetItemInstanceById(Guid id) => this[id];
 
-        public T LoadByVNum<T>(short vNum) where T : ItemInstance
-        {
-            return (T)GetAllItems().Find(i => i.ItemVNum.Equals(vNum));
-        }
+        public T LoadByVNum<T>(short vNum) where T : ItemInstance => (T)GetAllItems().Find(i => i.ItemVNum.Equals(vNum));
 
-        public T LoadByItemInstance<T>(Guid id) where T : ItemInstance
-        {
-            return (T)this[id];
-        }
+        public T LoadByItemInstance<T>(Guid id) where T : ItemInstance => (T)this[id];
 
         public T LoadBySlotAndType<T>(short slot, InventoryType type) where T : ItemInstance
         {
@@ -624,11 +603,19 @@ namespace OpenNos.GameObject
                     {
                         // add and remove save inventory
                         destinationInventory = TakeItem(destinationInventory.Slot, destinationInventory.Type);
-                        if (destinationInventory == null) return;
+                        if (destinationInventory == null)
+                        {
+                            return;
+                        }
+
                         destinationInventory.Slot = sourceSlot;
                         destinationInventory.Type = sourcetype;
                         sourceInventory = TakeItem(sourceInventory.Slot, sourceInventory.Type);
-                        if (sourceInventory == null) return;
+                        if (sourceInventory == null)
+                        {
+                            return;
+                        }
+
                         sourceInventory.Slot = destinationSlot;
                         sourceInventory.Type = desttype;
                         PutItem(destinationInventory);
@@ -741,10 +728,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        private bool CanAddItem(InventoryType type)
-        {
-            return Owner != null && GetFreeSlot(type).HasValue;
-        }
+        private bool CanAddItem(InventoryType type) => Owner != null && GetFreeSlot(type).HasValue;
 
         private void GenerateClearInventory(InventoryType type)
         {
@@ -773,10 +757,7 @@ namespace OpenNos.GameObject
         /// Puts a Single ItemInstance to the Inventory
         /// </summary>
         /// <param name="itemInstance"></param>
-        private void PutItem(ItemInstance itemInstance)
-        {
-            this[itemInstance.Id] = itemInstance;
-        }
+        private void PutItem(ItemInstance itemInstance) => this[itemInstance.Id] = itemInstance;
 
         /// <summary>
         /// Takes a Single Inventory including ItemInstance from the List and removes it.

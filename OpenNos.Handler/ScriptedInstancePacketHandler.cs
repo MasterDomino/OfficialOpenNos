@@ -12,10 +12,7 @@ namespace OpenNos.Handler
     {
         #region Instantiation
 
-        public ScriptedInstancePacketHandler(ClientSession session)
-        {
-            Session = session;
-        }
+        public ScriptedInstancePacketHandler(ClientSession session) => Session = session;
 
         #endregion
 
@@ -112,7 +109,11 @@ namespace OpenNos.Handler
                 if (treqPacket.StartPress == 1 || treqPacket.RecordPress == 1)
                 {
                     timespace.LoadScript(MapInstanceType.TimeSpaceInstance);
-                    if (timespace.FirstMap == null) return;
+                    if (timespace.FirstMap == null)
+                    {
+                        return;
+                    }
+
                     foreach (Gift gift in timespace.RequieredItems)
                     {
                         if (Session.Character.Inventory.CountItem(gift.VNum) < gift.Amount)
@@ -158,7 +159,11 @@ namespace OpenNos.Handler
                     {
                         Session.Character.Group.Raid.LoadScript(MapInstanceType.RaidInstance);
                     }
-                    if (Session.Character.Group.Raid.FirstMap == null) return;
+                    if (Session.Character.Group.Raid.FirstMap == null)
+                    {
+                        return;
+                    }
+
                     Session.Character.Group.Raid.InstanceBag.Lock = true;
 
                     //Session.Character.Group.Characters.Where(s => s.CurrentMapInstance != Session.CurrentMapInstance).ToList().ForEach(

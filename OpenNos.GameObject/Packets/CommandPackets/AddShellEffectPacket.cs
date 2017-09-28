@@ -24,10 +24,7 @@ namespace OpenNos.GameObject.CommandPackets
 
         #region Methods
 
-        public static string ReturnHelp()
-        {
-            return "$AddShellEffect Slot EffectLevel Effect Value";
-        }
+        public static string ReturnHelp() => "$AddShellEffect Slot EffectLevel Effect Value";
 
         #endregion
     }

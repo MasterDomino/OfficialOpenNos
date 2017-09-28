@@ -24,20 +24,11 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public SaveResult InsertOrUpdate(ref RespawnDTO respawn)
-        {
-            throw new NotImplementedException();
-        }
+        public SaveResult InsertOrUpdate(ref RespawnDTO respawn) => throw new NotImplementedException();
 
-        public IEnumerable<RespawnDTO> LoadByCharacter(long characterId)
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<RespawnDTO> LoadByCharacter(long characterId) => throw new NotImplementedException();
 
-        public RespawnDTO LoadById(long respawnId)
-        {
-            throw new NotImplementedException();
-        }
+        public RespawnDTO LoadById(long respawnId) => throw new NotImplementedException();
 
         #endregion
     }

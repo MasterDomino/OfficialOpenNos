@@ -21,14 +21,8 @@ namespace OpenNos.DAL.Mock
 {
     public class RollGeneratedItemDAO : BaseDAO<RollGeneratedItemDTO>, IRollGeneratedItemDAO
     {
-        public RollGeneratedItemDTO LoadById(short id)
-        {
-            throw new NotImplementedException();
-        }
+        public RollGeneratedItemDTO LoadById(short id) => throw new NotImplementedException();
 
-        public IEnumerable<RollGeneratedItemDTO> LoadByItemVNum(short vnum)
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<RollGeneratedItemDTO> LoadByItemVNum(short vnum) => throw new NotImplementedException();
     }
 }

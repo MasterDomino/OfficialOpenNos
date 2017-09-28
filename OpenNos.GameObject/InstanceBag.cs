@@ -62,10 +62,7 @@ namespace OpenNos.GameObject
 
         #region Methods
 
-        public string GenerateScore()
-        {
-            return $"rnsc {Point}";
-        }
+        public string GenerateScore() => $"rnsc {Point}";
 
         #endregion
     }

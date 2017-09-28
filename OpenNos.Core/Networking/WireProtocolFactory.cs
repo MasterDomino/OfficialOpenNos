@@ -20,10 +20,7 @@ namespace OpenNos.Core
     {
         #region Methods
 
-        public IScsWireProtocol CreateWireProtocol()
-        {
-            return new WireProtocol();
-        }
+        public IScsWireProtocol CreateWireProtocol() => new WireProtocol();
 
         #endregion
     }

@@ -22,10 +22,7 @@ namespace OpenNos.Core
     {
         #region Instantiation
 
-        protected CryptographyBase(bool hasCustomParameter)
-        {
-            HasCustomParameter = hasCustomParameter;
-        }
+        protected CryptographyBase(bool hasCustomParameter) => HasCustomParameter = hasCustomParameter;
 
         #endregion
 

@@ -33,10 +33,7 @@ namespace OpenNos.GameObject
 
         #region Instantiation
 
-        public ItemInstance()
-        {
-            _random = new Random();
-        }
+        public ItemInstance() => _random = new Random();
 
         public ItemInstance(short vNum, byte amount)
         {
@@ -50,29 +47,11 @@ namespace OpenNos.GameObject
 
         #region Properties
 
-        public bool IsBound
-        {
-            get
-            {
-                return BoundCharacterId.HasValue;
-            }
-        }
+        public bool IsBound => BoundCharacterId.HasValue;
 
-        public Item Item
-        {
-            get
-            {
-                return item ?? (item = ServerManager.Instance.GetItem(ItemVNum));
-            }
-        }
+        public Item Item => item ?? (item = ServerManager.Instance.GetItem(ItemVNum));
 
-        public List<ShellEffectDTO> ShellEffects
-        {
-            get
-            {
-                return shelleffects ?? (shelleffects = DAOFactory.ShellEffectDAO.LoadByItemInstanceId(Id).ToList());
-            }
-        }
+        public List<ShellEffectDTO> ShellEffects => shelleffects ?? (shelleffects = DAOFactory.ShellEffectDAO.LoadByItemInstanceId(Id).ToList());
 
         #endregion
 
@@ -80,15 +59,9 @@ namespace OpenNos.GameObject
 
         #region Methods
 
-        public ItemInstance DeepCopy()
-        {
-            return (ItemInstance)MemberwiseClone();
-        }
+        public ItemInstance DeepCopy() => (ItemInstance)MemberwiseClone();
 
-        public string GenerateFStash()
-        {
-            return $"f_stash {GenerateStashPacket()}";
-        }
+        public string GenerateFStash() => $"f_stash {GenerateStashPacket()}";
 
         public string GenerateInventoryAdd()
         {
@@ -115,15 +88,9 @@ namespace OpenNos.GameObject
             return string.Empty;
         }
 
-        public string GeneratePStash()
-        {
-            return $"pstash {GenerateStashPacket()}";
-        }
+        public string GeneratePStash() => $"pstash {GenerateStashPacket()}";
 
-        public string GenerateStash()
-        {
-            return $"stash {GenerateStashPacket()}";
-        }
+        public string GenerateStash() => $"stash {GenerateStashPacket()}";
 
         public string GenerateStashPacket()
         {

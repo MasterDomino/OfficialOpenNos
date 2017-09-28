@@ -25,10 +25,7 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public DeleteResult Delete(long accountId)
-        {
-            throw new NotImplementedException();
-        }
+        public DeleteResult Delete(long accountId) => throw new NotImplementedException();
 
         public SaveResult InsertOrUpdate(ref AccountDTO account)
         {
@@ -42,30 +39,18 @@ namespace OpenNos.DAL.Mock
             return SaveResult.Inserted;
         }
 
-        public AccountDTO LoadById(long accountId)
-        {
-            return MapEntity(Container.SingleOrDefault(a => a.AccountId == accountId));
-        }
+        public AccountDTO LoadById(long accountId) => MapEntity(Container.SingleOrDefault(a => a.AccountId == accountId));
 
-        public AccountDTO LoadByName(string name)
-        {
-            return Container.SingleOrDefault(a => a.Name == name);
-        }
+        public AccountDTO LoadByName(string name) => Container.SingleOrDefault(a => a.Name == name);
 
-        public void LogIn(string name)
-        {
-            throw new NotImplementedException();
-        }
+        public void LogIn(string name) => throw new NotImplementedException();
 
         public void UpdateLastSessionAndIp(string name, int session, string ip)
         {
             AccountDTO account = Container.SingleOrDefault(a => a.Name == name);
         }
 
-        public void WriteGeneralLog(long accountId, string ipAddress, long? characterId, GeneralLogType logType, string logData)
-        {
-            throw new NotImplementedException();
-        }
+        public void WriteGeneralLog(long accountId, string ipAddress, long? characterId, GeneralLogType logType, string logData) => throw new NotImplementedException();
 
         #endregion
     }

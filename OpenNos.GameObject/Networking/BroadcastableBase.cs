@@ -47,13 +47,7 @@ namespace OpenNos.GameObject
 
         #region Properties
 
-        public IEnumerable<ClientSession> Sessions
-        {
-            get
-            {
-                return _sessions.GetAllItems().Where(s => s.HasSelectedCharacter && !s.IsDisposing && s.IsConnected);
-            }
-        }
+        public IEnumerable<ClientSession> Sessions => _sessions.GetAllItems().Where(s => s.HasSelectedCharacter && !s.IsDisposing && s.IsConnected);
 
         protected DateTime LastUnregister { get; private set; }
 
@@ -61,30 +55,15 @@ namespace OpenNos.GameObject
 
         #region Methods
 
-        public void Broadcast(string packet, ReceiverType receiver = ReceiverType.All)
-        {
-            Broadcast(null, packet, receiver);
-        }
+        public void Broadcast(string packet, ReceiverType receiver = ReceiverType.All) => Broadcast(null, packet, receiver);
 
-        public void Broadcast(string packet, int xRangeCoordinate, int yRangeCoordinate)
-        {
-            Broadcast(new BroadcastPacket(null, packet, ReceiverType.AllInRange, xCoordinate: xRangeCoordinate, yCoordinate: yRangeCoordinate));
-        }
+        public void Broadcast(string packet, int xRangeCoordinate, int yRangeCoordinate) => Broadcast(new BroadcastPacket(null, packet, ReceiverType.AllInRange, xCoordinate: xRangeCoordinate, yCoordinate: yRangeCoordinate));
 
-        public void Broadcast(PacketDefinition packet, ReceiverType receiver = ReceiverType.All)
-        {
-            Broadcast(null, packet, receiver);
-        }
+        public void Broadcast(PacketDefinition packet, ReceiverType receiver = ReceiverType.All) => Broadcast(null, packet, receiver);
 
-        public void Broadcast(PacketDefinition packet, int xRangeCoordinate, int yRangeCoordinate)
-        {
-            Broadcast(new BroadcastPacket(null, PacketFactory.Serialize(packet), ReceiverType.AllInRange, xCoordinate: xRangeCoordinate, yCoordinate: yRangeCoordinate));
-        }
+        public void Broadcast(PacketDefinition packet, int xRangeCoordinate, int yRangeCoordinate) => Broadcast(new BroadcastPacket(null, PacketFactory.Serialize(packet), ReceiverType.AllInRange, xCoordinate: xRangeCoordinate, yCoordinate: yRangeCoordinate));
 
-        public void Broadcast(ClientSession client, PacketDefinition packet, ReceiverType receiver = ReceiverType.All, string characterName = "", long characterId = -1)
-        {
-            Broadcast(client, PacketFactory.Serialize(packet), receiver, characterName, characterId);
-        }
+        public void Broadcast(ClientSession client, PacketDefinition packet, ReceiverType receiver = ReceiverType.All, string characterName = "", long characterId = -1) => Broadcast(client, PacketFactory.Serialize(packet), receiver, characterName, characterId);
 
         public void Broadcast(BroadcastPacket packet)
         {
@@ -120,10 +99,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        public ClientSession GetSessionByCharacterId(long characterId)
-        {
-            return _sessions.ContainsKey(characterId) ? _sessions[characterId] : null;
-        }
+        public ClientSession GetSessionByCharacterId(long characterId) => _sessions.ContainsKey(characterId) ? _sessions[characterId] : null;
 
         public void RegisterSession(ClientSession session)
         {
@@ -182,7 +158,7 @@ namespace OpenNos.GameObject
                                 {
                                     if (sentPacket.Sender != null)
                                     {
-                                        if (!sentPacket.Sender?.Character.IsBlockedByCharacter(session.Character.CharacterId) == true)
+                                        if (sentPacket.Sender?.Character.IsBlockedByCharacter(session.Character.CharacterId) == false)
                                         {
                                             session.SendPacket(sentPacket.Packet);
                                         }
@@ -202,7 +178,7 @@ namespace OpenNos.GameObject
                                 {
                                     if (sentPacket.Sender != null)
                                     {
-                                        if (!sentPacket.Sender?.Character.IsBlockedByCharacter(session.Character.CharacterId) == true)
+                                        if (sentPacket.Sender?.Character.IsBlockedByCharacter(session.Character.CharacterId) == false)
                                         {
                                             session.SendPacket(sentPacket.Packet);
                                         }
@@ -328,7 +304,7 @@ namespace OpenNos.GameObject
                     case ReceiverType.AllNoEmoBlocked:
                         Parallel.ForEach(Sessions.Where(s => s?.Character.EmoticonsBlocked == false), session =>
                         {
-                            if (session?.HasSelectedCharacter == true && !sentPacket.Sender?.Character.IsBlockedByCharacter(session.Character.CharacterId) == true)
+                            if (session?.HasSelectedCharacter == true && sentPacket.Sender?.Character.IsBlockedByCharacter(session.Character.CharacterId) == false)
                             {
                                 session.SendPacket(sentPacket.Packet);
                             }
@@ -338,7 +314,7 @@ namespace OpenNos.GameObject
                     case ReceiverType.AllNoHeroBlocked:
                         Parallel.ForEach(Sessions.Where(s => s?.Character.HeroChatBlocked == false), session =>
                         {
-                            if (session?.HasSelectedCharacter == true && !sentPacket.Sender?.Character.IsBlockedByCharacter(session.Character.CharacterId) == true)
+                            if (session?.HasSelectedCharacter == true && sentPacket.Sender?.Character.IsBlockedByCharacter(session.Character.CharacterId) == false)
                             {
                                 session.SendPacket(sentPacket.Packet);
                             }

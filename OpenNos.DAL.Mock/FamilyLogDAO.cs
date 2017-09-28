@@ -24,20 +24,11 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public DeleteResult Delete(long familyLogId)
-        {
-            throw new NotImplementedException();
-        }
+        public DeleteResult Delete(long familyLogId) => throw new NotImplementedException();
 
-        public SaveResult InsertOrUpdate(ref FamilyLogDTO familyLog)
-        {
-            throw new NotImplementedException();
-        }
+        public SaveResult InsertOrUpdate(ref FamilyLogDTO familyLog) => throw new NotImplementedException();
 
-        public IEnumerable<FamilyLogDTO> LoadByFamilyId(long familyId)
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<FamilyLogDTO> LoadByFamilyId(long familyId) => throw new NotImplementedException();
 
         #endregion
     }

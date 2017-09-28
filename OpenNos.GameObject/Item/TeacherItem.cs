@@ -16,6 +16,7 @@ using OpenNos.Core;
 using OpenNos.Data;
 using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
+using System;
 using System.Linq;
 
 namespace OpenNos.GameObject
@@ -38,13 +39,38 @@ namespace OpenNos.GameObject
             {
                 return;
             }
-            int x1 = 0;
+
+            void releasePet(MateType mateType, Guid itemToRemoveId)
+            {
+                if (int.TryParse(packetsplit[3], out int mateTransportId))
+                {
+                    Mate mate = session.Character.Mates.Find(s => s.MateTransportId == mateTransportId && s.MateType == mateType);
+                    if (mate != null)
+                    {
+                        if (!mate.IsTeamMember)
+                        {
+                            session.Character.Mates.Remove(mate);
+                            session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("PET_RELEASED")));
+                            session.SendPacket(UserInterfaceHelper.Instance.GeneratePClear());
+                            session.SendPackets(session.Character.GenerateScP());
+                            session.SendPackets(session.Character.GenerateScN());
+                            session.CurrentMapInstance?.Broadcast(mate.GenerateOut());
+                            session.Character.Inventory.RemoveItemFromInventory(itemToRemoveId);
+                        }
+                        else
+                        {
+                            session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("PET_IN_TEAM_UNRELEASABLE"), 0));
+                        }
+                    }
+                }
+            }
+
             switch (Effect)
             {
                 case 11:
-                    if (int.TryParse(packetsplit[3], out x1))
+                    if (int.TryParse(packetsplit[3], out int mateTransportId))
                     {
-                        Mate mate = session.Character.Mates.Find(s => s.MateTransportId == x1);
+                        Mate mate = session.Character.Mates.Find(s => s.MateTransportId == mateTransportId);
                         if (mate == null || mate.Level >= session.Character.Level - 5)
                         {
                             return;
@@ -57,17 +83,17 @@ namespace OpenNos.GameObject
                     break;
 
                 case 13:
-                    if (int.TryParse(packetsplit[3], out x1) && session.Character.Mates.Any(s => s.MateTransportId == x1))
+                    if (int.TryParse(packetsplit[3], out mateTransportId) && session.Character.Mates.Any(s => s.MateTransportId == mateTransportId))
                     {
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateGuri(10, 1, x1, 2));
+                        session.SendPacket(UserInterfaceHelper.Instance.GenerateGuri(10, 1, mateTransportId, 2));
                         session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
                     break;
 
                 case 14:
-                    if (int.TryParse(packetsplit[3], out x1))
+                    if (int.TryParse(packetsplit[3], out mateTransportId))
                     {
-                        Mate mate = session.Character.Mates.Find(s => s.MateTransportId == x1 && s.MateType == MateType.Pet);
+                        Mate mate = session.Character.Mates.Find(s => s.MateTransportId == mateTransportId && s.MateType == MateType.Pet);
                         if (mate?.CanPickUp == false)
                         {
                             session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Npc, mate.MateTransportId, 5));
@@ -81,9 +107,9 @@ namespace OpenNos.GameObject
                     break;
 
                 case 17:
-                    if (int.TryParse(packetsplit[3], out x1))
+                    if (int.TryParse(packetsplit[3], out mateTransportId))
                     {
-                        Mate mate = session.Character.Mates.Find(s => s.MateTransportId == x1);
+                        Mate mate = session.Character.Mates.Find(s => s.MateTransportId == mateTransportId);
                         if (mate?.IsSummonable == false)
                         {
                             mate.IsSummonable = true;
@@ -96,51 +122,11 @@ namespace OpenNos.GameObject
                     break;
 
                 case 1000:
-                    if (int.TryParse(packetsplit[3], out x1))
-                    {
-                        Mate mate = session.Character.Mates.Find(s => s.MateTransportId == x1 && s.MateType == MateType.Pet);
-                        if (mate != null)
-                        {
-                            if (!mate.IsTeamMember)
-                            {
-                                session.Character.Mates.Remove(mate);
-                                session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("PET_RELEASED")));
-                                session.SendPacket(UserInterfaceHelper.Instance.GeneratePClear());
-                                session.SendPackets(session.Character.GenerateScP());
-                                session.SendPackets(session.Character.GenerateScN());
-                                session.CurrentMapInstance?.Broadcast(mate.GenerateOut());
-                                session.Character.Inventory.RemoveItemFromInventory(inv.Id);
-                            }
-                            else
-                            {
-                                session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("PET_IN_TEAM_UNRELEASABLE"), 0));
-                            }
-                        }
-                    }
+                    releasePet(MateType.Pet, inv.Id);
                     break;
 
                 case 1001:
-                    if (int.TryParse(packetsplit[3], out x1))
-                    {
-                        Mate mate = session.Character.Mates.Find(s => s.MateTransportId == x1 && s.MateType == MateType.Partner);
-                        if (mate != null)
-                        {
-                            if (!mate.IsTeamMember)
-                            {
-                                session.Character.Mates.Remove(mate);
-                                session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("PET_RELEASED")));
-                                session.SendPacket(UserInterfaceHelper.Instance.GeneratePClear());
-                                session.SendPackets(session.Character.GenerateScP());
-                                session.SendPackets(session.Character.GenerateScN());
-                                session.Character.Inventory.RemoveItemFromInventory(inv.Id);
-                                session.CurrentMapInstance?.Broadcast(mate.GenerateOut());
-                            }
-                            else
-                            {
-                                session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("PET_IN_TEAM_UNRELEASABLE"), 0));
-                            }
-                        }
-                    }
+                    releasePet(MateType.Partner, inv.Id);
                     break;
 
                 default:

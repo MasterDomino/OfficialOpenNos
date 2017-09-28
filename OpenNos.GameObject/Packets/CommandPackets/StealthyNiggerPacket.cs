@@ -15,10 +15,7 @@ namespace OpenNos.GameObject.CommandPackets
 
         #region Methods
 
-        public static string ReturnHelp()
-        {
-            return "$YoMommaIsAHoe CHARACTERNAME";
-        }
+        public static string ReturnHelp() => "$YoMommaIsAHoe CHARACTERNAME";
 
         #endregion
     }

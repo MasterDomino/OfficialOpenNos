@@ -22,10 +22,7 @@ namespace OpenNos.Core
     {
         #region Instantiation
 
-        public PacketHeaderAttribute(string identification)
-        {
-            Identification = identification;
-        }
+        public PacketHeaderAttribute(string identification) => Identification = identification;
 
         #endregion
 

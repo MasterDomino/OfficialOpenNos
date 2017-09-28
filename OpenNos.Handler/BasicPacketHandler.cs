@@ -37,10 +37,7 @@ namespace OpenNos.Handler
     {
         #region Instantiation
 
-        public BasicPacketHandler(ClientSession session)
-        {
-            Session = session;
-        }
+        public BasicPacketHandler(ClientSession session) => Session = session;
 
         #endregion
 
@@ -729,10 +726,7 @@ namespace OpenNos.Handler
         /// pleave packet
         /// </summary>
         /// <param name="pleavePacket"></param>
-        public void GroupLeave(PLeavePacket pleavePacket)
-        {
-            ServerManager.Instance.GroupLeave(Session);
-        }
+        public void GroupLeave(PLeavePacket pleavePacket) => ServerManager.Instance.GroupLeave(Session);
 
         /// <summary>
         /// ; packet
@@ -1363,7 +1357,9 @@ namespace OpenNos.Handler
                 case 2://leave
                     ClientSession sender = ServerManager.Instance.GetSessionByCharacterId(rdPacket.CharacterId);
                     if (sender?.Character?.Group == null)
+                    {
                         return;
+                    }
 
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("LEFT_RAID")), 0));
                     if (Session?.CurrentMapInstance?.MapInstanceType == MapInstanceType.RaidInstance)
@@ -1391,7 +1387,9 @@ namespace OpenNos.Handler
                     {
                         ClientSession chartokick = ServerManager.Instance.GetSessionByCharacterId(rdPacket.CharacterId);
                         if (chartokick.Character?.Group == null)
+                        {
                             return;
+                        }
 
                         chartokick.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("KICK_RAID")), 0));
                         grp = chartokick.Character?.Group;
