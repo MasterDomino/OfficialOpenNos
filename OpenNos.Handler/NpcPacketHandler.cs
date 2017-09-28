@@ -311,23 +311,26 @@ namespace OpenNos.Handler
                             }
                             if (newItems.Count > 0)
                             {
-                                foreach (WearableInstance wearableInst in newItems)
+                                foreach (ItemInstance itemInst in newItems)
                                 {
-                                    switch (wearableInst.Item.EquipmentSlot)
+                                    if (itemInst is WearableInstance)
                                     {
-                                        case EquipmentType.Armor:
-                                        case EquipmentType.MainWeapon:
-                                        case EquipmentType.SecondaryWeapon:
-                                            wearableInst.SetRarityPoint();
-                                            break;
+                                        switch (itemInst.Item.EquipmentSlot)
+                                        {
+                                            case EquipmentType.Armor:
+                                            case EquipmentType.MainWeapon:
+                                            case EquipmentType.SecondaryWeapon:
+                                                ((WearableInstance)itemInst).SetRarityPoint();
+                                                break;
 
-                                        case EquipmentType.Boots:
-                                        case EquipmentType.Gloves:
-                                            wearableInst.FireResistance = (short)(wearableInst.Item.FireResistance * shopItem.Upgrade);
-                                            wearableInst.DarkResistance = (short)(wearableInst.Item.DarkResistance * shopItem.Upgrade);
-                                            wearableInst.LightResistance = (short)(wearableInst.Item.LightResistance * shopItem.Upgrade);
-                                            wearableInst.WaterResistance = (short)(wearableInst.Item.WaterResistance * shopItem.Upgrade);
-                                            break;
+                                            case EquipmentType.Boots:
+                                            case EquipmentType.Gloves:
+                                                ((WearableInstance)itemInst).FireResistance = (short)(itemInst.Item.FireResistance * shopItem.Upgrade);
+                                                ((WearableInstance)itemInst).DarkResistance = (short)(itemInst.Item.DarkResistance * shopItem.Upgrade);
+                                                ((WearableInstance)itemInst).LightResistance = (short)(itemInst.Item.LightResistance * shopItem.Upgrade);
+                                                ((WearableInstance)itemInst).WaterResistance = (short)(itemInst.Item.WaterResistance * shopItem.Upgrade);
+                                                break;
+                                        }
                                     }
                                 }
                                 if (iteminfo.ReputPrice == 0)
