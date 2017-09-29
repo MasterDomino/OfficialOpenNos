@@ -63,9 +63,9 @@ Only comment the "**Why**" and not the "What". Jeff posted a good [blog post][je
  - :white_check_mark: DO use region where useful.
 
 ## Roslynator
-We will use [Roslynator](https://marketplace.visualstudio.com/items?itemName=josefpihrt.Roslynator) to follow general coding guidelines, 
+We will use [Roslynator](https://marketplace.visualstudio.com/items?itemName=josefpihrt.Roslynator2017) to follow general coding guidelines, 
 as well as a few rules set in visual studio settings, for Roslynator we included the [file](ProjectRuleset.ruleset) in our repository to automatically check for 
-errors on build and analysis, codemaid config can be found [here](CodeMaid.config) as well as StyleCop settings [here](Settings.StyleCop), please utilize this extension as much as possible.
+errors on build and analysis, [CodeMaid](http://www.codemaid.net/) config can be found [here](CodeMaid.config) as well as StyleCop settings [here](Settings.StyleCop), please utilize this extension as much as possible.
 
 [nuget]: http://docs.nuget.org/docs/contribute/Coding-Guidelines
 [ms-coding-guidelines]: http://blogs.msdn.com/b/brada/archive/2005/01/26/361363.aspx
