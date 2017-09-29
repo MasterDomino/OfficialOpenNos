@@ -351,7 +351,7 @@ namespace OpenNos.Handler
                 {
                     return;
                 }
-                if (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Member)
+                if (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Member || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager)
                 {
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("NOT_ALLOWED_KICK"))));
                     return;
