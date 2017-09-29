@@ -1,6 +1,6 @@
-#Thanks for all contributions!
+# Thanks for all contributions!
 
-#Authors
+# Authors
 chucktheripper  
 0Lucifer0  
 Ciapa  
@@ -10,7 +10,7 @@ Martazza
 KrisYiu  
 Uppermost  
 
-#Helpers
+# Helpers
 juhgiyo for his JPS+ algorithm  
 Medhy for encryptions algorithm  
 flowx3 for HP algorithm  
