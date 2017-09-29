@@ -135,9 +135,11 @@ namespace OpenNos.Master.Library.Interface
         /// <summary>
         /// Generates the Channel Selection Packet
         /// </summary>
+        /// <param name="username"></param>
         /// <param name="sessionId"></param>
+        /// <param name="ignoreUserName"></param>
         /// <returns>the actual packet</returns>
-        string RetrieveRegisteredWorldServers(int sessionId);
+        string RetrieveRegisteredWorldServers(string username, int sessionId, bool ignoreUserName);
 
         /// <summary>
         /// Generates the Stats from all Servers

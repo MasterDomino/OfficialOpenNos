@@ -121,7 +121,7 @@ namespace OpenNos.Master.Library.Client
 
         public int? RegisterWorldServer(SerializableWorldServer worldServer) => _client.ServiceProxy.RegisterWorldServer(worldServer);
 
-        public string RetrieveRegisteredWorldServers(int sessionId) => _client.ServiceProxy.RetrieveRegisteredWorldServers(sessionId);
+        public string RetrieveRegisteredWorldServers(string username, int sessionId, bool ignoreUserName) => _client.ServiceProxy.RetrieveRegisteredWorldServers(username, sessionId, ignoreUserName);
 
         public IEnumerable<string> RetrieveServerStatistics() => _client.ServiceProxy.RetrieveServerStatistics();
 
