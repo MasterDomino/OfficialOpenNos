@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  */
 
-using Hik.Communication.ScsServices.Service;
+using OpenNos.SCS.Communication.ScsServices.Service;
 using OpenNos.Master.Library.Data;
 using System.Collections.Generic;
 using OpenNos.Core;
@@ -35,6 +35,7 @@ namespace OpenNos.Master.Server
             LoginServers = new List<IScsServiceClient>();
             ConnectedAccounts = new ThreadSafeGenericList<AccountConnection>();
             AuthentificatedClients = new List<long>();
+            
         }
 
         #endregion

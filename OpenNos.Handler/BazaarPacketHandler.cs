@@ -92,6 +92,10 @@ namespace OpenNos.Handler
                             DAOFactory.IteminstanceDAO.InsertOrUpdate(bzitemdto);
                             ServerManager.Instance.BazaarRefresh(bzcree.BazaarItem.BazaarItemId);
                             Session.SendPacket($"rc_buy 1 {bzcree.Item.Item.VNum} {bzcree.Owner} {cBuyPacket.Amount} {cBuyPacket.Price} 0 0 0");
+                            if (bzcree.Item.ShellEffects != null)
+                            {
+
+                            }
                             ItemInstance newBz = bzcree.Item.DeepCopy();
                             newBz.Id = Guid.NewGuid();
                             newBz.Amount = cBuyPacket.Amount;
@@ -148,10 +152,15 @@ namespace OpenNos.Handler
                         Guid? newId = null;
                         if (Item.Amount != 0)
                         {
+                            if(Item.ShellEffects != null)
+                            {
+
+                            }
                             ItemInstance newBz = Item.DeepCopy();
                             newBz.Id = Guid.NewGuid();
                             newBz.Type = newBz.Item.Type;
                             newId = newBz.Id;
+                            
                             List<ItemInstance> newInv = Session.Character.Inventory.AddToInventory(newBz);
                         }
                         Session.SendPacket($"rc_scalc 1 {bz.Price} {bz.Amount - Item.Amount} {bz.Amount} {taxes} {price + taxes}");
@@ -245,7 +254,8 @@ namespace OpenNos.Handler
                 return;
             }
             ItemInstance it = Session.Character.Inventory.LoadBySlotAndType(cRegPacket.Slot, cRegPacket.Inventory == 4 ? 0 : (InventoryType)cRegPacket.Inventory);
-            if (it == null || !it.Item.IsSoldable || it.IsBound)
+
+            if (it == null || !it.Item.IsSoldable || !it.Item.IsTradable || it.IsBound || it.Item.ItemType == ItemType.Shell)
             {
                 return;
             }
@@ -292,6 +302,15 @@ namespace OpenNos.Handler
             }
 
             DAOFactory.IteminstanceDAO.InsertOrUpdate(bazar);
+
+            if (bazar.ShellEffects != null)
+            {
+                foreach (ShellEffectDTO effect in bazar.ShellEffects)
+                {
+                    effect.ItemInstanceId = bazar.Id;
+                    effect.ShellEffectId = DAOFactory.ShellEffectDAO.InsertOrUpdate(effect).ShellEffectId;
+                }
+            }
 
             BazaarItemDTO bazaarItem = new BazaarItemDTO
             {

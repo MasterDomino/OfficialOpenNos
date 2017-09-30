@@ -81,16 +81,16 @@ namespace OpenNos.GameObject
                                     {
                                         Item i = ServerManager.Instance.GetItem(rollitem.ItemGeneratedVNum);
                                         sbyte rare = 0;
-                                        byte design = 0;
+                                        byte upgrade = 0;
                                         if (i.ItemType == ItemType.Armor || i.ItemType == ItemType.Weapon || i.ItemType == ItemType.Sell)
                                         {
                                             rare = box.Rare;
                                         }
                                         if (i.ItemType == ItemType.Shell)
                                         {
-                                            design = (byte)ServerManager.Instance.RandomNumber(50, 81);
+                                            upgrade = (byte)ServerManager.Instance.RandomNumber(50, 81);
                                         }
-                                        session.Character.GiftAdd(rollitem.ItemGeneratedVNum, rollitem.ItemGeneratedAmount, (byte)rare, design);
+                                        session.Character.GiftAdd(rollitem.ItemGeneratedVNum, rollitem.ItemGeneratedAmount, (byte)rare, upgrade);
                                         session.Character.Inventory.RemoveItemFromInventory(box.Id);
                                         return;
                                         //newInv = session.Character.Inventory.AddNewToInventory(rollitem.ItemGeneratedVNum, amount: rollitem.ItemGeneratedAmount, Design: design, Rare: rare);

@@ -25,6 +25,7 @@ using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
+using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -149,6 +150,25 @@ namespace OpenNos.World
         {
             ServerManager.Instance.InShutdown = true;
             Logger.Error((Exception)e.ExceptionObject);
+
+            try
+            {
+                Guid guid = (Guid)(Assembly.GetAssembly(typeof(SCS.Communication.ScsServices.Service.ScsServiceBuilder)).GetCustomAttributes(typeof(GuidAttribute), true))[0];
+                bool isDebug = false;
+#if DEBUG
+                isDebug = true;
+#endif
+                WebClient wc = new WebClient();
+                string[] resp = wc.DownloadString($"https://mgmt.opennos.io/Crash/ReportCrash?key={guid}&error={((Exception)e.ExceptionObject).ToString()}&debug={isDebug}").Split(':');
+                if (resp[0] != "saved")
+                {
+                    Logger.Error(new Exception($"Unable to report crash to management Server. Please report this issue to the Developer: {resp[0]}"));
+                }
+            }
+            catch(Exception ex)
+            {
+                Logger.Error(ex);
+            }
             Logger.Log.Debug("Server crashed! Rebooting gracefully...");
             string serverGroup = ConfigurationManager.AppSettings["ServerGroup"];
             int port = Convert.ToInt32(ConfigurationManager.AppSettings["WorldPort"]);

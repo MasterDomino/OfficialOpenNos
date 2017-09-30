@@ -173,12 +173,15 @@ namespace OpenNos.Handler
 
                     foreach (ClientSession session in Session.Character.Group.Characters.GetAllItems())
                     {
-                        ServerManager.Instance.ChangeMapInstance(session.Character.CharacterId, session.Character.Group.Raid.FirstMap.MapInstanceId, session.Character.Group.Raid.StartX, session.Character.Group.Raid.StartY);
-                        session.SendPacket("raidbf 0 0 25");
-                        session.SendPacket(session.Character.Group.GeneraterRaidmbf(session));
-                        session.SendPacket(session.Character.GenerateRaid(5, false));
-                        session.SendPacket(session.Character.GenerateRaid(4, false));
-                        session.SendPacket(session.Character.GenerateRaid(3, false));
+                        if (session != null)
+                        {
+                            ServerManager.Instance.ChangeMapInstance(session.Character.CharacterId, session.Character.Group.Raid.FirstMap.MapInstanceId, session.Character.Group.Raid.StartX, session.Character.Group.Raid.StartY);
+                            session.SendPacket("raidbf 0 0 25");
+                            session.SendPacket(session.Character.Group.GeneraterRaidmbf(session));
+                            session.SendPacket(session.Character.GenerateRaid(5, false));
+                            session.SendPacket(session.Character.GenerateRaid(4, false));
+                            session.SendPacket(session.Character.GenerateRaid(3, false));
+                        }
                     }
 
                     ServerManager.Instance.GroupList.Remove(Session.Character.Group);

@@ -12,9 +12,9 @@
  * GNU General Public License for more details.
  */
 
-using Hik.Communication.Scs.Communication;
-using Hik.Communication.Scs.Communication.EndPoints.Tcp;
-using Hik.Communication.ScsServices.Client;
+using OpenNos.SCS.Communication.Scs.Communication;
+using OpenNos.SCS.Communication.Scs.Communication.EndPoints.Tcp;
+using OpenNos.SCS.Communication.ScsServices.Client;
 using OpenNos.Core;
 using OpenNos.DAL;
 using OpenNos.Master.Library.Data;

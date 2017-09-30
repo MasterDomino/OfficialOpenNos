@@ -211,6 +211,8 @@ namespace OpenNos.GameObject
                     {
                         InstanceBag.Lives = Lives;
                         MapInstance newmap = ServerManager.Instance.GenerateMapInstance(short.Parse(variable?.Attributes["VNum"].Value), mapinstancetype, new InstanceBag());
+                        newmap.Portals?.Clear();
+
                         byte.TryParse(variable?.Attributes["IndexX"]?.Value, out byte indexx);
                         newmap.MapIndexX = indexx;
 

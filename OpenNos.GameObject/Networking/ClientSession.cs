@@ -188,8 +188,12 @@ namespace OpenNos.GameObject
                     {
                         Character?.Group?.Characters.ForEach(s =>
                         {
-                            s.SendPacket(s.Character.Group.GeneraterRaidmbf(s));
-                            s.SendPacket(s.Character.Group.GenerateRdlst());
+                            if (s != null)
+                            {
+                                s.SendPacket(s.Character.Group.GeneraterRaidmbf(s));
+                                s.SendPacket(s.Character.Group.GenerateRdlst());
+
+                            }
                         });
                     }
                 }

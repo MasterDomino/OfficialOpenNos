@@ -111,7 +111,22 @@ namespace OpenNos.GameObject
                     break;
 
                 case 666:
-                    session.SendPacket("guri 18 0");
+                    if (EffectValue == 1 && byte.TryParse(packetsplit[9], out byte islot))
+                    {
+                        ItemInstance item = session.Character.Inventory.LoadBySlotAndType(islot, InventoryType.Equipment);
+
+                        if (item != null && (item.Item.ItemType == ItemType.Weapon || item.Item.ItemType == ItemType.Armor) && item.ShellEffects.Count != 0 && !item.Item.IsHeroic)
+                        {
+                            item.ShellEffects.Clear();
+                            session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                            session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_DELETE"), 0));
+
+                        }
+                    }
+                    else
+                    {
+                        session.SendPacket("guri 18 0");
+                    }
                     break;
 
                 //Atk/Def/HP/Exp potions

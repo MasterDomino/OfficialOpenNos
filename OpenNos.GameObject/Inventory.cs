@@ -102,6 +102,10 @@ namespace OpenNos.GameObject
             {
                 return null;
             }
+            if (inv.ShellEffects != null)
+            {
+
+            }
             ItemInstance invcopy = inv.DeepCopy();
             invcopy.Id = Guid.NewGuid();
             if (inv.Item.Type == InventoryType.Equipment)

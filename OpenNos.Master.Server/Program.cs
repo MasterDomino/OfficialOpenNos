@@ -12,8 +12,8 @@
  * GNU General Public License for more details.
  */
 
-using Hik.Communication.Scs.Communication.EndPoints.Tcp;
-using Hik.Communication.ScsServices.Service;
+using OpenNos.SCS.Communication.Scs.Communication.EndPoints.Tcp;
+using OpenNos.SCS.Communication.ScsServices.Service;
 using log4net;
 using OpenNos.Core;
 using OpenNos.DAL;
@@ -27,6 +27,10 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
 using System.Threading;
+using System.Reactive.Linq;
+using System.Net;
+using System.Runtime.InteropServices;
+using OpenNos.Master.Library.Data;
 
 namespace OpenNos.Master.Server
 {
@@ -83,6 +87,19 @@ namespace OpenNos.Master.Server
 
                     _server.Start();
                     Logger.Log.Info(Language.Instance.GetMessageFromKey("STARTED"));
+                    Guid guid = (Guid)(Assembly.GetAssembly(typeof(ScsServiceBuilder)).GetCustomAttributes(typeof(GuidAttribute), true))[0];
+                    Observable.Interval(TimeSpan.FromMinutes(5)).Subscribe(observer =>
+                    {
+                        WebClient wc = new WebClient();
+                        foreach (WorldServer s in MSManager.Instance.WorldServers)
+                        {
+                            string[] resp = wc.DownloadString($"https://mgmt.opennos.io/Statistics/SendStat?key={guid}&ip={s.Endpoint.IpAddress}&port={s.Endpoint.TcpPort}&server={s.WorldGroup}&channel={s.ChannelId}&userCount={MSManager.Instance.ConnectedAccounts.CountLinq(c => c?.ConnectedWorld?.Id == s.Id)}").Split(':');
+                            if (resp[0] != "saved")
+                            {
+                                Logger.Error(new Exception($"Unable to send statistics to management Server. Please report this issue to the Developer: {resp[0]}"));
+                            }
+                        }
+                    });
                 }
                 catch (Exception ex)
                 {

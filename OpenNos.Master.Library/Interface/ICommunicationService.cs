@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  */
 
-using Hik.Communication.ScsServices.Service;
+using OpenNos.SCS.Communication.ScsServices.Service;
 using OpenNos.Master.Library.Data;
 using System;
 using System.Collections.Generic;

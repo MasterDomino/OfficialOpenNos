@@ -244,6 +244,8 @@ namespace OpenNos.GameObject
         public void RunDeathEvent()
         {
             Buff.ClearAll();
+            NoMove = false;
+            NoAttack = false;
             if (IsBonus)
             {
                 MapInstance.InstanceBag.Combo++;
@@ -317,6 +319,10 @@ namespace OpenNos.GameObject
         {
             if (Target != -1)
             {
+                if (Path == null)
+                {
+                    Path = new List<Node>();
+                }
                 Path.Clear();
                 Target = -1;
 
@@ -439,64 +445,67 @@ namespace OpenNos.GameObject
                         });
                     }
                     hitRequest.Skill.BCards.Where(s => s.Type.Equals((byte)CardType.Buff)).ToList().ForEach(s => s.ApplyBCards(this, hitRequest.Session));
-                    foreach (ShellEffectDTO shell in battleEntity.ShellWeaponEffects)
+                    if (battleEntity?.ShellWeaponEffects != null)
                     {
-                        switch (shell.Effect)
+                        foreach (ShellEffectDTO shell in battleEntity.ShellWeaponEffects)
                         {
-                            case (byte)ShellWeaponEffectType.Blackout:
-                                {
-                                    Buff buff = new Buff(7, battleEntity.Level);
-                                    if (ServerManager.Instance.RandomNumber() < shell.Value)
+                            switch (shell.Effect)
+                            {
+                                case (byte)ShellWeaponEffectType.Blackout:
                                     {
-                                        AddBuff(buff);
+                                        Buff buff = new Buff(7, battleEntity.Level);
+                                        if (ServerManager.Instance.RandomNumber() < shell.Value)
+                                        {
+                                            AddBuff(buff);
+                                        }
+                                        break;
                                     }
-                                    break;
-                                }
-                            case (byte)ShellWeaponEffectType.DeadlyBlackout:
-                                {
-                                    Buff buff = new Buff(66, battleEntity.Level);
-                                    if (ServerManager.Instance.RandomNumber() < shell.Value)
+                                case (byte)ShellWeaponEffectType.DeadlyBlackout:
                                     {
-                                        AddBuff(buff);
+                                        Buff buff = new Buff(66, battleEntity.Level);
+                                        if (ServerManager.Instance.RandomNumber() < shell.Value)
+                                        {
+                                            AddBuff(buff);
+                                        }
+                                        break;
                                     }
-                                    break;
-                                }
-                            case (byte)ShellWeaponEffectType.MinorBleeding:
-                                {
-                                    Buff buff = new Buff(1, battleEntity.Level);
-                                    if (ServerManager.Instance.RandomNumber() < shell.Value)
+                                case (byte)ShellWeaponEffectType.MinorBleeding:
                                     {
-                                        AddBuff(buff);
+                                        Buff buff = new Buff(1, battleEntity.Level);
+                                        if (ServerManager.Instance.RandomNumber() < shell.Value)
+                                        {
+                                            AddBuff(buff);
+                                        }
+                                        break;
                                     }
-                                    break;
-                                }
-                            case (byte)ShellWeaponEffectType.Bleeding:
-                                {
-                                    Buff buff = new Buff(21, battleEntity.Level);
-                                    if (ServerManager.Instance.RandomNumber() < shell.Value)
+                                case (byte)ShellWeaponEffectType.Bleeding:
                                     {
-                                        AddBuff(buff);
+                                        Buff buff = new Buff(21, battleEntity.Level);
+                                        if (ServerManager.Instance.RandomNumber() < shell.Value)
+                                        {
+                                            AddBuff(buff);
+                                        }
+                                        break;
                                     }
-                                    break;
-                                }
-                            case (byte)ShellWeaponEffectType.HeavyBleeding:
-                                {
-                                    Buff buff = new Buff(42, battleEntity.Level);
-                                    if (ServerManager.Instance.RandomNumber() < shell.Value)
+                                case (byte)ShellWeaponEffectType.HeavyBleeding:
                                     {
-                                        AddBuff(buff);
+                                        Buff buff = new Buff(42, battleEntity.Level);
+                                        if (ServerManager.Instance.RandomNumber() < shell.Value)
+                                        {
+                                            AddBuff(buff);
+                                        }
+                                        break;
                                     }
-                                    break;
-                                }
-                            case (byte)ShellWeaponEffectType.Freeze:
-                                {
-                                    Buff buff = new Buff(27, battleEntity.Level);
-                                    if (ServerManager.Instance.RandomNumber() < shell.Value)
+                                case (byte)ShellWeaponEffectType.Freeze:
                                     {
-                                        AddBuff(buff);
+                                        Buff buff = new Buff(27, battleEntity.Level);
+                                        if (ServerManager.Instance.RandomNumber() < shell.Value)
+                                        {
+                                            AddBuff(buff);
+                                        }
+                                        break;
                                     }
-                                    break;
-                                }
+                            }
                         }
                     }
                     if (DamageList.ContainsKey(hitRequest.Session.Character.CharacterId))
@@ -728,7 +737,10 @@ namespace OpenNos.GameObject
             if (IsMoving && Monster.Speed > 0)
             {
                 double time = (DateTime.Now - LastMove).TotalMilliseconds;
-
+                if (Path == null)
+                {
+                    Path = new List<Node>();
+                }
                 if (Path.Count > 0) // move back to initial position after following target
                 {
                     int timetowalk = 2000 / Monster.Speed;

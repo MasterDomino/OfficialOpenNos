@@ -12,8 +12,8 @@
  * GNU General Public License for more details.
  */
 
-using Hik.Communication.Scs.Communication.EndPoints.Tcp;
-using Hik.Communication.ScsServices.Service;
+using OpenNos.SCS.Communication.Scs.Communication.EndPoints.Tcp;
+using OpenNos.SCS.Communication.ScsServices.Service;
 using System;
 
 namespace OpenNos.Master.Library.Data

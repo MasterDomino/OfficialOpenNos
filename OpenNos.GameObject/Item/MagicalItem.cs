@@ -42,25 +42,86 @@ namespace OpenNos.GameObject
                 case 0:
                     if (inv.Item.ItemType == ItemType.Shell)
                     {
-                        if (inv.ShellEffects.Count != 0 && packetsplit.Length > 9 && byte.TryParse(packetsplit[9], out byte islot))
+                        if (inv?.ShellEffects?.Count != 0 && packetsplit?.Length > 9 && byte.TryParse(packetsplit[9], out byte islot))
                         {
                             ItemInstance item = session.Character.Inventory.LoadBySlotAndType(islot, InventoryType.Equipment);
 
                             if (item != null && (item.Item.ItemType == ItemType.Weapon || item.Item.ItemType == ItemType.Armor) && item.Item.LevelMinimum >= inv.Upgrade && item.Rare >= inv.Rare && !item.Item.IsHeroic)
                             {
-                                if(item.ShellEffects.Count > 0 && ServerManager.Instance.RandomNumber() < 50)
+                                bool weapon = false;
+                                switch (inv.ItemVNum)
                                 {
-                                    session.Character.DeleteItemByItemInstanceId(inv.Id);
-                                    session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_APPLY_FAIL"), 0));
-                                    return;
+                                    case 589:
+                                    case 590:
+                                    case 591:
+                                    case 592:
+                                    case 593:
+                                    case 594:
+                                    case 595:
+                                    case 596:
+                                    case 597:
+                                    case 598:
+                                    case 565:
+                                    case 566:
+                                    case 567:
+                                    case 568:
+                                    case 569:
+                                    case 570:
+                                    case 571:
+                                    case 572:
+                                    case 573:
+                                    case 574:
+                                    case 575:
+                                    case 576:
+                                        weapon = true;
+                                        break;
+
+                                    case 599:
+                                    case 656:
+                                    case 657:
+                                    case 658:
+                                    case 659:
+                                    case 660:
+                                    case 661:
+                                    case 662:
+                                    case 663:
+                                    case 664:
+                                    case 577:
+                                    case 578:
+                                    case 579:
+                                    case 580:
+                                    case 581:
+                                    case 582:
+                                    case 583:
+                                    case 584:
+                                    case 585:
+                                    case 586:
+                                    case 587:
+                                    case 588:
+                                        weapon = false;
+                                        break;
+                                    default:
+                                        return;
+
                                 }
-                                item.ShellEffects.Clear();
-                                item.ShellEffects.AddRange(inv.ShellEffects);
-                                session.Character.DeleteItemByItemInstanceId(inv.Id);
-                                session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_APPLY_SUCCESS"), 0));
+                                if ((item.Item.ItemType == ItemType.Weapon && weapon) || (item.Item.ItemType == ItemType.Armor && !weapon))
+                                {
+
+                                    if (item.ShellEffects.Count > 0 && ServerManager.Instance.RandomNumber() < 50)
+                                    {
+                                        session.Character.DeleteItemByItemInstanceId(inv.Id);
+                                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_APPLY_FAIL"), 0));
+                                        return;
+                                    }
+                                    item.ShellEffects.Clear();
+                                    item.ShellEffects.AddRange(inv.ShellEffects);
+                                    session.Character.DeleteItemByItemInstanceId(inv.Id);
+                                    session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_APPLY_SUCCESS"), 0));
+                                }
                             }
                         }
                         return;
+
                     }
 
                     if (ItemType == ItemType.Event)

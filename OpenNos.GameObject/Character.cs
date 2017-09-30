@@ -2774,15 +2774,19 @@ namespace OpenNos.GameObject
                             {
                                 try
                                 {
-                                    ((WearableInstance)newItem).RarifyItem(Session, RarifyMode.Drop, RarifyProtection.None);
-                                    newItem.Upgrade = newItem.Item.BasicUpgrade;
+                                    ((WearableInstance)newItem).RarifyItem(Session, RarifyMode.Drop, RarifyProtection.None, forceRare: rare);
+                                    newItem.Upgrade = (byte)(newItem.Item.BasicUpgrade + upgrade);
+                                    if (newItem.Upgrade > 10)
+                                    {
+                                        newItem.Upgrade = 10;
+                                    }
                                 }
                                 catch
                                 {
 
                                 }
                             }
-                            else
+                            else if (rare == 0 || forceRandom)
                             {
                                 do
                                 {
@@ -2797,13 +2801,13 @@ namespace OpenNos.GameObject
                                     }
                                     catch
                                     {
-
+                                        break;
                                     }
                                 } while (forceRandom);
                             }
                         }
 
-                        if (newItem.Item.Type.Equals(InventoryType.Equipment) && rare != 0)
+                        if (newItem.Item.Type.Equals(InventoryType.Equipment) && rare != 0 && !forceRandom)
                         {
                             newItem.Rare = (sbyte)rare;
                             if (newItem is WearableInstance)
@@ -2811,6 +2815,12 @@ namespace OpenNos.GameObject
                                 ((WearableInstance)newItem).SetRarityPoint();
                             }
                         }
+
+                        if (newItem.Item.ItemType == ItemType.Shell)
+                        {
+                            newItem.Upgrade = (byte)ServerManager.Instance.RandomNumber(50, 81);
+                        }
+
 
                         List<ItemInstance> newInv = Inventory.AddToInventory(newItem);
                         if (newInv.Count > 0)

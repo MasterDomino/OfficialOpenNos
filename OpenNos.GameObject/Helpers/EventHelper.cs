@@ -229,7 +229,7 @@ namespace OpenNos.GameObject.Helpers
                         if (monster.MoveEvent?.InZone(monster.MapX, monster.MapY) == true)
                         {
                             monster.MoveEvent = null;
-                            monster.Path = null;
+                            monster.Path = new List<Node>();
                             ((List<EventContainer>)evt.Parameter).ForEach(s => RunEvent(s, monster: monster));
                         }
                         break;
