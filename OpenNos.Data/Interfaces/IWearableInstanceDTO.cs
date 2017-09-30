@@ -12,9 +12,9 @@
  * GNU General Public License for more details.
  */
 
-namespace OpenNos.Data
+namespace OpenNos.Data.Interfaces
 {
-    public interface IWearableInstance : IItemInstance
+    public interface IWearableInstanceDTO : IItemInstanceDTO
     {
         #region Properties
 

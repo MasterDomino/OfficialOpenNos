@@ -54,10 +54,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         /// Creates a new TcpConnectionListener for given endpoint.
         /// </summary>
         /// <param name="endPoint">The endpoint address of the server to listen incoming connections</param>
-        public TcpConnectionListener(ScsTcpEndPoint endPoint)
-        {
-            _endPoint = endPoint;
-        }
+        public TcpConnectionListener(ScsTcpEndPoint endPoint) => _endPoint = endPoint;
 
         #endregion
 

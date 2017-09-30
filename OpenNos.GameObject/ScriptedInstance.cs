@@ -83,10 +83,7 @@ namespace OpenNos.GameObject
             _mapinstancedictionary.Values.ToList().ForEach(m => m.Dispose());
         }
 
-        public string GenerateMainInfo()
-        {
-            return $"minfo 0 1 -1.0/0 -1.0/0 -1/0 -1.0/0 1 {InstanceBag.Lives + 1} 0";
-        }
+        public string GenerateMainInfo() => $"minfo 0 1 -1.0/0 -1.0/0 -1/0 -1.0/0 1 {InstanceBag.Lives + 1} 0";
 
         public List<string> GenerateMinimap()
         {
@@ -123,10 +120,7 @@ namespace OpenNos.GameObject
             return $"rbr 0.0.0 4 15 {LevelMinimum}.{LevelMaximum} {RequieredItems.Sum(s => s.Amount)} {drawgift} {specialitems} {bonusitems} {WinnerScore}.{(WinnerScore > 0 ? Winner : string.Empty)} 0 0 {Language.Instance.GetMessageFromKey("TS_TUTORIAL")}\n{Label}";
         }
 
-        public string GenerateWp()
-        {
-            return $"wp {PositionX} {PositionY} {ScriptedInstanceId} 0 {LevelMinimum} {LevelMaximum}";
-        }
+        public string GenerateWp() => $"wp {PositionX} {PositionY} {ScriptedInstanceId} 0 {LevelMinimum} {LevelMaximum}";
 
         public void LoadGlobals()
         {

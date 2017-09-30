@@ -168,55 +168,24 @@ namespace OpenNos.GameObject
                         }
                         else
                         {
-                            if (session.Character.BuffObservables.ContainsKey(387))
+                            void disposeBuff(short vNum)
                             {
-                                session.Character.BuffObservables[387].Dispose();
-                                session.Character.BuffObservables.Remove(387);
-                            }
-                            if (session.Character.BuffObservables.ContainsKey(395))
-                            {
-                                session.Character.BuffObservables[395].Dispose();
-                                session.Character.BuffObservables.Remove(395);
-                            }
-                            if (session.Character.BuffObservables.ContainsKey(396))
-                            {
-                                session.Character.BuffObservables[396].Dispose();
-                                session.Character.BuffObservables.Remove(396);
-                            }
-                            if (session.Character.BuffObservables.ContainsKey(397))
-                            {
-                                session.Character.BuffObservables[397].Dispose();
-                                session.Character.BuffObservables.Remove(397);
-                            }
-                            if (session.Character.BuffObservables.ContainsKey(398))
-                            {
-                                session.Character.BuffObservables[398].Dispose();
-                                session.Character.BuffObservables.Remove(398);
-                            }
-                            if (session.Character.BuffObservables.ContainsKey(410))
-                            {
-                                session.Character.BuffObservables[410].Dispose();
-                                session.Character.BuffObservables.Remove(410);
-                            }
-                            if (session.Character.BuffObservables.ContainsKey(411))
-                            {
-                                session.Character.BuffObservables[411].Dispose();
-                                session.Character.BuffObservables.Remove(411);
-                            }
-                            if (session.Character.BuffObservables.ContainsKey(444))
-                            {
-                                session.Character.BuffObservables[444].Dispose();
-                                session.Character.BuffObservables.Remove(444);
+                                if (session.Character.BuffObservables.ContainsKey(vNum))
+                                {
+                                    session.Character.BuffObservables[vNum].Dispose();
+                                    session.Character.BuffObservables.Remove(vNum);
+                                }
+                                session.Character.RemoveBuff(vNum);
                             }
 
-                            session.Character.RemoveBuff(387);
-                            session.Character.RemoveBuff(395);
-                            session.Character.RemoveBuff(396);
-                            session.Character.RemoveBuff(397);
-                            session.Character.RemoveBuff(398);
-                            session.Character.RemoveBuff(410);
-                            session.Character.RemoveBuff(411);
-                            session.Character.RemoveBuff(444);
+                            disposeBuff(387);
+                            disposeBuff(395);
+                            disposeBuff(396);
+                            disposeBuff(397);
+                            disposeBuff(398);
+                            disposeBuff(410);
+                            disposeBuff(411);
+                            disposeBuff(444);
 
                             specialistInstance.Design = (byte)EffectValue;
 
@@ -229,8 +198,7 @@ namespace OpenNos.GameObject
                     }
                     else
                     {
-                        session.SendPacket(
-                            UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_SP"), 0));
+                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_SP"), 0));
                     }
                     break;
 
@@ -366,7 +334,7 @@ namespace OpenNos.GameObject
                             MapY = session.Character.MapY,
                             MapX = session.Character.MapX,
                             MapId = session.Character.MapInstance.Map.MapId,
-                            Position = (byte)session.Character.Direction,
+                            Position = session.Character.Direction,
                             IsMoving = true,
                             MapMonsterId = session.CurrentMapInstance.GetNextMonsterId(),
                             ShouldRespawn = false

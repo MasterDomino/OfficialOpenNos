@@ -34,10 +34,7 @@ namespace OpenNos.DAL.Mock
 
         #region Methods
 
-        public DeleteResult DeleteFromSlotAndType(long characterId, short slot, InventoryType type)
-        {
-            throw new NotImplementedException();
-        }
+        public DeleteResult DeleteFromSlotAndType(long characterId, short slot, InventoryType type) => throw new NotImplementedException();
 
         public void InitializeMapper(Type baseType)
         {
@@ -58,30 +55,15 @@ namespace OpenNos.DAL.Mock
             _mapper = config.CreateMapper();
         }
 
-        public IEnumerable<ItemInstanceDTO> LoadByCharacterId(long characterId)
-        {
-            return Container.Where(i => i.CharacterId == characterId);
-        }
+        public IEnumerable<ItemInstanceDTO> LoadByCharacterId(long characterId) => Container.Where(i => i.CharacterId == characterId);
 
-        public ItemInstanceDTO LoadBySlotAndType(long characterId, short slot, InventoryType type)
-        {
-            return MapEntity(Container.SingleOrDefault(i => i.CharacterId == characterId && i.Slot == slot && i.Type == type));
-        }
+        public ItemInstanceDTO LoadBySlotAndType(long characterId, short slot, InventoryType type) => MapEntity(Container.SingleOrDefault(i => i.CharacterId == characterId && i.Slot == slot && i.Type == type));
 
-        public IEnumerable<ItemInstanceDTO> LoadByType(long characterId, InventoryType type)
-        {
-            return Container.Where(i => i.CharacterId == characterId && i.Type == type);
-        }
+        public IEnumerable<ItemInstanceDTO> LoadByType(long characterId, InventoryType type) => Container.Where(i => i.CharacterId == characterId && i.Type == type);
 
-        IList<Guid> IItemInstanceDAO.LoadSlotAndTypeByCharacterId(long characterId)
-        {
-            throw new NotImplementedException();
-        }
+        IList<Guid> IItemInstanceDAO.LoadSlotAndTypeByCharacterId(long characterId) => throw new NotImplementedException();
 
-        public IEnumerable<Guid> LoadSlotAndTypeByCharacterId(long characterId)
-        {
-            return Container.Where(i => i.CharacterId == characterId).Select(c => c.Id);
-        }
+        public IEnumerable<Guid> LoadSlotAndTypeByCharacterId(long characterId) => Container.Where(i => i.CharacterId == characterId).Select(c => c.Id);
 
         public override IMappingBaseDAO RegisterMapping(Type gameObjectType)
         {

@@ -113,15 +113,9 @@ namespace OpenNos.Master.Server
             }
         }
 
-        private static void OnClientConnected(object sender, ServiceClientEventArgs e)
-        {
-            Logger.Log.Info(Language.Instance.GetMessageFromKey("NEW_CONNECT") + e.Client.ClientId);
-        }
+        private static void OnClientConnected(object sender, ServiceClientEventArgs e) => Logger.Log.Info(Language.Instance.GetMessageFromKey("NEW_CONNECT") + e.Client.ClientId);
 
-        private static void OnClientDisconnected(object sender, ServiceClientEventArgs e)
-        {
-            Logger.Log.Info(Language.Instance.GetMessageFromKey("DISCONNECT") + e.Client.ClientId);
-        }
+        private static void OnClientDisconnected(object sender, ServiceClientEventArgs e) => Logger.Log.Info(Language.Instance.GetMessageFromKey("DISCONNECT") + e.Client.ClientId);
 
         private static void RegisterMappings()
         {

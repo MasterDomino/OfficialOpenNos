@@ -90,15 +90,9 @@ namespace OpenNos.GameObject
 
         #region Methods
 
-        public static int GetDistance(Character character1, Character character2)
-        {
-            return GetDistance(new MapCell { X = character1.PositionX, Y = character1.PositionY }, new MapCell { X = character2.PositionX, Y = character2.PositionY });
-        }
+        public static int GetDistance(Character character1, Character character2) => GetDistance(new MapCell { X = character1.PositionX, Y = character1.PositionY }, new MapCell { X = character2.PositionX, Y = character2.PositionY });
 
-        public static int GetDistance(MapCell p, MapCell q)
-        {
-            return (int)Heuristic.Octile(Math.Abs(p.X - q.X), Math.Abs(p.Y - q.Y));
-        }
+        public static int GetDistance(MapCell p, MapCell q) => (int)Heuristic.Octile(Math.Abs(p.X - q.X), Math.Abs(p.Y - q.Y));
 
         public IEnumerable<MonsterToSummon> GenerateMonsters(short vnum, short amount, bool move, List<EventContainer> deathEvents, bool isBonus = false, bool isHostile = true, bool isBoss = false)
         {

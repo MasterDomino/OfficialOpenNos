@@ -171,10 +171,7 @@ namespace OpenNos.GameObject
 
         #region Methods
 
-        public void AddGroup(Group group)
-        {
-            GroupsThreadSafe[group.GroupId] = group;
-        }
+        public void AddGroup(Group group) => GroupsThreadSafe[group.GroupId] = group;
 
         public void AskPVPRevive(long characterId)
         {
@@ -532,10 +529,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        public void FamilyRefresh(long FamilyId)
-        {
-            CommunicationServiceClient.Instance.UpdateFamily(ServerGroup, FamilyId);
-        }
+        public void FamilyRefresh(long FamilyId) => CommunicationServiceClient.Instance.UpdateFamily(ServerGroup, FamilyId);
 
         public MapInstance GenerateMapInstance(short mapId, MapInstanceType type, InstanceBag mapclock)
         {
@@ -563,55 +557,25 @@ namespace OpenNos.GameObject
             return null;
         }
 
-        public IEnumerable<Skill> GetAllSkill()
-        {
-            return _skills;
-        }
+        public IEnumerable<Skill> GetAllSkill() => _skills;
 
-        public IEnumerable<Card> GetAllCard()
-        {
-            return _cards;
-        }
+        public IEnumerable<Card> GetAllCard() => _cards;
 
-        public Guid GetBaseMapInstanceIdByMapId(short MapId)
-        {
-            return _mapinstances.FirstOrDefault(s => s.Value?.Map.MapId == MapId && s.Value.MapInstanceType == MapInstanceType.BaseMapInstance).Key;
-        }
+        public Guid GetBaseMapInstanceIdByMapId(short MapId) => _mapinstances.FirstOrDefault(s => s.Value?.Map.MapId == MapId && s.Value.MapInstanceType == MapInstanceType.BaseMapInstance).Key;
 
-        public List<DropDTO> GetDropsByMonsterVNum(short monsterVNum)
-        {
-            return _monsterDrops.ContainsKey(monsterVNum) ? _generalDrops.Concat(_monsterDrops[monsterVNum]).ToList() : new List<DropDTO>();
-        }
+        public List<DropDTO> GetDropsByMonsterVNum(short monsterVNum) => _monsterDrops.ContainsKey(monsterVNum) ? _generalDrops.Concat(_monsterDrops[monsterVNum]).ToList() : new List<DropDTO>();
 
-        public Group GetGroupByCharacterId(long characterId)
-        {
-            return Groups?.SingleOrDefault(g => g.IsMemberOfGroup(characterId));
-        }
+        public Group GetGroupByCharacterId(long characterId) => Groups?.SingleOrDefault(g => g.IsMemberOfGroup(characterId));
 
-        public Item GetItem(short vnum)
-        {
-            return _items.FirstOrDefault(m => m.VNum.Equals(vnum));
-        }
+        public Item GetItem(short vnum) => _items.FirstOrDefault(m => m.VNum.Equals(vnum));
 
-        public MapInstance GetMapInstance(Guid id)
-        {
-            return _mapinstances.ContainsKey(id) ? _mapinstances[id] : null;
-        }
+        public MapInstance GetMapInstance(Guid id) => _mapinstances.ContainsKey(id) ? _mapinstances[id] : null;
 
-        public List<MapInstance> GetMapInstances()
-        {
-            return _mapinstances.Values.ToList();
-        }
+        public List<MapInstance> GetMapInstances() => _mapinstances.Values.ToList();
 
-        public long GetNextGroupId()
-        {
-            return ++_lastGroupId;
-        }
+        public long GetNextGroupId() => ++_lastGroupId;
 
-        public NpcMonster GetNpc(short npcVNum)
-        {
-            return _npcs.FirstOrDefault(m => m.NpcMonsterVNum.Equals(npcVNum));
-        }
+        public NpcMonster GetNpc(short npcVNum) => _npcs.FirstOrDefault(m => m.NpcMonsterVNum.Equals(npcVNum));
 
         public T GetProperty<T>(string charName, string property)
         {
@@ -633,30 +597,15 @@ namespace OpenNos.GameObject
             return (T)session.Character.GetType().GetProperties().Single(pi => pi.Name == property).GetValue(session.Character, null);
         }
 
-        public List<Recipe> GetReceipesByMapNpcId(int mapNpcId)
-        {
-            return _recipes.ContainsKey(mapNpcId) ? _recipes[mapNpcId] : new List<Recipe>();
-        }
+        public List<Recipe> GetReceipesByMapNpcId(int mapNpcId) => _recipes.ContainsKey(mapNpcId) ? _recipes[mapNpcId] : new List<Recipe>();
 
-        public ClientSession GetSessionByCharacterName(string name)
-        {
-            return Sessions.SingleOrDefault(s => s.Character.Name == name);
-        }
+        public ClientSession GetSessionByCharacterName(string name) => Sessions.SingleOrDefault(s => s.Character.Name == name);
 
-        public ClientSession GetSessionBySessionId(int sessionId)
-        {
-            return Sessions.SingleOrDefault(s => s.SessionId == sessionId);
-        }
+        public ClientSession GetSessionBySessionId(int sessionId) => Sessions.SingleOrDefault(s => s.SessionId == sessionId);
 
-        public Skill GetSkill(short skillVNum)
-        {
-            return _skills.FirstOrDefault(m => m.SkillVNum.Equals(skillVNum));
-        }
+        public Skill GetSkill(short skillVNum) => _skills.FirstOrDefault(m => m.SkillVNum.Equals(skillVNum));
 
-        public Card GetCard(short cardId)
-        {
-            return _cards.FirstOrDefault(m => m.CardId.Equals(cardId));
-        }
+        public Card GetCard(short cardId) => _cards.FirstOrDefault(m => m.CardId.Equals(cardId));
 
         public T GetUserMethod<T>(long characterId, string methodName)
         {
@@ -756,7 +705,7 @@ namespace OpenNos.GameObject
             Schedules = ConfigurationManager.GetSection("eventScheduler") as List<Schedule>;
             Mails = DAOFactory.MailDAO.LoadAll().ToList();
 
-            var itemPartitioner = Partitioner.Create(DAOFactory.ItemDAO.LoadAll(), EnumerablePartitionerOptions.NoBuffering);
+            OrderablePartitioner<ItemDTO> itemPartitioner = Partitioner.Create(DAOFactory.ItemDAO.LoadAll(), EnumerablePartitionerOptions.NoBuffering);
             Parallel.ForEach(itemPartitioner, new ParallelOptions { MaxDegreeOfParallelism = 4 }, itemDTO =>
             {
                 switch (itemDTO.ItemType)
@@ -836,7 +785,7 @@ namespace OpenNos.GameObject
 
             // initialize bazaar
             BazaarList = new ThreadSafeGenericList<BazaarItemLink>();
-            var bazaarPartitioner = Partitioner.Create(DAOFactory.BazaarItemDAO.LoadAll(), EnumerablePartitionerOptions.NoBuffering);
+            OrderablePartitioner<BazaarItemDTO> bazaarPartitioner = Partitioner.Create(DAOFactory.BazaarItemDAO.LoadAll(), EnumerablePartitionerOptions.NoBuffering);
             Parallel.ForEach(bazaarPartitioner, new ParallelOptions { MaxDegreeOfParallelism = 8 }, bazaarItem =>
             {
                 BazaarItemLink item = new BazaarItemLink
@@ -918,7 +867,7 @@ namespace OpenNos.GameObject
             {
                 int i = 0;
                 int monstercount = 0;
-                var mapPartitioner = Partitioner.Create(DAOFactory.MapDAO.LoadAll(), EnumerablePartitionerOptions.NoBuffering);
+                OrderablePartitioner<MapDTO> mapPartitioner = Partitioner.Create(DAOFactory.MapDAO.LoadAll(), EnumerablePartitionerOptions.NoBuffering);
                 Parallel.ForEach(mapPartitioner, new ParallelOptions { MaxDegreeOfParallelism = 8 }, map =>
                 {
                     Guid guid = Guid.NewGuid();
@@ -985,15 +934,9 @@ namespace OpenNos.GameObject
             WorldId = Guid.NewGuid();
         }
 
-        public bool IsCharacterMemberOfGroup(long characterId)
-        {
-            return Groups?.Any(g => g.IsMemberOfGroup(characterId)) == true;
-        }
+        public bool IsCharacterMemberOfGroup(long characterId) => Groups?.Any(g => g.IsMemberOfGroup(characterId)) == true;
 
-        public bool IsCharactersGroupFull(long characterId)
-        {
-            return Groups?.Any(g => g.IsMemberOfGroup(characterId) && g.CharacterCount == (byte)g.GroupType) == true;
-        }
+        public bool IsCharactersGroupFull(long characterId) => Groups?.Any(g => g.IsMemberOfGroup(characterId) && g.CharacterCount == (byte)g.GroupType) == true;
 
         public void JoinMiniland(ClientSession Session, ClientSession MinilandOwner)
         {
@@ -1038,10 +981,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        public int RandomNumber(int min = 0, int max = 100)
-        {
-            return random.Next(min, max);
-        }
+        public int RandomNumber(int min = 0, int max = 100) => random.Next(min, max);
 
         public void RefreshRanking()
         {
@@ -1217,25 +1157,13 @@ namespace OpenNos.GameObject
             }
         }
 
-        internal List<NpcMonsterSkill> GetNpcMonsterSkillsByMonsterVNum(short npcMonsterVNum)
-        {
-            return _monsterSkills.ContainsKey(npcMonsterVNum) ? _monsterSkills[npcMonsterVNum] : new List<NpcMonsterSkill>();
-        }
+        internal List<NpcMonsterSkill> GetNpcMonsterSkillsByMonsterVNum(short npcMonsterVNum) => _monsterSkills.ContainsKey(npcMonsterVNum) ? _monsterSkills[npcMonsterVNum] : new List<NpcMonsterSkill>();
 
-        internal Shop GetShopByMapNpcId(int mapNpcId)
-        {
-            return _shops.ContainsKey(mapNpcId) ? _shops[mapNpcId] : null;
-        }
+        internal Shop GetShopByMapNpcId(int mapNpcId) => _shops.ContainsKey(mapNpcId) ? _shops[mapNpcId] : null;
 
-        internal List<ShopItemDTO> GetShopItemsByShopId(int shopId)
-        {
-            return _shopItems.ContainsKey(shopId) ? _shopItems[shopId] : new List<ShopItemDTO>();
-        }
+        internal List<ShopItemDTO> GetShopItemsByShopId(int shopId) => _shopItems.ContainsKey(shopId) ? _shopItems[shopId] : new List<ShopItemDTO>();
 
-        internal List<ShopSkillDTO> GetShopSkillsByShopId(int shopId)
-        {
-            return _shopSkills.ContainsKey(shopId) ? _shopSkills[shopId] : new List<ShopSkillDTO>();
-        }
+        internal List<ShopSkillDTO> GetShopSkillsByShopId(int shopId) => _shopSkills.ContainsKey(shopId) ? _shopSkills[shopId] : new List<ShopSkillDTO>();
 
         internal List<TeleporterDTO> GetTeleportersByNpcVNum(short npcMonsterVNum)
         {

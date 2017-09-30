@@ -29,10 +29,7 @@ namespace OpenNos.Handler
     {
         #region Instantiation
 
-        public BazaarPacketHandler(ClientSession session)
-        {
-            Session = session;
-        }
+        public BazaarPacketHandler(ClientSession session) => Session = session;
 
         #endregion
 
@@ -138,7 +135,10 @@ namespace OpenNos.Handler
             {
                 ItemInstance Item = (ItemInstance)DAOFactory.IteminstanceDAO.LoadById(bz.ItemInstanceId);
                 if (Item == null || bz.SellerId != Session.Character.CharacterId)
+                {
                     return;
+                }
+
                 int soldedamount = bz.Amount - Item.Amount;
                 long taxes = bz.MedalUsed ? 0 : (long)(bz.Price * 0.10 * soldedamount);
                 long price = (bz.Price * soldedamount) - taxes;

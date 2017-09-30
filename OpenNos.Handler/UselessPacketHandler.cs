@@ -21,10 +21,7 @@ namespace OpenNos.Handler
     {
         #region Instantiation
 
-        public UselessPacketHandler(ClientSession session)
-        {
-            Session = session;
-        }
+        public UselessPacketHandler(ClientSession session) => Session = session;
 
         #endregion
 

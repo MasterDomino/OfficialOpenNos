@@ -14,6 +14,7 @@
 
 using OpenNos.Core;
 using OpenNos.Data;
+using OpenNos.Data.Interfaces;
 using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
 using System;
@@ -22,7 +23,7 @@ using System.Linq;
 
 namespace OpenNos.GameObject
 {
-    public class SpecialistInstance : WearableInstance, ISpecialistInstance
+    public class SpecialistInstance : WearableInstance, ISpecialistInstanceDTO
     {
         #region Members
 
@@ -34,10 +35,7 @@ namespace OpenNos.GameObject
 
         #region Instantiation
 
-        public SpecialistInstance()
-        {
-            _random = new Random();
-        }
+        public SpecialistInstance() => _random = new Random();
 
         public SpecialistInstance(Guid id)
         {

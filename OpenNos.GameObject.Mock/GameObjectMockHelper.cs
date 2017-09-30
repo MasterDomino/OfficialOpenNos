@@ -25,13 +25,7 @@ namespace OpenNos.GameObject.Mock
 
         #region Properties
 
-        public static GameObjectMockHelper Instance
-        {
-            get
-            {
-                return instance ?? (instance = new GameObjectMockHelper());
-            }
-        }
+        public static GameObjectMockHelper Instance => instance ?? (instance = new GameObjectMockHelper());
 
         #endregion
 

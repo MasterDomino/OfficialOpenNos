@@ -22,24 +22,12 @@ namespace OpenNos.DAL.Mock
 {
     public class StaticBuffDAO : BaseDAO<StaticBuffDTO>, IStaticBuffDAO
     {
-        public void Delete(short bonusToDelete, long characterId)
-        {
-            throw new NotImplementedException();
-        }
+        public void Delete(short bonusToDelete, long characterId) => throw new NotImplementedException();
 
-        public SaveResult InsertOrUpdate(ref StaticBuffDTO staticBuff)
-        {
-            throw new NotImplementedException();
-        }
+        public SaveResult InsertOrUpdate(ref StaticBuffDTO staticBuff) => throw new NotImplementedException();
 
-        public IEnumerable<StaticBuffDTO> LoadByCharacterId(long characterId)
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<StaticBuffDTO> LoadByCharacterId(long characterId) => throw new NotImplementedException();
 
-        public IEnumerable<short> LoadByTypeCharacterId(long characterId)
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<short> LoadByTypeCharacterId(long characterId) => throw new NotImplementedException();
     }
 }

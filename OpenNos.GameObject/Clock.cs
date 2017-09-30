@@ -52,15 +52,9 @@ namespace OpenNos.GameObject
 
         #region Methods
 
-        public string GetClock()
-        {
-            return $"evnt {Type} {(Enabled ? 0 : (Type != 3) ? -1 : 1)} {DeciSecondRemaining} {BasesSecondRemaining}";
-        }
+        public string GetClock() => $"evnt {Type} {(Enabled ? 0 : (Type != 3) ? -1 : 1)} {DeciSecondRemaining} {BasesSecondRemaining}";
 
-        public void StartClock()
-        {
-            Enabled = true;
-        }
+        public void StartClock() => Enabled = true;
 
         public void StopClock()
         {

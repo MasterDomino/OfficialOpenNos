@@ -31,20 +31,11 @@ namespace OpenNos.DAL.Mock
             return DeleteResult.Deleted;
         }
 
-        public List<CharacterDTO> GetTopCompliment()
-        {
-            return new List<CharacterDTO>();
-        }
+        public List<CharacterDTO> GetTopCompliment() => new List<CharacterDTO>();
 
-        public List<CharacterDTO> GetTopPoints()
-        {
-            return new List<CharacterDTO>();
-        }
+        public List<CharacterDTO> GetTopPoints() => new List<CharacterDTO>();
 
-        public List<CharacterDTO> GetTopReputation()
-        {
-            return new List<CharacterDTO>();
-        }
+        public List<CharacterDTO> GetTopReputation() => new List<CharacterDTO>();
 
         public override CharacterDTO Insert(CharacterDTO dto)
         {
@@ -64,25 +55,13 @@ namespace OpenNos.DAL.Mock
             return SaveResult.Inserted;
         }
 
-        public IEnumerable<CharacterDTO> LoadByAccount(long accountId)
-        {
-            return Container.Where(c => c.AccountId == accountId).Select(MapEntity).ToList();
-        }
+        public IEnumerable<CharacterDTO> LoadByAccount(long accountId) => Container.Where(c => c.AccountId == accountId).Select(MapEntity).ToList();
 
-        public CharacterDTO LoadById(long characterId)
-        {
-            return Container.SingleOrDefault(c => c.CharacterId == characterId);
-        }
+        public CharacterDTO LoadById(long characterId) => Container.SingleOrDefault(c => c.CharacterId == characterId);
 
-        public CharacterDTO LoadByName(string name)
-        {
-            return Container.SingleOrDefault(c => c.Name == name);
-        }
+        public CharacterDTO LoadByName(string name) => Container.SingleOrDefault(c => c.Name == name);
 
-        public CharacterDTO LoadBySlot(long accountId, byte slot)
-        {
-            return Container.SingleOrDefault(c => c.AccountId == accountId && c.Slot == slot);
-        }
+        public CharacterDTO LoadBySlot(long accountId, byte slot) => Container.SingleOrDefault(c => c.AccountId == accountId && c.Slot == slot);
 
         #endregion
     }

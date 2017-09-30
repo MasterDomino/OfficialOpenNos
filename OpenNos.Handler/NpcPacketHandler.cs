@@ -29,10 +29,7 @@ namespace OpenNos.Handler
     {
         #region Instantiation
 
-        public NpcPacketHandler(ClientSession session)
-        {
-            Session = session;
-        }
+        public NpcPacketHandler(ClientSession session) => Session = session;
 
         #endregion
 
@@ -303,14 +300,36 @@ namespace OpenNos.Handler
                                 }
                             }
 
-                            List<ItemInstance> newItem = Session.Character.Inventory.AddNewToInventory(shopItem.ItemVNum, amount, Rare: rare, Upgrade: shopItem.Upgrade, Design: shopItem.Color);
-                            if (newItem.Count == 0)
+                            List<ItemInstance> newItems = Session.Character.Inventory.AddNewToInventory(shopItem.ItemVNum, amount, Rare: rare, Upgrade: shopItem.Upgrade, Design: shopItem.Color);
+                            if (newItems.Count == 0)
                             {
                                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateShopMemo(3, Language.Instance.GetMessageFromKey("NOT_ENOUGH_PLACE")));
                                 return;
                             }
-                            if (newItem.Count > 0)
+                            if (newItems.Count > 0)
                             {
+                                foreach (ItemInstance itemInst in newItems)
+                                {
+                                    if (itemInst is WearableInstance)
+                                    {
+                                        switch (itemInst.Item.EquipmentSlot)
+                                        {
+                                            case EquipmentType.Armor:
+                                            case EquipmentType.MainWeapon:
+                                            case EquipmentType.SecondaryWeapon:
+                                                ((WearableInstance)itemInst).SetRarityPoint();
+                                                break;
+
+                                            case EquipmentType.Boots:
+                                            case EquipmentType.Gloves:
+                                                ((WearableInstance)itemInst).FireResistance = (short)(itemInst.Item.FireResistance * shopItem.Upgrade);
+                                                ((WearableInstance)itemInst).DarkResistance = (short)(itemInst.Item.DarkResistance * shopItem.Upgrade);
+                                                ((WearableInstance)itemInst).LightResistance = (short)(itemInst.Item.LightResistance * shopItem.Upgrade);
+                                                ((WearableInstance)itemInst).WaterResistance = (short)(itemInst.Item.WaterResistance * shopItem.Upgrade);
+                                                break;
+                                        }
+                                    }
+                                }
                                 if (iteminfo.ReputPrice == 0)
                                 {
                                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateShopMemo(1, string.Format(Language.Instance.GetMessageFromKey("BUY_ITEM_VALID"), iteminfo.Name, amount)));
@@ -527,7 +546,10 @@ namespace OpenNos.Handler
                             string rece = $"m_list 3 {rec.Amount}";
                             foreach (RecipeItemDTO ite in rec.Items)
                             {
-                                if (ite.Amount > 0) rece += $" {ite.ItemVNum} {ite.Amount}";
+                                if (ite.Amount > 0)
+                                {
+                                    rece += $" {ite.ItemVNum} {ite.Amount}";
+                                }
                             }
                             rece += " -1";
                             Session.SendPacket(rece);

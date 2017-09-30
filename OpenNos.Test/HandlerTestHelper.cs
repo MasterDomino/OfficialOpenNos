@@ -101,10 +101,7 @@ namespace OpenNos.Test
             return CreateFakeNetworkClient();
         }
 
-        public static void ShutdownTestingEnvironment()
-        {
-            _sessionManager.StopServer();
-        }
+        public static void ShutdownTestingEnvironment() => _sessionManager.StopServer();
 
         public static string WaitForPacket(FakeNetworkClient client)
         {

@@ -10,9 +10,6 @@ namespace OpenNos.DAL.Mock
 {
     public class ShellEffectGenerationDAO : BaseDAO<ShellEffectGenerationDTO>, IShellEffectGenerationDAO
     {
-        public ShellEffectGenerationDTO InsertOrUpdate(ShellEffectGenerationDTO shelleffect)
-        {
-            throw new NotImplementedException();
-        }
+        public ShellEffectGenerationDTO InsertOrUpdate(ShellEffectGenerationDTO shelleffect) => throw new NotImplementedException();
     }
 }

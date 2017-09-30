@@ -23,20 +23,11 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public void Insert(List<ShopSkillDTO> skills)
-        {
-            throw new NotImplementedException();
-        }
+        public void Insert(List<ShopSkillDTO> skills) => throw new NotImplementedException();
 
-        public new ShopSkillDTO Insert(ShopSkillDTO shopSkill)
-        {
-            throw new NotImplementedException();
-        }
+        public new ShopSkillDTO Insert(ShopSkillDTO shopSkill) => throw new NotImplementedException();
 
-        public IEnumerable<ShopSkillDTO> LoadByShopId(int shopId)
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<ShopSkillDTO> LoadByShopId(int shopId) => throw new NotImplementedException();
 
         #endregion
     }

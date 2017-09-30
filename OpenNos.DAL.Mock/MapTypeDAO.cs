@@ -23,20 +23,11 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public MapTypeDTO Insert(ref MapTypeDTO mapType)
-        {
-            throw new NotImplementedException();
-        }
+        public MapTypeDTO Insert(ref MapTypeDTO mapType) => throw new NotImplementedException();
 
-        public new IEnumerable<MapTypeDTO> LoadAll()
-        {
-            throw new NotImplementedException();
-        }
+        public new IEnumerable<MapTypeDTO> LoadAll() => throw new NotImplementedException();
 
-        public MapTypeDTO LoadById(short maptypeId)
-        {
-            throw new NotImplementedException();
-        }
+        public MapTypeDTO LoadById(short maptypeId) => throw new NotImplementedException();
 
         #endregion
     }

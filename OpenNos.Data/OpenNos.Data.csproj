@@ -35,14 +35,14 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
-	<LangVersion>latest</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <PlatformTarget>x64</PlatformTarget>
     <OutputPath>bin\x64\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
-	<LangVersion>latest</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <PlatformTarget>x64</PlatformTarget>
@@ -50,14 +50,14 @@
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
-	<LangVersion>latest</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
-	<LangVersion>latest</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <PlatformTarget>x86</PlatformTarget>
@@ -65,7 +65,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
-	<LangVersion>latest</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -80,6 +80,10 @@
     <Compile Include="BazaarItemDTO.cs" />
     <Compile Include="BCardDTO.cs" />
     <Compile Include="BoxItemDTO.cs" />
+    <Compile Include="Interfaces\IBoxInstanceDTO.cs" />
+    <Compile Include="Interfaces\IItemInstanceDTO.cs" />
+    <Compile Include="Interfaces\ISpecialistInstanceDTO.cs" />
+    <Compile Include="Interfaces\IWearableInstanceDTO.cs" />
     <Compile Include="MaintenanceLogDTO.cs" />
     <Compile Include="RollGeneratedItemDTO.cs" />
     <Compile Include="CardDTO.cs" />
@@ -92,11 +96,7 @@
     <Compile Include="FamilyDTO.cs" />
     <Compile Include="FamilyLogDTO.cs" />
     <Compile Include="GeneralLogDTO.cs" />
-    <Compile Include="Interfaces\IBoxInstance.cs" />
     <Compile Include="Interfaces\IMapDTO.cs" />
-    <Compile Include="Interfaces\IItemInstance.cs" />
-    <Compile Include="Interfaces\ISpecialistInstance.cs" />
-    <Compile Include="Interfaces\IWearableInstance.cs" />
     <Compile Include="MailDTO.cs" />
     <Compile Include="MapMonsterDTO.cs" />
     <Compile Include="MapNpcDTO.cs" />

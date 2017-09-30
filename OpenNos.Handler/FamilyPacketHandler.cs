@@ -33,10 +33,7 @@ namespace OpenNos.Handler
     {
         #region Instantiation
 
-        public FamilyPacketHandler(ClientSession session)
-        {
-            Session = session;
-        }
+        public FamilyPacketHandler(ClientSession session) => Session = session;
 
         #endregion
 
@@ -214,10 +211,7 @@ namespace OpenNos.Handler
         /// today_cts packet
         /// </summary>
         /// <param name="todayPacket"></param>
-        public void FamilyChangeMessage(TodayPacket todayPacket)
-        {
-            Session.SendPacket("today_stc");
-        }
+        public void FamilyChangeMessage(TodayPacket todayPacket) => Session.SendPacket("today_stc");
 
         /// <summary>
         /// : packet
@@ -357,7 +351,7 @@ namespace OpenNos.Handler
                 {
                     return;
                 }
-                if (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Member)
+                if (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Member || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager)
                 {
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("NOT_ALLOWED_KICK"))));
                     return;
@@ -633,19 +627,13 @@ namespace OpenNos.Handler
         /// frank_cts packet
         /// </summary>
         /// <param name="frankCtsPacket"></param>
-        public void FamilyRank(FrankCtsPacket frankCtsPacket)
-        {
-            Session.SendPacket(UserInterfaceHelper.Instance.GenerateFrank(frankCtsPacket.Type));
-        }
+        public void FamilyRank(FrankCtsPacket frankCtsPacket) => Session.SendPacket(UserInterfaceHelper.Instance.GenerateFrank(frankCtsPacket.Type));
 
         /// <summary>
         /// fhis_cts packet
         /// </summary>
         /// <param name="fhistCtsPacket"></param>
-        public void FamilyRefreshHist(FhistCtsPacket fhistCtsPacket)
-        {
-            Session.SendPackets(Session.Character.GetFamilyHistory());
-        }
+        public void FamilyRefreshHist(FhistCtsPacket fhistCtsPacket) => Session.SendPackets(Session.Character.GetFamilyHistory());
 
         /// <summary>
         /// f_repos packet
@@ -772,7 +760,10 @@ namespace OpenNos.Handler
             {
                 FamilyCharacter fhead = Session.Character.Family.FamilyCharacters.Find(s => s.Authority == FamilyAuthority.Head);
                 if (fhead == null)
+                {
                     return;
+                }
+
                 DAOFactory.IteminstanceDAO.DeleteFromSlotAndType(fhead.CharacterId, fWithdrawPacket.Slot, InventoryType.FamilyWareHouse);
             }
             Session.Character.Family.InsertFamilyLog(FamilyLogType.WareHouseRemoved, Session.Character.Name, message: $"{item2.ItemVNum}|{fWithdrawPacket.Amount}");

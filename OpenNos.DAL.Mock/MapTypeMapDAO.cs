@@ -24,25 +24,13 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public void Insert(List<MapTypeMapDTO> mapTypeMaps)
-        {
-            throw new NotImplementedException();
-        }
+        public void Insert(List<MapTypeMapDTO> mapTypeMaps) => throw new NotImplementedException();
 
-        public MapTypeMapDTO LoadByMapAndMapType(short mapId, short maptypeId)
-        {
-            return Container.SingleOrDefault(m => m.MapId == mapId && m.MapTypeId == maptypeId);
-        }
+        public MapTypeMapDTO LoadByMapAndMapType(short mapId, short maptypeId) => Container.SingleOrDefault(m => m.MapId == mapId && m.MapTypeId == maptypeId);
 
-        public IEnumerable<MapTypeMapDTO> LoadByMapId(short mapId)
-        {
-            return Container.Where(m => m.MapId == mapId);
-        }
+        public IEnumerable<MapTypeMapDTO> LoadByMapId(short mapId) => Container.Where(m => m.MapId == mapId);
 
-        public IEnumerable<MapTypeMapDTO> LoadByMapTypeId(short maptypeId)
-        {
-            return Container.Where(m => m.MapTypeId == maptypeId);
-        }
+        public IEnumerable<MapTypeMapDTO> LoadByMapTypeId(short maptypeId) => Container.Where(m => m.MapTypeId == maptypeId);
 
         #endregion
     }

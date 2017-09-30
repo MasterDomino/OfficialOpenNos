@@ -24,6 +24,8 @@ namespace OpenNos.DAL.EF
 
         public byte AttachmentAmount { get; set; }
 
+        public byte AttachmentLevel { get; set; }
+
         public byte AttachmentRarity { get; set; }
 
         public byte AttachmentUpgrade { get; set; }

@@ -26,10 +26,7 @@ namespace OpenNos.PathFinder
 
         #region Methods
 
-        public static double Chebyshev(int iDx, int iDy)
-        {
-            return Math.Max(iDx, iDy);
-        }
+        public static double Chebyshev(int iDx, int iDy) => Math.Max(iDx, iDy);
 
         public static double Euclidean(int iDx, int iDy)
         {
@@ -38,10 +35,7 @@ namespace OpenNos.PathFinder
             return Math.Sqrt((tFdx * tFdx) + (tFdy * tFdy));
         }
 
-        public static double Manhattan(int iDx, int iDy)
-        {
-            return iDx + iDy;
-        }
+        public static double Manhattan(int iDx, int iDy) => iDx + iDy;
 
         public static double Octile(int iDx, int iDy)
         {

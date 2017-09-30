@@ -72,8 +72,8 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
         /// </summary>
         public int ReConnectCheckPeriod
         {
-            get { return _reconnectTimer.Period; }
-            set { _reconnectTimer.Period = value; }
+            get => _reconnectTimer.Period;
+            set => _reconnectTimer.Period = value;
         }
 
         #endregion
@@ -109,10 +109,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
         /// </summary>
         /// <param name="sender">Source of the event</param>
         /// <param name="e">Event arguments</param>
-        private void Client_Disconnected(object sender, EventArgs e)
-        {
-            _reconnectTimer.Start();
-        }
+        private void Client_Disconnected(object sender, EventArgs e) => _reconnectTimer.Start();
 
         /// <summary>
         /// Hadles Elapsed event of _reconnectTimer.

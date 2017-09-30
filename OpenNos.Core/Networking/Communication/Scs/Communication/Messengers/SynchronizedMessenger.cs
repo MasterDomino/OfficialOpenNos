@@ -90,10 +90,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         /// message is received.
         /// </summary>
         /// <returns>Received message</returns>
-        public IScsMessage ReceiveMessage()
-        {
-            return ReceiveMessage(System.Threading.Timeout.Infinite);
-        }
+        public IScsMessage ReceiveMessage() => ReceiveMessage(System.Threading.Timeout.Infinite);
 
         /// <summary>
         /// This method is used to receive a message from remote application. It waits until a
@@ -147,10 +144,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         /// </summary>
         /// <typeparam name="TMessage"></typeparam>
         /// <returns>Received message</returns>
-        public TMessage ReceiveMessage<TMessage>() where TMessage : IScsMessage
-        {
-            return ReceiveMessage<TMessage>(System.Threading.Timeout.Infinite);
-        }
+        public TMessage ReceiveMessage<TMessage>() where TMessage : IScsMessage => ReceiveMessage<TMessage>(System.Threading.Timeout.Infinite);
 
         /// <summary>
         /// This method is used to receive a specific type of message from remote application. It

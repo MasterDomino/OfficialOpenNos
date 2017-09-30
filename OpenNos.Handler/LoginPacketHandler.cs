@@ -35,18 +35,15 @@ namespace OpenNos.Handler
 
         #region Instantiation
 
-        public LoginPacketHandler(ClientSession session)
-        {
-            _session = session;
-        }
+        public LoginPacketHandler(ClientSession session) => _session = session;
 
         #endregion
 
         #region Methods
 
-        public string BuildServersPacket(int sessionId)
+        public string BuildServersPacket(string username, int sessionId, bool ignoreUserName)
         {
-            string channelpacket = CommunicationServiceClient.Instance.RetrieveRegisteredWorldServers(sessionId);
+            string channelpacket = CommunicationServiceClient.Instance.RetrieveRegisteredWorldServers(username, sessionId, ignoreUserName);
 
             if (channelpacket == null)
             {
@@ -78,6 +75,7 @@ namespace OpenNos.Handler
             {
                 string ipAddress = _session.IpAddress;
                 DAOFactory.AccountDAO.WriteGeneralLog(loadedAccount.AccountId, ipAddress, null, GeneralLogType.Connection, "LoginServer");
+                //NoS0575 3151710 MasterDomino PASS 0074E795\v0.9.3.3075 0 8B52893122F546170026401556D30AF5
 
                 //check if the account is connected
                 if (!CommunicationServiceClient.Instance.IsAccountConnected(loadedAccount.AccountId))
@@ -133,7 +131,9 @@ namespace OpenNos.Handler
                                     {
                                         Logger.Log.Error("General Error SessionId: " + newSessionId, ex);
                                     }
-                                    _session.SendPacket(BuildServersPacket(newSessionId));
+                                    string[] clientData = loginPacket.ClientData.Split('.');
+                                    bool ignoreUserName = short.TryParse(clientData[3], out short clientVersion) ? clientVersion < 3075 : false;
+                                    _session.SendPacket(BuildServersPacket(user.Name, newSessionId, ignoreUserName));
                                 }
                                 break;
                         }

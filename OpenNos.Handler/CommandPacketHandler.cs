@@ -35,10 +35,7 @@ namespace OpenNos.Handler
     {
         #region Instantiation
 
-        public CommandPacketHandler(ClientSession session)
-        {
-            Session = session;
-        }
+        public CommandPacketHandler(ClientSession session) => Session = session;
 
         #endregion
 
@@ -236,7 +233,7 @@ namespace OpenNos.Handler
         /// $ArenaWinner Command
         /// </summary>
         /// <param name="arenaWinner"></param>
-        public void ArenaWinner(ArenaWinner arenaWinner)
+        public void ArenaWinner(ArenaWinnerPacket arenaWinner)
         {
             Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[ArenaWinner]");
 
@@ -1790,7 +1787,7 @@ namespace OpenNos.Handler
         /// $RemoveNpcMonster Packet
         /// </summary>
         /// <param name="removeNpcMonsterPacket"></param>
-        public void RemoveNpcMonster(RemoveNpcMonster removeNpcMonsterPacket)
+        public void RemoveNpcMonster(RemoveNpcMonsterPacket removeNpcMonsterPacket)
         {
             if (Session.HasCurrentMapInstance)
             {

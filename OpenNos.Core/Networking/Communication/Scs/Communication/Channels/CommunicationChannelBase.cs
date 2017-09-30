@@ -126,29 +126,20 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels
         /// <summary>
         /// Raises Disconnected event.
         /// </summary>
-        protected virtual void OnDisconnected()
-        {
-            Disconnected?.Invoke(this, EventArgs.Empty);
-        }
+        protected virtual void OnDisconnected() => Disconnected?.Invoke(this, EventArgs.Empty);
 
         /// <summary>
         /// Raises MessageReceived event.
         /// </summary>
         /// <param name="message">Received message</param>
         /// <param name="receivedTimestamp">Message reception timestamp</param>
-        protected virtual void OnMessageReceived(IScsMessage message, DateTime receivedTimestamp)
-        {
-            MessageReceived?.Invoke(this, new MessageEventArgs(message, receivedTimestamp));
-        }
+        protected virtual void OnMessageReceived(IScsMessage message, DateTime receivedTimestamp) => MessageReceived?.Invoke(this, new MessageEventArgs(message, receivedTimestamp));
 
         /// <summary>
         /// Raises MessageSent event.
         /// </summary>
         /// <param name="message">Received message</param>
-        protected virtual void OnMessageSent(IScsMessage message)
-        {
-            MessageSent?.Invoke(this, new MessageEventArgs(message, DateTime.Now));
-        }
+        protected virtual void OnMessageSent(IScsMessage message) => MessageSent?.Invoke(this, new MessageEventArgs(message, DateTime.Now));
 
         /// <summary>
         /// Sends a message to the remote application. This method is overrided by derived Classs to

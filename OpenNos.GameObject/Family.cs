@@ -26,10 +26,7 @@ namespace OpenNos.GameObject
     {
         #region Instantiation
 
-        public Family()
-        {
-            FamilyCharacters = new List<FamilyCharacter>();
-        }
+        public Family() => FamilyCharacters = new List<FamilyCharacter>();
 
         #endregion
 
@@ -125,10 +122,7 @@ namespace OpenNos.GameObject
             });
         }
 
-        internal Family DeepCopy()
-        {
-            return (Family)MemberwiseClone();
-        }
+        internal Family DeepCopy() => (Family)MemberwiseClone();
 
         #endregion
     }

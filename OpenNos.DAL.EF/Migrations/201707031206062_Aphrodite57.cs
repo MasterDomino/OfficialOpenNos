@@ -4,14 +4,8 @@ namespace OpenNos.DAL.EF.Migrations
 
     public partial class Aphrodite57 : DbMigration
     {
-        public override void Up()
-        {
-            AddColumn("dbo.BCard", "IsLevelDivided", c => c.Boolean(nullable: false));
-        }
+        public override void Up() => AddColumn("dbo.BCard", "IsLevelDivided", c => c.Boolean(nullable: false));
 
-        public override void Down()
-        {
-            DropColumn("dbo.BCard", "IsLevelDivided");
-        }
+        public override void Down() => DropColumn("dbo.BCard", "IsLevelDivided");
     }
 }

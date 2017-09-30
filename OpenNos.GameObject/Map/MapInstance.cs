@@ -166,15 +166,9 @@ namespace OpenNos.GameObject
 
         #region Methods
 
-        public void AddMonster(MapMonster monster)
-        {
-            _monsters[monster.MapMonsterId] = monster;
-        }
+        public void AddMonster(MapMonster monster) => _monsters[monster.MapMonsterId] = monster;
 
-        public void AddNPC(MapNpc monster)
-        {
-            _npcs[monster.MapNpcId] = monster;
-        }
+        public void AddNPC(MapNpc monster) => _npcs[monster.MapNpcId] = monster;
 
         public void DespawnMonster(int monsterVnum)
         {
@@ -236,15 +230,9 @@ namespace OpenNos.GameObject
             }
         }
 
-        public IEnumerable<string> GenerateNPCShopOnMap()
-        {
-            return (from npc in Npcs where npc.Shop != null select $"shop 2 {npc.MapNpcId} {npc.Shop.ShopId} {npc.Shop.MenuType} {npc.Shop.ShopType} {npc.Shop.Name}").ToList();
-        }
+        public IEnumerable<string> GenerateNPCShopOnMap() => (from npc in Npcs where npc.Shop != null select $"shop 2 {npc.MapNpcId} {npc.Shop.ShopId} {npc.Shop.MenuType} {npc.Shop.ShopType} {npc.Shop.Name}").ToList();
 
-        public IEnumerable<string> GeneratePlayerShopOnMap()
-        {
-            return UserShops.Select(shop => $"pflag 1 {shop.Value.OwnerId} {shop.Key + 1}").ToList();
-        }
+        public IEnumerable<string> GeneratePlayerShopOnMap() => UserShops.Select(shop => $"pflag 1 {shop.Value.OwnerId} {shop.Key + 1}").ToList();
 
         public string GenerateRsfn(bool isInit = false)
         {
@@ -255,15 +243,9 @@ namespace OpenNos.GameObject
             return string.Empty;
         }
 
-        public IEnumerable<string> GenerateUserShops()
-        {
-            return UserShops.Select(shop => $"shop 1 {shop.Value.OwnerId} 1 3 0 {shop.Value.Name}").ToList();
-        }
+        public IEnumerable<string> GenerateUserShops() => UserShops.Select(shop => $"shop 1 {shop.Value.OwnerId} 1 3 0 {shop.Value.Name}").ToList();
 
-        public List<MapMonster> GetListMonsterInRange(short mapX, short mapY, byte distance)
-        {
-            return _monsters.GetAllItems().Where(s => s.IsAlive && s.IsInRange(mapX, mapY, distance)).ToList();
-        }
+        public List<MapMonster> GetListMonsterInRange(short mapX, short mapY, byte distance) => _monsters.GetAllItems().Where(s => s.IsAlive && s.IsInRange(mapX, mapY, distance)).ToList();
 
         public List<string> GetMapItems()
         {
@@ -288,10 +270,7 @@ namespace OpenNos.GameObject
             return packets;
         }
 
-        public MapMonster GetMonster(long mapMonsterId)
-        {
-            return _monsters[mapMonsterId];
-        }
+        public MapMonster GetMonster(long mapMonsterId) => _monsters[mapMonsterId];
 
         public int GetNextMonsterId()
         {
@@ -307,10 +286,7 @@ namespace OpenNos.GameObject
             return nextId;
         }
 
-        public MapNpc GetNpc(long mapNpcId)
-        {
-            return _npcs[mapNpcId];
-        }
+        public MapNpc GetNpc(long mapNpcId) => _npcs[mapNpcId];
 
         public void LoadMonsters()
         {
@@ -411,15 +387,9 @@ namespace OpenNos.GameObject
             }
         }
 
-        public void RemoveMonster(MapMonster monsterToRemove)
-        {
-            _monsters.Remove(monsterToRemove.MapMonsterId);
-        }
+        public void RemoveMonster(MapMonster monsterToRemove) => _monsters.Remove(monsterToRemove.MapMonsterId);
 
-        public void RemoveNpc(MapNpc npcToRemove)
-        {
-            _npcs.Remove(npcToRemove.MapNpcId);
-        }
+        public void RemoveNpc(MapNpc npcToRemove) => _npcs.Remove(npcToRemove.MapNpcId);
 
         public void SpawnButton(MapButton parameter)
         {
@@ -471,10 +441,7 @@ namespace OpenNos.GameObject
             return characters;
         }
 
-        internal void RemoveMonstersTarget(long characterId)
-        {
-            Parallel.ForEach(Monsters.Where(m => m.Target == characterId), monster => monster.RemoveTarget());
-        }
+        internal void RemoveMonstersTarget(long characterId) => Parallel.ForEach(Monsters.Where(m => m.Target == characterId), monster => monster.RemoveTarget());
 
         internal void StartLife()
         {

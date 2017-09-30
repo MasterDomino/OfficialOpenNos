@@ -122,24 +122,12 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         /// <summary>
         /// Gets the time of the last succesfully received message.
         /// </summary>
-        public DateTime LastReceivedMessageTime
-        {
-            get
-            {
-                return Messenger.LastReceivedMessageTime;
-            }
-        }
+        public DateTime LastReceivedMessageTime => Messenger.LastReceivedMessageTime;
 
         /// <summary>
         /// Gets the time of the last succesfully received message.
         /// </summary>
-        public DateTime LastSentMessageTime
-        {
-            get
-            {
-                return Messenger.LastSentMessageTime;
-            }
-        }
+        public DateTime LastSentMessageTime => Messenger.LastSentMessageTime;
 
         /// <summary>
         /// Gets the underlying IMessenger object.
@@ -157,24 +145,15 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         /// </summary>
         public IScsWireProtocol WireProtocol
         {
-            get
-            {
-                return Messenger.WireProtocol;
-            }
-            set
-            {
-                Messenger.WireProtocol = value;
-            }
+            get => Messenger.WireProtocol;
+            set => Messenger.WireProtocol = value;
         }
 
         #endregion
 
         #region Methods
 
-        public async Task ClearLowPriorityQueue()
-        {
-            await Task.CompletedTask;
-        }
+        public async Task ClearLowPriorityQueue() => await Task.CompletedTask;
 
         /// <summary>
         /// Calls Stop method of this object.
@@ -194,10 +173,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         /// </summary>
         /// <param name="message">Message to be sent</param>
         /// <param name="priority">Message priority to send</param>
-        public void SendMessage(IScsMessage message, byte priority)
-        {
-            Messenger.SendMessage(message, priority);
-        }
+        public void SendMessage(IScsMessage message, byte priority) => Messenger.SendMessage(message, priority);
 
         /// <summary>
         /// Sends a message and waits a response for that message.
@@ -212,10 +188,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         /// <param name="message">message to send</param>
         /// <param name="priority">Message priority to send</param>
         /// <returns>Response message</returns>
-        public IScsMessage SendMessageAndWaitForResponse(IScsMessage message, byte priority)
-        {
-            return SendMessageAndWaitForResponse(message, Timeout, priority);
-        }
+        public IScsMessage SendMessageAndWaitForResponse(IScsMessage message, byte priority) => SendMessageAndWaitForResponse(message, Timeout, priority);
 
         /// <summary>
         /// Sends a message and waits a response for that message.
@@ -282,10 +255,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         /// <summary>
         /// Starts the messenger.
         /// </summary>
-        public virtual void Start()
-        {
-            _incomingMessageProcessor.Start();
-        }
+        public virtual void Start() => _incomingMessageProcessor.Start();
 
         /// <summary>
         /// Stops the messenger. Cancels all waiting threads in SendMessageAndWaitForResponse method
@@ -323,19 +293,13 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         /// Raises MessageReceived event.
         /// </summary>
         /// <param name="message">Received message</param>
-        protected virtual void OnMessageReceived(IScsMessage message)
-        {
-            MessageReceived?.Invoke(this, new MessageEventArgs(message, DateTime.Now));
-        }
+        protected virtual void OnMessageReceived(IScsMessage message) => MessageReceived?.Invoke(this, new MessageEventArgs(message, DateTime.Now));
 
         /// <summary>
         /// Raises MessageSent event.
         /// </summary>
         /// <param name="message">Received message</param>
-        protected virtual void OnMessageSent(IScsMessage message)
-        {
-            MessageSent?.Invoke(this, new MessageEventArgs(message, DateTime.Now));
-        }
+        protected virtual void OnMessageSent(IScsMessage message) => MessageSent?.Invoke(this, new MessageEventArgs(message, DateTime.Now));
 
         /// <summary>
         /// Handles MessageReceived event of Messenger object.
@@ -374,10 +338,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         /// </summary>
         /// <param name="sender">Source of event</param>
         /// <param name="e">Event arguments</param>
-        private void Messenger_MessageSent(object sender, MessageEventArgs e)
-        {
-            OnMessageSent(e.Message);
-        }
+        private void Messenger_MessageSent(object sender, MessageEventArgs e) => OnMessageSent(e.Message);
 
         #endregion
 
@@ -418,10 +379,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
             /// </summary>
             public ManualResetEventSlim WaitEvent { get; }
 
-            public void Dispose()
-            {
-                throw new NotImplementedException();
-            }
+            public void Dispose() => throw new NotImplementedException();
 
             #endregion
         }

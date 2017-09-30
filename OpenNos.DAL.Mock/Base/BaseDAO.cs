@@ -17,10 +17,7 @@ namespace OpenNos.DAL.Mock
 
         #region Instantiation
 
-        protected BaseDAO()
-        {
-            Container = new List<TDTO>();
-        }
+        protected BaseDAO() => Container = new List<TDTO>();
 
         #endregion
 
@@ -91,10 +88,7 @@ namespace OpenNos.DAL.Mock
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        protected virtual TDTO MapEntity(TDTO dto)
-        {
-            return _mapper.Map<TDTO>(dto);
-        }
+        protected virtual TDTO MapEntity(TDTO dto) => _mapper.Map<TDTO>(dto);
 
         #endregion
     }

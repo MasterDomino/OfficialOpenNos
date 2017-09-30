@@ -23,15 +23,9 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public void Insert(List<ScriptedInstanceDTO> scriptedInstances)
-        {
-            throw new NotImplementedException();
-        }
+        public void Insert(List<ScriptedInstanceDTO> scriptedInstances) => throw new NotImplementedException();
 
-        public IEnumerable<ScriptedInstanceDTO> LoadByMap(short mapId)
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<ScriptedInstanceDTO> LoadByMap(short mapId) => throw new NotImplementedException();
 
         #endregion
     }

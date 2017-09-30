@@ -35,13 +35,7 @@ namespace OpenNos.GameObject.Helpers
 
         #region Properties
 
-        public static EventHelper Instance
-        {
-            get
-            {
-                return instance ?? (instance = new EventHelper());
-            }
-        }
+        public static EventHelper Instance => instance ?? (instance = new EventHelper());
 
         #endregion
 
@@ -465,10 +459,7 @@ namespace OpenNos.GameObject.Helpers
             }
         }
 
-        public void ScheduleEvent(TimeSpan timeSpan, EventContainer evt)
-        {
-            Observable.Timer(timeSpan).Subscribe(x => RunEvent(evt));
-        }
+        public void ScheduleEvent(TimeSpan timeSpan, EventContainer evt) => Observable.Timer(timeSpan).Subscribe(x => RunEvent(evt));
 
         #endregion
     }

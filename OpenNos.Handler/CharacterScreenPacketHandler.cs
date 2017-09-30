@@ -32,10 +32,7 @@ namespace OpenNos.Handler
     {
         #region Instantiation
 
-        public CharacterScreenPacketHandler(ClientSession session)
-        {
-            Session = session;
-        }
+        public CharacterScreenPacketHandler(ClientSession session) => Session = session;
 
         #endregion
 

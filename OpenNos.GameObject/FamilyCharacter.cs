@@ -27,13 +27,7 @@ namespace OpenNos.GameObject
 
         #region Properties
 
-        public CharacterDTO Character
-        {
-            get
-            {
-                return _character ?? (_character = DAOFactory.CharacterDAO.LoadById(CharacterId));
-            }
-        }
+        public CharacterDTO Character => _character ?? (_character = DAOFactory.CharacterDAO.LoadById(CharacterId));
 
         #endregion
 

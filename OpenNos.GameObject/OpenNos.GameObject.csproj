@@ -101,9 +101,8 @@
     <Compile Include="Buff\BCard.cs" />
     <Compile Include="Buff\Card.cs" />
     <Compile Include="Event\EventWave.cs" />
-    <Compile Include="Event\GAMES\Meteorite.cs" />
+    <Compile Include="Event\GAMES\MeteoriteGame.cs" />
     <Compile Include="Helpers\StaticPacketHelper.cs" />
-    <Compile Include="Map\Zone.cs" />
     <Compile Include="BattleEntity.cs" />
     <Compile Include="Helpers\DamageHelper.cs" />
     <Compile Include="Event\EventContainer.cs" />
@@ -120,6 +119,7 @@
     <Compile Include="InstanceBag.cs" />
     <Compile Include="Map\MapInstancePortalHandler.cs" />
     <Compile Include="Battle\MTListHitTarget.cs" />
+    <Compile Include="Map\ZoneEvent.cs" />
     <Compile Include="NpcToSummon.cs" />
     <Compile Include="MonsterToSummon.cs" />
     <Compile Include="Packets\ClientPackets\BlDelPacket.cs" />
@@ -159,7 +159,7 @@
     <Compile Include="Packets\CommandPackets\CloneItemPacket.cs" />
     <Compile Include="Packets\CommandPackets\CreateItemPacket.cs" />
     <Compile Include="Packets\CommandPackets\InstanceMusicPacket.cs" />
-    <Compile Include="Packets\CommandPackets\ItemRain.cs" />
+    <Compile Include="Packets\CommandPackets\ItemRainPacket.cs" />
     <Compile Include="Packets\CommandPackets\MaintenancePacket.cs" />
     <Compile Include="Packets\CommandPackets\RemoveNpcMonsterPacket.cs" />
     <Compile Include="Packets\CommandPackets\ShutdownAllPacket.cs" />
@@ -278,7 +278,7 @@
     <Compile Include="Packets\ClientPackets\ExchangeListPacket.cs" />
     <Compile Include="Packets\ClientPackets\ExchangeRequestPacket.cs" />
     <Compile Include="Packets\ClientPackets\CClosePacket.cs" />
-    <Compile Include="Packets\ClientPackets\FhisctsPacket.cs" />
+    <Compile Include="Packets\ClientPackets\FhistCtsPacket.cs" />
     <Compile Include="Packets\ClientPackets\FrankCtsPacket.cs" />
     <Compile Include="Packets\ClientPackets\GetPacket.cs" />
     <Compile Include="Packets\ClientPackets\FStashEndPacket.cs" />

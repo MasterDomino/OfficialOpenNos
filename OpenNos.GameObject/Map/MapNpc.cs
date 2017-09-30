@@ -83,10 +83,7 @@ namespace OpenNos.GameObject
             return string.Empty;
         }
 
-        public string GetNpcDialog()
-        {
-            return $"npc_req 2 {MapNpcId} {Dialog}";
-        }
+        public string GetNpcDialog() => $"npc_req 2 {MapNpcId} {Dialog}";
 
         public void Initialize(MapInstance currentMapInstance)
         {

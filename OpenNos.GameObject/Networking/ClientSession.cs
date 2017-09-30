@@ -103,10 +103,7 @@ namespace OpenNos.GameObject
                 return _character;
             }
 
-            private set
-            {
-                _character = value;
-            }
+            private set => _character = value;
         }
 
         public long ClientId => _client.ClientId;
@@ -115,15 +112,9 @@ namespace OpenNos.GameObject
 
         public IDictionary<string, HandlerMethodReference> HandlerMethods
         {
-            get
-            {
-                return _handlerMethods ?? (_handlerMethods = new Dictionary<string, HandlerMethodReference>());
-            }
+            get => _handlerMethods ?? (_handlerMethods = new Dictionary<string, HandlerMethodReference>());
 
-            set
-            {
-                _handlerMethods = value;
-            }
+            set => _handlerMethods = value;
         }
 
         public bool HasCurrentMapInstance => CurrentMapInstance != null;
@@ -140,15 +131,9 @@ namespace OpenNos.GameObject
 
         public bool IsDisposing
         {
-            get
-            {
-                return _client.IsDisposing;
-            }
+            get => _client.IsDisposing;
 
-            set
-            {
-                _client.IsDisposing = value;
-            }
+            set => _client.IsDisposing = value;
         }
 
         public bool IsLocalhost => IpAddress.Contains("127.0.0.1");
@@ -165,10 +150,7 @@ namespace OpenNos.GameObject
 
         #region Methods
 
-        public void ClearLowPriorityQueue()
-        {
-            _client.ClearLowPriorityQueue();
-        }
+        public void ClearLowPriorityQueue() => _client.ClearLowPriorityQueue();
 
         public void Destroy()
         {
@@ -223,15 +205,9 @@ namespace OpenNos.GameObject
             ClearReceiveQueue();
         }
 
-        public void Disconnect()
-        {
-            _client.Disconnect();
-        }
+        public void Disconnect() => _client.Disconnect();
 
-        public string GenerateIdentity()
-        {
-            return $"Account: {Account.Name}";
-        }
+        public string GenerateIdentity() => $"Account: {Account.Name}";
 
         public void Initialize(CryptographyBase encryptor, Type packetHandler, bool isWorldServer)
         {

@@ -76,10 +76,7 @@ namespace OpenNos.Core.Threading
 
         #region Methods
 
-        public void ClearQueue()
-        {
-            _queue.Clear();
-        }
+        public void ClearQueue() => _queue.Clear();
 
         /// <summary>
         /// Adds an item to queue to process the item.
@@ -107,10 +104,7 @@ namespace OpenNos.Core.Threading
         /// <summary>
         /// Starts processing of items.
         /// </summary>
-        public void Start()
-        {
-            _isRunning = true;
-        }
+        public void Start() => _isRunning = true;
 
         /// <summary>
         /// Stops processing of items and waits stopping of current item.

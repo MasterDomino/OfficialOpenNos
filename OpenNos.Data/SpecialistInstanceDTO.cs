@@ -12,9 +12,11 @@
  * GNU General Public License for more details.
  */
 
+using OpenNos.Data.Interfaces;
+
 namespace OpenNos.Data
 {
-    public class SpecialistInstanceDTO : WearableInstanceDTO, ISpecialistInstance
+    public class SpecialistInstanceDTO : WearableInstanceDTO, ISpecialistInstanceDTO
     {
         #region Properties
 

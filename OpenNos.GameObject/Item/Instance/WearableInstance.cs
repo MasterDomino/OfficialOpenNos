@@ -14,6 +14,7 @@
 
 using OpenNos.Core;
 using OpenNos.Data;
+using OpenNos.Data.Interfaces;
 using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
 using System;
@@ -22,7 +23,7 @@ using System.Linq;
 
 namespace OpenNos.GameObject
 {
-    public class WearableInstance : ItemInstance, IWearableInstance
+    public class WearableInstance : ItemInstance, IWearableInstanceDTO
     {
         #region Members
 
@@ -32,10 +33,7 @@ namespace OpenNos.GameObject
 
         #region Instantiation
 
-        public WearableInstance()
-        {
-            _random = new Random();
-        }
+        public WearableInstance() => _random = new Random();
 
         public WearableInstance(Guid id)
         {
@@ -43,10 +41,7 @@ namespace OpenNos.GameObject
             _random = new Random();
         }
 
-        public WearableInstance(short vNum, byte amount) : base(vNum, amount)
-        {
-            _random = new Random();
-        }
+        public WearableInstance(short vNum, byte amount) : base(vNum, amount) => _random = new Random();
 
         #endregion
 
@@ -212,10 +207,7 @@ namespace OpenNos.GameObject
             return string.Empty;
         }
 
-        public override void Initialize()
-        {
-            _random = new Random();
-        }
+        public override void Initialize() => _random = new Random();
 
         public void RarifyItem(ClientSession session, RarifyMode mode, RarifyProtection protection, bool isCommand = false, byte forceRare = 0)
         {

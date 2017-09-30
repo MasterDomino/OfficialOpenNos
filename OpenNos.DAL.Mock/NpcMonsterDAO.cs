@@ -24,25 +24,13 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public IEnumerable<NpcMonsterDTO> FindByName(string name)
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<NpcMonsterDTO> FindByName(string name) => throw new NotImplementedException();
 
-        public void Insert(List<NpcMonsterDTO> npcMonsters)
-        {
-            throw new NotImplementedException();
-        }
+        public void Insert(List<NpcMonsterDTO> npcMonsters) => throw new NotImplementedException();
 
-        public SaveResult InsertOrUpdate(ref NpcMonsterDTO npcMonster)
-        {
-            throw new NotImplementedException();
-        }
+        public SaveResult InsertOrUpdate(ref NpcMonsterDTO npcMonster) => throw new NotImplementedException();
 
-        public NpcMonsterDTO LoadByVNum(short npcMonsterVNum)
-        {
-            throw new NotImplementedException();
-        }
+        public NpcMonsterDTO LoadByVNum(short npcMonsterVNum) => throw new NotImplementedException();
 
         #endregion
     }

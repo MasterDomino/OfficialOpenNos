@@ -24,15 +24,9 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public void Insert(List<MapDTO> maps)
-        {
-            throw new NotImplementedException();
-        }
+        public void Insert(List<MapDTO> maps) => throw new NotImplementedException();
 
-        public MapDTO LoadById(short mapId)
-        {
-            return Container.SingleOrDefault(c => c.MapId.Equals(mapId));
-        }
+        public MapDTO LoadById(short mapId) => Container.SingleOrDefault(c => c.MapId.Equals(mapId));
 
         #endregion
     }

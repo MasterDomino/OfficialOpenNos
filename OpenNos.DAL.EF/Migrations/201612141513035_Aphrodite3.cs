@@ -6,15 +6,9 @@ namespace OpenNos.DAL.EF.Migrations
     {
         #region Methods
 
-        public override void Down()
-        {
-            DropColumn("dbo.ItemInstance", "HoldingVNum");
-        }
+        public override void Down() => DropColumn("dbo.ItemInstance", "HoldingVNum");
 
-        public override void Up()
-        {
-            AddColumn("dbo.ItemInstance", "HoldingVNum", c => c.Short());
-        }
+        public override void Up() => AddColumn("dbo.ItemInstance", "HoldingVNum", c => c.Short());
 
         #endregion
     }

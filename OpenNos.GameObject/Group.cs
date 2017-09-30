@@ -46,13 +46,7 @@ namespace OpenNos.GameObject
 
         #region Properties
 
-        public int CharacterCount
-        {
-            get
-            {
-                return Characters.Count;
-            }
-        }
+        public int CharacterCount => Characters.Count;
 
         public ThreadSafeGenericList<ClientSession> Characters { get; }
 
@@ -120,10 +114,7 @@ namespace OpenNos.GameObject
             return result;
         }
 
-        public string GeneraterRaidmbf(ClientSession session)
-        {
-            return $"raidmbf {session?.CurrentMapInstance?.InstanceBag?.MonsterLocker.Initial} {session?.CurrentMapInstance?.InstanceBag?.MonsterLocker.Current} {session?.CurrentMapInstance?.InstanceBag?.ButtonLocker.Initial} {session?.CurrentMapInstance?.InstanceBag?.ButtonLocker.Current} {Raid?.InstanceBag?.Lives - Raid?.InstanceBag?.DeadList.Count} {Raid?.InstanceBag?.Lives} 25";
-        }
+        public string GeneraterRaidmbf(ClientSession session) => $"raidmbf {session?.CurrentMapInstance?.InstanceBag?.MonsterLocker.Initial} {session?.CurrentMapInstance?.InstanceBag?.MonsterLocker.Current} {session?.CurrentMapInstance?.InstanceBag?.ButtonLocker.Initial} {session?.CurrentMapInstance?.InstanceBag?.ButtonLocker.Current} {Raid?.InstanceBag?.Lives - Raid?.InstanceBag?.DeadList.Count} {Raid?.InstanceBag?.Lives} 25";
 
         public long? GetNextOrderedCharacterId(Character character)
         {
@@ -157,15 +148,9 @@ namespace OpenNos.GameObject
             }
         }
 
-        public bool IsMemberOfGroup(long characterId)
-        {
-            return Characters?.Any(s => s?.Character?.CharacterId == characterId) == true;
-        }
+        public bool IsMemberOfGroup(long characterId) => Characters?.Any(s => s?.Character?.CharacterId == characterId) == true;
 
-        public bool IsMemberOfGroup(ClientSession session)
-        {
-            return Characters?.Any(s => s?.Character?.CharacterId == session.Character.CharacterId) == true;
-        }
+        public bool IsMemberOfGroup(ClientSession session) => Characters?.Any(s => s?.Character?.CharacterId == session.Character.CharacterId) == true;
 
         public void JoinGroup(long characterId)
         {

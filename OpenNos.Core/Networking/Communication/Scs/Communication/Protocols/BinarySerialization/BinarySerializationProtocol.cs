@@ -58,10 +58,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Protocols.Bina
         /// <summary>
         /// Creates a new instance of BinarySerializationProtocol.
         /// </summary>
-        public BinarySerializationProtocol()
-        {
-            _receiveMemoryStream = new MemoryStream();
-        }
+        public BinarySerializationProtocol() => _receiveMemoryStream = new MemoryStream();
 
         #endregion
 

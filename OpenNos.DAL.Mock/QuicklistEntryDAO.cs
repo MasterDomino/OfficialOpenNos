@@ -24,15 +24,9 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public IEnumerable<QuicklistEntryDTO> LoadByCharacterId(long characterId)
-        {
-            return Container.Where(c => c.CharacterId == characterId);
-        }
+        public IEnumerable<QuicklistEntryDTO> LoadByCharacterId(long characterId) => Container.Where(c => c.CharacterId == characterId);
 
-        public IEnumerable<Guid> LoadKeysByCharacterId(long characterId)
-        {
-            return Container.Where(c => c.CharacterId == characterId).Select(c => c.Id);
-        }
+        public IEnumerable<Guid> LoadKeysByCharacterId(long characterId) => Container.Where(c => c.CharacterId == characterId).Select(c => c.Id);
 
         #endregion
     }

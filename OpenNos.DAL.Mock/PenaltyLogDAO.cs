@@ -25,25 +25,13 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public DeleteResult Delete(int penaltyLogId)
-        {
-            throw new NotImplementedException();
-        }
+        public DeleteResult Delete(int penaltyLogId) => throw new NotImplementedException();
 
-        public SaveResult InsertOrUpdate(ref PenaltyLogDTO log)
-        {
-            throw new NotImplementedException();
-        }
+        public SaveResult InsertOrUpdate(ref PenaltyLogDTO log) => throw new NotImplementedException();
 
-        public IEnumerable<PenaltyLogDTO> LoadByAccount(long accountId)
-        {
-            return Container.Where(pl => pl.AccountId == accountId);
-        }
+        public IEnumerable<PenaltyLogDTO> LoadByAccount(long accountId) => Container.Where(pl => pl.AccountId == accountId);
 
-        public PenaltyLogDTO LoadById(int penaltyLogId)
-        {
-            throw new NotImplementedException();
-        }
+        public PenaltyLogDTO LoadById(int penaltyLogId) => throw new NotImplementedException();
 
         #endregion
     }

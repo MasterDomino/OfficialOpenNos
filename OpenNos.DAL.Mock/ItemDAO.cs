@@ -23,15 +23,9 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public IEnumerable<ItemDTO> FindByName(string name)
-        {
-            return Container.Where(i => i.Name.Contains(name)).Select(e => MapEntity(e));
-        }
+        public IEnumerable<ItemDTO> FindByName(string name) => Container.Where(i => i.Name.Contains(name)).Select(e => MapEntity(e));
 
-        public ItemDTO LoadById(short vNum)
-        {
-            return Container.SingleOrDefault(i => i.VNum == vNum);
-        }
+        public ItemDTO LoadById(short vNum) => Container.SingleOrDefault(i => i.VNum == vNum);
 
         #endregion
     }

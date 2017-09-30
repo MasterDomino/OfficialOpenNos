@@ -12,9 +12,11 @@
  * GNU General Public License for more details.
  */
 
+using OpenNos.Data.Interfaces;
+
 namespace OpenNos.Data
 {
-    public class BoxItemDTO : SpecialistInstanceDTO, IBoxInstance
+    public class BoxItemDTO : SpecialistInstanceDTO, IBoxInstanceDTO
     {
         #region Properties
 

@@ -34,10 +34,7 @@ namespace OpenNos.Core
         /// <param name="Caller"></param>
         /// <param name="message"></param>
         /// <param name="memberName"></param>
-        public static void Debug(string Caller, string message, [CallerMemberName]string memberName = "")
-        {
-            Log?.Debug($"{Caller} Method: {memberName} Packet: {message}");
-        }
+        public static void Debug(string Caller, string message, [CallerMemberName]string memberName = "") => Log?.Debug($"{Caller} Method: {memberName} Packet: {message}");
 
         /// <summary>
         /// Wraps up the error message with the CallerMemberName
@@ -94,15 +91,9 @@ namespace OpenNos.Core
         /// <param name="caller"></param>
         /// <param name="data"></param>
         /// <param name="ex"></param>
-        public static void LogEventError(string logEvent, string caller, string data, Exception ex)
-        {
-            Log?.Error($"[{logEvent}][{caller}]{data}", ex);
-        }
+        public static void LogEventError(string logEvent, string caller, string data, Exception ex) => Log?.Error($"[{logEvent}][{caller}]{data}", ex);
 
-        public static void InitializeLogger(ILog log)
-        {
-            Log = log;
-        }
+        public static void InitializeLogger(ILog log) => Log = log;
 
         #endregion
     }

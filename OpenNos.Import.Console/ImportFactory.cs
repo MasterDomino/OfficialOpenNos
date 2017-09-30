@@ -39,10 +39,7 @@ namespace OpenNos.Import.Console
 
         #region Instantiation
 
-        public ImportFactory(string folder)
-        {
-            _folder = folder;
-        }
+        public ImportFactory(string folder) => _folder = folder;
 
         #endregion
 
@@ -2323,10 +2320,7 @@ namespace OpenNos.Import.Console
             Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("TIMESPACES_PARSED"), listtimespace.Count));
         }
 
-        public void LoadMaps()
-        {
-            _maps = DAOFactory.MapDAO.LoadAll().ToList();
-        }
+        public void LoadMaps() => _maps = DAOFactory.MapDAO.LoadAll().ToList();
 
         internal void ImportItems()
         {

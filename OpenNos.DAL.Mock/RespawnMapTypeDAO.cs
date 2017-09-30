@@ -24,25 +24,13 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public void Insert(List<RespawnMapTypeDTO> respawnMapTypes)
-        {
-            throw new NotImplementedException();
-        }
+        public void Insert(List<RespawnMapTypeDTO> respawnMapTypes) => throw new NotImplementedException();
 
-        public SaveResult InsertOrUpdate(ref RespawnMapTypeDTO respawnMapType)
-        {
-            throw new NotImplementedException();
-        }
+        public SaveResult InsertOrUpdate(ref RespawnMapTypeDTO respawnMapType) => throw new NotImplementedException();
 
-        public RespawnMapTypeDTO LoadById(long respawnMapTypeId)
-        {
-            throw new NotImplementedException();
-        }
+        public RespawnMapTypeDTO LoadById(long respawnMapTypeId) => throw new NotImplementedException();
 
-        public RespawnMapTypeDTO LoadByMapId(short mapId)
-        {
-            throw new NotImplementedException();
-        }
+        public RespawnMapTypeDTO LoadByMapId(short mapId) => throw new NotImplementedException();
 
         #endregion
     }

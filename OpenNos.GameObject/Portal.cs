@@ -29,10 +29,7 @@ namespace OpenNos.GameObject
 
         #region Instantiation
 
-        public Portal()
-        {
-            OnTraversalEvents = new List<EventContainer>();
-        }
+        public Portal() => OnTraversalEvents = new List<EventContainer>();
 
         #endregion
 
@@ -48,7 +45,7 @@ namespace OpenNos.GameObject
                 }
                 return destinationMapInstanceId;
             }
-            set { destinationMapInstanceId = value; }
+            set => destinationMapInstanceId = value;
         }
 
         public List<EventContainer> OnTraversalEvents { get; set; }
@@ -63,17 +60,14 @@ namespace OpenNos.GameObject
                 }
                 return sourceMapInstanceId;
             }
-            set { sourceMapInstanceId = value; }
+            set => sourceMapInstanceId = value;
         }
 
         #endregion
 
         #region Methods
 
-        public string GenerateGp()
-        {
-            return $"gp {SourceX} {SourceY} {ServerManager.Instance.GetMapInstance(DestinationMapInstanceId)?.Map.MapId ?? 0} {Type} {PortalId} {(IsDisabled ? 1 : 0)}";
-        }
+        public string GenerateGp() => $"gp {SourceX} {SourceY} {ServerManager.Instance.GetMapInstance(DestinationMapInstanceId)?.Map.MapId ?? 0} {Type} {PortalId} {(IsDisabled ? 1 : 0)}";
 
         #endregion
     }

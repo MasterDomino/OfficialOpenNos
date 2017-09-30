@@ -17,7 +17,7 @@ namespace OpenNos.GameObject.Packets.ClientPackets
         [PacketIndex(2)]
         public string Password { get; set; }
 
-        [PacketIndex(3)]
+        [PacketIndex(4)]
         public string ClientData { get; set; }
 
         #endregion

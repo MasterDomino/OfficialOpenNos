@@ -18,9 +18,6 @@ namespace OpenNos.DAL.EF.Migrations
                 .PrimaryKey(t => t.LogId);
         }
 
-        public override void Down()
-        {
-            DropTable("dbo.MaintenanceLog");
-        }
+        public override void Down() => DropTable("dbo.MaintenanceLog");
     }
 }

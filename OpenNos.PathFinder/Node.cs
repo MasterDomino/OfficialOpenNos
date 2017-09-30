@@ -49,10 +49,7 @@ namespace OpenNos.PathFinder
 
         #region Methods
 
-        public int CompareTo(Node other)
-        {
-            return F > other.F ? 1 : F < other.F ? -1 : 0;
-        }
+        public int CompareTo(Node other) => F > other.F ? 1 : F < other.F ? -1 : 0;
 
         #endregion
     }

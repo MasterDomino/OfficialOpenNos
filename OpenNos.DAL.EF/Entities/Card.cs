@@ -23,10 +23,7 @@ namespace OpenNos.DAL.EF
     {
         #region Instantiation
 
-        public Card()
-        {
-            BCards = new HashSet<BCard>();
-        }
+        public Card() => BCards = new HashSet<BCard>();
 
         #endregion
 

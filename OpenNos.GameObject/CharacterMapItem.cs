@@ -18,10 +18,7 @@ namespace OpenNos.GameObject
     {
         #region Instantiation
 
-        public CharacterMapItem(short x, short y, ItemInstance itemInstance) : base(x, y)
-        {
-            ItemInstance = itemInstance;
-        }
+        public CharacterMapItem(short x, short y, ItemInstance itemInstance) : base(x, y) => ItemInstance = itemInstance;
 
         #endregion
 
@@ -29,40 +26,25 @@ namespace OpenNos.GameObject
 
         public override byte Amount
         {
-            get
-            {
-                return ItemInstance.Amount;
-            }
+            get => ItemInstance.Amount;
 
-            set
-            {
-                ItemInstance.Amount = Amount;
-            }
+            set => ItemInstance.Amount = Amount;
         }
 
         public ItemInstance ItemInstance { get; set; }
 
         public override short ItemVNum
         {
-            get
-            {
-                return ItemInstance.ItemVNum;
-            }
+            get => ItemInstance.ItemVNum;
 
-            set
-            {
-                ItemInstance.ItemVNum = value;
-            }
+            set => ItemInstance.ItemVNum = value;
         }
 
         #endregion
 
         #region Methods
 
-        public override ItemInstance GetItemInstance()
-        {
-            return ItemInstance;
-        }
+        public override ItemInstance GetItemInstance() => ItemInstance;
 
         #endregion
     }

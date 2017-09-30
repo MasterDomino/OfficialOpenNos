@@ -24,20 +24,11 @@ namespace OpenNos.DAL.Mock
     {
         #region Methods
 
-        public DeleteResult Delete(long id)
-        {
-            throw new NotImplementedException();
-        }
+        public DeleteResult Delete(long id) => throw new NotImplementedException();
 
-        public SaveResult InsertOrUpdate(ref MateDTO mate)
-        {
-            throw new NotImplementedException();
-        }
+        public SaveResult InsertOrUpdate(ref MateDTO mate) => throw new NotImplementedException();
 
-        public IEnumerable<MateDTO> LoadByCharacterId(long characterId)
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<MateDTO> LoadByCharacterId(long characterId) => throw new NotImplementedException();
 
         #endregion
     }

@@ -45,10 +45,7 @@ namespace OpenNos.GameObject
 
         #region Methods
 
-        public string GenerateIn()
-        {
-            return StaticPacketHelper.In(Domain.UserType.Object, State ? EnabledVNum : DisabledVNum, MapButtonId, PositionX, PositionY, 1, 0, 0, 0, 0, false);
-        }
+        public string GenerateIn() => StaticPacketHelper.In(Domain.UserType.Object, State ? EnabledVNum : DisabledVNum, MapButtonId, PositionX, PositionY, 1, 0, 0, 0, 0, false);
 
         public void RunAction()
         {

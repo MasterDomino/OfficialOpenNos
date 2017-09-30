@@ -29,14 +29,6 @@ namespace OpenNos.Master.Server
 {
     internal class CommunicationService : ScsService, ICommunicationService
     {
-        #region Instantiation
-
-        public CommunicationService()
-        {
-        }
-
-        #endregion
-
         #region Methods
 
         public bool Authenticate(string authKey)
@@ -64,6 +56,19 @@ namespace OpenNos.Master.Server
 
             MSManager.Instance.ConnectedAccounts.Clear();
             MSManager.Instance.WorldServers.Clear();
+        }
+
+        public void CleanupOutdatedSession()
+        {
+            AccountConnection[] tmp = new AccountConnection[MSManager.Instance.ConnectedAccounts.Count + 20];
+            lock (MSManager.Instance.ConnectedAccounts)
+            {
+                MSManager.Instance.ConnectedAccounts.CopyTo(tmp);
+            }
+            foreach (AccountConnection account in tmp.Where(a => a?.LastPulse.AddMinutes(5) <= DateTime.Now))
+            {
+                KickSession(account.AccountId, null);
+            }
         }
 
         public bool ConnectAccount(Guid worldId, long accountId, int sessionId)
@@ -129,10 +134,7 @@ namespace OpenNos.Master.Server
             }
         }
 
-        public int? GetChannelIdByWorldId(Guid worldId)
-        {
-            return MSManager.Instance.WorldServers.Find(w => w.Id == worldId)?.ChannelId;
-        }
+        public int? GetChannelIdByWorldId(Guid worldId) => MSManager.Instance.WorldServers.Find(w => w.Id == worldId)?.ChannelId;
 
         public bool IsAccountConnected(long accountId)
         {
@@ -185,6 +187,19 @@ namespace OpenNos.Master.Server
             }
         }
 
+        public void PulseAccount(long accountId)
+        {
+            if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
+            {
+                return;
+            }
+            AccountConnection account = MSManager.Instance.ConnectedAccounts.Find(a => a.AccountId.Equals(accountId));
+            if (account != null)
+            {
+                account.LastPulse = DateTime.Now;
+            }
+        }
+
         public void RefreshPenalty(int penaltyId)
         {
             if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
@@ -212,24 +227,6 @@ namespace OpenNos.Master.Server
             MSManager.Instance.ConnectedAccounts.Add(new AccountConnection(accountId, sessionId, ipAddress));
         }
 
-        public long[][] RetrieveOnlineCharacters(long characterId)
-        {
-            List<AccountConnection> connections = MSManager.Instance.ConnectedAccounts.GetAllItems()
-                .Where(s => s.IpAddress == MSManager.Instance.ConnectedAccounts.GetAllItems().Find(f => f.CharacterId == characterId)?.IpAddress && s.CharacterId != 0).ToList();
-
-            long[][] result = new long[connections.Count][];
-
-            int i = 0;
-            foreach (AccountConnection acc in connections)
-            {
-                result[i] = new long[2];
-                result[i][0] = acc.CharacterId;
-                result[i][1] = acc.ConnectedWorld?.ChannelId ?? 0;
-                i++;
-            }
-            return result;
-        }
-
         public int? RegisterWorldServer(SerializableWorldServer worldServer)
         {
             if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
@@ -249,11 +246,29 @@ namespace OpenNos.Master.Server
             return ws.ChannelId;
         }
 
-        public string RetrieveRegisteredWorldServers(int sessionId)
+        public long[][] RetrieveOnlineCharacters(long characterId)
+        {
+            List<AccountConnection> connections = MSManager.Instance.ConnectedAccounts.GetAllItems()
+                .Where(s => s.IpAddress == MSManager.Instance.ConnectedAccounts.GetAllItems().Find(f => f.CharacterId == characterId)?.IpAddress && s.CharacterId != 0).ToList();
+
+            long[][] result = new long[connections.Count][];
+
+            int i = 0;
+            foreach (AccountConnection acc in connections)
+            {
+                result[i] = new long[2];
+                result[i][0] = acc.CharacterId;
+                result[i][1] = acc.ConnectedWorld?.ChannelId ?? 0;
+                i++;
+            }
+            return result;
+        }
+
+        public string RetrieveRegisteredWorldServers(string username, int sessionId, bool ignoreUserName)
         {
             string lastGroup = string.Empty;
             byte worldCount = 0;
-            string channelPacket = $"NsTeST {sessionId} ";
+            string channelPacket = "NsTeST" + (ignoreUserName ? string.Empty : " " + username) + $" {sessionId} ";
 
             foreach (WorldServer world in MSManager.Instance.WorldServers.OrderBy(w => w.WorldGroup))
             {
@@ -366,6 +381,29 @@ namespace OpenNos.Master.Server
             return null;
         }
 
+        public void Shutdown(string worldGroup)
+        {
+            if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
+            {
+                return;
+            }
+
+            if (worldGroup == "*")
+            {
+                foreach (WorldServer world in MSManager.Instance.WorldServers)
+                {
+                    world.ServiceClient.GetClientProxy<ICommunicationClient>().Shutdown();
+                }
+            }
+            else
+            {
+                foreach (WorldServer world in MSManager.Instance.WorldServers.Where(w => w.WorldGroup.Equals(worldGroup)))
+                {
+                    world.ServiceClient.GetClientProxy<ICommunicationClient>().Shutdown();
+                }
+            }
+        }
+
         public void UnregisterWorldServer(Guid worldId)
         {
             if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
@@ -403,29 +441,6 @@ namespace OpenNos.Master.Server
             }
         }
 
-        public void Shutdown(string worldGroup)
-        {
-            if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
-            {
-                return;
-            }
-
-            if (worldGroup == "*")
-            {
-                foreach (WorldServer world in MSManager.Instance.WorldServers)
-                {
-                    world.ServiceClient.GetClientProxy<ICommunicationClient>().Shutdown();
-                }
-            }
-            else
-            {
-                foreach (WorldServer world in MSManager.Instance.WorldServers.Where(w => w.WorldGroup.Equals(worldGroup)))
-                {
-                    world.ServiceClient.GetClientProxy<ICommunicationClient>().Shutdown();
-                }
-            }
-        }
-
         public void UpdateRelation(string worldGroup, long relationId)
         {
             if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
@@ -436,32 +451,6 @@ namespace OpenNos.Master.Server
             foreach (WorldServer world in MSManager.Instance.WorldServers.Where(w => w.WorldGroup.Equals(worldGroup)))
             {
                 world.ServiceClient.GetClientProxy<ICommunicationClient>().UpdateRelation(relationId);
-            }
-        }
-
-        public void PulseAccount(long accountId)
-        {
-            if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
-            {
-                return;
-            }
-            AccountConnection account = MSManager.Instance.ConnectedAccounts.Find(a => a.AccountId.Equals(accountId));
-            if (account != null)
-            {
-                account.LastPulse = DateTime.Now;
-            }
-        }
-
-        public void CleanupOutdatedSession()
-        {
-            AccountConnection[] tmp = new AccountConnection[MSManager.Instance.ConnectedAccounts.Count + 20];
-            lock (MSManager.Instance.ConnectedAccounts)
-            {
-                MSManager.Instance.ConnectedAccounts.CopyTo(tmp);
-            }
-            foreach (AccountConnection account in tmp.Where(a => a?.LastPulse.AddMinutes(5) <= DateTime.Now))
-            {
-                KickSession(account.AccountId, null);
             }
         }
 

@@ -6,15 +6,9 @@ namespace OpenNos.DAL.EF.Migrations
     {
         #region Methods
 
-        public override void Down()
-        {
-            AddColumn("dbo.Skill", "BuffId", c => c.Short(nullable: false));
-        }
+        public override void Down() => AddColumn("dbo.Skill", "BuffId", c => c.Short(nullable: false));
 
-        public override void Up()
-        {
-            DropColumn("dbo.Skill", "BuffId");
-        }
+        public override void Up() => DropColumn("dbo.Skill", "BuffId");
 
         #endregion
     }

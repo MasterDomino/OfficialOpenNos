@@ -88,26 +88,14 @@ namespace OpenNos.GameObject
 
         public NpcMonster Monster
         {
-            get
-            {
-                return monster ?? (monster = ServerManager.Instance.GetNpc(NpcMonsterVNum));
-            }
-            set
-            {
-                monster = value;
-            }
+            get => monster ?? (monster = ServerManager.Instance.GetNpc(NpcMonsterVNum));
+            set => monster = value;
         }
 
         public Character Owner
         {
-            get
-            {
-                return owner ?? (owner = ServerManager.Instance.GetSessionByCharacterId(CharacterId).Character);
-            }
-            set
-            {
-                owner = value;
-            }
+            get => owner ?? (owner = ServerManager.Instance.GetSessionByCharacterId(CharacterId).Character);
+            set => owner = value;
         }
 
         public byte PetId { get; set; }
@@ -116,45 +104,15 @@ namespace OpenNos.GameObject
 
         public short PositionY { get; set; }
 
-        public int MeleeDefense
-        {
-            get
-            {
-                return Monster.CloseDefence; //TODO: get proper Defense
-            }
-        }
+        public int MeleeDefense => Monster.CloseDefence; //TODO: get proper Defense
 
-        public int MeleeDefenseRate
-        {
-            get
-            {
-                return Monster.DefenceDodge; //TODO: get proper Defense
-            }
-        }
+        public int MeleeDefenseRate => Monster.DefenceDodge; //TODO: get proper Defense
 
-        public int RangeDefense
-        {
-            get
-            {
-                return Monster.DistanceDefence; //TODO: get proper Defense
-            }
-        }
+        public int RangeDefense => Monster.DistanceDefence; //TODO: get proper Defense
 
-        public int RangeDefenseRate
-        {
-            get
-            {
-                return Monster.DistanceDefenceDodge; //TODO: get proper Defense
-            }
-        }
+        public int RangeDefenseRate => Monster.DistanceDefenceDodge; //TODO: get proper Defense
 
-        public int MagicalDefense
-        {
-            get
-            {
-                return Monster.MagicDefence; //TODO: get proper Defense
-            }
-        }
+        public int MagicalDefense => Monster.MagicDefence; //TODO: get proper Defense
 
         #endregion
 
@@ -167,15 +125,9 @@ namespace OpenNos.GameObject
             MateTransportId = nextId;
         }
 
-        public string GenerateCMode(short morphId)
-        {
-            return $"c_mode 2 {MateTransportId} {morphId} 0 0";
-        }
+        public string GenerateCMode(short morphId) => $"c_mode 2 {MateTransportId} {morphId} 0 0";
 
-        public string GenerateEInfo()
-        {
-            return $"e_info 10 {NpcMonsterVNum} {Level} {Monster.Element} {Monster.AttackClass} {Monster.ElementRate} {Monster.AttackUpgrade} {Monster.DamageMinimum} {Monster.DamageMaximum} {Monster.Concentrate} {Monster.CriticalChance} {Monster.CriticalRate} {Monster.DefenceUpgrade} {Monster.CloseDefence} {Monster.DefenceDodge} {Monster.DistanceDefence} {Monster.DistanceDefenceDodge} {Monster.MagicDefence} {Monster.FireResistance} {Monster.WaterResistance} {Monster.LightResistance} {Monster.DarkResistance} {Monster.MaxHP} {Monster.MaxMP} -1 {Name.Replace(' ', '^')}";
-        }
+        public string GenerateEInfo() => $"e_info 10 {NpcMonsterVNum} {Level} {Monster.Element} {Monster.AttackClass} {Monster.ElementRate} {Monster.AttackUpgrade} {Monster.DamageMinimum} {Monster.DamageMaximum} {Monster.Concentrate} {Monster.CriticalChance} {Monster.CriticalRate} {Monster.DefenceUpgrade} {Monster.CloseDefence} {Monster.DefenceDodge} {Monster.DistanceDefence} {Monster.DistanceDefenceDodge} {Monster.MagicDefence} {Monster.FireResistance} {Monster.WaterResistance} {Monster.LightResistance} {Monster.DarkResistance} {Monster.MaxHP} {Monster.MaxMP} -1 {Name.Replace(' ', '^')}";
 
         public string GenerateIn(bool foe = false)
         {
@@ -192,10 +144,7 @@ namespace OpenNos.GameObject
             return $"in 2 {NpcMonsterVNum} {MateTransportId} {(IsTeamMember ? PositionX : MapX)} {(IsTeamMember ? PositionY : MapY)} {Direction} {(int)((float)Hp / (float)MaxHp * 100)} {(int)((float)Mp / (float)MaxMp * 100)} 0 {_faction} 3 {CharacterId} 1 0 {(Skin != 0 ? Skin : -1)} {_name} {(byte)MateType} {(MateType == MateType.Partner ? 1 : -1)} 0 0 0 0 0 0 0 0";
         }
 
-        public string GenerateOut()
-        {
-            return $"out 2 {MateTransportId}";
-        }
+        public string GenerateOut() => $"out 2 {MateTransportId}";
 
         public string GenerateRest()
         {
@@ -203,10 +152,7 @@ namespace OpenNos.GameObject
             return $"rest 2 {MateTransportId} {(IsSitting ? 1 : 0)}";
         }
 
-        public string GenerateSay(string message, int type)
-        {
-            return $"say 2 {MateTransportId} {type} {message}";
-        }
+        public string GenerateSay(string message, int type) => $"say 2 {MateTransportId} {type} {message}";
 
         public string GenerateScPacket()
         {
@@ -226,10 +172,7 @@ namespace OpenNos.GameObject
             return string.Empty;
         }
 
-        public string GenerateStatInfo()
-        {
-            return $"st 2 {MateTransportId} {Level} 0 {(int)(Hp / (float)MaxHp * 100)} {(int)(Mp / (float)MaxMp * 100)} {Hp} {Mp}";
-        }
+        public string GenerateStatInfo() => $"st 2 {MateTransportId} {Level} 0 {(int)(Hp / (float)MaxHp * 100)} {(int)(Mp / (float)MaxMp * 100)} {Hp} {Mp}";
 
         public List<ItemInstance> GetInventory()
         {
@@ -258,10 +201,7 @@ namespace OpenNos.GameObject
         /// <param name="yCoordinate">The y coordinate of the object to check.</param>
         /// <param name="range">The range of the coordinates to be maximal distanced.</param>
         /// <returns>True if the object is in Range, False if not.</returns>
-        public bool IsInRange(int xCoordinate, int yCoordinate, int range)
-        {
-            return Math.Abs(PositionX - xCoordinate) <= range && Math.Abs(PositionY - yCoordinate) <= range;
-        }
+        public bool IsInRange(int xCoordinate, int yCoordinate, int range) => Math.Abs(PositionX - xCoordinate) <= range && Math.Abs(PositionY - yCoordinate) <= range;
 
         #endregion
     }
