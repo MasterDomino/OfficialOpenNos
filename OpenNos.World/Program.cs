@@ -29,6 +29,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 
 namespace OpenNos.World
@@ -158,8 +159,14 @@ namespace OpenNos.World
 #if DEBUG
                 isDebug = true;
 #endif
+                var reqparm = new System.Collections.Specialized.NameValueCollection();
+                reqparm.Add("key", guid);
+                reqparm.Add("error", ((Exception)e.ExceptionObject).ToString());
+                reqparm.Add("debug", isDebug.ToString());
                 WebClient wc = new WebClient();
-                string[] resp = wc.DownloadString($"https://mgmt.opennos.io/Crash/ReportCrash?key={guid}&error={((Exception)e.ExceptionObject).ToString()}&debug={isDebug}").Split(':');
+                byte[] responsebytes = wc.UploadValues("https://mgmt.opennos.io/Crash/ReportCrash", "POST", reqparm);
+                string[] resp = Encoding.UTF8.GetString(responsebytes).Split(':');
+
                 if (resp[0] != "saved")
                 {
                     Logger.Error(new Exception($"Unable to report crash to management Server. Please report this issue to the Developer: {resp[0]}"));

@@ -31,6 +31,7 @@ using System.Reactive.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
 using OpenNos.Master.Library.Data;
+using System.Text;
 
 namespace OpenNos.Master.Server
 {
@@ -90,14 +91,29 @@ namespace OpenNos.Master.Server
                     string guid = ((GuidAttribute)Assembly.GetAssembly(typeof(SCS.Communication.ScsServices.Service.ScsServiceBuilder)).GetCustomAttributes(typeof(GuidAttribute), true)[0]).Value;
                     Observable.Interval(TimeSpan.FromMinutes(5)).Subscribe(observer =>
                     {
-                        WebClient wc = new WebClient();
-                        foreach (WorldServer s in MSManager.Instance.WorldServers)
+                        try
                         {
-                            string[] resp = wc.DownloadString($"https://mgmt.opennos.io/Statistics/SendStat?key={guid}&ip={s.Endpoint.IpAddress}&port={s.Endpoint.TcpPort}&server={s.WorldGroup}&channel={s.ChannelId}&userCount={MSManager.Instance.ConnectedAccounts.CountLinq(c => c?.ConnectedWorld?.Id == s.Id)}").Split(':');
-                            if (resp[0] != "saved")
+                            WebClient wc = new WebClient();
+                            foreach (WorldServer s in MSManager.Instance.WorldServers)
                             {
-                                Logger.Error(new Exception($"Unable to send statistics to management Server. Please report this issue to the Developer: {resp[0]}"));
+                                var reqparm = new System.Collections.Specialized.NameValueCollection();
+                                reqparm.Add("key", guid);
+                                reqparm.Add("ip", s.Endpoint.IpAddress);
+                                reqparm.Add("port", s.Endpoint.TcpPort.ToString());
+                                reqparm.Add("server", s.WorldGroup);
+                                reqparm.Add("channel", s.ChannelId.ToString());
+                                reqparm.Add("userCount", MSManager.Instance.ConnectedAccounts.CountLinq(c => c.ConnectedWorld?.Id == s.Id).ToString());
+                                byte[] responsebytes = wc.UploadValues("https://mgmt.opennos.io/Statistics/SendStat", "POST", reqparm);
+                                string[] resp = Encoding.UTF8.GetString(responsebytes).Split(':');
+                                if (resp[0] != "saved")
+                                {
+                                    Logger.Error(new Exception($"Unable to send statistics to management Server. Please report this issue to the Developer: {resp[0]}"));
+                                }
                             }
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(new Exception($"Unable to send statistics to management Server. Please report this issue to the Developer: {ex.Message}"));
                         }
                     });
                 }
