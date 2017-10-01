@@ -153,7 +153,7 @@ namespace OpenNos.World
 
             try
             {
-                Guid guid = (Guid)(Assembly.GetAssembly(typeof(SCS.Communication.ScsServices.Service.ScsServiceBuilder)).GetCustomAttributes(typeof(GuidAttribute), true))[0];
+                Guid guid = (Guid)Assembly.GetAssembly(typeof(SCS.Communication.ScsServices.Service.ScsServiceBuilder)).GetCustomAttributes(typeof(GuidAttribute), true)[0];
                 bool isDebug = false;
 #if DEBUG
                 isDebug = true;

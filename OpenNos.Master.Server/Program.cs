@@ -87,7 +87,7 @@ namespace OpenNos.Master.Server
 
                     _server.Start();
                     Logger.Log.Info(Language.Instance.GetMessageFromKey("STARTED"));
-                    Guid guid = (Guid)(Assembly.GetAssembly(typeof(ScsServiceBuilder)).GetCustomAttributes(typeof(GuidAttribute), true))[0];
+                    Guid guid = (Guid)Assembly.GetAssembly(typeof(ScsServiceBuilder)).GetCustomAttributes(typeof(GuidAttribute), true)[0];
                     Observable.Interval(TimeSpan.FromMinutes(5)).Subscribe(observer =>
                     {
                         WebClient wc = new WebClient();
