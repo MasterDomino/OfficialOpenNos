@@ -172,6 +172,7 @@ namespace OpenNos.Handler
                             DAOFactory.BazaarItemDAO.Delete(bz.BazaarItemId);
                         }
 
+                        DAOFactory.ShellEffectDAO.DeleteByItemInstanceId(Item.Id);
                         DAOFactory.IteminstanceDAO.Delete(Item.Id);
 
                         ServerManager.Instance.BazaarRefresh(bz.BazaarItemId);
@@ -255,7 +256,7 @@ namespace OpenNos.Handler
             }
             ItemInstance it = Session.Character.Inventory.LoadBySlotAndType(cRegPacket.Slot, cRegPacket.Inventory == 4 ? 0 : (InventoryType)cRegPacket.Inventory);
 
-            if (it == null || !it.Item.IsSoldable || !it.Item.IsTradable || it.IsBound || it.Item.ItemType == ItemType.Shell)
+            if (it == null || !it.Item.IsSoldable || !it.Item.IsTradable || it.IsBound || it.Item.ItemType == ItemType.Shell || it.ShellEffects?.Count != 0)
             {
                 return;
             }
