@@ -1330,7 +1330,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You were blessed by power of angel..
+        ///   Looks up a localized string similar to You were blessed by the power of angels..
         /// </summary>
         internal static string GET_PROTECTION_POWER_1 {
             get {
@@ -1339,7 +1339,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You were cursed by  power of demon..
+        ///   Looks up a localized string similar to You were cursed by the power of demons..
         /// </summary>
         internal static string GET_PROTECTION_POWER_2 {
             get {

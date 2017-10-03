@@ -1097,6 +1097,31 @@ namespace OpenNos.Handler
         }
 
         /// <summary>
+        /// $Faction Command
+        /// </summary>
+        /// <param name="factionPacket"></param>
+        public void Faction(FactionPacket factionPacket)
+        {
+            if(factionPacket != null)
+            {
+                Session.SendPacket("scr 0 0 0 0 0 0 0");
+                Session.SendPacket(Session.Character.GenerateFaction());
+                if (Session.Character.Faction == FactionType.Angel)
+                {
+                    Session.Character.Faction = FactionType.Demon;
+                    Session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId, 4801));
+                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey($"GET_PROTECTION_POWER_2"), 0));
+                }
+                else
+                {
+                    Session.Character.Faction = FactionType.Angel;
+                    Session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId, 4800));
+                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey($"GET_PROTECTION_POWER_1"), 0));
+                }
+            }
+        }
+
+        /// <summary>
         /// $FairyXPRate Command
         /// </summary>
         /// <param name="fairyXpRatePacket"></param>

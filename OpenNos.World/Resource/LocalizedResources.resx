@@ -262,10 +262,10 @@
     <value>Friend request allowed</value>
   </data>
   <data name="GET_PROTECTION_POWER_1" xml:space="preserve">
-    <value>You were blessed by power of angel.</value>
+    <value>You were blessed by the power of angels.</value>
   </data>
   <data name="GET_PROTECTION_POWER_2" xml:space="preserve">
-    <value>You were cursed by  power of demon.</value>
+    <value>You were cursed by the power of demons.</value>
   </data>
   <data name="GOLD_SET" xml:space="preserve">
     <value>Gold changed!</value>
