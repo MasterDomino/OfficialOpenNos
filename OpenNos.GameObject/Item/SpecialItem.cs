@@ -13,6 +13,7 @@
  */
 
 using OpenNos.Core;
+using OpenNos.DAL;
 using OpenNos.Data;
 using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
@@ -118,6 +119,7 @@ namespace OpenNos.GameObject
                         if (item != null && (item.Item.ItemType == ItemType.Weapon || item.Item.ItemType == ItemType.Armor) && item.ShellEffects.Count != 0 && !item.Item.IsHeroic)
                         {
                             item.ShellEffects.Clear();
+                            DAOFactory.ShellEffectDAO.DeleteByItemInstanceId(item.Id);
                             session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                             session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_DELETE"), 0));
 
