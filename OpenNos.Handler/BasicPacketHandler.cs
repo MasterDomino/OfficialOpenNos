@@ -768,7 +768,7 @@ namespace OpenNos.Handler
                     if (guriPacket.Argument == 0 && short.TryParse(guriPacket.User.ToString(), out short slot))
                     {
                         WearableInstance shell = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>(slot, InventoryType.Equipment);
-                        if (shell != null && shell.ShellEffects.Count == 0)
+                        if (shell != null && shell.ShellEffects.Count == 0 && shell.Upgrade > 0 && shell.Rare > 0)
                         {
                             shell.SetShellEffects();
                             Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_IDENTIFIED"), 0));
