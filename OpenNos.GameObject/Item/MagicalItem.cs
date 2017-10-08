@@ -13,6 +13,7 @@
  */
 
 using OpenNos.Core;
+using OpenNos.DAL;
 using OpenNos.Data;
 using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
@@ -114,6 +115,7 @@ namespace OpenNos.GameObject
                                         return;
                                     }
                                     item.ShellEffects.Clear();
+                                    DAOFactory.ShellEffectDAO.DeleteByItemInstanceId(item.Id);
                                     item.ShellEffects.AddRange(inv.ShellEffects);
                                     session.Character.DeleteItemByItemInstanceId(inv.Id);
                                     session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_APPLY_SUCCESS"), 0));
