@@ -2207,7 +2207,7 @@ namespace OpenNos.GameObject
                     MagicalDefence += specialist.MagicDefence + (specialist.SpDefence * 10);
 
                     WearableInstance mainWeapon = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.MainWeapon, InventoryType.Wear);
-                    WearableInstance secondaryWeapon = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.MainWeapon, InventoryType.Wear);
+                    WearableInstance secondaryWeapon = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.SecondaryWeapon, InventoryType.Wear);
                     List<ShellEffectDTO> effects = new List<ShellEffectDTO>();
                     if (mainWeapon?.ShellEffects != null)
                     {
