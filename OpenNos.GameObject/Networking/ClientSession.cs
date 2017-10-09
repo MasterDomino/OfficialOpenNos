@@ -207,7 +207,14 @@ namespace OpenNos.GameObject
 
         public void Disconnect() => _client.Disconnect();
 
-        public string GenerateIdentity() => $"Account: {Account.Name}";
+        public string GenerateIdentity()
+        {
+            if (Character != null)
+            {
+                return $"Character: {Character.Name}";
+            }
+            return $"Account: {Account.Name}";
+        }
 
         public void Initialize(CryptographyBase encryptor, Type packetHandler, bool isWorldServer)
         {
