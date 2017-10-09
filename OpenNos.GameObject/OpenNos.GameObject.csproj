@@ -153,6 +153,7 @@
     <Compile Include="Packets\ClientPackets\SortOpenPacket.cs" />
     <Compile Include="Packets\ClientPackets\UseItemPacket.cs" />
     <Compile Include="Packets\CommandPackets\AddPartnerPacket.cs" />
+    <Compile Include="Packets\CommandPackets\HelpMePacket.cs" />
     <Compile Include="Packets\CommandPackets\AddPortalPacket.cs" />
     <Compile Include="Packets\CommandPackets\AddShellEffectPacket.cs" />
     <Compile Include="Packets\CommandPackets\BuffPacket.cs" />
