@@ -156,6 +156,12 @@ namespace OpenNos.Master.Library.Interface
         long[][] RetrieveOnlineCharacters(long characterId);
 
         /// <summary>
+        /// Runs an event on all registered Worlds
+        /// </summary>
+        /// <param name="eventType">The event to run</param>
+        void RunGlobalEvent(Domain.EventType eventType);
+
+        /// <summary>
         /// Sends a Message to a specific Character
         /// </summary>
         /// <param name="message">The SCSCharacterMessage object containing all required informations</param>

@@ -26,6 +26,8 @@ namespace OpenNos.Master.Library.Interface
 
         void KickSession(long? accountId, int? sessionId);
 
+        void RunGlobalEvent(Domain.EventType eventType);
+
         void SendMessageToCharacter(SCSCharacterMessage message);
 
         void Shutdown();

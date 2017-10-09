@@ -69,6 +69,8 @@ namespace OpenNos.Master.Library.Client
 
         public event EventHandler FamilyRefresh;
 
+        public event EventHandler GlobalEvent;
+
         public event EventHandler MessageSentToCharacter;
 
         public event EventHandler PenaltyLogRefresh;
@@ -127,6 +129,8 @@ namespace OpenNos.Master.Library.Client
 
         public long[][] RetrieveOnlineCharacters(long characterId) => _client.ServiceProxy.RetrieveOnlineCharacters(characterId);
 
+        public void RunGlobalEvent(Domain.EventType eventType) => _client.ServiceProxy.RunGlobalEvent(eventType);
+
         public int? SendMessageToCharacter(SCSCharacterMessage message) => _client.ServiceProxy.SendMessageToCharacter(message);
 
         public void Shutdown(string worldGroup) => _client.ServiceProxy.Shutdown(worldGroup);
@@ -152,6 +156,8 @@ namespace OpenNos.Master.Library.Client
         }
 
         internal void OnKickSession(long? accountId, int? sessionId) => SessionKickedEvent?.Invoke(new Tuple<long?, long?>(accountId, sessionId), null);
+
+        internal void OnRunGlobalEvent(Domain.EventType eventType) => GlobalEvent?.Invoke(eventType, null);
 
         internal void OnSendMessageToCharacter(SCSCharacterMessage message) => MessageSentToCharacter?.Invoke(message, null);
 

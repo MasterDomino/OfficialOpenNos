@@ -334,6 +334,19 @@ namespace OpenNos.Master.Server
             return result;
         }
 
+        public void RunGlobalEvent(EventType eventType)
+        {
+            if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
+            {
+                return;
+            }
+
+            foreach (WorldServer world in MSManager.Instance.WorldServers)
+            {
+                world.ServiceClient.GetClientProxy<ICommunicationClient>().RunGlobalEvent(eventType);
+            }
+        }
+
         public int? SendMessageToCharacter(SCSCharacterMessage message)
         {
             if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))

@@ -1264,8 +1264,14 @@ namespace OpenNos.GameObject
             CommunicationServiceClient.Instance.RelationRefresh += OnRelationRefresh;
             CommunicationServiceClient.Instance.BazaarRefresh += OnBazaarRefresh;
             CommunicationServiceClient.Instance.PenaltyLogRefresh += OnPenaltyLogRefresh;
+            CommunicationServiceClient.Instance.GlobalEvent += OnGlobalEvent;
             CommunicationServiceClient.Instance.ShutdownEvent += OnShutdown;
             _lastGroupId = 1;
+        }
+
+        private void OnGlobalEvent(object sender, EventArgs e)
+        {
+            EventHelper.Instance.GenerateEvent((EventType)sender);
         }
 
         private void LoadFamilies()

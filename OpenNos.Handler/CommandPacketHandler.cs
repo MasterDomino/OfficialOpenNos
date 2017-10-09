@@ -2155,6 +2155,24 @@ namespace OpenNos.Handler
         }
 
         /// <summary>
+        /// $GlobalEvent Command
+        /// </summary>
+        /// <param name="eventPacket"></param>
+        public void StartGlobalEvent(GlobalEventPacket eventPacket)
+        {
+            if (eventPacket != null)
+            {
+                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[GlobalEvent]EventType: {eventPacket.EventType.ToString()}");
+
+                CommunicationServiceClient.Instance.RunGlobalEvent(eventPacket.EventType);
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay(EventPacket.ReturnHelp(), 10));
+            }
+        }
+
+        /// <summary>
         /// $Stat Command
         /// </summary>
         /// <param name="statCommandPacket"></param>
