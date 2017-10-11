@@ -764,6 +764,10 @@ namespace OpenNos.Handler
         /// <param name="putPacket"></param>
         public void PutItem(PutPacket putPacket)
         {
+            if (Session.Character.HasShopOpened)
+            {
+                return;
+            }
             lock (Session.Character.Inventory)
             {
                 ItemInstance invitem = Session.Character.Inventory.LoadBySlotAndType(putPacket.Slot, putPacket.InventoryType);
