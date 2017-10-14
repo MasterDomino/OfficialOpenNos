@@ -898,6 +898,13 @@ namespace OpenNos.Handler
             {
                 amount = shopitem.SellAmount;
             }
+
+            ItemInstance sellerItem = shopOwnerSession.Character.Inventory.GetItemInstanceById(id);
+            if (sellerItem == null || sellerItem.Amount < amount)
+            {
+                return false;
+            }
+
             List<ItemInstance> inv = shopitem.ItemInstance.Type == InventoryType.Equipment
                    ? clientSession.Character.Inventory.AddToInventory(shopitem.ItemInstance)
                    : clientSession.Character.Inventory.AddNewToInventory(shopitem.ItemInstance.ItemVNum, amount, shopitem.ItemInstance.Type);
