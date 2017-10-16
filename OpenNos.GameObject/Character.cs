@@ -2838,7 +2838,6 @@ namespace OpenNos.GameObject
                             newItem.Upgrade = (byte)ServerManager.Instance.RandomNumber(50, 81);
                         }
 
-
                         List<ItemInstance> newInv = Inventory.AddToInventory(newItem);
                         if (newInv.Count > 0)
                         {

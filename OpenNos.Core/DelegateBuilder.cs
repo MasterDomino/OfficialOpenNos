@@ -53,7 +53,7 @@ namespace OpenNos.Core
                 return Expression.Convert(paramsOfDelegate[index], callParamType.ParameterType);
             }
 
-            if (queueMissingParams.Any())
+            if (queueMissingParams.Count > 0)
             {
                 return Expression.Constant(queueMissingParams.Dequeue());
             }

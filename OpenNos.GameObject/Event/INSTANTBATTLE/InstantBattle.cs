@@ -100,7 +100,7 @@ namespace OpenNos.GameObject.Event
             {
                 ServerManager.Instance.StartedEvents.Remove(EventType.INSTANTBATTLE);
                 Thread.Sleep(10 * 1000);
-                if (mapinstance.Item1.Sessions.Count() < 3)
+                if (!mapinstance.Item1.Sessions.Skip(2).Any())
                 {
                     mapinstance.Item1.Sessions.Where(s => s.Character != null).ToList().ForEach(s => ServerManager.Instance.ChangeMap(s.Character.CharacterId, s.Character.MapId, s.Character.MapX, s.Character.MapY));
                 }

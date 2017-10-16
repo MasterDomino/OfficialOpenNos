@@ -159,10 +159,12 @@ namespace OpenNos.World
 #if DEBUG
                 isDebug = true;
 #endif
-                var reqparm = new System.Collections.Specialized.NameValueCollection();
-                reqparm.Add("key", guid);
-                reqparm.Add("error", ((Exception)e.ExceptionObject).ToString());
-                reqparm.Add("debug", isDebug.ToString());
+                System.Collections.Specialized.NameValueCollection reqparm = new System.Collections.Specialized.NameValueCollection
+                {
+                    { "key", guid },
+                    { "error", ((Exception)e.ExceptionObject).ToString() },
+                    { "debug", isDebug.ToString() }
+                };
                 WebClient wc = new WebClient();
                 byte[] responsebytes = wc.UploadValues("https://mgmt.opennos.io/Crash/ReportCrash", "POST", reqparm);
                 string[] resp = Encoding.UTF8.GetString(responsebytes).Split(':');
