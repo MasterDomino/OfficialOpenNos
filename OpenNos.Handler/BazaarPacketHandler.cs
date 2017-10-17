@@ -89,10 +89,6 @@ namespace OpenNos.Handler
                             DAOFactory.IteminstanceDAO.InsertOrUpdate(bzitemdto);
                             ServerManager.Instance.BazaarRefresh(bzcree.BazaarItem.BazaarItemId);
                             Session.SendPacket($"rc_buy 1 {bzcree.Item.Item.VNum} {bzcree.Owner} {cBuyPacket.Amount} {cBuyPacket.Price} 0 0 0");
-                            if (bzcree.Item.ShellEffects != null)
-                            {
-
-                            }
                             ItemInstance newBz = bzcree.Item.DeepCopy();
                             newBz.Id = Guid.NewGuid();
                             newBz.Amount = cBuyPacket.Amount;
@@ -152,10 +148,6 @@ namespace OpenNos.Handler
                         Guid? newId = null;
                         if (Item.Amount != 0)
                         {
-                            if(Item.ShellEffects != null)
-                            {
-
-                            }
                             ItemInstance newBz = Item.DeepCopy();
                             newBz.Id = Guid.NewGuid();
                             newBz.Type = newBz.Item.Type;
@@ -256,7 +248,7 @@ namespace OpenNos.Handler
             }
             ItemInstance it = Session.Character.Inventory.LoadBySlotAndType(cRegPacket.Slot, cRegPacket.Inventory == 4 ? 0 : (InventoryType)cRegPacket.Inventory);
 
-            if (it == null || !it.Item.IsSoldable || !it.Item.IsTradable || it.IsBound || it.Item.ItemType == ItemType.Shell || it.ShellEffects?.Count != 0)
+            if (it == null || !it.Item.IsSoldable || !it.Item.IsTradable || it.IsBound || it.Item.ItemType == ItemType.Shell)
             {
                 return;
             }

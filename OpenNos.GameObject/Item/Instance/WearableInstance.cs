@@ -13,6 +13,7 @@
  */
 
 using OpenNos.Core;
+using OpenNos.DAL;
 using OpenNos.Data;
 using OpenNos.Data.Interfaces;
 using OpenNos.Domain;
@@ -28,6 +29,7 @@ namespace OpenNos.GameObject
         #region Members
 
         private Random _random;
+        private List<ShellEffectDTO> shelleffects;
 
         #endregion
 
@@ -55,7 +57,7 @@ namespace OpenNos.GameObject
         public WearableInstance(short vNum, byte amount) : base(vNum, amount)
         {
             _random = new Random();
-            if(EquipmentSerialId == Guid.Empty)
+            if (EquipmentSerialId == Guid.Empty)
             {
                 EquipmentSerialId = Guid.NewGuid();
             }
@@ -124,6 +126,9 @@ namespace OpenNos.GameObject
         public long XP { get; set; }
 
         public Guid EquipmentSerialId { get; set; }
+
+        public List<ShellEffectDTO> ShellEffects => shelleffects ?? (shelleffects = DAOFactory.ShellEffectDAO.LoadByEquipmentSerialId(EquipmentSerialId == Guid.Empty ? EquipmentSerialId = Guid.NewGuid() : EquipmentSerialId).ToList());
+
 
         #endregion
 

@@ -160,7 +160,7 @@ namespace OpenNos.Handler
                 try
                 {
                     ItemInstance instance = Session.Character.Inventory.LoadBySlotAndType(addShellEffectPacket.Slot, InventoryType.Equipment);
-                    instance.ShellEffects.Add(new ShellEffectDTO() { EffectLevel = (ShellEffectLevelType)addShellEffectPacket.EffectLevel, Effect = addShellEffectPacket.Effect, Value = addShellEffectPacket.Value, EquipmentSerialId = (instance as WearableInstance).EquipmentSerialId });
+                    (instance as WearableInstance).ShellEffects.Add(new ShellEffectDTO() { EffectLevel = (ShellEffectLevelType)addShellEffectPacket.EffectLevel, Effect = addShellEffectPacket.Effect, Value = addShellEffectPacket.Value, EquipmentSerialId = (instance as WearableInstance).EquipmentSerialId });
                 }
                 catch
                 {
