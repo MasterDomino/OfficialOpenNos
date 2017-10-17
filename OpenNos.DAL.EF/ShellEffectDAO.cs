@@ -75,7 +75,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        public IEnumerable<ShellEffectDTO> LoadByItemInstanceId(Guid id)
+        public IEnumerable<ShellEffectDTO> LoadByEquipmentSerialId(Guid id)
         {
             using (var context = DataAccessHelper.CreateContext())
             {

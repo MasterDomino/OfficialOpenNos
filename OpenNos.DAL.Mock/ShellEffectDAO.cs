@@ -15,6 +15,6 @@ namespace OpenNos.DAL.Mock
 
         public ShellEffectDTO InsertOrUpdate(ShellEffectDTO shelleffect) => throw new NotImplementedException();
 
-        public IEnumerable<ShellEffectDTO> LoadByItemInstanceId(Guid id) => throw new NotImplementedException();
+        public IEnumerable<ShellEffectDTO> LoadByEquipmentSerialId(Guid id) => throw new NotImplementedException();
     }
 }

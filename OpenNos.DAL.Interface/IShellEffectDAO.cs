@@ -14,6 +14,6 @@ namespace OpenNos.DAL.Interface
 
         ShellEffectDTO InsertOrUpdate(ShellEffectDTO shelleffect);
 
-        IEnumerable<ShellEffectDTO> LoadByItemInstanceId(Guid id);
+        IEnumerable<ShellEffectDTO> LoadByEquipmentSerialId(Guid id);
     }
 }

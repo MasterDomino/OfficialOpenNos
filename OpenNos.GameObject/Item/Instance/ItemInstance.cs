@@ -51,7 +51,7 @@ namespace OpenNos.GameObject
 
         public Item Item => item ?? (item = ServerManager.Instance.GetItem(ItemVNum));
 
-        public List<ShellEffectDTO> ShellEffects => shelleffects ?? (shelleffects = DAOFactory.ShellEffectDAO.LoadByItemInstanceId(Id).ToList());
+        public List<ShellEffectDTO> ShellEffects => shelleffects ?? (shelleffects = DAOFactory.ShellEffectDAO.LoadByEquipmentSerialId(Id).ToList());
 
         #endregion
 
