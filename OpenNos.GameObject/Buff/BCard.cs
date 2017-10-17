@@ -30,7 +30,7 @@ namespace OpenNos.GameObject
         public void ApplyBCards(object session, object sender = null)
         {
             Type type = session.GetType();
-            int antibuff = 0;
+            // int debuff = 0;
             if (type == null)
             {
                 return;
@@ -49,8 +49,7 @@ namespace OpenNos.GameObject
                                 {
                                     if (sType == typeof(Character))
                                     {
-                                        //Todo: Get anti stats from BCard
-                                        
+                                        //Todo: Get anti stats from BCard                                        
                                     }
                                 }
                             }
@@ -74,7 +73,6 @@ namespace OpenNos.GameObject
                         }
                         break;
                     }
-
                 case BCardType.CardType.Move:
                     {
                         if (type == typeof(Character) && session is Character character)

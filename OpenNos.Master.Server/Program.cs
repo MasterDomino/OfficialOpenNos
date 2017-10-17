@@ -88,7 +88,7 @@ namespace OpenNos.Master.Server
 
                     _server.Start();
                     Logger.Log.Info(Language.Instance.GetMessageFromKey("STARTED"));
-                    string guid = ((GuidAttribute)Assembly.GetAssembly(typeof(SCS.Communication.ScsServices.Service.ScsServiceBuilder)).GetCustomAttributes(typeof(GuidAttribute), true)[0]).Value;
+                    string guid = ((GuidAttribute)Assembly.GetAssembly(typeof(ScsServiceBuilder)).GetCustomAttributes(typeof(GuidAttribute), true)[0]).Value;
                     Observable.Interval(TimeSpan.FromMinutes(5)).Subscribe(observer =>
                     {
                         try
@@ -96,13 +96,15 @@ namespace OpenNos.Master.Server
                             WebClient wc = new WebClient();
                             foreach (WorldServer s in MSManager.Instance.WorldServers)
                             {
-                                var reqparm = new System.Collections.Specialized.NameValueCollection();
-                                reqparm.Add("key", guid);
-                                reqparm.Add("ip", s.Endpoint.IpAddress);
-                                reqparm.Add("port", s.Endpoint.TcpPort.ToString());
-                                reqparm.Add("server", s.WorldGroup);
-                                reqparm.Add("channel", s.ChannelId.ToString());
-                                reqparm.Add("userCount", MSManager.Instance.ConnectedAccounts.CountLinq(c => c.ConnectedWorld?.Id == s.Id).ToString());
+                                System.Collections.Specialized.NameValueCollection reqparm = new System.Collections.Specialized.NameValueCollection
+                                {
+                                    { "key", guid },
+                                    { "ip", s.Endpoint.IpAddress },
+                                    { "port", s.Endpoint.TcpPort.ToString() },
+                                    { "server", s.WorldGroup },
+                                    { "channel", s.ChannelId.ToString() },
+                                    { "userCount", MSManager.Instance.ConnectedAccounts.CountLinq(c => c.ConnectedWorld?.Id == s.Id).ToString() }
+                                };
                                 byte[] responsebytes = wc.UploadValues("https://mgmt.opennos.io/Statistics/SendStat", "POST", reqparm);
                                 string[] resp = Encoding.UTF8.GetString(responsebytes).Split(':');
                                 if (resp[0] != "saved")

@@ -901,7 +901,7 @@ namespace OpenNos.Handler
                 else
                 {
                     Session.SendPacket(Session.Character.GenerateSay("-------------Command Info-------------", 11));
-                    foreach (string message in messages.Where(s => s.ToLower().Contains(helpPacket.Contents.ToLower())))
+                    foreach (string message in messages.Where(s => s.IndexOf(helpPacket.Contents, StringComparison.OrdinalIgnoreCase) >= 0))
                     {
                         Session.SendPacket(Session.Character.GenerateSay(message, 12));
                     }

@@ -122,7 +122,6 @@ namespace OpenNos.GameObject
                             DAOFactory.ShellEffectDAO.DeleteByItemInstanceId(item.Id);
                             session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                             session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_DELETE"), 0));
-
                         }
                     }
                     else

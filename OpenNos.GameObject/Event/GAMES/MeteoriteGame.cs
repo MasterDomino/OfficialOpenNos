@@ -118,7 +118,6 @@ namespace OpenNos.GameObject.Event.GAMES
                 }
             }
 
-
             public void Run(MapInstance map)
             {
                 _map = map;
@@ -229,7 +228,7 @@ namespace OpenNos.GameObject.Event.GAMES
                             _map.Broadcast(StaticPacketHelper.SkillUsed(UserType.Monster, circleId, 3, circleId, 1220, 220, 0, 4983, cell.X, cell.Y, true, 0, 65535, 0, 0));
                             foreach (Character character in _map.GetCharactersInRange(cell.X, cell.Y, 2))
                             {
-                                if (_map.Sessions.Count() < 4)
+                                if (!_map.Sessions.Skip(3).Any())
                                 {
                                     // Your reward for the last three living players
                                 }

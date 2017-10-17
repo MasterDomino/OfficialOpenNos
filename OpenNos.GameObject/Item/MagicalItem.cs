@@ -103,11 +103,9 @@ namespace OpenNos.GameObject
                                         break;
                                     default:
                                         return;
-
                                 }
                                 if ((item.Item.ItemType == ItemType.Weapon && weapon) || (item.Item.ItemType == ItemType.Armor && !weapon))
                                 {
-
                                     if (item.ShellEffects.Count > 0 && ServerManager.Instance.RandomNumber() < 50)
                                     {
                                         session.Character.DeleteItemByItemInstanceId(inv.Id);
@@ -123,7 +121,6 @@ namespace OpenNos.GameObject
                             }
                         }
                         return;
-
                     }
 
                     if (ItemType == ItemType.Event)

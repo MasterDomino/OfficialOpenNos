@@ -316,11 +316,7 @@ namespace OpenNos.GameObject
         {
             if (Target != -1)
             {
-                if (Path == null)
-                {
-                    Path = new List<Node>();
-                }
-                Path.Clear();
+                (Path ?? (Path = new List<Node>())).Clear();
                 Target = -1;
 
                 //return to origin
@@ -720,7 +716,6 @@ namespace OpenNos.GameObject
                     }
                 }
             }
-
         }
 
         private void Move()

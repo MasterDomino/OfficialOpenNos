@@ -13,7 +13,6 @@
  */
 
 using OpenNos.Core;
-using OpenNos.Core.Handling;
 using OpenNos.DAL;
 using OpenNos.Data;
 using OpenNos.Domain;
@@ -22,7 +21,6 @@ using OpenNos.GameObject.Helpers;
 using OpenNos.GameObject.Packets.ClientPackets;
 using OpenNos.Master.Library.Client;
 using OpenNos.Master.Library.Data;
-using OpenNos.PathFinder;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -768,12 +766,12 @@ namespace OpenNos.Handler
                     if (guriPacket.Argument == 0 && short.TryParse(guriPacket.User.ToString(), out short slot))
                     {
                         WearableInstance shell = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>(slot, InventoryType.Equipment);
-                        if (shell != null && shell.ShellEffects.Count == 0 && shell.Upgrade > 0 && shell.Rare > 0 && Session.Character.Inventory.CountItem(1429) >= (shell.Upgrade / 10 + shell.Rare))
+                        if (shell?.ShellEffects.Count == 0 && shell.Upgrade > 0 && shell.Rare > 0 && Session.Character.Inventory.CountItem(1429) >= ((shell.Upgrade / 10) + shell.Rare))
                         {
                             shell.SetShellEffects();
                             Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_IDENTIFIED"), 0));
                             Session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId, 3006));
-                            Session.Character.Inventory.RemoveItemAmount(1429, shell.Upgrade / 10 + shell.Rare);
+                            Session.Character.Inventory.RemoveItemAmount(1429, (shell.Upgrade / 10) + shell.Rare);
                         }
                     }
                 }

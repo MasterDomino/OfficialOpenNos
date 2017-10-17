@@ -174,7 +174,6 @@ namespace OpenNos.GameObject
                             {
                                 s.SendPacket(s.Character.Group.GeneraterRaidmbf(s));
                                 s.SendPacket(s.Character.Group.GenerateRdlst());
-
                             }
                         });
                     }
