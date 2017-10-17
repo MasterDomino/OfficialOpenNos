@@ -27,10 +27,7 @@ namespace OpenNos.DAL.EF
 
         public int Value { get; set; }
 
-        [ForeignKey(nameof(WearableInstanceId))]
-        public virtual WearableInstance WearableInstance { get; set; }
-
-        public Guid WearableInstanceId { get; set; }
+        public Guid EquipmentSerialId { get; set; }
 
         #endregion
     }

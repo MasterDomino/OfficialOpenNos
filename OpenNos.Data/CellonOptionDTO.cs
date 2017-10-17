@@ -12,13 +12,15 @@
  * GNU General Public License for more details.
  */
 
+using System;
+
 namespace OpenNos.Data
 {
     public class CellonOptionDTO : SynchronizableBaseDTO
     {
         #region Properties
 
-        public long InventoryItemId { get; set; }
+        public Guid EquipmentSerialId { get; set; }
 
         public byte Level { get; set; }
 

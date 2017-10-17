@@ -27,7 +27,7 @@ namespace OpenNos.DAL.EF
 
         public virtual ICollection<CellonOption> CellonOption { get; set; }
 
-        public Guid? CellonOptionId { get; set; }
+        public Guid? EquipmentSerialId { get; set; }
 
         public short? CloseDefence { get; set; }
 

@@ -109,7 +109,6 @@ namespace OpenNos.DAL.EF.DB
 
         public virtual DbSet<ShellEffect> ShellEffect { get; set; }
 
-        public virtual DbSet<ShellEffectGeneration> ShellEffectGeneration { get; set; }
 
         public virtual DbSet<Shop> Shop { get; set; }
 
@@ -296,12 +295,6 @@ namespace OpenNos.DAL.EF.DB
             modelBuilder.Entity<Item>()
                 .HasMany(e => e.ShopItem)
                 .WithRequired(e => e.Item)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<ShellEffect>()
-                .HasRequired(e => e.ItemInstance)
-                .WithMany(e => e.ShellEffect)
-                .HasForeignKey(e => e.ItemInstanceId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Mail>()
