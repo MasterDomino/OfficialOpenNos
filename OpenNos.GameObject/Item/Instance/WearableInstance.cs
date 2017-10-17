@@ -227,7 +227,14 @@ namespace OpenNos.GameObject
             return string.Empty;
         }
 
-        public override void Initialize() => _random = new Random();
+        public override void Initialize()
+        {
+            _random = new Random();
+            if (EquipmentSerialId == Guid.Empty)
+            {
+                EquipmentSerialId = Guid.NewGuid();
+            }
+        }
 
         public void RarifyItem(ClientSession session, RarifyMode mode, RarifyProtection protection, bool isCommand = false, byte forceRare = 0)
         {
