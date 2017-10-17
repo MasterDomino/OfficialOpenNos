@@ -304,15 +304,6 @@ namespace OpenNos.Handler
 
             DAOFactory.IteminstanceDAO.InsertOrUpdate(bazar);
 
-            if (bazar.ShellEffects != null)
-            {
-                foreach (ShellEffectDTO effect in bazar.ShellEffects)
-                {
-                    effect.ItemInstanceId = bazar.Id;
-                    effect.ShellEffectId = DAOFactory.ShellEffectDAO.InsertOrUpdate(effect).ShellEffectId;
-                }
-            }
-
             BazaarItemDTO bazaarItem = new BazaarItemDTO
             {
                 Amount = bazar.Amount,

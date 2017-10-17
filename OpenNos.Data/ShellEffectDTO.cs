@@ -17,6 +17,6 @@ namespace OpenNos.Data
 
         public short Value { get; set; }
 
-        public Guid ItemInstanceId { get; set; }
+        public Guid EquipmentSerialId { get; set; }
     }
 }

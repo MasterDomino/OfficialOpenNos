@@ -105,6 +105,8 @@ namespace OpenNos.GameObject
 
         public long XP { get; set; }
 
+        public Guid EquipmentSerialId { get; set; }
+
         #endregion
 
         #region Methods
@@ -1321,7 +1323,7 @@ namespace OpenNos.GameObject
                                     continue;
                                 }
 
-                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.CNormal, Effect = effect, Value = value, ItemInstanceId = Id });
+                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.CNormal, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
                                 return;
                             }
                         case ShellEffectLevelType.BNormal:
@@ -1384,7 +1386,7 @@ namespace OpenNos.GameObject
                                     continue;
                                 }
 
-                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.BNormal, Effect = effect, Value = value, ItemInstanceId = Id });
+                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.BNormal, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
                                 return;
                             }
                         case ShellEffectLevelType.ANormal:
@@ -1438,7 +1440,7 @@ namespace OpenNos.GameObject
                                     continue;
                                 }
 
-                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.ANormal, Effect = effect, Value = value, ItemInstanceId = Id });
+                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.ANormal, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
                                 return;
                             }
                         case ShellEffectLevelType.SNormal:
@@ -1473,7 +1475,7 @@ namespace OpenNos.GameObject
                                     continue;
                                 }
 
-                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.SNormal, Effect = effect, Value = value, ItemInstanceId = Id });
+                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.SNormal, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
                                 return;
                             }
                         case ShellEffectLevelType.CBonus:
@@ -1505,7 +1507,7 @@ namespace OpenNos.GameObject
                                     continue;
                                 }
 
-                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.CBonus, Effect = effect, Value = value, ItemInstanceId = Id });
+                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.CBonus, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
                                 return;
                             }
                         case ShellEffectLevelType.BBonus:
@@ -1538,7 +1540,7 @@ namespace OpenNos.GameObject
                                     continue;
                                 }
 
-                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.BBonus, Effect = effect, Value = value, ItemInstanceId = Id });
+                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.BBonus, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
                                 return;
                             }
                         case ShellEffectLevelType.ABonus:
@@ -1571,7 +1573,7 @@ namespace OpenNos.GameObject
                                     continue;
                                 }
 
-                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.ABonus, Effect = effect, Value = value, ItemInstanceId = Id });
+                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.ABonus, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
                                 return;
                             }
                         case ShellEffectLevelType.SBonus:
@@ -1604,7 +1606,7 @@ namespace OpenNos.GameObject
                                     continue;
                                 }
 
-                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.SBonus, Effect = effect, Value = value, ItemInstanceId = Id });
+                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.SBonus, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
                                 return;
                             }
                         case ShellEffectLevelType.CPVP:
@@ -1639,7 +1641,7 @@ namespace OpenNos.GameObject
                                     continue;
                                 }
 
-                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.CPVP, Effect = effect, Value = value, ItemInstanceId = Id });
+                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.CPVP, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
                                 return;
                             }
                         case ShellEffectLevelType.BPVP:
@@ -1677,7 +1679,7 @@ namespace OpenNos.GameObject
                                     continue;
                                 }
 
-                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.BPVP, Effect = effect, Value = value, ItemInstanceId = Id });
+                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.BPVP, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
                                 return;
                             }
                         case ShellEffectLevelType.APVP:
@@ -1716,7 +1718,7 @@ namespace OpenNos.GameObject
                                     continue;
                                 }
 
-                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.APVP, Effect = effect, Value = value, ItemInstanceId = Id });
+                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.APVP, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
                                 return;
                             }
                         case ShellEffectLevelType.SPVP:
@@ -1748,7 +1750,7 @@ namespace OpenNos.GameObject
                                     continue;
                                 }
 
-                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.SPVP, Effect = effect, Value = value, ItemInstanceId = Id });
+                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.SPVP, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
                                 return;
                             }
                     }

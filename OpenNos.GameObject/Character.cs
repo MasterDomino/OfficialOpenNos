@@ -3343,7 +3343,7 @@ namespace OpenNos.GameObject
                             {
                                 foreach (ShellEffectDTO effect in itemInstance.ShellEffects)
                                 {
-                                    effect.ItemInstanceId = itemInstance.Id;
+                                    effect.EquipmentSerialId = (itemInstance as WearableInstance).EquipmentSerialId;
                                     effect.ShellEffectId = DAOFactory.ShellEffectDAO.InsertOrUpdate(effect).ShellEffectId;
                                 }
                             }
