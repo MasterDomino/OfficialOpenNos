@@ -33,15 +33,33 @@ namespace OpenNos.GameObject
 
         #region Instantiation
 
-        public WearableInstance() => _random = new Random();
+        public WearableInstance()
+        {
+            _random = new Random();
+            if (EquipmentSerialId == Guid.Empty)
+            {
+                EquipmentSerialId = Guid.NewGuid();
+            }
+        }
 
         public WearableInstance(Guid id)
         {
             Id = id;
             _random = new Random();
+            if (EquipmentSerialId == Guid.Empty)
+            {
+                EquipmentSerialId = Guid.NewGuid();
+            }
         }
 
-        public WearableInstance(short vNum, byte amount) : base(vNum, amount) => _random = new Random();
+        public WearableInstance(short vNum, byte amount) : base(vNum, amount)
+        {
+            _random = new Random();
+            if(EquipmentSerialId == Guid.Empty)
+            {
+                EquipmentSerialId = Guid.NewGuid();
+            }
+        }
 
         #endregion
 
