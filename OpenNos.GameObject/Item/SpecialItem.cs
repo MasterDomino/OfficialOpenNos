@@ -111,6 +111,21 @@ namespace OpenNos.GameObject
                     }
                     break;
 
+                case 250:
+                    if(!session.Character.Buff.ContainsKey(131))
+                    {
+                        session.Character.AddStaticBuff(new StaticBuffDTO() { CardId = 131 });
+                        session.CurrentMapInstance?.Broadcast(session.Character.GeneratePairy());
+                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("EFFECT_START"), inv.Item.Name), 0));
+                        session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 3014), session.Character.MapX, session.Character.MapY);
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                    }
+                    else
+                    {
+                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("THIS_ITEM_IN_USE"), 0));
+                    }
+                    break;
+
                 case 666:
                     if (EffectValue == 1 && byte.TryParse(packetsplit[9], out byte islot))
                     {
@@ -137,8 +152,15 @@ namespace OpenNos.GameObject
                     break;
 
                 case 208:
-                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
-                    session.Character.AddStaticBuff(new StaticBuffDTO() { CardId = 121 });
+                    if(!session.Character.Buff.ContainsKey(121))
+                    {
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                        session.Character.AddStaticBuff(new StaticBuffDTO() { CardId = 121 });
+                    }
+                    else
+                    {
+                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("THIS_ITEM_IN_USE"), 0));
+                    }
                     break;
 
                 // Divorce letter

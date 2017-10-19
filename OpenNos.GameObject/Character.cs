@@ -39,6 +39,7 @@ namespace OpenNos.GameObject
         private Random _random;
         private byte _speed;
         private int slhpbonus = 0;
+        private bool isStaticBuffListInitial = false;
 
         #endregion
 
@@ -547,7 +548,7 @@ namespace OpenNos.GameObject
             });
 
             Session.SendPacket($"vb {bf.Card.CardId} 1 {bf.RemainingTime * 10}");
-            Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), Name), 12));
+            Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), bf.Card.Name), 12));
         }
 
         public bool CanAddMate(Mate mate) => mate.MateType == MateType.Pet ? MaxMateCount > Mates.Count : 3 > Mates.Count(s => s.MateType == MateType.Partner);
@@ -1782,14 +1783,18 @@ namespace OpenNos.GameObject
             }
             ElementRate = 0;
             Element = 0;
+
+            bool isUsingBooster = isStaticBuffListInitial ? Buff.ContainsKey(131) : DAOFactory.StaticBuffDAO.LoadByCharacterId(CharacterId).Any(s => s.CardId.Equals(131));
+            isStaticBuffListInitial = true;
+
             if (fairy != null)
             {
-                ElementRate += fairy.ElementRate + fairy.Item.ElementRate;
+                ElementRate += fairy.ElementRate + fairy.Item.ElementRate + (isUsingBooster ? 30 : 0);
                 Element = fairy.Item.Element;
             }
 
             return fairy != null
-                ? $"pairy 1 {CharacterId} 4 {fairy.Item.Element} {fairy.ElementRate + fairy.Item.ElementRate} {fairy.Item.Morph}"
+                ? $"pairy 1 {CharacterId} 4 {fairy.Item.Element} {fairy.ElementRate + fairy.Item.ElementRate + +(isUsingBooster ? 30 : 0)} {fairy.Item.Morph + (isUsingBooster ? 5 : 0)}"
                 : $"pairy 1 {CharacterId} 0 0 0 0";
         }
 
@@ -3240,6 +3245,11 @@ namespace OpenNos.GameObject
                 {
                     NoMove = false;
                     Session.SendPacket(GenerateCond());
+                }
+                // TODO : Find another way because it is hardcode
+                if(indicator.Card.CardId == 131)
+                {
+                    Session.SendPacket(GeneratePairy());
                 }
             }
         }

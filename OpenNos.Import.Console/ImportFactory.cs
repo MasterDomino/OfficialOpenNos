@@ -3173,6 +3173,15 @@ namespace OpenNos.Import.Console
                                         item.Effect = 6969; // imagined number as for I = √(-1), complex z = a + bi
                                         break;
 
+                                    case 1429:
+                                        item.Effect = 666;
+                                        break;
+
+                                    case 1430:
+                                        item.Effect = 666;
+                                        item.EffectValue = 1;
+                                        break;
+
                                     default:
                                         if ((item.VNum > 5891 && item.VNum < 5900) || (item.VNum > 9100 && item.VNum < 9109))
                                         {
