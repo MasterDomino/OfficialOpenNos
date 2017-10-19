@@ -174,7 +174,7 @@ namespace OpenNos.GameObject
 
         public bool IsSitting { get; set; }
 
-        public bool IsUsingFairyBooster { get; set; }
+        public bool IsUsingFairyBooster => isStaticBuffListInitial ? Buff.ContainsKey(131) : DAOFactory.StaticBuffDAO.LoadByCharacterId(CharacterId).Any(s => s.CardId.Equals(131));
 
         public bool IsVehicled { get; set; }
 
@@ -548,6 +548,10 @@ namespace OpenNos.GameObject
                     AddBuff(new Buff(bf.Card.TimeoutBuff, Level));
                 }
             });
+            if(!isStaticBuffListInitial)
+            {
+                isStaticBuffListInitial = true;
+            }
 
             Session.SendPacket($"vb {bf.Card.CardId} 1 {bf.RemainingTime * 10}");
             Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), bf.Card.Name), 12));
@@ -1788,8 +1792,6 @@ namespace OpenNos.GameObject
             
             if (fairy != null)
             {
-                IsUsingFairyBooster = isStaticBuffListInitial ? Buff.ContainsKey(131) : DAOFactory.StaticBuffDAO.LoadByCharacterId(CharacterId).Any(s => s.CardId.Equals(131));
-                isStaticBuffListInitial = true;
                 ElementRate += fairy.ElementRate + fairy.Item.ElementRate + (IsUsingFairyBooster ? 30 : 0);
                 Element = fairy.Item.Element;
             }
@@ -2163,7 +2165,6 @@ namespace OpenNos.GameObject
             int weaponUpgrade = 0;
             int secondaryUpgrade = 0;
             int armorUpgrade = 0;
-            int ElementRateForStatChar = 0;
 
             MinHit = CharacterHelper.MinHit(Class, Level);
             MaxHit = CharacterHelper.MaxHit(Class, Level);
@@ -2181,7 +2182,7 @@ namespace OpenNos.GameObject
             DarkResistance = GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.DarkIncreased)[0] + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
             Defence = CharacterHelper.Defence(Class, Level);
             DefenceRate = CharacterHelper.DefenceRate(Class, Level);
-            ElementRateForStatChar = 0;
+            ElementRate = 0;
             ElementRateSP = 0;
             DistanceDefence = CharacterHelper.DistanceDefence(Class, Level);
             DistanceDefenceRate = CharacterHelper.DistanceDefenceRate(Class, Level);
@@ -2394,7 +2395,7 @@ namespace OpenNos.GameObject
             WearableInstance fairy = Inventory?.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.Fairy, InventoryType.Wear);
             if (fairy != null)
             {
-                ElementRateForStatChar += fairy.ElementRate + fairy.Item.ElementRate;
+                ElementRate += fairy.ElementRate + fairy.Item.ElementRate + (IsUsingFairyBooster ? 30 : 0);
             }
 
             for (short i = 1; i < 14; i++)
