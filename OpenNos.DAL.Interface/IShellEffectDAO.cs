@@ -2,9 +2,6 @@
 using OpenNos.Data.Enums;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OpenNos.DAL.Interface
 {
@@ -14,6 +11,6 @@ namespace OpenNos.DAL.Interface
 
         ShellEffectDTO InsertOrUpdate(ShellEffectDTO shelleffect);
 
-        IEnumerable<ShellEffectDTO> LoadByItemInstanceId(Guid id);
+        IEnumerable<ShellEffectDTO> LoadByEquipmentSerialId(Guid id);
     }
 }

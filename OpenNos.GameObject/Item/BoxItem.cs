@@ -82,7 +82,7 @@ namespace OpenNos.GameObject
                                         Item i = ServerManager.Instance.GetItem(rollitem.ItemGeneratedVNum);
                                         sbyte rare = 0;
                                         byte upgrade = 0;
-                                        if (i.ItemType == ItemType.Armor || i.ItemType == ItemType.Weapon || i.ItemType == ItemType.Sell)
+                                        if (i.ItemType == ItemType.Armor || i.ItemType == ItemType.Weapon || i.ItemType == ItemType.Shell)
                                         {
                                             rare = box.Rare;
                                         }

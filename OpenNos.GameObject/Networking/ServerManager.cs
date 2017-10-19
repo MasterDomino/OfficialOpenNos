@@ -1269,10 +1269,7 @@ namespace OpenNos.GameObject
             _lastGroupId = 1;
         }
 
-        private void OnGlobalEvent(object sender, EventArgs e)
-        {
-            EventHelper.Instance.GenerateEvent((EventType)sender);
-        }
+        private void OnGlobalEvent(object sender, EventArgs e) => EventHelper.Instance.GenerateEvent((EventType)sender);
 
         private void LoadFamilies()
         {

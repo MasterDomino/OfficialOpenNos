@@ -12,11 +12,15 @@
  * GNU General Public License for more details.
  */
 
+using System;
+
 namespace OpenNos.Data.Interfaces
 {
     public interface IWearableInstanceDTO : IItemInstanceDTO
     {
         #region Properties
+
+        Guid EquipmentSerialId { get; set; }
 
         byte Ammo { get; set; }
 

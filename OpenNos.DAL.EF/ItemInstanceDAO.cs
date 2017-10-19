@@ -46,7 +46,7 @@ namespace OpenNos.DAL.EF
                 {
                     using (var context = DataAccessHelper.CreateContext())
                     {
-                        List<ShellEffect> deleteentities = context.ShellEffect.Where(s => s.ItemInstanceId == dto.Id).ToList();
+                        List<ShellEffect> deleteentities = context.ShellEffect.Where(s => s.EquipmentSerialId == dto.Id).ToList();
                         if (deleteentities.Count != 0)
                         {
                             context.ShellEffect.RemoveRange(deleteentities);

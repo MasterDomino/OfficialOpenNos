@@ -11,9 +11,7 @@
     <AssemblyName>OpenNos.Data</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <StyleCopTreatErrorsAsWarnings>True</StyleCopTreatErrorsAsWarnings>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <NuGetPackageImportStamp />
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -111,7 +109,6 @@
     <Compile Include="RespawnDTO.cs" />
     <Compile Include="RespawnMapTypeDTO.cs" />
     <Compile Include="ShellEffectDTO.cs" />
-    <Compile Include="ShellEffectGenerationDTO.cs" />
     <Compile Include="ShopItemDTO.cs" />
     <Compile Include="ShopDTO.cs" />
     <Compile Include="ItemInstanceDTO.cs" />

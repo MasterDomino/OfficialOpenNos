@@ -11,9 +11,7 @@
     <AssemblyName>OpenNos.DAL.EF</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <StyleCopTreatErrorsAsWarnings>True</StyleCopTreatErrorsAsWarnings>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <NuGetPackageImportStamp />
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -104,7 +102,6 @@
     <Compile Include="Entities\ScriptedInstance.cs" />
     <Compile Include="Entities\BCard.cs" />
     <Compile Include="Entities\ShellEffect.cs" />
-    <Compile Include="Entities\ShellEffectGeneration.cs" />
     <Compile Include="MaintenanceLogDAO.cs" />
     <Compile Include="Migrations\201706162134577_Aphrodite55.cs" />
     <Compile Include="Migrations\201706162134577_Aphrodite55.Designer.cs">
@@ -149,6 +146,10 @@
     <Compile Include="Migrations\201709281953580_Aphrodite65.cs" />
     <Compile Include="Migrations\201709281953580_Aphrodite65.Designer.cs">
       <DependentUpon>201709281953580_Aphrodite65.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710171909504_Aphrodite66.cs" />
+    <Compile Include="Migrations\201710171909504_Aphrodite66.Designer.cs">
+      <DependentUpon>201710171909504_Aphrodite66.cs</DependentUpon>
     </Compile>
     <Compile Include="RollGeneratedItemDAO.cs" />
     <Compile Include="MateDAO.cs" />
@@ -436,7 +437,6 @@
     <Compile Include="Entities\Shop.cs" />
     <Compile Include="RespawnMapTypeDAO.cs" />
     <Compile Include="ShellEffectDAO.cs" />
-    <Compile Include="ShellEffectGenerationDAO.cs" />
     <Compile Include="ShopDAO.cs" />
     <Compile Include="Entities\ShopItem.cs" />
     <Compile Include="ShopItemDAO.cs" />
@@ -688,6 +688,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201709281953580_Aphrodite65.resx">
       <DependentUpon>201709281953580_Aphrodite65.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710171909504_Aphrodite66.resx">
+      <DependentUpon>201710171909504_Aphrodite66.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,9 +1,5 @@
 ﻿using OpenNos.Domain;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OpenNos.Data
 {
@@ -17,6 +13,6 @@ namespace OpenNos.Data
 
         public short Value { get; set; }
 
-        public Guid ItemInstanceId { get; set; }
+        public Guid EquipmentSerialId { get; set; }
     }
 }

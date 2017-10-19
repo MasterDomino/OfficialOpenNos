@@ -18,7 +18,6 @@ using OpenNos.DAL.EF.Helpers;
 using OpenNos.DAL.Interface;
 using OpenNos.Data;
 using OpenNos.Data.Enums;
-using OpenNos.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +34,7 @@ namespace OpenNos.DAL.EF
             {
                 using (var context = DataAccessHelper.CreateContext())
                 {
-                    List<ShellEffect> deleteentities = context.ShellEffect.Where(s => s.ItemInstanceId == id).ToList();
+                    List<ShellEffect> deleteentities = context.ShellEffect.Where(s => s.EquipmentSerialId == id).ToList();
                     if (deleteentities.Count != 0)
                     {
                         context.ShellEffect.RemoveRange(deleteentities);
@@ -75,11 +74,11 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        public IEnumerable<ShellEffectDTO> LoadByItemInstanceId(Guid id)
+        public IEnumerable<ShellEffectDTO> LoadByEquipmentSerialId(Guid id)
         {
             using (var context = DataAccessHelper.CreateContext())
             {
-                return context.ShellEffect.Where(c => c.ItemInstanceId == id).ToList().Select(c => _mapper.Map<ShellEffectDTO>(c)).ToList();
+                return context.ShellEffect.Where(c => c.EquipmentSerialId == id).ToList().Select(c => _mapper.Map<ShellEffectDTO>(c)).ToList();
             }
         }
 

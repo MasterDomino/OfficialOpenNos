@@ -25,9 +25,7 @@ namespace OpenNos.DAL.EF
 
         public ShellEffectLevelType EffectLevel { get; set; }
 
-        public virtual ItemInstance ItemInstance { get; set; }
-
-        public Guid ItemInstanceId { get; set; }
+        public Guid EquipmentSerialId { get; set; }
 
         public long ShellEffectId { get; set; }
 

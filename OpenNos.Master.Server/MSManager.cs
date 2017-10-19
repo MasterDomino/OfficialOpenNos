@@ -35,7 +35,6 @@ namespace OpenNos.Master.Server
             LoginServers = new List<IScsServiceClient>();
             ConnectedAccounts = new ThreadSafeGenericList<AccountConnection>();
             AuthentificatedClients = new List<long>();
-            
         }
 
         #endregion

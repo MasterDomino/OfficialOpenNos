@@ -27,7 +27,6 @@ namespace OpenNos.GameObject
 
         private readonly Random _random;
         private Item item;
-        private List<ShellEffectDTO> shelleffects;
 
         #endregion
 
@@ -50,8 +49,6 @@ namespace OpenNos.GameObject
         public bool IsBound => BoundCharacterId.HasValue;
 
         public Item Item => item ?? (item = ServerManager.Instance.GetItem(ItemVNum));
-
-        public List<ShellEffectDTO> ShellEffects => shelleffects ?? (shelleffects = DAOFactory.ShellEffectDAO.LoadByItemInstanceId(Id).ToList());
 
         #endregion
 

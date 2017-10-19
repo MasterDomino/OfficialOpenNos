@@ -2843,7 +2843,6 @@ namespace OpenNos.GameObject
                             newItem.Upgrade = (byte)ServerManager.Instance.RandomNumber(50, 81);
                         }
 
-
                         List<ItemInstance> newInv = Inventory.AddToInventory(newItem);
                         if (newInv.Count > 0)
                         {
@@ -3348,12 +3347,11 @@ namespace OpenNos.GameObject
                         foreach (ItemInstance itemInstance in inventories.Where(s => s.Type != InventoryType.Bazaar && s.Type != InventoryType.FamilyWareHouse))
                         {
                             DAOFactory.IteminstanceDAO.InsertOrUpdate(itemInstance);
-
-                            if (itemInstance.ShellEffects != null)
+                            if (itemInstance is WearableInstance)
                             {
-                                foreach (ShellEffectDTO effect in itemInstance.ShellEffects)
+                                foreach (ShellEffectDTO effect in (itemInstance as WearableInstance).ShellEffects)
                                 {
-                                    effect.ItemInstanceId = itemInstance.Id;
+                                    effect.EquipmentSerialId = (itemInstance as WearableInstance).EquipmentSerialId;
                                     effect.ShellEffectId = DAOFactory.ShellEffectDAO.InsertOrUpdate(effect).ShellEffectId;
                                 }
                             }

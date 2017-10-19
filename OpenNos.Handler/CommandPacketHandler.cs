@@ -160,7 +160,7 @@ namespace OpenNos.Handler
                 try
                 {
                     ItemInstance instance = Session.Character.Inventory.LoadBySlotAndType(addShellEffectPacket.Slot, InventoryType.Equipment);
-                    instance.ShellEffects.Add(new ShellEffectDTO() { EffectLevel = (ShellEffectLevelType)addShellEffectPacket.EffectLevel, Effect = addShellEffectPacket.Effect, Value = addShellEffectPacket.Value, ItemInstanceId = instance.Id });
+                    (instance as WearableInstance).ShellEffects.Add(new ShellEffectDTO() { EffectLevel = (ShellEffectLevelType)addShellEffectPacket.EffectLevel, Effect = addShellEffectPacket.Effect, Value = addShellEffectPacket.Value, EquipmentSerialId = (instance as WearableInstance).EquipmentSerialId });
                 }
                 catch
                 {
@@ -901,7 +901,7 @@ namespace OpenNos.Handler
                 else
                 {
                     Session.SendPacket(Session.Character.GenerateSay("-------------Command Info-------------", 11));
-                    foreach (string message in messages.Where(s => s.ToLower().Contains(helpPacket.Contents.ToLower())))
+                    foreach (string message in messages.Where(s => s.IndexOf(helpPacket.Contents, StringComparison.OrdinalIgnoreCase) >= 0))
                     {
                         Session.SendPacket(Session.Character.GenerateSay(message, 12));
                     }
