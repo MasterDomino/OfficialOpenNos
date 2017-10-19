@@ -1794,7 +1794,7 @@ namespace OpenNos.GameObject
             }
 
             return fairy != null
-                ? $"pairy 1 {CharacterId} 4 {fairy.Item.Element} {fairy.ElementRate + fairy.Item.ElementRate + +(isUsingBooster ? 30 : 0)} {fairy.Item.Morph + (isUsingBooster ? 5 : 0)}"
+                ? $"pairy 1 {CharacterId} 4 {fairy.Item.Element} {fairy.ElementRate + fairy.Item.ElementRate + (isUsingBooster ? 30 : 0)} {fairy.Item.Morph + (isUsingBooster ? 5 : 0)}"
                 : $"pairy 1 {CharacterId} 0 0 0 0";
         }
 
