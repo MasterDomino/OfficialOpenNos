@@ -104,7 +104,7 @@ namespace OpenNos.Handler
             {
                 Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[AddPartner]NpcMonsterVNum: {addPartnerPacket.MonsterVNum} Level: {addPartnerPacket.Level}");
 
-                AddMate(addPartnerPacket.MonsterVNum, addPartnerPacket.Level, MateType.Partner);
+                addMate(addPartnerPacket.MonsterVNum, addPartnerPacket.Level, MateType.Partner);
             }
             else
             {
@@ -122,7 +122,7 @@ namespace OpenNos.Handler
             {
                 Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[AddPet]NpcMonsterVNum: {addPetPacket.MonsterVNum} Level: {addPetPacket.Level}");
 
-                AddMate(addPetPacket.MonsterVNum, addPetPacket.Level, MateType.Pet);
+                addMate(addPetPacket.MonsterVNum, addPetPacket.Level, MateType.Pet);
             }
             else
             {
@@ -140,7 +140,7 @@ namespace OpenNos.Handler
             {
                 Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[AddPortal]DestinationMapId: {addPortalPacket.DestinationMapId} DestinationMapX: {addPortalPacket.DestinationX} DestinationY: {addPortalPacket.DestinationY}");
 
-                AddPortal(addPortalPacket.DestinationMapId, addPortalPacket.DestinationX, addPortalPacket.DestinationY, addPortalPacket.PortalType == null ? (short)-1 : (short)addPortalPacket.PortalType, true);
+                addPortal(addPortalPacket.DestinationMapId, addPortalPacket.DestinationX, addPortalPacket.DestinationY, addPortalPacket.PortalType == null ? (short)-1 : (short)addPortalPacket.PortalType, true);
             }
             else
             {
@@ -160,7 +160,7 @@ namespace OpenNos.Handler
                 try
                 {
                     ItemInstance instance = Session.Character.Inventory.LoadBySlotAndType(addShellEffectPacket.Slot, InventoryType.Equipment);
-                    (instance as WearableInstance).ShellEffects.Add(new ShellEffectDTO() { EffectLevel = (ShellEffectLevelType)addShellEffectPacket.EffectLevel, Effect = addShellEffectPacket.Effect, Value = addShellEffectPacket.Value, EquipmentSerialId = (instance as WearableInstance).EquipmentSerialId });
+                    (instance as WearableInstance)?.ShellEffects.Add(new ShellEffectDTO() { EffectLevel = (ShellEffectLevelType)addShellEffectPacket.EffectLevel, Effect = addShellEffectPacket.Effect, Value = addShellEffectPacket.Value, EquipmentSerialId = (instance as WearableInstance)?.EquipmentSerialId ?? Guid.NewGuid() });
                 }
                 catch
                 {
@@ -251,7 +251,7 @@ namespace OpenNos.Handler
             if (banPacket != null)
             {
                 Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Ban]CharacterName: {banPacket.CharacterName} Reason: {banPacket.Reason} Until: {(banPacket.Duration == 0 ? DateTime.Now.AddYears(15) : DateTime.Now.AddDays(banPacket.Duration))}");
-                BanMethod(banPacket.CharacterName, banPacket.Duration, banPacket.Reason);
+                banMethod(banPacket.CharacterName, banPacket.Duration, banPacket.Reason);
             }
             else
             {
@@ -783,7 +783,7 @@ namespace OpenNos.Handler
                     if (ServerManager.Instance.GetSessionBySessionId(sessionId) != null)
                     {
                         Character character = ServerManager.Instance.GetSessionBySessionId(sessionId).Character;
-                        SendStats(character);
+                        sendStats(character);
                     }
                     else
                     {
@@ -795,12 +795,12 @@ namespace OpenNos.Handler
                     if (ServerManager.Instance.GetSessionByCharacterName(name) != null)
                     {
                         Character character = ServerManager.Instance.GetSessionByCharacterName(name).Character;
-                        SendStats(character);
+                        sendStats(character);
                     }
                     else if (DAOFactory.CharacterDAO.LoadByName(name) != null)
                     {
                         CharacterDTO characterDto = DAOFactory.CharacterDAO.LoadByName(name);
-                        SendStats(characterDto);
+                        sendStats(characterDto);
                     }
                     else
                     {
@@ -1102,7 +1102,7 @@ namespace OpenNos.Handler
         /// <param name="factionPacket"></param>
         public void Faction(FactionPacket factionPacket)
         {
-            if(factionPacket != null)
+            if (factionPacket != null)
             {
                 Session.SendPacket("scr 0 0 0 0 0 0 0");
                 Session.SendPacket(Session.Character.GenerateFaction());
@@ -1345,8 +1345,9 @@ namespace OpenNos.Handler
                 if (team.HasSelectedCharacter)
                 {
                     count++;
+                    // TODO: move that to resx soo we follow i18n
                     team.SendPacket(team.Character.GenerateSay($"User {Session.Character.Name} needs your help!", 12));
-                    team.SendPacket(team.Character.GenerateSay($"Please inform the family chat when you take care of!", 12));
+                    team.SendPacket(team.Character.GenerateSay("Please inform the family chat when you take care of!", 12));
                     team.SendPacket(Session.Character.GenerateSpk("Click this message to start chatting.", 5));
                     team.SendPacket(UserInterfaceHelper.Instance.GenerateMsg($"User {Session.Character.Name} needs your help!", 0));
                 }
@@ -1490,7 +1491,7 @@ namespace OpenNos.Handler
                 byte amount = itemRainPacket.Amount;
                 int count = itemRainPacket.Count;
                 int time = itemRainPacket.Time;
-                GameObject.MapInstance instance = Session.CurrentMapInstance;
+                MapInstance instance = Session.CurrentMapInstance;
 
                 Observable.Timer(TimeSpan.FromSeconds(0)).Subscribe(observer =>
                 {
@@ -1595,6 +1596,10 @@ namespace OpenNos.Handler
             }
         }
 
+        /// <summary>
+        /// $PenaltyLog Command
+        /// </summary>
+        /// <param name="penaltyLogPacket"></param>
         public void ListPenalties(PenaltyLogPacket penaltyLogPacket)
         {
             string returnHelp = CharacterStatsPacket.ReturnHelp();
@@ -1620,6 +1625,7 @@ namespace OpenNos.Handler
                             separatorSent = true;
                         }
                         IEnumerable<PenaltyLogDTO> penaltyLogs = ServerManager.Instance.PenaltyLogs.Where(s => s.AccountId == character.AccountId).ToList();
+
                         //PenaltyLogDTO penalty = penaltyLogs.LastOrDefault(s => s.DateEnd > DateTime.Now);
                         Session.SendPacket(Session.Character.GenerateSay("----- PENALTIES -----", 13));
 
@@ -1784,7 +1790,7 @@ namespace OpenNos.Handler
                     mutePacket.Duration = 60;
                 }
                 mutePacket.Reason = mutePacket.Reason?.Trim();
-                MuteMethod(mutePacket.CharacterName, mutePacket.Reason, mutePacket.Duration);
+                muteMethod(mutePacket.CharacterName, mutePacket.Reason, mutePacket.Duration);
             }
             else
             {
@@ -1846,7 +1852,7 @@ namespace OpenNos.Handler
             {
                 Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[PortalTo]DestinationMapId: {portalToPacket.DestinationMapId} DestinationMapX: {portalToPacket.DestinationX} DestinationY: {portalToPacket.DestinationY}");
 
-                AddPortal(portalToPacket.DestinationMapId, portalToPacket.DestinationX, portalToPacket.DestinationY, portalToPacket.PortalType == null ? (short)-1 : (short)portalToPacket.PortalType, false);
+                addPortal(portalToPacket.DestinationMapId, portalToPacket.DestinationX, portalToPacket.DestinationY, portalToPacket.PortalType == null ? (short)-1 : (short)portalToPacket.PortalType, false);
             }
             else
             {
@@ -2245,8 +2251,8 @@ namespace OpenNos.Handler
         /// <summary>
         /// $SPRefill Command
         /// </summary>
-        /// <param name="sprefillPacket"></param>
-        public void SPRefill(SPRefillPacket sprefillPacket)
+        /// <param name="spRefillPacket"></param>
+        public void SPRefill(SPRefillPacket spRefillPacket)
         {
             Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[SPRefill]");
 
@@ -2277,14 +2283,14 @@ namespace OpenNos.Handler
         /// <summary>
         /// $GlobalEvent Command
         /// </summary>
-        /// <param name="eventPacket"></param>
-        public void StartGlobalEvent(GlobalEventPacket eventPacket)
+        /// <param name="globalEventPacket"></param>
+        public void StartGlobalEvent(GlobalEventPacket globalEventPacket)
         {
-            if (eventPacket != null)
+            if (globalEventPacket != null)
             {
-                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[GlobalEvent]EventType: {eventPacket.EventType.ToString()}");
+                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[GlobalEvent]EventType: {globalEventPacket.EventType.ToString()}");
 
-                CommunicationServiceClient.Instance.RunGlobalEvent(eventPacket.EventType);
+                CommunicationServiceClient.Instance.RunGlobalEvent(globalEventPacket.EventType);
             }
             else
             {
@@ -2715,7 +2721,7 @@ namespace OpenNos.Handler
             }
         }
 
-        public void Unstuck(UnstuckPacket packet)
+        public void Unstuck(UnstuckPacket unstuckPacket)
         {
             if (Session?.Character != null)
             {
@@ -2780,30 +2786,31 @@ namespace OpenNos.Handler
                     });
                     switch (DAOFactory.PenaltyLogDAO.LoadByAccount(character.AccountId).Count(p => p.Penalty == PenaltyType.Warning))
                     {
-                        case 1: break;
+                        case 1:
+                            break;
 
                         case 2:
-                            MuteMethod(characterName, "Auto-Warning mute: 2 strikes", 30);
+                            muteMethod(characterName, "Auto-Warning mute: 2 strikes", 30);
                             break;
 
                         case 3:
-                            MuteMethod(characterName, "Auto-Warning mute: 3 strikes", 60);
+                            muteMethod(characterName, "Auto-Warning mute: 3 strikes", 60);
                             break;
 
                         case 4:
-                            MuteMethod(characterName, "Auto-Warning mute: 4 strikes", 720);
+                            muteMethod(characterName, "Auto-Warning mute: 4 strikes", 720);
                             break;
 
                         case 5:
-                            MuteMethod(characterName, "Auto-Warning mute: 5 strikes", 1440);
+                            muteMethod(characterName, "Auto-Warning mute: 5 strikes", 1440);
                             break;
 
                         case 69:
-                            BanMethod(characterName, 7, "LOL SIXTY NINE AMIRITE?");
+                            banMethod(characterName, 7, "LOL SIXTY NINE AMIRITE?");
                             break;
 
                         default:
-                            MuteMethod(characterName, "You've been THUNDERSTRUCK", 6969); // imagined number as for I = √(-1), complex z = a + bi
+                            muteMethod(characterName, "You've been THUNDERSTRUCK", 6969); // imagined number as for I = √(-1), complex z = a + bi
                             break;
                     }
                 }
@@ -2891,12 +2898,12 @@ namespace OpenNos.Handler
         }
 
         /// <summary>
-        /// private AddMate method
+        /// private addMate method
         /// </summary>
         /// <param name="vnum"></param>
         /// <param name="level"></param>
         /// <param name="mateType"></param>
-        private void AddMate(short vnum, byte level, MateType mateType)
+        private void addMate(short vnum, byte level, MateType mateType)
         {
             NpcMonster mateNpc = ServerManager.Instance.GetNpc(vnum);
             if (Session.CurrentMapInstance == Session.Character.Miniland && mateNpc != null)
@@ -2919,7 +2926,7 @@ namespace OpenNos.Handler
         /// <param name="destinationY"></param>
         /// <param name="type"></param>
         /// <param name="insertToDatabase"></param>
-        private void AddPortal(short destinationMapId, short destinationX, short destinationY, short type, bool insertToDatabase)
+        private void addPortal(short destinationMapId, short destinationX, short destinationY, short type, bool insertToDatabase)
         {
             if (Session.HasCurrentMapInstance)
             {
@@ -2948,7 +2955,7 @@ namespace OpenNos.Handler
         /// <param name="characterName"></param>
         /// <param name="duration"></param>
         /// <param name="reason"></param>
-        private void BanMethod(string characterName, int duration, string reason)
+        private void banMethod(string characterName, int duration, string reason)
         {
             CharacterDTO character = DAOFactory.CharacterDAO.LoadByName(characterName);
             if (character != null)
@@ -2978,7 +2985,7 @@ namespace OpenNos.Handler
         /// <param name="characterName"></param>
         /// <param name="reason"></param>
         /// <param name="duration"></param>
-        private void MuteMethod(string characterName, string reason, int duration)
+        private void muteMethod(string characterName, string reason, int duration)
         {
             CharacterDTO characterToMute = DAOFactory.CharacterDAO.LoadByName(characterName);
             if (characterToMute != null)
@@ -3010,7 +3017,7 @@ namespace OpenNos.Handler
         /// Helper method used for sending stats of desired character
         /// </summary>
         /// <param name="character"></param>
-        private void SendStats(CharacterDTO character)
+        private void sendStats(CharacterDTO character)
         {
             Session.SendPacket(Session.Character.GenerateSay("----- CHARACTER -----", 13));
             Session.SendPacket(Session.Character.GenerateSay($"Name: {character.Name}", 13));

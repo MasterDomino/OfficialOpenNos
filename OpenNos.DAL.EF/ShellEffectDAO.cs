@@ -32,7 +32,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     List<ShellEffect> deleteentities = context.ShellEffect.Where(s => s.EquipmentSerialId == id).ToList();
                     if (deleteentities.Count != 0)
@@ -55,16 +55,16 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     long shelleffectId = shelleffect.ShellEffectId;
                     ShellEffect entity = context.ShellEffect.FirstOrDefault(c => c.ShellEffectId.Equals(shelleffectId));
 
                     if (entity == null)
                     {
-                        return Insert(shelleffect, context);
+                        return insert(shelleffect, context);
                     }
-                    return Update(entity, shelleffect, context);
+                    return update(entity, shelleffect, context);
                 }
             }
             catch (Exception e)
@@ -76,13 +76,13 @@ namespace OpenNos.DAL.EF
 
         public IEnumerable<ShellEffectDTO> LoadByEquipmentSerialId(Guid id)
         {
-            using (var context = DataAccessHelper.CreateContext())
+            using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 return context.ShellEffect.Where(c => c.EquipmentSerialId == id).ToList().Select(c => _mapper.Map<ShellEffectDTO>(c)).ToList();
             }
         }
 
-        private ShellEffectDTO Insert(ShellEffectDTO shelleffect, OpenNosContext context)
+        private ShellEffectDTO insert(ShellEffectDTO shelleffect, OpenNosContext context)
         {
             ShellEffect entity = _mapper.Map<ShellEffect>(shelleffect);
             context.ShellEffect.Add(entity);
@@ -90,7 +90,7 @@ namespace OpenNos.DAL.EF
             return _mapper.Map<ShellEffectDTO>(entity);
         }
 
-        private ShellEffectDTO Update(ShellEffect entity, ShellEffectDTO shelleffect, OpenNosContext context)
+        private ShellEffectDTO update(ShellEffect entity, ShellEffectDTO shelleffect, OpenNosContext context)
         {
             if (entity != null)
             {

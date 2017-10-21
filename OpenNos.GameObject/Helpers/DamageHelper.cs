@@ -9,9 +9,19 @@ namespace OpenNos.GameObject
 {
     public class DamageHelper
     {
-        private static DamageHelper instance;
+        #region Members
 
-        public static DamageHelper Instance => instance ?? (instance = new DamageHelper());
+        private static DamageHelper _instance;
+
+        #endregion
+
+        #region Properties
+
+        public static DamageHelper Instance => _instance ?? (_instance = new DamageHelper());
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Calculates the damage attacker inflicts defender
@@ -31,13 +41,13 @@ namespace OpenNos.GameObject
                 int[] tmp;
                 int temp = 0;
 
-                tmp = GetBuff(attacker.Level, attacker.Buffs, attacker.BCards, type, subtype, BuffType.Good, ref temp);
+                tmp = getBuff(attacker.Level, attacker.Buffs, attacker.BCards, type, subtype, BuffType.Good, ref temp);
                 value1 += tmp[0];
                 value2 += tmp[1];
-                tmp = GetBuff(attacker.Level, attacker.Buffs, attacker.BCards, type, subtype, BuffType.Neutral, ref temp);
+                tmp = getBuff(attacker.Level, attacker.Buffs, attacker.BCards, type, subtype, BuffType.Neutral, ref temp);
                 value1 += tmp[0];
                 value2 += tmp[1];
-                tmp = GetBuff(defender.Level, defender.Buffs, defender.BCards, type, subtype, BuffType.Bad, ref temp);
+                tmp = getBuff(defender.Level, defender.Buffs, defender.BCards, type, subtype, BuffType.Bad, ref temp);
                 value1 += tmp[0];
                 value2 += tmp[1];
 
@@ -51,13 +61,13 @@ namespace OpenNos.GameObject
                 int[] tmp;
                 int temp = 0;
 
-                tmp = GetBuff(defender.Level, defender.Buffs, defender.BCards, type, subtype, BuffType.Good, ref temp);
+                tmp = getBuff(defender.Level, defender.Buffs, defender.BCards, type, subtype, BuffType.Good, ref temp);
                 value1 += tmp[0];
                 value2 += tmp[1];
-                tmp = GetBuff(defender.Level, defender.Buffs, defender.BCards, type, subtype, BuffType.Neutral, ref temp);
+                tmp = getBuff(defender.Level, defender.Buffs, defender.BCards, type, subtype, BuffType.Neutral, ref temp);
                 value1 += tmp[0];
                 value2 += tmp[1];
-                tmp = GetBuff(attacker.Level, attacker.Buffs, attacker.BCards, type, subtype, BuffType.Bad, ref temp);
+                tmp = getBuff(attacker.Level, attacker.Buffs, attacker.BCards, type, subtype, BuffType.Bad, ref temp);
                 value1 += tmp[0];
                 value2 += tmp[1];
 
@@ -92,37 +102,37 @@ namespace OpenNos.GameObject
             defender.DefenseUpgrade += (short)GetAttackerBenefitingBuffs(CardType.Defence, (byte)AdditionalTypes.Defence.DefenceLevelDecreased)[0];
 
             /*
-             * 
+             *
              * Percentage Boost categories:
              *  1.: Adds to Total Damage
              *  2.: Adds to Normal Damage
              *  3.: Adds to Base Damage
              *  4.: Adds to Defense
              *  5.: Adds to Element
-             * 
+             *
              * Buff Effects get added, whereas
              * Shell Effects get multiplied afterwards.
-             * 
+             *
              * Simplified Example on Defense (Same for Attack):
              *  - 1k Defense
              *  - Costume(+5% Defense)
              *  - Defense Potion(+20% Defense)
              *  - S-Defense Shell with 20% Boost
-             *  
+             *
              * Calculation:
              *  1000 * 1.25 * 1.2 = 1500
              *  Def    Buff   Shell Total
-             *  
+             *
              * Keep in Mind that after each step, one has
              * to round the current value down if necessary
-             * 
+             *
              * Static Boost categories:
              *  1.: Adds to Total Damage
              *  2.: Adds to Normal Damage
              *  3.: Adds to Base Damage
              *  4.: Adds to Defense
              *  5.: Adds to Element
-             *  
+             *
              */
 
             #region Definitions
@@ -476,6 +486,7 @@ namespace OpenNos.GameObject
                 {
                     chance = 1;
                 }
+
                 //if (GetBuff(CardType.Buff, (byte)AdditionalTypes.DodgeAndDefencePercent.)[0] != 0)    TODO: Eagle Eyes AND Other Fixed Hitrates
                 //{
                 //    chance = 10;
@@ -489,9 +500,11 @@ namespace OpenNos.GameObject
                     case AttackType.Melee:
                         bonus += GetShellArmorEffectValue(ShellArmorEffectType.CloseDefenceDodgeInPVP);
                         break;
+
                     case AttackType.Range:
                         bonus += GetShellArmorEffectValue(ShellArmorEffectType.DistanceDefenceDodgeInPVP);
                         break;
+
                     case AttackType.Magical:
                         bonus += GetShellArmorEffectValue(ShellArmorEffectType.IgnoreMagicDamage);
                         break;
@@ -596,6 +609,7 @@ namespace OpenNos.GameObject
             #endregion
 
             baseDamage = (int)((int)((baseDamage + staticBoostCategory3 + weaponDamage + 15) * boostCategory3) * shellBoostCategory3);
+
             #endregion
 
             #region Defense
@@ -821,7 +835,7 @@ namespace OpenNos.GameObject
 
             #endregion
 
-            #region Elemental Damage 
+            #region Elemental Damage
 
             int elementalDamage = (int)((int)((int)((int)((staticBoostCategory5 + fairyDamage) * elementalBoost) * (1 - (defender.Resistance / 100D))) * boostCategory5) * shellBoostCategory5);
 
@@ -843,7 +857,7 @@ namespace OpenNos.GameObject
 
             if (defender.EntityType == EntityType.Monster || defender.EntityType == EntityType.NPC)
             {
-                totalDamage -= GetMonsterDamageBonus(defender.Level);
+                totalDamage -= getMonsterDamageBonus(defender.Level);
             }
 
             if (totalDamage < 5)
@@ -853,7 +867,7 @@ namespace OpenNos.GameObject
 
             if (attacker.EntityType == EntityType.Monster || attacker.EntityType == EntityType.NPC)
             {
-                totalDamage += GetMonsterDamageBonus(attacker.Level);
+                totalDamage += getMonsterDamageBonus(attacker.Level);
             }
 
             #endregion
@@ -871,35 +885,7 @@ namespace OpenNos.GameObject
             return totalDamage;
         }
 
-        private int GetMonsterDamageBonus(byte Level)
-        {
-            if (Level < 45)
-            {
-                return 0;
-            }
-            else if (Level < 55)
-            {
-                return Level;
-            }
-            else if (Level < 60)
-            {
-                return Level * 2;
-            }
-            else if (Level < 65)
-            {
-                return Level * 3;
-            }
-            else if (Level < 70)
-            {
-                return Level * 4;
-            }
-            else
-            {
-                return Level * 5;
-            }
-        }
-
-        private int[] GetBuff(byte Level, List<Buff> buffs, List<BCard> bcards, CardType type, byte subtype, BuffType btype, ref int count)
+        private int[] getBuff(byte Level, List<Buff> buffs, List<BCard> bcards, CardType type, byte subtype, BuffType btype, ref int count)
         {
             int value1 = 0;
             int value2 = 0;
@@ -977,5 +963,35 @@ namespace OpenNos.GameObject
 
             return new[] { value1, value2 };
         }
+
+        private int getMonsterDamageBonus(byte Level)
+        {
+            if (Level < 45)
+            {
+                return 0;
+            }
+            else if (Level < 55)
+            {
+                return Level;
+            }
+            else if (Level < 60)
+            {
+                return Level * 2;
+            }
+            else if (Level < 65)
+            {
+                return Level * 3;
+            }
+            else if (Level < 70)
+            {
+                return Level * 4;
+            }
+            else
+            {
+                return Level * 5;
+            }
+        }
+
+        #endregion
     }
 }

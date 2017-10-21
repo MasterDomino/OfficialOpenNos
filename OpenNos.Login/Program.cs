@@ -31,29 +31,48 @@ namespace OpenNos.Login
 {
     public static class Program
     {
+        #region Members
+
+        private static bool _isDebug;
+
+        #endregion
+
         #region Methods
 
-        public static void Main()
+        public static void Main(string[] args)
         {
             checked
             {
                 try
                 {
-                    CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
 #if DEBUG
-                    Thread.Sleep(1000);
+                    _isDebug = true;
 #endif
+                    CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
+                    Console.Title = $"OpenNos Login Server{(_isDebug ? " Development Environment" : string.Empty)}";
+
+                    bool ignoreStartupMessages = false;
+                    foreach (string arg in args)
+                    {
+                        if (arg == "--nomsg")
+                        {
+                            ignoreStartupMessages = true;
+                        }
+                    }
+
                     // initialize Logger
                     Logger.InitializeLogger(LogManager.GetLogger(typeof(Program)));
-                    Assembly assembly = Assembly.GetExecutingAssembly();
-                    FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
 
-                    Console.Title = $"OpenNos Login Server v{fileVersionInfo.ProductVersion}dev";
                     int port = Convert.ToInt32(ConfigurationManager.AppSettings["LoginPort"]);
-                    string text = $"LOGIN SERVER v{fileVersionInfo.ProductVersion}dev - PORT : {port} by OpenNos Team";
-                    int offset = (Console.WindowWidth / 2) + (text.Length / 2);
-                    string separator = new string('=', Console.WindowWidth);
-                    Console.WriteLine(separator + string.Format("{0," + offset + "}\n", text) + separator);
+                    if (!ignoreStartupMessages)
+                    {
+                        Assembly assembly = Assembly.GetExecutingAssembly();
+                        FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+                        string text = $"LOGIN SERVER v{fileVersionInfo.ProductVersion}dev - PORT : {port} by OpenNos Team";
+                        int offset = (Console.WindowWidth / 2) + (text.Length / 2);
+                        string separator = new string('=', Console.WindowWidth);
+                        Console.WriteLine(separator + string.Format("{0," + offset + "}\n", text) + separator);
+                    }
 
                     // initialize api
                     if (CommunicationServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["MasterAuthKey"]))
@@ -73,7 +92,7 @@ namespace OpenNos.Login
                     try
                     {
                         // register EF -> GO and GO -> EF mappings
-                        RegisterMappings();
+                        registerMappings();
 
                         // initialize PacketSerialization
                         PacketFactory.Initialize<WalkPacket>();
@@ -93,7 +112,7 @@ namespace OpenNos.Login
             }
         }
 
-        private static void RegisterMappings()
+        private static void registerMappings()
         {
             // entities
             DAOFactory.AccountDAO.RegisterMapping(typeof(Account)).InitializeMapper();

@@ -83,7 +83,7 @@ namespace OpenNos.GameObject.Helpers
                             LOD.GenerateLod(35);
                             break;
 
-                        case EventType.MeteoriteGame:
+                        case EventType.METEORITEGAME:
                             MeteoriteGame.GenerateMeteoriteGame();
                             break;
                     }

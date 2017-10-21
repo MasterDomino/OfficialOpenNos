@@ -323,7 +323,7 @@ namespace OpenNos.Import.Console
                 dictionaryMusic[int.Parse(linesave[2])] = int.Parse(linesave[7]);
             });
 
-            var mapPartitioner = Partitioner.Create(new DirectoryInfo(folderMap).GetFiles(), EnumerablePartitionerOptions.NoBuffering);
+            OrderablePartitioner<FileInfo> mapPartitioner = Partitioner.Create(new DirectoryInfo(folderMap).GetFiles(), EnumerablePartitionerOptions.NoBuffering);
             Parallel.ForEach(mapPartitioner, new ParallelOptions { MaxDegreeOfParallelism = 8 }, file =>
             {
                 string name = string.Empty;
@@ -815,7 +815,7 @@ namespace OpenNos.Import.Console
 
         public void ImportNpcMonsterData()
         {
-            var npcMonsterDataPartitioner = Partitioner.Create(_packetList.Where(o => o[0].Equals("e_info") && o[1].Equals("10")), EnumerablePartitionerOptions.NoBuffering);
+            OrderablePartitioner<string[]> npcMonsterDataPartitioner = Partitioner.Create(_packetList.Where(o => o[0].Equals("e_info") && o[1].Equals("10")), EnumerablePartitionerOptions.NoBuffering);
             Parallel.ForEach(npcMonsterDataPartitioner, new ParallelOptions { MaxDegreeOfParallelism = 8 }, currentPacket =>
             {
                 if (currentPacket.Length > 25)

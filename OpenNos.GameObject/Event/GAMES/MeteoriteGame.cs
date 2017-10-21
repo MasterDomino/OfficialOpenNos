@@ -45,7 +45,7 @@ namespace OpenNos.GameObject.Event.GAMES
                 }
 
                 ServerManager.Instance.Sessions.Where(s => s.Character != null).ToList().ForEach(s => s.Character.IsWaitingForEvent = false);
-                ServerManager.Instance.StartedEvents.Remove(EventType.MeteoriteGame);
+                ServerManager.Instance.StartedEvents.Remove(EventType.METEORITEGAME);
 
                 MeteoriteGameThread task = new MeteoriteGameThread();
                 Observable.Timer(TimeSpan.FromSeconds(10)).Subscribe(X => task.Run(map));
@@ -66,7 +66,59 @@ namespace OpenNos.GameObject.Event.GAMES
 
             #region Methods
 
-            private void RemoveSP(ClientSession Session, short vnum)
+            public void Run(MapInstance map)
+            {
+                _map = map;
+
+                foreach (ClientSession sess in _map.Sessions)
+                {
+                    ServerManager.Instance.TeleportOnRandomPlaceInMap(sess, map.MapInstanceId);
+                    if (sess.Character.IsVehicled)
+                    {
+                        sess.Character.RemoveVehicle();
+                    }
+                    if (sess.Character.UseSp)
+                    {
+                        sess.Character.LastSp = (DateTime.Now - Process.GetCurrentProcess().StartTime.AddSeconds(-50)).TotalSeconds;
+                        SpecialistInstance specialist = sess.Character.Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear);
+                        if (specialist != null)
+                        {
+                            removeSP(sess, specialist.ItemVNum);
+                        }
+                    }
+
+                    sess.Character.Speed = 12;
+                    sess.Character.IsVehicled = true;
+                    sess.Character.Morph = 1156;
+                    sess.Character.ArenaWinner = 0;
+                    sess.Character.MorphUpgrade = 0;
+                    sess.Character.MorphUpgrade2 = 0;
+                    sess.SendPacket(sess.Character.GenerateCond());
+                    sess.Character.LastSpeedChange = DateTime.Now;
+                    sess.CurrentMapInstance?.Broadcast(sess.Character.GenerateCMode());
+                }
+
+                int i = 0;
+                while (_map?.Sessions?.Any() == true)
+                {
+                    runRound(i++);
+                }
+
+                //ended
+            }
+
+            private IEnumerable<Tuple<short, int, short, short>> generateDrop(Map map, short vnum, int amountofdrop, int amount)
+            {
+                List<Tuple<short, int, short, short>> dropParameters = new List<Tuple<short, int, short, short>>();
+                for (int i = 0; i < amountofdrop; i++)
+                {
+                    MapCell cell = map.GetRandomPosition();
+                    dropParameters.Add(new Tuple<short, int, short, short>(vnum, amount, cell.X, cell.Y));
+                }
+                return dropParameters;
+            }
+
+            private void removeSP(ClientSession Session, short vnum)
             {
                 if (Session?.HasSession == true)
                 {
@@ -75,11 +127,11 @@ namespace OpenNos.GameObject.Event.GAMES
                         return;
                     }
                     List<BuffType> bufftodisable = new List<BuffType>
-                {
-                    BuffType.Bad,
-                    BuffType.Good,
-                    BuffType.Neutral
-                };
+                    {
+                        BuffType.Bad,
+                        BuffType.Good,
+                        BuffType.Neutral
+                    };
                     Session.Character.DisableBuffs(bufftodisable);
                     Session.Character.EquipmentBCards.RemoveAll(s => s.ItemVNum.Equals(vnum));
                     Session.Character.UseSp = false;
@@ -118,68 +170,14 @@ namespace OpenNos.GameObject.Event.GAMES
                 }
             }
 
-            public void Run(MapInstance map)
-            {
-                _map = map;
-
-                foreach (ClientSession sess in _map.Sessions)
-                {
-                    ServerManager.Instance.TeleportOnRandomPlaceInMap(sess, map.MapInstanceId);
-                    if (sess.Character.IsVehicled)
-                    {
-                        sess.Character.RemoveVehicle();
-                    }
-                    if (sess.Character.UseSp)
-                    {
-                        double currentRunningSeconds = (DateTime.Now - Process.GetCurrentProcess().StartTime.AddSeconds(-50)).TotalSeconds;
-
-                        sess.Character.LastSp = currentRunningSeconds;
-                        SpecialistInstance specialist = sess.Character.Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear);
-                        if (specialist != null)
-                        {
-                            RemoveSP(sess, specialist.ItemVNum);
-                        }
-                    }
-
-                    sess.Character.Speed = 12;
-                    sess.Character.IsVehicled = true;
-                    sess.Character.Morph = 1156;
-                    sess.Character.ArenaWinner = 0;
-                    sess.Character.MorphUpgrade = 0;
-                    sess.Character.MorphUpgrade2 = 0;
-                    sess.SendPacket(sess.Character.GenerateCond());
-                    sess.Character.LastSpeedChange = DateTime.Now;
-                    sess.CurrentMapInstance?.Broadcast(sess.Character.GenerateCMode());
-                }
-
-                int i = 0;
-                while (_map?.Sessions?.Any() == true)
-                {
-                    RunRound(i++);
-                }
-
-                //ended
-            }
-
-            private IEnumerable<Tuple<short, int, short, short>> GenerateDrop(Map map, short vnum, int amountofdrop, int amount)
-            {
-                List<Tuple<short, int, short, short>> dropParameters = new List<Tuple<short, int, short, short>>();
-                for (int i = 0; i < amountofdrop; i++)
-                {
-                    MapCell cell = map.GetRandomPosition();
-                    dropParameters.Add(new Tuple<short, int, short, short>(vnum, amount, cell.X, cell.Y));
-                }
-                return dropParameters;
-            }
-
-            private void RunRound(int number)
+            private void runRound(int number)
             {
                 int amount = 120 + (60 * number);
 
                 int i = amount;
                 while (i != 0)
                 {
-                    SpawnCircle(number);
+                    spawnCircle(number);
                     Thread.Sleep(60000 / amount);
                     i--;
                 }
@@ -207,7 +205,7 @@ namespace OpenNos.GameObject.Event.GAMES
                 Thread.Sleep(30000);
             }
 
-            private void SpawnCircle(int round)
+            private void spawnCircle(int round)
             {
                 if (_map != null)
                 {
