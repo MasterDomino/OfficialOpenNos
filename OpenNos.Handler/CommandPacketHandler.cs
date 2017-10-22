@@ -159,8 +159,11 @@ namespace OpenNos.Handler
                 Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[AddShellEffect]Slot: {addShellEffectPacket.Slot} EffectLevel: {addShellEffectPacket.EffectLevel} Effect: {addShellEffectPacket.Effect} Value: {addShellEffectPacket.Value}");
                 try
                 {
-                    ItemInstance instance = Session.Character.Inventory.LoadBySlotAndType(addShellEffectPacket.Slot, InventoryType.Equipment);
-                    (instance as WearableInstance)?.ShellEffects.Add(new ShellEffectDTO() { EffectLevel = (ShellEffectLevelType)addShellEffectPacket.EffectLevel, Effect = addShellEffectPacket.Effect, Value = addShellEffectPacket.Value, EquipmentSerialId = (instance as WearableInstance)?.EquipmentSerialId ?? Guid.NewGuid() });
+                    WearableInstance instance = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>(addShellEffectPacket.Slot, InventoryType.Equipment);
+                    if (instance != null)
+                    {
+                        instance.ShellEffects.Add(new ShellEffectDTO() { EffectLevel = (ShellEffectLevelType)addShellEffectPacket.EffectLevel, Effect = addShellEffectPacket.Effect, Value = addShellEffectPacket.Value, EquipmentSerialId = instance.EquipmentSerialId });
+                    }
                 }
                 catch
                 {

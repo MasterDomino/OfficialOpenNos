@@ -3351,11 +3351,11 @@ namespace OpenNos.GameObject
                         foreach (ItemInstance itemInstance in inventories.Where(s => s.Type != InventoryType.Bazaar && s.Type != InventoryType.FamilyWareHouse))
                         {
                             DAOFactory.IteminstanceDAO.InsertOrUpdate(itemInstance);
-                            if (itemInstance is WearableInstance)
+                            if (itemInstance is WearableInstance wearInstance)
                             {
-                                foreach (ShellEffectDTO effect in (itemInstance as WearableInstance)?.ShellEffects)
+                                foreach (ShellEffectDTO effect in wearInstance.ShellEffects)
                                 {
-                                    effect.EquipmentSerialId = (itemInstance as WearableInstance)?.EquipmentSerialId ?? Guid.NewGuid();
+                                    effect.EquipmentSerialId = wearInstance.EquipmentSerialId;
                                     effect.ShellEffectId = DAOFactory.ShellEffectDAO.InsertOrUpdate(effect).ShellEffectId;
                                 }
                             }

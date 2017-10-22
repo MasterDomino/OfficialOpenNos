@@ -30,7 +30,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     NpcMonsterSkill entity = _mapper.Map<NpcMonsterSkill>(npcMonsterSkill);
                     context.NpcMonsterSkill.Add(entity);
@@ -49,7 +49,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     context.Configuration.AutoDetectChangesEnabled = false;
                     foreach (NpcMonsterSkillDTO Skill in skills)
@@ -69,7 +69,7 @@ namespace OpenNos.DAL.EF
 
         public List<NpcMonsterSkillDTO> LoadAll()
         {
-            using (var context = DataAccessHelper.CreateContext())
+            using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 return context.NpcMonsterSkill.ToList().Select(n => _mapper.Map<NpcMonsterSkillDTO>(n)).ToList();
             }
@@ -77,7 +77,7 @@ namespace OpenNos.DAL.EF
 
         public IEnumerable<NpcMonsterSkillDTO> LoadByNpcMonster(short npcId)
         {
-            using (var context = DataAccessHelper.CreateContext())
+            using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 foreach (NpcMonsterSkill NpcMonsterSkillobject in context.NpcMonsterSkill.Where(i => i.NpcMonsterVNum == npcId))
                 {
