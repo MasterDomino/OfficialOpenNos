@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace OpenNos.Core
@@ -164,6 +165,50 @@ namespace OpenNos.Core
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns>integer number of found elements</returns>
+        public int CountLinq(Func<TV, bool> predicate)
+        {
+            if (!_disposed)
+            {
+                Lock.EnterReadLock();
+                try
+                {
+                    return Items.Values.Count(predicate);
+                }
+                finally
+                {
+                    Lock.ExitReadLock();
+                }
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// returns list based on given predicate
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public List<TV> Where(Func<TV, bool> predicate)
+        {
+            if (!_disposed)
+            {
+                Lock.EnterReadLock();
+                try
+                {
+                    return new List<TV>(Items.Values.Where(predicate));
+                }
+                finally
+                {
+                    Lock.ExitReadLock();
+                }
+            }
+            return new List<TV>();
         }
 
         /// <summary>

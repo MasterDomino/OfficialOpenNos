@@ -132,6 +132,11 @@ namespace OpenNos.Core
             return false;
         }
 
+        /// <summary>
+        /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns>integer number of found elements</returns>
         public int CountLinq(Func<T, bool> predicate)
         {
             if (!_disposed)
@@ -149,6 +154,10 @@ namespace OpenNos.Core
             return 0;
         }
 
+        /// <summary>
+        /// Copies the entire List&lt;T&gt; to a compatible one-dimensional array, starting at the beginning of the target array.
+        /// </summary>
+        /// <param name="grpmembers"></param>
         public void CopyTo(T[] grpmembers)
         {
             if (!_disposed)
@@ -165,6 +174,9 @@ namespace OpenNos.Core
             }
         }
 
+        /// <summary>
+        /// Removes all elements from the List&lt;T&gt;.
+        /// </summary>
         public void Clear()
         {
             if (!_disposed)
@@ -181,6 +193,11 @@ namespace OpenNos.Core
             }
         }
 
+        /// <summary>
+        /// returns the element at given index
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns>T object</returns>
         public T ElementAt(int v)
         {
             if (!_disposed)
@@ -198,42 +215,11 @@ namespace OpenNos.Core
             return default;
         }
 
-        public T FirstOrDefault()
-        {
-            if (!_disposed)
-            {
-                Lock.EnterReadLock();
-                try
-                {
-                    return _list.FirstOrDefault();
-                }
-                finally
-                {
-                    Lock.ExitReadLock();
-                }
-            }
-            return default;
-        }
-
-        public T FirstOrDefault(Func<T, bool> predicate)
-        {
-            if (!_disposed)
-            {
-                Lock.EnterReadLock();
-                try
-                {
-#pragma warning disable RCS1119 // Call 'Find' method instead of 'FirstOrDefault' method.
-                    return _list.FirstOrDefault(predicate);
-#pragma warning restore RCS1119 // Call 'Find' method instead of 'FirstOrDefault' method.
-                }
-                finally
-                {
-                    Lock.ExitReadLock();
-                }
-            }
-            return default;
-        }
-
+        /// <summary>
+        ///  Searches for an element that matches the conditions defined by the specified predicate, and returns the first occurrence within the entire List&lt;T&gt;.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns>T object</returns>
         public T Find(Predicate<T> predicate)
         {
             if (!_disposed)
@@ -251,6 +237,10 @@ namespace OpenNos.Core
             return default;
         }
 
+        /// <summary>
+        /// executes actions for each entry of the list
+        /// </summary>
+        /// <param name="action"></param>
         public void ForEach(Action<T> action)
         {
             if (!_disposed)
@@ -267,6 +257,10 @@ namespace OpenNos.Core
             }
         }
 
+        /// <summary>
+        /// returns a list of all objects in current thread safe generic list
+        /// </summary>
+        /// <returns>List&lt;T&gt;</returns>
         public List<T> GetAllItems()
         {
             if (!_disposed)
@@ -284,6 +278,10 @@ namespace OpenNos.Core
             return new List<T>();
         }
 
+        /// <summary>
+        /// removes all matches based on given predicate
+        /// </summary>
+        /// <param name="match"></param>
         public void RemoveAll(Predicate<T> match)
         {
             if (!_disposed)
@@ -300,6 +298,10 @@ namespace OpenNos.Core
             }
         }
 
+        /// <summary>
+        /// removes entry from the list
+        /// </summary>
+        /// <param name="match"></param>
         public void Remove(T match)
         {
             if (!_disposed)

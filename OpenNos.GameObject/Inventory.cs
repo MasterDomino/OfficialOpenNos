@@ -188,8 +188,8 @@ namespace OpenNos.GameObject
                 // check if item can be stapled
                 if (newItem.Type != InventoryType.Bazaar && (newItem.Item.Type == InventoryType.Etc || newItem.Item.Type == InventoryType.Main))
                 {
-                    IEnumerable<ItemInstance> slotNotFull = GetAllItems().Where(i => i.Type != InventoryType.Bazaar && i.Type != InventoryType.PetWarehouse && i.Type != InventoryType.Warehouse && i.Type != InventoryType.FamilyWareHouse && i.ItemVNum.Equals(newItem.ItemVNum) && i.Amount < MAX_ITEM_AMOUNT);
-                    int freeslot = BackpackSize() - GetAllItems().Count(s => s.Type == newItem.Type);
+                    List<ItemInstance> slotNotFull = Where(i => i.Type != InventoryType.Bazaar && i.Type != InventoryType.PetWarehouse && i.Type != InventoryType.Warehouse && i.Type != InventoryType.FamilyWareHouse && i.ItemVNum.Equals(newItem.ItemVNum) && i.Amount < MAX_ITEM_AMOUNT);
+                    int freeslot = BackpackSize() - CountLinq(s => s.Type == newItem.Type);
                     if (newItem.Amount <= (freeslot * MAX_ITEM_AMOUNT) + slotNotFull.Sum(s => MAX_ITEM_AMOUNT - s.Amount))
                     {
                         foreach (ItemInstance slot in slotNotFull)
@@ -270,7 +270,7 @@ namespace OpenNos.GameObject
 
         public int CountItem(int itemVNum) => GetAllItems().Where(s => s.ItemVNum == itemVNum && s.Type != InventoryType.FamilyWareHouse && s.Type != InventoryType.Bazaar && s.Type != InventoryType.Warehouse && s.Type != InventoryType.PetWarehouse).Sum(i => i.Amount);
 
-        public int CountItemInAnInventory(InventoryType inv) => GetAllItems().Count(s => s.Type == inv);
+        public int CountItemInAnInventory(InventoryType inv) => CountLinq(s => s.Type == inv);
 
         public Tuple<short, InventoryType> DeleteById(Guid id)
         {

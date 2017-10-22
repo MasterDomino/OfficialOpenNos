@@ -2128,7 +2128,7 @@ namespace OpenNos.Handler
                 if (setPerfectionPacket.Slot >= 0)
                 {
                     SpecialistInstance specialistInstance = Session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>(setPerfectionPacket.Slot, 0);
-                    
+
                     if(specialistInstance != null)
                     {
                         switch (setPerfectionPacket.Type)
@@ -2164,7 +2164,7 @@ namespace OpenNos.Handler
                             case 7:
                                 specialistInstance.SpLight = setPerfectionPacket.Value;
                                 break;
-                                
+
                             case 8:
                                 specialistInstance.SpDark = setPerfectionPacket.Value;
                                 break;

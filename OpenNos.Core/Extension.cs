@@ -16,6 +16,7 @@ using OpenNos.Core.ArrayExtensions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace OpenNos.Core
@@ -89,16 +90,34 @@ namespace OpenNos.Core
         }
     }
 
-    internal static class ConcurrentQueueExtensions
+    public static class ConcurrentBagExtensions
     {
         #region Methods
 
-        public static void Clear<T>(this ConcurrentQueue<T> queue)
+        public static void AddRange<T>(this ConcurrentBag<T> bag, List<T> list)
         {
-            while (queue.TryDequeue(out T item))
+            foreach (T item in list)
             {
-                // do nothing
+                bag.Add(item);
             }
+        }
+
+        public static void Clear<T>(this ConcurrentBag<T> bag)
+        {
+            while (bag.Count > 0)
+            {
+                bag.TryTake(out T item);
+            }
+        }
+
+        public static ConcurrentBag<T> Where<T>(this ConcurrentBag<T> bag, Func<T, bool> predicate)
+        {
+            ConcurrentBag<T> newBag = new ConcurrentBag<T>();
+            foreach (T item in bag.ToList().Where(predicate))
+            {
+                newBag.Add(item);
+            }
+            return newBag;
         }
 
         #endregion
@@ -214,6 +233,21 @@ namespace OpenNos.Core
                 return 0;
             }
             return obj.GetHashCode();
+        }
+
+        #endregion
+    }
+
+    internal static class ConcurrentQueueExtensions
+    {
+        #region Methods
+
+        public static void Clear<T>(this ConcurrentQueue<T> queue)
+        {
+            while (queue.TryDequeue(out T item))
+            {
+                // do nothing
+            }
         }
 
         #endregion
