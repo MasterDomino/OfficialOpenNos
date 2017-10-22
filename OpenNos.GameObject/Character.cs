@@ -36,9 +36,10 @@ namespace OpenNos.GameObject
         #region Members
 
         private readonly object _syncObj = new object();
+        private bool _isStaticBuffListInitial;
         private Random _random;
+        private int _slhpbonus;
         private byte _speed;
-        private int slhpbonus = 0;
 
         #endregion
 
@@ -172,6 +173,8 @@ namespace OpenNos.GameObject
         public bool IsShopping { get; set; }
 
         public bool IsSitting { get; set; }
+
+        public bool IsUsingFairyBooster => _isStaticBuffListInitial ? Buff.ContainsKey(131) : DAOFactory.StaticBuffDAO.LoadByCharacterId(CharacterId).Any(s => s.CardId.Equals(131));
 
         public bool IsVehicled { get; set; }
 
@@ -545,9 +548,13 @@ namespace OpenNos.GameObject
                     AddBuff(new Buff(bf.Card.TimeoutBuff, Level));
                 }
             });
+            if (!_isStaticBuffListInitial)
+            {
+                _isStaticBuffListInitial = true;
+            }
 
             Session.SendPacket($"vb {bf.Card.CardId} 1 {bf.RemainingTime * 10}");
-            Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), Name), 12));
+            Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), bf.Card.Name), 12));
         }
 
         public bool CanAddMate(Mate mate) => mate.MateType == MateType.Pet ? MaxMateCount > Mates.Count : 3 > Mates.Count(s => s.MateType == MateType.Partner);
@@ -708,10 +715,10 @@ namespace OpenNos.GameObject
                         {
                             x = 1;
                         }
-                        if (Hp + HealthHPLoad() < HPLoad())
+                        if (Hp + healthHPLoad() < HPLoad())
                         {
                             change = true;
-                            Hp += HealthHPLoad();
+                            Hp += healthHPLoad();
                         }
                         else
                         {
@@ -723,9 +730,9 @@ namespace OpenNos.GameObject
                         }
                         if (x == 1)
                         {
-                            if (Mp + HealthMPLoad() < MPLoad())
+                            if (Mp + healthMPLoad() < MPLoad())
                             {
-                                Mp += HealthMPLoad();
+                                Mp += healthMPLoad();
                                 change = true;
                             }
                             else
@@ -1470,32 +1477,6 @@ namespace OpenNos.GameObject
 
         public string GenerateInvisible() => $"cl {CharacterId} {(Invisible ? 1 : 0)} {(InvisibleGm ? 1 : 0)}";
 
-        public void GetReferrerReward()
-        {
-            long referrerId = Session.Account.ReferrerId;
-            if (Level >= 70 && referrerId != 0 && !CharacterId.Equals(referrerId))
-            {
-                List<GeneralLogDTO> logs = DAOFactory.GeneralLogDAO.LoadByLogType("ReferralProgram", null).Where(g => g.IpAddress.Equals(Session.Account.RegistrationIP.Split(':')[1].Replace("//", ""))).ToList();
-                if (logs.Count <= 5)
-                {
-                    CharacterDTO character = DAOFactory.CharacterDAO.LoadById(referrerId);
-                    if (character == null || character.Level < 70)
-                    {
-                        return;
-                    }
-                    AccountDTO referrer = DAOFactory.AccountDAO.LoadById(character.AccountId);
-                    if (referrer != null && !AccountId.Equals(character.AccountId))
-                    {
-                        Logger.LogEvent("REFERRERREWARD", Session.GenerateIdentity(), $"AccountId: {AccountId} ReferrerId: {referrerId}");
-                        DAOFactory.AccountDAO.WriteGeneralLog(AccountId, Session.Account.RegistrationIP, CharacterId, GeneralLogType.ReferralProgram, $"ReferrerId: {referrerId}");
-                        // send gifts like you want
-                        //SendGift(CharacterId, 5910, 1, 0, 0, false);
-                        //SendGift(referrerId, 5910, 1, 0, 0, false);
-                    }
-                }
-            }
-        }
-
         public void GenerateKillBonus(MapMonster monsterToAttack)
         {
             lock (_syncObj)
@@ -1591,7 +1572,7 @@ namespace OpenNos.GameObject
                         #region gold drop
 
                         // gold calculation
-                        int gold = GetGold(monsterToAttack);
+                        int gold = getGold(monsterToAttack);
                         long maxGold = ServerManager.Instance.MaxGold;
                         gold = gold > maxGold ? (int)maxGold : gold;
                         double randChance = ServerManager.Instance.RandomNumber() * random.NextDouble();
@@ -1672,12 +1653,12 @@ namespace OpenNos.GameObject
                                 {
                                     if (grp.IsMemberOfGroup(monsterToAttack.DamageList.FirstOrDefault().Key))
                                     {
-                                        targetSession.Character.GenerateXp(monsterToAttack, true);
+                                        targetSession.Character.generateXp(monsterToAttack, true);
                                     }
                                     else
                                     {
                                         targetSession.SendPacket(targetSession.Character.GenerateSay(Language.Instance.GetMessageFromKey("XP_NOTFIRSTHIT"), 10));
-                                        targetSession.Character.GenerateXp(monsterToAttack, false);
+                                        targetSession.Character.generateXp(monsterToAttack, false);
                                     }
                                 }
                             }
@@ -1685,12 +1666,12 @@ namespace OpenNos.GameObject
                             {
                                 if (monsterToAttack.DamageList.FirstOrDefault().Key == CharacterId)
                                 {
-                                    GenerateXp(monsterToAttack, true);
+                                    generateXp(monsterToAttack, true);
                                 }
                                 else
                                 {
                                     Session.SendPacket(GenerateSay(Language.Instance.GetMessageFromKey("XP_NOTFIRSTHIT"), 10));
-                                    GenerateXp(monsterToAttack, false);
+                                    generateXp(monsterToAttack, false);
                                 }
                             }
                             GenerateDignity(monsterToAttack.Monster);
@@ -1709,7 +1690,7 @@ namespace OpenNos.GameObject
             {
                 specialist = Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear);
             }
-            return $"lev {Level} {(Level < 100 ? LevelXp : LevelXp / 100)} {(!UseSp || specialist == null ? JobLevel : specialist.SpLevel)} {(!UseSp || specialist == null ? JobLevelXp : specialist.XP)} {(Level < 100 ? XPLoad() : XPLoad() / 100)} {(!UseSp || specialist == null ? JobXPLoad() : SPXPLoad())} {Reputation} {GetCP()} {HeroXp} {HeroLevel} {HeroXPLoad()} 0";
+            return $"lev {Level} {(Level < 100 ? LevelXp : LevelXp / 100)} {(!UseSp || specialist == null ? JobLevel : specialist.SpLevel)} {(!UseSp || specialist == null ? JobLevelXp : specialist.XP)} {(Level < 100 ? xpLoad() : xpLoad() / 100)} {(!UseSp || specialist == null ? jobXPLoad() : spXpLoad())} {Reputation} {GetCP()} {HeroXp} {HeroLevel} {heroXPLoad()} 0";
         }
 
         public string GenerateLevelUp()
@@ -1782,14 +1763,15 @@ namespace OpenNos.GameObject
             }
             ElementRate = 0;
             Element = 0;
+
             if (fairy != null)
             {
-                ElementRate += fairy.ElementRate + fairy.Item.ElementRate;
+                ElementRate += fairy.ElementRate + fairy.Item.ElementRate + (IsUsingFairyBooster ? 30 : 0);
                 Element = fairy.Item.Element;
             }
 
             return fairy != null
-                ? $"pairy 1 {CharacterId} 4 {fairy.Item.Element} {fairy.ElementRate + fairy.Item.ElementRate} {fairy.Item.Morph}"
+                ? $"pairy 1 {CharacterId} 4 {fairy.Item.Element} {fairy.ElementRate + fairy.Item.ElementRate} {fairy.Item.Morph + (IsUsingFairyBooster ? 5 : 0)}"
                 : $"pairy 1 {CharacterId} 0 0 0 0";
         }
 
@@ -2342,7 +2324,7 @@ namespace OpenNos.GameObject
                     }
                     ElementRateSP += p;
 
-                    slhpbonus = GetShellWeaponEffectValue(ShellWeaponEffectType.SLHP) + GetShellWeaponEffectValue(ShellWeaponEffectType.SLGlobal);
+                    _slhpbonus = GetShellWeaponEffectValue(ShellWeaponEffectType.SLHP) + GetShellWeaponEffectValue(ShellWeaponEffectType.SLGlobal);
                 }
             }
 
@@ -2387,7 +2369,7 @@ namespace OpenNos.GameObject
             WearableInstance fairy = Inventory?.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.Fairy, InventoryType.Wear);
             if (fairy != null)
             {
-                ElementRate += fairy.ElementRate + fairy.Item.ElementRate;
+                ElementRate += fairy.ElementRate + fairy.Item.ElementRate + (IsUsingFairyBooster ? 30 : 0);
             }
 
             for (short i = 1; i < 14; i++)
@@ -2424,7 +2406,7 @@ namespace OpenNos.GameObject
             };
         }
 
-        public string GenerateTit() => $"tit {Language.Instance.GetMessageFromKey(Class == (byte)ClassType.Adventurer ? ClassType.Adventurer.ToString().ToUpper() : Class == ClassType.Swordman ? ClassType.Swordman.ToString().ToUpper() : Class == ClassType.Archer ? ClassType.Archer.ToString().ToUpper() : ClassType.Magician.ToString().ToUpper())} {Name}";
+        public string GenerateTit() => $"tit {Language.Instance.GetMessageFromKey(Class == (byte)ClassType.Adventurer ? nameof(ClassType.Adventurer).ToUpper() : Class == ClassType.Swordman ? nameof(ClassType.Swordman).ToUpper() : Class == ClassType.Archer ? nameof(ClassType.Archer).ToUpper() : nameof(ClassType.Magician).ToUpper())} {Name}";
 
         public string GenerateTp() => $"tp 1 {CharacterId} {PositionX} {PositionY} 0";
 
@@ -2592,6 +2574,33 @@ namespace OpenNos.GameObject
             }
 
             return mlobjstring;
+        }
+
+        public void GetReferrerReward()
+        {
+            long referrerId = Session.Account.ReferrerId;
+            if (Level >= 70 && referrerId != 0 && !CharacterId.Equals(referrerId))
+            {
+                List<GeneralLogDTO> logs = DAOFactory.GeneralLogDAO.LoadByLogType("ReferralProgram", null).Where(g => g.IpAddress.Equals(Session.Account.RegistrationIP.Split(':')[1].Replace("//", ""))).ToList();
+                if (logs.Count <= 5)
+                {
+                    CharacterDTO character = DAOFactory.CharacterDAO.LoadById(referrerId);
+                    if (character == null || character.Level < 70)
+                    {
+                        return;
+                    }
+                    AccountDTO referrer = DAOFactory.AccountDAO.LoadById(character.AccountId);
+                    if (referrer != null && !AccountId.Equals(character.AccountId))
+                    {
+                        Logger.LogEvent("REFERRERREWARD", Session.GenerateIdentity(), $"AccountId: {AccountId} ReferrerId: {referrerId}");
+                        DAOFactory.AccountDAO.WriteGeneralLog(AccountId, Session.Account.RegistrationIP, CharacterId, GeneralLogType.ReferralProgram, $"ReferrerId: {referrerId}");
+
+                        // send gifts like you want
+                        //SendGift(CharacterId, 5910, 1, 0, 0, false);
+                        //SendGift(referrerId, 5910, 1, 0, 0, false);
+                    }
+                }
+            }
         }
 
         public int GetReputationIco()
@@ -2800,7 +2809,6 @@ namespace OpenNos.GameObject
                                 }
                                 catch
                                 {
-
                                 }
                             }
                             else if (rare == 0 || forceRandom)
@@ -2865,7 +2873,7 @@ namespace OpenNos.GameObject
                     Inventory?.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear);
                 if (specialist != null)
                 {
-                    int point = CharacterHelper.SlPoint(specialist.SlHP, 3) + slhpbonus;
+                    int point = CharacterHelper.SlPoint(specialist.SlHP, 3) + _slhpbonus;
 
                     if (point <= 50)
                     {
@@ -3240,6 +3248,12 @@ namespace OpenNos.GameObject
                     NoMove = false;
                     Session.SendPacket(GenerateCond());
                 }
+
+                // TODO : Find another way because it is hardcode
+                if (indicator.Card.CardId == 131)
+                {
+                    Session.SendPacket(GeneratePairy());
+                }
             }
         }
 
@@ -3339,9 +3353,9 @@ namespace OpenNos.GameObject
                             DAOFactory.IteminstanceDAO.InsertOrUpdate(itemInstance);
                             if (itemInstance is WearableInstance)
                             {
-                                foreach (ShellEffectDTO effect in (itemInstance as WearableInstance).ShellEffects)
+                                foreach (ShellEffectDTO effect in (itemInstance as WearableInstance)?.ShellEffects)
                                 {
-                                    effect.EquipmentSerialId = (itemInstance as WearableInstance).EquipmentSerialId;
+                                    effect.EquipmentSerialId = (itemInstance as WearableInstance)?.EquipmentSerialId ?? Guid.NewGuid();
                                     effect.ShellEffectId = DAOFactory.ShellEffectDAO.InsertOrUpdate(effect).ShellEffectId;
                                 }
                             }
@@ -3700,7 +3714,7 @@ namespace OpenNos.GameObject
 
         internal void SetSession(ClientSession clientSession) => Session = clientSession;
 
-        private void GenerateXp(MapMonster monster, bool isMonsterOwner)
+        private void generateXp(MapMonster monster, bool isMonsterOwner)
         {
             NpcMonster monsterinfo = monster.Monster;
             if (!Session.Account.PenaltyLogs.Any(s => s.Penalty == PenaltyType.BlockExp && s.DateEnd > DateTime.Now))
@@ -3711,7 +3725,7 @@ namespace OpenNos.GameObject
                 {
                     return;
                 }
-                if ((int)(LevelXp / (XPLoad() / 10)) < (int)((LevelXp + monsterinfo.XP) / (XPLoad() / 10)))
+                if ((int)(LevelXp / (xpLoad() / 10)) < (int)((LevelXp + monsterinfo.XP) / (xpLoad() / 10)))
                 {
                     Hp = (int)HPLoad();
                     Mp = (int)MPLoad();
@@ -3728,46 +3742,46 @@ namespace OpenNos.GameObject
                 {
                     if (isMonsterOwner)
                     {
-                        LevelXp += (int)(GetXP(monsterinfo, grp) * (1 + (GetBuff(CardType.Item, (byte)AdditionalTypes.Item.EXPIncreased)[0] / 100D)));
+                        LevelXp += (int)(getXP(monsterinfo, grp) * (1 + (GetBuff(CardType.Item, (byte)AdditionalTypes.Item.EXPIncreased)[0] / 100D)));
                     }
                     else
                     {
-                        LevelXp += (int)(GetXP(monsterinfo, grp) / 3D * (1 + (GetBuff(CardType.Item, (byte)AdditionalTypes.Item.EXPIncreased)[0] / 100D)));
+                        LevelXp += (int)(getXP(monsterinfo, grp) / 3D * (1 + (GetBuff(CardType.Item, (byte)AdditionalTypes.Item.EXPIncreased)[0] / 100D)));
                     }
                 }
                 if ((Class == 0 && JobLevel < 20) || (Class != 0 && JobLevel < ServerManager.Instance.MaxJobLevel))
                 {
                     if (specialist != null && UseSp && specialist.SpLevel < ServerManager.Instance.MaxSPLevel && specialist.SpLevel > 19)
                     {
-                        JobLevelXp += (int)(GetJXP(monsterinfo, grp) / 2D * (1 + (GetBuff(CardType.Item, (byte)AdditionalTypes.Item.EXPIncreased)[0] / 100D)));
+                        JobLevelXp += (int)(getJXP(monsterinfo, grp) / 2D * (1 + (GetBuff(CardType.Item, (byte)AdditionalTypes.Item.EXPIncreased)[0] / 100D)));
                     }
                     else
                     {
-                        JobLevelXp += (int)(GetJXP(monsterinfo, grp) * (1 + (GetBuff(CardType.Item, (byte)AdditionalTypes.Item.EXPIncreased)[0] / 100D)));
+                        JobLevelXp += (int)(getJXP(monsterinfo, grp) * (1 + (GetBuff(CardType.Item, (byte)AdditionalTypes.Item.EXPIncreased)[0] / 100D)));
                     }
                 }
                 if (specialist != null && UseSp && specialist.SpLevel < ServerManager.Instance.MaxSPLevel)
                 {
                     int multiplier = specialist.SpLevel < 10 ? 10 : specialist.SpLevel < 19 ? 5 : 1;
-                    specialist.XP += (int)(GetJXP(monsterinfo, grp) * (multiplier + (GetBuff(CardType.Item, (byte)AdditionalTypes.Item.EXPIncreased)[0] / 100D)));
+                    specialist.XP += (int)(getJXP(monsterinfo, grp) * (multiplier + (GetBuff(CardType.Item, (byte)AdditionalTypes.Item.EXPIncreased)[0] / 100D)));
                 }
                 if (HeroLevel > 0 && HeroLevel < ServerManager.Instance.MaxHeroLevel)
                 {
                     if (isMonsterOwner)
                     {
-                        HeroXp += (int)((GetHXP(monsterinfo, grp) / 50) * (1 + (GetBuff(CardType.Item, (byte)AdditionalTypes.Item.EXPIncreased)[0] / 100D)));
+                        HeroXp += (int)((getHXP(monsterinfo, grp) / 50) * (1 + (GetBuff(CardType.Item, (byte)AdditionalTypes.Item.EXPIncreased)[0] / 100D)));
                     }
                     else
                     {
-                        HeroXp += (int)((GetHXP(monsterinfo, grp) / 50) / 3D * (1 + (GetBuff(CardType.Item, (byte)AdditionalTypes.Item.EXPIncreased)[0] / 100D)));
+                        HeroXp += (int)((getHXP(monsterinfo, grp) / 50) / 3D * (1 + (GetBuff(CardType.Item, (byte)AdditionalTypes.Item.EXPIncreased)[0] / 100D)));
                     }
                 }
-                double experience = XPLoad();
+                double experience = xpLoad();
                 while (LevelXp >= experience)
                 {
                     LevelXp -= (long)experience;
                     Level++;
-                    experience = XPLoad();
+                    experience = xpLoad();
                     if (Level >= ServerManager.Instance.MaxLevel)
                     {
                         Level = ServerManager.Instance.MaxLevel;
@@ -3840,12 +3854,12 @@ namespace OpenNos.GameObject
                     }
                 }
 
-                experience = JobXPLoad();
+                experience = jobXPLoad();
                 while (JobLevelXp >= experience)
                 {
                     JobLevelXp -= (long)experience;
                     JobLevel++;
-                    experience = JobXPLoad();
+                    experience = jobXPLoad();
                     if (JobLevel >= 20 && Class == 0)
                     {
                         JobLevel = 20;
@@ -3867,13 +3881,13 @@ namespace OpenNos.GameObject
                 }
                 if (specialist != null)
                 {
-                    experience = SPXPLoad();
+                    experience = spXpLoad();
 
                     while (UseSp && specialist.XP >= experience)
                     {
                         specialist.XP -= (long)experience;
                         specialist.SpLevel++;
-                        experience = SPXPLoad();
+                        experience = spXpLoad();
                         Session.SendPacket(GenerateStat());
                         Session.SendPacket(GenerateLevelUp());
                         if (specialist.SpLevel >= ServerManager.Instance.MaxSPLevel)
@@ -3891,12 +3905,12 @@ namespace OpenNos.GameObject
                         Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 198), PositionX, PositionY);
                     }
                 }
-                experience = HeroXPLoad();
+                experience = heroXPLoad();
                 while (HeroXp >= experience)
                 {
                     HeroXp -= (long)experience;
                     HeroLevel++;
-                    experience = HeroXPLoad();
+                    experience = heroXPLoad();
                     if (HeroLevel >= ServerManager.Instance.MaxHeroLevel)
                     {
                         HeroLevel = ServerManager.Instance.MaxHeroLevel;
@@ -3914,7 +3928,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        private int GetGold(MapMonster mapMonster)
+        private int getGold(MapMonster mapMonster)
         {
             if (MapId == 2006 || MapId == 150)
             {
@@ -3930,7 +3944,7 @@ namespace OpenNos.GameObject
             return (int)(lowBaseGold * ServerManager.Instance.GoldRate * actMultiplier * eqMultiplier);
         }
 
-        private int GetHXP(NpcMonsterDTO monster, Group group)
+        private int getHXP(NpcMonsterDTO monster, Group group)
         {
             int partySize = 1;
             float partyPenalty = 1f;
@@ -3953,7 +3967,7 @@ namespace OpenNos.GameObject
             return heroXp;
         }
 
-        private int GetJXP(NpcMonsterDTO monster, Group group)
+        private int getJXP(NpcMonsterDTO monster, Group group)
         {
             int partySize = 1;
             double partyPenalty = 1d;
@@ -3975,7 +3989,7 @@ namespace OpenNos.GameObject
             return jobxp;
         }
 
-        private int GetXP(NpcMonsterDTO monster, Group group)
+        private int getXP(NpcMonsterDTO monster, Group group)
         {
             int partySize = 1;
             double partyPenalty = 1d;
@@ -4017,7 +4031,7 @@ namespace OpenNos.GameObject
             return xp;
         }
 
-        private int HealthHPLoad()
+        private int healthHPLoad()
         {
             if (IsSitting)
             {
@@ -4026,7 +4040,7 @@ namespace OpenNos.GameObject
             return (DateTime.Now - LastDefence).TotalSeconds > 4 ? CharacterHelper.HPHealthStand[(byte)Class] : 0;
         }
 
-        private int HealthMPLoad()
+        private int healthMPLoad()
         {
             if (IsSitting)
             {
@@ -4035,11 +4049,11 @@ namespace OpenNos.GameObject
             return (DateTime.Now - LastDefence).TotalSeconds > 4 ? CharacterHelper.MPHealthStand[(byte)Class] : 0;
         }
 
-        private double HeroXPLoad() => HeroLevel == 0 ? 1 : CharacterHelper.HeroXpData[HeroLevel - 1];
+        private double heroXPLoad() => HeroLevel == 0 ? 1 : CharacterHelper.HeroXpData[HeroLevel - 1];
 
-        private double JobXPLoad() => Class == (byte)ClassType.Adventurer ? CharacterHelper.FirstJobXPData[JobLevel - 1] : CharacterHelper.SecondJobXPData[JobLevel - 1];
+        private double jobXPLoad() => Class == (byte)ClassType.Adventurer ? CharacterHelper.FirstJobXPData[JobLevel - 1] : CharacterHelper.SecondJobXPData[JobLevel - 1];
 
-        private double SPXPLoad()
+        private double spXpLoad()
         {
             SpecialistInstance specialist = null;
             if (Inventory != null)
@@ -4049,7 +4063,7 @@ namespace OpenNos.GameObject
             return specialist != null ? CharacterHelper.SPXPData[specialist.SpLevel == 0 ? 0 : specialist.SpLevel - 1] : 0;
         }
 
-        private double XPLoad() => CharacterHelper.XPData[Level - 1];
+        private double xpLoad() => CharacterHelper.XPData[Level - 1];
 
         #endregion
     }

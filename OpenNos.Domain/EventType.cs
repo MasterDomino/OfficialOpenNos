@@ -21,6 +21,6 @@ namespace OpenNos.Domain
         MINILANDREFRESHEVENT,
         LODDH,
         RANKINGREFRESH,
-        MeteoriteGame
+        METEORITEGAME
     }
 }

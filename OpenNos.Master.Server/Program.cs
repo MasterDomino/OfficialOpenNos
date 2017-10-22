@@ -12,26 +12,26 @@
  * GNU General Public License for more details.
  */
 
-using OpenNos.SCS.Communication.Scs.Communication.EndPoints.Tcp;
-using OpenNos.SCS.Communication.ScsServices.Service;
 using log4net;
 using OpenNos.Core;
 using OpenNos.DAL;
 using OpenNos.DAL.EF.Helpers;
 using OpenNos.Data;
 using OpenNos.GameObject;
+using OpenNos.Master.Library.Data;
 using OpenNos.Master.Library.Interface;
+using OpenNos.SCS.Communication.Scs.Communication.EndPoints.Tcp;
+using OpenNos.SCS.Communication.ScsServices.Service;
 using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
-using System.Reflection;
-using System.Threading;
-using System.Reactive.Linq;
 using System.Net;
+using System.Reactive.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
-using OpenNos.Master.Library.Data;
 using System.Text;
+using System.Threading;
 
 namespace OpenNos.Master.Server
 {
@@ -39,31 +39,45 @@ namespace OpenNos.Master.Server
     {
         #region Members
 
-        private static readonly ManualResetEvent run = new ManualResetEvent(true);
+        private static readonly ManualResetEvent _run = new ManualResetEvent(true);
+        private static bool _isDebug;
 
         #endregion
 
         #region Methods
 
-        private static void Main()
+        public static void Main(string[] args)
         {
             try
             {
+#if DEBUG
+                _isDebug = true;
+#endif
                 CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
+                Console.Title = $"OpenNos Master Server{(_isDebug ? " Development Environment" : string.Empty)}";
+
+                bool ignoreStartupMessages = false;
+                foreach (string arg in args)
+                {
+                    if (arg == "--nomsg")
+                    {
+                        ignoreStartupMessages = true;
+                    }
+                }
 
                 // initialize Logger
                 Logger.InitializeLogger(LogManager.GetLogger(typeof(Program)));
 
-                Assembly assembly = Assembly.GetExecutingAssembly();
-                FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-
-                Console.Title = $"OpenNos Master Server v{fileVersionInfo.ProductVersion}dev";
-                string ipAddress = ConfigurationManager.AppSettings["MasterIP"];
                 int port = Convert.ToInt32(ConfigurationManager.AppSettings["MasterPort"]);
-                string text = $"MASTER SERVER v{fileVersionInfo.ProductVersion}dev - PORT : {port} by OpenNos Team";
-                int offset = (Console.WindowWidth / 2) + (text.Length / 2);
-                string separator = new string('=', Console.WindowWidth);
-                Console.WriteLine(separator + string.Format("{0," + offset + "}\n", text) + separator);
+                if (!ignoreStartupMessages)
+                {
+                    Assembly assembly = Assembly.GetExecutingAssembly();
+                    FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+                    string text = $"MASTER SERVER v{fileVersionInfo.ProductVersion}dev - PORT : {port} by OpenNos Team";
+                    int offset = (Console.WindowWidth / 2) + (text.Length / 2);
+                    string separator = new string('=', Console.WindowWidth);
+                    Console.WriteLine(separator + string.Format("{0," + offset + "}\n", text) + separator);
+                }
 
                 // initialize DB
                 if (!DataAccessHelper.Initialize())
@@ -77,14 +91,15 @@ namespace OpenNos.Master.Server
                 try
                 {
                     // register EF -> GO and GO -> EF mappings
-                    RegisterMappings();
+                    registerMappings();
 
                     // configure Services and Service Host
+                    string ipAddress = ConfigurationManager.AppSettings["MasterIP"];
                     IScsServiceApplication _server = ScsServiceBuilder.CreateService(new ScsTcpEndPoint(ipAddress, port));
 
                     _server.AddService<ICommunicationService, CommunicationService>(new CommunicationService());
-                    _server.ClientConnected += OnClientConnected;
-                    _server.ClientDisconnected += OnClientDisconnected;
+                    _server.ClientConnected += onClientConnected;
+                    _server.ClientDisconnected += onClientDisconnected;
 
                     _server.Start();
                     Logger.Log.Info(Language.Instance.GetMessageFromKey("STARTED"));
@@ -131,11 +146,11 @@ namespace OpenNos.Master.Server
             }
         }
 
-        private static void OnClientConnected(object sender, ServiceClientEventArgs e) => Logger.Log.Info(Language.Instance.GetMessageFromKey("NEW_CONNECT") + e.Client.ClientId);
+        private static void onClientConnected(object sender, ServiceClientEventArgs e) => Logger.Log.Info(Language.Instance.GetMessageFromKey("NEW_CONNECT") + e.Client.ClientId);
 
-        private static void OnClientDisconnected(object sender, ServiceClientEventArgs e) => Logger.Log.Info(Language.Instance.GetMessageFromKey("DISCONNECT") + e.Client.ClientId);
+        private static void onClientDisconnected(object sender, ServiceClientEventArgs e) => Logger.Log.Info(Language.Instance.GetMessageFromKey("DISCONNECT") + e.Client.ClientId);
 
-        private static void RegisterMappings()
+        private static void registerMappings()
         {
             //Prepare mappings for future use
 
