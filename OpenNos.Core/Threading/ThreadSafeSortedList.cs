@@ -30,14 +30,14 @@ namespace OpenNos.Core
         #region Members
 
         /// <summary>
-        /// public collection to store items.
+        /// private collection to store items.
         /// </summary>
-        protected readonly SortedList<TK, TV> Items;
+        private readonly SortedList<TK, TV> _items;
 
         /// <summary>
-        /// Used to synchronize access to _items list.
+        /// Used to synchronize access to Items list.
         /// </summary>
-        protected readonly ReaderWriterLockSlim Lock;
+        private readonly ReaderWriterLockSlim _lock;
 
         private bool _disposed;
 
@@ -50,8 +50,8 @@ namespace OpenNos.Core
         /// </summary>
         public ThreadSafeSortedList()
         {
-            Items = new SortedList<TK, TV>();
-            Lock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
+            _items = new SortedList<TK, TV>();
+            _lock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
         }
 
         #endregion
@@ -65,14 +65,14 @@ namespace OpenNos.Core
         {
             get
             {
-                Lock.EnterReadLock();
+                _lock.EnterReadLock();
                 try
                 {
-                    return Items.Count;
+                    return _items.Count;
                 }
                 finally
                 {
-                    Lock.ExitReadLock();
+                    _lock.ExitReadLock();
                 }
             }
         }
@@ -92,14 +92,14 @@ namespace OpenNos.Core
             {
                 if (!_disposed)
                 {
-                    Lock.EnterReadLock();
+                    _lock.EnterReadLock();
                     try
                     {
-                        return Items.ContainsKey(key) ? Items[key] : default;
+                        return _items.ContainsKey(key) ? _items[key] : default;
                     }
                     finally
                     {
-                        Lock.ExitReadLock();
+                        _lock.ExitReadLock();
                     }
                 }
                 return default;
@@ -109,14 +109,14 @@ namespace OpenNos.Core
             {
                 if (!_disposed)
                 {
-                    Lock.EnterWriteLock();
+                    _lock.EnterWriteLock();
                     try
                     {
-                        Items[key] = value;
+                        _items[key] = value;
                     }
                     finally
                     {
-                        Lock.ExitWriteLock();
+                        _lock.ExitWriteLock();
                     }
                 }
             }
@@ -133,14 +133,14 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                Lock.EnterWriteLock();
+                _lock.EnterWriteLock();
                 try
                 {
-                    Items.Clear();
+                    _items.Clear();
                 }
                 finally
                 {
-                    Lock.ExitWriteLock();
+                    _lock.ExitWriteLock();
                 }
             }
         }
@@ -154,14 +154,36 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                Lock.EnterReadLock();
+                _lock.EnterReadLock();
                 try
                 {
-                    return Items.ContainsKey(key);
+                    return _items.ContainsKey(key);
                 }
                 finally
                 {
-                    Lock.ExitReadLock();
+                    _lock.ExitReadLock();
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if collection contains spesified item.
+        /// </summary>
+        /// <param name="item">Item to check</param>
+        /// <returns>True; if collection contains given item</returns>
+        public bool ContainsValue(TV item)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _items.ContainsValue(item);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
                 }
             }
             return false;
@@ -176,63 +198,22 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                Lock.EnterReadLock();
+                _lock.EnterReadLock();
                 try
                 {
-                    return Items.Values.Count(predicate);
+                    return _items.Values.Count(predicate);
                 }
                 finally
                 {
-                    Lock.ExitReadLock();
+                    _lock.ExitReadLock();
                 }
             }
             return 0;
         }
 
         /// <summary>
-        /// returns list based on given predicate
+        /// Disposes the current object.
         /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        public List<TV> Where(Func<TV, bool> predicate)
-        {
-            if (!_disposed)
-            {
-                Lock.EnterReadLock();
-                try
-                {
-                    return new List<TV>(Items.Values.Where(predicate));
-                }
-                finally
-                {
-                    Lock.ExitReadLock();
-                }
-            }
-            return new List<TV>();
-        }
-
-        /// <summary>
-        /// Checks if collection contains spesified item.
-        /// </summary>
-        /// <param name="item">Item to check</param>
-        /// <returns>True; if collection contains given item</returns>
-        public bool ContainsValue(TV item)
-        {
-            if (!_disposed)
-            {
-                Lock.EnterReadLock();
-                try
-                {
-                    return Items.ContainsValue(item);
-                }
-                finally
-                {
-                    Lock.ExitReadLock();
-                }
-            }
-            return false;
-        }
-
         public void Dispose()
         {
             if (!_disposed)
@@ -251,14 +232,14 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                Lock.EnterReadLock();
+                _lock.EnterReadLock();
                 try
                 {
-                    return new List<TV>(Items.Values);
+                    return new List<TV>(_items.Values);
                 }
                 finally
                 {
-                    Lock.ExitReadLock();
+                    _lock.ExitReadLock();
                 }
             }
             return new List<TV>();
@@ -272,16 +253,16 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                Lock.EnterWriteLock();
+                _lock.EnterWriteLock();
                 try
                 {
-                    List<TV> list = new List<TV>(Items.Values);
-                    Items.Clear();
+                    List<TV> list = new List<TV>(_items.Values);
+                    _items.Clear();
                     return list;
                 }
                 finally
                 {
-                    Lock.ExitWriteLock();
+                    _lock.ExitWriteLock();
                 }
             }
             return new List<TV>();
@@ -295,23 +276,45 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                Lock.EnterWriteLock();
+                _lock.EnterWriteLock();
                 try
                 {
-                    if (!Items.ContainsKey(key))
+                    if (!_items.ContainsKey(key))
                     {
                         return false;
                     }
 
-                    Items.Remove(key);
+                    _items.Remove(key);
                     return true;
                 }
                 finally
                 {
-                    Lock.ExitWriteLock();
+                    _lock.ExitWriteLock();
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// returns list based on given predicate
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public List<TV> Where(Func<TV, bool> predicate)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return new List<TV>(_items.Values.Where(predicate));
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return new List<TV>();
         }
 
         protected virtual void Dispose(bool disposing)
@@ -319,7 +322,7 @@ namespace OpenNos.Core
             if (disposing)
             {
                 ClearAll();
-                Lock.Dispose();
+                _lock.Dispose();
             }
         }
 
