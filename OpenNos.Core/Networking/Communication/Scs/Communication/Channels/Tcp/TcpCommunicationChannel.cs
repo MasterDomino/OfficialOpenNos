@@ -37,7 +37,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         /// <summary>
         /// Size of the buffer that is used to receive bytes from TCP socket.
         /// </summary>
-        private const int ReceiveBufferSize = 4 * 1024;
+        private const int _receiveBufferSize = 4 * 1024;
 
         /// <summary>
         /// This buffer is used to receive bytes
@@ -91,7 +91,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
             IPEndPoint ipEndPoint = (IPEndPoint)_clientSocket.RemoteEndPoint;
             _remoteEndPoint = new ScsTcpEndPoint(ipEndPoint.Address.ToString(), ipEndPoint.Port);
 
-            _buffer = new byte[ReceiveBufferSize];
+            _buffer = new byte[_receiveBufferSize];
             _syncLock = new object();
 
             _highPriorityBuffer = new ConcurrentQueue<byte[]>();
@@ -184,8 +184,8 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
             {
                 if (WireProtocol != null)
                 {
-                    SendByPriority(_highPriorityBuffer);
-                    SendByPriority(_lowPriorityBuffer);
+                    sendByPriority(_highPriorityBuffer);
+                    sendByPriority(_lowPriorityBuffer);
                 }
             }
             catch
@@ -230,10 +230,10 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         protected override void Startpublic()
         {
             _running = true;
-            _clientSocket.BeginReceive(_buffer, 0, _buffer.Length, 0, ReceiveCallback, null);
+            _clientSocket.BeginReceive(_buffer, 0, _buffer.Length, 0, receiveCallback, null);
         }
 
-        private static void SendCallback(IAsyncResult result)
+        private static void sendCallback(IAsyncResult result)
         {
             try
             {
@@ -259,7 +259,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         /// reveives bytes from socker.
         /// </summary>
         /// <param name="result">Asyncronous call result</param>
-        private void ReceiveCallback(IAsyncResult result)
+        private void receiveCallback(IAsyncResult result)
         {
             if (!_running)
             {
@@ -299,7 +299,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
                 // Read more bytes if still running
                 if (_running)
                 {
-                    _clientSocket.BeginReceive(_buffer, 0, _buffer.Length, 0, ReceiveCallback, null);
+                    _clientSocket.BeginReceive(_buffer, 0, _buffer.Length, 0, receiveCallback, null);
                 }
             }
             catch
@@ -308,7 +308,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
             }
         }
 
-        private void SendByPriority(ConcurrentQueue<byte[]> buffer)
+        private void sendByPriority(ConcurrentQueue<byte[]> buffer)
         {
             IEnumerable<byte> outgoingPacket = new List<byte>();
 
@@ -328,7 +328,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
             if (outgoingPacket.Any())
             {
                 _clientSocket.BeginSend(outgoingPacket.ToArray(), 0, outgoingPacket.Count(), SocketFlags.None,
-                SendCallback, _clientSocket);
+                sendCallback, _clientSocket);
             }
         }
 

@@ -1,8 +1,7 @@
 namespace OpenNos.DAL.EF.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class Aphrodite66 : DbMigration
     {
         public override void Up()
@@ -23,7 +22,7 @@ namespace OpenNos.DAL.EF.Migrations
             DropColumn("dbo.ItemInstance", "CellonOptionId");
             DropTable("dbo.ShellEffectGeneration");
         }
-        
+
         public override void Down()
         {
             CreateTable(
@@ -39,7 +38,7 @@ namespace OpenNos.DAL.EF.Migrations
                         ShellEffectGenerationId = c.Long(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
-            
+
             AddColumn("dbo.ItemInstance", "CellonOptionId", c => c.Guid());
             DropForeignKey("dbo.CellonOption", "WearableInstance_Id", "dbo.ItemInstance");
             DropIndex("dbo.CellonOption", new[] { "WearableInstance_Id" });

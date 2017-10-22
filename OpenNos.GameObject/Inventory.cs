@@ -109,7 +109,7 @@ namespace OpenNos.GameObject
                         invcopy.Slot = i;
                         invcopy.CharacterId = Owner.CharacterId;
                         DeleteFromSlotAndType(inv.Slot, inv.Type);
-                        PutItem(invcopy);
+                        putItem(invcopy);
                         break;
                     }
                 }
@@ -126,7 +126,7 @@ namespace OpenNos.GameObject
                         invcopy.Slot = i;
                         invcopy.CharacterId = Owner.CharacterId;
                         DeleteFromSlotAndType(inv.Slot, inv.Type);
-                        PutItem(invcopy);
+                        putItem(invcopy);
                         break;
                     }
                 }
@@ -144,7 +144,7 @@ namespace OpenNos.GameObject
                     invcopy.Type = InventoryType.Bazaar;
                     invcopy.Slot = i;
                     invcopy.CharacterId = Owner.CharacterId;
-                    PutItem(invcopy);
+                    putItem(invcopy);
                     break;
                 }
             }
@@ -211,7 +211,7 @@ namespace OpenNos.GameObject
                     short? freeSlot = newItem.Type == InventoryType.Wear ? (LoadBySlotAndType((short)newItem.Item.EquipmentSlot, InventoryType.Wear) == null
                                                                          ? (short?)newItem.Item.EquipmentSlot
                                                                          : null)
-                                                                         : GetFreeSlot(newItem.Type);
+                                                                         : getFreeSlot(newItem.Type);
                     if (freeSlot.HasValue)
                     {
                         inv = AddToInventoryWithSlotAndType(newItem, newItem.Type, freeSlot.Value);
@@ -255,7 +255,7 @@ namespace OpenNos.GameObject
                 {
                     return null;
                 }
-                CheckItemInstanceType(itemInstance);
+                checkItemInstanceType(itemInstance);
                 this[itemInstance.Id] = itemInstance;
                 return itemInstance;
             }
@@ -265,7 +265,7 @@ namespace OpenNos.GameObject
         public bool CanAddItem(short itemVnum)
         {
             InventoryType type = ServerManager.Instance.GetItem(itemVnum).Type;
-            return CanAddItem(type);
+            return canAddItem(type);
         }
 
         public int CountItem(int itemVNum) => GetAllItems().Where(s => s.ItemVNum == itemVNum && s.Type != InventoryType.FamilyWareHouse && s.Type != InventoryType.Bazaar && s.Type != InventoryType.Warehouse && s.Type != InventoryType.PetWarehouse).Sum(i => i.Amount);
@@ -415,7 +415,7 @@ namespace OpenNos.GameObject
                     ItemInstance itemInstance = GetAllItems().Find(i => i?.GetType().Equals(typeof(T)) == true && i.Slot == slot && i.Type == type);
                     if (itemInstance != null)
                     {
-                        short? freeSlot = GetFreeSlot(type);
+                        short? freeSlot = getFreeSlot(type);
                         if (freeSlot.HasValue)
                         {
                             itemInstance.Slot = freeSlot.Value;
@@ -455,7 +455,7 @@ namespace OpenNos.GameObject
                     ItemInstance itemInstance = GetAllItems().Find(i => i.Slot.Equals(slot) && i.Type.Equals(type));
                     if (itemInstance != null)
                     {
-                        short? freeSlot = GetFreeSlot(type);
+                        short? freeSlot = getFreeSlot(type);
                         if (freeSlot.HasValue)
                         {
                             itemInstance.Slot = freeSlot.Value;
@@ -506,7 +506,7 @@ namespace OpenNos.GameObject
                     else
                     {
                         // move source to target
-                        short? freeTargetSlot = GetFreeSlot(targetType);
+                        short? freeTargetSlot = getFreeSlot(targetType);
                         if (freeTargetSlot.HasValue)
                         {
                             sourceInstance.Slot = freeTargetSlot.Value;
@@ -531,7 +531,7 @@ namespace OpenNos.GameObject
                         break;
 
                     default:
-                        nextFreeSlot = GetFreeSlot(targetType);
+                        nextFreeSlot = getFreeSlot(targetType);
                         break;
                 }
                 if (nextFreeSlot.HasValue)
@@ -603,7 +603,7 @@ namespace OpenNos.GameObject
                     else
                     {
                         // add and remove save inventory
-                        destinationInventory = TakeItem(destinationInventory.Slot, destinationInventory.Type);
+                        destinationInventory = takeItem(destinationInventory.Slot, destinationInventory.Type);
                         if (destinationInventory == null)
                         {
                             return;
@@ -611,7 +611,7 @@ namespace OpenNos.GameObject
 
                         destinationInventory.Slot = sourceSlot;
                         destinationInventory.Type = sourcetype;
-                        sourceInventory = TakeItem(sourceInventory.Slot, sourceInventory.Type);
+                        sourceInventory = takeItem(sourceInventory.Slot, sourceInventory.Type);
                         if (sourceInventory == null)
                         {
                             return;
@@ -619,8 +619,8 @@ namespace OpenNos.GameObject
 
                         sourceInventory.Slot = destinationSlot;
                         sourceInventory.Type = desttype;
-                        PutItem(destinationInventory);
-                        PutItem(sourceInventory);
+                        putItem(destinationInventory);
+                        putItem(sourceInventory);
                     }
                 }
             }
@@ -703,7 +703,7 @@ namespace OpenNos.GameObject
                     itemsByInventoryType = GetAllItems().Where(s => s.Type == inventoryType).OrderBy(s => s.Item.Price).ToList();
                     break;
             }
-            GenerateClearInventory(inventoryType);
+            generateClearInventory(inventoryType);
             for (short i = 0; i < itemsByInventoryType.Count; i++)
             {
                 ItemInstance item = itemsByInventoryType[i];
@@ -713,7 +713,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        private static void CheckItemInstanceType(ItemInstanceDTO itemInstance)
+        private static void checkItemInstanceType(ItemInstanceDTO itemInstance)
         {
             if (itemInstance != null)
             {
@@ -729,9 +729,9 @@ namespace OpenNos.GameObject
             }
         }
 
-        private bool CanAddItem(InventoryType type) => Owner != null && GetFreeSlot(type).HasValue;
+        private bool canAddItem(InventoryType type) => Owner != null && getFreeSlot(type).HasValue;
 
-        private void GenerateClearInventory(InventoryType type)
+        private void generateClearInventory(InventoryType type)
         {
             if (Owner != null)
             {
@@ -745,7 +745,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        private short? GetFreeSlot(InventoryType type)
+        private short? getFreeSlot(InventoryType type)
         {
             IEnumerable<int> itemInstanceSlotsByType = GetAllItems().Where(i => i.Type == type).OrderBy(i => i.Slot).Select(i => (int)i.Slot);
             IEnumerable<int> instanceSlotsByType = itemInstanceSlotsByType as int[] ?? itemInstanceSlotsByType.ToArray();
@@ -758,7 +758,7 @@ namespace OpenNos.GameObject
         /// Puts a Single ItemInstance to the Inventory
         /// </summary>
         /// <param name="itemInstance"></param>
-        private void PutItem(ItemInstance itemInstance) => this[itemInstance.Id] = itemInstance;
+        private void putItem(ItemInstance itemInstance) => this[itemInstance.Id] = itemInstance;
 
         /// <summary>
         /// Takes a Single Inventory including ItemInstance from the List and removes it.
@@ -766,7 +766,7 @@ namespace OpenNos.GameObject
         /// <param name="slot"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        private ItemInstance TakeItem(short slot, InventoryType type)
+        private ItemInstance takeItem(short slot, InventoryType type)
         {
             ItemInstance itemInstance = GetAllItems().SingleOrDefault(i => i.Slot == slot && i.Type == type);
             if (itemInstance != null)
