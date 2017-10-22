@@ -30,7 +30,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     context.Configuration.AutoDetectChangesEnabled = false;
                     foreach (ScriptedInstanceDTO scriptedInstance in scriptedInstances)
@@ -52,7 +52,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     ScriptedInstance entity = _mapper.Map<ScriptedInstance>(scriptedInstance);
                     context.ScriptedInstance.Add(entity);
@@ -69,7 +69,7 @@ namespace OpenNos.DAL.EF
 
         public IEnumerable<ScriptedInstanceDTO> LoadByMap(short mapId)
         {
-            using (var context = DataAccessHelper.CreateContext())
+            using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 foreach (ScriptedInstance timespaceObject in context.ScriptedInstance.Where(c => c.MapId.Equals(mapId)))
                 {

@@ -41,9 +41,9 @@ namespace OpenNos.GameObject
             {
                 // airwaves - eventitems
                 case 0:
-                    if (inv.Item.ItemType == ItemType.Shell)
+                    if (inv.Item.ItemType == ItemType.Shell && inv is WearableInstance wearInstance)
                     {
-                        if ((inv as WearableInstance).ShellEffects.Count != 0 && packetsplit?.Length > 9 && byte.TryParse(packetsplit[9], out byte islot))
+                        if (wearInstance.ShellEffects.Count != 0 && packetsplit?.Length > 9 && byte.TryParse(packetsplit[9], out byte islot))
                         {
                             ItemInstance item = session.Character.Inventory.LoadBySlotAndType(islot, InventoryType.Equipment);
 
@@ -106,15 +106,15 @@ namespace OpenNos.GameObject
                                 }
                                 if ((item.Item.ItemType == ItemType.Weapon && weapon) || (item.Item.ItemType == ItemType.Armor && !weapon))
                                 {
-                                    if ((item as WearableInstance).ShellEffects.Count > 0 && ServerManager.Instance.RandomNumber() < 50)
+                                    if (wearInstance.ShellEffects.Count > 0 && ServerManager.Instance.RandomNumber() < 50)
                                     {
                                         session.Character.DeleteItemByItemInstanceId(inv.Id);
                                         session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_APPLY_FAIL"), 0));
                                         return;
                                     }
-                                    (item as WearableInstance).ShellEffects.Clear();
+                                    wearInstance.ShellEffects.Clear();
                                     DAOFactory.ShellEffectDAO.DeleteByItemInstanceId(item.Id);
-                                    (item as WearableInstance).ShellEffects.AddRange((inv as WearableInstance).ShellEffects);
+                                    wearInstance.ShellEffects.AddRange(wearInstance.ShellEffects);
                                     session.Character.DeleteItemByItemInstanceId(inv.Id);
                                     session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_APPLY_SUCCESS"), 0));
                                 }

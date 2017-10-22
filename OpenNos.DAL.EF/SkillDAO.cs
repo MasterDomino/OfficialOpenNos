@@ -30,7 +30,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     context.Configuration.AutoDetectChangesEnabled = false;
                     foreach (SkillDTO skill in skills)
@@ -52,7 +52,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     Skill entity = _mapper.Map<Skill>(skill);
                     context.Skill.Add(entity);
@@ -69,7 +69,7 @@ namespace OpenNos.DAL.EF
 
         public IEnumerable<SkillDTO> LoadAll()
         {
-            using (var context = DataAccessHelper.CreateContext())
+            using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 foreach (Skill Skill in context.Skill)
                 {
@@ -82,7 +82,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     return _mapper.Map<SkillDTO>(context.Skill.FirstOrDefault(s => s.SkillVNum.Equals(skillId)));
                 }

@@ -31,7 +31,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     context.Configuration.AutoDetectChangesEnabled = false;
                     foreach (MapNpcDTO Item in npcs)
@@ -53,7 +53,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     MapNpc npc = context.MapNpc.First(i => i.MapNpcId.Equals(mapNpcId));
 
@@ -77,7 +77,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     MapNpc entity = _mapper.Map<MapNpc>(npc);
                     context.MapNpc.Add(entity);
@@ -94,7 +94,7 @@ namespace OpenNos.DAL.EF
 
         public IEnumerable<MapNpcDTO> LoadAll()
         {
-            using (var context = DataAccessHelper.CreateContext())
+            using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 foreach (MapNpc entity in context.MapNpc)
                 {
@@ -107,7 +107,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     return _mapper.Map<MapNpcDTO>(context.MapNpc.FirstOrDefault(i => i.MapNpcId.Equals(mapNpcId)));
                 }
@@ -121,7 +121,7 @@ namespace OpenNos.DAL.EF
 
         public IEnumerable<MapNpcDTO> LoadFromMap(short mapId)
         {
-            using (var context = DataAccessHelper.CreateContext())
+            using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 foreach (MapNpc npcobject in context.MapNpc.Where(c => c.MapId.Equals(mapId)))
                 {

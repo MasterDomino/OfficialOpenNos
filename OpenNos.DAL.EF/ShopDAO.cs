@@ -31,7 +31,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     context.Configuration.AutoDetectChangesEnabled = false;
                     foreach (ShopDTO Item in shops)
@@ -53,7 +53,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     Shop shop = context.Shop.First(i => i.MapNpcId.Equals(mapNpcId));
                     IEnumerable<ShopItem> shopItem = context.ShopItem.Where(s => s.ShopId.Equals(shop.ShopId));
@@ -87,7 +87,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     if (context.Shop.FirstOrDefault(c => c.MapNpcId.Equals(shop.MapNpcId)) == null)
                     {
@@ -108,7 +108,7 @@ namespace OpenNos.DAL.EF
 
         public IEnumerable<ShopDTO> LoadAll()
         {
-            using (var context = DataAccessHelper.CreateContext())
+            using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 foreach (Shop entity in context.Shop)
                 {
@@ -121,7 +121,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     return _mapper.Map<ShopDTO>(context.Shop.FirstOrDefault(s => s.ShopId.Equals(shopId)));
                 }
@@ -137,7 +137,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     return _mapper.Map<ShopDTO>(context.Shop.FirstOrDefault(s => s.MapNpcId.Equals(mapNpcId)));
                 }

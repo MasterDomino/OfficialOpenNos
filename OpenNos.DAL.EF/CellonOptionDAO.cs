@@ -27,7 +27,7 @@ namespace OpenNos.DAL.EF
 
         public IEnumerable<CellonOptionDTO> GetOptionsByWearableInstanceId(Guid wearableInstanceId)
         {
-            using (var context = DataAccessHelper.CreateContext())
+            using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 foreach (CellonOption cellonOptionobject in context.CellonOption.Where(i => i.EquipmentSerialId.Equals(wearableInstanceId)))
                 {

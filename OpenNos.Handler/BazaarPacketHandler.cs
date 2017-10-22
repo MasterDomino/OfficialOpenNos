@@ -152,7 +152,6 @@ namespace OpenNos.Handler
                             newBz.Id = Guid.NewGuid();
                             newBz.Type = newBz.Item.Type;
                             newId = newBz.Id;
-                            
                             List<ItemInstance> newInv = Session.Character.Inventory.AddToInventory(newBz);
                         }
                         Session.SendPacket($"rc_scalc 1 {bz.Price} {bz.Amount - Item.Amount} {bz.Amount} {taxes} {price + taxes}");

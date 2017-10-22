@@ -32,7 +32,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     FamilyLog famlog = context.FamilyLog.FirstOrDefault(c => c.FamilyLogId.Equals(familyLogId));
 
@@ -56,7 +56,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     long FamilyLog = familyLog.FamilyLogId;
                     FamilyLog entity = context.FamilyLog.FirstOrDefault(c => c.FamilyLogId.Equals(FamilyLog));
@@ -80,7 +80,7 @@ namespace OpenNos.DAL.EF
 
         public IEnumerable<FamilyLogDTO> LoadByFamilyId(long familyId)
         {
-            using (var context = DataAccessHelper.CreateContext())
+            using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 foreach (FamilyLog familylog in context.FamilyLog.Where(fc => fc.FamilyId.Equals(familyId)))
                 {

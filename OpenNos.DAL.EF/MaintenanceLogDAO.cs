@@ -30,7 +30,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     MaintenanceLog entity = _mapper.Map<MaintenanceLog>(maintenanceLog);
                     context.MaintenanceLog.Add(entity);
@@ -47,7 +47,7 @@ namespace OpenNos.DAL.EF
 
         public IEnumerable<MaintenanceLogDTO> LoadAll()
         {
-            using (var context = DataAccessHelper.CreateContext())
+            using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 foreach (MaintenanceLog maintenanceLog in context.MaintenanceLog)
                 {
@@ -60,7 +60,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     return _mapper.Map<MaintenanceLogDTO>(context.MaintenanceLog.FirstOrDefault(m => m.DateEnd > DateTime.Now));
                 }

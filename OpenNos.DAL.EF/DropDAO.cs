@@ -30,7 +30,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     context.Configuration.AutoDetectChangesEnabled = false;
                     foreach (DropDTO Drop in drops)
@@ -52,7 +52,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     Drop entity = _mapper.Map<Drop>(drop);
                     context.Drop.Add(entity);
@@ -69,7 +69,7 @@ namespace OpenNos.DAL.EF
 
         public List<DropDTO> LoadAll()
         {
-            using (var context = DataAccessHelper.CreateContext())
+            using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 return context.Drop.ToList().Select(d => _mapper.Map<DropDTO>(d)).ToList();
             }
@@ -77,7 +77,7 @@ namespace OpenNos.DAL.EF
 
         public IEnumerable<DropDTO> LoadByMonster(short monsterVNum)
         {
-            using (var context = DataAccessHelper.CreateContext())
+            using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 foreach (Drop Drop in context.Drop.Where(s => s.MonsterVNum == monsterVNum || s.MonsterVNum == null))
                 {

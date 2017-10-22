@@ -33,7 +33,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     // actually a Character wont be deleted, it just will be disabled for future traces
                     Character character = context.Character.SingleOrDefault(c => c.AccountId.Equals(accountId) && c.Slot.Equals(characterSlot) && c.State.Equals((byte)CharacterState.Active));
@@ -60,7 +60,7 @@ namespace OpenNos.DAL.EF
         /// <returns></returns>
         public List<CharacterDTO> GetTopCompliment()
         {
-            using (var context = DataAccessHelper.CreateContext())
+            using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 return context.Character.Where(c => c.Account.Authority == AuthorityType.User && !c.Account.PenaltyLog.Any(l => l.Penalty == PenaltyType.Banned && l.DateEnd > DateTime.Now)).OrderByDescending(c => c.Compliment).Take(30).ToList().Select(c => _mapper.Map<CharacterDTO>(c)).ToList();
             }
@@ -72,7 +72,7 @@ namespace OpenNos.DAL.EF
         /// <returns></returns>
         public List<CharacterDTO> GetTopPoints()
         {
-            using (var context = DataAccessHelper.CreateContext())
+            using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 return context.Character.Where(c => c.Account.Authority == AuthorityType.User && !c.Account.PenaltyLog.Any(l => l.Penalty == PenaltyType.Banned && l.DateEnd > DateTime.Now)).OrderByDescending(c => c.Act4Points).Take(30).ToList().Select(c => _mapper.Map<CharacterDTO>(c)).ToList();
             }
@@ -84,7 +84,7 @@ namespace OpenNos.DAL.EF
         /// <returns></returns>
         public List<CharacterDTO> GetTopReputation()
         {
-            using (var context = DataAccessHelper.CreateContext())
+            using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 return context.Character.Where(c => c.Account.Authority == AuthorityType.User && !c.Account.PenaltyLog.Any(l => l.Penalty == PenaltyType.Banned && l.DateEnd > DateTime.Now)).OrderByDescending(c => c.Reputation).Take(43).ToList().Select(c => _mapper.Map<CharacterDTO>(c)).ToList();
             }
@@ -94,7 +94,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     long characterId = character.CharacterId;
                     Character entity = context.Character.FirstOrDefault(c => c.CharacterId.Equals(characterId));
@@ -117,7 +117,7 @@ namespace OpenNos.DAL.EF
         [Obsolete("LoadAll is obsolete, create a separate DAO statement for your function")]
         public IEnumerable<CharacterDTO> LoadAll()
         {
-            using (var context = DataAccessHelper.CreateContext())
+            using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 foreach (Character chara in context.Character)
                 {
@@ -128,7 +128,7 @@ namespace OpenNos.DAL.EF
 
         public IEnumerable<CharacterDTO> LoadByAccount(long accountId)
         {
-            using (var context = DataAccessHelper.CreateContext())
+            using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 return context.Character.Where(c => c.AccountId.Equals(accountId) && c.State.Equals((byte)CharacterState.Active)).OrderByDescending(c => c.Slot).ToList().Select(c => _mapper.Map<CharacterDTO>(c)).ToList();
             }
@@ -138,7 +138,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     return _mapper.Map<CharacterDTO>(context.Character.FirstOrDefault(c => c.CharacterId.Equals(characterId)));
                 }
@@ -154,7 +154,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     return _mapper.Map<CharacterDTO>(context.Character.SingleOrDefault(c => c.Name.Equals(name) && c.State.Equals((byte)CharacterState.Active)));
                 }
@@ -170,7 +170,7 @@ namespace OpenNos.DAL.EF
         {
             try
             {
-                using (var context = DataAccessHelper.CreateContext())
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     return _mapper.Map<CharacterDTO>(context.Character.SingleOrDefault(c => c.AccountId.Equals(accountId) && c.Slot.Equals(slot) && c.State.Equals((byte)CharacterState.Active)));
                 }
