@@ -271,10 +271,10 @@ namespace OpenNos.Handler
         /// <summary>
         /// addobj packet
         /// </summary>
-        /// <param name="packet"></param>
-        public void MinilandAddObject(AddobjPacket packet)
+        /// <param name="addObjPacket"></param>
+        public void MinilandAddObject(AddObjPacket addObjPacket)
         {
-            ItemInstance minilandobject = Session.Character.Inventory.LoadBySlotAndType<ItemInstance>(packet.Slot, InventoryType.Miniland);
+            ItemInstance minilandobject = Session.Character.Inventory.LoadBySlotAndType<ItemInstance>(addObjPacket.Slot, InventoryType.Miniland);
             if (minilandobject != null)
             {
                 if (Session.Character.MinilandObjects.All(s => s.ItemInstanceId != minilandobject.Id))
@@ -286,8 +286,8 @@ namespace OpenNos.Handler
                             CharacterId = Session.Character.CharacterId,
                             ItemInstance = minilandobject,
                             ItemInstanceId = minilandobject.Id,
-                            MapX = packet.PositionX,
-                            MapY = packet.PositionY,
+                            MapX = addObjPacket.PositionX,
+                            MapY = addObjPacket.PositionY,
                             Level1BoxAmount = 0,
                             Level2BoxAmount = 0,
                             Level3BoxAmount = 0,

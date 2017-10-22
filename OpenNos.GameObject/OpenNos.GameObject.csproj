@@ -175,7 +175,7 @@
     <Compile Include="Packets\CommandPackets\WarningPacket.cs" />
     <Compile Include="Packets\ServerPackets\TalkPacket.cs" />
     <Compile Include="ScriptedInstance.cs" />
-    <Compile Include="Packets\ClientPackets\AddobjPacket.cs" />
+    <Compile Include="Packets\ClientPackets\AddObjPacket.cs" />
     <Compile Include="Packets\ClientPackets\ComplimentPacket.cs" />
     <Compile Include="Packets\ClientPackets\GitPacket.cs" />
     <Compile Include="Packets\ClientPackets\EquipmentInfoPacket.cs" />
