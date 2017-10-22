@@ -43,21 +43,6 @@ namespace OpenNos.Core
             #endregion
         }
 
-        internal static class ConcurrentQueueExtensions
-        {
-            #region Methods
-
-            public static void Clear<T>(this ConcurrentQueue<T> queue)
-            {
-                while (queue.TryDequeue(out T item))
-                {
-                    // do nothing
-                }
-            }
-
-            #endregion
-        }
-
         internal class ArrayTraverse
         {
             #region Members
@@ -102,6 +87,21 @@ namespace OpenNos.Core
 
             #endregion
         }
+    }
+
+    internal static class ConcurrentQueueExtensions
+    {
+        #region Methods
+
+        public static void Clear<T>(this ConcurrentQueue<T> queue)
+        {
+            while (queue.TryDequeue(out T item))
+            {
+                // do nothing
+            }
+        }
+
+        #endregion
     }
 
     public static class Extension
