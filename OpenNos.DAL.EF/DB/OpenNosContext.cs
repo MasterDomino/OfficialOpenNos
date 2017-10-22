@@ -109,7 +109,6 @@ namespace OpenNos.DAL.EF.DB
 
         public virtual DbSet<ShellEffect> ShellEffect { get; set; }
 
-
         public virtual DbSet<Shop> Shop { get; set; }
 
         public virtual DbSet<ShopItem> ShopItem { get; set; }

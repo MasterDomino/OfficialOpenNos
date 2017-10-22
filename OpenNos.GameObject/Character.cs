@@ -23,6 +23,7 @@ using OpenNos.Master.Library.Client;
 using OpenNos.Master.Library.Data;
 using OpenNos.PathFinder;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -55,7 +56,7 @@ namespace OpenNos.GameObject
             MinilandObjects = new List<MinilandObject>();
             Mates = new List<Mate>();
             LastMonsterAggro = DateTime.Now;
-            MTListTargetQueue = new ThreadSafeGenericList<MTListHitTarget>();
+            MTListTargetQueue = new ConcurrentStack<MTListHitTarget>();
             EquipmentBCards = new ThreadSafeGenericList<BCard>();
             MeditationDictionary = new Dictionary<short, DateTime>();
             Buff = new ThreadSafeSortedList<short, Buff>();
@@ -256,7 +257,7 @@ namespace OpenNos.GameObject
 
         public int MorphUpgrade2 { get; set; }
 
-        public ThreadSafeGenericList<MTListHitTarget> MTListTargetQueue { get; set; }
+        public ConcurrentStack<MTListHitTarget> MTListTargetQueue { get; set; }
 
         public bool NoAttack { get; set; }
 

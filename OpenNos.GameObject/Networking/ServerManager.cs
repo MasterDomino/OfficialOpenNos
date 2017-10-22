@@ -1365,7 +1365,7 @@ namespace OpenNos.GameObject
         {
             long BazaarId = (long)sender;
             BazaarItemDTO bzdto = DAOFactory.BazaarItemDAO.LoadById(BazaarId);
-            BazaarItemLink bzlink = BazaarList.FirstOrDefault(s => s.BazaarItem.BazaarItemId == BazaarId);
+            BazaarItemLink bzlink = BazaarList.Find(s => s.BazaarItem.BazaarItemId == BazaarId);
             lock (BazaarList)
             {
                 if (bzdto != null)

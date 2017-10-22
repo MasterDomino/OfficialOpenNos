@@ -274,14 +274,14 @@ namespace OpenNos.GameObject
 
         public int GetNextMonsterId()
         {
-            int nextId = _mapMonsterIds.GetAllItems().Count > 0 ? _mapMonsterIds.GetAllItems().Last() + 1 : 1;
+            int nextId = _mapMonsterIds.Count > 0 ? _mapMonsterIds.GetAllItems().Last() + 1 : 1;
             _mapMonsterIds[nextId] = nextId;
             return nextId;
         }
 
         public int GetNextNpcId()
         {
-            int nextId = _mapNpcIds.GetAllItems().Count > 0 ? _mapNpcIds.GetAllItems().Last() + 1 : 1;
+            int nextId = _mapNpcIds.Count > 0 ? _mapNpcIds.GetAllItems().Last() + 1 : 1;
             _mapNpcIds[nextId] = nextId;
             return nextId;
         }

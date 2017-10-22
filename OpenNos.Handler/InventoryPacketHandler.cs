@@ -775,7 +775,7 @@ namespace OpenNos.Handler
                 {
                     if (putPacket.Amount > 0 && putPacket.Amount < 100)
                     {
-                        if (Session.Character.MapInstance.DroppedList.GetAllItems().Count < 200 && Session.HasCurrentMapInstance)
+                        if (Session.Character.MapInstance.DroppedList.Count < 200 && Session.HasCurrentMapInstance)
                         {
                             MapItem droppedItem = Session.CurrentMapInstance.PutItem(putPacket.InventoryType, putPacket.Slot, putPacket.Amount, ref invitem, Session);
                             if (droppedItem == null)
