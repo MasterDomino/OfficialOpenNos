@@ -253,7 +253,7 @@ namespace OpenNos.Handler
 
                     //coupon
                     case 9:
-                        List<ItemInstance> items = Session.Character.Inventory.GetAllItems().Where(s => s.ItemVNum == 1269 || s.ItemVNum == 1271).OrderBy(s => s.Slot).ToList();
+                        List<ItemInstance> items = Session.Character.Inventory.Where(s => s.ItemVNum == 1269 || s.ItemVNum == 1271).OrderBy(s => s.Slot);
                         if (items.Count > 0)
                         {
                             short itemVNum = items[0].ItemVNum;

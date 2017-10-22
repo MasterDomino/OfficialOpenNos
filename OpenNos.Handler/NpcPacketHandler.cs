@@ -129,14 +129,14 @@ namespace OpenNos.Handler
                                 return;
                             }
 
-                            if (Session.Character.Skills.GetAllItems().Any(s => s.LastUse.AddMilliseconds(s.Skill.Cooldown * 100) > DateTime.Now))
+                            if (Session.Character.Skills.Any(s => s.LastUse.AddMilliseconds(s.Skill.Cooldown * 100) > DateTime.Now))
                             {
                                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("SKILL_NEED_COOLDOWN"), 0));
                                 return;
                             }
 
                             Skill skillinfo = ServerManager.Instance.GetSkill(buyPacket.Slot);
-                            if (Session.Character.Skills.GetAllItems().Any(s => s.SkillVNum == buyPacket.Slot) || skillinfo == null)
+                            if (Session.Character.Skills.Any(s => s.SkillVNum == buyPacket.Slot) || skillinfo == null)
                             {
                                 return;
                             }
@@ -213,7 +213,7 @@ namespace OpenNos.Handler
                                     }
                                     if (skillinfo.UpgradeSkill != 0)
                                     {
-                                        CharacterSkill oldupgrade = Session.Character.Skills.GetAllItems().Find(s => s.Skill.UpgradeSkill == skillinfo.UpgradeSkill && s.Skill.UpgradeType == skillinfo.UpgradeType && s.Skill.UpgradeSkill != 0);
+                                        CharacterSkill oldupgrade = Session.Character.Skills.FirstOrDefault(s => s.Skill.UpgradeSkill == skillinfo.UpgradeSkill && s.Skill.UpgradeType == skillinfo.UpgradeType && s.Skill.UpgradeSkill != 0);
                                         if (oldupgrade != null)
                                         {
                                             Session.Character.Skills.Remove(oldupgrade.SkillVNum);

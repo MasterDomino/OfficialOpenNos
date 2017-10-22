@@ -284,6 +284,95 @@ namespace OpenNos.Core
         }
 
         /// <summary>
+        /// Returns the only element of a sequence that satisfies a specified condition or a default value if no such element exists; this method throws an exception if more than one element satisfies the condition.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns>TV object</returns>
+        public T SingleOrDefault(Func<T, bool> predicate)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _list.SingleOrDefault(predicate);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return default;
+        }
+
+        /// <summary>
+        /// Returns the last element of a sequence that satisfies a condition or a default value if
+        /// no such element is found.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns>TV object</returns>
+        public T LastOrDefault(Func<T, bool> predicate)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _list.LastOrDefault(predicate);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return default;
+        }
+
+        /// <summary>
+        /// Filters a sequence of values based on a predicate.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public List<T> Where(Func<T, bool> predicate)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _list.Where(predicate).ToList();
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return new List<T>();
+        }
+
+        /// <summary>
+        /// Returns the only element of a sequence that satisfies a specified condition, and throws an exception if more than one such element exists.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns>TV object</returns>
+        public T Single(Func<T, bool> predicate)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _list.Single(predicate);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return default;
+        }
+
+        /// <summary>
         /// Performs the specified action on each element of the List&lt;T&gt;.
         /// </summary>
         /// <param name="action"></param>

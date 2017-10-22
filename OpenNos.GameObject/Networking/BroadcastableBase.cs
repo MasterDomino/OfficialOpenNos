@@ -47,7 +47,7 @@ namespace OpenNos.GameObject
 
         #region Properties
 
-        public IEnumerable<ClientSession> Sessions => _sessions.GetAllItems().Where(s => s.HasSelectedCharacter && !s.IsDisposing && s.IsConnected);
+        public IEnumerable<ClientSession> Sessions => _sessions.Where(s => s.HasSelectedCharacter && !s.IsDisposing && s.IsConnected);
 
         protected DateTime LastUnregister { get; private set; }
 

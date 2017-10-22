@@ -1467,7 +1467,7 @@ namespace OpenNos.Handler
             }
             else if (!Session.Character.IsSitting)
             {
-                if (Session.Character.Skills.GetAllItems().Any(s => !s.CanBeUsed()))
+                if (Session.Character.Skills.Any(s => !s.CanBeUsed()))
                 {
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("SKILLS_IN_LOADING"), 0));
                     return;
@@ -1906,7 +1906,7 @@ namespace OpenNos.Handler
                 Session.Character.SpCooldown = 30;
                 if (Session.Character?.SkillsSp != null)
                 {
-                    foreach (CharacterSkill ski in Session.Character.SkillsSp.GetAllItems().Where(s => !s.CanBeUsed()))
+                    foreach (CharacterSkill ski in Session.Character.SkillsSp.Where(s => !s.CanBeUsed()))
                     {
                         short time = ski.Skill.Cooldown;
                         double temp = (ski.LastUse - DateTime.Now).TotalMilliseconds + (time * 100);
