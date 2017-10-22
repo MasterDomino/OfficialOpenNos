@@ -113,7 +113,7 @@ namespace OpenNos.GameObject
                                         return;
                                     }
                                     (item as WearableInstance).ShellEffects.Clear();
-                                    DAOFactory.ShellEffectDAO.DeleteByItemInstanceId(item.Id);
+                                    DAOFactory.ShellEffectDAO.DeleteByItemInstanceId((item as WearableInstance).EquipmentSerialId);
                                     (item as WearableInstance).ShellEffects.AddRange((inv as WearableInstance).ShellEffects);
                                     session.Character.DeleteItemByItemInstanceId(inv.Id);
                                     session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_APPLY_SUCCESS"), 0));

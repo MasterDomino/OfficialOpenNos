@@ -119,7 +119,7 @@ namespace OpenNos.GameObject
                         if (item != null && (item.Item.ItemType == ItemType.Weapon || item.Item.ItemType == ItemType.Armor) && (item as WearableInstance).ShellEffects.Count != 0 && !item.Item.IsHeroic)
                         {
                             (item as WearableInstance).ShellEffects.Clear();
-                            DAOFactory.ShellEffectDAO.DeleteByItemInstanceId(item.Id);
+                            DAOFactory.ShellEffectDAO.DeleteByItemInstanceId((item as WearableInstance).EquipmentSerialId);
                             session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                             session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_DELETE"), 0));
                         }
