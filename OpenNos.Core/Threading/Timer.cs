@@ -67,7 +67,7 @@ namespace OpenNos.Core.Threading
         {
             Period = period;
             RunOnStart = runOnStart;
-            _taskTimer = new System.Threading.Timer(TimerCallBack, null, Timeout.Infinite, Timeout.Infinite);
+            _taskTimer = new System.Threading.Timer(timerCallBack, null, Timeout.Infinite, Timeout.Infinite);
         }
 
         #endregion
@@ -156,7 +156,7 @@ namespace OpenNos.Core.Threading
         /// This method is called by _taskTimer.
         /// </summary>
         /// <param name="state">Not used argument</param>
-        private void TimerCallBack(object state)
+        private void timerCallBack(object state)
         {
             lock (_lock)
             {
@@ -172,9 +172,6 @@ namespace OpenNos.Core.Threading
             try
             {
                 Elapsed?.Invoke(this, EventArgs.Empty);
-            }
-            catch
-            {
             }
             finally
             {
