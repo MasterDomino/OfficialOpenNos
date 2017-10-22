@@ -57,11 +57,18 @@ namespace OpenNos.Master.Server
                 Console.Title = $"OpenNos Master Server{(_isDebug ? " Development Environment" : string.Empty)}";
 
                 bool ignoreStartupMessages = false;
+                bool ignoreTelemetry = false;
                 foreach (string arg in args)
                 {
-                    if (arg == "--nomsg")
+                    switch (arg)
                     {
-                        ignoreStartupMessages = true;
+                        case "--nomsg":
+                            ignoreStartupMessages = true;
+                            break;
+
+                        case "--notelemetry":
+                            ignoreTelemetry = true;
+                            break;
                     }
                 }
 
@@ -103,36 +110,39 @@ namespace OpenNos.Master.Server
 
                     _server.Start();
                     Logger.Log.Info(Language.Instance.GetMessageFromKey("STARTED"));
-                    string guid = ((GuidAttribute)Assembly.GetAssembly(typeof(ScsServiceBuilder)).GetCustomAttributes(typeof(GuidAttribute), true)[0]).Value;
-                    Observable.Interval(TimeSpan.FromMinutes(5)).Subscribe(observer =>
+                    if (!ignoreTelemetry)
                     {
-                        try
+                        string guid = ((GuidAttribute)Assembly.GetAssembly(typeof(ScsServiceBuilder)).GetCustomAttributes(typeof(GuidAttribute), true)[0]).Value;
+                        Observable.Interval(TimeSpan.FromMinutes(5)).Subscribe(observer =>
                         {
-                            WebClient wc = new WebClient();
-                            foreach (WorldServer s in MSManager.Instance.WorldServers)
+                            try
                             {
-                                System.Collections.Specialized.NameValueCollection reqparm = new System.Collections.Specialized.NameValueCollection
+                                WebClient wc = new WebClient();
+                                foreach (WorldServer world in MSManager.Instance.WorldServers)
                                 {
-                                    { "key", guid },
-                                    { "ip", s.Endpoint.IpAddress },
-                                    { "port", s.Endpoint.TcpPort.ToString() },
-                                    { "server", s.WorldGroup },
-                                    { "channel", s.ChannelId.ToString() },
-                                    { "userCount", MSManager.Instance.ConnectedAccounts.CountLinq(c => c.ConnectedWorld?.Id == s.Id).ToString() }
-                                };
-                                byte[] responsebytes = wc.UploadValues("https://mgmt.opennos.io/Statistics/SendStat", "POST", reqparm);
-                                string[] resp = Encoding.UTF8.GetString(responsebytes).Split(':');
-                                if (resp[0] != "saved")
-                                {
-                                    Logger.Error(new Exception($"Unable to send statistics to management Server. Please report this issue to the Developer: {resp[0]}"));
+                                    System.Collections.Specialized.NameValueCollection reqparm = new System.Collections.Specialized.NameValueCollection
+                                    {
+                                        { "key", guid },
+                                        { "ip", world.Endpoint.IpAddress },
+                                        { "port", world.Endpoint.TcpPort.ToString() },
+                                        { "server", world.WorldGroup },
+                                        { "channel", world.ChannelId.ToString() },
+                                        { "userCount", MSManager.Instance.ConnectedAccounts.CountLinq(c => c.ConnectedWorld?.Id == world.Id).ToString() }
+                                    };
+                                    byte[] responsebytes = wc.UploadValues("https://mgmt.opennos.io/Statistics/SendStat", "POST", reqparm);
+                                    string[] resp = Encoding.UTF8.GetString(responsebytes).Split(':');
+                                    if (resp[0] != "saved")
+                                    {
+                                        Logger.Error(new Exception($"Unable to send statistics to management Server. Please report this issue to the Developer: {resp[0]}"));
+                                    }
                                 }
                             }
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.Error(new Exception($"Unable to send statistics to management Server. Please report this issue to the Developer: {ex.Message}"));
-                        }
-                    });
+                            catch (Exception ex)
+                            {
+                                Logger.Error(new Exception($"Unable to send statistics to management Server. Please report this issue to the Developer: {ex.Message}"));
+                            }
+                        });
+                    }
                 }
                 catch (Exception ex)
                 {
