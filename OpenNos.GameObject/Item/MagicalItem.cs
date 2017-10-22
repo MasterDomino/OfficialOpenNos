@@ -45,9 +45,8 @@ namespace OpenNos.GameObject
                     {
                         if (wearInstance.ShellEffects.Count != 0 && packetsplit?.Length > 9 && byte.TryParse(packetsplit[9], out byte islot))
                         {
-                            ItemInstance item = session.Character.Inventory.LoadBySlotAndType(islot, InventoryType.Equipment);
-
-                            if (item != null && (item.Item.ItemType == ItemType.Weapon || item.Item.ItemType == ItemType.Armor) && item.Item.LevelMinimum >= inv.Upgrade && item.Rare >= inv.Rare && !item.Item.IsHeroic)
+                            WearableInstance wearable = session.Character.Inventory.LoadBySlotAndType<WearableInstance>(islot, InventoryType.Equipment);
+                            if (wearable != null && (wearable.Item.ItemType == ItemType.Weapon || wearable.Item.ItemType == ItemType.Armor) && wearable.Item.LevelMinimum >= inv.Upgrade && wearable.Rare >= inv.Rare && !wearable.Item.IsHeroic)
                             {
                                 bool weapon = false;
                                 switch (inv.ItemVNum)
@@ -101,10 +100,11 @@ namespace OpenNos.GameObject
                                     case 588:
                                         weapon = false;
                                         break;
+
                                     default:
                                         return;
                                 }
-                                if ((item.Item.ItemType == ItemType.Weapon && weapon) || (item.Item.ItemType == ItemType.Armor && !weapon))
+                                if ((wearable.Item.ItemType == ItemType.Weapon && weapon) || (wearable.Item.ItemType == ItemType.Armor && !weapon))
                                 {
                                     if (wearInstance.ShellEffects.Count > 0 && ServerManager.Instance.RandomNumber() < 50)
                                     {
@@ -112,9 +112,9 @@ namespace OpenNos.GameObject
                                         session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_APPLY_FAIL"), 0));
                                         return;
                                     }
-                                    wearInstance.ShellEffects.Clear();
-                                    DAOFactory.ShellEffectDAO.DeleteByItemInstanceId(item.Id);
-                                    wearInstance.ShellEffects.AddRange(wearInstance.ShellEffects);
+                                    wearable.ShellEffects.Clear();
+                                    DAOFactory.ShellEffectDAO.DeleteByItemInstanceId(wearable.Id);
+                                    wearable.ShellEffects.AddRange(wearInstance.ShellEffects);
                                     session.Character.DeleteItemByItemInstanceId(inv.Id);
                                     session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_APPLY_SUCCESS"), 0));
                                 }

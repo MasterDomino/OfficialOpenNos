@@ -129,12 +129,12 @@ namespace OpenNos.GameObject
                 case 666:
                     if (EffectValue == 1 && byte.TryParse(packetsplit[9], out byte islot))
                     {
-                        ItemInstance item = session.Character.Inventory.LoadBySlotAndType(islot, InventoryType.Equipment);
+                        WearableInstance wearInstance = session.Character.Inventory.LoadBySlotAndType<WearableInstance>(islot, InventoryType.Equipment);
 
-                        if (item != null && (item.Item.ItemType == ItemType.Weapon || item.Item.ItemType == ItemType.Armor) && item is WearableInstance wearInstance && wearInstance.ShellEffects.Count != 0 && !item.Item.IsHeroic)
+                        if (wearInstance != null && (wearInstance.Item.ItemType == ItemType.Weapon || wearInstance.Item.ItemType == ItemType.Armor) && wearInstance.ShellEffects.Count != 0 && !wearInstance.Item.IsHeroic)
                         {
                             wearInstance.ShellEffects.Clear();
-                            DAOFactory.ShellEffectDAO.DeleteByItemInstanceId(item.Id);
+                            DAOFactory.ShellEffectDAO.DeleteByItemInstanceId(wearInstance.Id);
                             session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                             session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_DELETE"), 0));
                         }
