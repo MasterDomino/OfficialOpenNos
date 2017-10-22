@@ -65,6 +65,7 @@ namespace OpenNos.GameObject.Helpers
                     {
                         case EventType.RANKINGREFRESH:
                             ServerManager.Instance.RefreshRanking();
+                            ServerManager.Instance.StartedEvents.Remove(EventType.RANKINGREFRESH);
                             break;
 
                         case EventType.LOD:
