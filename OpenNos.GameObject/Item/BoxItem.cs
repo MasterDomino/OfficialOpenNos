@@ -208,6 +208,7 @@ namespace OpenNos.GameObject
                                         specialist.SpStoneUpgrade = box.SpStoneUpgrade;
                                         specialist.SpWater = box.SpWater;
                                         specialist.Upgrade = box.Upgrade;
+                                        specialist.EquipmentSerialId = box.EquipmentSerialId;
                                         specialist.XP = box.XP;
                                     }
                                     short Slot = inv.Slot;

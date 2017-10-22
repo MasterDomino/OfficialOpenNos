@@ -1000,6 +1000,7 @@ namespace OpenNos.Handler
                 holder.SpWater = specialist.SpWater;
                 holder.Upgrade = specialist.Upgrade;
                 holder.XP = specialist.XP;
+                holder.EquipmentSerialId = specialist.EquipmentSerialId;
                 Session.SendPacket("shop_end 2");
                 Session.Character.Inventory.RemoveItemFromInventory(specialist.Id);
             }
