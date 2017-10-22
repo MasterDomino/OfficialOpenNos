@@ -407,6 +407,10 @@ namespace OpenNos.GameObject
 
         public int WaterResistance { get; set; }
 
+        public int HPMax { get; set; }
+
+        public int MPMax { get; set; }
+
         #endregion
 
         #region Methods
@@ -2889,7 +2893,8 @@ namespace OpenNos.GameObject
             multiplicator += GetBuff(CardType.BearSpirit, (byte)AdditionalTypes.BearSpirit.IncreaseMaximumHP)[0] / 100D;
             multiplicator += GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.IncreasesMaximumHP)[0] / 100D;
 
-            return (int)((CharacterHelper.HPData[(byte)Class, Level] + hp + GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumHPIncreased)[0] + GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumHPMPIncreased)[0]) * multiplicator);
+            HPMax = (int)((CharacterHelper.HPData[(byte)Class, Level] + hp + GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumHPIncreased)[0] + GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumHPMPIncreased)[0]) * multiplicator);
+            return HPMax;
         }
 
         public override void Initialize()
@@ -3134,7 +3139,8 @@ namespace OpenNos.GameObject
             multiplicator += GetBuff(CardType.BearSpirit, (byte)AdditionalTypes.BearSpirit.IncreaseMaximumMP)[0] / 100D;
             multiplicator += GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.IncreasesMaximumMP)[0] / 100D;
 
-            return (int)((CharacterHelper.MPData[(byte)Class, Level] + mp + GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumMPIncreased)[0] + GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumHPMPIncreased)[0]) * multiplicator);
+            MPMax = (int)((CharacterHelper.MPData[(byte)Class, Level] + mp + GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumMPIncreased)[0] + GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumHPMPIncreased)[0]) * multiplicator);
+            return MPMax;
         }
 
         public bool MuteMessage()
