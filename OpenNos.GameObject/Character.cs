@@ -2169,8 +2169,8 @@ namespace OpenNos.GameObject
                 {
                     MinHit += specialist.DamageMinimum + (specialist.SpDamage * 10);
                     MaxHit += specialist.DamageMaximum + (specialist.SpDamage * 10);
-                    MinDistance += specialist.DamageMinimum;
-                    MaxDistance += specialist.DamageMaximum;
+                    MinDistance += specialist.DamageMinimum + (specialist.SpDamage * 100);
+                    MaxDistance += specialist.DamageMaximum + (specialist.SpDamage * 100);
                     HitCriticalRate += specialist.CriticalLuckRate;
                     HitCritical += specialist.CriticalRate;
                     DistanceCriticalRate += specialist.CriticalLuckRate;
