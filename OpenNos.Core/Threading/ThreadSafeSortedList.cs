@@ -256,138 +256,6 @@ namespace OpenNos.Core
         }
 
         /// <summary>
-        /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
-        /// </summary>
-        /// <param name="selector"></param>
-        /// <returns>integer number of found elements</returns>
-        public int Sum(Func<TV, int> selector)
-        {
-            if (!_disposed)
-            {
-                _lock.EnterReadLock();
-                try
-                {
-                    return _items.Values.Sum(selector);
-                }
-                finally
-                {
-                    _lock.ExitReadLock();
-                }
-            }
-            return 0;
-        }
-
-        /// <summary>
-        /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
-        /// </summary>
-        /// <param name="selector"></param>
-        /// <returns>integer number of found elements</returns>
-        public int? Sum(Func<TV, int?> selector)
-        {
-            if (!_disposed)
-            {
-                _lock.EnterReadLock();
-                try
-                {
-                    return _items.Values.Sum(selector);
-                }
-                finally
-                {
-                    _lock.ExitReadLock();
-                }
-            }
-            return 0;
-        }
-
-        /// <summary>
-        /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
-        /// </summary>
-        /// <param name="selector"></param>
-        /// <returns>integer number of found elements</returns>
-        public long Sum(Func<TV, long> selector)
-        {
-            if (!_disposed)
-            {
-                _lock.EnterReadLock();
-                try
-                {
-                    return _items.Values.Sum(selector);
-                }
-                finally
-                {
-                    _lock.ExitReadLock();
-                }
-            }
-            return 0;
-        }
-
-        /// <summary>
-        /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
-        /// </summary>
-        /// <param name="selector"></param>
-        /// <returns>integer number of found elements</returns>
-        public long? Sum(Func<TV, long?> selector)
-        {
-            if (!_disposed)
-            {
-                _lock.EnterReadLock();
-                try
-                {
-                    return _items.Values.Sum(selector);
-                }
-                finally
-                {
-                    _lock.ExitReadLock();
-                }
-            }
-            return 0;
-        }
-
-        /// <summary>
-        /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
-        /// </summary>
-        /// <param name="selector"></param>
-        /// <returns>integer number of found elements</returns>
-        public double Sum(Func<TV, double> selector)
-        {
-            if (!_disposed)
-            {
-                _lock.EnterReadLock();
-                try
-                {
-                    return _items.Values.Sum(selector);
-                }
-                finally
-                {
-                    _lock.ExitReadLock();
-                }
-            }
-            return 0;
-        }
-
-        /// <summary>
-        /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
-        /// </summary>
-        /// <param name="selector"></param>
-        /// <returns>integer number of found elements</returns>
-        public double? Sum(Func<TV, double?> selector)
-        {
-            if (!_disposed)
-            {
-                _lock.EnterReadLock();
-                try
-                {
-                    return _items.Values.Sum(selector);
-                }
-                finally
-                {
-                    _lock.ExitReadLock();
-                }
-            }
-            return 0;
-        }
-
-        /// <summary>
         /// Disposes the current object.
         /// </summary>
         public void Dispose()
@@ -668,6 +536,138 @@ namespace OpenNos.Core
                 }
             }
             return default;
+        }
+
+        /// <summary>
+        /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
+        /// </summary>
+        /// <param name="selector"></param>
+        /// <returns>integer number of found elements</returns>
+        public int Sum(Func<TV, int> selector)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _items.Values.Sum(selector);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
+        /// </summary>
+        /// <param name="selector"></param>
+        /// <returns>integer number of found elements</returns>
+        public int? Sum(Func<TV, int?> selector)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _items.Values.Sum(selector);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
+        /// </summary>
+        /// <param name="selector"></param>
+        /// <returns>integer number of found elements</returns>
+        public long Sum(Func<TV, long> selector)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _items.Values.Sum(selector);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
+        /// </summary>
+        /// <param name="selector"></param>
+        /// <returns>integer number of found elements</returns>
+        public long? Sum(Func<TV, long?> selector)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _items.Values.Sum(selector);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
+        /// </summary>
+        /// <param name="selector"></param>
+        /// <returns>integer number of found elements</returns>
+        public double Sum(Func<TV, double> selector)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _items.Values.Sum(selector);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
+        /// </summary>
+        /// <param name="selector"></param>
+        /// <returns>integer number of found elements</returns>
+        public double? Sum(Func<TV, double?> selector)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _items.Values.Sum(selector);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return 0;
         }
 
         /// <summary>
