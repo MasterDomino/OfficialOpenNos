@@ -171,6 +171,7 @@
     <Compile Include="Packets\CommandPackets\StealthyNiggerPacket.cs" />
     <Compile Include="Packets\CommandPackets\SudoPacket.cs" />
     <Compile Include="Packets\CommandPackets\UnstuckPacket.cs" />
+    <Compile Include="Packets\CommandPackets\SetPerfectionPacket.cs" />
     <Compile Include="Packets\CommandPackets\WarningPacket.cs" />
     <Compile Include="Packets\ServerPackets\TalkPacket.cs" />
     <Compile Include="ScriptedInstance.cs" />

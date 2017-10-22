@@ -2116,6 +2116,77 @@ namespace OpenNos.Handler
         }
 
         /// <summary>
+        /// $SetPerfection Command
+        /// </summary>
+        /// <param name="setPerfectionPacket"></param>
+        public void SetPerfection(SetPerfectionPacket setPerfectionPacket)
+        {
+            if (setPerfectionPacket != null)
+            {
+                Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[SetPerfection]Slot: {setPerfectionPacket.Slot} Type: {setPerfectionPacket.Type} Value: {setPerfectionPacket.Value}");
+
+                if (setPerfectionPacket.Slot >= 0)
+                {
+                    SpecialistInstance specialistInstance = Session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>(setPerfectionPacket.Slot, 0);
+                    
+                    if(specialistInstance != null)
+                    {
+                        switch (setPerfectionPacket.Type)
+                        {
+                            case 0:
+                                specialistInstance.SpStoneUpgrade = setPerfectionPacket.Value;
+                                break;
+
+                            case 1:
+                                specialistInstance.SpDamage = setPerfectionPacket.Value;
+                                break;
+
+                            case 2:
+                                specialistInstance.SpDefence = setPerfectionPacket.Value;
+                                break;
+
+                            case 3:
+                                specialistInstance.SpElement = setPerfectionPacket.Value;
+                                break;
+
+                            case 4:
+                                specialistInstance.SpHP = setPerfectionPacket.Value;
+                                break;
+
+                            case 5:
+                                specialistInstance.SpFire = setPerfectionPacket.Value;
+                                break;
+
+                            case 6:
+                                specialistInstance.SpWater = setPerfectionPacket.Value;
+                                break;
+
+                            case 7:
+                                specialistInstance.SpLight = setPerfectionPacket.Value;
+                                break;
+                                
+                            case 8:
+                                specialistInstance.SpDark = setPerfectionPacket.Value;
+                                break;
+
+                            default:
+                                Session.SendPacket(Session.Character.GenerateSay(UpgradeCommandPacket.ReturnHelp(), 10));
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        Session.SendPacket(Session.Character.GenerateSay(UpgradeCommandPacket.ReturnHelp(), 10));
+                    }
+                }
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay(UpgradeCommandPacket.ReturnHelp(), 10));
+            }
+        }
+
+        /// <summary>
         /// $Shout Command
         /// </summary>
         /// <param name="shoutPacket"></param>
