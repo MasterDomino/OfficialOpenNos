@@ -96,7 +96,7 @@ namespace OpenNos.Core.Threading
 
                 if (!_isProcessing)
                 {
-                    _currentProcessTask = Task.Factory.StartNew(ProcessItem);
+                    _currentProcessTask = Task.Factory.StartNew(processItem);
                 }
             }
         }
@@ -138,7 +138,7 @@ namespace OpenNos.Core.Threading
         /// <summary>
         /// This method runs on a new seperated Task (thread) to process items on the queue.
         /// </summary>
-        private void ProcessItem()
+        private void processItem()
         {
             // Try to get an item from queue to process it.
             TItem itemToProcess;
@@ -171,7 +171,7 @@ namespace OpenNos.Core.Threading
                 }
 
                 // Start a new task
-                _currentProcessTask = Task.Factory.StartNew(ProcessItem);
+                _currentProcessTask = Task.Factory.StartNew(processItem);
             }
         }
 

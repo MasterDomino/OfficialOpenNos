@@ -41,6 +41,7 @@ namespace OpenNos.World
         private static readonly ManualResetEvent _run = new ManualResetEvent(true);
         private static EventHandler _exitHandler;
         private static bool _isDebug;
+        private static bool _ignoreTelemetry;
 
         #endregion
 
@@ -76,9 +77,15 @@ namespace OpenNos.World
             bool ignoreStartupMessages = false;
             foreach (string arg in args)
             {
-                if (arg == "--nomsg")
+                switch (arg)
                 {
-                    ignoreStartupMessages = true;
+                    case "--nomsg":
+                        ignoreStartupMessages = true;
+                        break;
+
+                    case "--notelemetry":
+                        _ignoreTelemetry = true;
+                        break;
                 }
             }
 
@@ -245,20 +252,22 @@ namespace OpenNos.World
 
             try
             {
-                string guid = ((GuidAttribute)Assembly.GetAssembly(typeof(SCS.Communication.ScsServices.Service.ScsServiceBuilder)).GetCustomAttributes(typeof(GuidAttribute), true)[0]).Value;
-                System.Collections.Specialized.NameValueCollection reqparm = new System.Collections.Specialized.NameValueCollection
+                if (!_ignoreTelemetry)
                 {
-                    { "key", guid },
-                    { "error", ((Exception)e.ExceptionObject).ToString() },
-                    { "debug", _isDebug.ToString() }
-                };
-                WebClient wc = new WebClient();
-                byte[] responsebytes = wc.UploadValues("https://mgmt.opennos.io/Crash/ReportCrash", "POST", reqparm);
-                string[] resp = Encoding.UTF8.GetString(responsebytes).Split(':');
-
-                if (resp[0] != "saved")
-                {
-                    Logger.Error(new Exception($"Unable to report crash to management Server. Please report this issue to the Developer: {resp[0]}"));
+                    string guid = ((GuidAttribute)Assembly.GetAssembly(typeof(SCS.Communication.ScsServices.Service.ScsServiceBuilder)).GetCustomAttributes(typeof(GuidAttribute), true)[0]).Value;
+                    System.Collections.Specialized.NameValueCollection reqparm = new System.Collections.Specialized.NameValueCollection
+                    {
+                        { "key", guid },
+                        { "error", ((Exception)e.ExceptionObject).ToString() },
+                        { "debug", _isDebug.ToString() }
+                    };
+                    WebClient wc = new WebClient();
+                    byte[] responsebytes = wc.UploadValues("https://mgmt.opennos.io/Crash/ReportCrash", "POST", reqparm);
+                    string[] response = Encoding.UTF8.GetString(responsebytes).Split(':');
+                    if (response[0] != "saved")
+                    {
+                        Logger.Error(new Exception($"Unable to report crash to management Server. Please report this issue to the Developer: {response[0]}"));
+                    }
                 }
             }
             catch (Exception ex)

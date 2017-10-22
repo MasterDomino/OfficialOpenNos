@@ -23,7 +23,7 @@ namespace OpenNos.Core
     {
         #region Members
 
-        private static Language instance;
+        private static Language _instance;
 
         private readonly ResourceManager _manager;
 
@@ -46,7 +46,7 @@ namespace OpenNos.Core
 
         #region Properties
 
-        public static Language Instance => instance ?? (instance = new Language());
+        public static Language Instance => _instance ?? (_instance = new Language());
 
         #endregion
 

@@ -33,20 +33,20 @@ namespace OpenNos.Core
             ParameterInfo[] methodParams = method.GetParameters();
             if (method.IsStatic)
             {
-                Expression[] paramsToPass = methodParams.Select((p, i) => CreateParam(paramsOfDelegate, i, p, queueMissingParams)).ToArray();
+                Expression[] paramsToPass = methodParams.Select((p, i) => createParam(paramsOfDelegate, i, p, queueMissingParams)).ToArray();
                 Expression<T> expr = Expression.Lambda<T>(Expression.Call(method, paramsToPass), paramsOfDelegate);
                 return expr.Compile();
             }
             else
             {
                 UnaryExpression paramThis = Expression.Convert(paramsOfDelegate[0], method.DeclaringType);
-                Expression[] paramsToPass = methodParams.Select((p, i) => CreateParam(paramsOfDelegate, i + 1, p, queueMissingParams)).ToArray();
+                Expression[] paramsToPass = methodParams.Select((p, i) => createParam(paramsOfDelegate, i + 1, p, queueMissingParams)).ToArray();
                 Expression<T> expr = Expression.Lambda<T>(Expression.Call(paramThis, method, paramsToPass), paramsOfDelegate);
                 return expr.Compile();
             }
         }
 
-        private static Expression CreateParam(ParameterExpression[] paramsOfDelegate, int index, ParameterInfo callParamType, Queue<object> queueMissingParams)
+        private static Expression createParam(ParameterExpression[] paramsOfDelegate, int index, ParameterInfo callParamType, Queue<object> queueMissingParams)
         {
             if (index < paramsOfDelegate.Length)
             {

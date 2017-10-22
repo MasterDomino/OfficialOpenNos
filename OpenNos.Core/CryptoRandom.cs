@@ -90,7 +90,7 @@ namespace OpenNos.Core
         public override int Next()
         {
             // Mask away the sign bit so that we always return nonnegative integers
-            return (int)GetRandomUInt32() & 0x7FFFFFFF;
+            return (int)getRandomUInt32() & 0x7FFFFFFF;
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace OpenNos.Core
             long diff = maxValue - minValue;
             while (true)
             {
-                uint rand = GetRandomUInt32();
+                uint rand = getRandomUInt32();
                 const long max = 1 + (long)uint.MaxValue;
                 long remainder = max % diff;
                 if (rand < max - remainder)
@@ -174,14 +174,14 @@ namespace OpenNos.Core
             {
                 if (IsRandomPoolEnabled && _buffer == null)
                 {
-                    InitBuffer();
+                    initBuffer();
                 }
 
                 // Can we fit the requested number of bytes in the buffer?
                 if (IsRandomPoolEnabled && _buffer.Length <= buffer.Length)
                 {
                     int count = buffer.Length;
-                    EnsureRandomBuffer(count);
+                    ensureRandomBuffer(count);
                     Buffer.BlockCopy(_buffer, _bufferPosition, buffer, 0, count);
                     _bufferPosition += count;
                 }
@@ -199,7 +199,7 @@ namespace OpenNos.Core
         /// <returns>
         /// A double-precision floating point number greater than or equal to 0.0, and less than 1.0.
         /// </returns>
-        public override double NextDouble() => GetRandomUInt32() / (1.0 + uint.MaxValue);
+        public override double NextDouble() => getRandomUInt32() / (1.0 + uint.MaxValue);
 
         protected virtual void Dispose(bool disposing)
         {
@@ -213,11 +213,11 @@ namespace OpenNos.Core
         /// Ensures that we have enough bytes in the random buffer.
         /// </summary>
         /// <param name="requiredBytes">The number of required bytes.</param>
-        private void EnsureRandomBuffer(int requiredBytes)
+        private void ensureRandomBuffer(int requiredBytes)
         {
             if (_buffer == null)
             {
-                InitBuffer();
+                initBuffer();
             }
             if (requiredBytes > _buffer.Length)
             {
@@ -225,25 +225,25 @@ namespace OpenNos.Core
             }
             if ((_buffer.Length - _bufferPosition) < requiredBytes)
             {
-                InitBuffer();
+                initBuffer();
             }
         }
 
         /// <summary>
         /// Gets one random unsigned 32bit integer in a thread safe manner.
         /// </summary>
-        private uint GetRandomUInt32()
+        private uint getRandomUInt32()
         {
             lock (_lockObject2)
             {
-                EnsureRandomBuffer(4);
+                ensureRandomBuffer(4);
                 uint rand = BitConverter.ToUInt32(_buffer, _bufferPosition);
                 _bufferPosition += 4;
                 return rand;
             }
         }
 
-        private void InitBuffer()
+        private void initBuffer()
         {
             if (IsRandomPoolEnabled)
             {
