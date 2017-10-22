@@ -38,20 +38,24 @@ namespace OpenNos.GameObject
             {
                 int value1 = 0;
                 int value2 = 0;
+                int value3 = 0;
                 int[] tmp;
                 int temp = 0;
 
                 tmp = getBuff(attacker.Level, attacker.Buffs, attacker.BCards, type, subtype, BuffType.Good, ref temp);
                 value1 += tmp[0];
                 value2 += tmp[1];
+                value3 += tmp[2];
                 tmp = getBuff(attacker.Level, attacker.Buffs, attacker.BCards, type, subtype, BuffType.Neutral, ref temp);
                 value1 += tmp[0];
                 value2 += tmp[1];
+                value3 += tmp[2];
                 tmp = getBuff(defender.Level, defender.Buffs, defender.BCards, type, subtype, BuffType.Bad, ref temp);
                 value1 += tmp[0];
                 value2 += tmp[1];
+                value3 += tmp[2];
 
-                return new int[] { value1, value2, temp };
+                return new int[] { value1, value2, value3, temp };
             }
 
             int[] GetDefenderBenefitingBuffs(CardType type, byte subtype)
@@ -100,6 +104,18 @@ namespace OpenNos.GameObject
             attacker.AttackUpgrade += (short)GetDefenderBenefitingBuffs(CardType.AttackPower, (byte)AdditionalTypes.AttackPower.AttackLevelDecreased)[0];
             defender.DefenseUpgrade += (short)GetDefenderBenefitingBuffs(CardType.Defence, (byte)AdditionalTypes.Defence.DefenceLevelIncreased)[0];
             defender.DefenseUpgrade += (short)GetAttackerBenefitingBuffs(CardType.Defence, (byte)AdditionalTypes.Defence.DefenceLevelDecreased)[0];
+
+
+            int[] attackerpercentdamage = GetAttackerBenefitingBuffs(CardType.RecoveryAndDamagePercent, 11);
+            int[] defenderpercentdefense = GetDefenderBenefitingBuffs(CardType.RecoveryAndDamagePercent, 2);
+            if (attackerpercentdamage[3] != 0)
+            {
+                return defender.HPMax / 100 * attackerpercentdamage[2];
+            }
+            if (defenderpercentdefense[3] != 0)
+            {
+                return defender.HPMax / 100 * Math.Abs(defenderpercentdefense[2]);
+            }
 
             /*
              *
@@ -531,11 +547,11 @@ namespace OpenNos.GameObject
             int[] atklvlfix = GetDefenderBenefitingBuffs(CardType.CalculatingLevel, (byte)AdditionalTypes.CalculatingLevel.CalculatedAttackLevel);
             int[] deflvlfix = GetAttackerBenefitingBuffs(CardType.CalculatingLevel, (byte)AdditionalTypes.CalculatingLevel.CalculatedDefenceLevel);
 
-            if (atklvlfix[2] != 0)
+            if (atklvlfix[3] != 0)
             {
                 attacker.AttackUpgrade = (short)atklvlfix[0];
             }
-            if (deflvlfix[2] != 0)
+            if (deflvlfix[3] != 0)
             {
                 attacker.DefenseUpgrade = (short)deflvlfix[0];
             }
@@ -671,10 +687,10 @@ namespace OpenNos.GameObject
 
             int defense = (int)((int)((defender.Defense + defender.ArmorDefense + staticBoostCategory4) * boostCategory4) * shellBoostCategory4);
 
-            if (GetAttackerBenefitingBuffs(CardType.SpecialDefence, (byte)AdditionalTypes.SpecialDefence.AllDefenceNullified)[2] != 0
-                || (GetAttackerBenefitingBuffs(CardType.SpecialDefence, (byte)AdditionalTypes.SpecialDefence.MeleeDefenceNullified)[2] != 0 && attacker.AttackType.Equals(AttackType.Melee))
-                || (GetAttackerBenefitingBuffs(CardType.SpecialDefence, (byte)AdditionalTypes.SpecialDefence.RangedDefenceNullified)[2] != 0 && attacker.AttackType.Equals(AttackType.Range))
-                || (GetAttackerBenefitingBuffs(CardType.SpecialDefence, (byte)AdditionalTypes.SpecialDefence.MagicDefenceNullified)[2] != 0 && attacker.AttackType.Equals(AttackType.Magical)))
+            if (GetAttackerBenefitingBuffs(CardType.SpecialDefence, (byte)AdditionalTypes.SpecialDefence.AllDefenceNullified)[3] != 0
+                || (GetAttackerBenefitingBuffs(CardType.SpecialDefence, (byte)AdditionalTypes.SpecialDefence.MeleeDefenceNullified)[3] != 0 && attacker.AttackType.Equals(AttackType.Melee))
+                || (GetAttackerBenefitingBuffs(CardType.SpecialDefence, (byte)AdditionalTypes.SpecialDefence.RangedDefenceNullified)[3] != 0 && attacker.AttackType.Equals(AttackType.Range))
+                || (GetAttackerBenefitingBuffs(CardType.SpecialDefence, (byte)AdditionalTypes.SpecialDefence.MagicDefenceNullified)[3] != 0 && attacker.AttackType.Equals(AttackType.Magical)))
             {
                 defense = 0;
             }
@@ -889,6 +905,7 @@ namespace OpenNos.GameObject
         {
             int value1 = 0;
             int value2 = 0;
+            int value3 = 0;
 
             IEnumerable<BCard> cards = null;
 
@@ -921,6 +938,7 @@ namespace OpenNos.GameObject
                         value1 += entry.FirstData;
                     }
                     value2 += entry.SecondData;
+                    value3 += entry.ThirdData;
                     count++;
                 }
             }
@@ -956,12 +974,13 @@ namespace OpenNos.GameObject
                             value1 += entry.FirstData;
                         }
                         value2 += entry.SecondData;
+                        value3 += entry.ThirdData;
                         count++;
                     }
                 }
             }
 
-            return new[] { value1, value2 };
+            return new[] { value1, value2, value3 };
         }
 
         private int getMonsterDamageBonus(byte Level)

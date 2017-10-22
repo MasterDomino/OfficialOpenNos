@@ -10,6 +10,8 @@ namespace OpenNos.GameObject
         public BattleEntity(Character character, Skill skill)
         {
             Session = character.Session;
+            HPMax = character.HPMax;
+            MPMax = character.MPMax;
             Buffs = character.Buff.GetAllItems();
             BCards = character.EquipmentBCards.GetAllItems();
             Level = character.Level;
@@ -156,6 +158,8 @@ namespace OpenNos.GameObject
 
         public BattleEntity(Mate mate)
         {
+            HPMax = mate.MaxHp;
+            MPMax = mate.MaxMp;
             //Buffs = mate.Monster.Buff.ToList();
             BCards = mate.Monster.BCards.ToList();
             Level = mate.Level;
@@ -191,6 +195,8 @@ namespace OpenNos.GameObject
 
         public BattleEntity(MapMonster monster)
         {
+            HPMax = monster.Monster.MaxHP;
+            MPMax = monster.Monster.MaxMP;
             Buffs = monster.Buff.GetAllItems();
             BCards = monster.Monster.BCards.ToList();
             Level = monster.Monster.Level;
@@ -226,6 +232,8 @@ namespace OpenNos.GameObject
 
         public BattleEntity(MapNpc npc)
         {
+            HPMax = npc.Npc.MaxHP;
+            MPMax = npc.Npc.MaxMP;
             //npc.Buff.CopyTo(Buffs);
             BCards = npc.Npc.BCards.ToList();
             Level = npc.Npc.Level;
@@ -333,5 +341,9 @@ namespace OpenNos.GameObject
         public short PositionX { get; set; }
 
         public short PositionY { get; set; }
+
+        public int HPMax { get; set; }
+
+        public int MPMax { get; set; }
     }
 }

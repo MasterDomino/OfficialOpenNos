@@ -575,6 +575,8 @@ namespace OpenNos.Domain
 
         public enum RecoveryAndDamagePercent : byte
         {
+            HPRecoveredOnDefense = 01,
+            HPDecreasedOnDefense = 02,
             HPRecovered = 11,
             HPReduced = 12,
             MPRecovered = 21,
