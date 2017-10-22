@@ -283,7 +283,7 @@ namespace OpenNos.Handler
                     }
                 }
 
-                hitRequest.Skill.BCards.Where(s => s.Type.Equals((byte)BCardType.CardType.Buff)).ToList().ForEach(s => s.ApplyBCards(target.Character));
+                hitRequest.Skill.BCards.Where(s => s.Type.Equals((byte)BCardType.CardType.Buff)).ToList().ForEach(s => s.ApplyBCards(target.Character, Session.Character));
 
                 if (battleEntity.ShellWeaponEffects != null)
                 {
@@ -538,7 +538,7 @@ namespace OpenNos.Handler
                             Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.CastOnTarget(UserType.Player, Session.Character.CharacterId, 1, Session.Character.CharacterId, ski.Skill.CastAnimation, ski.Skill.CastEffect, ski.Skill.SkillVNum));
                             Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.SkillUsed(UserType.Player, Session.Character.CharacterId, 1, targetId, ski.Skill.SkillVNum, ski.Skill.Cooldown, ski.Skill.AttackAnimation, ski.Skill.Effect, Session.Character.PositionX, Session.Character.PositionY, true, (int)((double)Session.Character.Hp / Session.Character.HPLoad() * 100), 0, -1, (byte)(ski.Skill.SkillType - 1)));
                             ClientSession target = ServerManager.Instance.GetSessionByCharacterId(targetId) ?? Session;
-                            ski.Skill.BCards.Where(s => !s.Type.Equals((byte)BCardType.CardType.MeditationSkill)).ToList().ForEach(s => s.ApplyBCards(target.Character));
+                            ski.Skill.BCards.Where(s => !s.Type.Equals((byte)BCardType.CardType.MeditationSkill)).ToList().ForEach(s => s.ApplyBCards(target.Character, Session.Character));
                         }
                         else if (ski.Skill.TargetType == 1 && ski.Skill.HitType != 1)
                         {
@@ -552,7 +552,7 @@ namespace OpenNos.Handler
                                     {
                                         foreach (ClientSession target in clientSessions)
                                         {
-                                            ski.Skill.BCards.Where(s => !s.Type.Equals((byte)BCardType.CardType.MeditationSkill)).ToList().ForEach(s => s.ApplyBCards(target.Character));
+                                            ski.Skill.BCards.Where(s => !s.Type.Equals((byte)BCardType.CardType.MeditationSkill)).ToList().ForEach(s => s.ApplyBCards(target.Character, Session.Character));
                                         }
                                     }
                                     break;
@@ -876,6 +876,7 @@ namespace OpenNos.Handler
                                         {
                                             Session.SendPackets(Session.Character.GenerateQuicklist());
                                         }
+#warning check this
                                         monsterToAttack.Monster.BCards.Where(s => s.CastType == 1).ToList().ForEach(s => s.ApplyBCards(this));
                                         Session.SendPacket(Session.Character.GenerateStat());
                                         CharacterSkill characterSkillInfo = Session.Character.Skills.GetAllItems().OrderBy(o => o.SkillVNum).FirstOrDefault(s => s.Skill.UpgradeSkill == ski.Skill.SkillVNum && s.Skill.Effect > 0 && s.Skill.SkillType == 2);
@@ -1026,6 +1027,8 @@ namespace OpenNos.Handler
                                 {
                                     Session.Character.Mp -= ski.Skill.MpCost;
                                 }
+
+#warning check this
                                 monsterToCatch.Monster.BCards.Where(s => s.CastType == 1).ToList().ForEach(s => s.ApplyBCards(this));
                                 Session.SendPacket(Session.Character.GenerateStat());
                                 CharacterSkill characterSkillInfo = Session.Character.Skills.GetAllItems().OrderBy(o => o.SkillVNum).FirstOrDefault(s => s.Skill.UpgradeSkill == ski.Skill.SkillVNum && s.Skill.Effect > 0 && s.Skill.SkillType == 2);

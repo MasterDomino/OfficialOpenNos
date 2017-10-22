@@ -30,7 +30,7 @@ namespace OpenNos.GameObject
         public void ApplyBCards(object session, object sender = null)
         {
             Type type = session.GetType();
-            // int debuff = 0;
+            // int antibuff = 0;
             if (type == null)
             {
                 return;
@@ -41,17 +41,23 @@ namespace OpenNos.GameObject
                     {
                         if (type == typeof(Character) && session is Character character)
                         {
-                            Buff buff = new Buff((short)SecondData, character.Level);
+                            Buff buff = null;
                             if (sender != null)
                             {
                                 Type sType = sender.GetType();
                                 if (sType != null)
                                 {
-                                    if (sType == typeof(Character))
+                                    if (sType == typeof(Character) && sender is Character sendingCharacter)
                                     {
+                                        buff = new Buff((short)SecondData, sendingCharacter.Level);
+
                                         //Todo: Get anti stats from BCard                                        
                                     }
                                 }
+                            }
+                            else
+                            {
+                                buff = new Buff((short)SecondData, character.Level);
                             }
                             if (ServerManager.Instance.RandomNumber() < FirstData)
                             {
