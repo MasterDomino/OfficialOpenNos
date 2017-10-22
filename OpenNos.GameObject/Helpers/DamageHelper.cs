@@ -62,20 +62,24 @@ namespace OpenNos.GameObject
             {
                 int value1 = 0;
                 int value2 = 0;
+                int value3 = 0;
                 int[] tmp;
                 int temp = 0;
 
                 tmp = getBuff(defender.Level, defender.Buffs, defender.BCards, type, subtype, BuffType.Good, ref temp);
                 value1 += tmp[0];
                 value2 += tmp[1];
+                value3 += tmp[2];
                 tmp = getBuff(defender.Level, defender.Buffs, defender.BCards, type, subtype, BuffType.Neutral, ref temp);
                 value1 += tmp[0];
                 value2 += tmp[1];
+                value3 += tmp[2];
                 tmp = getBuff(attacker.Level, attacker.Buffs, attacker.BCards, type, subtype, BuffType.Bad, ref temp);
                 value1 += tmp[0];
                 value2 += tmp[1];
+                value3 += tmp[2];
 
-                return new int[] { value1, value2, temp };
+                return new int[] { value1, value2, value3, temp };
             }
 
             int GetShellWeaponEffectValue(ShellWeaponEffectType effectType)
