@@ -3344,7 +3344,11 @@ namespace OpenNos.GameObject
                         {
                             try
                             {
-                                DAOFactory.ShellEffectDAO.DeleteByItemInstanceId(inventoryToDeleteId);
+                                ItemInstanceDTO itemInstance = DAOFactory.IteminstanceDAO.LoadById(inventoryToDeleteId);
+                                if (ServerManager.Instance.GetItem(itemInstance.ItemVNum).Type == InventoryType.Equipment && itemInstance is WearableInstanceDTO wearableInstance)
+                                {
+                                    DAOFactory.ShellEffectDAO.DeleteByItemInstanceId(wearableInstance.EquipmentSerialId);
+                                }
                                 DAOFactory.IteminstanceDAO.Delete(inventoryToDeleteId);
                             }
                             catch (Exception err)
