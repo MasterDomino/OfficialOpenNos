@@ -2174,8 +2174,8 @@ namespace OpenNos.GameObject
                 {
                     MinHit += specialist.DamageMinimum + (specialist.SpDamage * 10);
                     MaxHit += specialist.DamageMaximum + (specialist.SpDamage * 10);
-                    MinDistance += specialist.DamageMinimum + (specialist.SpDamage * 100);
-                    MaxDistance += specialist.DamageMaximum + (specialist.SpDamage * 100);
+                    MinDistance += specialist.DamageMinimum + (specialist.SpDamage * 10);
+                    MaxDistance += specialist.DamageMaximum + (specialist.SpDamage * 10);
                     HitCriticalRate += specialist.CriticalLuckRate;
                     HitCritical += specialist.CriticalRate;
                     DistanceCriticalRate += specialist.CriticalLuckRate;
@@ -3343,7 +3343,11 @@ namespace OpenNos.GameObject
                         {
                             try
                             {
-                                DAOFactory.ShellEffectDAO.DeleteByItemInstanceId(inventoryToDeleteId);
+                                ItemInstanceDTO itemInstance = DAOFactory.IteminstanceDAO.LoadById(inventoryToDeleteId);
+                                if (ServerManager.Instance.GetItem(itemInstance.ItemVNum).Type == InventoryType.Equipment && itemInstance is WearableInstanceDTO wearableInstance)
+                                {
+                                    DAOFactory.ShellEffectDAO.DeleteByItemInstanceId(wearableInstance.EquipmentSerialId);
+                                }
                                 DAOFactory.IteminstanceDAO.Delete(inventoryToDeleteId);
                             }
                             catch (Exception err)

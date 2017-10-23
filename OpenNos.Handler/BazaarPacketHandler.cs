@@ -163,7 +163,6 @@ namespace OpenNos.Handler
                             DAOFactory.BazaarItemDAO.Delete(bz.BazaarItemId);
                         }
 
-                        DAOFactory.ShellEffectDAO.DeleteByItemInstanceId(Item.Id);
                         DAOFactory.IteminstanceDAO.Delete(Item.Id);
 
                         ServerManager.Instance.BazaarRefresh(bz.BazaarItemId);
