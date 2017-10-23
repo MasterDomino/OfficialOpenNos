@@ -179,13 +179,13 @@ namespace OpenNos.GameObject
             switch (PetId)
             {
                 case 0:
-                    return Owner.Inventory.GetAllItems().Where(s => s.Type == InventoryType.FirstPartnerInventory).ToList();
+                    return Owner.Inventory.Where(s => s.Type == InventoryType.FirstPartnerInventory);
 
                 case 1:
-                    return Owner.Inventory.GetAllItems().Where(s => s.Type == InventoryType.SecondPartnerInventory).ToList();
+                    return Owner.Inventory.Where(s => s.Type == InventoryType.SecondPartnerInventory);
 
                 case 2:
-                    return Owner.Inventory.GetAllItems().Where(s => s.Type == InventoryType.ThirdPartnerInventory).ToList();
+                    return Owner.Inventory.Where(s => s.Type == InventoryType.ThirdPartnerInventory);
             }
             return new List<ItemInstance>();
         }

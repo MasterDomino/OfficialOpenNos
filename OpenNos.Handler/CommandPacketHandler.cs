@@ -213,7 +213,7 @@ namespace OpenNos.Handler
 
                     if (skillinfo.UpgradeSkill != 0)
                     {
-                        CharacterSkill oldupgrade = Session.Character.Skills.GetAllItems().Find(s => s.Skill.UpgradeSkill == skillinfo.UpgradeSkill && s.Skill.UpgradeType == skillinfo.UpgradeType && s.Skill.UpgradeSkill != 0);
+                        CharacterSkill oldupgrade = Session.Character.Skills.FirstOrDefault(s => s.Skill.UpgradeSkill == skillinfo.UpgradeSkill && s.Skill.UpgradeType == skillinfo.UpgradeType && s.Skill.UpgradeSkill != 0);
                         if (oldupgrade != null)
                         {
                             Session.Character.Skills.Remove(oldupgrade.SkillVNum);
@@ -704,7 +704,7 @@ namespace OpenNos.Handler
                         Session.Character.LearnSPSkill();
                         Session.SendPacket(Session.Character.GenerateSki());
                         Session.SendPackets(Session.Character.GenerateQuicklist());
-                        Session.Character.Skills.GetAllItems().ForEach(s => s.LastUse = DateTime.Now.AddDays(-1));
+                        Session.Character.Skills.ForEach(s => s.LastUse = DateTime.Now.AddDays(-1));
                         Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(), ReceiverType.AllExceptMe);
                         Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(), ReceiverType.AllExceptMe);
                         Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId, 8), Session.Character.PositionX, Session.Character.PositionY);
@@ -831,7 +831,7 @@ namespace OpenNos.Handler
             {
                 Logger.LogEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Clear]InventoryType: {clearInventoryPacket.InventoryType}");
 
-                Parallel.ForEach(Session.Character.Inventory.GetAllItems().Where(s => s.Type == clearInventoryPacket.InventoryType), inv =>
+                Parallel.ForEach(Session.Character.Inventory.Where(s => s.Type == clearInventoryPacket.InventoryType), inv =>
                 {
                     Session.Character.Inventory.DeleteById(inv.Id);
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateInventoryRemove(inv.Type, inv.Slot));

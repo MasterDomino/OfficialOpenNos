@@ -141,7 +141,7 @@ namespace OpenNos.GameObject.Event.GAMES
                     Session.Character.SpCooldown = 30;
                     if (Session.Character?.SkillsSp != null)
                     {
-                        foreach (CharacterSkill ski in Session.Character.SkillsSp.GetAllItems().Where(s => !s.CanBeUsed()))
+                        foreach (CharacterSkill ski in Session.Character.SkillsSp.Where(s => !s.CanBeUsed()))
                         {
                             short time = ski.Skill.Cooldown;
                             double temp = (ski.LastUse - DateTime.Now).TotalMilliseconds + (time * 100);

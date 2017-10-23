@@ -30,14 +30,14 @@ namespace OpenNos.Core
         #region Members
 
         /// <summary>
-        /// public collection to store items.
+        /// private collection to store items.
         /// </summary>
-        protected readonly SortedList<TK, TV> Items;
+        private readonly SortedList<TK, TV> _items;
 
         /// <summary>
-        /// Used to synchronize access to _items list.
+        /// Used to synchronize access to Items list.
         /// </summary>
-        protected readonly ReaderWriterLockSlim Lock;
+        private readonly ReaderWriterLockSlim _lock;
 
         private bool _disposed;
 
@@ -50,8 +50,8 @@ namespace OpenNos.Core
         /// </summary>
         public ThreadSafeSortedList()
         {
-            Items = new SortedList<TK, TV>();
-            Lock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
+            _items = new SortedList<TK, TV>();
+            _lock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
         }
 
         #endregion
@@ -65,14 +65,14 @@ namespace OpenNos.Core
         {
             get
             {
-                Lock.EnterReadLock();
+                _lock.EnterReadLock();
                 try
                 {
-                    return Items.Count;
+                    return _items.Count;
                 }
                 finally
                 {
-                    Lock.ExitReadLock();
+                    _lock.ExitReadLock();
                 }
             }
         }
@@ -92,14 +92,14 @@ namespace OpenNos.Core
             {
                 if (!_disposed)
                 {
-                    Lock.EnterReadLock();
+                    _lock.EnterReadLock();
                     try
                     {
-                        return Items.ContainsKey(key) ? Items[key] : default;
+                        return _items.ContainsKey(key) ? _items[key] : default;
                     }
                     finally
                     {
-                        Lock.ExitReadLock();
+                        _lock.ExitReadLock();
                     }
                 }
                 return default;
@@ -109,14 +109,14 @@ namespace OpenNos.Core
             {
                 if (!_disposed)
                 {
-                    Lock.EnterWriteLock();
+                    _lock.EnterWriteLock();
                     try
                     {
-                        Items[key] = value;
+                        _items[key] = value;
                     }
                     finally
                     {
-                        Lock.ExitWriteLock();
+                        _lock.ExitWriteLock();
                     }
                 }
             }
@@ -127,20 +127,64 @@ namespace OpenNos.Core
         #region Methods
 
         /// <summary>
+        /// Determines whether all elements of a sequence satisfy a condition.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns>True; if elements satisgy the condition</returns>
+        public bool All(Func<TV, bool> predicate)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _items.Values.All(predicate);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Determines whether any element of a sequence satisfies a condition.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public bool Any(Func<TV, bool> predicate)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _items.Values.Any(predicate);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Removes all items from list.
         /// </summary>
         public void ClearAll()
         {
             if (!_disposed)
             {
-                Lock.EnterWriteLock();
+                _lock.EnterWriteLock();
                 try
                 {
-                    Items.Clear();
+                    _items.Clear();
                 }
                 finally
                 {
-                    Lock.ExitWriteLock();
+                    _lock.ExitWriteLock();
                 }
             }
         }
@@ -154,14 +198,36 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                Lock.EnterReadLock();
+                _lock.EnterReadLock();
                 try
                 {
-                    return Items.ContainsKey(key);
+                    return _items.ContainsKey(key);
                 }
                 finally
                 {
-                    Lock.ExitReadLock();
+                    _lock.ExitReadLock();
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if collection contains spesified item.
+        /// </summary>
+        /// <param name="item">Item to check</param>
+        /// <returns>True; if collection contains given item</returns>
+        public bool ContainsValue(TV item)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _items.ContainsValue(item);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
                 }
             }
             return false;
@@ -176,63 +242,22 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                Lock.EnterReadLock();
+                _lock.EnterReadLock();
                 try
                 {
-                    return Items.Values.Count(predicate);
+                    return _items.Values.Count(predicate);
                 }
                 finally
                 {
-                    Lock.ExitReadLock();
+                    _lock.ExitReadLock();
                 }
             }
             return 0;
         }
 
         /// <summary>
-        /// returns list based on given predicate
+        /// Disposes the current object.
         /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        public List<TV> Where(Func<TV, bool> predicate)
-        {
-            if (!_disposed)
-            {
-                Lock.EnterReadLock();
-                try
-                {
-                    return new List<TV>(Items.Values.Where(predicate));
-                }
-                finally
-                {
-                    Lock.ExitReadLock();
-                }
-            }
-            return new List<TV>();
-        }
-
-        /// <summary>
-        /// Checks if collection contains spesified item.
-        /// </summary>
-        /// <param name="item">Item to check</param>
-        /// <returns>True; if collection contains given item</returns>
-        public bool ContainsValue(TV item)
-        {
-            if (!_disposed)
-            {
-                Lock.EnterReadLock();
-                try
-                {
-                    return Items.ContainsValue(item);
-                }
-                finally
-                {
-                    Lock.ExitReadLock();
-                }
-            }
-            return false;
-        }
-
         public void Dispose()
         {
             if (!_disposed)
@@ -244,6 +269,49 @@ namespace OpenNos.Core
         }
 
         /// <summary>
+        /// Returns the first element of the sequence that satisfies a condition or a default value
+        /// if no such element is found.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns>TV object</returns>
+        public TV FirstOrDefault(Func<TV, bool> predicate)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _items.Values.FirstOrDefault(predicate);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return default;
+        }
+
+        /// <summary>
+        /// Performs the specified action on each element of the List&lt;T&gt;.
+        /// </summary>
+        /// <param name="action"></param>
+        public void ForEach(Action<TV> action)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    _items.Values.ToList().ForEach(action);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets all items in collection.
         /// </summary>
         /// <returns>Item list</returns>
@@ -251,14 +319,14 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                Lock.EnterReadLock();
+                _lock.EnterReadLock();
                 try
                 {
-                    return new List<TV>(Items.Values);
+                    return new List<TV>(_items.Values);
                 }
                 finally
                 {
-                    Lock.ExitReadLock();
+                    _lock.ExitReadLock();
                 }
             }
             return new List<TV>();
@@ -272,19 +340,106 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                Lock.EnterWriteLock();
+                _lock.EnterWriteLock();
                 try
                 {
-                    List<TV> list = new List<TV>(Items.Values);
-                    Items.Clear();
+                    List<TV> list = new List<TV>(_items.Values);
+                    _items.Clear();
                     return list;
                 }
                 finally
                 {
-                    Lock.ExitWriteLock();
+                    _lock.ExitWriteLock();
                 }
             }
             return new List<TV>();
+        }
+
+        /// <summary>
+        /// Returns the last element of a sequence that satisfies a specified condition.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns>TV object</returns>
+        public TV Last(Func<TV, bool> predicate)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _items.Values.Last(predicate);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return default;
+        }
+
+        /// <summary>
+        /// Returns the last element of a sequence.
+        /// </summary>
+        /// <returns>TV object</returns>
+        public TV Last()
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _items.Values.Last();
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return default;
+        }
+
+        /// <summary>
+        /// Returns the last element of a sequence that satisfies a condition or a default value if
+        /// no such element is found.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns>TV object</returns>
+        public TV LastOrDefault(Func<TV, bool> predicate)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _items.Values.LastOrDefault(predicate);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return default;
+        }
+
+        /// <summary>
+        /// Returns the last element of a sequence, or a default value if the sequence contains no elements.
+        /// </summary>
+        /// <returns>TV object</returns>
+        public TV LastOrDefault()
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _items.Values.LastOrDefault();
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return default;
         }
 
         /// <summary>
@@ -295,23 +450,246 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                Lock.EnterWriteLock();
+                _lock.EnterWriteLock();
                 try
                 {
-                    if (!Items.ContainsKey(key))
+                    if (!_items.ContainsKey(key))
                     {
                         return false;
                     }
 
-                    Items.Remove(key);
+                    _items.Remove(key);
                     return true;
                 }
                 finally
                 {
-                    Lock.ExitWriteLock();
+                    _lock.ExitWriteLock();
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Projects each element of a sequence into a new form.
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="selector"></param>
+        public IEnumerable<TResult> Select<TResult>(Func<TV, TResult> selector)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _items.Values.Select(selector);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return default;
+        }
+
+        /// <summary>
+        /// Returns the only element of a sequence that satisfies a specified condition, and throws
+        /// an exception if more than one such element exists.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns>TV object</returns>
+        public TV Single(Func<TV, bool> predicate)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _items.Values.Single(predicate);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return default;
+        }
+
+        /// <summary>
+        /// Returns the only element of a sequence that satisfies a specified condition or a default
+        /// value if no such element exists; this method throws an exception if more than one element
+        /// satisfies the condition.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns>TV object</returns>
+        public TV SingleOrDefault(Func<TV, bool> predicate)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _items.Values.SingleOrDefault(predicate);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return default;
+        }
+
+        /// <summary>
+        /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
+        /// </summary>
+        /// <param name="selector"></param>
+        /// <returns>integer number of found elements</returns>
+        public int Sum(Func<TV, int> selector)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _items.Values.Sum(selector);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
+        /// </summary>
+        /// <param name="selector"></param>
+        /// <returns>integer number of found elements</returns>
+        public int? Sum(Func<TV, int?> selector)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _items.Values.Sum(selector);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
+        /// </summary>
+        /// <param name="selector"></param>
+        /// <returns>integer number of found elements</returns>
+        public long Sum(Func<TV, long> selector)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _items.Values.Sum(selector);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
+        /// </summary>
+        /// <param name="selector"></param>
+        /// <returns>integer number of found elements</returns>
+        public long? Sum(Func<TV, long?> selector)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _items.Values.Sum(selector);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
+        /// </summary>
+        /// <param name="selector"></param>
+        /// <returns>integer number of found elements</returns>
+        public double Sum(Func<TV, double> selector)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _items.Values.Sum(selector);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
+        /// </summary>
+        /// <param name="selector"></param>
+        /// <returns>integer number of found elements</returns>
+        public double? Sum(Func<TV, double?> selector)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _items.Values.Sum(selector);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Filters a sequence of values based on a predicate.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public List<TV> Where(Func<TV, bool> predicate)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return new List<TV>(_items.Values.Where(predicate));
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return new List<TV>();
         }
 
         protected virtual void Dispose(bool disposing)
@@ -319,7 +697,7 @@ namespace OpenNos.Core
             if (disposing)
             {
                 ClearAll();
-                Lock.Dispose();
+                _lock.Dispose();
             }
         }
 

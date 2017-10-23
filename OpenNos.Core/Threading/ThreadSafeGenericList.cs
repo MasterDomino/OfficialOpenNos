@@ -19,43 +19,56 @@ using System.Threading;
 
 namespace OpenNos.Core
 {
-    //Definitely not the best approach, but it does what it has to do.
     public class ThreadSafeGenericList<T> : IDisposable
     {
         #region Members
 
-        protected readonly List<T> _list;
-        protected readonly ReaderWriterLockSlim Lock;
+        /// <summary>
+        /// protected collection to store items.
+        /// </summary>
+        private readonly List<T> _list;
+
+        /// <summary>
+        /// Used to synchronize access to _list list.
+        /// </summary>
+        private readonly ReaderWriterLockSlim _lock;
+
         private bool _disposed;
 
         #endregion
 
         #region Instantiation
 
+        /// <summary>
+        /// Creates a new ThreadSafeGenericList object.
+        /// </summary>
         public ThreadSafeGenericList()
         {
             _list = new List<T>();
-            Lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
+            _lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
         }
 
         #endregion
 
         #region Properties
 
+        /// <summary>
+        /// Gets the number of elements contained in the List&lt;T&gt;.
+        /// </summary>
         public int Count
         {
             get
             {
                 if (!_disposed)
                 {
-                    Lock.EnterReadLock();
+                    _lock.EnterReadLock();
                     try
                     {
                         return _list.Count;
                     }
                     finally
                     {
-                        Lock.ExitReadLock();
+                        _lock.ExitReadLock();
                     }
                 }
                 return 0;
@@ -66,70 +79,128 @@ namespace OpenNos.Core
 
         #region Methods
 
+        /// <summary>
+        /// Adds an object to the end of the List&lt;T&gt;.
+        /// </summary>
+        /// <param name="value"></param>
         public void Add(T value)
         {
             if (!_disposed)
             {
-                Lock.EnterWriteLock();
+                _lock.EnterWriteLock();
                 try
                 {
                     _list.Add(value);
                 }
                 finally
                 {
-                    Lock.ExitWriteLock();
+                    _lock.ExitWriteLock();
                 }
             }
         }
 
+        /// <summary>
+        /// Adds the elements of the specified collection to the end of the List&lt;T&gt;.
+        /// </summary>
+        /// <param name="value"></param>
         public void AddRange(List<T> value)
         {
             if (!_disposed)
             {
-                Lock.EnterWriteLock();
+                _lock.EnterWriteLock();
                 try
                 {
                     _list.AddRange(value);
                 }
                 finally
                 {
-                    Lock.ExitWriteLock();
+                    _lock.ExitWriteLock();
                 }
             }
         }
 
-        public bool Any(Func<T, bool> predicate)
-        {
-            if (!_disposed)
-            {
-                Lock.EnterReadLock();
-                try
-                {
-                    return _list.Any(predicate);
-                }
-                finally
-                {
-                    Lock.ExitReadLock();
-                }
-            }
-            return false;
-        }
-
+        /// <summary>
+        /// Determines whether all elements of a sequence satisfy a condition.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns>True; if elements satisgy the condition</returns>
         public bool All(Func<T, bool> predicate)
         {
             if (!_disposed)
             {
-                Lock.EnterReadLock();
+                _lock.EnterReadLock();
                 try
                 {
                     return _list.All(predicate);
                 }
                 finally
                 {
-                    Lock.ExitReadLock();
+                    _lock.ExitReadLock();
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Determines whether any element of a sequence satisfies a condition.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public bool Any(Func<T, bool> predicate)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _list.Any(predicate);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Removes all elements from the List&lt;T&gt;.
+        /// </summary>
+        public void Clear()
+        {
+            if (!_disposed)
+            {
+                _lock.EnterWriteLock();
+                try
+                {
+                    _list.Clear();
+                }
+                finally
+                {
+                    _lock.ExitWriteLock();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Copies the entire List&lt;T&gt; to a compatible one-dimensional array, starting at the
+        /// beginning of the target array.
+        /// </summary>
+        /// <param name="grpmembers"></param>
+        public void CopyTo(T[] grpmembers)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    _list.CopyTo(grpmembers);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
         }
 
         /// <summary>
@@ -141,60 +212,34 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                Lock.EnterReadLock();
+                _lock.EnterReadLock();
                 try
                 {
                     return _list.Count(predicate);
                 }
                 finally
                 {
-                    Lock.ExitReadLock();
+                    _lock.ExitReadLock();
                 }
             }
             return 0;
         }
 
         /// <summary>
-        /// Copies the entire List&lt;T&gt; to a compatible one-dimensional array, starting at the beginning of the target array.
+        /// Disposes the current object.
         /// </summary>
-        /// <param name="grpmembers"></param>
-        public void CopyTo(T[] grpmembers)
+        public void Dispose()
         {
             if (!_disposed)
             {
-                Lock.EnterReadLock();
-                try
-                {
-                    _list.CopyTo(grpmembers);
-                }
-                finally
-                {
-                    Lock.ExitReadLock();
-                }
+                _disposed = true;
+                Dispose(true);
+                GC.SuppressFinalize(this);
             }
         }
 
         /// <summary>
-        /// Removes all elements from the List&lt;T&gt;.
-        /// </summary>
-        public void Clear()
-        {
-            if (!_disposed)
-            {
-                Lock.EnterWriteLock();
-                try
-                {
-                    _list.Clear();
-                }
-                finally
-                {
-                    Lock.ExitWriteLock();
-                }
-            }
-        }
-
-        /// <summary>
-        /// returns the element at given index
+        /// Returns the element at given index
         /// </summary>
         /// <param name="v"></param>
         /// <returns>T object</returns>
@@ -202,21 +247,22 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                Lock.EnterReadLock();
+                _lock.EnterReadLock();
                 try
                 {
                     return _list[v];
                 }
                 finally
                 {
-                    Lock.ExitReadLock();
+                    _lock.ExitReadLock();
                 }
             }
             return default;
         }
 
         /// <summary>
-        ///  Searches for an element that matches the conditions defined by the specified predicate, and returns the first occurrence within the entire List&lt;T&gt;.
+        /// Searches for an element that matches the conditions defined by the specified predicate,
+        /// and returns the first occurrence within the entire List&lt;T&gt;.
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns>T object</returns>
@@ -224,35 +270,35 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                Lock.EnterReadLock();
+                _lock.EnterReadLock();
                 try
                 {
                     return _list.Find(predicate);
                 }
                 finally
                 {
-                    Lock.ExitReadLock();
+                    _lock.ExitReadLock();
                 }
             }
             return default;
         }
 
         /// <summary>
-        /// executes actions for each entry of the list
+        /// Performs the specified action on each element of the List&lt;T&gt;.
         /// </summary>
         /// <param name="action"></param>
         public void ForEach(Action<T> action)
         {
             if (!_disposed)
             {
-                Lock.EnterReadLock();
+                _lock.EnterReadLock();
                 try
                 {
                     _list.ForEach(action);
                 }
                 finally
                 {
-                    Lock.ExitReadLock();
+                    _lock.ExitReadLock();
                 }
             }
         }
@@ -265,67 +311,281 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                Lock.EnterReadLock();
+                _lock.EnterReadLock();
                 try
                 {
                     return new List<T>(_list);
                 }
                 finally
                 {
-                    Lock.ExitReadLock();
+                    _lock.ExitReadLock();
                 }
             }
             return new List<T>();
         }
 
         /// <summary>
-        /// removes all matches based on given predicate
+        /// Returns the last element of a sequence that satisfies a condition or a default value if
+        /// no such element is found.
         /// </summary>
-        /// <param name="match"></param>
-        public void RemoveAll(Predicate<T> match)
+        /// <param name="predicate"></param>
+        /// <returns>TV object</returns>
+        public T LastOrDefault(Func<T, bool> predicate)
         {
             if (!_disposed)
             {
-                Lock.EnterWriteLock();
+                _lock.EnterReadLock();
                 try
                 {
-                    _list.RemoveAll(match);
+                    return _list.LastOrDefault(predicate);
                 }
                 finally
                 {
-                    Lock.ExitWriteLock();
+                    _lock.ExitReadLock();
                 }
             }
+            return default;
         }
 
         /// <summary>
-        /// removes entry from the list
+        /// Removes the first occurrence of a specific object from the List&lt;T&gt;.
         /// </summary>
         /// <param name="match"></param>
         public void Remove(T match)
         {
             if (!_disposed)
             {
-                Lock.EnterWriteLock();
+                _lock.EnterWriteLock();
                 try
                 {
                     _list.Remove(match);
                 }
                 finally
                 {
-                    Lock.ExitWriteLock();
+                    _lock.ExitWriteLock();
                 }
             }
         }
 
-        public void Dispose()
+        /// <summary>
+        /// Removes all the elements that match the conditions defined by the specified predicate.
+        /// </summary>
+        /// <param name="match"></param>
+        public void RemoveAll(Predicate<T> match)
         {
             if (!_disposed)
             {
-                _disposed = true;
-                Dispose(true);
-                GC.SuppressFinalize(this);
+                _lock.EnterWriteLock();
+                try
+                {
+                    _list.RemoveAll(match);
+                }
+                finally
+                {
+                    _lock.ExitWriteLock();
+                }
             }
+        }
+
+        /// <summary>
+        /// Returns the only element of a sequence that satisfies a specified condition, and throws
+        /// an exception if more than one such element exists.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns>TV object</returns>
+        public T Single(Func<T, bool> predicate)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _list.Single(predicate);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return default;
+        }
+
+        /// <summary>
+        /// Returns the only element of a sequence that satisfies a specified condition or a default
+        /// value if no such element exists; this method throws an exception if more than one element
+        /// satisfies the condition.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns>TV object</returns>
+        public T SingleOrDefault(Func<T, bool> predicate)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _list.SingleOrDefault(predicate);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return default;
+        }
+
+        /// <summary>
+        /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
+        /// </summary>
+        /// <param name="selector"></param>
+        /// <returns>integer number of found elements</returns>
+        public int Sum(Func<T, int> selector)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _list.Sum(selector);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
+        /// </summary>
+        /// <param name="selector"></param>
+        /// <returns>integer number of found elements</returns>
+        public int? Sum(Func<T, int?> selector)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _list.Sum(selector);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
+        /// </summary>
+        /// <param name="selector"></param>
+        /// <returns>integer number of found elements</returns>
+        public long Sum(Func<T, long> selector)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _list.Sum(selector);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
+        /// </summary>
+        /// <param name="selector"></param>
+        /// <returns>integer number of found elements</returns>
+        public long? Sum(Func<T, long?> selector)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _list.Sum(selector);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
+        /// </summary>
+        /// <param name="selector"></param>
+        /// <returns>integer number of found elements</returns>
+        public double Sum(Func<T, double> selector)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _list.Sum(selector);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
+        /// </summary>
+        /// <param name="selector"></param>
+        /// <returns>integer number of found elements</returns>
+        public double? Sum(Func<T, double?> selector)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _list.Sum(selector);
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Filters a sequence of values based on a predicate.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public List<T> Where(Func<T, bool> predicate)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _list.Where(predicate).ToList();
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return new List<T>();
         }
 
         protected virtual void Dispose(bool disposing)
@@ -333,7 +593,7 @@ namespace OpenNos.Core
             if (disposing)
             {
                 Clear();
-                Lock.Dispose();
+                _lock.Dispose();
             }
         }
 

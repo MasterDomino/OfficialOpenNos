@@ -235,7 +235,7 @@ namespace OpenNos.GameObject
 
                 // magic lamps
                 case 651:
-                    if (session.Character.Inventory.GetAllItems().All(i => i.Type != InventoryType.Wear))
+                    if (session.Character.Inventory.All(i => i.Type != InventoryType.Wear))
                     {
                         if (Option == 0)
                         {
