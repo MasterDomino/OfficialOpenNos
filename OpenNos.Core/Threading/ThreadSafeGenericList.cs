@@ -26,12 +26,12 @@ namespace OpenNos.Core
         /// <summary>
         /// protected collection to store items.
         /// </summary>
-        private readonly List<T> _list;
+        protected readonly List<T> Items;
 
         /// <summary>
-        /// Used to synchronize access to _list list.
+        /// Used to synchronize access to List list.
         /// </summary>
-        private readonly ReaderWriterLockSlim _lock;
+        protected readonly ReaderWriterLockSlim Lock;
 
         private bool _disposed;
 
@@ -44,8 +44,8 @@ namespace OpenNos.Core
         /// </summary>
         public ThreadSafeGenericList()
         {
-            _list = new List<T>();
-            _lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
+            Items = new List<T>();
+            Lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
         }
 
         #endregion
@@ -61,14 +61,14 @@ namespace OpenNos.Core
             {
                 if (!_disposed)
                 {
-                    _lock.EnterReadLock();
+                    Lock.EnterReadLock();
                     try
                     {
-                        return _list.Count;
+                        return Items.Count;
                     }
                     finally
                     {
-                        _lock.ExitReadLock();
+                        Lock.ExitReadLock();
                     }
                 }
                 return 0;
@@ -87,14 +87,14 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                _lock.EnterWriteLock();
+                Lock.EnterWriteLock();
                 try
                 {
-                    _list.Add(value);
+                    Items.Add(value);
                 }
                 finally
                 {
-                    _lock.ExitWriteLock();
+                    Lock.ExitWriteLock();
                 }
             }
         }
@@ -107,14 +107,14 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                _lock.EnterWriteLock();
+                Lock.EnterWriteLock();
                 try
                 {
-                    _list.AddRange(value);
+                    Items.AddRange(value);
                 }
                 finally
                 {
-                    _lock.ExitWriteLock();
+                    Lock.ExitWriteLock();
                 }
             }
         }
@@ -128,14 +128,14 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                _lock.EnterReadLock();
+                Lock.EnterReadLock();
                 try
                 {
-                    return _list.All(predicate);
+                    return Items.All(predicate);
                 }
                 finally
                 {
-                    _lock.ExitReadLock();
+                    Lock.ExitReadLock();
                 }
             }
             return false;
@@ -150,14 +150,14 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                _lock.EnterReadLock();
+                Lock.EnterReadLock();
                 try
                 {
-                    return _list.Any(predicate);
+                    return Items.Any(predicate);
                 }
                 finally
                 {
-                    _lock.ExitReadLock();
+                    Lock.ExitReadLock();
                 }
             }
             return false;
@@ -170,14 +170,14 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                _lock.EnterWriteLock();
+                Lock.EnterWriteLock();
                 try
                 {
-                    _list.Clear();
+                    Items.Clear();
                 }
                 finally
                 {
-                    _lock.ExitWriteLock();
+                    Lock.ExitWriteLock();
                 }
             }
         }
@@ -191,14 +191,14 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                _lock.EnterReadLock();
+                Lock.EnterReadLock();
                 try
                 {
-                    _list.CopyTo(grpmembers);
+                    Items.CopyTo(grpmembers);
                 }
                 finally
                 {
-                    _lock.ExitReadLock();
+                    Lock.ExitReadLock();
                 }
             }
         }
@@ -212,14 +212,14 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                _lock.EnterReadLock();
+                Lock.EnterReadLock();
                 try
                 {
-                    return _list.Count(predicate);
+                    return Items.Count(predicate);
                 }
                 finally
                 {
-                    _lock.ExitReadLock();
+                    Lock.ExitReadLock();
                 }
             }
             return 0;
@@ -247,14 +247,14 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                _lock.EnterReadLock();
+                Lock.EnterReadLock();
                 try
                 {
-                    return _list[v];
+                    return Items[v];
                 }
                 finally
                 {
-                    _lock.ExitReadLock();
+                    Lock.ExitReadLock();
                 }
             }
             return default;
@@ -270,14 +270,14 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                _lock.EnterReadLock();
+                Lock.EnterReadLock();
                 try
                 {
-                    return _list.Find(predicate);
+                    return Items.Find(predicate);
                 }
                 finally
                 {
-                    _lock.ExitReadLock();
+                    Lock.ExitReadLock();
                 }
             }
             return default;
@@ -291,14 +291,14 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                _lock.EnterReadLock();
+                Lock.EnterReadLock();
                 try
                 {
-                    _list.ForEach(action);
+                    Items.ForEach(action);
                 }
                 finally
                 {
-                    _lock.ExitReadLock();
+                    Lock.ExitReadLock();
                 }
             }
         }
@@ -311,14 +311,14 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                _lock.EnterReadLock();
+                Lock.EnterReadLock();
                 try
                 {
-                    return new List<T>(_list);
+                    return new List<T>(Items);
                 }
                 finally
                 {
-                    _lock.ExitReadLock();
+                    Lock.ExitReadLock();
                 }
             }
             return new List<T>();
@@ -334,14 +334,14 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                _lock.EnterReadLock();
+                Lock.EnterReadLock();
                 try
                 {
-                    return _list.LastOrDefault(predicate);
+                    return Items.LastOrDefault(predicate);
                 }
                 finally
                 {
-                    _lock.ExitReadLock();
+                    Lock.ExitReadLock();
                 }
             }
             return default;
@@ -355,14 +355,14 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                _lock.EnterWriteLock();
+                Lock.EnterWriteLock();
                 try
                 {
-                    _list.Remove(match);
+                    Items.Remove(match);
                 }
                 finally
                 {
-                    _lock.ExitWriteLock();
+                    Lock.ExitWriteLock();
                 }
             }
         }
@@ -375,14 +375,14 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                _lock.EnterWriteLock();
+                Lock.EnterWriteLock();
                 try
                 {
-                    _list.RemoveAll(match);
+                    Items.RemoveAll(match);
                 }
                 finally
                 {
-                    _lock.ExitWriteLock();
+                    Lock.ExitWriteLock();
                 }
             }
         }
@@ -397,14 +397,14 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                _lock.EnterReadLock();
+                Lock.EnterReadLock();
                 try
                 {
-                    return _list.Single(predicate);
+                    return Items.Single(predicate);
                 }
                 finally
                 {
-                    _lock.ExitReadLock();
+                    Lock.ExitReadLock();
                 }
             }
             return default;
@@ -421,14 +421,14 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                _lock.EnterReadLock();
+                Lock.EnterReadLock();
                 try
                 {
-                    return _list.SingleOrDefault(predicate);
+                    return Items.SingleOrDefault(predicate);
                 }
                 finally
                 {
-                    _lock.ExitReadLock();
+                    Lock.ExitReadLock();
                 }
             }
             return default;
@@ -443,14 +443,14 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                _lock.EnterReadLock();
+                Lock.EnterReadLock();
                 try
                 {
-                    return _list.Sum(selector);
+                    return Items.Sum(selector);
                 }
                 finally
                 {
-                    _lock.ExitReadLock();
+                    Lock.ExitReadLock();
                 }
             }
             return 0;
@@ -465,14 +465,14 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                _lock.EnterReadLock();
+                Lock.EnterReadLock();
                 try
                 {
-                    return _list.Sum(selector);
+                    return Items.Sum(selector);
                 }
                 finally
                 {
-                    _lock.ExitReadLock();
+                    Lock.ExitReadLock();
                 }
             }
             return 0;
@@ -487,14 +487,14 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                _lock.EnterReadLock();
+                Lock.EnterReadLock();
                 try
                 {
-                    return _list.Sum(selector);
+                    return Items.Sum(selector);
                 }
                 finally
                 {
-                    _lock.ExitReadLock();
+                    Lock.ExitReadLock();
                 }
             }
             return 0;
@@ -509,14 +509,14 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                _lock.EnterReadLock();
+                Lock.EnterReadLock();
                 try
                 {
-                    return _list.Sum(selector);
+                    return Items.Sum(selector);
                 }
                 finally
                 {
-                    _lock.ExitReadLock();
+                    Lock.ExitReadLock();
                 }
             }
             return 0;
@@ -531,14 +531,14 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                _lock.EnterReadLock();
+                Lock.EnterReadLock();
                 try
                 {
-                    return _list.Sum(selector);
+                    return Items.Sum(selector);
                 }
                 finally
                 {
-                    _lock.ExitReadLock();
+                    Lock.ExitReadLock();
                 }
             }
             return 0;
@@ -553,14 +553,14 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                _lock.EnterReadLock();
+                Lock.EnterReadLock();
                 try
                 {
-                    return _list.Sum(selector);
+                    return Items.Sum(selector);
                 }
                 finally
                 {
-                    _lock.ExitReadLock();
+                    Lock.ExitReadLock();
                 }
             }
             return 0;
@@ -575,14 +575,14 @@ namespace OpenNos.Core
         {
             if (!_disposed)
             {
-                _lock.EnterReadLock();
+                Lock.EnterReadLock();
                 try
                 {
-                    return _list.Where(predicate).ToList();
+                    return Items.Where(predicate).ToList();
                 }
                 finally
                 {
-                    _lock.ExitReadLock();
+                    Lock.ExitReadLock();
                 }
             }
             return new List<T>();
@@ -593,7 +593,7 @@ namespace OpenNos.Core
             if (disposing)
             {
                 Clear();
-                _lock.Dispose();
+                Lock.Dispose();
             }
         }
 
