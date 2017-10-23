@@ -8,6 +8,7 @@ namespace OpenNos.DAL.EF.Migrations
         public override void Up()
         {
             DropForeignKey("dbo.ShellEffect", "ItemInstance_Id", "dbo.ItemInstance");
+            DropForeignKey("dbo.ShellEffect", "ItemInstanceId", "dbo.ItemInstance");
             DropIndex("dbo.ShellEffect", new[] { "ItemInstance_Id" });
             DropColumn("dbo.ShellEffect", "ItemInstance_Id");
         }
