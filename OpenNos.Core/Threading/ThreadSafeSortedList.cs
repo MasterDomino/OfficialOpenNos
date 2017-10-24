@@ -65,15 +65,19 @@ namespace OpenNos.Core
         {
             get
             {
-                Lock.EnterReadLock();
-                try
+                if (!_disposed)
                 {
-                    return Items.Count;
+                    Lock.EnterReadLock();
+                    try
+                    {
+                        return Items.Count;
+                    }
+                    finally
+                    {
+                        Lock.ExitReadLock();
+                    }
                 }
-                finally
-                {
-                    Lock.ExitReadLock();
-                }
+                return 0;
             }
         }
 
