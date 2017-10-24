@@ -439,6 +439,10 @@ namespace OpenNos.GameObject.Helpers
 
                     case EventActionType.THROWITEMS:
                         Tuple<int, short, byte, int, int> parameters = (Tuple<int, short, byte, int, int>)evt.Parameter;
+                        if (monster != null)
+                        {
+                            parameters = new Tuple<int, short, byte, int, int>(monster.MapMonsterId, parameters.Item2, parameters.Item3, parameters.Item4, parameters.Item5);
+                        }
                         evt.MapInstance.ThrowItems(parameters);
                         break;
 

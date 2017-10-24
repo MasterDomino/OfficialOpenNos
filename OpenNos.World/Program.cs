@@ -73,6 +73,7 @@ namespace OpenNos.World
         {
 #if DEBUG
             _isDebug = true;
+            Thread.Sleep(1000);
 #endif
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
             Console.Title = $"OpenNos World Server{(_isDebug ? " Development Environment" : string.Empty)}";
