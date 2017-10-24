@@ -1,4 +1,18 @@
-﻿using OpenNos.Core;
+﻿/*
+ * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+using OpenNos.Core;
 using OpenNos.DAL.EF.DB;
 using OpenNos.DAL.EF.Helpers;
 using OpenNos.DAL.Interface;
@@ -24,7 +38,6 @@ namespace OpenNos.DAL.EF
                     context.Set<TEntity>().Remove(entity);
                     context.SaveChanges();
                 }
-
                 return DeleteResult.Deleted;
             }
         }
@@ -41,7 +54,6 @@ namespace OpenNos.DAL.EF
                         results.Add(InsertOrUpdate(context, dto));
                     }
                 }
-
                 return results;
             }
             catch (Exception e)
@@ -106,7 +118,6 @@ namespace OpenNos.DAL.EF
                 _mapper.Map(inventory, entity);
                 context.SaveChanges();
             }
-
             return _mapper.Map<TDTO>(entity);
         }
 

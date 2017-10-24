@@ -83,7 +83,7 @@ namespace OpenNos.GameObject
         {
             List<string> str = new List<string>();
             int i = 0;
-            Characters.GetAllItems().ForEach(session =>
+            Characters.ForEach(session =>
             {
                 if (session == player)
                 {
@@ -105,7 +105,7 @@ namespace OpenNos.GameObject
             result = $"rdlst{((GroupType == GroupType.GiantTeam) ? "f" : string.Empty)} {Raid.LevelMinimum} {Raid.LevelMaximum} 0";
             try
             {
-                Characters.GetAllItems().ForEach(session => result += $" {session.Character.Level}.{(session.Character.UseSp || session.Character.IsVehicled ? session.Character.Morph : -1)}.{(short)session.Character.Class}.{Raid?.InstanceBag.DeadList.Count(s => s == session.Character.CharacterId) ?? 0}.{session.Character.Name}.{(short)session.Character.Gender}.{session.Character.CharacterId}.{session.Character.HeroLevel}");
+                Characters.ForEach(session => result += $" {session.Character.Level}.{(session.Character.UseSp || session.Character.IsVehicled ? session.Character.Morph : -1)}.{(short)session.Character.Class}.{Raid?.InstanceBag.DeadList.Count(s => s == session.Character.CharacterId) ?? 0}.{session.Character.Name}.{(short)session.Character.Gender}.{session.Character.CharacterId}.{session.Character.HeroLevel}");
             }
             catch (Exception ex)
             {
@@ -121,7 +121,7 @@ namespace OpenNos.GameObject
             lock (_syncObj)
             {
                 _order++;
-                List<ClientSession> sessions = Characters.GetAllItems().Where(s => Map.GetDistance(s.Character, character) < 50).ToList();
+                List<ClientSession> sessions = Characters.Where(s => Map.GetDistance(s.Character, character) < 50);
                 if (_order > sessions.Count - 1) // if order wents out of amount of ppl, reset it -> zero based index
                 {
                     _order = 0;
@@ -172,7 +172,7 @@ namespace OpenNos.GameObject
             session.Character.Group = null;
             if (IsLeader(session) && GroupType != GroupType.Group && Characters.Count > 1)
             {
-                Characters.GetAllItems().ForEach(s => s.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("TEAM_LEADER_CHANGE"), Characters.ElementAt(0).Character?.Name), 0)));
+                Characters.ForEach(s => s.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("TEAM_LEADER_CHANGE"), Characters.ElementAt(0).Character?.Name), 0)));
             }
             Characters.RemoveAll(s => s?.Character.CharacterId == session.Character.CharacterId);
         }

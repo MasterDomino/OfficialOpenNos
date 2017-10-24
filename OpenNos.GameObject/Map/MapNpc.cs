@@ -29,7 +29,9 @@ namespace OpenNos.GameObject
         #region Members
 
         public NpcMonster Npc;
+
         private int _movetime;
+
         private Random _random;
 
         #endregion
@@ -151,7 +153,7 @@ namespace OpenNos.GameObject
             {
                 if (!MapInstance.IsSleeping)
                 {
-                    NpcLife();
+                    npcLife();
                 }
             }
             catch (Exception e)
@@ -160,7 +162,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        private void NpcLife()
+        private void npcLife()
         {
             double time = (DateTime.Now - LastEffect).TotalMilliseconds;
             if (time > EffectDelay)

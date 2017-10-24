@@ -776,12 +776,12 @@ namespace OpenNos.GameObject
                     _generalDrops = monsterDropGrouping.ToList();
                 }
             });
-            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("DROPS_LOADED"), _monsterDrops.GetAllItems().Sum(i => i.Count)));
+            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("DROPS_LOADED"), _monsterDrops.Sum(i => i.Count)));
 
             // initialize monsterskills
             _monsterSkills = new ThreadSafeSortedList<short, List<NpcMonsterSkill>>();
             Parallel.ForEach(DAOFactory.NpcMonsterSkillDAO.LoadAll().GroupBy(n => n.NpcMonsterVNum), monsterSkillGrouping => _monsterSkills[monsterSkillGrouping.Key] = monsterSkillGrouping.Select(n => n as NpcMonsterSkill).ToList());
-            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("MONSTERSKILLS_LOADED"), _monsterSkills.GetAllItems().Sum(i => i.Count)));
+            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("MONSTERSKILLS_LOADED"), _monsterSkills.Sum(i => i.Count)));
 
             // initialize bazaar
             BazaarList = new ThreadSafeGenericList<BazaarItemLink>();
@@ -815,17 +815,17 @@ namespace OpenNos.GameObject
             // intialize recipes
             _recipes = new ThreadSafeSortedList<int, List<Recipe>>();
             Parallel.ForEach(DAOFactory.RecipeDAO.LoadAll().GroupBy(r => r.MapNpcId), recipeGrouping => _recipes[recipeGrouping.Key] = recipeGrouping.Select(r => r as Recipe).ToList());
-            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("RECIPES_LOADED"), _recipes.GetAllItems().Sum(i => i.Count)));
+            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("RECIPES_LOADED"), _recipes.Sum(i => i.Count)));
 
             // initialize shopitems
             _shopItems = new ThreadSafeSortedList<int, List<ShopItemDTO>>();
             Parallel.ForEach(DAOFactory.ShopItemDAO.LoadAll().GroupBy(s => s.ShopId), shopItemGrouping => _shopItems[shopItemGrouping.Key] = shopItemGrouping.ToList());
-            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("SHOPITEMS_LOADED"), _shopItems.GetAllItems().Sum(i => i.Count)));
+            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("SHOPITEMS_LOADED"), _shopItems.Sum(i => i.Count)));
 
             // initialize shopskills
             _shopSkills = new ThreadSafeSortedList<int, List<ShopSkillDTO>>();
             Parallel.ForEach(DAOFactory.ShopSkillDAO.LoadAll().GroupBy(s => s.ShopId), shopSkillGrouping => _shopSkills[shopSkillGrouping.Key] = shopSkillGrouping.ToList());
-            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("SHOPSKILLS_LOADED"), _shopSkills.GetAllItems().Sum(i => i.Count)));
+            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("SHOPSKILLS_LOADED"), _shopSkills.Sum(i => i.Count)));
 
             // initialize shops
             _shops = new ThreadSafeSortedList<int, Shop>();
@@ -835,7 +835,7 @@ namespace OpenNos.GameObject
             // initialize teleporters
             _teleporters = new ThreadSafeSortedList<int, List<TeleporterDTO>>();
             Parallel.ForEach(DAOFactory.TeleporterDAO.LoadAll().GroupBy(t => t.MapNpcId), teleporterGrouping => _teleporters[teleporterGrouping.Key] = teleporterGrouping.Select(t => t).ToList());
-            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("TELEPORTERS_LOADED"), _teleporters.GetAllItems().Sum(i => i.Count)));
+            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("TELEPORTERS_LOADED"), _teleporters.Sum(i => i.Count)));
 
             // initialize skills
             Parallel.ForEach(DAOFactory.SkillDAO.LoadAll(), skill =>
@@ -861,7 +861,7 @@ namespace OpenNos.GameObject
             // intialize mapnpcs
             _mapNpcs = new ThreadSafeSortedList<short, List<MapNpc>>();
             Parallel.ForEach(DAOFactory.MapNpcDAO.LoadAll().GroupBy(t => t.MapId), mapNpcGrouping => _mapNpcs[mapNpcGrouping.Key] = mapNpcGrouping.Select(t => t as MapNpc).ToList());
-            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("MAPNPCS_LOADED"), _mapNpcs.GetAllItems().Sum(i => i.Count)));
+            Logger.Log.Info(string.Format(Language.Instance.GetMessageFromKey("MAPNPCS_LOADED"), _mapNpcs.Sum(i => i.Count)));
 
             try
             {
@@ -955,7 +955,7 @@ namespace OpenNos.GameObject
             }
             MinilandOwner.Character.Mates.Where(s => !s.IsTeamMember).ToList().ForEach(s => Session.SendPacket(s.GenerateIn()));
             Session.SendPackets(MinilandOwner.Character.GetMinilandEffects());
-            Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MINILAND_VISITOR"), Session.Character.GeneralLogs.GetAllItems().Count(s => s.LogData == "Miniland" && s.Timestamp.Day == DateTime.Now.Day), Session.Character.GeneralLogs.GetAllItems().Count(s => s.LogData == "Miniland")), 10));
+            Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MINILAND_VISITOR"), Session.Character.GeneralLogs.CountLinq(s => s.LogData == "Miniland" && s.Timestamp.Day == DateTime.Now.Day), Session.Character.GeneralLogs.CountLinq(s => s.LogData == "Miniland")), 10));
         }
 
         // Server

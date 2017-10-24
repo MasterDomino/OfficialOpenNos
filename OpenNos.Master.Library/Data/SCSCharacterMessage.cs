@@ -20,14 +20,6 @@ namespace OpenNos.Master.Library.Data
     [Serializable]
     public class SCSCharacterMessage
     {
-        #region Instantiation
-
-        public SCSCharacterMessage()
-        {
-        }
-
-        #endregion
-
         #region Properties
 
         public long? DestinationCharacterId { get; set; }

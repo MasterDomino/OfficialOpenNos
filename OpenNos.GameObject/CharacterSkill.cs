@@ -21,7 +21,7 @@ namespace OpenNos.GameObject
     {
         #region Members
 
-        private Skill skill;
+        private Skill _skill;
 
         #endregion
 
@@ -53,7 +53,7 @@ namespace OpenNos.GameObject
             get; set;
         }
 
-        public Skill Skill => skill ?? (skill = ServerManager.Instance.GetSkill(SkillVNum));
+        public Skill Skill => _skill ?? (_skill = ServerManager.Instance.GetSkill(SkillVNum));
 
         #endregion
 

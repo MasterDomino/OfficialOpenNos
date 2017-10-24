@@ -29,13 +29,13 @@ namespace OpenNos.GameObject.Helpers
     {
         #region Members
 
-        private static EventHelper instance;
+        private static EventHelper _instance;
 
         #endregion
 
         #region Properties
 
-        public static EventHelper Instance => instance ?? (instance = new EventHelper());
+        public static EventHelper Instance => _instance ?? (_instance = new EventHelper());
 
         #endregion
 
@@ -292,7 +292,7 @@ namespace OpenNos.GameObject.Helpers
                                     }
                                     if (evt.MapInstance.InstanceBag.EndState == 1 && evt.MapInstance.Monsters.Any(s => s.IsBoss))
                                     {
-                                        foreach (ClientSession sess in grp.Characters.GetAllItems().Where(s => s.CurrentMapInstance.Monsters.Any(e => e.IsBoss)))
+                                        foreach (ClientSession sess in grp.Characters.Where(s => s.CurrentMapInstance.Monsters.Any(e => e.IsBoss)))
                                         {
                                             foreach (Gift gift in grp?.Raid?.GiftItems)
                                             {

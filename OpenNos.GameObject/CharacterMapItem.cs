@@ -27,7 +27,6 @@ namespace OpenNos.GameObject
         public override byte Amount
         {
             get => ItemInstance.Amount;
-
             set => ItemInstance.Amount = Amount;
         }
 
@@ -36,7 +35,6 @@ namespace OpenNos.GameObject
         public override short ItemVNum
         {
             get => ItemInstance.ItemVNum;
-
             set => ItemInstance.ItemVNum = value;
         }
 

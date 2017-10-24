@@ -26,6 +26,7 @@ namespace OpenNos.GameObject
         #region Members
 
         protected Type _packetHandler;
+
         protected ConcurrentDictionary<long, ClientSession> _sessions = new ConcurrentDictionary<long, ClientSession>();
 
         #endregion

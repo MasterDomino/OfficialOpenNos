@@ -76,10 +76,10 @@
       <HintPath>..\packages\AutoMapper.6.1.1\lib\net45\AutoMapper.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0-beta1\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.3.0-beta1-61024\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0-beta1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.3.0-beta1-61024\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
@@ -150,6 +150,10 @@
     <Compile Include="Migrations\201710171909504_Aphrodite66.cs" />
     <Compile Include="Migrations\201710171909504_Aphrodite66.Designer.cs">
       <DependentUpon>201710171909504_Aphrodite66.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710231715320_Aphrodite67.cs" />
+    <Compile Include="Migrations\201710231715320_Aphrodite67.Designer.cs">
+      <DependentUpon>201710231715320_Aphrodite67.cs</DependentUpon>
     </Compile>
     <Compile Include="RollGeneratedItemDAO.cs" />
     <Compile Include="MateDAO.cs" />
@@ -463,7 +467,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config">
+    <None Include="app.config">
       <SubType>Designer</SubType>
       <TransformOnBuild>true</TransformOnBuild>
     </None>
@@ -691,6 +695,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201710171909504_Aphrodite66.resx">
       <DependentUpon>201710171909504_Aphrodite66.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710231715320_Aphrodite67.resx">
+      <DependentUpon>201710231715320_Aphrodite67.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

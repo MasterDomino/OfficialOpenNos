@@ -24,9 +24,9 @@ namespace OpenNos.GameObject
     {
         #region Members
 
-        private NpcMonster monster;
+        private NpcMonster _monster;
 
-        private Character owner;
+        private Character _owner;
 
         #endregion
 
@@ -88,14 +88,14 @@ namespace OpenNos.GameObject
 
         public NpcMonster Monster
         {
-            get => monster ?? (monster = ServerManager.Instance.GetNpc(NpcMonsterVNum));
-            set => monster = value;
+            get => _monster ?? (_monster = ServerManager.Instance.GetNpc(NpcMonsterVNum));
+            set => _monster = value;
         }
 
         public Character Owner
         {
-            get => owner ?? (owner = ServerManager.Instance.GetSessionByCharacterId(CharacterId).Character);
-            set => owner = value;
+            get => _owner ?? (_owner = ServerManager.Instance.GetSessionByCharacterId(CharacterId).Character);
+            set => _owner = value;
         }
 
         public byte PetId { get; set; }
@@ -179,13 +179,13 @@ namespace OpenNos.GameObject
             switch (PetId)
             {
                 case 0:
-                    return Owner.Inventory.GetAllItems().Where(s => s.Type == InventoryType.FirstPartnerInventory).ToList();
+                    return Owner.Inventory.Where(s => s.Type == InventoryType.FirstPartnerInventory);
 
                 case 1:
-                    return Owner.Inventory.GetAllItems().Where(s => s.Type == InventoryType.SecondPartnerInventory).ToList();
+                    return Owner.Inventory.Where(s => s.Type == InventoryType.SecondPartnerInventory);
 
                 case 2:
-                    return Owner.Inventory.GetAllItems().Where(s => s.Type == InventoryType.ThirdPartnerInventory).ToList();
+                    return Owner.Inventory.Where(s => s.Type == InventoryType.ThirdPartnerInventory);
             }
             return new List<ItemInstance>();
         }

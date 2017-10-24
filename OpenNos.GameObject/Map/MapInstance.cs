@@ -172,7 +172,7 @@ namespace OpenNos.GameObject
 
         public void DespawnMonster(int monsterVnum)
         {
-            Parallel.ForEach(_monsters.GetAllItems().Where(s => s.MonsterVNum == monsterVnum), monster =>
+            Parallel.ForEach(_monsters.Where(s => s.MonsterVNum == monsterVnum), monster =>
             {
                 monster.IsAlive = false;
                 monster.LastMove = DateTime.Now;
@@ -245,7 +245,7 @@ namespace OpenNos.GameObject
 
         public IEnumerable<string> GenerateUserShops() => UserShops.Select(shop => $"shop 1 {shop.Value.OwnerId} 1 3 0 {shop.Value.Name}").ToList();
 
-        public List<MapMonster> GetListMonsterInRange(short mapX, short mapY, byte distance) => _monsters.GetAllItems().Where(s => s.IsAlive && s.IsInRange(mapX, mapY, distance)).ToList();
+        public List<MapMonster> GetListMonsterInRange(short mapX, short mapY, byte distance) => _monsters.Where(s => s.IsAlive && s.IsInRange(mapX, mapY, distance)).ToList();
 
         public List<string> GetMapItems()
         {
@@ -263,7 +263,7 @@ namespace OpenNos.GameObject
             });
             Npcs.ForEach(s => packets.Add(s.GenerateIn()));
             packets.AddRange(GenerateNPCShopOnMap());
-            DroppedList.GetAllItems().ForEach(s => packets.Add(s.GenerateIn()));
+            DroppedList.ForEach(s => packets.Add(s.GenerateIn()));
             Buttons.ForEach(s => packets.Add(s.GenerateIn()));
             packets.AddRange(GenerateUserShops());
             packets.AddRange(GeneratePlayerShopOnMap());
@@ -274,14 +274,14 @@ namespace OpenNos.GameObject
 
         public int GetNextMonsterId()
         {
-            int nextId = _mapMonsterIds.Count > 0 ? _mapMonsterIds.GetAllItems().Last() + 1 : 1;
+            int nextId = _mapMonsterIds.Count > 0 ? _mapMonsterIds.Last() + 1 : 1;
             _mapMonsterIds[nextId] = nextId;
             return nextId;
         }
 
         public int GetNextNpcId()
         {
-            int nextId = _mapNpcIds.Count > 0 ? _mapNpcIds.GetAllItems().Last() + 1 : 1;
+            int nextId = _mapNpcIds.Count > 0 ? _mapNpcIds.Last() + 1 : 1;
             _mapNpcIds[nextId] = nextId;
             return nextId;
         }
@@ -374,7 +374,7 @@ namespace OpenNos.GameObject
             // take the data from list to remove it without having enumeration problems (ToList)
             try
             {
-                List<MapItem> dropsToRemove = DroppedList.GetAllItems().Where(dl => dl.CreatedDate.AddMinutes(3) < DateTime.Now).ToList();
+                List<MapItem> dropsToRemove = DroppedList.Where(dl => dl.CreatedDate.AddMinutes(3) < DateTime.Now);
                 Parallel.ForEach(dropsToRemove, drop =>
                 {
                     Broadcast(StaticPacketHelper.Out(UserType.Object, drop.TransportId));
@@ -528,7 +528,6 @@ namespace OpenNos.GameObject
                 {
                     ServerManager.Instance.ChangeMap(session.Character.CharacterId, session.Character.MapId, session.Character.MapX, session.Character.MapY);
                 }
-                GC.SuppressFinalize(this);
             }
         }
 

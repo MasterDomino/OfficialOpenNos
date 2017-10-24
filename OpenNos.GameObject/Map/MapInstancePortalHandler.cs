@@ -31,7 +31,6 @@ namespace OpenNos.GameObject
         public static List<Portal> GenerateMinilandEntryPortals(short entryMap, Guid exitMapinstanceId)
         {
             List<Portal> list = new List<Portal>();
-
             switch (entryMap)
             {
                 case 1:
@@ -60,7 +59,6 @@ namespace OpenNos.GameObject
                     });
                     break;
             }
-
             return list;
         }
 

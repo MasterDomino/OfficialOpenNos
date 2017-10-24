@@ -36,13 +36,13 @@ namespace OpenNos.Master.Library.Data
 
         public long CharacterId { get; set; }
 
-        public DateTime LastPulse { get; set; }
-
         public WorldServer ConnectedWorld { get; set; }
 
-        public int SessionId { get; }
-
         public string IpAddress { get; }
+
+        public DateTime LastPulse { get; set; }
+
+        public int SessionId { get; }
 
         #endregion
     }

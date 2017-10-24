@@ -47,7 +47,7 @@ namespace OpenNos.GameObject
 
         #region Properties
 
-        public IEnumerable<ClientSession> Sessions => _sessions.GetAllItems().Where(s => s.HasSelectedCharacter && !s.IsDisposing && s.IsConnected);
+        public IEnumerable<ClientSession> Sessions => _sessions.Where(s => s.HasSelectedCharacter && !s.IsDisposing && s.IsConnected);
 
         protected DateTime LastUnregister { get; private set; }
 
@@ -69,7 +69,7 @@ namespace OpenNos.GameObject
         {
             try
             {
-                SpreadBroadcastpacket(packet);
+                spreadBroadcastpacket(packet);
             }
             catch (Exception ex)
             {
@@ -81,7 +81,7 @@ namespace OpenNos.GameObject
         {
             try
             {
-                SpreadBroadcastpacket(new BroadcastPacket(client, content, receiver, characterName, characterId));
+                spreadBroadcastpacket(new BroadcastPacket(client, content, receiver, characterName, characterId));
             }
             catch (Exception ex)
             {
@@ -143,7 +143,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        private void SpreadBroadcastpacket(BroadcastPacket sentPacket)
+        private void spreadBroadcastpacket(BroadcastPacket sentPacket)
         {
             if (Sessions != null && !string.IsNullOrEmpty(sentPacket?.Packet))
             {

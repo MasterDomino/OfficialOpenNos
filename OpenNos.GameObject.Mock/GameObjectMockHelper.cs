@@ -18,24 +18,21 @@ namespace OpenNos.GameObject.Mock
     {
         #region Members
 
-        private static GameObjectMockHelper instance;
-        private long nextClientId;
+        private static GameObjectMockHelper _instance;
+
+        private long _nextClientId;
 
         #endregion
 
         #region Properties
 
-        public static GameObjectMockHelper Instance => instance ?? (instance = new GameObjectMockHelper());
+        public static GameObjectMockHelper Instance => _instance ?? (_instance = new GameObjectMockHelper());
 
         #endregion
 
         #region Methods
 
-        public long GetNextClientId()
-        {
-            nextClientId++;
-            return nextClientId;
-        }
+        public long GetNextClientId() => ++_nextClientId;
 
         #endregion
     }

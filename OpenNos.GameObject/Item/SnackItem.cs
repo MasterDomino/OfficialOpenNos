@@ -32,7 +32,7 @@ namespace OpenNos.GameObject
 
         #region Methods
 
-        public void Regenerate(ClientSession session, Item item)
+        private void regenerate(ClientSession session, Item item)
         {
             session.SendPacket(Helpers.StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId,6000));
             session.Character.SnackAmount++;
@@ -48,7 +48,7 @@ namespace OpenNos.GameObject
             session.Character.SnackAmount--;
         }
 
-        public void Sync(ClientSession session)
+        private void sync(ClientSession session)
         {
             for (session.Character.MaxSnack = 0; session.Character.MaxSnack < 5; session.Character.MaxSnack++)
             {
@@ -100,7 +100,7 @@ namespace OpenNos.GameObject
                     int amount = session.Character.SnackAmount;
                     if (amount < 5)
                     {
-                        Thread workerThread = new Thread(() => Regenerate(session, item));
+                        Thread workerThread = new Thread(() => regenerate(session, item));
                         workerThread.Start();
                         session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
@@ -112,7 +112,7 @@ namespace OpenNos.GameObject
                     }
                     if (amount == 0)
                     {
-                        Thread workerThread2 = new Thread(() => Sync(session));
+                        Thread workerThread2 = new Thread(() => sync(session));
                         workerThread2.Start();
                     }
                     break;

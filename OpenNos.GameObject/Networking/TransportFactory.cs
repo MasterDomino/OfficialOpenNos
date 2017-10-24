@@ -18,7 +18,7 @@ namespace OpenNos.GameObject
     {
         #region Members
 
-        private static TransportFactory instance;
+        private static TransportFactory _instance;
 
         private long _lastTransportId = 100000;
 
@@ -35,7 +35,7 @@ namespace OpenNos.GameObject
 
         #region Properties
 
-        public static TransportFactory Instance => instance ?? (instance = new TransportFactory());
+        public static TransportFactory Instance => _instance ?? (_instance = new TransportFactory());
 
         #endregion
 

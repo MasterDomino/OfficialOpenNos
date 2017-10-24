@@ -30,7 +30,7 @@ namespace OpenNos.GameObject
         public void ApplyBCards(object session, object sender = null)
         {
             Type type = session.GetType();
-            // int antibuff = 0;
+            // int counterBuff = 0;
             if (type == null)
             {
                 return;

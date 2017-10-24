@@ -39,8 +39,11 @@ namespace OpenNos.World
         #region Members
 
         private static readonly ManualResetEvent _run = new ManualResetEvent(true);
+
         private static EventHandler _exitHandler;
+
         private static bool _isDebug;
+
         private static bool _ignoreTelemetry;
 
         #endregion

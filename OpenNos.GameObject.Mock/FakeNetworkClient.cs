@@ -27,8 +27,10 @@ namespace OpenNos.GameObject.Mock
         #region Members
 
         private long _clientId;
+
         private ClientSession _clientSession;
-        private long lastKeepAliveIdentitiy;
+
+        private long _lastPacketId;
 
         #endregion
 
@@ -39,7 +41,7 @@ namespace OpenNos.GameObject.Mock
             _clientId = 0;
             SentPackets = new Queue<string>();
             ReceivedPackets = new Queue<string>();
-            lastKeepAliveIdentitiy = 1;
+            _lastPacketId = 1;
             IsConnected = true;
         }
 
@@ -103,9 +105,9 @@ namespace OpenNos.GameObject.Mock
         {
             Debug.WriteLine($"Enqueued {packet}");
             UTF8Encoding encoding = new UTF8Encoding();
-            byte[] buf = encoding.GetBytes($"{lastKeepAliveIdentitiy} {packet}");
+            byte[] buf = encoding.GetBytes($"{_lastPacketId} {packet}");
             MessageReceived?.Invoke(this, new MessageEventArgs(new ScsRawDataMessage(buf), DateTime.Now));
-            lastKeepAliveIdentitiy++;
+            _lastPacketId++;
         }
 
         /// <summary>

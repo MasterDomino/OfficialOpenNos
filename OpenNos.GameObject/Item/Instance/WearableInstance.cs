@@ -29,7 +29,8 @@ namespace OpenNos.GameObject
         #region Members
 
         private Random _random;
-        private List<ShellEffectDTO> shelleffects;
+
+        private List<ShellEffectDTO> _shellEffects;
 
         #endregion
 
@@ -127,8 +128,7 @@ namespace OpenNos.GameObject
 
         public Guid EquipmentSerialId { get; set; }
 
-        public List<ShellEffectDTO> ShellEffects => shelleffects ?? (shelleffects = DAOFactory.ShellEffectDAO.LoadByEquipmentSerialId(EquipmentSerialId == Guid.Empty ? EquipmentSerialId = Guid.NewGuid() : EquipmentSerialId).ToList());
-
+        public List<ShellEffectDTO> ShellEffects => _shellEffects ?? (_shellEffects = DAOFactory.ShellEffectDAO.LoadByEquipmentSerialId(EquipmentSerialId == Guid.Empty ? EquipmentSerialId = Guid.NewGuid() : EquipmentSerialId).ToList());
 
         #endregion
 

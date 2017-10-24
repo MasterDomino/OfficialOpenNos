@@ -42,7 +42,7 @@ namespace OpenNos.Import.Console
             System.Console.WriteLine(separator + string.Format("{0," + offset + "}\n", text) + separator);
             if (DataAccessHelper.Initialize())
             {
-                RegisterMappings();
+                registerMappings();
             }
             ConsoleKeyInfo key = new ConsoleKeyInfo();
             Logger.Log.Warn(Language.Instance.GetMessageFromKey("NEED_TREE"));
@@ -251,7 +251,7 @@ namespace OpenNos.Import.Console
             }
         }
 
-        private static void RegisterMappings()
+        private static void registerMappings()
         {
             // entities
             DAOFactory.AccountDAO.RegisterMapping(typeof(AccountDTO)).InitializeMapper();

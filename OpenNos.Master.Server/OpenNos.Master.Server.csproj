@@ -68,10 +68,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0-beta1\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.3.0-beta1-61024\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0-beta1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.3.0-beta1-61024\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
@@ -81,7 +81,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
     <Reference Include="System.Reactive, Version=4.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.4.0.0-preview00001\lib\net46\System.Reactive.dll</HintPath>
     </Reference>
@@ -100,10 +99,6 @@
     <Reference Include="System.Reactive.Windows.Threading, Version=3.0.1000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.Windows.Threading.4.0.0-preview00001\lib\net45\System.Reactive.Windows.Threading.dll</HintPath>
     </Reference>
-    <Reference Include="System.Windows" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccountConnection.cs" />
@@ -143,29 +138,29 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config">
+    <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
     <None Include="App.DE.config">
-      <DependentUpon>App.config</DependentUpon>
+      <DependentUpon>app.config</DependentUpon>
     </None>
     <None Include="App.Debug.config">
-      <DependentUpon>App.config</DependentUpon>
+      <DependentUpon>app.config</DependentUpon>
     </None>
     <None Include="App.FR.config">
-      <DependentUpon>App.config</DependentUpon>
+      <DependentUpon>app.config</DependentUpon>
     </None>
     <None Include="App.IT.config">
-      <DependentUpon>App.config</DependentUpon>
+      <DependentUpon>app.config</DependentUpon>
     </None>
     <None Include="App.PL.config">
-      <DependentUpon>App.config</DependentUpon>
+      <DependentUpon>app.config</DependentUpon>
     </None>
     <None Include="App.Release.config">
-      <DependentUpon>App.config</DependentUpon>
+      <DependentUpon>app.config</DependentUpon>
     </None>
     <None Include="App.TH.config">
-      <DependentUpon>App.config</DependentUpon>
+      <DependentUpon>app.config</DependentUpon>
     </None>
     <None Include="packages.config" />
   </ItemGroup>

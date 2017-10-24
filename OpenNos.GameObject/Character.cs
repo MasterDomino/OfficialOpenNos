@@ -37,9 +37,13 @@ namespace OpenNos.GameObject
         #region Members
 
         private readonly object _syncObj = new object();
+
         private bool _isStaticBuffListInitial;
+
         private Random _random;
+
         private int _slhpbonus;
+
         private byte _speed;
 
         #endregion
@@ -418,7 +422,7 @@ namespace OpenNos.GameObject
 
         public void AddBuff(Buff indicator, bool noMessage = false)
         {
-            if (indicator.Card != null && (!noMessage || !Buff.GetAllItems().Any(s => s.Card.CardId == indicator.Card.CardId)))
+            if (indicator.Card != null && (!noMessage || !Buff.Any(s => s.Card.CardId == indicator.Card.CardId)))
             {
                 Buff.Remove(indicator.Card.CardId);
                 Buff[indicator.Card.CardId] = indicator;
@@ -923,7 +927,7 @@ namespace OpenNos.GameObject
                                     SpCooldown = 30;
                                     if (SkillsSp != null)
                                     {
-                                        foreach (CharacterSkill ski in SkillsSp.GetAllItems().Where(s => !s.CanBeUsed()))
+                                        foreach (CharacterSkill ski in SkillsSp.Where(s => !s.CanBeUsed()))
                                         {
                                             short time = ski.Skill.Cooldown;
                                             double temp = (ski.LastUse - DateTime.Now).TotalMilliseconds + (time * 100);
@@ -1103,7 +1107,7 @@ namespace OpenNos.GameObject
         {
             lock (Buff)
             {
-                Buff.GetAllItems().Where(s => types.Contains(s.Card.BuffType) && !s.StaticBuff && s.Card.Level < level).ToList()
+                Buff.Where(s => types.Contains(s.Card.BuffType) && !s.StaticBuff && s.Card.Level < level).ToList()
                     .ForEach(s => { if (BuffObservables.ContainsKey(s.Card.CardId)) { BuffObservables[s.Card.CardId].Dispose(); BuffObservables.Remove(s.Card.CardId); } RemoveBuff(s.Card.CardId); });
             }
         }
@@ -1557,7 +1561,7 @@ namespace OpenNos.GameObject
                                                         dropOwner = group.GetNextOrderedCharacterId(this);
                                                         if (dropOwner.HasValue)
                                                         {
-                                                            group.Characters.ForEach(s => s.SendPacket(s.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("ITEM_BOUND_TO"), ServerManager.Instance.GetItem(drop.ItemVNum).Name, group.Characters.GetAllItems().Single(c => c.Character.CharacterId == (long)dropOwner).Character.Name, drop.Amount), 10)));
+                                                            group.Characters.ForEach(s => s.SendPacket(s.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("ITEM_BOUND_TO"), ServerManager.Instance.GetItem(drop.ItemVNum).Name, group.Characters.Single(c => c.Character.CharacterId == (long)dropOwner).Character.Name, drop.Amount), 10)));
                                                         }
                                                     }
                                                     else
@@ -1633,7 +1637,7 @@ namespace OpenNos.GameObject
 
                                             if (dropOwner.HasValue)
                                             {
-                                                group.Characters.ForEach(s => s.SendPacket(s.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("ITEM_BOUND_TO"), ServerManager.Instance.GetItem(drop2.ItemVNum).Name, group.Characters.GetAllItems().Single(c => c.Character.CharacterId == (long)dropOwner).Character.Name, drop2.Amount), 10)));
+                                                group.Characters.ForEach(s => s.SendPacket(s.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("ITEM_BOUND_TO"), ServerManager.Instance.GetItem(drop2.ItemVNum).Name, group.Characters.Single(c => c.Character.CharacterId == (long)dropOwner).Character.Name, drop2.Amount), 10)));
                                             }
                                         }
                                         else
@@ -1663,7 +1667,7 @@ namespace OpenNos.GameObject
                             Group grp = ServerManager.Instance.Groups.Find(g => g.IsMemberOfGroup(CharacterId));
                             if (grp != null)
                             {
-                                foreach (ClientSession targetSession in grp.Characters.GetAllItems().Where(g => g.Character.MapInstanceId == MapInstanceId))
+                                foreach (ClientSession targetSession in grp.Characters.Where(g => g.Character.MapInstanceId == MapInstanceId))
                                 {
                                     if (grp.IsMemberOfGroup(monsterToAttack.DamageList.FirstOrDefault().Key))
                                     {
@@ -1760,9 +1764,9 @@ namespace OpenNos.GameObject
             }
         }
 
-        public string GenerateMlinfo() => $"mlinfo 3800 {MinilandPoint} 100 {GeneralLogs.GetAllItems().Count(s => s.LogData == "Miniland" && s.Timestamp.Day == DateTime.Now.Day)} {GeneralLogs.GetAllItems().Count(s => s.LogData == "Miniland")} 10 {(byte)MinilandState} {Language.Instance.GetMessageFromKey("WELCOME_MUSIC_INFO")} {Language.Instance.GetMessageFromKey("MINILAND_WELCOME_MESSAGE")}";
+        public string GenerateMlinfo() => $"mlinfo 3800 {MinilandPoint} 100 {GeneralLogs.CountLinq(s => s.LogData == "Miniland" && s.Timestamp.Day == DateTime.Now.Day)} {GeneralLogs.CountLinq(s => s.LogData == "Miniland")} 10 {(byte)MinilandState} {Language.Instance.GetMessageFromKey("WELCOME_MUSIC_INFO")} {Language.Instance.GetMessageFromKey("MINILAND_WELCOME_MESSAGE")}";
 
-        public string GenerateMlinfobr() => $"mlinfobr 3800 {Name} {GeneralLogs.GetAllItems().Count(s => s.LogData == "Miniland" && s.Timestamp.Day == DateTime.Now.Day)} {GeneralLogs.GetAllItems().Count(s => s.LogData == "Miniland")} 25 {MinilandMessage.Replace(' ', '^')}";
+        public string GenerateMlinfobr() => $"mlinfobr 3800 {Name} {GeneralLogs.CountLinq(s => s.LogData == "Miniland" && s.Timestamp.Day == DateTime.Now.Day)} {GeneralLogs.CountLinq(s => s.LogData == "Miniland")} 25 {MinilandMessage.Replace(' ', '^')}";
 
         public string GenerateMloMg(MinilandObject mlobj, MinigamePacket packet) => $"mlo_mg {packet.MinigameVNum} {MinilandPoint} 0 0 {mlobj.ItemInstance.DurabilityPoint} {mlobj.ItemInstance.Item.MinilandObjectPoint}";
 
@@ -1859,7 +1863,7 @@ namespace OpenNos.GameObject
         public string GeneratePStashAll()
         {
             string stash = $"pstash_all {(StaticBonusList.Any(s => s.StaticBonusType == StaticBonusType.PetBackPack) ? 50 : 0)}";
-            return Inventory.GetAllItems().Where(s => s.Type == InventoryType.PetWarehouse).Aggregate(stash, (current, item) => current + $" {item.GenerateStashPacket()}");
+            return Inventory.Where(s => s.Type == InventoryType.PetWarehouse).Aggregate(stash, (current, item) => current + $" {item.GenerateStashPacket()}");
         }
 
         public IEnumerable<string> GenerateQuicklist()
@@ -2123,7 +2127,7 @@ namespace OpenNos.GameObject
         public string GenerateStashAll()
         {
             string stash = $"stash_all {WareHouseSize}";
-            foreach (ItemInstance item in Inventory.GetAllItems().Where(s => s.Type == InventoryType.Warehouse))
+            foreach (ItemInstance item in Inventory.Where(s => s.Type == InventoryType.Warehouse))
             {
                 stash += $" {item.GenerateStashPacket()}";
             }
@@ -2183,8 +2187,8 @@ namespace OpenNos.GameObject
                 {
                     MinHit += specialist.DamageMinimum + (specialist.SpDamage * 10);
                     MaxHit += specialist.DamageMaximum + (specialist.SpDamage * 10);
-                    MinDistance += specialist.DamageMinimum + (specialist.SpDamage * 100);
-                    MaxDistance += specialist.DamageMaximum + (specialist.SpDamage * 100);
+                    MinDistance += specialist.DamageMinimum + (specialist.SpDamage * 10);
+                    MaxDistance += specialist.DamageMaximum + (specialist.SpDamage * 10);
                     HitCriticalRate += specialist.CriticalLuckRate;
                     HitCritical += specialist.CriticalRate;
                     DistanceCriticalRate += specialist.CriticalLuckRate;
@@ -2435,7 +2439,7 @@ namespace OpenNos.GameObject
             int value1 = 0;
             int value2 = 0;
 
-            foreach (BCard entry in EquipmentBCards.GetAllItems().Where(s => s?.Type.Equals((byte)type) == true && s.SubType.Equals((byte)(subtype / 10))))
+            foreach (BCard entry in EquipmentBCards.Where(s => s?.Type.Equals((byte)type) == true && s.SubType.Equals((byte)(subtype / 10))))
             {
                 if (entry.IsLevelScaled)
                 {
@@ -2576,7 +2580,7 @@ namespace OpenNos.GameObject
         public string GetMinilandObjectList()
         {
             string mlobjstring = "mlobjlst";
-            foreach (ItemInstance item in Inventory.GetAllItems().Where(s => s.Type == InventoryType.Miniland).OrderBy(s => s.Slot))
+            foreach (ItemInstance item in Inventory.Where(s => s.Type == InventoryType.Miniland).OrderBy(s => s.Slot))
             {
                 if (item.Item.IsMinilandObject)
                 {
@@ -2779,8 +2783,7 @@ namespace OpenNos.GameObject
         {
             int value1 = 0;
             int value2 = 0;
-            foreach (BCard entry in EquipmentBCards.GetAllItems().Where(
-                s => s.Type.Equals((byte)type) && s.SubType.Equals((byte)(subtype / 10))))
+            foreach (BCard entry in EquipmentBCards.Where(s => s.Type.Equals((byte)type) && s.SubType.Equals((byte)(subtype / 10))))
             {
                 if (entry.IsLevelScaled)
                 {
@@ -2996,7 +2999,7 @@ namespace OpenNos.GameObject
                     }
 
                     Skill skinfo = ServerManager.Instance.GetSkill((short)i);
-                    if (skinfo.Class == 0 && JobLevel >= skinfo.LevelMinimum && Skills.GetAllItems().All(s => s.SkillVNum != i))
+                    if (skinfo.Class == 0 && JobLevel >= skinfo.LevelMinimum && Skills.All(s => s.SkillVNum != i))
                     {
                         NewSkill = 1;
                         Skills[i] = new CharacterSkill { SkillVNum = (short)i, CharacterId = CharacterId };
@@ -3353,7 +3356,11 @@ namespace OpenNos.GameObject
                         {
                             try
                             {
-                                DAOFactory.ShellEffectDAO.DeleteByItemInstanceId(inventoryToDeleteId);
+                                ItemInstanceDTO itemInstance = DAOFactory.IteminstanceDAO.LoadById(inventoryToDeleteId);
+                                if (ServerManager.Instance.GetItem(itemInstance.ItemVNum).Type == InventoryType.Equipment && itemInstance is WearableInstanceDTO wearableInstance)
+                                {
+                                    DAOFactory.ShellEffectDAO.DeleteByItemInstanceId(wearableInstance.EquipmentSerialId);
+                                }
                                 DAOFactory.IteminstanceDAO.Delete(inventoryToDeleteId);
                             }
                             catch (Exception err)
@@ -3383,7 +3390,7 @@ namespace OpenNos.GameObject
                 {
                     IEnumerable<Guid> currentlySavedCharacterSkills = DAOFactory.CharacterSkillDAO.LoadKeysByCharacterId(CharacterId).ToList();
 
-                    foreach (Guid characterSkillToDeleteId in currentlySavedCharacterSkills.Except(Skills.GetAllItems().Select(s => s.Id)))
+                    foreach (Guid characterSkillToDeleteId in currentlySavedCharacterSkills.Except(Skills.Select(s => s.Id)))
                     {
                         DAOFactory.CharacterSkillDAO.Delete(characterSkillToDeleteId);
                     }
@@ -3428,12 +3435,12 @@ namespace OpenNos.GameObject
                 }
 
                 IEnumerable<short> currentlySavedBuff = DAOFactory.StaticBuffDAO.LoadByTypeCharacterId(CharacterId);
-                foreach (short bonusToDelete in currentlySavedBuff.Except(Buff.GetAllItems().Select(s => s.Card.CardId)))
+                foreach (short bonusToDelete in currentlySavedBuff.Except(Buff.Select(s => s.Card.CardId)))
                 {
                     DAOFactory.StaticBuffDAO.Delete(bonusToDelete, CharacterId);
                 }
 
-                foreach (Buff buff in Buff.GetAllItems().Where(s => s.StaticBuff).ToArray())
+                foreach (Buff buff in Buff.Where(s => s.StaticBuff).ToArray())
                 {
                     StaticBuffDTO bf = new StaticBuffDTO()
                     {
@@ -3912,7 +3919,7 @@ namespace OpenNos.GameObject
                             specialist.XP = 0;
                         }
                         LearnSPSkill();
-                        Skills.GetAllItems().ForEach(s => s.LastUse = DateTime.Now.AddDays(-1));
+                        Skills.ForEach(s => s.LastUse = DateTime.Now.AddDays(-1));
                         Session.SendPacket(GenerateSki());
                         Session.SendPackets(GenerateQuicklist());
 
@@ -3967,7 +3974,7 @@ namespace OpenNos.GameObject
 
             if (group != null)
             {
-                int levelSum = group.Characters.GetAllItems().Sum(g => g.Character.Level);
+                int levelSum = group.Characters.Sum(g => g.Character.Level);
                 partySize = group.CharacterCount;
                 partyPenalty = (6f / partySize) / levelSum;
             }
@@ -3990,7 +3997,7 @@ namespace OpenNos.GameObject
 
             if (group != null)
             {
-                int levelSum = group.Characters.GetAllItems().Sum(g => g.Character.JobLevel);
+                int levelSum = group.Characters.Sum(g => g.Character.JobLevel);
                 partySize = group.CharacterCount;
                 partyPenalty = (6f / partySize) / levelSum;
             }
@@ -4013,7 +4020,7 @@ namespace OpenNos.GameObject
 
             if (group != null)
             {
-                int levelSum = group.Characters.GetAllItems().Sum(g => g.Character.Level);
+                int levelSum = group.Characters.Sum(g => g.Character.Level);
                 partySize = group.CharacterCount;
                 partyPenalty = (6f / partySize) / levelSum;
             }

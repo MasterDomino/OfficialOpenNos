@@ -12,13 +12,13 @@
  * GNU General Public License for more details.
  */
 
-using OpenNos.SCS.Communication.Scs.Communication.EndPoints.Tcp;
-using OpenNos.SCS.Communication.ScsServices.Service;
 using OpenNos.Core;
 using OpenNos.DAL;
 using OpenNos.Domain;
 using OpenNos.Master.Library.Data;
 using OpenNos.Master.Library.Interface;
+using OpenNos.SCS.Communication.Scs.Communication.EndPoints.Tcp;
+using OpenNos.SCS.Communication.ScsServices.Service;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -125,7 +125,7 @@ namespace OpenNos.Master.Server
                 return;
             }
 
-            foreach (AccountConnection account in MSManager.Instance.ConnectedAccounts.GetAllItems().Where(c => c.CharacterId.Equals(characterId) && c.ConnectedWorld.Id.Equals(worldId)))
+            foreach (AccountConnection account in MSManager.Instance.ConnectedAccounts.Where(c => c.CharacterId.Equals(characterId) && c.ConnectedWorld.Id.Equals(worldId)))
             {
                 foreach (WorldServer world in MSManager.Instance.WorldServers.Where(w => w.WorldGroup.Equals(account.ConnectedWorld.WorldGroup)))
                 {
@@ -248,8 +248,7 @@ namespace OpenNos.Master.Server
 
         public long[][] RetrieveOnlineCharacters(long characterId)
         {
-            List<AccountConnection> connections = MSManager.Instance.ConnectedAccounts.GetAllItems()
-                .Where(s => s.IpAddress == MSManager.Instance.ConnectedAccounts.GetAllItems().Find(f => f.CharacterId == characterId)?.IpAddress && s.CharacterId != 0).ToList();
+            List<AccountConnection> connections = MSManager.Instance.ConnectedAccounts.Where(s => s.IpAddress == MSManager.Instance.ConnectedAccounts.Find(f => f.CharacterId == characterId)?.IpAddress && s.CharacterId != 0);
 
             long[][] result = new long[connections.Count][];
 
