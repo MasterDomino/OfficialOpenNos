@@ -1,8 +1,7 @@
 namespace OpenNos.DAL.EF.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class Aphrodite67 : DbMigration
     {
         public override void Up()
@@ -12,7 +11,7 @@ namespace OpenNos.DAL.EF.Migrations
             DropIndex("dbo.ShellEffect", new[] { "ItemInstance_Id" });
             DropColumn("dbo.ShellEffect", "ItemInstance_Id");
         }
-        
+
         public override void Down()
         {
             AddColumn("dbo.ShellEffect", "ItemInstance_Id", c => c.Guid());
