@@ -54,8 +54,11 @@ namespace OpenNos.GameObject
         public int Point { get; set; }
 
         public int RoomsVisited { get; set; }
+
         public Locker MonsterLocker { get;  set; }
+
         public Locker ButtonLocker { get;  set; }
+
         public List<EventContainer> UnlockEvents { get;  set; }
 
         #endregion

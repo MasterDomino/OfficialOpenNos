@@ -19,7 +19,6 @@ using OpenNos.GameObject.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Linq;
 
 namespace OpenNos.GameObject
 {
@@ -30,7 +29,7 @@ namespace OpenNos.GameObject
         public void ApplyBCards(object session, object sender = null)
         {
             Type type = session.GetType();
-            // int antibuff = 0;
+            // int counterBuff = 0;
             if (type == null)
             {
                 return;

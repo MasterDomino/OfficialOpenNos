@@ -28,7 +28,9 @@ namespace OpenNos.GameObject
         #region Members
 
         private const short DEFAULT_BACKPACK_SIZE = 48;
+
         private const byte MAX_ITEM_AMOUNT = 99;
+
         private readonly object _lockObject = new object();
 
         #endregion

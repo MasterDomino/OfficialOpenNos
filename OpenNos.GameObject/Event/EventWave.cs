@@ -21,11 +21,11 @@ namespace OpenNos.GameObject
     {
         #region Instantiation
 
-        public EventWave(byte Delay, List<EventContainer> Events, byte Offset = 0)
+        public EventWave(byte delay, List<EventContainer> events, byte offset = 0)
         {
-            this.Delay = Delay;
-            this.Offset = Offset;
-            this.Events = Events;
+            Delay = delay;
+            Offset = offset;
+            Events = events;
         }
 
         #endregion

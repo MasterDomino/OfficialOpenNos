@@ -37,9 +37,13 @@ namespace OpenNos.GameObject
         #region Members
 
         private readonly object _syncObj = new object();
+
         private bool _isStaticBuffListInitial;
+
         private Random _random;
+
         private int _slhpbonus;
+
         private byte _speed;
 
         #endregion

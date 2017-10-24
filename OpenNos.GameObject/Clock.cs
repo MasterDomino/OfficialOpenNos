@@ -29,7 +29,7 @@ namespace OpenNos.GameObject
             TimeoutEvents = new List<EventContainer>();
             Type = type;
             DeciSecondRemaining = 1;
-            Observable.Interval(TimeSpan.FromSeconds(1)).Subscribe(x => Tick());
+            Observable.Interval(TimeSpan.FromSeconds(1)).Subscribe(x => tick());
         }
 
         #endregion
@@ -63,7 +63,7 @@ namespace OpenNos.GameObject
             StopEvents.RemoveAll(s => s != null);
         }
 
-        private void Tick()
+        private void tick()
         {
             if (Enabled)
             {

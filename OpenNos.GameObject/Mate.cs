@@ -24,9 +24,9 @@ namespace OpenNos.GameObject
     {
         #region Members
 
-        private NpcMonster monster;
+        private NpcMonster _monster;
 
-        private Character owner;
+        private Character _owner;
 
         #endregion
 
@@ -88,14 +88,14 @@ namespace OpenNos.GameObject
 
         public NpcMonster Monster
         {
-            get => monster ?? (monster = ServerManager.Instance.GetNpc(NpcMonsterVNum));
-            set => monster = value;
+            get => _monster ?? (_monster = ServerManager.Instance.GetNpc(NpcMonsterVNum));
+            set => _monster = value;
         }
 
         public Character Owner
         {
-            get => owner ?? (owner = ServerManager.Instance.GetSessionByCharacterId(CharacterId).Character);
-            set => owner = value;
+            get => _owner ?? (_owner = ServerManager.Instance.GetSessionByCharacterId(CharacterId).Character);
+            set => _owner = value;
         }
 
         public byte PetId { get; set; }

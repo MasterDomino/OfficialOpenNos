@@ -20,7 +20,6 @@ using OpenNos.PathFinder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Linq;
 
 namespace OpenNos.GameObject
 {
@@ -29,7 +28,9 @@ namespace OpenNos.GameObject
         #region Members
 
         public NpcMonster Npc;
+
         private int _movetime;
+
         private Random _random;
 
         #endregion
@@ -151,7 +152,7 @@ namespace OpenNos.GameObject
             {
                 if (!MapInstance.IsSleeping)
                 {
-                    NpcLife();
+                    npcLife();
                 }
             }
             catch (Exception e)
@@ -160,7 +161,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        private void NpcLife()
+        private void npcLife()
         {
             double time = (DateTime.Now - LastEffect).TotalMilliseconds;
             if (time > EffectDelay)

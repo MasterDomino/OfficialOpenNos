@@ -22,7 +22,9 @@ namespace OpenNos.GameObject
         #region Members
 
         protected ItemInstance _itemInstance;
+
         private long _transportId;
+
         private readonly object _lockObject = new object();
 
         #endregion

@@ -20,7 +20,6 @@ using OpenNos.PathFinder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 
 namespace OpenNos.GameObject.Helpers
@@ -29,13 +28,13 @@ namespace OpenNos.GameObject.Helpers
     {
         #region Members
 
-        private static EventHelper instance;
+        private static EventHelper _instance;
 
         #endregion
 
         #region Properties
 
-        public static EventHelper Instance => instance ?? (instance = new EventHelper());
+        public static EventHelper Instance => _instance ?? (_instance = new EventHelper());
 
         #endregion
 

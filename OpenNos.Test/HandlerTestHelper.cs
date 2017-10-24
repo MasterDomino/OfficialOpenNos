@@ -82,12 +82,12 @@ namespace OpenNos.Test
             Logger.InitializeLogger(LogManager.GetLogger(typeof(BasicPacketHandlerTest)));
 
             // register mappings for items
-            RegisterMappings();
+            registerMappings();
 
             // create server entities (this values would have been imported)
-            CreateServerItems();
-            CreateServerMaps();
-            CreateServerSkills();
+            createServerItems();
+            createServerMaps();
+            createServerSkills();
 
             // initialize servermanager
             ServerManager.Instance.Initialize();
@@ -202,7 +202,7 @@ namespace OpenNos.Test
             }
         }
 
-        private static void CreateServerItems()
+        private static void createServerItems()
         {
             DAOFactory.ItemDAO.Insert(new ItemDTO
             {
@@ -233,7 +233,7 @@ namespace OpenNos.Test
             });
         }
 
-        private static void CreateServerMaps()
+        private static void createServerMaps()
         {
             MapDTO testingMap = new MapDTO
             {
@@ -263,7 +263,7 @@ namespace OpenNos.Test
             DAOFactory.MapDAO.Insert(testingMap);
         }
 
-        private static void CreateServerSkills()
+        private static void createServerSkills()
         {
             DAOFactory.SkillDAO.Insert(new SkillDTO
             {
@@ -282,7 +282,7 @@ namespace OpenNos.Test
             });
         }
 
-        private static void RegisterMappings()
+        private static void registerMappings()
         {
             // register mappings for items
             DAOFactory.IteminstanceDAO.RegisterMapping(typeof(SpecialistInstance));
