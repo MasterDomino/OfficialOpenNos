@@ -17,6 +17,7 @@ using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Reactive.Linq;
 using System.Threading;
 
 namespace OpenNos.GameObject.Event
