@@ -29,12 +29,12 @@ namespace OpenNos.GameObject
             List<Schedule> list = new List<Schedule>();
             foreach (XmlNode aSchedule in section.ChildNodes)
             {
-                list.Add(GetSchedule(aSchedule));
+                list.Add(getSchedule(aSchedule));
             }
             return list;
         }
 
-        private static Schedule GetSchedule(XmlNode str)
+        private static Schedule getSchedule(XmlNode str)
         {
             if (str.Attributes != null)
             {

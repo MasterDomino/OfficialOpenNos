@@ -64,10 +64,10 @@ namespace OpenNos.DAL.EF
 
                     if (entity == null)
                     {
-                        account = Insert(account, context);
+                        account = insert(account, context);
                         return SaveResult.Inserted;
                     }
-                    account = Update(entity, account, context);
+                    account = update(entity, account, context);
                     return SaveResult.Updated;
                 }
             }
@@ -144,7 +144,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        private AccountDTO Insert(AccountDTO account, OpenNosContext context)
+        private AccountDTO insert(AccountDTO account, OpenNosContext context)
         {
             Account entity = _mapper.Map<Account>(account);
             context.Account.Add(entity);
@@ -152,7 +152,7 @@ namespace OpenNos.DAL.EF
             return _mapper.Map<AccountDTO>(entity);
         }
 
-        private AccountDTO Update(Account entity, AccountDTO account, OpenNosContext context)
+        private AccountDTO update(Account entity, AccountDTO account, OpenNosContext context)
         {
             if (entity != null)
             {

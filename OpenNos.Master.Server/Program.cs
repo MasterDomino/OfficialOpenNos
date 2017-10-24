@@ -40,6 +40,7 @@ namespace OpenNos.Master.Server
         #region Members
 
         private static readonly ManualResetEvent _run = new ManualResetEvent(true);
+
         private static bool _isDebug;
 
         #endregion

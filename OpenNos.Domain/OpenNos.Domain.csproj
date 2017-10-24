@@ -66,12 +66,6 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Net.Http" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="AttackType.cs" />
     <Compile Include="BazaarListType.cs" />
     <Compile Include="BuffType.cs" />
