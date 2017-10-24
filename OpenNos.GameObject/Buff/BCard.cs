@@ -264,6 +264,65 @@ namespace OpenNos.GameObject
                     break;
 
                 case BCardType.CardType.Capture:
+                    if (type == typeof(MapMonster))
+                    {
+                        if (session is MapMonster mapMonster && sender is ClientSession senderSession)
+                        {
+                            NpcMonster mateNpc = ServerManager.Instance.GetNpc(mapMonster.MonsterVNum);
+                            if (mateNpc != null)
+                            {
+                                if (mapMonster.Monster.Catch)
+                                {
+                                    if (mapMonster.IsAlive && mapMonster.CurrentHp <= (int)((double)mapMonster.MaxHp / 2))
+                                    {
+                                        if (mapMonster.Monster.Level < senderSession.Character.Level)
+                                        {
+#warning find a new algorithm
+                                            int[] chance = { 100, 80, 60, 40, 20, 0 };
+                                            if (ServerManager.Instance.RandomNumber() < chance[ServerManager.Instance.RandomNumber(0, 5)])
+                                            {
+                                                Mate mate = new Mate(senderSession.Character, mateNpc, (byte)(mapMonster.Monster.Level - 5 >= 1 ? mapMonster.Monster.Level - 5 : mapMonster.Monster.Level), MateType.Pet);
+                                                if (senderSession.Character.CanAddMate(mate))
+                                                {
+                                                    senderSession.Character.AddPetWithSkill(mate);
+                                                    senderSession.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("CATCH_SUCCESS"), 0));
+                                                    senderSession.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, senderSession.Character.CharacterId, 197));
+                                                    senderSession.CurrentMapInstance?.Broadcast(StaticPacketHelper.SkillUsed(UserType.Player, senderSession.Character.CharacterId, 3, mapMonster.MapMonsterId, -1, 0, 15, -1, -1, -1, true, (int)((float)mapMonster.CurrentHp / (float)mapMonster.MaxHp * 100), 0, -1, 0));
+                                                    mapMonster.SetDeathStatement();
+                                                    senderSession.CurrentMapInstance?.Broadcast(StaticPacketHelper.Out(UserType.Monster, mapMonster.MapMonsterId));
+                                                }
+                                                else
+                                                {
+                                                    senderSession.SendPacket(senderSession.Character.GenerateSay(Language.Instance.GetMessageFromKey("PET_SLOT_FULL"), 10));
+                                                    senderSession.SendPacket(StaticPacketHelper.Cancel(2, mapMonster.MapMonsterId));
+                                                }
+                                            }
+                                            else
+                                            {
+                                                senderSession.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("CATCH_FAIL"), 0));
+                                                senderSession.CurrentMapInstance?.Broadcast(StaticPacketHelper.SkillUsed(UserType.Player, senderSession.Character.CharacterId, 3, mapMonster.MapMonsterId, -1, 0, 15, -1, -1, -1, true, (int)((float)mapMonster.CurrentHp / (float)mapMonster.MaxHp * 100), 0, -1, 0));
+                                            }
+                                        }
+                                        else
+                                        {
+                                            senderSession.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("LEVEL_LOW"), 0));
+                                            senderSession.SendPacket(StaticPacketHelper.Cancel(2, mapMonster.MapMonsterId));
+                                        }
+                                    }
+                                    else
+                                    {
+                                        senderSession.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("HP_LOW_50"), 0));
+                                        senderSession.SendPacket(StaticPacketHelper.Cancel(2, mapMonster.MapMonsterId));
+                                    }
+                                }
+                                else
+                                {
+                                    senderSession.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("CANT_CATCH_THIS"), 0));
+                                    senderSession.SendPacket(StaticPacketHelper.Cancel(2, mapMonster.MapMonsterId));
+                                }
+                            }
+                        }
+                    }
                     break;
 
                 case BCardType.CardType.SpecialDamageAndExplosions:
