@@ -489,16 +489,25 @@ namespace OpenNos.GameObject
                 isUsingMate = false;
                 mate.IsTeamMember = true;
             }
+            else
+            {
+                //set position to mate because mate will send to miniland
+                mate.MapX = 9;
+                mate.MapY = 11;
+            }
             Session.SendPacket($"ctl 2 {mate.MateTransportId} 3");
             Mates.Add(mate);
             Session.SendPacket(UserInterfaceHelper.Instance.GeneratePClear());
             Session.SendPackets(GenerateScP());
-            if (isUsingMate)
+            Session.SendPackets(GenerateScN());
+            if (!isUsingMate)
             {
                 MapInstance.Broadcast(mate.GenerateIn());
                 Session.SendPacket(GeneratePinit());
                 Session.SendPacket(UserInterfaceHelper.Instance.GeneratePClear());
                 Session.SendPackets(GenerateScP());
+                Session.SendPackets(GenerateScN());
+                Session.SendPackets(GeneratePst());
             }
         }
 

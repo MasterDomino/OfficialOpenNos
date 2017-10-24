@@ -67,6 +67,8 @@ namespace OpenNos.GameObject.Helpers
 
         public static string SkillReset(int castId) => $"sr {castId}";
 
+        public static string SkillResetWithCoolDown(int castId, int coolDown) => $"sr -10 {castId} {coolDown}";
+
         public static string SkillUsed(UserType type, long callerId, byte secondaryType, long targetId, short skillVNum, short cooldown, short attackAnimation, short skillEffect, short x, short y, bool isAlive, int health, int damage, int hitmode, byte skillType) => $"su {(byte)type} {callerId} {secondaryType} {targetId} {skillVNum} {cooldown} {attackAnimation} {skillEffect} {x} {y} {(isAlive ? 1 : 0)} {health} {damage} {hitmode} {skillType}";
 
         #endregion

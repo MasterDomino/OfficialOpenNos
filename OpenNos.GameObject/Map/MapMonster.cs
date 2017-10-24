@@ -260,6 +260,15 @@ namespace OpenNos.GameObject
             OnDeathEvents.ForEach(e => EventHelper.Instance.RunEvent(e, monster: this));
         }
 
+        public void SetDeathStatement()
+        {
+            IsAlive = false;
+            CurrentHp = 0;
+            CurrentMp = 0;
+            Death = DateTime.Now;
+            LastMove = DateTime.Now;
+        }
+
         public void StartLife()
         {
             try
@@ -417,6 +426,7 @@ namespace OpenNos.GameObject
                 if (IsAlive && hitRequest.Session.Character.Hp > 0)
                 {
                     int hitmode = 0;
+                    bool isCaptureSkill = hitRequest.Skill.BCards.Any(s => s.Type.Equals((byte)CardType.Capture));
 
                     // calculate damage
                     bool onyxWings = false;
@@ -441,6 +451,7 @@ namespace OpenNos.GameObject
                         });
                     }
                     hitRequest.Skill.BCards.Where(s => s.Type.Equals((byte)CardType.Buff)).ToList().ForEach(s => s.ApplyBCards(this, hitRequest.Session));
+                    hitRequest.Skill.BCards.Where(s => s.Type.Equals((byte)CardType.Capture)).ToList().ForEach(s => s.ApplyBCards(this, hitRequest.Session));
                     if (battleEntity?.ShellWeaponEffects != null)
                     {
                         foreach (ShellEffectDTO shell in battleEntity.ShellWeaponEffects)
@@ -512,13 +523,13 @@ namespace OpenNos.GameObject
                     {
                         DamageList.Add(hitRequest.Session.Character.CharacterId, damage);
                     }
+                    if(isCaptureSkill)
+                    {
+                        damage = 0;
+                    }
                     if (CurrentHp <= damage)
                     {
-                        IsAlive = false;
-                        CurrentHp = 0;
-                        CurrentMp = 0;
-                        Death = DateTime.Now;
-                        LastMove = DateTime.Now;
+                        SetDeathStatement();
                     }
                     else
                     {
@@ -557,7 +568,10 @@ namespace OpenNos.GameObject
                     switch (hitRequest.TargetHitType)
                     {
                         case TargetHitType.SingleTargetHit:
-                            MapInstance?.Broadcast(StaticPacketHelper.SkillUsed(UserType.Player, hitRequest.Session.Character.CharacterId, 3, MapMonsterId, hitRequest.Skill.SkillVNum, hitRequest.Skill.Cooldown, hitRequest.Skill.AttackAnimation, hitRequest.SkillEffect, hitRequest.Session.Character.PositionX, hitRequest.Session.Character.PositionY, IsAlive, (int)((float)CurrentHp / (float)MaxHp * 100), damage, hitmode, (byte)(hitRequest.Skill.SkillType - 1)));
+                            if (!isCaptureSkill)
+                            {
+                                MapInstance?.Broadcast(StaticPacketHelper.SkillUsed(UserType.Player, hitRequest.Session.Character.CharacterId, 3, MapMonsterId, hitRequest.Skill.SkillVNum, hitRequest.Skill.Cooldown, hitRequest.Skill.AttackAnimation, hitRequest.SkillEffect, hitRequest.Session.Character.PositionX, hitRequest.Session.Character.PositionY, IsAlive, (int)((float)CurrentHp / (float)MaxHp * 100), damage, hitmode, (byte)(hitRequest.Skill.SkillType - 1)));
+                            }
                             break;
 
                         case TargetHitType.SingleTargetHitCombo:
@@ -613,7 +627,7 @@ namespace OpenNos.GameObject
                             break;
                     }
 
-                    if (CurrentHp <= 0)
+                    if (CurrentHp <= 0 && !isCaptureSkill)
                     {
                         // generate the kill bonus
                         hitRequest.Session.Character.GenerateKillBonus(this);
