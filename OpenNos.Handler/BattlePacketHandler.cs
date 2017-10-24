@@ -583,7 +583,7 @@ namespace OpenNos.Handler
                                         Session.SendPacket(Session.Character.GenerateStat());
                                         CharacterSkill characterSkillInfo = Session.Character.Skills.GetAllItems().OrderBy(o => o.SkillVNum).FirstOrDefault(s => s.Skill.UpgradeSkill == ski.Skill.SkillVNum && s.Skill.Effect > 0 && s.Skill.SkillType == 2);
                                         Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.CastOnTarget(UserType.Player, Session.Character.CharacterId, 3, targetId, ski.Skill.CastAnimation, characterSkillInfo?.Skill.CastEffect ?? ski.Skill.CastEffect, ski.Skill.SkillVNum));
-                                        Session.Character.Skills.GetAllItems().Where(s => s.Id != ski.Id).ToList().ForEach(i => i.Hit = 0);
+                                        Session.Character.Skills.Where(s => s.Id != ski.Id).ForEach(i => i.Hit = 0);
 
                                         // Generate scp
                                         if ((DateTime.Now - ski.LastUse).TotalSeconds > 3)
@@ -882,7 +882,7 @@ namespace OpenNos.Handler
                                         CharacterSkill characterSkillInfo = Session.Character.Skills.GetAllItems().OrderBy(o => o.SkillVNum).FirstOrDefault(s => s.Skill.UpgradeSkill == ski.Skill.SkillVNum && s.Skill.Effect > 0 && s.Skill.SkillType == 2);
 
                                         Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.CastOnTarget(UserType.Player, Session.Character.CharacterId, 3, monsterToAttack.MapMonsterId, ski.Skill.CastAnimation, characterSkillInfo?.Skill.CastEffect ?? ski.Skill.CastEffect, ski.Skill.SkillVNum));
-                                        Session.Character.Skills.GetAllItems().Where(s => s.Id != ski.Id).ToList().ForEach(i => i.Hit = 0);
+                                        Session.Character.Skills.Where(s => s.Id != ski.Id).ForEach(i => i.Hit = 0);
 
                                         // Generate scp
                                         if ((DateTime.Now - ski.LastUse).TotalSeconds > 3)
