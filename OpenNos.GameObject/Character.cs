@@ -3049,6 +3049,10 @@ namespace OpenNos.GameObject
             {
                 inventory.CharacterId = CharacterId;
                 Inventory[inventory.Id] = (ItemInstance)inventory;
+                if(Inventory[inventory.Id] is WearableInstance wearable && wearable.EquipmentSerialId == Guid.Empty)
+                {
+                    wearable.EquipmentSerialId = Guid.NewGuid();
+                }
             }
         }
 
