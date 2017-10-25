@@ -190,7 +190,12 @@ namespace OpenNos.GameObject
                             return $"e_info 4 {ItemVNum} {Item.Element} {ElementRate + Item.ElementRate} 0 0 0 0 0"; // last IsNosmall
 
                         default:
-                            return $"e_info 4 {ItemVNum} {Item.LevelMinimum} {Item.MaxCellonLvl} {Item.MaxCellon} {CellonOptions.Count} {Item.Price}{CellonOptions.Select(x => string.Format("{0} {1} {2}", (byte)x.Type, x.Level, x.Value)).Aggregate((current, next) => current + " " + next)}";
+                            string cellon = "";
+                            foreach(CellonOptionDTO option in CellonOptions)
+                            {
+                                cellon += $" {(byte)option.Type} {option.Level} {option.Value}";
+                            }
+                            return $"e_info 4 {ItemVNum} {Item.LevelMinimum} {Item.MaxCellonLvl} {Item.MaxCellon} {CellonOptions.Count} {Item.Price}{cellon}";
                     }
                 case ItemType.Specialist:
                     return $"e_info 8 {ItemVNum}";
