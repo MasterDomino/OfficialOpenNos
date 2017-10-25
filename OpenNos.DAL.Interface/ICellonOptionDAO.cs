@@ -25,7 +25,7 @@ namespace OpenNos.DAL.Interface
 
         DeleteResult DeleteByEquipmentSerialId(Guid id);
 
-        ShellEffectDTO InsertOrUpdate(ShellEffectDTO shelleffect);
+        CellonOptionDTO InsertOrUpdate(CellonOptionDTO shelleffect);
 
         IEnumerable<CellonOptionDTO> GetOptionsByWearableInstanceId(Guid wearableInstanceId);
 

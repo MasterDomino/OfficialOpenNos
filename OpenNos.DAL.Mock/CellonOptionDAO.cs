@@ -20,7 +20,7 @@ using OpenNos.Data.Enums;
 
 namespace OpenNos.DAL.Mock
 {
-    public class CellonOptionDAO : SynchronizableBaseDAO<CellonOptionDTO>, ICellonOptionDAO
+    public class CellonOptionDAO : BaseDAO<CellonOptionDTO>, ICellonOptionDAO
     {
         public DeleteResult DeleteByEquipmentSerialId(Guid id)
         {
@@ -30,7 +30,7 @@ namespace OpenNos.DAL.Mock
 
         public IEnumerable<CellonOptionDTO> GetOptionsByWearableInstanceId(Guid wearableInstanceId) => throw new NotImplementedException();
 
-        public ShellEffectDTO InsertOrUpdate(ShellEffectDTO shelleffect)
+        public CellonOptionDTO InsertOrUpdate(CellonOptionDTO shelleffect)
         {
             throw new NotImplementedException();
         }

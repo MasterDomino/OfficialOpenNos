@@ -59,46 +59,46 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        public ShellEffectDTO InsertOrUpdate(ShellEffectDTO shelleffect)
+        public CellonOptionDTO InsertOrUpdate(CellonOptionDTO cellonOption)
         {
             try
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    long shelleffectId = shelleffect.ShellEffectId;
-                    ShellEffect entity = context.ShellEffect.FirstOrDefault(c => c.ShellEffectId.Equals(shelleffectId));
+                    long cellonOptionId = cellonOption.CellonOptionId;
+                    CellonOption entity = context.CellonOption.FirstOrDefault(c => c.CellonOptionId.Equals(cellonOptionId));
 
                     if (entity == null)
                     {
-                        return insert(shelleffect, context);
+                        return insert(cellonOption, context);
                     }
-                    return update(entity, shelleffect, context);
+                    return update(entity, cellonOption, context);
                 }
             }
             catch (Exception e)
             {
-                Logger.Log.Error(string.Format(Language.Instance.GetMessageFromKey("INSERT_ERROR"), shelleffect, e.Message), e);
-                return shelleffect;
+                Logger.Log.Error(string.Format(Language.Instance.GetMessageFromKey("INSERT_ERROR"), cellonOption, e.Message), e);
+                return cellonOption;
             }
         }
 
-        private ShellEffectDTO insert(ShellEffectDTO shelleffect, OpenNosContext context)
+        private CellonOptionDTO insert(CellonOptionDTO cellonOption, OpenNosContext context)
         {
-            ShellEffect entity = _mapper.Map<ShellEffect>(shelleffect);
-            context.ShellEffect.Add(entity);
+            CellonOption entity = _mapper.Map<CellonOption>(cellonOption);
+            context.CellonOption.Add(entity);
             context.SaveChanges();
-            return _mapper.Map<ShellEffectDTO>(entity);
+            return _mapper.Map<CellonOptionDTO>(entity);
         }
 
-        private ShellEffectDTO update(ShellEffect entity, ShellEffectDTO shelleffect, OpenNosContext context)
+        private CellonOptionDTO update(CellonOption entity, CellonOptionDTO cellonOption, OpenNosContext context)
         {
             if (entity != null)
             {
-                _mapper.Map(shelleffect, entity);
+                _mapper.Map(cellonOption, entity);
                 context.SaveChanges();
             }
 
-            return _mapper.Map<ShellEffectDTO>(entity);
+            return _mapper.Map<CellonOptionDTO>(entity);
         }
 
         #endregion

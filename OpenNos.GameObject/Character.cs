@@ -3364,6 +3364,7 @@ namespace OpenNos.GameObject
                                 if (ServerManager.Instance.GetItem(itemInstance.ItemVNum).Type == InventoryType.Equipment && itemInstance is WearableInstanceDTO wearableInstance)
                                 {
                                     DAOFactory.ShellEffectDAO.DeleteByEquipmentSerialId(wearableInstance.EquipmentSerialId);
+                                    DAOFactory.CellonOptionDAO.DeleteByEquipmentSerialId(wearableInstance.EquipmentSerialId);
                                 }
                                 DAOFactory.IteminstanceDAO.Delete(inventoryToDeleteId);
                             }
@@ -3384,6 +3385,11 @@ namespace OpenNos.GameObject
                                 {
                                     effect.EquipmentSerialId = wearInstance.EquipmentSerialId;
                                     effect.ShellEffectId = DAOFactory.ShellEffectDAO.InsertOrUpdate(effect).ShellEffectId;
+                                }
+                                foreach (CellonOptionDTO effect in wearInstance.CellonOptions)
+                                {
+                                    effect.EquipmentSerialId = wearInstance.EquipmentSerialId;
+                                    effect.CellonOptionId = DAOFactory.CellonOptionDAO.InsertOrUpdate(effect).CellonOptionId;
                                 }
                             }
                         }
