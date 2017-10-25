@@ -8,7 +8,7 @@ namespace OpenNos.DAL.Mock
 {
     public class ShellEffectDAO : BaseDAO<ShellEffectDTO>, IShellEffectDAO
     {
-        public DeleteResult DeleteByItemInstanceId(Guid id) => throw new NotImplementedException();
+        public DeleteResult DeleteByEquipmentSerialId(Guid id) => throw new NotImplementedException();
 
         public ShellEffectDTO InsertOrUpdate(ShellEffectDTO shelleffect) => throw new NotImplementedException();
 

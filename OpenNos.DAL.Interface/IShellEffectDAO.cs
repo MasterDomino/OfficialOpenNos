@@ -7,7 +7,7 @@ namespace OpenNos.DAL.Interface
 {
     public interface IShellEffectDAO : IMappingBaseDAO
     {
-        DeleteResult DeleteByItemInstanceId(Guid id);
+        DeleteResult DeleteByEquipmentSerialId(Guid id);
 
         ShellEffectDTO InsertOrUpdate(ShellEffectDTO shelleffect);
 

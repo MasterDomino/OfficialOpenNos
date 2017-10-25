@@ -32,6 +32,8 @@ namespace OpenNos.GameObject
 
         private List<ShellEffectDTO> _shellEffects;
 
+        private List<CellonOptionDTO> _cellonOptions;
+
         #endregion
 
         #region Instantiation
@@ -129,6 +131,8 @@ namespace OpenNos.GameObject
         public Guid EquipmentSerialId { get; set; }
 
         public List<ShellEffectDTO> ShellEffects => _shellEffects ?? (_shellEffects = DAOFactory.ShellEffectDAO.LoadByEquipmentSerialId(EquipmentSerialId == Guid.Empty ? EquipmentSerialId = Guid.NewGuid() : EquipmentSerialId).ToList());
+
+        public List<CellonOptionDTO> CellonOptions => _cellonOptions ?? (_cellonOptions = DAOFactory.CellonOptionDAO.GetOptionsByWearableInstanceId(EquipmentSerialId == Guid.Empty ? EquipmentSerialId = Guid.NewGuid() : EquipmentSerialId).ToList());
 
         #endregion
 
