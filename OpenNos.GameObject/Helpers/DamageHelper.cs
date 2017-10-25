@@ -109,8 +109,9 @@ namespace OpenNos.GameObject
             defender.DefenseUpgrade += (short)GetDefenderBenefitingBuffs(CardType.Defence, (byte)AdditionalTypes.Defence.DefenceLevelIncreased)[0];
             defender.DefenseUpgrade += (short)GetAttackerBenefitingBuffs(CardType.Defence, (byte)AdditionalTypes.Defence.DefenceLevelDecreased)[0];
 
-            int[] attackerpercentdamage = GetAttackerBenefitingBuffs(CardType.RecoveryAndDamagePercent, 11);
+            int[] attackerpercentdamage = GetDefenderBenefitingBuffs(CardType.RecoveryAndDamagePercent, 11);
             int[] defenderpercentdefense = GetDefenderBenefitingBuffs(CardType.RecoveryAndDamagePercent, 2);
+
             if (attackerpercentdamage[3] != 0)
             {
                 return defender.HPMax / 100 * attackerpercentdamage[2];
