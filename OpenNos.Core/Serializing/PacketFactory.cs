@@ -42,9 +42,7 @@ namespace OpenNos.Core
         /// </summary>
         /// <param name="packetContent">The content to deseralize</param>
         /// <param name="packetType">The type of the packet to deserialize to</param>
-        /// <param name="includesKeepAliveIdentity">
-        /// Include the keep alive identity or exclude it
-        /// </param>
+        /// <param name="includesKeepAliveIdentity">Include the keep alive identity or exclude it</param>
         /// <returns>The deserialized packet.</returns>
         public static PacketDefinition Deserialize(string packetContent, Type packetType, bool includesKeepAliveIdentity = false)
         {
@@ -68,9 +66,7 @@ namespace OpenNos.Core
         /// </summary>
         /// <typeparam name="TPacket"></typeparam>
         /// <param name="packetContent">The content to deseralize</param>
-        /// <param name="includesKeepAliveIdentity">
-        /// Include the keep alive identity or exclude it
-        /// </param>
+        /// <param name="includesKeepAliveIdentity">Include the keep alive identity or exclude it</param>
         /// <returns>The deserialized packet.</returns>
         public static TPacket Deserialize<TPacket>(string packetContent, bool includesKeepAliveIdentity = false)
             where TPacket : PacketDefinition
@@ -91,8 +87,7 @@ namespace OpenNos.Core
         }
 
         /// <summary>
-        /// Initializes the PacketFactory and generates the serialization informations based on the
-        /// given BaseType.
+        /// Initializes the PacketFactory and generates the serialization informations based on the given BaseType.
         /// </summary>
         /// <typeparam name="TBaseType">The BaseType to generate serialization informations</typeparam>
         public static void Initialize<TBaseType>() where TBaseType : PacketDefinition
@@ -222,10 +217,13 @@ namespace OpenNos.Core
             return newSubpacket;
         }
 
-        /// <summary> Converts a Sublist of Packets to List of Subpackets </summary>
+        /// <summary>
+        /// Converts a Sublist of Packets to List of Subpackets
+        /// </summary>
         /// <param name="currentValue">The value as String</param>
         /// <param name="packetBasePropertyType">Type of the Property to convert to</param>
-        /// <param name="shouldRemoveSeparator"></param> <param name="packetMatchCollections"></param>
+        /// <param name="shouldRemoveSeparator"></param> 
+        /// <param name="packetMatchCollections"></param>
         /// <param name="currentIndex"></param> 
         /// <param name="includesKeepAliveIdentity"></param> 
         /// <returns>List of Deserialized subpackets</returns>
@@ -349,8 +347,7 @@ namespace OpenNos.Core
             return Convert.ChangeType(currentValue, packetPropertyType); // cast to specified type
         }
 
-        private static void generateSerializationInformations<TPacketDefinition>()
-                            where TPacketDefinition : PacketDefinition
+        private static void generateSerializationInformations<TPacketDefinition>() where TPacketDefinition : PacketDefinition
         {
             _packetSerializationInformations = new Dictionary<Tuple<Type, string>, Dictionary<PacketIndexAttribute, PropertyInfo>>();
 

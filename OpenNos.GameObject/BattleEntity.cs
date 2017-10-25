@@ -317,11 +317,13 @@ namespace OpenNos.GameObject
         public int MeleeDefenseDodge { get; set; }
 
         public int RangeDefense { get; set; }
+
         public int ArmorRangeDefense { get; set; }
 
         public int RangeDefenseDodge { get; set; }
 
         public int MagicalDefense { get; set; }
+
         public int ArmorMagicalDefense { get; set; }
 
         public int FireResistance { get; set; }

@@ -21,14 +21,16 @@ using System.Linq;
 
 namespace OpenNos.GameObject
 {
-    public class NetworkManager<EncryptorT> : SessionManager
-        where EncryptorT : CryptographyBase
+    public class NetworkManager<EncryptorT> : SessionManager where EncryptorT : CryptographyBase
     {
         #region Members
 
         private IDictionary<string, DateTime> _connectionLog;
+
         private readonly EncryptorT _encryptor;
+
         private readonly CryptographyBase _fallbackEncryptor;
+
         private readonly IScsServer _server;
 
         #endregion
@@ -47,8 +49,8 @@ namespace OpenNos.GameObject
             _server = ScsServerFactory.CreateServer(new ScsTcpEndPoint(ipAddress, port));
 
             // Register events of the server to be informed about clients
-            _server.ClientConnected += OnServerClientConnected;
-            _server.ClientDisconnected += OnServerClientDisconnected;
+            _server.ClientConnected += onServerClientConnected;
+            _server.ClientDisconnected += onServerClientDisconnected;
             _server.WireProtocolFactory = new WireProtocolFactory<EncryptorT>();
 
             // Start the server
@@ -70,13 +72,13 @@ namespace OpenNos.GameObject
         public override void StopServer()
         {
             _server.Stop();
-            _server.ClientConnected -= OnServerClientDisconnected;
-            _server.ClientDisconnected -= OnServerClientConnected;
+            _server.ClientConnected -= onServerClientDisconnected;
+            _server.ClientDisconnected -= onServerClientConnected;
         }
 
         protected override ClientSession IntializeNewSession(INetworkClient client)
         {
-            if (!CheckGeneralLog(client))
+            if (!checkGeneralLog(client))
             {
                 Logger.Log.WarnFormat(Language.Instance.GetMessageFromKey("FORCED_DISCONNECT"), client.ClientId);
                 client.Initialize(_fallbackEncryptor);
@@ -91,7 +93,7 @@ namespace OpenNos.GameObject
             return session;
         }
 
-        private bool CheckGeneralLog(INetworkClient client)
+        private bool checkGeneralLog(INetworkClient client)
         {
             if (!client.IpAddress.Contains("127.0.0.1"))
             {
@@ -114,9 +116,9 @@ namespace OpenNos.GameObject
             return true;
         }
 
-        private void OnServerClientConnected(object sender, ServerClientEventArgs e) => AddSession(e.Client as NetworkClient);
+        private void onServerClientConnected(object sender, ServerClientEventArgs e) => AddSession(e.Client as NetworkClient);
 
-        private void OnServerClientDisconnected(object sender, ServerClientEventArgs e) => RemoveSession(e.Client as NetworkClient);
+        private void onServerClientDisconnected(object sender, ServerClientEventArgs e) => RemoveSession(e.Client as NetworkClient);
 
         #endregion
     }

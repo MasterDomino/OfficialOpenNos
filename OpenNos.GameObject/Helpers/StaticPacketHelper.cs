@@ -1,4 +1,18 @@
-﻿using OpenNos.Domain;
+﻿/*
+ * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+using OpenNos.Domain;
 using OpenNos.GameObject.Packets.ServerPackets;
 
 namespace OpenNos.GameObject.Helpers
@@ -52,6 +66,8 @@ namespace OpenNos.GameObject.Helpers
         public static string Out(UserType type, long callerId) => $"out {(byte)type} {callerId}";
 
         public static string SkillReset(int castId) => $"sr {castId}";
+
+        public static string SkillResetWithCoolDown(int castId, int coolDown) => $"sr -10 {castId} {coolDown}";
 
         public static string SkillUsed(UserType type, long callerId, byte secondaryType, long targetId, short skillVNum, short cooldown, short attackAnimation, short skillEffect, short x, short y, bool isAlive, int health, int damage, int hitmode, byte skillType) => $"su {(byte)type} {callerId} {secondaryType} {targetId} {skillVNum} {cooldown} {attackAnimation} {skillEffect} {x} {y} {(isAlive ? 1 : 0)} {health} {damage} {hitmode} {skillType}";
 

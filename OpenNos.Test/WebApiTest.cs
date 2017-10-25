@@ -18,11 +18,11 @@ namespace OpenNos.Test
             foreach (int x in Enumerable.Range(1, 50000))
             {
                 await Task.Factory.StartNew(() =>
-                 {
-                     CommunicationServiceClient.Instance.RegisterAccountLogin(x, x, "127.0.0.1");
-                     bool hasRegisteredAccountLogin = CommunicationServiceClient.Instance.IsLoginPermitted(x, x);
-                     Assert.IsTrue(hasRegisteredAccountLogin);
-                 }).ConfigureAwait(false);
+                {
+                    CommunicationServiceClient.Instance.RegisterAccountLogin(x, x, "127.0.0.1");
+                    bool hasRegisteredAccountLogin = CommunicationServiceClient.Instance.IsLoginPermitted(x, x);
+                    Assert.IsTrue(hasRegisteredAccountLogin);
+                }).ConfigureAwait(false);
             }
         }
 

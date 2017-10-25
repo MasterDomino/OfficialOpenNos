@@ -25,6 +25,7 @@ namespace OpenNos.DAL
         #region Members
 
         private static readonly bool _useMock;
+
         private static IAccountDAO _accountDAO;
         private static IBazaarItemDAO _bazaarItemDAO;
         private static ICardDAO _cardDAO;

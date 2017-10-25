@@ -12,13 +12,13 @@
  * GNU General Public License for more details.
  */
 
-using OpenNos.SCS.Communication.Scs.Communication.EndPoints.Tcp;
-using OpenNos.SCS.Communication.ScsServices.Service;
 using OpenNos.Core;
 using OpenNos.DAL;
 using OpenNos.Domain;
 using OpenNos.Master.Library.Data;
 using OpenNos.Master.Library.Interface;
+using OpenNos.SCS.Communication.Scs.Communication.EndPoints.Tcp;
+using OpenNos.SCS.Communication.ScsServices.Service;
 using System;
 using System.Collections.Generic;
 using System.Configuration;

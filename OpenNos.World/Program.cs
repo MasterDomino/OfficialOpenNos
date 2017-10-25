@@ -39,8 +39,11 @@ namespace OpenNos.World
         #region Members
 
         private static readonly ManualResetEvent _run = new ManualResetEvent(true);
+
         private static EventHandler _exitHandler;
+
         private static bool _isDebug;
+
         private static bool _ignoreTelemetry;
 
         #endregion
@@ -70,6 +73,7 @@ namespace OpenNos.World
         {
 #if DEBUG
             _isDebug = true;
+            Thread.Sleep(1000);
 #endif
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
             Console.Title = $"OpenNos World Server{(_isDebug ? " Development Environment" : string.Empty)}";

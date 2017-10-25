@@ -30,12 +30,12 @@ namespace OpenNos.Core
         #region Members
 
         /// <summary>
-        /// private collection to store items.
+        /// private collection to store _items.
         /// </summary>
         private readonly SortedList<TK, TV> _items;
 
         /// <summary>
-        /// Used to synchronize access to Items list.
+        /// Used to synchronize access to _items list.
         /// </summary>
         private readonly ReaderWriterLockSlim _lock;
 
@@ -65,15 +65,19 @@ namespace OpenNos.Core
         {
             get
             {
-                _lock.EnterReadLock();
-                try
+                if (!_disposed)
                 {
-                    return _items.Count;
+                    _lock.EnterReadLock();
+                    try
+                    {
+                        return _items.Count;
+                    }
+                    finally
+                    {
+                        _lock.ExitReadLock();
+                    }
                 }
-                finally
-                {
-                    _lock.ExitReadLock();
-                }
+                return 0;
             }
         }
 

@@ -528,7 +528,6 @@ namespace OpenNos.GameObject
                 {
                     ServerManager.Instance.ChangeMap(session.Character.CharacterId, session.Character.MapId, session.Character.MapX, session.Character.MapY);
                 }
-                GC.SuppressFinalize(this);
             }
         }
 

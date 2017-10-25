@@ -24,12 +24,12 @@ namespace OpenNos.Core
         #region Members
 
         /// <summary>
-        /// protected collection to store items.
+        /// private collection to store _items.
         /// </summary>
-        private readonly List<T> _list;
+        private readonly List<T> _items;
 
         /// <summary>
-        /// Used to synchronize access to _list list.
+        /// Used to synchronize access to _items list.
         /// </summary>
         private readonly ReaderWriterLockSlim _lock;
 
@@ -44,7 +44,7 @@ namespace OpenNos.Core
         /// </summary>
         public ThreadSafeGenericList()
         {
-            _list = new List<T>();
+            _items = new List<T>();
             _lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
         }
 
@@ -64,7 +64,7 @@ namespace OpenNos.Core
                     _lock.EnterReadLock();
                     try
                     {
-                        return _list.Count;
+                        return _items.Count;
                     }
                     finally
                     {
@@ -90,7 +90,7 @@ namespace OpenNos.Core
                 _lock.EnterWriteLock();
                 try
                 {
-                    _list.Add(value);
+                    _items.Add(value);
                 }
                 finally
                 {
@@ -110,7 +110,7 @@ namespace OpenNos.Core
                 _lock.EnterWriteLock();
                 try
                 {
-                    _list.AddRange(value);
+                    _items.AddRange(value);
                 }
                 finally
                 {
@@ -131,7 +131,7 @@ namespace OpenNos.Core
                 _lock.EnterReadLock();
                 try
                 {
-                    return _list.All(predicate);
+                    return _items.All(predicate);
                 }
                 finally
                 {
@@ -153,7 +153,7 @@ namespace OpenNos.Core
                 _lock.EnterReadLock();
                 try
                 {
-                    return _list.Any(predicate);
+                    return _items.Any(predicate);
                 }
                 finally
                 {
@@ -173,7 +173,7 @@ namespace OpenNos.Core
                 _lock.EnterWriteLock();
                 try
                 {
-                    _list.Clear();
+                    _items.Clear();
                 }
                 finally
                 {
@@ -194,7 +194,7 @@ namespace OpenNos.Core
                 _lock.EnterReadLock();
                 try
                 {
-                    _list.CopyTo(grpmembers);
+                    _items.CopyTo(grpmembers);
                 }
                 finally
                 {
@@ -215,7 +215,7 @@ namespace OpenNos.Core
                 _lock.EnterReadLock();
                 try
                 {
-                    return _list.Count(predicate);
+                    return _items.Count(predicate);
                 }
                 finally
                 {
@@ -250,7 +250,7 @@ namespace OpenNos.Core
                 _lock.EnterReadLock();
                 try
                 {
-                    return _list[v];
+                    return _items[v];
                 }
                 finally
                 {
@@ -273,7 +273,7 @@ namespace OpenNos.Core
                 _lock.EnterReadLock();
                 try
                 {
-                    return _list.Find(predicate);
+                    return _items.Find(predicate);
                 }
                 finally
                 {
@@ -294,7 +294,7 @@ namespace OpenNos.Core
                 _lock.EnterReadLock();
                 try
                 {
-                    _list.ForEach(action);
+                    _items.ForEach(action);
                 }
                 finally
                 {
@@ -314,7 +314,7 @@ namespace OpenNos.Core
                 _lock.EnterReadLock();
                 try
                 {
-                    return new List<T>(_list);
+                    return new List<T>(_items);
                 }
                 finally
                 {
@@ -337,7 +337,7 @@ namespace OpenNos.Core
                 _lock.EnterReadLock();
                 try
                 {
-                    return _list.LastOrDefault(predicate);
+                    return _items.LastOrDefault(predicate);
                 }
                 finally
                 {
@@ -358,7 +358,7 @@ namespace OpenNos.Core
                 _lock.EnterWriteLock();
                 try
                 {
-                    _list.Remove(match);
+                    _items.Remove(match);
                 }
                 finally
                 {
@@ -378,7 +378,7 @@ namespace OpenNos.Core
                 _lock.EnterWriteLock();
                 try
                 {
-                    _list.RemoveAll(match);
+                    _items.RemoveAll(match);
                 }
                 finally
                 {
@@ -400,7 +400,7 @@ namespace OpenNos.Core
                 _lock.EnterReadLock();
                 try
                 {
-                    return _list.Single(predicate);
+                    return _items.Single(predicate);
                 }
                 finally
                 {
@@ -424,7 +424,7 @@ namespace OpenNos.Core
                 _lock.EnterReadLock();
                 try
                 {
-                    return _list.SingleOrDefault(predicate);
+                    return _items.SingleOrDefault(predicate);
                 }
                 finally
                 {
@@ -446,7 +446,7 @@ namespace OpenNos.Core
                 _lock.EnterReadLock();
                 try
                 {
-                    return _list.Sum(selector);
+                    return _items.Sum(selector);
                 }
                 finally
                 {
@@ -468,7 +468,7 @@ namespace OpenNos.Core
                 _lock.EnterReadLock();
                 try
                 {
-                    return _list.Sum(selector);
+                    return _items.Sum(selector);
                 }
                 finally
                 {
@@ -490,7 +490,7 @@ namespace OpenNos.Core
                 _lock.EnterReadLock();
                 try
                 {
-                    return _list.Sum(selector);
+                    return _items.Sum(selector);
                 }
                 finally
                 {
@@ -512,7 +512,7 @@ namespace OpenNos.Core
                 _lock.EnterReadLock();
                 try
                 {
-                    return _list.Sum(selector);
+                    return _items.Sum(selector);
                 }
                 finally
                 {
@@ -534,7 +534,7 @@ namespace OpenNos.Core
                 _lock.EnterReadLock();
                 try
                 {
-                    return _list.Sum(selector);
+                    return _items.Sum(selector);
                 }
                 finally
                 {
@@ -556,7 +556,7 @@ namespace OpenNos.Core
                 _lock.EnterReadLock();
                 try
                 {
-                    return _list.Sum(selector);
+                    return _items.Sum(selector);
                 }
                 finally
                 {
@@ -578,7 +578,7 @@ namespace OpenNos.Core
                 _lock.EnterReadLock();
                 try
                 {
-                    return _list.Where(predicate).ToList();
+                    return _items.Where(predicate).ToList();
                 }
                 finally
                 {

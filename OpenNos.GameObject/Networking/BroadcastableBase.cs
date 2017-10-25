@@ -69,7 +69,7 @@ namespace OpenNos.GameObject
         {
             try
             {
-                SpreadBroadcastpacket(packet);
+                spreadBroadcastpacket(packet);
             }
             catch (Exception ex)
             {
@@ -81,7 +81,7 @@ namespace OpenNos.GameObject
         {
             try
             {
-                SpreadBroadcastpacket(new BroadcastPacket(client, content, receiver, characterName, characterId));
+                spreadBroadcastpacket(new BroadcastPacket(client, content, receiver, characterName, characterId));
             }
             catch (Exception ex)
             {
@@ -143,7 +143,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        private void SpreadBroadcastpacket(BroadcastPacket sentPacket)
+        private void spreadBroadcastpacket(BroadcastPacket sentPacket)
         {
             if (Sessions != null && !string.IsNullOrEmpty(sentPacket?.Packet))
             {

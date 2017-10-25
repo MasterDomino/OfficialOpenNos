@@ -12,12 +12,9 @@
  * GNU General Public License for more details.
  */
 
-using OpenNos.DAL;
 using OpenNos.Data;
 using OpenNos.Domain;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace OpenNos.GameObject
 {
@@ -26,7 +23,8 @@ namespace OpenNos.GameObject
         #region Members
 
         private readonly Random _random;
-        private Item item;
+
+        private Item _item;
 
         #endregion
 
@@ -48,7 +46,7 @@ namespace OpenNos.GameObject
 
         public bool IsBound => BoundCharacterId.HasValue;
 
-        public Item Item => item ?? (item = ServerManager.Instance.GetItem(ItemVNum));
+        public Item Item => _item ?? (_item = ServerManager.Instance.GetItem(ItemVNum));
 
         #endregion
 

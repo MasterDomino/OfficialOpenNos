@@ -83,7 +83,7 @@ namespace OpenNos.Login
                     // initialize DB
                     if (!DataAccessHelper.Initialize())
                     {
-                        Console.ReadLine();
+                        Console.ReadKey();
                         return;
                     }
 

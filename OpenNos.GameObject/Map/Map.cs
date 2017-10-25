@@ -37,7 +37,7 @@ namespace OpenNos.GameObject
             _random = new Random();
             MapId = mapId;
             Data = data;
-            LoadZone();
+            loadZone();
             MapTypes = new List<MapTypeDTO>();
             foreach (MapTypeMapDTO maptypemap in DAOFactory.MapTypeMapDAO.LoadByMapId(mapId).ToList())
             {
@@ -165,7 +165,7 @@ namespace OpenNos.GameObject
             }
             foreach (MapCell cell in cells.OrderBy(s => _random.Next(int.MaxValue)))
             {
-                if (!IsBlockedZone(firstX, firstY, cell.X, cell.Y))
+                if (!isBlockedZone(firstX, firstY, cell.X, cell.Y))
                 {
                     firstX = cell.X;
                     firstY = cell.Y;
@@ -175,7 +175,7 @@ namespace OpenNos.GameObject
             return false;
         }
 
-        private bool IsBlockedZone(int firstX, int firstY, int mapX, int mapY)
+        private bool isBlockedZone(int firstX, int firstY, int mapX, int mapY)
         {
             for (int i = 1; i <= Math.Abs(mapX - firstX); i++)
             {
@@ -184,7 +184,6 @@ namespace OpenNos.GameObject
                     return true;
                 }
             }
-
             for (int i = 1; i <= Math.Abs(mapY - firstY); i++)
             {
                 if (IsBlockedZone(firstX, firstY + (Math.Sign(mapY - firstY) * i)))
@@ -195,7 +194,7 @@ namespace OpenNos.GameObject
             return false;
         }
 
-        private void LoadZone()
+        private void loadZone()
         {
             // TODO: Optimize
             using (Stream stream = new MemoryStream(Data))

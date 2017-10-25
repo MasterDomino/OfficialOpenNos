@@ -96,7 +96,6 @@ namespace OpenNos.PathFinder
         }
 
         public static Node[,] LoadBrushFire(GridPos user, GridPos[,] mapGrid, short MaxDistance = 22)
-
         {
             Node[,] grid = new Node[mapGrid.GetLength(0), mapGrid.GetLength(1)];
 

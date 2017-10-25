@@ -23,13 +23,13 @@ namespace OpenNos.GameObject.Helpers
     {
         #region Members
 
-        private static UserInterfaceHelper instance;
+        private static UserInterfaceHelper _instance;
 
         #endregion
 
         #region Properties
 
-        public static UserInterfaceHelper Instance => instance ?? (instance = new UserInterfaceHelper());
+        public static UserInterfaceHelper Instance => _instance ?? (_instance = new UserInterfaceHelper());
 
         #endregion
 

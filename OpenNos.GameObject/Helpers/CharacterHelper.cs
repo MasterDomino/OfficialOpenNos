@@ -22,31 +22,52 @@ namespace OpenNos.GameObject.Helpers
         #region Members
 
         private static int[,] _criticalDist;
+
         private static int[,] _criticalDistRate;
+
         private static int[,] _criticalHit;
+
         private static int[,] _criticalHitRate;
+
         private static int[,] _distDef;
+
         private static int[,] _distDodge;
+
         private static int[,] _distRate;
+
         private static double[] _firstJobXpData;
+
         private static double[] _heroXpData;
+
         private static int[,] _hitDef;
+
         private static int[,] _hitDodge;
+
         private static int[,] _hitRate;
+
         private static int[,] _hp;
+
         private static int[] _hpHealth;
+
         private static int[] _hpHealthStand;
+
         private static int[,] _magicalDef;
+
         private static int[,] _maxDist;
+
         private static int[,] _maxHit;
+
         private static int[,] _minDist;
 
         // difference between class
         private static int[,] _minHit;
 
         private static int[,] _mp;
+
         private static int[] _mpHealth;
+
         private static int[] _mpHealthStand;
+
         private static double[] _secondjobxpData;
 
         // STAT DATA
@@ -63,18 +84,18 @@ namespace OpenNos.GameObject.Helpers
 
         private CharacterHelper()
         {
-            LoadSpeedData();
-            LoadJobXPData();
-            LoadSPXPData();
-            LoadHeroXpData();
-            LoadXPData();
-            LoadHPData();
-            LoadMPData();
-            LoadStats();
-            LoadHPHealth();
-            LoadMPHealth();
-            LoadHPHealthStand();
-            LoadMPHealthStand();
+            loadSpeedData();
+            loadJobXPData();
+            loadSPXPData();
+            loadHeroXpData();
+            loadXPData();
+            loadHPData();
+            loadMPData();
+            loadStats();
+            loadHPHealth();
+            loadMPHealth();
+            loadHPHealthStand();
+            loadMPHealthStand();
         }
 
         #endregion
@@ -721,7 +742,7 @@ namespace OpenNos.GameObject.Helpers
 
         internal static int HitRate(ClassType @class, byte level) => _hitRate[(byte)@class, level];
 
-        private static void LoadHeroXpData()
+        private static void loadHeroXpData()
         {
             // Load SpData
             _heroXpData = new double[256];
@@ -732,7 +753,7 @@ namespace OpenNos.GameObject.Helpers
             }
         }
 
-        private static void LoadHPData()
+        private static void loadHPData()
         {
             _hp = new int[4, 256];
 
@@ -792,7 +813,7 @@ namespace OpenNos.GameObject.Helpers
             }
         }
 
-        private static void LoadHPHealth()
+        private static void loadHPHealth()
         {
             _hpHealth = new int[4];
             _hpHealth[(int)ClassType.Archer] = 60;
@@ -801,7 +822,7 @@ namespace OpenNos.GameObject.Helpers
             _hpHealth[(int)ClassType.Magician] = 30;
         }
 
-        private static void LoadHPHealthStand()
+        private static void loadHPHealthStand()
         {
             _hpHealthStand = new int[4];
             _hpHealthStand[(int)ClassType.Archer] = 32;
@@ -810,7 +831,7 @@ namespace OpenNos.GameObject.Helpers
             _hpHealthStand[(int)ClassType.Magician] = 20;
         }
 
-        private static void LoadJobXPData()
+        private static void loadJobXPData()
         {
             // Load JobData
             _firstJobXpData = new double[21];
@@ -837,7 +858,7 @@ namespace OpenNos.GameObject.Helpers
             }
         }
 
-        private static void LoadMPData()
+        private static void loadMPData()
         {
             _mp = new int[4, 257];
 
@@ -873,7 +894,7 @@ namespace OpenNos.GameObject.Helpers
             }
         }
 
-        private static void LoadMPHealth()
+        private static void loadMPHealth()
         {
             _mpHealth = new int[4];
             _mpHealth[(int)ClassType.Adventurer] = 10;
@@ -882,7 +903,7 @@ namespace OpenNos.GameObject.Helpers
             _mpHealth[(int)ClassType.Magician] = 80;
         }
 
-        private static void LoadMPHealthStand()
+        private static void loadMPHealthStand()
         {
             _mpHealthStand = new int[4];
             _mpHealthStand[(int)ClassType.Adventurer] = 5;
@@ -891,7 +912,7 @@ namespace OpenNos.GameObject.Helpers
             _mpHealthStand[(int)ClassType.Magician] = 40;
         }
 
-        private static void LoadSpeedData()
+        private static void loadSpeedData()
         {
             _speedData = new byte[4];
             _speedData[(int)ClassType.Adventurer] = 11;
@@ -900,7 +921,7 @@ namespace OpenNos.GameObject.Helpers
             _speedData[(int)ClassType.Magician] = 10;
         }
 
-        private static void LoadSPXPData()
+        private static void loadSPXPData()
         {
             // Load SpData
             _spxpData = new double[256];
@@ -917,7 +938,7 @@ namespace OpenNos.GameObject.Helpers
         }
 
         // TODO: Change or Verify
-        private static void LoadStats()
+        private static void loadStats()
         {
             _minHit = new int[4, 256];
             _maxHit = new int[4, 256];
@@ -1014,7 +1035,7 @@ namespace OpenNos.GameObject.Helpers
             }
         }
 
-        private static void LoadXPData()
+        private static void loadXPData()
         {
             // Load XpData
             _xpData = new double[256];
