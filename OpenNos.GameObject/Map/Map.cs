@@ -129,7 +129,7 @@ namespace OpenNos.GameObject
                     }
                 }
             }
-            return cells.OrderBy(s => _random.Next(int.MaxValue)).FirstOrDefault();
+            return cells.OrderBy(s => ServerManager.Instance.RandomNumber(0, int.MaxValue)).FirstOrDefault();
         }
 
         public bool IsBlockedZone(int x, int y)
