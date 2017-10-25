@@ -147,22 +147,7 @@ namespace OpenNos.GameObject
                 ShellArmorEffects = new List<ShellEffectDTO>(armor.ShellEffects);
             }
 
-            WearableInstance ring = character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.Ring, InventoryType.Wear);
-            WearableInstance bracelet = character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.Bracelet, InventoryType.Wear);
-            WearableInstance necklace = character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.Necklace, InventoryType.Wear);
-            CellonOptions = new List<CellonOptionDTO>();
-            if (ring != null)
-            {
-                CellonOptions.AddRange(ring.CellonOptions);
-            }
-            if (bracelet != null)
-            {
-                CellonOptions.AddRange(bracelet.CellonOptions);
-            }
-            if (necklace != null)
-            {
-                CellonOptions.AddRange(necklace.CellonOptions);
-            }
+            CellonOptions = Session.Character.CellonOptions.GetAllItems();
 
 
             MeleeDefense = character.Defence;

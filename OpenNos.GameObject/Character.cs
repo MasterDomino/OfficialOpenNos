@@ -65,6 +65,7 @@ namespace OpenNos.GameObject
             MeditationDictionary = new Dictionary<short, DateTime>();
             Buff = new ThreadSafeSortedList<short, Buff>();
             BuffObservables = new ThreadSafeSortedList<short, IDisposable>();
+            CellonOptions = new ThreadSafeGenericList<CellonOptionDTO>();
         }
 
         #endregion
@@ -80,6 +81,8 @@ namespace OpenNos.GameObject
         public ThreadSafeSortedList<short, IDisposable> BuffObservables { get; internal set; }
 
         public bool CanFight => !IsSitting && ExchangeInfo == null;
+
+        public ThreadSafeGenericList<CellonOptionDTO> CellonOptions { get; set; }
 
         public List<CharacterRelationDTO> CharacterRelations
         {
@@ -688,6 +691,23 @@ namespace OpenNos.GameObject
                     if (Session.CurrentMapInstance?.MapInstanceType == MapInstanceType.RaidInstance)
                     {
                         Session.SendPacket(GenerateRaid(3, false));
+                    }
+
+                    WearableInstance ring = Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.Ring, InventoryType.Wear);
+                    WearableInstance bracelet = Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.Bracelet, InventoryType.Wear);
+                    WearableInstance necklace = Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.Necklace, InventoryType.Wear);
+                    CellonOptions.Clear();
+                    if (ring != null)
+                    {
+                        CellonOptions.AddRange(ring.CellonOptions);
+                    }
+                    if (bracelet != null)
+                    {
+                        CellonOptions.AddRange(bracelet.CellonOptions);
+                    }
+                    if (necklace != null)
+                    {
+                        CellonOptions.AddRange(necklace.CellonOptions);
                     }
 
                     WearableInstance amulet = Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.Amulet, InventoryType.Wear);
@@ -2903,6 +2923,7 @@ namespace OpenNos.GameObject
                     hp = specialist.HP + (specialist.SpHP * 100);
                 }
             }
+            hp += CellonOptions.Where(s => s.Type == CellonOptionType.HPMax).Sum(s => s.Value);
             multiplicator += GetBuff(CardType.BearSpirit, (byte)AdditionalTypes.BearSpirit.IncreaseMaximumHP)[0] / 100D;
             multiplicator += GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.IncreasesMaximumHP)[0] / 100D;
 
@@ -3153,6 +3174,8 @@ namespace OpenNos.GameObject
                     mp = specialist.MP + (specialist.SpHP * 100);
                 }
             }
+            mp += CellonOptions.Where(s => s.Type == CellonOptionType.MPMax).Sum(s => s.Value);
+
             multiplicator += GetBuff(CardType.BearSpirit, (byte)AdditionalTypes.BearSpirit.IncreaseMaximumMP)[0] / 100D;
             multiplicator += GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.IncreasesMaximumMP)[0] / 100D;
 
