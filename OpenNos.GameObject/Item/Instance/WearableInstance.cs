@@ -252,43 +252,45 @@ namespace OpenNos.GameObject
 
         public void OptionItem(ClientSession session, short cellonVNum)
         {
-            byte dataIndex = 0;
-            switch (cellonVNum)
+            if (session.Character.Inventory.CountItem(cellonVNum) > 0)
             {
-                case 1017:
-                    dataIndex = 0;
-                    break;
-                case 1018:
-                    dataIndex = 1;
-                    break;
-                case 1019:
-                    dataIndex = 2;
-                    break;
-                case 1020:
-                    dataIndex = 3;
-                    break;
-                case 1021:
-                    dataIndex = 4;
-                    break;
-                case 1022:
-                    dataIndex = 5;
-                    break;
-                case 1023:
-                    dataIndex = 6;
-                    break;
-                case 1024:
-                    dataIndex = 7;
-                    break;
-                case 1025:
-                    dataIndex = 8;
-                    break;
-                case 1026:
-                    return; //no data known, not implemented in the client at all right now
-                    //dataIndex = 9;
-                    //break;
-            }
+                byte dataIndex = 0;
+                switch (cellonVNum)
+                {
+                    case 1017:
+                        dataIndex = 0;
+                        break;
+                    case 1018:
+                        dataIndex = 1;
+                        break;
+                    case 1019:
+                        dataIndex = 2;
+                        break;
+                    case 1020:
+                        dataIndex = 3;
+                        break;
+                    case 1021:
+                        dataIndex = 4;
+                        break;
+                    case 1022:
+                        dataIndex = 5;
+                        break;
+                    case 1023:
+                        dataIndex = 6;
+                        break;
+                    case 1024:
+                        dataIndex = 7;
+                        break;
+                    case 1025:
+                        dataIndex = 8;
+                        break;
+                    case 1026:
+                        return; //no data known, not implemented in the client at all right now
+                                //dataIndex = 9;
+                                //break;
+                }
 
-            short[][] minimumData = new short[][] {
+                short[][] minimumData = new short[][] {
                 new short[] { 30, 50, 5, 8, 0, 0 },                 //lv1
                 new short[] { 120, 150, 14, 16, 0, 0 },             //lv2
                 new short[] { 220, 280, 22, 28, 0, 0 },             //lv3
@@ -300,7 +302,7 @@ namespace OpenNos.GameObject
                 new short[] { 1100, 1100, 110, 110, 14, 22 },       //lv9
                 new short[] { 0, 0, 0, 0, 0, 0 }                    //lv10 (NOT EXISTING!)
             };
-            short[][] maximumData = new short[][] {
+                short[][] maximumData = new short[][] {
                 new short[] {100,150,10,15,0,0  },          //lv1
                 new short[] {200,250,20,25,0,0  },          //lv1
                 new short[] {300,330,28,35,0,0  },          //lv1
@@ -313,52 +315,54 @@ namespace OpenNos.GameObject
                 new short[] { 0, 0, 0, 0, 0, 0 }            //lv10 (NOT EXISTING!)
             };
 
-            short[] generateOption()
-            {
-                
-                byte option = 0;
-                if(dataIndex < 5)
+                short[] generateOption()
                 {
-                    option = (byte)ServerManager.Instance.RandomNumber(0, 4);
+
+                    byte option = 0;
+                    if (dataIndex < 5)
+                    {
+                        option = (byte)ServerManager.Instance.RandomNumber(0, 4);
+                    }
+                    else
+                    {
+                        option = (byte)ServerManager.Instance.RandomNumber(0, 6);
+                    }
+
+                    if (CellonOptions.Any(s => s.Type == (CellonOptionType)option))
+                    {
+                        return new short[] { -1, -1 };
+                    }
+
+                    return new short[] { option, (short)ServerManager.Instance.RandomNumber(minimumData[dataIndex][option], maximumData[dataIndex][option] + 1) };
+                }
+
+
+                short[] value = generateOption();
+                Logger.LogEvent("OPTION", session.GenerateIdentity(), $"[OptionItem]Serial: {EquipmentSerialId} Type: {value[0]} Value: {value[1]}");
+                if (value[0] != -1)
+                {
+                    CellonOptionDTO cellonOptionDTO = new CellonOptionDTO()
+                    {
+                        EquipmentSerialId = EquipmentSerialId,
+                        Level = (byte)(dataIndex + 1),
+                        Type = (CellonOptionType)value[0],
+                        Value = value[1]
+                    };
+
+                    CellonOptions.Add(cellonOptionDTO);
+
+                    session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("OPTION_SUCCESS"), Rare), 12));
+                    session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("OPTION_SUCCESS"), Rare), 0));
+                    session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 3005), session.Character.PositionX, session.Character.PositionY);
+                    session.SendPacket("shop_end 1");
                 }
                 else
                 {
-                    option = (byte)ServerManager.Instance.RandomNumber(0, 6);
+                    session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("OPTION_FAIL"), Rare), 12));
+                    session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("OPTION_FAIL"), Rare), 0));
+                    session.SendPacket("shop_end 1");
                 }
-
-                if (CellonOptions.Any(s => s.Type == (CellonOptionType)option))
-                {
-                    return new short[] { -1, -1 };
-                }
-
-                return new short[] {option, (short)ServerManager.Instance.RandomNumber(minimumData[dataIndex][option], maximumData[dataIndex][option] + 1) };
-            }
-
-
-            short[] value = generateOption();
-            Logger.LogEvent("OPTION", session.GenerateIdentity(), $"[OptionItem]Serial: {EquipmentSerialId} Type: {value[0]} Value: {value[1]}");
-            if (value[0] != -1)
-            {
-                CellonOptionDTO cellonOptionDTO = new CellonOptionDTO()
-                {
-                    EquipmentSerialId = EquipmentSerialId,
-                    Level = (byte)(dataIndex + 1),
-                    Type = (CellonOptionType)value[0],
-                    Value = value[1]
-                };
-
-                CellonOptions.Add(cellonOptionDTO);
-
-                session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("OPTION_SUCCESS"), Rare), 12));
-                session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("OPTION_SUCCESS"), Rare), 0));
-                session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 3005), session.Character.PositionX, session.Character.PositionY);
-                session.SendPacket("shop_end 1");
-            }
-            else
-            {
-                session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("OPTION_FAIL"), Rare), 12));
-                session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("OPTION_FAIL"), Rare), 0));
-                session.SendPacket("shop_end 1");
+                session.Character.Inventory.RemoveItemAmount(cellonVNum);
             }
         }
 
