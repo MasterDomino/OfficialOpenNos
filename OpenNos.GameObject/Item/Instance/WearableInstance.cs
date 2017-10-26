@@ -254,42 +254,52 @@ namespace OpenNos.GameObject
             if (session.Character.Inventory.CountItem(cellonVNum) > 0 && Item.MaxCellon > CellonOptions.Count)
             {
                 byte dataIndex = 0;
+                int goldAmount = 0;
                 switch (cellonVNum)
                 {
                     case 1017:
                         dataIndex = 0;
+                        goldAmount = 700;
                         break;
 
                     case 1018:
                         dataIndex = 1;
+                        goldAmount = 1400;
                         break;
 
                     case 1019:
                         dataIndex = 2;
+                        goldAmount = 3000;
                         break;
 
                     case 1020:
                         dataIndex = 3;
+                        goldAmount = 5000;
                         break;
 
                     case 1021:
                         dataIndex = 4;
+                        goldAmount = 10000;
                         break;
 
                     case 1022:
                         dataIndex = 5;
+                        goldAmount = 20000;
                         break;
 
                     case 1023:
                         dataIndex = 6;
+                        goldAmount = 32000;
                         break;
 
                     case 1024:
                         dataIndex = 7;
+                        goldAmount = 58000;
                         break;
 
                     case 1025:
                         dataIndex = 8;
+                        goldAmount = 95000;
                         break;
 
                     case 1026:
@@ -299,7 +309,7 @@ namespace OpenNos.GameObject
                         //break;
                 }
 
-                if (Item.MaxCellonLvl < dataIndex)
+                if (Item.MaxCellonLvl < dataIndex && session.Character.Gold >= goldAmount)
                 {
                     short[][] minimumData = new short[][] {
                     new short[] { 30, 50, 5, 8, 0, 0 },                 //lv1
@@ -372,6 +382,8 @@ namespace OpenNos.GameObject
                         session.SendPacket("shop_end 1");
                     }
                     session.Character.Inventory.RemoveItemAmount(cellonVNum);
+                    session.Character.Gold -= goldAmount;
+                    session.SendPacket(session.Character.GenerateGold());
                 }
             }
         }
