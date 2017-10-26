@@ -595,9 +595,12 @@ namespace OpenNos.GameObject
                             }
                             if (hitRequest.ShowTargetHitAnimation)
                             {
-                                MapInstance?.Broadcast(StaticPacketHelper.SkillUsed(UserType.Player, hitRequest.Session.Character.CharacterId, 3, MapMonsterId, hitRequest.Skill.SkillVNum, hitRequest.Skill.Cooldown, hitRequest.Skill.AttackAnimation, hitRequest.SkillEffect, 0, 0, IsAlive, (int)((float)CurrentHp / (float)MaxHp * 100), damage, hitmode, (byte)(hitRequest.Skill.SkillType - 1)));
+                                MapInstance?.Broadcast(StaticPacketHelper.SkillUsed(UserType.Player, hitRequest.Session.Character.CharacterId, 3, MapMonsterId, hitRequest.Skill.SkillVNum, hitRequest.Skill.Cooldown, hitRequest.Skill.AttackAnimation, hitRequest.SkillEffect, hitRequest.Session.Character.PositionX, hitRequest.Session.Character.PositionY, IsAlive, (int)((float)CurrentHp / (float)MaxHp * 100), damage, hitmode, (byte)(hitRequest.Skill.SkillType - 1)));
                             }
-                            MapInstance?.Broadcast(StaticPacketHelper.SkillUsed(UserType.Player, hitRequest.Session.Character.CharacterId, 3, MapMonsterId, hitRequest.Skill.SkillVNum, hitRequest.Skill.Cooldown, hitRequest.Skill.AttackAnimation, hitRequest.SkillEffect, hitRequest.Session.Character.PositionX, hitRequest.Session.Character.PositionY, IsAlive, (int)((float)CurrentHp / (float)MaxHp * 100), damage, hitmode, (byte)(hitRequest.Skill.SkillType - 1)));
+                            else
+                            {
+                                MapInstance?.Broadcast(StaticPacketHelper.SkillUsed(UserType.Player, hitRequest.Session.Character.CharacterId, 3, MapMonsterId, 0, 0, 0, 0, 0, 0, IsAlive, (int)((float)CurrentHp / (float)MaxHp * 100), damage, hitmode, (byte)(hitRequest.Skill.SkillType - 1)));
+                            }
                             break;
 
                         case TargetHitType.AOETargetHit:

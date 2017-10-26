@@ -1099,7 +1099,7 @@ namespace OpenNos.Handler
                             MapMonster mon = Session.CurrentMapInstance?.GetMonster(id);
                             if (mon.CurrentHp > 0)
                             {
-                                mon.HitQueue.Enqueue(new HitRequest(TargetHitType.ZoneHit, Session, characterSkill.Skill, x, y));
+                                mon.HitQueue.Enqueue(new HitRequest(TargetHitType.ZoneHit, Session, characterSkill.Skill, characterSkill.Skill.Effect, x, y));
                             }
                         }
 
