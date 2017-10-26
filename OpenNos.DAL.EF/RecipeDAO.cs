@@ -72,24 +72,13 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        public IEnumerable<RecipeDTO> LoadByNpc(int mapNpcId)
-        {
-            using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
-            {
-                foreach (Recipe Recipe in context.Recipe.Where(s => s.MapNpcId.Equals(mapNpcId)))
-                {
-                    yield return _mapper.Map<RecipeDTO>(Recipe);
-                }
-            }
-        }
-
         public void Update(RecipeDTO recipe)
         {
             try
             {
                 using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    Recipe result = context.Recipe.FirstOrDefault(c => c.MapNpcId == recipe.MapNpcId && c.ItemVNum == recipe.ItemVNum);
+                    Recipe result = context.Recipe.FirstOrDefault(c => c.ItemVNum == recipe.ItemVNum);
                     if (result != null)
                     {
                         recipe.RecipeId = result.RecipeId;

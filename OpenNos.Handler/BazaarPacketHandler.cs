@@ -264,8 +264,8 @@ namespace OpenNos.Handler
             {
                 return;
             }
-            ItemInstance bazar = Session.Character.Inventory.AddIntoBazaarInventory(cRegPacket.Inventory == 4 ? 0 : (InventoryType)cRegPacket.Inventory, cRegPacket.Slot, cRegPacket.Amount);
-            if (bazar == null)
+            ItemInstance bazaar = Session.Character.Inventory.AddIntoBazaarInventory(cRegPacket.Inventory == 4 ? 0 : (InventoryType)cRegPacket.Inventory, cRegPacket.Slot, cRegPacket.Amount);
+            if (bazaar == null)
             {
                 return;
             }
@@ -292,18 +292,18 @@ namespace OpenNos.Handler
                     return;
             }
 
-            DAOFactory.IteminstanceDAO.InsertOrUpdate(bazar);
+            DAOFactory.IteminstanceDAO.InsertOrUpdate(bazaar);
 
             BazaarItemDTO bazaarItem = new BazaarItemDTO
             {
-                Amount = bazar.Amount,
+                Amount = bazaar.Amount,
                 DateStart = DateTime.Now,
                 Duration = duration,
                 IsPackage = cRegPacket.IsPackage != 0,
                 MedalUsed = medal != null,
                 Price = cRegPacket.Price,
                 SellerId = Session.Character.CharacterId,
-                ItemInstanceId = bazar.Id
+                ItemInstanceId = bazaar.Id
             };
 
             DAOFactory.BazaarItemDAO.InsertOrUpdate(ref bazaarItem);
@@ -315,7 +315,7 @@ namespace OpenNos.Handler
             Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("OBJECT_IN_BAZAAR"), 10));
             Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OBJECT_IN_BAZAAR"), 0));
 
-            Logger.LogUserEvent("BAZAAR_INSERT", Session.GenerateIdentity(), $"BazaarId: {bazaarItem.BazaarItemId}, IIId: {bazaarItem.ItemInstanceId} VNum: {bazar.ItemVNum} Amount: {cRegPacket.Amount} Price: {cRegPacket.Price} Time: {duration}");
+            Logger.LogUserEvent("BAZAAR_INSERT", Session.GenerateIdentity(), $"BazaarId: {bazaarItem.BazaarItemId}, IIId: {bazaarItem.ItemInstanceId} VNum: {bazaar.ItemVNum} Amount: {cRegPacket.Amount} Price: {cRegPacket.Price} Time: {duration}");
 
             Session.SendPacket("rc_reg 1");
         }

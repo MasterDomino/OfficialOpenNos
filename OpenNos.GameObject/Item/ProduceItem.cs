@@ -1,4 +1,5 @@
-﻿/*
+﻿using Microsoft.Win32;
+/*
  * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,6 +34,18 @@ namespace OpenNos.GameObject
         {
             switch (Effect)
             {
+                case 100:
+                    switch (EffectValue)
+                    {
+                        case 15:
+                            session.Character.LastNRunId = 0;
+                            session.Character.LastItemVNum = inv.ItemVNum;
+                            session.SendPacket("m_list 2 1016 1018 1019 1020 1021 1022 1023 1024 1025 1026 1029 1030 1031 1032 1033 1034");
+                            session.SendPacket("wopen 28 0");
+                            break;
+                    }
+                    break;
+
                 default:
                     Logger.Warn(string.Format(Language.Instance.GetMessageFromKey("NO_HANDLER_ITEM"), GetType()));
                     break;
