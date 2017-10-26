@@ -436,16 +436,16 @@ namespace OpenNos.DAL.EF.DB
                 .WithRequired(e => e.MapNpc)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<Item>()
-                .HasOptional(e => e.RecipeList)
-                .WithMany(e => e.Item)
-                .HasForeignKey(e => e.RecipeListId)
+            modelBuilder.Entity<RecipeList>()
+                .HasOptional(e => e.Item)
+                .WithMany(e => e.RecipeList)
+                .HasForeignKey(e => e.ItemVNum)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<MapNpc>()
-                .HasOptional(e => e.RecipeList)
-                .WithMany(e => e.MapNpc)
-                .HasForeignKey(e => e.RecipeListId)
+            modelBuilder.Entity<RecipeList>()
+                .HasOptional(e => e.MapNpc)
+                .WithMany(e => e.RecipeList)
+                .HasForeignKey(e => e.MapNpcId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<RecipeList>()

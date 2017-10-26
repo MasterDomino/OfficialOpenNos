@@ -34,6 +34,7 @@ namespace OpenNos.DAL.EF
             RollGeneratedItem = new HashSet<RollGeneratedItem>();
             RollGeneratedItem2 = new HashSet<RollGeneratedItem>();
             RecipeItem = new HashSet<RecipeItem>();
+            RecipeList = new HashSet<RecipeList>();
             ShopItem = new HashSet<ShopItem>();
             BCards = new HashSet<BCard>();
         }
@@ -169,9 +170,7 @@ namespace OpenNos.DAL.EF
 
         public virtual ICollection<RecipeItem> RecipeItem { get; set; }
 
-        public virtual RecipeList RecipeList { get; set; }
-
-        public int? RecipeListId { get; set; }
+        public virtual ICollection<RecipeList> RecipeList { get; set; }
 
         public short ReduceOposantResistance { get; set; }
 

@@ -25,6 +25,7 @@ namespace OpenNos.DAL.EF
         {
             Shop = new HashSet<Shop>();
             Teleporter = new HashSet<Teleporter>();
+            RecipeList = new HashSet<RecipeList>();
         }
 
         #endregion
@@ -64,9 +65,7 @@ namespace OpenNos.DAL.EF
 
         public virtual ICollection<Teleporter> Teleporter { get; set; }
 
-        public virtual RecipeList RecipeList { get; set; }
-
-        public int? RecipeListId { get; set; }
+        public virtual ICollection<RecipeList> RecipeList { get; set; }
 
         #endregion
     }

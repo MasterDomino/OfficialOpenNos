@@ -169,9 +169,9 @@
     <Compile Include="Migrations\201710252045092_Aphrodite70.Designer.cs">
       <DependentUpon>201710252045092_Aphrodite70.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201710261831350_Aphrodite71.cs" />
-    <Compile Include="Migrations\201710261831350_Aphrodite71.Designer.cs">
-      <DependentUpon>201710261831350_Aphrodite71.cs</DependentUpon>
+    <Compile Include="Migrations\201710261852390_Aphrodite71.cs" />
+    <Compile Include="Migrations\201710261852390_Aphrodite71.Designer.cs">
+      <DependentUpon>201710261852390_Aphrodite71.cs</DependentUpon>
     </Compile>
     <Compile Include="RollGeneratedItemDAO.cs" />
     <Compile Include="MateDAO.cs" />
@@ -725,8 +725,8 @@
     <EmbeddedResource Include="Migrations\201710252045092_Aphrodite70.resx">
       <DependentUpon>201710252045092_Aphrodite70.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201710261831350_Aphrodite71.resx">
-      <DependentUpon>201710261831350_Aphrodite71.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201710261852390_Aphrodite71.resx">
+      <DependentUpon>201710261852390_Aphrodite71.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
