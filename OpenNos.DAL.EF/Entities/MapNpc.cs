@@ -23,9 +23,9 @@ namespace OpenNos.DAL.EF
 
         public MapNpc()
         {
-            Recipe = new HashSet<Recipe>();
             Shop = new HashSet<Shop>();
             Teleporter = new HashSet<Teleporter>();
+            RecipeList = new HashSet<RecipeList>();
         }
 
         #endregion
@@ -61,11 +61,11 @@ namespace OpenNos.DAL.EF
 
         public byte Position { get; set; }
 
-        public virtual ICollection<Recipe> Recipe { get; set; }
-
         public virtual ICollection<Shop> Shop { get; set; }
 
         public virtual ICollection<Teleporter> Teleporter { get; set; }
+
+        public virtual ICollection<RecipeList> RecipeList { get; set; }
 
         #endregion
     }

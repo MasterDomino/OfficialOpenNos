@@ -20,7 +20,11 @@ namespace OpenNos.DAL.EF
     {
         #region Instantiation
 
-        public Recipe() => RecipeItem = new HashSet<RecipeItem>();
+        public Recipe()
+        {
+            RecipeItem = new HashSet<RecipeItem>();
+            RecipeList = new HashSet<RecipeList>();
+        }
 
         #endregion
 
@@ -32,13 +36,11 @@ namespace OpenNos.DAL.EF
 
         public short ItemVNum { get; set; }
 
-        public virtual MapNpc MapNpc { get; set; }
-
-        public int MapNpcId { get; set; }
-
         public short RecipeId { get; set; }
 
         public virtual ICollection<RecipeItem> RecipeItem { get; set; }
+
+        public virtual ICollection<RecipeList> RecipeList { get; set; }
 
         #endregion
     }

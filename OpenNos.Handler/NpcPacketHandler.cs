@@ -507,6 +507,7 @@ namespace OpenNos.Handler
         public void NpcRunFunction(NRunPacket packet)
         {
             Session.Character.LastNRunId = packet.NpcId;
+            Session.Character.LastItemVNum = 0;
             if (Session.Character.Hp > 0)
             {
                 NRunHandler.NRun(Session, packet);
@@ -556,6 +557,10 @@ namespace OpenNos.Handler
                         }
                     }
                 }
+                else if (Session.Character.LastItemVNum == 1072)
+                {
+                    //Session.SendPacket("m_list 3 10 2029 3 2097 5 2098 10 2099 5 -1");
+                }
             }
             else
             {
@@ -602,6 +607,10 @@ namespace OpenNos.Handler
                             }
                         }
                     }
+                }
+                else if (Session.Character.LastItemVNum == 1072)
+                {
+                    //Session.SendPacket("pdti 11 1018 2 29 0 0");
                 }
             }
         }

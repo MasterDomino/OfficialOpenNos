@@ -98,6 +98,7 @@
     <Compile Include="CardDAO.cs" />
     <Compile Include="Entities\CellonOption.cs" />
     <Compile Include="Entities\MaintenanceLog.cs" />
+    <Compile Include="Entities\RecipeList.cs" />
     <Compile Include="Entities\RollGeneratedItem.cs" />
     <Compile Include="Entities\Mate.cs" />
     <Compile Include="Entities\ScriptedInstance.cs" />
@@ -167,6 +168,10 @@
     <Compile Include="Migrations\201710252045092_Aphrodite70.cs" />
     <Compile Include="Migrations\201710252045092_Aphrodite70.Designer.cs">
       <DependentUpon>201710252045092_Aphrodite70.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710261852390_Aphrodite71.cs" />
+    <Compile Include="Migrations\201710261852390_Aphrodite71.Designer.cs">
+      <DependentUpon>201710261852390_Aphrodite71.cs</DependentUpon>
     </Compile>
     <Compile Include="RollGeneratedItemDAO.cs" />
     <Compile Include="MateDAO.cs" />
@@ -719,6 +724,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201710252045092_Aphrodite70.resx">
       <DependentUpon>201710252045092_Aphrodite70.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710261852390_Aphrodite71.resx">
+      <DependentUpon>201710261852390_Aphrodite71.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

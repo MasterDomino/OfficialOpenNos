@@ -123,6 +123,8 @@ namespace OpenNos.DAL.EF.DB
 
         public virtual DbSet<Teleporter> Teleporter { get; set; }
 
+        public virtual DbSet<RecipeList> RecipeList { get; set; }
+
         #endregion
 
         #region Methods
@@ -425,11 +427,6 @@ namespace OpenNos.DAL.EF.DB
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<MapNpc>()
-                .HasMany(e => e.Recipe)
-                .WithRequired(e => e.MapNpc)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<MapNpc>()
                 .HasMany(e => e.Shop)
                 .WithRequired(e => e.MapNpc)
                 .WillCascadeOnDelete(false);
@@ -437,6 +434,24 @@ namespace OpenNos.DAL.EF.DB
             modelBuilder.Entity<MapNpc>()
                 .HasMany(e => e.Teleporter)
                 .WithRequired(e => e.MapNpc)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<RecipeList>()
+                .HasOptional(e => e.Item)
+                .WithMany(e => e.RecipeList)
+                .HasForeignKey(e => e.ItemVNum)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<RecipeList>()
+                .HasOptional(e => e.MapNpc)
+                .WithMany(e => e.RecipeList)
+                .HasForeignKey(e => e.MapNpcId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<RecipeList>()
+                .HasRequired(e => e.Recipe)
+                .WithMany(e => e.RecipeList)
+                .HasForeignKey(e => e.RecipeId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<NpcMonster>()
