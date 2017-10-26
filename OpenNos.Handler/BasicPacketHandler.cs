@@ -746,18 +746,18 @@ namespace OpenNos.Handler
         {
             if (guriPacket != null)
             {
-                if (guriPacket.Type == 10 && guriPacket.Data >= 973 && guriPacket.Data <= 999 && !Session.Character.EmoticonsBlocked)
+                if (guriPacket.Data.HasValue && guriPacket.Type == 10 && guriPacket.Data.Value >= 973 && guriPacket.Data.Value <= 999 && !Session.Character.EmoticonsBlocked)
                 {
                     if (guriPacket.User == Session.Character.CharacterId)
                     {
-                        Session.CurrentMapInstance?.Broadcast(Session, StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId, guriPacket.Data + 4099), ReceiverType.AllNoEmoBlocked);
+                        Session.CurrentMapInstance?.Broadcast(Session, StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId, guriPacket.Data.Value + 4099), ReceiverType.AllNoEmoBlocked);
                     }
                     else if (int.TryParse(guriPacket.User.ToString(), out int mateTransportId))
                     {
                         Mate mate = Session.Character.Mates.Find(s => s.MateTransportId == mateTransportId);
                         if (mate != null)
                         {
-                            Session.CurrentMapInstance?.Broadcast(Session, StaticPacketHelper.GenerateEff(UserType.Npc, mate.MateTransportId, guriPacket.Data + 4099), ReceiverType.AllNoEmoBlocked);
+                            Session.CurrentMapInstance?.Broadcast(Session, StaticPacketHelper.GenerateEff(UserType.Npc, mate.MateTransportId, guriPacket.Data.Value + 4099), ReceiverType.AllNoEmoBlocked);
                         }
                     }
                 }
