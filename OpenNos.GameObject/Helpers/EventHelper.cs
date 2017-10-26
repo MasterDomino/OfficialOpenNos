@@ -298,7 +298,7 @@ namespace OpenNos.GameObject.Helpers
                                             {
                                                 const byte rare = 0;
 
-                                                //TODO add random rarity for some object
+                                                // TODO: add random rarity for some object
                                                 sess.Character.GiftAdd(gift.VNum, gift.Amount, rare, 0, gift.Design, gift.IsRandomRare);
                                             }
                                         }

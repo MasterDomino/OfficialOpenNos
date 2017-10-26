@@ -1102,7 +1102,7 @@ namespace OpenNos.Handler
                         foreach (long id in Session.Character.MTListTargetQueue.Where(s => s.EntityType == UserType.Monster).Select(s => s.TargetId))
                         {
                             ClientSession character = ServerManager.Instance.GetSessionByCharacterId(id);
-                            if (character.CurrentMapInstance == Session.CurrentMapInstance && character.Character.CharacterId != Session.Character.CharacterId)
+                            if (character != null && character.CurrentMapInstance == Session.CurrentMapInstance && character.Character.CharacterId != Session.Character.CharacterId)
                             {
                                 if (Session.CurrentMapInstance?.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
                                 {
@@ -1130,9 +1130,7 @@ namespace OpenNos.Handler
                                 }
                             }
                         }
-
                         Session.Character.MTListTargetQueue.Clear();
-
                     });
                     Observable.Timer(TimeSpan.FromMilliseconds(characterSkill.Skill.Cooldown * 100)).Subscribe(o => Session.SendPacket(StaticPacketHelper.SkillReset(castingId)));
                 }
