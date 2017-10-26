@@ -91,6 +91,7 @@ namespace OpenNos.GameObject
                                             upgrade = (byte)ServerManager.Instance.RandomNumber(50, 81);
                                         }
                                         session.Character.GiftAdd(rollitem.ItemGeneratedVNum, rollitem.ItemGeneratedAmount, (byte)rare, upgrade);
+                                        session.SendPacket($"rdi {rollitem.ItemGeneratedVNum} {rollitem.ItemGeneratedAmount}");
                                         session.Character.Inventory.RemoveItemFromInventory(box.Id);
                                         return;
                                         //newInv = session.Character.Inventory.AddNewToInventory(rollitem.ItemGeneratedVNum, amount: rollitem.ItemGeneratedAmount, Design: design, Rare: rare);
