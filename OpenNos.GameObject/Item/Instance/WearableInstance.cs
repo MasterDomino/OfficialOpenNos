@@ -251,7 +251,7 @@ namespace OpenNos.GameObject
 
         public void OptionItem(ClientSession session, short cellonVNum)
         {
-            if (session.Character.Inventory.CountItem(cellonVNum) > 0)
+            if (session.Character.Inventory.CountItem(cellonVNum) > 0 && Item.MaxCellon > CellonOptions.Count)
             {
                 byte dataIndex = 0;
                 switch (cellonVNum)
