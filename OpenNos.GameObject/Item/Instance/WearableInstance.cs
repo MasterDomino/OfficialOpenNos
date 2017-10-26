@@ -28,11 +28,10 @@ namespace OpenNos.GameObject
     {
         #region Members
 
+        private List<CellonOptionDTO> _cellonOptions;
         private Random _random;
 
         private List<ShellEffectDTO> _shellEffects;
-
-        private List<CellonOptionDTO> _cellonOptions;
 
         #endregion
 
@@ -74,6 +73,8 @@ namespace OpenNos.GameObject
 
         public byte Cellon { get; set; }
 
+        public List<CellonOptionDTO> CellonOptions => _cellonOptions ?? (_cellonOptions = DAOFactory.CellonOptionDAO.GetOptionsByWearableInstanceId(EquipmentSerialId == Guid.Empty ? EquipmentSerialId = Guid.NewGuid() : EquipmentSerialId).ToList());
+
         public short CloseDefence { get; set; }
 
         public short Concentrate { get; set; }
@@ -100,6 +101,8 @@ namespace OpenNos.GameObject
 
         public short ElementRate { get; set; }
 
+        public Guid EquipmentSerialId { get; set; }
+
         public byte FireElement { get; set; }
 
         public short FireResistance { get; set; }
@@ -122,17 +125,13 @@ namespace OpenNos.GameObject
 
         public short MP { get; set; }
 
+        public List<ShellEffectDTO> ShellEffects => _shellEffects ?? (_shellEffects = DAOFactory.ShellEffectDAO.LoadByEquipmentSerialId(EquipmentSerialId == Guid.Empty ? EquipmentSerialId = Guid.NewGuid() : EquipmentSerialId).ToList());
+
         public byte WaterElement { get; set; }
 
         public short WaterResistance { get; set; }
 
         public long XP { get; set; }
-
-        public Guid EquipmentSerialId { get; set; }
-
-        public List<ShellEffectDTO> ShellEffects => _shellEffects ?? (_shellEffects = DAOFactory.ShellEffectDAO.LoadByEquipmentSerialId(EquipmentSerialId == Guid.Empty ? EquipmentSerialId = Guid.NewGuid() : EquipmentSerialId).ToList());
-
-        public List<CellonOptionDTO> CellonOptions => _cellonOptions ?? (_cellonOptions = DAOFactory.CellonOptionDAO.GetOptionsByWearableInstanceId(EquipmentSerialId == Guid.Empty ? EquipmentSerialId = Guid.NewGuid() : EquipmentSerialId).ToList());
 
         #endregion
 
@@ -191,7 +190,7 @@ namespace OpenNos.GameObject
 
                         default:
                             string cellon = "";
-                            foreach(CellonOptionDTO option in CellonOptions)
+                            foreach (CellonOptionDTO option in CellonOptions)
                             {
                                 cellon += $" {(byte)option.Type} {option.Level} {option.Value}";
                             }
@@ -260,64 +259,73 @@ namespace OpenNos.GameObject
                     case 1017:
                         dataIndex = 0;
                         break;
+
                     case 1018:
                         dataIndex = 1;
                         break;
+
                     case 1019:
                         dataIndex = 2;
                         break;
+
                     case 1020:
                         dataIndex = 3;
                         break;
+
                     case 1021:
                         dataIndex = 4;
                         break;
+
                     case 1022:
                         dataIndex = 5;
                         break;
+
                     case 1023:
                         dataIndex = 6;
                         break;
+
                     case 1024:
                         dataIndex = 7;
                         break;
+
                     case 1025:
                         dataIndex = 8;
                         break;
+
                     case 1026:
                         return; //no data known, not implemented in the client at all right now
+
                                 //dataIndex = 9;
                                 //break;
                 }
 
                 short[][] minimumData = new short[][] {
-                new short[] { 30, 50, 5, 8, 0, 0 },                 //lv1
-                new short[] { 120, 150, 14, 16, 0, 0 },             //lv2
-                new short[] { 220, 280, 22, 28, 0, 0 },             //lv3
-                new short[] { 330, 350, 30, 38, 0, 0 },             //lv4
-                new short[] { 430, 450, 40, 50, 0, 0 },             //lv5
-                new short[] { 600, 600, 55, 65, 1, 1 },             //lv6
-                new short[] { 800, 800, 75, 75, 8, 11 },            //lv7
-                new short[] { 1000, 1000, 100, 100, 13, 21 },       //lv8
-                new short[] { 1100, 1100, 110, 110, 14, 22 },       //lv9
-                new short[] { 0, 0, 0, 0, 0, 0 }                    //lv10 (NOT EXISTING!)
-            };
+                    new short[] { 30, 50, 5, 8, 0, 0 },                 //lv1
+                    new short[] { 120, 150, 14, 16, 0, 0 },             //lv2
+                    new short[] { 220, 280, 22, 28, 0, 0 },             //lv3
+                    new short[] { 330, 350, 30, 38, 0, 0 },             //lv4
+                    new short[] { 430, 450, 40, 50, 0, 0 },             //lv5
+                    new short[] { 600, 600, 55, 65, 1, 1 },             //lv6
+                    new short[] { 800, 800, 75, 75, 8, 11 },            //lv7
+                    new short[] { 1000, 1000, 100, 100, 13, 21 },       //lv8
+                    new short[] { 1100, 1100, 110, 110, 14, 22 },       //lv9
+                    new short[] { 0, 0, 0, 0, 0, 0 }                    //lv10 (NOT EXISTING!)
+                };
                 short[][] maximumData = new short[][] {
-                new short[] {100,150,10,15,0,0  },          //lv1
-                new short[] {200,250,20,25,0,0  },          //lv1
-                new short[] {300,330,28,35,0,0  },          //lv1
-                new short[] {400,420,38,45,0,0  },          //lv1
-                new short[] {550,550,50,60,0,0  },          //lv1
-                new short[] {750,750,70,80,7,10  },         //lv1
-                new short[] {1000,1000,90,90,12,20  },      //lv1
-                new short[] {1300,1300,120,120,17,35  },    //lv1
-                new short[] {1500,1500,135,135,21,45  },    //lv1
-                new short[] { 0, 0, 0, 0, 0, 0 }            //lv10 (NOT EXISTING!)
-            };
+                    new short[] { 100, 150, 10, 15, 0, 0 },          //lv1
+                    new short[] { 200, 250, 20, 25, 0, 0 },          //lv1
+                    new short[] { 300, 330, 28, 35, 0, 0 },          //lv1
+                    new short[] { 400, 420, 38, 45, 0, 0 },          //lv1
+                    new short[] { 550, 550, 50, 60, 0, 0 },          //lv1
+                    new short[] { 750, 750, 70, 80, 7, 10 },         //lv1
+                    new short[] { 1000, 1000, 90,90, 12, 20 },      //lv1
+                    new short[] { 1300, 1300, 120, 120, 17, 35 },    //lv1
+                    new short[] { 1500, 1500, 135, 135, 21, 45 },    //lv1
+                    new short[] { 0, 0, 0, 0, 0, 0 }            //lv10 (NOT EXISTING!)
+                };
 
                 short[] generateOption()
                 {
-
                     byte option = 0;
                     if (dataIndex < 5)
                     {
@@ -335,7 +343,6 @@ namespace OpenNos.GameObject
 
                     return new short[] { option, (short)ServerManager.Instance.RandomNumber(minimumData[dataIndex][option], maximumData[dataIndex][option] + 1) };
                 }
-
 
                 short[] value = generateOption();
                 Logger.LogUserEvent("OPTION", session.GenerateIdentity(), $"[OptionItem]Serial: {EquipmentSerialId} Type: {value[0]} Value: {value[1]}");
@@ -468,7 +475,7 @@ namespace OpenNos.GameObject
                 SetRarityPoint();
             }
 
-            if(forceRare != 0)
+            if (forceRare != 0)
             {
                 rarify((sbyte)forceRare);
                 return;
@@ -1379,7 +1386,7 @@ namespace OpenNos.GameObject
 
             short CalculateEffect(short maximum)
             {
-                if(maximum == 0)
+                if (maximum == 0)
                 {
                     return 1;
                 }
@@ -1393,18 +1400,23 @@ namespace OpenNos.GameObject
                         case 2:
                             multiplier = 0.6;
                             break;
+
                         case 3:
                             multiplier = 0.65;
                             break;
+
                         case 4:
                             multiplier = 0.75;
                             break;
+
                         case 5:
                             multiplier = 0.85;
                             break;
+
                         case 6:
                             multiplier = 0.95;
                             break;
+
                         case 7:
                         case 8:
                             multiplier = 1;
@@ -1428,7 +1440,7 @@ namespace OpenNos.GameObject
             void AddEffect(ShellEffectLevelType levelType)
             {
                 int i = 0;
-                while (i<10)
+                while (i < 10)
                 {
                     i++;
                     switch (levelType)

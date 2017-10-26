@@ -1565,16 +1565,12 @@ namespace OpenNos.Handler
                         && byte.TryParse(originalSplit[8], out byte secondSlot))
                     {
                         inventory = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>(firstSlot, InventoryType.Equipment);
-                        if (inventory != null)
+                        if (inventory != null && (inventory.Item.EquipmentSlot == EquipmentType.Necklace || inventory.Item.EquipmentSlot == EquipmentType.Bracelet || inventory.Item.EquipmentSlot == EquipmentType.Ring) && inventory.Item.ItemType != ItemType.Shell && inventory.Item.Type == InventoryType.Equipment)
                         {
-                            if ((inventory.Item.EquipmentSlot == EquipmentType.Necklace || inventory.Item.EquipmentSlot == EquipmentType.Bracelet || inventory.Item.EquipmentSlot == EquipmentType.Ring) && inventory.Item.ItemType != ItemType.Shell && inventory.Item.Type == InventoryType.Equipment)
+                            ItemInstance cellon = Session.Character.Inventory.LoadBySlotAndType<ItemInstance>(secondSlot, InventoryType.Main);
+                            if (cellon?.ItemVNum > 1016 && cellon.ItemVNum < 1027)
                             {
-                                ItemInstance cellon = Session.Character.Inventory.LoadBySlotAndType<ItemInstance>(secondSlot, InventoryType.Main);
-                                if (cellon != null)
-                                {
-                                    if (cellon.ItemVNum > 1016 && cellon.ItemVNum < 1027)
-                                        inventory.OptionItem(Session, cellon.ItemVNum);
-                                }
+                                inventory.OptionItem(Session, cellon.ItemVNum);
                             }
                         }
                     }

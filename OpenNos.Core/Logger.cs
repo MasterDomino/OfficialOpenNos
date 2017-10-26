@@ -31,19 +31,6 @@ namespace OpenNos.Core
         /// <summary>
         /// Wraps up the error message with the CallerMemberName
         /// </summary>
-        /// <param name="memberName"></param>
-        /// <param name="innerException"></param>
-        public static void Error(Exception innerException = null, [CallerMemberName]string memberName = "")
-        {
-            if (innerException != null)
-            {
-                Log?.Error($"[{memberName}]: {innerException.Message}", innerException);
-            }
-        }
-
-        /// <summary>
-        /// Wraps up the error message with the CallerMemberName
-        /// </summary>
         /// <param name="data"></param>
         /// <param name="memberName"></param>
         public static void Debug(string data, [CallerMemberName]string memberName = "") => Log?.Debug($"[{memberName}]: {data}");
@@ -51,33 +38,21 @@ namespace OpenNos.Core
         /// <summary>
         /// Wraps up the error message with the CallerMemberName
         /// </summary>
-        /// <param name="data"></param>
-        /// <param name="innerException"></param>
         /// <param name="memberName"></param>
-        public static void Warn(string data, Exception innerException = null, [CallerMemberName]string memberName = "")
-        {
-            if (innerException != null)
-            {
-                Log?.Warn($"[{memberName}]: {data} {innerException.InnerException}", innerException);
-            }
-            else
-            {
-                Log?.Warn($"[{memberName}]: {data}");
-            }
-        }
-
+        /// <param name="ex"></param>
+        public static void Error(Exception ex, [CallerMemberName]string memberName = "") => Log?.Error($"[{memberName}]: {ex.Message}", ex);
 
         /// <summary>
         /// Wraps up the error message with the CallerMemberName
         /// </summary>
         /// <param name="data"></param>
-        /// <param name="innerException"></param>
+        /// <param name="ex"></param>
         /// <param name="memberName"></param>
-        public static void Error(string data, Exception innerException = null, [CallerMemberName]string memberName = "")
+        public static void Error(string data, Exception ex = null, [CallerMemberName]string memberName = "")
         {
-            if (innerException != null)
+            if (ex != null)
             {
-                Log?.Error($"[{memberName}]: {data} {innerException.InnerException}", innerException);
+                Log?.Error($"[{memberName}]: {data} {ex.InnerException}", ex);
             }
             else
             {
@@ -86,16 +61,34 @@ namespace OpenNos.Core
         }
 
         /// <summary>
+        /// Wraps up the fatal message with the CallerMemberName
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="ex"></param>
+        /// <param name="memberName"></param>
+        public static void Fatal(string data, Exception ex = null, [CallerMemberName]string memberName = "")
+        {
+            if (ex != null)
+            {
+                Log?.Fatal($"[{memberName}]: {data} {ex.InnerException}", ex);
+            }
+            else
+            {
+                Log?.Fatal($"[{memberName}]: {data}");
+            }
+        }
+
+        /// <summary>
         /// Wraps up the info message with the CallerMemberName
         /// </summary>
         /// <param name="message"></param>
-        /// <param name="innerException"></param>
+        /// <param name="ex"></param>
         /// <param name="memberName"></param>
-        public static void Info(string message, Exception innerException = null, [CallerMemberName]string memberName = "")
+        public static void Info(string message, Exception ex = null, [CallerMemberName]string memberName = "")
         {
-            if (innerException != null)
+            if (ex != null)
             {
-                Log?.Info($"[{memberName}]: {message}", innerException);
+                Log?.Info($"[{memberName}]: {message}", ex);
             }
             else
             {
@@ -170,6 +163,24 @@ namespace OpenNos.Core
         /// <param name="data"></param>
         /// <param name="ex"></param>
         public static void LogUserEventError(string logEvent, string caller, string data, Exception ex) => Log?.Error($"[{logEvent}][{caller}]{data}", ex);
+
+        /// <summary>
+        /// Wraps up the warn message with the CallerMemberName
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="innerException"></param>
+        /// <param name="memberName"></param>
+        public static void Warn(string data, Exception innerException = null, [CallerMemberName]string memberName = "")
+        {
+            if (innerException != null)
+            {
+                Log?.Warn($"[{memberName}]: {data} {innerException.InnerException}", innerException);
+            }
+            else
+            {
+                Log?.Warn($"[{memberName}]: {data}");
+            }
+        }
 
         #endregion
     }
