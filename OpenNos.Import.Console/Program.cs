@@ -91,7 +91,7 @@ namespace OpenNos.Import.Console
                 }
                 else
                 {
-                    factory = new ImportFactory(Directory.GetCurrentDirectory() + "\\parser");
+                    factory = new ImportFactory(Directory.GetCurrentDirectory() + "/parser");
                 }
 
                 factory.ImportPackets();
@@ -244,9 +244,9 @@ namespace OpenNos.Import.Console
                 System.Console.WriteLine(Language.Instance.GetMessageFromKey("DONE"));
                 System.Console.ReadKey();
             }
-            catch (FileNotFoundException)
+            catch (FileNotFoundException ex)
             {
-                Logger.Error(Language.Instance.GetMessageFromKey("AT_LEAST_ONE_FILE_MISSING"));
+                Logger.Error(Language.Instance.GetMessageFromKey("AT_LEAST_ONE_FILE_MISSING"), ex);
                 System.Console.ReadKey();
             }
         }
