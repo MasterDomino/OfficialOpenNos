@@ -99,7 +99,7 @@ namespace OpenNos.GameObject
                 if (_character == null || !HasSelectedCharacter)
                 {
                     // cant access an
-                    Logger.Log.Warn("Uninitialized Character cannot be accessed.");
+                    Logger.Warn("Uninitialized Character cannot be accessed.");
                 }
 
                 return _character;
@@ -158,7 +158,7 @@ namespace OpenNos.GameObject
             // do everything necessary before removing client, DB save, Whatever
             if (HasSelectedCharacter)
             {
-                Logger.LogEvent("CHARACTER_LOGOUT", GenerateIdentity(), string.Empty);
+                Logger.LogUserEvent("CHARACTER_LOGOUT", GenerateIdentity(), string.Empty);
                 Character.Dispose();
                 if (Character.MapInstance.MapInstanceType == MapInstanceType.TimeSpaceInstance || Character.MapInstance.MapInstanceType == MapInstanceType.RaidInstance)
                 {
@@ -288,7 +288,7 @@ namespace OpenNos.GameObject
             Character = character;
             HasSelectedCharacter = true;
 
-            Logger.LogEvent("CHARACTER_LOGIN", GenerateIdentity(), string.Empty);
+            Logger.LogUserEvent("CHARACTER_LOGIN", GenerateIdentity(), string.Empty);
 
             // register CSC events
             CommunicationServiceClient.Instance.CharacterConnectedEvent += onOtherCharacterConnected;
@@ -375,7 +375,7 @@ namespace OpenNos.GameObject
                     if (int.TryParse(sessionParts[1].Split('\\').FirstOrDefault(), out int sessid))
                     {
                         SessionId = sessid;
-                        Logger.Log.DebugFormat(Language.Instance.GetMessageFromKey("CLIENT_ARRIVED"), SessionId);
+                        Logger.Debug(string.Format(Language.Instance.GetMessageFromKey("CLIENT_ARRIVED"), SessionId));
 
                         if (!_waitForPacketsAmount.HasValue)
                         {
@@ -396,7 +396,7 @@ namespace OpenNos.GameObject
                         string nextRawPacketId = packetsplit[0];
                         if (!int.TryParse(nextRawPacketId, out int nextPacketId) && nextPacketId != _lastPacketId + 1)
                         {
-                            Logger.Log.ErrorFormat(Language.Instance.GetMessageFromKey("CORRUPTED_KEEPALIVE"), _client.ClientId);
+                            Logger.Error(string.Format(Language.Instance.GetMessageFromKey("CORRUPTED_KEEPALIVE"), _client.ClientId));
                             _client.Disconnect();
                             return;
                         }
@@ -539,7 +539,7 @@ namespace OpenNos.GameObject
                                     }
                                     else
                                     {
-                                        Logger.Log.WarnFormat(Language.Instance.GetMessageFromKey("CORRUPT_PACKET"), packetHeader, packet);
+                                        Logger.Warn(string.Format(Language.Instance.GetMessageFromKey("CORRUPT_PACKET"), packetHeader, packet));
                                     }
                                 }
                             }
@@ -552,18 +552,18 @@ namespace OpenNos.GameObject
                     catch (DivideByZeroException ex)
                     {
                         // disconnect if something unexpected happens
-                        Logger.Log.Error("Handler Error SessionId: " + SessionId, ex);
+                        Logger.Error("Handler Error SessionId: " + SessionId, ex);
                         Disconnect();
                     }
                 }
                 else
                 {
-                    Logger.Log.WarnFormat(Language.Instance.GetMessageFromKey("HANDLER_NOT_FOUND"), packetHeader);
+                    Logger.Warn(string.Format(Language.Instance.GetMessageFromKey("HANDLER_NOT_FOUND"), packetHeader));
                 }
             }
             else
             {
-                Logger.Log.WarnFormat(Language.Instance.GetMessageFromKey("CLIENTSESSION_DISPOSING"), packetHeader);
+                Logger.Warn(string.Format(Language.Instance.GetMessageFromKey("CLIENTSESSION_DISPOSING"), packetHeader));
             }
         }
 

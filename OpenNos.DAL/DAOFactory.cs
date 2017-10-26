@@ -83,7 +83,7 @@ namespace OpenNos.DAL
             }
             catch (Exception ex)
             {
-                Logger.Log.Error("Database Error Server", ex);
+                Logger.Error("Database Error Server", ex);
             }
         }
 

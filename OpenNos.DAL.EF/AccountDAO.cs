@@ -48,7 +48,7 @@ namespace OpenNos.DAL.EF
             }
             catch (Exception e)
             {
-                Logger.Log.Error(string.Format(Language.Instance.GetMessageFromKey("DELETE_ACCOUNT_ERROR"), accountId, e.Message), e);
+                Logger.Error(string.Format(Language.Instance.GetMessageFromKey("DELETE_ACCOUNT_ERROR"), accountId, e.Message), e);
                 return DeleteResult.Error;
             }
         }
@@ -73,7 +73,7 @@ namespace OpenNos.DAL.EF
             }
             catch (Exception e)
             {
-                Logger.Log.Error(string.Format(Language.Instance.GetMessageFromKey("UPDATE_ACCOUNT_ERROR"), account.AccountId, e.Message), e);
+                Logger.Error(string.Format(Language.Instance.GetMessageFromKey("UPDATE_ACCOUNT_ERROR"), account.AccountId, e.Message), e);
                 return SaveResult.Error;
             }
         }

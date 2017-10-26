@@ -30,7 +30,9 @@ namespace OpenNos.Master.Library.Client
         #region Members
 
         private static CommunicationServiceClient _instance;
+
         private readonly IScsServiceClient<ICommunicationService> _client;
+
         private readonly CommunicationClient _commClient;
 
         #endregion
@@ -43,6 +45,7 @@ namespace OpenNos.Master.Library.Client
             int port = Convert.ToInt32(ConfigurationManager.AppSettings["MasterPort"]);
             _commClient = new CommunicationClient();
             _client = ScsServiceClientBuilder.CreateClient<ICommunicationService>(new ScsTcpEndPoint(ip, port), _commClient);
+            System.Threading.Thread.Sleep(5000);
             while (_client.CommunicationState != CommunicationStates.Connected)
             {
                 try
@@ -51,8 +54,8 @@ namespace OpenNos.Master.Library.Client
                 }
                 catch
                 {
-                    Logger.Log.Error(Language.Instance.GetMessageFromKey("RETRY_CONNECTION"));
-                    System.Threading.Thread.Sleep(5000);
+                    Logger.Error(Language.Instance.GetMessageFromKey("RETRY_CONNECTION"), memberName: "CommunicationServiceClient");
+                    System.Threading.Thread.Sleep(1000);
                 }
             }
         }

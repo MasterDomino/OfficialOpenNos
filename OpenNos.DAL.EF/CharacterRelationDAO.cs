@@ -47,7 +47,7 @@ namespace OpenNos.DAL.EF
             }
             catch (Exception e)
             {
-                Logger.Log.Error(string.Format(Language.Instance.GetMessageFromKey("DELETE_CHARACTER_ERROR"), characterRelationId, e.Message), e);
+                Logger.Error(string.Format(Language.Instance.GetMessageFromKey("DELETE_CHARACTER_ERROR"), characterRelationId, e.Message), e);
                 return DeleteResult.Error;
             }
         }
@@ -73,7 +73,7 @@ namespace OpenNos.DAL.EF
             }
             catch (Exception e)
             {
-                Logger.Log.Error(string.Format(Language.Instance.GetMessageFromKey("UPDATE_CHARACTERRELATION_ERROR"), characterRelation.CharacterRelationId, e.Message), e);
+                Logger.Error(string.Format(Language.Instance.GetMessageFromKey("UPDATE_CHARACTERRELATION_ERROR"), characterRelation.CharacterRelationId, e.Message), e);
                 return SaveResult.Error;
             }
         }

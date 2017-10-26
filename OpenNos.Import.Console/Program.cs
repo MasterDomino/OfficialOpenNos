@@ -45,7 +45,7 @@ namespace OpenNos.Import.Console
                 registerMappings();
             }
             ConsoleKeyInfo key = new ConsoleKeyInfo();
-            Logger.Log.Warn(Language.Instance.GetMessageFromKey("NEED_TREE"));
+            Logger.Warn(Language.Instance.GetMessageFromKey("NEED_TREE"));
             System.Console.BackgroundColor = ConsoleColor.Blue;
             System.Console.WriteLine("Root");
             System.Console.ResetColor();
@@ -69,7 +69,7 @@ namespace OpenNos.Import.Console
 
             try
             {
-                Logger.Log.Warn(Language.Instance.GetMessageFromKey("ENTER_PATH"));
+                Logger.Warn(Language.Instance.GetMessageFromKey("ENTER_PATH"));
                 string folder = string.Empty;
                 if (args.Length == 0)
                 {
@@ -246,7 +246,7 @@ namespace OpenNos.Import.Console
             }
             catch (FileNotFoundException)
             {
-                Logger.Log.Error(Language.Instance.GetMessageFromKey("AT_LEAST_ONE_FILE_MISSING"));
+                Logger.Error(Language.Instance.GetMessageFromKey("AT_LEAST_ONE_FILE_MISSING"));
                 System.Console.ReadKey();
             }
         }

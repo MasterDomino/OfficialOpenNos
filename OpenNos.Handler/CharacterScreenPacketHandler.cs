@@ -56,7 +56,7 @@ namespace OpenNos.Handler
             }
             // TODO: Hold Account Information in Authorized object
             long accountId = Session.Account.AccountId;
-            Logger.LogEvent("CREATECHARACTER", Session.GenerateIdentity(), $"[CreateCharacter]Name: {characterCreatePacket.Name} Slot: {characterCreatePacket.Slot} Gender: {characterCreatePacket.Gender} HairStyle: {characterCreatePacket.HairStyle} HairColor: {characterCreatePacket.HairColor}");
+            Logger.LogUserEvent("CREATECHARACTER", Session.GenerateIdentity(), $"[CreateCharacter]Name: {characterCreatePacket.Name} Slot: {characterCreatePacket.Slot} Gender: {characterCreatePacket.Gender} HairStyle: {characterCreatePacket.HairStyle} HairColor: {characterCreatePacket.HairColor}");
             if (characterCreatePacket.Slot <= 2 && DAOFactory.CharacterDAO.LoadBySlot(accountId, characterCreatePacket.Slot) == null && characterCreatePacket.Name.Length > 3 && characterCreatePacket.Name.Length < 15)
             {
                 Regex rg = new Regex(@"^[A-Za-z0-9_äÄöÖüÜß~*<>°+-.!_-Ð™¤£±†‡×ßø^\S]+$");
@@ -164,7 +164,7 @@ namespace OpenNos.Handler
             {
                 return;
             }
-            Logger.LogEvent("DELETECHARACTER", Session.GenerateIdentity(), $"[DeleteCharacter]Name: {characterDeletePacket.Slot}");
+            Logger.LogUserEvent("DELETECHARACTER", Session.GenerateIdentity(), $"[DeleteCharacter]Name: {characterDeletePacket.Slot}");
             AccountDTO account = DAOFactory.AccountDAO.LoadById(Session.Account.AccountId);
             if (account == null)
             {
@@ -215,7 +215,7 @@ namespace OpenNos.Handler
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log.Error("MS Communication Failed.", ex);
+                    Logger.Error("MS Communication Failed.", ex);
                     Session.Disconnect();
                     return;
                 }
@@ -238,21 +238,21 @@ namespace OpenNos.Handler
                         }
                         else
                         {
-                            Logger.Log.ErrorFormat($"Client {Session.ClientId} forced Disconnection, invalid Password or SessionId.");
+                            Logger.Error($"Client {Session.ClientId} forced Disconnection, invalid Password or SessionId.");
                             Session.Disconnect();
                             return;
                         }
                     }
                     else
                     {
-                        Logger.Log.ErrorFormat($"Client {Session.ClientId} forced Disconnection, invalid AccountName.");
+                        Logger.Error($"Client {Session.ClientId} forced Disconnection, invalid AccountName.");
                         Session.Disconnect();
                         return;
                     }
                 }
                 else
                 {
-                    Logger.Log.ErrorFormat($"Client {Session.ClientId} forced Disconnection, login has not been registered or Account is already logged in.");
+                    Logger.Error($"Client {Session.ClientId} forced Disconnection, login has not been registered or Account is already logged in.");
                     Session.Disconnect();
                     return;
                 }
@@ -260,7 +260,7 @@ namespace OpenNos.Handler
 
             // TODO: Wrap Database access up to GO
             IEnumerable<CharacterDTO> characters = DAOFactory.CharacterDAO.LoadByAccount(Session.Account.AccountId);
-            Logger.Log.InfoFormat(Language.Instance.GetMessageFromKey("ACCOUNT_ARRIVED"), Session.SessionId);
+            Logger.Info(string.Format(Language.Instance.GetMessageFromKey("ACCOUNT_ARRIVED"), Session.SessionId));
 
             // load characterlist packet for each character in CharacterDTO
             Session.SendPacket("clist_start 0");
@@ -347,7 +347,7 @@ namespace OpenNos.Handler
             }
             catch (Exception ex)
             {
-                Logger.Log.Error("Select character failed.", ex);
+                Logger.Error("Select character failed.", ex);
             }
         }
 

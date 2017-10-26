@@ -174,7 +174,7 @@ namespace OpenNos.GameObject.Event.GAMES
                     Session.SendPacket(Session.Character.GenerateStat());
                     Session.SendPacket(Session.Character.GenerateStatChar());
 
-                    Logger.LogEvent("CHARACTER_SPECIALIST_RETURN", Session.GenerateIdentity(), $"SpCooldown: {Session.Character.SpCooldown}");
+                    Logger.LogUserEvent("CHARACTER_SPECIALIST_RETURN", Session.GenerateIdentity(), $"SpCooldown: {Session.Character.SpCooldown}");
 
                     Observable.Timer(TimeSpan.FromMilliseconds(Session.Character.SpCooldown * 1000)).Subscribe(o =>
                     {

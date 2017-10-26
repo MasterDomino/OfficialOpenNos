@@ -161,7 +161,7 @@ namespace OpenNos.GameObject
                     }
                     else
                     {
-                        Logger.LogEvent("EQUIPMENT_TAKEOFF", session.GenerateIdentity(), $"IIId: {currentlyEquippedItem.Id} ItemVnum: {currentlyEquippedItem.ItemVNum} Upgrade: {currentlyEquippedItem.Upgrade} Rare: {currentlyEquippedItem.Rare}");
+                        Logger.LogUserEvent("EQUIPMENT_TAKEOFF", session.GenerateIdentity(), $"IIId: {currentlyEquippedItem.Id} ItemVnum: {currentlyEquippedItem.ItemVNum} Upgrade: {currentlyEquippedItem.Upgrade} Rare: {currentlyEquippedItem.Rare}");
 
                         // move from wear to equipment and back
                         session.Character.Inventory.MoveInInventory(currentlyEquippedItem.Slot, equipment, itemToWearType, inv.Slot);
@@ -169,7 +169,7 @@ namespace OpenNos.GameObject
                         session.Character.EquipmentBCards.RemoveAll(o => o.ItemVNum == currentlyEquippedItem.ItemVNum);
                     }
 
-                    Logger.LogEvent("EQUIPMENT_WEAR", session.GenerateIdentity(), $"IIId: {inv.Id} ItemVnum: {inv.ItemVNum} Upgrade: {inv.Upgrade} Rare: {inv.Rare}");
+                    Logger.LogUserEvent("EQUIPMENT_WEAR", session.GenerateIdentity(), $"IIId: {inv.Id} ItemVnum: {inv.ItemVNum} Upgrade: {inv.Upgrade} Rare: {inv.Rare}");
 
                     session.Character.EquipmentBCards.AddRange(inv.Item.BCards);
 

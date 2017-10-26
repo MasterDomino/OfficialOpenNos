@@ -29,14 +29,6 @@ namespace OpenNos.Core
         #region Methods
 
         /// <summary>
-        /// Wraps up the message with the CallerMemberName
-        /// </summary>
-        /// <param name="Caller"></param>
-        /// <param name="message"></param>
-        /// <param name="memberName"></param>
-        public static void Debug(string Caller, string message, [CallerMemberName]string memberName = "") => Log?.Debug($"{Caller} Method: {memberName} Packet: {message}");
-
-        /// <summary>
         /// Wraps up the error message with the CallerMemberName
         /// </summary>
         /// <param name="memberName"></param>
@@ -45,7 +37,51 @@ namespace OpenNos.Core
         {
             if (innerException != null)
             {
-                Log?.Error($"{memberName}: {innerException.Message}", innerException);
+                Log?.Error($"[{memberName}]: {innerException.Message}", innerException);
+            }
+        }
+
+        /// <summary>
+        /// Wraps up the error message with the CallerMemberName
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="memberName"></param>
+        public static void Debug(string data, [CallerMemberName]string memberName = "") => Log?.Debug($"[{memberName}]: {data}");
+
+        /// <summary>
+        /// Wraps up the error message with the CallerMemberName
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="innerException"></param>
+        /// <param name="memberName"></param>
+        public static void Warn(string data, Exception innerException = null, [CallerMemberName]string memberName = "")
+        {
+            if (innerException != null)
+            {
+                Log?.Warn($"[{memberName}]: {data} {innerException.InnerException}", innerException);
+            }
+            else
+            {
+                Log?.Warn($"[{memberName}]: {data}");
+            }
+        }
+
+
+        /// <summary>
+        /// Wraps up the error message with the CallerMemberName
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="innerException"></param>
+        /// <param name="memberName"></param>
+        public static void Error(string data, Exception innerException = null, [CallerMemberName]string memberName = "")
+        {
+            if (innerException != null)
+            {
+                Log?.Error($"[{memberName}]: {data} {innerException.InnerException}", innerException);
+            }
+            else
+            {
+                Log?.Error($"[{memberName}]: {data}");
             }
         }
 
@@ -59,27 +95,52 @@ namespace OpenNos.Core
         {
             if (innerException != null)
             {
-                Log?.Info($"Method: {memberName} Message: {message}", innerException);
+                Log?.Info($"[{memberName}]: {message}", innerException);
+            }
+            else
+            {
+                Log?.Info($"[{memberName}]: {message}");
+            }
+        }
+
+        public static void InitializeLogger(ILog log) => Log = log;
+
+        /// <summary>
+        /// Wraps up the error message with the Logging Event
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="logEvent"></param>
+        /// <param name="data"></param>
+        /// <param name="ex"></param>
+        /// <param name="memberName"></param>
+        public static void LogEvent(string logEvent, string data, Exception ex = null, [CallerMemberName]string memberName = "")
+        {
+            if (ex != null)
+            {
+                Log?.Info($"[{memberName}]: [{logEvent}]{data}");
+            }
+            else
+            {
+                Log?.Info($"[{memberName}]: [{logEvent}]{data}", ex);
             }
         }
 
         /// <summary>
-        /// Wraps up the info message with the Logging Event
+        /// Wraps up the error message with the Logging Event
         /// </summary>
-        /// <param name="message"></param>
         /// <param name="logEvent"></param>
-        /// <param name="caller"></param>
         /// <param name="data"></param>
         /// <param name="ex"></param>
-        public static void LogEvent(string logEvent, string caller, string data, Exception ex = null)
+        /// <param name="memberName"></param>
+        public static void LogEventError(string logEvent, string data, Exception ex = null, [CallerMemberName]string memberName = "")
         {
             if (ex != null)
             {
-                Log?.Info($"[{logEvent}][{caller}]{data}");
+                Log?.Error($"[{memberName}]: [{logEvent}]{data}", ex);
             }
             else
             {
-                Log?.Info($"[{logEvent}][{caller}]{data}", ex);
+                Log?.Error($"[{memberName}]: [{logEvent}]{data}");
             }
         }
 
@@ -91,9 +152,24 @@ namespace OpenNos.Core
         /// <param name="caller"></param>
         /// <param name="data"></param>
         /// <param name="ex"></param>
-        public static void LogEventError(string logEvent, string caller, string data, Exception ex) => Log?.Error($"[{logEvent}][{caller}]{data}", ex);
+        public static void LogUserEvent(string logEvent, string caller, string data) => Log?.Info($"[{logEvent}][{caller}]{data}");
 
-        public static void InitializeLogger(ILog log) => Log = log;
+        /// <summary>
+        /// Wraps up the message with the CallerMemberName
+        /// </summary>
+        /// <param name="logEvent"></param>
+        /// <param name="caller"></param>
+        /// <param name="data"></param>
+        public static void LogUserEventDebug(string logEvent, string caller, string data) => Log?.Debug($"[{logEvent}][{caller}]{data}");
+
+        /// <summary>
+        /// Wraps up the error message with the Logging Event
+        /// </summary>
+        /// <param name="logEvent"></param>
+        /// <param name="caller"></param>
+        /// <param name="data"></param>
+        /// <param name="ex"></param>
+        public static void LogUserEventError(string logEvent, string caller, string data, Exception ex) => Log?.Error($"[{logEvent}][{caller}]{data}", ex);
 
         #endregion
     }

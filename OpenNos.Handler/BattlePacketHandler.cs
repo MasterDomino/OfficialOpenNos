@@ -423,7 +423,7 @@ namespace OpenNos.Handler
                         break;
 
                     default:
-                        Logger.Log.Warn("Not Implemented TargetHitType Handling!");
+                        Logger.Warn("Not Implemented TargetHitType Handling!");
                         break;
                 }
             }
@@ -606,7 +606,7 @@ namespace OpenNos.Handler
                                             foreach (long id in Session.Character.MTListTargetQueue.Where(s => s.EntityType == UserType.Monster).Select(s => s.TargetId))
                                             {
                                                 ClientSession character = ServerManager.Instance.GetSessionByCharacterId(id);
-                                                if (character.CurrentMapInstance == Session.CurrentMapInstance && character.Character.CharacterId != Session.Character.CharacterId)
+                                                if (character != null && character.CurrentMapInstance == Session.CurrentMapInstance && character.Character.CharacterId != Session.Character.CharacterId)
                                                 {
                                                     if (Session.CurrentMapInstance?.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
                                                     {
@@ -943,7 +943,7 @@ namespace OpenNos.Handler
                                             foreach (long id in Session.Character.MTListTargetQueue.Where(s => s.EntityType == UserType.Monster).Select(s => s.TargetId))
                                             {
                                                 MapMonster mon = Session.CurrentMapInstance?.GetMonster(id);
-                                                if (mon.CurrentHp > 0)
+                                                if (mon?.CurrentHp > 0)
                                                 {
                                                     mon.HitQueue.Enqueue(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill, characterSkillInfo?.Skill.Effect ?? ski.Skill.Effect));
                                                 }

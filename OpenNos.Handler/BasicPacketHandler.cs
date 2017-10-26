@@ -377,7 +377,7 @@ namespace OpenNos.Handler
                                 wearable?.SetRarityPoint();
                             }
 
-                            Logger.LogEvent("PARCEL_GET", Session.GenerateIdentity(), $"IIId: {newInv.Id} ItemVNum: {newInv.ItemVNum} Amount: {mail.AttachmentAmount} Sender: {mail.SenderId}");
+                            Logger.LogUserEvent("PARCEL_GET", Session.GenerateIdentity(), $"IIId: {newInv.Id} ItemVNum: {newInv.ItemVNum} Amount: {mail.AttachmentAmount} Sender: {mail.SenderId}");
 
                             Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_GIFTED")}: {newInv.Item.Name} x {mail.AttachmentAmount}", 12));
 
@@ -1303,7 +1303,7 @@ namespace OpenNos.Handler
                     {
                         ServerManager.Instance.GroupList.Add(Session.Character.Group);
                         Session.SendPacket(UserInterfaceHelper.Instance.GenerateRl(1));
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format("RAID_REGISTERED")));
+                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("RAID_REGISTERED")));
                         ServerManager.Instance.Broadcast(Session, $"qnaml 100 #rl {string.Format(Language.Instance.GetMessageFromKey("SEARCH_TEAM_MEMBERS"), Session.Character.Name, Session.Character.Group.Raid?.Label)}", ReceiverType.AllExceptGroup);
                     }
                     break;
@@ -1313,7 +1313,7 @@ namespace OpenNos.Handler
                     {
                         ServerManager.Instance.GroupList.Remove(Session.Character.Group);
                         Session.SendPacket(UserInterfaceHelper.Instance.GenerateRl(2));
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format("RAID_UNREGISTERED")));
+                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("RAID_UNREGISTERED")));
                     }
                     break;
 
@@ -2047,7 +2047,7 @@ namespace OpenNos.Handler
             }
             catch (Exception e)
             {
-                Logger.Log.Error("Whisper failed.", e);
+                Logger.Error("Whisper failed.", e);
             }
         }
 

@@ -281,18 +281,15 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
                     byte[] receivedBytes = new byte[bytesRead];
                     Array.Copy(_buffer, receivedBytes, bytesRead);
 
-                    // Read messages according to current wire protocol
-                    IEnumerable<IScsMessage> messages = WireProtocol.CreateMessages(receivedBytes);
-
-                    // Raise MessageReceived event for all received messages
-                    foreach (IScsMessage message in messages)
+                    // Read messages according to current wire protocol and raise MessageReceived event for all received messages
+                    foreach (IScsMessage message in WireProtocol.CreateMessages(receivedBytes))
                     {
                         OnMessageReceived(message, DateTime.Now);
                     }
                 }
                 else
                 {
-                    Logger.Log.Warn(Language.Instance.GetMessageFromKey("CLIENT_DISCONNECTED"));
+                    Logger.Warn(Language.Instance.GetMessageFromKey("CLIENT_DISCONNECTED"));
                     Disconnect();
                 }
 

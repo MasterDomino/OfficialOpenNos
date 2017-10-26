@@ -51,14 +51,14 @@ namespace OpenNos.GameObject
 
         public void AddSession(INetworkClient customClient)
         {
-            Logger.Log.Info(Language.Instance.GetMessageFromKey("NEW_CONNECT") + customClient.ClientId);
+            Logger.Info(Language.Instance.GetMessageFromKey("NEW_CONNECT") + customClient.ClientId);
 
             ClientSession session = IntializeNewSession(customClient);
             customClient.SetClientSession(session);
 
             if (session != null && IsWorldServer && !_sessions.TryAdd(customClient.ClientId, session))
             {
-                Logger.Log.WarnFormat(Language.Instance.GetMessageFromKey("FORCED_DISCONNECT"), customClient.ClientId);
+                Logger.Warn(string.Format(Language.Instance.GetMessageFromKey("FORCED_DISCONNECT"), customClient.ClientId));
                 customClient.Disconnect();
                 _sessions.TryRemove(customClient.ClientId, out session);
             }
@@ -110,7 +110,7 @@ namespace OpenNos.GameObject
                 }
 
                 client.Disconnect();
-                Logger.Log.Info(Language.Instance.GetMessageFromKey("DISCONNECT") + client.ClientId);
+                Logger.Info(Language.Instance.GetMessageFromKey("DISCONNECT") + client.ClientId);
                 // session = null;
             }
         }

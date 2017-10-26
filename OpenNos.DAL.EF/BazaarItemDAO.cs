@@ -48,7 +48,7 @@ namespace OpenNos.DAL.EF
             }
             catch (Exception e)
             {
-                Logger.Log.Error(string.Format(Language.Instance.GetMessageFromKey("DELETE_ERROR"), bazaarItemId, e.Message), e);
+                Logger.Error(string.Format(Language.Instance.GetMessageFromKey("DELETE_ERROR"), bazaarItemId, e.Message), e);
                 return DeleteResult.Error;
             }
         }
@@ -74,7 +74,7 @@ namespace OpenNos.DAL.EF
             }
             catch (Exception e)
             {
-                Logger.Log.Error(string.Format(Language.Instance.GetMessageFromKey("UPDATE_ERROR"), bazaarItem.BazaarItemId, e.Message), e);
+                Logger.Error(string.Format(Language.Instance.GetMessageFromKey("UPDATE_ERROR"), bazaarItem.BazaarItemId, e.Message), e);
                 return SaveResult.Error;
             }
         }

@@ -47,8 +47,8 @@ namespace OpenNos.Handler
 
             if (channelpacket == null)
             {
-                Logger.Log.Error("Could not retrieve Worldserver groups. Please make sure they've already been registered.");
-                _session.SendPacket($"fail {string.Format(Language.Instance.GetMessageFromKey("NO_WORLDSERVERS"))}");
+                Logger.Error("Could not retrieve Worldserver groups. Please make sure they've already been registered.");
+                _session.SendPacket($"fail {Language.Instance.GetMessageFromKey("NO_WORLDSERVERS")}");
             }
 
             return channelpacket;
@@ -121,7 +121,7 @@ namespace OpenNos.Handler
                                     }
 
                                     int newSessionId = SessionFactory.Instance.GenerateSessionId();
-                                    Logger.Log.DebugFormat(Language.Instance.GetMessageFromKey("CONNECTION"), user.Name, newSessionId);
+                                    Logger.Debug(string.Format(Language.Instance.GetMessageFromKey("CONNECTION"), user.Name, newSessionId));
                                     try
                                     {
                                         ipAddress = ipAddress.Substring(6, ipAddress.LastIndexOf(':') - 6);
@@ -129,7 +129,7 @@ namespace OpenNos.Handler
                                     }
                                     catch (Exception ex)
                                     {
-                                        Logger.Log.Error("General Error SessionId: " + newSessionId, ex);
+                                        Logger.Error("General Error SessionId: " + newSessionId, ex);
                                     }
                                     string[] clientData = loginPacket.ClientData.Split('.');
                                     bool ignoreUserName = short.TryParse(clientData[3], out short clientVersion) ? (clientVersion < 3075 || ConfigurationManager.AppSettings["UseOldCrypto"] == "true") : false;
@@ -141,12 +141,12 @@ namespace OpenNos.Handler
                 }
                 else
                 {
-                    _session.SendPacket($"fail {string.Format(Language.Instance.GetMessageFromKey("ALREADY_CONNECTED"))}");
+                    _session.SendPacket($"fail {Language.Instance.GetMessageFromKey("ALREADY_CONNECTED")}");
                 }
             }
             else
             {
-                _session.SendPacket($"fail {string.Format(Language.Instance.GetMessageFromKey("IDERROR"))}");
+                _session.SendPacket($"fail {Language.Instance.GetMessageFromKey("IDERROR")}");
             }
         }
 

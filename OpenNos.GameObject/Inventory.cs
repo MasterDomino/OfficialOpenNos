@@ -200,7 +200,7 @@ namespace OpenNos.GameObject
                             max = max > MAX_ITEM_AMOUNT ? MAX_ITEM_AMOUNT : max;
                             newItem.Amount = (byte)(slot.Amount + newItem.Amount - max);
                             newItem.Amount = (byte)(newItem.Amount < 0 ? 0 : newItem.Amount);
-                            Logger.LogEvent("ITEM_CREATE", Owner.GenerateIdentity(), $"IIId: {slot.Id} ItemVNum: {slot.ItemVNum} Amount: {max - slot.Amount} MapId: {Owner.MapInstance?.Map.MapId} MapX: {Owner.PositionX} MapY: {Owner.PositionY}");
+                            Logger.LogUserEvent("ITEM_CREATE", Owner.GenerateIdentity(), $"IIId: {slot.Id} ItemVNum: {slot.ItemVNum} Amount: {max - slot.Amount} MapId: {Owner.MapInstance?.Map.MapId} MapX: {Owner.PositionX} MapY: {Owner.PositionY}");
                             slot.Amount = (byte)max;
                             invlist.Add(slot);
                             Owner.Session?.SendPacket(slot.GenerateInventoryAdd());
@@ -235,7 +235,7 @@ namespace OpenNos.GameObject
         {
             if (Owner != null)
             {
-                Logger.LogEvent("ITEM_CREATE", Owner.GenerateIdentity(), $"IIId: {itemInstance.Id} ItemVNum: {itemInstance.ItemVNum} Amount: {itemInstance.Amount} MapId: {Owner.MapInstance?.Map.MapId} MapX: {Owner.PositionX} MapY: {Owner.PositionY}");
+                Logger.LogUserEvent("ITEM_CREATE", Owner.GenerateIdentity(), $"IIId: {itemInstance.Id} ItemVNum: {itemInstance.ItemVNum} Amount: {itemInstance.Amount} MapId: {Owner.MapInstance?.Map.MapId} MapX: {Owner.PositionX} MapY: {Owner.PositionY}");
 
                 itemInstance.Slot = slot;
                 itemInstance.Type = type;
@@ -400,7 +400,7 @@ namespace OpenNos.GameObject
             }
             catch (InvalidOperationException ioEx)
             {
-                Logger.LogEventError("LoadBySlotAndType", Owner?.Session?.GenerateIdentity(), "MULTIPLE_ITEMS_IN_SLOT", ioEx);
+                Logger.LogUserEventError("LoadBySlotAndType", Owner?.Session?.GenerateIdentity(), "MULTIPLE_ITEMS_IN_SLOT", ioEx);
                 bool isFirstItem = true;
                 foreach (ItemInstance item in Where(i => i?.GetType().Equals(typeof(T)) == true && i.Slot == slot && i.Type == type))
                 {
@@ -440,7 +440,7 @@ namespace OpenNos.GameObject
             }
             catch (InvalidOperationException ioEx)
             {
-                Logger.LogEventError("LoadBySlotAndType", Owner?.Session?.GenerateIdentity(), "MULTIPLE_ITEMS_IN_SLOT", ioEx);
+                Logger.LogUserEventError("LoadBySlotAndType", Owner?.Session?.GenerateIdentity(), "MULTIPLE_ITEMS_IN_SLOT", ioEx);
                 bool isFirstItem = true;
                 foreach (ItemInstance item in Where(i => i.Slot.Equals(slot) && i.Type.Equals(type)))
                 {
@@ -552,7 +552,7 @@ namespace OpenNos.GameObject
 
         public void MoveItem(InventoryType sourcetype, InventoryType desttype, short sourceSlot, byte amount, short destinationSlot, out ItemInstance sourceInventory, out ItemInstance destinationInventory)
         {
-            Logger.LogEvent("ITEM_MOVE", Owner.GenerateIdentity(), $"SourceType: {sourcetype.ToString()} DestType: {desttype.ToString()} SourceSlot: {sourceSlot} Amount: {amount} DestSlot: {destinationSlot}");
+            Logger.LogUserEvent("ITEM_MOVE", Owner.GenerateIdentity(), $"SourceType: {sourcetype.ToString()} DestType: {desttype.ToString()} SourceSlot: {sourceSlot} Amount: {amount} DestSlot: {destinationSlot}");
 
             // load source and destination slots
             sourceInventory = LoadBySlotAndType(sourceSlot, sourcetype);

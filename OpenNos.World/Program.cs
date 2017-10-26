@@ -110,7 +110,7 @@ namespace OpenNos.World
             // initialize api
             if (CommunicationServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["MasterAuthKey"]))
             {
-                Logger.Log.Info(Language.Instance.GetMessageFromKey("API_INITIALIZED"));
+                Logger.Info(Language.Instance.GetMessageFromKey("API_INITIALIZED"));
             }
 
             // initialize DB
@@ -139,7 +139,7 @@ namespace OpenNos.World
             }
             catch (Exception ex)
             {
-                Logger.Log.Error("General Error", ex);
+                Logger.Error("General Error", ex);
             }
             NetworkManager<WorldCryptography> networkManager = null;
             portloop:
@@ -152,10 +152,10 @@ namespace OpenNos.World
                 if (ex.ErrorCode == 10048)
                 {
                     port++;
-                    Logger.Log.Info("Port already in use! Incrementing...");
+                    Logger.Info("Port already in use! Incrementing...");
                     goto portloop;
                 }
-                Logger.Log.Error("General Error", ex);
+                Logger.Error("General Error", ex);
                 Environment.Exit(ex.ErrorCode);
             }
 
@@ -169,7 +169,7 @@ namespace OpenNos.World
             }
             else
             {
-                Logger.Log.ErrorFormat("Could not retrieve ChannelId from Web API.");
+                Logger.Error("Could not retrieve ChannelId from Web API.");
                 Console.ReadKey();
             }
         }
@@ -278,7 +278,7 @@ namespace OpenNos.World
             {
                 Logger.Error(ex);
             }
-            Logger.Log.Debug("Server crashed! Rebooting gracefully...");
+            Logger.Debug("Server crashed! Rebooting gracefully...");
             string serverGroup = ConfigurationManager.AppSettings["ServerGroup"];
             int port = Convert.ToInt32(ConfigurationManager.AppSettings["WorldPort"]);
             CommunicationServiceClient.Instance.UnregisterWorldServer(ServerManager.Instance.WorldId);

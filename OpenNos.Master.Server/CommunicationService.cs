@@ -327,7 +327,7 @@ namespace OpenNos.Master.Server
             }
             catch (Exception ex)
             {
-                Logger.Log.Error("Error while retreiving server Statistics:", ex);
+                Logger.LogEventError("RETRIEVE_EXCEPTION", "Error while retreiving server Statistics:", ex);
             }
 
             return result;

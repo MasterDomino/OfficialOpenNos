@@ -1,8 +1,7 @@
 namespace OpenNos.DAL.EF.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class Aphrodite69 : DbMigration
     {
         public override void Up()
@@ -18,12 +17,7 @@ namespace OpenNos.DAL.EF.Migrations
                         EquipmentSerialId = c.Guid(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
-            
         }
-        
-        public override void Down()
-        {
-            DropTable("dbo.CellonOption");
-        }
+        public override void Down() => DropTable("dbo.CellonOption");
     }
 }

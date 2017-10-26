@@ -966,7 +966,7 @@ namespace OpenNos.GameObject
                                     Session.SendPacket(GenerateStat());
                                     Session.SendPacket(GenerateStatChar());
 
-                                    Logger.LogEvent("CHARACTER_SPECIALIST_RETURN", Session.GenerateIdentity(), $"SpCooldown: {SpCooldown}");
+                                    Logger.LogUserEvent("CHARACTER_SPECIALIST_RETURN", Session.GenerateIdentity(), $"SpCooldown: {SpCooldown}");
 
                                     Observable.Timer(TimeSpan.FromMilliseconds(SpCooldown * 1000)).Subscribe(o =>
                                     {
@@ -1386,7 +1386,7 @@ namespace OpenNos.GameObject
                         DestinationCharacterId = Family.FamilyId,
                         SourceCharacterId = CharacterId,
                         SourceWorldId = ServerManager.Instance.WorldId,
-                        Message = UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("FAMILY_UP")), 0),
+                        Message = UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("FAMILY_UP"), 0),
                         Type = MessageType.Family
                     });
                 }
@@ -1733,7 +1733,7 @@ namespace OpenNos.GameObject
 
         public string GenerateLevelUp()
         {
-            Logger.LogEvent("LEVELUP", Session.GenerateIdentity(), $"Level: {Level} JobLevel: {JobLevel} SPLevel: {Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear)?.SpLevel} HeroLevel: {HeroLevel} MapId: {Session.CurrentMapInstance?.Map.MapId} MapX: {PositionX} MapY: {PositionY}");
+            Logger.LogUserEvent("LEVELUP", Session.GenerateIdentity(), $"Level: {Level} JobLevel: {JobLevel} SPLevel: {Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear)?.SpLevel} HeroLevel: {HeroLevel} MapId: {Session.CurrentMapInstance?.Map.MapId} MapX: {PositionX} MapY: {PositionY}");
             return $"levelup {CharacterId}";
         }
 
@@ -2630,7 +2630,7 @@ namespace OpenNos.GameObject
                     AccountDTO referrer = DAOFactory.AccountDAO.LoadById(character.AccountId);
                     if (referrer != null && !AccountId.Equals(character.AccountId))
                     {
-                        Logger.LogEvent("REFERRERREWARD", Session.GenerateIdentity(), $"AccountId: {AccountId} ReferrerId: {referrerId}");
+                        Logger.LogUserEvent("REFERRERREWARD", Session.GenerateIdentity(), $"AccountId: {AccountId} ReferrerId: {referrerId}");
                         DAOFactory.AccountDAO.WriteGeneralLog(AccountId, Session.Account.RegistrationIP, CharacterId, GeneralLogType.ReferralProgram, $"ReferrerId: {referrerId}");
 
                         // send gifts like you want
@@ -3254,7 +3254,7 @@ namespace OpenNos.GameObject
             }
             catch (Exception ex)
             {
-                Logger.Log.Debug("Error while refreshing mail: " + ex.Message);
+                Logger.Debug("Error while refreshing mail: " + ex.Message);
             }
         }
 
@@ -3349,7 +3349,7 @@ namespace OpenNos.GameObject
 
         public void Save()
         {
-            Logger.LogEvent("CHARACTER_DB_SAVE", Session.GenerateIdentity(), "START");
+            Logger.LogUserEvent("CHARACTER_DB_SAVE", Session.GenerateIdentity(), "START");
             try
             {
                 AccountDTO account = Session.Account;
@@ -3391,10 +3391,10 @@ namespace OpenNos.GameObject
                                 }
                                 DAOFactory.IteminstanceDAO.Delete(inventoryToDeleteId);
                             }
-                            catch (Exception err)
+                            catch (Exception ex)
                             {
-                                Logger.Error(err);
-                                Logger.Debug(Name, $"Detailed Item Information: Item ID = {inventoryToDeleteId}");
+                                Logger.Error(ex);
+                                Logger.LogUserEventError("ONSAVEDELETION_EXCEPTION", Name, $"Detailed Item Information: Item ID = {inventoryToDeleteId}", ex);
                             }
                         }
 
@@ -3505,11 +3505,11 @@ namespace OpenNos.GameObject
                         DAOFactory.RespawnDAO.InsertOrUpdate(ref res);
                     }
                 }
-                Logger.LogEvent("CHARACTER_DB_SAVE", Session.GenerateIdentity(), "FINISH");
+                Logger.LogUserEvent("CHARACTER_DB_SAVE", Session.GenerateIdentity(), "FINISH");
             }
             catch (Exception e)
             {
-                Logger.LogEvent("CHARACTER_DB_SAVE", Session.GenerateIdentity(), "ERROR", e);
+                Logger.LogUserEventError("CHARACTER_DB_SAVE", Session.GenerateIdentity(), "ERROR", e);
             }
         }
 

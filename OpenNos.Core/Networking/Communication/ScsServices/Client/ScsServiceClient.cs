@@ -273,7 +273,7 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Client
             }
             catch (Exception ex)
             {
-                Logger.Log.Error("Invoke response failed to send", ex);
+                Logger.Error("Invoke response failed to send", ex);
             }
         }
 

@@ -78,12 +78,12 @@ namespace OpenNos.DAL.EF.Helpers
                 {
                     context.Database.Initialize(true);
                     context.Database.Connection.Open();
-                    Logger.Log.Info(Language.Instance.GetMessageFromKey("DATABASE_INITIALIZED"));
+                    Logger.Info(Language.Instance.GetMessageFromKey("DATABASE_INITIALIZED"));
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log.Error("Database Error", ex);
-                    Logger.Log.Error(Language.Instance.GetMessageFromKey("DATABASE_NOT_UPTODATE"));
+                    Logger.LogEventError("DATABASE_INITIALIZATION", "Database Error", ex);
+                    Logger.LogEventError("DATABASE_INITIALIZATION", Language.Instance.GetMessageFromKey("DATABASE_NOT_UPTODATE"));
                     return false;
                 }
                 return true;

@@ -94,7 +94,7 @@ namespace OpenNos.Master.Server
                     return;
                 }
 
-                Logger.Log.Info(Language.Instance.GetMessageFromKey("CONFIG_LOADED"));
+                Logger.Info(Language.Instance.GetMessageFromKey("CONFIG_LOADED"));
 
                 try
                 {
@@ -110,7 +110,7 @@ namespace OpenNos.Master.Server
                     _server.ClientDisconnected += onClientDisconnected;
 
                     _server.Start();
-                    Logger.Log.Info(Language.Instance.GetMessageFromKey("STARTED"));
+                    Logger.Info(Language.Instance.GetMessageFromKey("STARTED"));
                     if (!ignoreTelemetry)
                     {
                         string guid = ((GuidAttribute)Assembly.GetAssembly(typeof(ScsServiceBuilder)).GetCustomAttributes(typeof(GuidAttribute), true)[0]).Value;
@@ -147,19 +147,19 @@ namespace OpenNos.Master.Server
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log.Error("General Error Server", ex);
+                    Logger.Error("General Error Server", ex);
                 }
             }
             catch (Exception ex)
             {
-                Logger.Log.Error("General Error", ex);
+                Logger.Error("General Error", ex);
                 Console.ReadKey();
             }
         }
 
-        private static void onClientConnected(object sender, ServiceClientEventArgs e) => Logger.Log.Info(Language.Instance.GetMessageFromKey("NEW_CONNECT") + e.Client.ClientId);
+        private static void onClientConnected(object sender, ServiceClientEventArgs e) => Logger.Info(Language.Instance.GetMessageFromKey("NEW_CONNECT") + e.Client.ClientId);
 
-        private static void onClientDisconnected(object sender, ServiceClientEventArgs e) => Logger.Log.Info(Language.Instance.GetMessageFromKey("DISCONNECT") + e.Client.ClientId);
+        private static void onClientDisconnected(object sender, ServiceClientEventArgs e) => Logger.Info(Language.Instance.GetMessageFromKey("DISCONNECT") + e.Client.ClientId);
 
         private static void registerMappings()
         {

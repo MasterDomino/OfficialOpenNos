@@ -174,7 +174,7 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Service
             }
             catch (Exception ex)
             {
-                Logger.Log.Error("Invoke response send failed", ex);
+                Logger.Error("Invoke response send failed", ex);
             }
         }
 

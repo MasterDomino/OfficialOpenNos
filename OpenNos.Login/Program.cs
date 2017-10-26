@@ -77,7 +77,7 @@ namespace OpenNos.Login
                     // initialize api
                     if (CommunicationServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["MasterAuthKey"]))
                     {
-                        Logger.Log.Info(Language.Instance.GetMessageFromKey("API_INITIALIZED"));
+                        Logger.Info(Language.Instance.GetMessageFromKey("API_INITIALIZED"));
                     }
 
                     // initialize DB
@@ -87,7 +87,7 @@ namespace OpenNos.Login
                         return;
                     }
 
-                    Logger.Log.Info(Language.Instance.GetMessageFromKey("CONFIG_LOADED"));
+                    Logger.Info(Language.Instance.GetMessageFromKey("CONFIG_LOADED"));
 
                     try
                     {
@@ -101,12 +101,12 @@ namespace OpenNos.Login
                     }
                     catch (Exception ex)
                     {
-                        Logger.Log.Error("General Error Server", ex);
+                        Logger.LogEventError("INITIALIZATION_EXCEPTION", "General Error Server", ex);
                     }
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log.Error("General Error", ex);
+                    Logger.LogEventError("INITIALIZATION_EXCEPTION", "General Error", ex);
                     Console.ReadKey();
                 }
             }

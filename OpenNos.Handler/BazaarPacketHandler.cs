@@ -99,7 +99,7 @@ namespace OpenNos.Handler
                             {
                                 Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: { bzcree.Item.Item.Name} x {cBuyPacket.Amount}", 10));
                             }
-                            Logger.LogEvent("BAZAAR_BUY", Session.GenerateIdentity(), $"BazaarId: {cBuyPacket.BazaarId} VNum: {cBuyPacket.VNum} Amount: {cBuyPacket.Amount} Price: {cBuyPacket.Price}");
+                            Logger.LogUserEvent("BAZAAR_BUY", Session.GenerateIdentity(), $"BazaarId: {cBuyPacket.BazaarId} VNum: {cBuyPacket.VNum} Amount: {cBuyPacket.Amount} Price: {cBuyPacket.Price}");
                         }
                     }
                     else
@@ -156,7 +156,7 @@ namespace OpenNos.Handler
                         }
                         Session.SendPacket($"rc_scalc 1 {bz.Price} {bz.Amount - Item.Amount} {bz.Amount} {taxes} {price + taxes}");
 
-                        Logger.LogEvent("BAZAAR_REMOVE", Session.GenerateIdentity(), $"BazaarId: {cScalcPacket.BazaarId}, OldIIId: {bz.ItemInstanceId} NewIIId: {newId} VNum: {Item.ItemVNum} Amount: {bz.Amount} RemainingAmount: {Item.Amount} Price: {bz.Price}");
+                        Logger.LogUserEvent("BAZAAR_REMOVE", Session.GenerateIdentity(), $"BazaarId: {cScalcPacket.BazaarId}, OldIIId: {bz.ItemInstanceId} NewIIId: {newId} VNum: {Item.ItemVNum} Amount: {bz.Amount} RemainingAmount: {Item.Amount} Price: {bz.Price}");
 
                         if (DAOFactory.BazaarItemDAO.LoadById(bz.BazaarItemId) != null)
                         {
@@ -315,7 +315,7 @@ namespace OpenNos.Handler
             Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("OBJECT_IN_BAZAAR"), 10));
             Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OBJECT_IN_BAZAAR"), 0));
 
-            Logger.LogEvent("BAZAAR_INSERT", Session.GenerateIdentity(), $"BazaarId: {bazaarItem.BazaarItemId}, IIId: {bazaarItem.ItemInstanceId} VNum: {bazar.ItemVNum} Amount: {cRegPacket.Amount} Price: {cRegPacket.Price} Time: {duration}");
+            Logger.LogUserEvent("BAZAAR_INSERT", Session.GenerateIdentity(), $"BazaarId: {bazaarItem.BazaarItemId}, IIId: {bazaarItem.ItemInstanceId} VNum: {bazar.ItemVNum} Amount: {cRegPacket.Amount} Price: {cRegPacket.Price} Time: {duration}");
 
             Session.SendPacket("rc_reg 1");
         }
