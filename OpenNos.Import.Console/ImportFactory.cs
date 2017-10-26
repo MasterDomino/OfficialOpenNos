@@ -1692,7 +1692,7 @@ namespace OpenNos.Import.Console
             Logger.Info(string.Format(Language.Instance.GetMessageFromKey("PORTALS_PARSED"), portalCounter));
         }
 
-        public void ImportRecipe()
+        /*public void ImportRecipe()
         {
             int count = 0;
             int mapnpcid = 0;
@@ -1715,12 +1715,11 @@ namespace OpenNos.Import.Console
                             recipe = new RecipeDTO
                             {
                                 ItemVNum = short.Parse(currentPacket[i]),
-                                MapNpcId = mapnpcid
                             };
-                            if (DAOFactory.RecipeDAO.LoadByNpc(mapnpcid).Any(s => s.ItemVNum == recipe.ItemVNum))
-                            {
-                                continue;
-                            }
+                            //if (DAOFactory.RecipeDAO.LoadByNpc(mapnpcid).Any(s => s.ItemVNum == recipe.ItemVNum))
+                            //{
+                            //    continue;
+                            //}
                             DAOFactory.RecipeDAO.Insert(recipe);
                             count++;
                         }
@@ -1765,7 +1764,7 @@ namespace OpenNos.Import.Console
             }
             Logger.Info(string.Format(Language.Instance.GetMessageFromKey("RECIPES_PARSED"), count));
         }
-
+        */
         //Need fix
         public void ImportRespawnMapType()
         {

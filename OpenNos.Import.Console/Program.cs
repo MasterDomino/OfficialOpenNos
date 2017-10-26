@@ -116,7 +116,7 @@ namespace OpenNos.Import.Console
                     factory.ImportTeleporters();
                     factory.ImportShopItems();
                     factory.ImportShopSkills();
-                    factory.ImportRecipe();
+                    //factory.ImportRecipe();
                 }
                 else
                 {
@@ -238,7 +238,7 @@ namespace OpenNos.Import.Console
                     key = System.Console.ReadKey(true);
                     if (key.KeyChar != 'n')
                     {
-                        factory.ImportRecipe();
+                        //factory.ImportRecipe();
                     }
                 }
                 System.Console.WriteLine(Language.Instance.GetMessageFromKey("DONE"));
