@@ -447,7 +447,7 @@ namespace OpenNos.Handler
             List<CharacterSkill> skills = Session.Character.UseSp ? Session.Character.SkillsSp?.GetAllItems() : Session.Character.Skills?.GetAllItems();
             if (skills != null)
             {
-                CharacterSkill ski = skills.Find(s => s.Skill?.CastId == castingId && (s.Skill?.UpgradeSkill == 0 || s.Skill?.UpgradeSkill == 3));
+                CharacterSkill ski = skills.Find(s => s.Skill?.CastId == castingId);// && (s.Skill?.UpgradeSkill == 0 || s.Skill?.UpgradeSkill == 3));
                 if (castingId != 0)
                 {
                     Session.SendPacket("ms_c 0");
@@ -603,7 +603,7 @@ namespace OpenNos.Handler
 
                                         if (ski.Skill.HitType == 3)
                                         {
-                                            foreach (long id in Session.Character.MTListTargetQueue.Where(s => s.EntityType == UserType.Monster).Select(s => s.TargetId))
+                                            foreach (long id in Session.Character.MTListTargetQueue.Where(s => s.EntityType == UserType.Player).Select(s => s.TargetId))
                                             {
                                                 ClientSession character = ServerManager.Instance.GetSessionByCharacterId(id);
                                                 if (character != null && character.CurrentMapInstance == Session.CurrentMapInstance && character.Character.CharacterId != Session.Character.CharacterId)
@@ -634,8 +634,6 @@ namespace OpenNos.Handler
                                                     }
                                                 }
                                             }
-
-                                            Session.Character.MTListTargetQueue.Clear();
                                         }
                                         else
                                         {
@@ -940,6 +938,8 @@ namespace OpenNos.Handler
 
                                         if (ski.Skill.HitType == 3)
                                         {
+                                            monsterToAttack.HitQueue.Enqueue(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill, characterSkillInfo?.Skill.Effect ?? ski.Skill.Effect, showTargetAnimation: true));
+
                                             foreach (long id in Session.Character.MTListTargetQueue.Where(s => s.EntityType == UserType.Monster).Select(s => s.TargetId))
                                             {
                                                 MapMonster mon = Session.CurrentMapInstance?.GetMonster(id);
@@ -948,7 +948,6 @@ namespace OpenNos.Handler
                                                     mon.HitQueue.Enqueue(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill, characterSkillInfo?.Skill.Effect ?? ski.Skill.Effect));
                                                 }
                                             }
-                                            Session.Character.MTListTargetQueue.Clear();
                                         }
                                         else
                                         {
@@ -1031,6 +1030,11 @@ namespace OpenNos.Handler
                                     Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                 }
                             }
+
+                            if (ski.Skill.HitType == 3)
+                            {
+                                Session.Character.MTListTargetQueue.Clear(); 
+                            }
                         }
                         else
                         {
@@ -1095,11 +1099,11 @@ namespace OpenNos.Handler
                             MapMonster mon = Session.CurrentMapInstance?.GetMonster(id);
                             if (mon.CurrentHp > 0)
                             {
-                                mon.HitQueue.Enqueue(new HitRequest(TargetHitType.ZoneHit, Session, characterSkill.Skill, x, y));
+                                mon.HitQueue.Enqueue(new HitRequest(TargetHitType.ZoneHit, Session, characterSkill.Skill, characterSkill.Skill.Effect, x, y));
                             }
                         }
 
-                        foreach (long id in Session.Character.MTListTargetQueue.Where(s => s.EntityType == UserType.Monster).Select(s => s.TargetId))
+                        foreach (long id in Session.Character.MTListTargetQueue.Where(s => s.EntityType == UserType.Player).Select(s => s.TargetId))
                         {
                             ClientSession character = ServerManager.Instance.GetSessionByCharacterId(id);
                             if (character != null && character.CurrentMapInstance == Session.CurrentMapInstance && character.Character.CharacterId != Session.Character.CharacterId)
