@@ -309,7 +309,7 @@ namespace OpenNos.GameObject
                         //break;
                 }
 
-                if (Item.MaxCellonLvl < dataIndex && session.Character.Gold >= goldAmount)
+                if (Item.MaxCellonLvl > dataIndex && session.Character.Gold >= goldAmount)
                 {
                     short[][] minimumData = new short[][] {
                     new short[] { 30, 50, 5, 8, 0, 0 },                 //lv1
