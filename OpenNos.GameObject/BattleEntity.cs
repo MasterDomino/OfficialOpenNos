@@ -147,6 +147,9 @@ namespace OpenNos.GameObject
                 ShellArmorEffects = new List<ShellEffectDTO>(armor.ShellEffects);
             }
 
+            CellonOptions = Session.Character.CellonOptions.GetAllItems();
+
+
             MeleeDefense = character.Defence;
             MeleeDefenseDodge = character.DefenceRate;
             RangeDefense = character.DistanceDefence;
@@ -280,6 +283,8 @@ namespace OpenNos.GameObject
         public List<ShellEffectDTO> ShellArmorEffects { get; set; }
 
         public List<ShellEffectDTO> ShellWeaponEffects { get; set; }
+
+        public List<CellonOptionDTO> CellonOptions { get; set; }
 
         public bool Invincible { get; set; }
 

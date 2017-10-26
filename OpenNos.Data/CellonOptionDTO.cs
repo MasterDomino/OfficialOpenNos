@@ -12,21 +12,24 @@
  * GNU General Public License for more details.
  */
 
+using OpenNos.Domain;
 using System;
 
 namespace OpenNos.Data
 {
-    public class CellonOptionDTO : SynchronizableBaseDTO
+    public class CellonOptionDTO : MappingBaseDTO
     {
         #region Properties
 
-        public Guid EquipmentSerialId { get; set; }
+        public long CellonOptionId { get; set; }
 
         public byte Level { get; set; }
 
-        public byte Type { get; set; }
+        public CellonOptionType Type { get; set; }
 
         public int Value { get; set; }
+
+        public Guid EquipmentSerialId { get; set; }
 
         #endregion
     }

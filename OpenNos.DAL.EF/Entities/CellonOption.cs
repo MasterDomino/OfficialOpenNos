@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify
@@ -12,18 +12,21 @@
  * GNU General Public License for more details.
  */
 
+using OpenNos.Domain;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OpenNos.DAL.EF
 {
-    public class CellonOption : SynchronizableBaseEntity
+    public class CellonOption
     {
         #region Properties
 
+        public long CellonOptionId { get; set; }
+
         public byte Level { get; set; }
 
-        public byte Type { get; set; }
+        public CellonOptionType Type { get; set; }
 
         public int Value { get; set; }
 

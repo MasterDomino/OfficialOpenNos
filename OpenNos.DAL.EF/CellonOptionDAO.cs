@@ -12,28 +12,93 @@
  * GNU General Public License for more details.
  */
 
+using OpenNos.Core;
+using OpenNos.DAL.EF.DB;
 using OpenNos.DAL.EF.Helpers;
 using OpenNos.DAL.Interface;
 using OpenNos.Data;
+using OpenNos.Data.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace OpenNos.DAL.EF
 {
-    public class CellonOptionDAO : SynchronizableBaseDAO<CellonOption, CellonOptionDTO>, ICellonOptionDAO
+    public class CellonOptionDAO : MappingBaseDAO<CellonOption, CellonOptionDTO>, ICellonOptionDAO
     {
         #region Methods
 
         public IEnumerable<CellonOptionDTO> GetOptionsByWearableInstanceId(Guid wearableInstanceId)
         {
-            using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
+            using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
-                foreach (CellonOption cellonOptionobject in context.CellonOption.Where(i => i.EquipmentSerialId.Equals(wearableInstanceId)))
+                return context.CellonOption.Where(c => c.EquipmentSerialId == wearableInstanceId).ToList().Select(c => _mapper.Map<CellonOptionDTO>(c)).ToList();
+            }
+        }
+
+        public DeleteResult DeleteByEquipmentSerialId(Guid id)
+        {
+            try
+            {
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    yield return _mapper.Map<CellonOptionDTO>(cellonOptionobject);
+                    List<ShellEffect> deleteentities = context.ShellEffect.Where(s => s.EquipmentSerialId == id).ToList();
+                    if (deleteentities.Count != 0)
+                    {
+                        context.ShellEffect.RemoveRange(deleteentities);
+                        context.SaveChanges();
+                    }
+
+                    return DeleteResult.Deleted;
                 }
             }
+            catch (Exception e)
+            {
+                Logger.Log.Error(string.Format(Language.Instance.GetMessageFromKey("DELETE_ERROR"), id, e.Message), e);
+                return DeleteResult.Error;
+            }
+        }
+
+        public CellonOptionDTO InsertOrUpdate(CellonOptionDTO cellonOption)
+        {
+            try
+            {
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
+                {
+                    long cellonOptionId = cellonOption.CellonOptionId;
+                    CellonOption entity = context.CellonOption.FirstOrDefault(c => c.CellonOptionId.Equals(cellonOptionId));
+
+                    if (entity == null)
+                    {
+                        return insert(cellonOption, context);
+                    }
+                    return update(entity, cellonOption, context);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Log.Error(string.Format(Language.Instance.GetMessageFromKey("INSERT_ERROR"), cellonOption, e.Message), e);
+                return cellonOption;
+            }
+        }
+
+        private CellonOptionDTO insert(CellonOptionDTO cellonOption, OpenNosContext context)
+        {
+            CellonOption entity = _mapper.Map<CellonOption>(cellonOption);
+            context.CellonOption.Add(entity);
+            context.SaveChanges();
+            return _mapper.Map<CellonOptionDTO>(entity);
+        }
+
+        private CellonOptionDTO update(CellonOption entity, CellonOptionDTO cellonOption, OpenNosContext context)
+        {
+            if (entity != null)
+            {
+                _mapper.Map(cellonOption, entity);
+                context.SaveChanges();
+            }
+
+            return _mapper.Map<CellonOptionDTO>(entity);
         }
 
         #endregion

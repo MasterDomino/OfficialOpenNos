@@ -16,14 +16,24 @@ using OpenNos.DAL.Interface;
 using OpenNos.Data;
 using System;
 using System.Collections.Generic;
+using OpenNos.Data.Enums;
 
 namespace OpenNos.DAL.Mock
 {
-    public class CellonOptionDAO : SynchronizableBaseDAO<CellonOptionDTO>, ICellonOptionDAO
+    public class CellonOptionDAO : BaseDAO<CellonOptionDTO>, ICellonOptionDAO
     {
+        public DeleteResult DeleteByEquipmentSerialId(Guid id)
+        {
+            throw new NotImplementedException();
+        }
         #region Methods
 
         public IEnumerable<CellonOptionDTO> GetOptionsByWearableInstanceId(Guid wearableInstanceId) => throw new NotImplementedException();
+
+        public CellonOptionDTO InsertOrUpdate(CellonOptionDTO shelleffect)
+        {
+            throw new NotImplementedException();
+        }
 
         #endregion
     }

@@ -28,7 +28,7 @@ namespace OpenNos.DAL.EF
     {
         #region Methods
 
-        public DeleteResult DeleteByItemInstanceId(Guid id)
+        public DeleteResult DeleteByEquipmentSerialId(Guid id)
         {
             try
             {

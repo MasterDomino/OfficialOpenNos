@@ -1557,6 +1557,28 @@ namespace OpenNos.Handler
                         }
                     }
                     break;
+                case 3:
+                    //up_gr 3 0 0 7 1 1 20 99
+                    string[] originalSplit = upgradePacket.OriginalContent.Split(' ');
+                    if (originalSplit.Length == 10
+                        && byte.TryParse(originalSplit[5], out byte firstSlot)
+                        && byte.TryParse(originalSplit[8], out byte secondSlot))
+                    {
+                        inventory = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>(firstSlot, InventoryType.Equipment);
+                        if (inventory != null)
+                        {
+                            if ((inventory.Item.EquipmentSlot == EquipmentType.Necklace || inventory.Item.EquipmentSlot == EquipmentType.Bracelet || inventory.Item.EquipmentSlot == EquipmentType.Ring) && inventory.Item.ItemType != ItemType.Shell && inventory.Item.Type == InventoryType.Equipment)
+                            {
+                                ItemInstance cellon = Session.Character.Inventory.LoadBySlotAndType<ItemInstance>(secondSlot, InventoryType.Main);
+                                if (cellon != null)
+                                {
+                                    if (cellon.ItemVNum > 1016 && cellon.ItemVNum < 1027)
+                                        inventory.OptionItem(Session, cellon.ItemVNum);
+                                }
+                            }
+                        }
+                    }
+                    break;
 
                 case 7:
                     inventory = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>(slot, inventoryType);
