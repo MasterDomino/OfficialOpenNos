@@ -1693,6 +1693,31 @@ namespace OpenNos.Import.Console
             Logger.Info(string.Format(Language.Instance.GetMessageFromKey("PORTALS_PARSED"), portalCounter));
         }
 
+        public void ImportHardcodedItemRecipes()
+        {
+            loadRecipe(1016, 1072);
+            loadRecipe(1018, 1072);
+            // implement this will have a FUCKTON of hardcoding, for fucks sake ENTWELL why u suck soo much -_-
+        }
+
+        private void loadRecipe(short itemVNum, short triggerVNum)
+        {
+            RecipeDTO recipe = DAOFactory.RecipeDAO.LoadByItemVNum(itemVNum);
+            if (recipe != null)
+            {
+                RecipeListDTO recipeList = DAOFactory.RecipeListDAO.LoadByRecipeId(recipe.RecipeId).Where(r => r.ItemVNum != triggerVNum).SingleOrDefault(r => r.ItemVNum == null);
+                if (recipeList != null)
+                {
+                    recipeList.ItemVNum = triggerVNum;
+                    DAOFactory.RecipeListDAO.Update(recipeList);
+                }
+            }
+            else
+            {
+                // add the missing recipes <hardcoded>
+            }
+        }
+
         public void ImportRecipe()
         {
             int count = 0;

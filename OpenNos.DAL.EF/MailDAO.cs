@@ -63,12 +63,12 @@ namespace OpenNos.DAL.EF
 
                     if (entity == null)
                     {
-                        mail = Insert(mail, context);
+                        mail = insert(mail, context);
                         return SaveResult.Inserted;
                     }
 
                     mail.MailId = entity.MailId;
-                    mail = Update(entity, mail, context);
+                    mail = update(entity, mail, context);
                     return SaveResult.Updated;
                 }
             }
@@ -106,7 +106,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        private MailDTO Insert(MailDTO mail, OpenNosContext context)
+        private MailDTO insert(MailDTO mail, OpenNosContext context)
         {
             try
             {
@@ -122,7 +122,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        private MailDTO Update(Mail entity, MailDTO respawn, OpenNosContext context)
+        private MailDTO update(Mail entity, MailDTO respawn, OpenNosContext context)
         {
             if (entity != null)
             {

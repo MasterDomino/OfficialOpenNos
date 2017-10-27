@@ -41,7 +41,7 @@ namespace OpenNos.DAL.EF
                     if (character != null)
                     {
                         character.State = (byte)CharacterState.Inactive;
-                        Update(character, _mapper.Map<CharacterDTO>(character), context);
+                        update(character, _mapper.Map<CharacterDTO>(character), context);
                     }
 
                     return DeleteResult.Deleted;
@@ -100,10 +100,10 @@ namespace OpenNos.DAL.EF
                     Character entity = context.Character.FirstOrDefault(c => c.CharacterId.Equals(characterId));
                     if (entity == null)
                     {
-                        character = Insert(character, context);
+                        character = insert(character, context);
                         return SaveResult.Inserted;
                     }
-                    character = Update(entity, character, context);
+                    character = update(entity, character, context);
                     return SaveResult.Updated;
                 }
             }
@@ -182,7 +182,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        private CharacterDTO Insert(CharacterDTO character, OpenNosContext context)
+        private CharacterDTO insert(CharacterDTO character, OpenNosContext context)
         {
             Character entity = _mapper.Map<Character>(character);
             context.Character.Add(entity);
@@ -190,7 +190,7 @@ namespace OpenNos.DAL.EF
             return _mapper.Map<CharacterDTO>(entity);
         }
 
-        private CharacterDTO Update(Character entity, CharacterDTO character, OpenNosContext context)
+        private CharacterDTO update(Character entity, CharacterDTO character, OpenNosContext context)
         {
             if (entity != null)
             {

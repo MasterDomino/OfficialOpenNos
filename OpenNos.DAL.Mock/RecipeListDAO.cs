@@ -1,6 +1,7 @@
 ﻿using OpenNos.DAL.Interface;
 using OpenNos.Data;
 using System;
+using System.Collections.Generic;
 
 namespace OpenNos.DAL.Mock
 {
@@ -9,6 +10,10 @@ namespace OpenNos.DAL.Mock
         #region Methods
 
         public RecipeListDTO LoadById(int recipeListId) => throw new NotImplementedException();
+
+        public IEnumerable<RecipeListDTO> LoadByItemVNum(short itemVNum) => throw new NotImplementedException();
+
+        public IEnumerable<RecipeListDTO> LoadByMapNpcId(int mapNpcId) => throw new NotImplementedException();
 
         #endregion
     }

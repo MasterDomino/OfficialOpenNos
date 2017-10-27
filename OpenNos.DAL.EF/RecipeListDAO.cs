@@ -80,6 +80,38 @@ namespace OpenNos.DAL.EF
             }
         }
 
+        public IEnumerable<RecipeListDTO> LoadByRecipeId(short recipeId)
+        {
+            using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
+            {
+                foreach (RecipeList recipeList in context.RecipeList.Where(r => r.RecipeId.Equals(recipeId)))
+                {
+                    yield return _mapper.Map<RecipeListDTO>(recipeList);
+                }
+            }
+        }
+
+        public void Update(RecipeListDTO recipe)
+        {
+            try
+            {
+                using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
+                {
+                    RecipeList result = context.RecipeList.FirstOrDefault(r => r.RecipeListId.Equals(recipe.RecipeListId));
+                    if (result != null)
+                    {
+                        recipe.RecipeListId = result.RecipeListId;
+                        _mapper.Map(recipe, result);
+                        context.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+            }
+        }
+
         #endregion
     }
 }

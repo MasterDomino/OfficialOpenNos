@@ -63,11 +63,11 @@ namespace OpenNos.DAL.EF
 
                     if (entity == null)
                     {
-                        mate = Insert(mate, context);
+                        mate = insert(mate, context);
                         return SaveResult.Inserted;
                     }
 
-                    mate = Update(entity, mate, context);
+                    mate = update(entity, mate, context);
                     return SaveResult.Updated;
                 }
             }
@@ -89,7 +89,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        private MateDTO Insert(MateDTO mate, OpenNosContext context)
+        private MateDTO insert(MateDTO mate, OpenNosContext context)
         {
             Mate entity = _mapper.Map<Mate>(mate);
             context.Mate.Add(entity);
@@ -97,7 +97,7 @@ namespace OpenNos.DAL.EF
             return _mapper.Map<MateDTO>(entity);
         }
 
-        private MateDTO Update(Mate entity, MateDTO character, OpenNosContext context)
+        private MateDTO update(Mate entity, MateDTO character, OpenNosContext context)
         {
             if (entity != null)
             {

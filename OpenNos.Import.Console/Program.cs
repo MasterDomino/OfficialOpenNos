@@ -117,6 +117,7 @@ namespace OpenNos.Import.Console
                     factory.ImportShopItems();
                     factory.ImportShopSkills();
                     //factory.ImportRecipe();
+                    //factory.ImportHardcodedItemRecipes();
                 }
                 else
                 {
@@ -234,12 +235,13 @@ namespace OpenNos.Import.Console
                         factory.ImportShopSkills();
                     }
 
-                    System.Console.WriteLine($"{Language.Instance.GetMessageFromKey("PARSE_RECIPES")} [Y/n]");
-                    key = System.Console.ReadKey(true);
-                    if (key.KeyChar != 'n')
-                    {
-                        //factory.ImportRecipe();
-                    }
+                    //System.Console.WriteLine($"{Language.Instance.GetMessageFromKey("PARSE_RECIPES")} [Y/n]");
+                    //key = System.Console.ReadKey(true);
+                    //if (key.KeyChar != 'n')
+                    //{
+                    //    factory.ImportRecipe();
+                    //    factory.ImportHardcodedItemRecipes();
+                    //}
                 }
                 System.Console.WriteLine(Language.Instance.GetMessageFromKey("DONE"));
                 System.Console.ReadKey();

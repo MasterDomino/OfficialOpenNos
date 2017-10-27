@@ -27,9 +27,11 @@ namespace OpenNos.DAL.Mock
 
         public RecipeDTO LoadById(short recipeId) => throw new NotImplementedException();
 
-        public IEnumerable<RecipeDTO> LoadByItemVNum(short itemVNum) => throw new NotImplementedException();
-
         public IEnumerable<RecipeDTO> LoadByNpc(int mapNpcId) => throw new NotImplementedException();
+
+        public void Update(RecipeDTO recipe) => throw new NotImplementedException();
+
+        public RecipeDTO LoadByItemVNum(short itemVNum) => throw new NotImplementedException();
 
         #endregion
     }
