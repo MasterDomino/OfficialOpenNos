@@ -3651,10 +3651,10 @@ namespace OpenNos.Import.Console
 
         private void insertRecipe(short itemVNum, short triggerVNum, byte amount = 1, short[] recipeItems = null)
         {
-            RecipeDTO recipe = DAOFactory.RecipeDAO.LoadByItemVNum(itemVNum);
-            if (recipe != null)
+
+            void recipeAdd(RecipeDTO recipeDTO)
             {
-                RecipeListDTO recipeList = DAOFactory.RecipeListDAO.LoadByRecipeId(recipe.RecipeId).Where(r => r.ItemVNum != triggerVNum).FirstOrDefault(r => r.ItemVNum == null);
+                RecipeListDTO recipeList = DAOFactory.RecipeListDAO.LoadByRecipeId(recipeDTO.RecipeId).Where(r => r.ItemVNum != triggerVNum).FirstOrDefault(r => r.ItemVNum == null);
                 if (recipeList != null)
                 {
                     recipeList.ItemVNum = triggerVNum;
@@ -3665,10 +3665,16 @@ namespace OpenNos.Import.Console
                     recipeList = new RecipeListDTO
                     {
                         ItemVNum = triggerVNum,
-                        RecipeId = recipe.RecipeId
+                        RecipeId = recipeDTO.RecipeId
                     };
                     DAOFactory.RecipeListDAO.Insert(recipeList);
                 }
+            }
+
+            RecipeDTO recipe = DAOFactory.RecipeDAO.LoadByItemVNum(itemVNum);
+            if (recipe != null)
+            {
+                recipeAdd(recipe);
             }
             else
             {
@@ -3694,6 +3700,7 @@ namespace OpenNos.Import.Console
                             DAOFactory.RecipeItemDAO.Insert(recipeItem);
                         }
                     }
+                    recipeAdd(recipe);
                 }
             }
         }
