@@ -32,7 +32,9 @@ namespace OpenNos.Import.Console
         #region Members
 
         private readonly string _folder;
+
         private readonly List<string[]> _packetList = new List<string[]>();
+
         private List<MapDTO> _maps;
 
         #endregion
@@ -372,7 +374,12 @@ namespace OpenNos.Import.Console
             insertRecipe(4966, 5885, 1, new short[] { 4904, 1, 2805, 80, 2816, 60, 5881, 70, 2812, 35, 5885, 1 });
 
             // Ancelloan's Secondary Weapon Production Scroll
-            // TODO: Implement!
+            insertRecipe(4955, 5886, 1, new short[] { 4913, 1, 2805, 80, 2816, 60, 5880, 70, 2812, 35, 5886, 1 });
+            insertRecipe(4956, 5886, 1, new short[] { 4910, 1, 2805, 80, 2816, 60, 5880, 70, 2812, 35, 5886, 1 });
+            insertRecipe(4957, 5886, 1, new short[] { 4916, 1, 2805, 80, 2816, 60, 5880, 70, 2812, 35, 5886, 1 });
+            insertRecipe(4961, 5886, 1, new short[] { 4913, 1, 2805, 80, 2816, 60, 5881, 70, 2812, 35, 5886, 1 });
+            insertRecipe(4962, 5886, 1, new short[] { 4910, 1, 2805, 80, 2816, 60, 5881, 70, 2812, 35, 5886, 1 });
+            insertRecipe(4963, 5886, 1, new short[] { 4916, 1, 2805, 80, 2816, 60, 5881, 70, 2812, 35, 5886, 1 });
 
             // Ancelloan's Armour Production Scroll
             insertRecipe(4949, 5887, 1, new short[] { 4919, 1, 2805, 80, 2816, 40, 5880, 10, 2818, 20, 2819, 10, 2811, 70, 5887, 1 });
