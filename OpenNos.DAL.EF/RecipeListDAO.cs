@@ -100,7 +100,6 @@ namespace OpenNos.DAL.EF
                     RecipeList result = context.RecipeList.FirstOrDefault(r => r.RecipeListId.Equals(recipe.RecipeListId));
                     if (result != null)
                     {
-                        recipe.RecipeListId = result.RecipeListId;
                         _mapper.Map(recipe, result);
                         context.SaveChanges();
                     }
