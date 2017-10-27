@@ -1705,11 +1705,20 @@ namespace OpenNos.Import.Console
             RecipeDTO recipe = DAOFactory.RecipeDAO.LoadByItemVNum(itemVNum);
             if (recipe != null)
             {
-                RecipeListDTO recipeList = DAOFactory.RecipeListDAO.LoadByRecipeId(recipe.RecipeId).Where(r => r.ItemVNum != triggerVNum).SingleOrDefault(r => r.ItemVNum == null);
+                RecipeListDTO recipeList = DAOFactory.RecipeListDAO.LoadByRecipeId(recipe.RecipeId).Where(r => r.ItemVNum != triggerVNum).FirstOrDefault(r => r.ItemVNum == null);
                 if (recipeList != null)
                 {
                     recipeList.ItemVNum = triggerVNum;
                     DAOFactory.RecipeListDAO.Update(recipeList);
+                }
+                else
+                {
+                    recipeList = new RecipeListDTO
+                    {
+                        ItemVNum = triggerVNum,
+                        RecipeId = recipe.RecipeId
+                    };
+                    DAOFactory.RecipeListDAO.Insert(recipeList);
                 }
             }
             else

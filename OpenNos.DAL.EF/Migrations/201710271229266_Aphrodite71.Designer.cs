@@ -7,13 +7,13 @@ namespace OpenNos.DAL.EF.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.3.0-beta1-61024")]
-    public sealed partial class Aphrodite72 : IMigrationMetadata
+    public sealed partial class Aphrodite71 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Aphrodite72));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Aphrodite71));
         
         string IMigrationMetadata.Id
         {
-            get { return "201710271036586_Aphrodite72"; }
+            get { return "201710271229266_Aphrodite71"; }
         }
         
         string IMigrationMetadata.Source

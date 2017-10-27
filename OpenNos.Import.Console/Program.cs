@@ -116,8 +116,8 @@ namespace OpenNos.Import.Console
                     factory.ImportTeleporters();
                     factory.ImportShopItems();
                     factory.ImportShopSkills();
-                    //factory.ImportRecipe();
-                    //factory.ImportHardcodedItemRecipes();
+                    factory.ImportRecipe();
+                    factory.ImportHardcodedItemRecipes();
                 }
                 else
                 {
@@ -235,13 +235,13 @@ namespace OpenNos.Import.Console
                         factory.ImportShopSkills();
                     }
 
-                    //System.Console.WriteLine($"{Language.Instance.GetMessageFromKey("PARSE_RECIPES")} [Y/n]");
-                    //key = System.Console.ReadKey(true);
-                    //if (key.KeyChar != 'n')
-                    //{
-                    //    factory.ImportRecipe();
-                    //    factory.ImportHardcodedItemRecipes();
-                    //}
+                    System.Console.WriteLine($"{Language.Instance.GetMessageFromKey("PARSE_RECIPES")} [Y/n]");
+                    key = System.Console.ReadKey(true);
+                    if (key.KeyChar != 'n')
+                    {
+                        //factory.ImportRecipe();
+                        factory.ImportHardcodedItemRecipes();
+                    }
                 }
                 System.Console.WriteLine(Language.Instance.GetMessageFromKey("DONE"));
                 System.Console.ReadKey();
@@ -276,6 +276,7 @@ namespace OpenNos.Import.Console
             DAOFactory.PortalDAO.RegisterMapping(typeof(PortalDTO)).InitializeMapper();
             DAOFactory.QuicklistEntryDAO.RegisterMapping(typeof(QuicklistEntryDTO)).InitializeMapper();
             DAOFactory.RecipeDAO.RegisterMapping(typeof(RecipeDTO)).InitializeMapper();
+            DAOFactory.RecipeListDAO.RegisterMapping(typeof(RecipeListDTO)).InitializeMapper();
             DAOFactory.RecipeItemDAO.RegisterMapping(typeof(RecipeItemDTO)).InitializeMapper();
             DAOFactory.RespawnDAO.RegisterMapping(typeof(RespawnDTO)).InitializeMapper();
             DAOFactory.BCardDAO.RegisterMapping(typeof(BCardDTO)).InitializeMapper();

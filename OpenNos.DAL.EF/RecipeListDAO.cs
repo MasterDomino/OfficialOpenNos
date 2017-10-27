@@ -62,7 +62,7 @@ namespace OpenNos.DAL.EF
         {
             using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
             {
-                foreach (RecipeList recipeList in context.RecipeList.Where(r => r.ItemVNum.Equals(itemVNum)))
+                foreach (RecipeList recipeList in context.RecipeList.Where(r => r.ItemVNum == itemVNum))
                 {
                     yield return _mapper.Map<RecipeListDTO>(recipeList);
                 }
@@ -73,7 +73,7 @@ namespace OpenNos.DAL.EF
         {
             using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
             {
-                foreach (RecipeList recipeList in context.RecipeList.Where(r => r.MapNpcId.Equals(mapNpcId)))
+                foreach (RecipeList recipeList in context.RecipeList.Where(r => r.MapNpcId == mapNpcId))
                 {
                     yield return _mapper.Map<RecipeListDTO>(recipeList);
                 }

@@ -12,7 +12,7 @@ namespace OpenNos.DAL.EF.Migrations
                 "dbo.RecipeList",
                 c => new
                     {
-                        RecipeListId = c.Int(nullable: false),
+                        RecipeListId = c.Int(nullable: false, identity: true),
                         ItemVNum = c.Short(),
                         MapNpcId = c.Int(),
                         RecipeId = c.Short(nullable: false),
