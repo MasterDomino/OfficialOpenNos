@@ -450,8 +450,11 @@ namespace OpenNos.GameObject
                             MapInstance.Broadcast(StaticPacketHelper.Out(UserType.Monster, onyx.MapMonsterId));
                         });
                     }
-                    hitRequest.Skill.BCards.Where(s => s.Type.Equals((byte)CardType.Buff)).ToList().ForEach(s => s.ApplyBCards(this, hitRequest.Session));
-                    hitRequest.Skill.BCards.Where(s => s.Type.Equals((byte)CardType.Capture)).ToList().ForEach(s => s.ApplyBCards(this, hitRequest.Session));
+                    if(hitmode != 1)
+                    {
+                        hitRequest.Skill.BCards.Where(s => s.Type.Equals((byte)CardType.Buff)).ToList().ForEach(s => s.ApplyBCards(this, hitRequest.Session));
+                        hitRequest.Skill.BCards.Where(s => s.Type.Equals((byte)CardType.Capture)).ToList().ForEach(s => s.ApplyBCards(this, hitRequest.Session));
+                    }
                     if (battleEntity?.ShellWeaponEffects != null)
                     {
                         foreach (ShellEffectDTO shell in battleEntity.ShellWeaponEffects)
