@@ -814,8 +814,11 @@ namespace OpenNos.GameObject
 
             // intialize recipes
             _recipes = new ThreadSafeSortedList<int, List<Recipe>>();
-            //Parallel.ForEach(DAOFactory.RecipeDAO.LoadAll().GroupBy(r => r.MapNpcId), recipeGrouping => _recipes[recipeGrouping.Key] = recipeGrouping.Select(r => r as Recipe).ToList());
+            Parallel.ForEach(DAOFactory.RecipeDAO.LoadAll().GroupBy(r => r.RecipeId), recipeGrouping => _recipes[recipeGrouping.Key] = recipeGrouping.Select(r => r as Recipe).ToList());
             Logger.Info(string.Format(Language.Instance.GetMessageFromKey("RECIPES_LOADED"), _recipes.Sum(i => i.Count)));
+
+            // initialize recipelist
+            // TODO: Implement that!
 
             // initialize shopitems
             _shopItems = new ThreadSafeSortedList<int, List<ShopItemDTO>>();
