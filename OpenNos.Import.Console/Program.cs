@@ -239,7 +239,7 @@ namespace OpenNos.Import.Console
                     key = System.Console.ReadKey(true);
                     if (key.KeyChar != 'n')
                     {
-                        //factory.ImportRecipe();
+                        factory.ImportRecipe();
                         factory.ImportHardcodedItemRecipes();
                     }
                 }

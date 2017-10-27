@@ -1580,6 +1580,11 @@ namespace OpenNos.Handler
             {
                 return;
             }
+            Session.Character.MessageCounter += 2;
+            if (Session.Character.MessageCounter < 11)
+            {
+                return;
+            }
             bool isMuted = Session.Character.MuteMessage();
             string message = sayPacket.Message;
             if (!isMuted)

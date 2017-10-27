@@ -116,14 +116,11 @@ namespace OpenNos.Handler
                             {
                                 Observable.Timer(TimeSpan.FromSeconds(1)).Subscribe(o =>
                                 {
-                                    if (Session?.Character != null)
+                                    CharacterSkill ski = (Session.Character.UseSp ? Session.Character.SkillsSp?.GetAllItems() : Session.Character.Skills?.GetAllItems()).Find(s => s.Skill?.CastId == useSkillPacket.CastId && s.Skill?.UpgradeSkill == 0);
+                                    if (ski != null)
                                     {
-                                        CharacterSkill ski = (Session.Character.UseSp ? Session.Character.SkillsSp?.GetAllItems() : Session.Character.Skills?.GetAllItems()).Find(s => s.Skill?.CastId == useSkillPacket.CastId && s.Skill?.UpgradeSkill == 0);
-                                        if (ski != null)
-                                        {
-                                            ski.LastUse = DateTime.Now.AddMilliseconds(ski.Skill.Cooldown * 100 * -1);
-                                            Session.SendPacket(StaticPacketHelper.SkillReset(useSkillPacket.CastId));
-                                        }
+                                        ski.LastUse = DateTime.Now.AddMilliseconds(ski.Skill.Cooldown * 100 * -1);
+                                        Session.SendPacket(StaticPacketHelper.SkillReset(useSkillPacket.CastId));
                                     }
                                 });
                             }
@@ -147,14 +144,11 @@ namespace OpenNos.Handler
                             {
                                 Observable.Timer(TimeSpan.FromSeconds(1)).Subscribe(o =>
                                 {
-                                    if (Session?.Character != null)
+                                    CharacterSkill ski = (Session.Character.UseSp ? Session.Character.SkillsSp?.GetAllItems() : Session.Character.Skills?.GetAllItems()).Find(s => s.Skill?.CastId == useSkillPacket.CastId && s.Skill?.UpgradeSkill == 0);
+                                    if (ski != null)
                                     {
-                                        CharacterSkill ski = (Session.Character.UseSp ? Session.Character.SkillsSp?.GetAllItems() : Session.Character.Skills?.GetAllItems()).Find(s => s.Skill?.CastId == useSkillPacket.CastId && s.Skill?.UpgradeSkill == 0);
-                                        if (ski != null)
-                                        {
-                                            ski.LastUse = DateTime.Now.AddMilliseconds(ski.Skill.Cooldown * 100 * -1);
-                                            Session.SendPacket(StaticPacketHelper.SkillReset(useSkillPacket.CastId));
-                                        }
+                                        ski.LastUse = DateTime.Now.AddMilliseconds(ski.Skill.Cooldown * 100 * -1);
+                                        Session.SendPacket(StaticPacketHelper.SkillReset(useSkillPacket.CastId));
                                     }
                                 });
                             }
@@ -204,7 +198,7 @@ namespace OpenNos.Handler
 
         private void pvpHit(HitRequest hitRequest, ClientSession target)
         {
-            if (target.Character.Hp > 0 && hitRequest.Session.Character.Hp > 0)
+            if (target?.Character.Hp > 0 && hitRequest?.Session.Character.Hp > 0)
             {
                 if (target.Character.IsSitting)
                 {
@@ -231,7 +225,7 @@ namespace OpenNos.Handler
                 bool IsAlive = target.Character.Hp > 0;
                 if (!IsAlive)
                 {
-                    if (target?.CurrentMapInstance?.Map?.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
+                    if (target.CurrentMapInstance?.Map?.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
                     {
                         hitRequest.Session.Character.Act4Kill++;
                         target.Character.Act4Dead++;
@@ -285,7 +279,7 @@ namespace OpenNos.Handler
 
                 hitRequest.Skill.BCards.Where(s => s.Type.Equals((byte)BCardType.CardType.Buff)).ToList().ForEach(s => s.ApplyBCards(target.Character, Session.Character));
 
-                if (battleEntity.ShellWeaponEffects != null)
+                if (battleEntity?.ShellWeaponEffects != null)
                 {
                     foreach (ShellEffectDTO shell in battleEntity.ShellWeaponEffects)
                     {
@@ -1100,7 +1094,7 @@ namespace OpenNos.Handler
 
                             if (ski.Skill.HitType == 3)
                             {
-                                Session.Character.MTListTargetQueue.Clear(); 
+                                Session.Character.MTListTargetQueue.Clear();
                             }
                         }
                         else
@@ -1136,7 +1130,7 @@ namespace OpenNos.Handler
         private void zoneHit(int castingId, short x, short y)
         {
             List<CharacterSkill> skills = Session.Character.UseSp ? Session.Character.SkillsSp.GetAllItems() : Session.Character.Skills.GetAllItems();
-            CharacterSkill characterSkill = skills.Find(s => s.Skill.CastId == castingId);
+            CharacterSkill characterSkill = skills?.Find(s => s.Skill.CastId == castingId);
             if (!Session.Character.WeaponLoaded(characterSkill) || !Session.HasCurrentMapInstance)
             {
                 Session.SendPacket(StaticPacketHelper.Cancel(2));
@@ -1164,7 +1158,7 @@ namespace OpenNos.Handler
                         foreach (long id in Session.Character.MTListTargetQueue.Where(s => s.EntityType == UserType.Monster).Select(s => s.TargetId))
                         {
                             MapMonster mon = Session.CurrentMapInstance?.GetMonster(id);
-                            if (mon.CurrentHp > 0)
+                            if (mon?.CurrentHp > 0)
                             {
                                 mon.HitQueue.Enqueue(new HitRequest(TargetHitType.ZoneHit, Session, characterSkill.Skill, characterSkill.Skill.Effect, x, y));
                             }

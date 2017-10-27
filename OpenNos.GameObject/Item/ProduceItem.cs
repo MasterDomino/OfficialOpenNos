@@ -42,7 +42,7 @@ namespace OpenNos.GameObject
                     session.SendPacket("wopen 28 0");
                     List<Recipe> recipeList = ServerManager.Instance.GetRecipesByItemVNum(VNum);
                     string list = recipeList.Where(s => s.Amount > 0).Aggregate("m_list 2", (current, s) => current + $" {s.ItemVNum}");
-                    session.SendPacket(list);
+                    session.SendPacket(list + (EffectValue <= 110 && EffectValue >= 108 ? " 999" : string.Empty));
                     break;
 
                 default:

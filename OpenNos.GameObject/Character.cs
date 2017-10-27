@@ -121,6 +121,8 @@ namespace OpenNos.GameObject
 
         public int ElementRateSP { get; private set; }
 
+        public int MessageCounter { get; set; }
+
         public ThreadSafeGenericList<BCard> EquipmentBCards { get; set; }
 
         public ExchangeInfo ExchangeInfo { get; set; }
@@ -686,6 +688,10 @@ namespace OpenNos.GameObject
                 {
                     Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, CurrentMinigame));
                     LastEffect = DateTime.Now;
+                }
+                if (LastEffect.AddMilliseconds(400) <= DateTime.Now && MessageCounter > 0)
+                {
+                    MessageCounter--;
                 }
 
                 if (LastEffect.AddSeconds(5) <= DateTime.Now)
