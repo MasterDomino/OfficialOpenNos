@@ -83,6 +83,17 @@ namespace OpenNos.DAL.EF
             }
         }
 
+        public IEnumerable<RecipeItemDTO> LoadByRecipeAndItem(short recipeId, short itemVNum)
+        {
+            using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
+            {
+                foreach (RecipeItem recipeItem in context.RecipeItem.Where(s => s.ItemVNum.Equals(itemVNum) && s.RecipeId.Equals(recipeId)))
+                {
+                    yield return _mapper.Map<RecipeItemDTO>(recipeItem);
+                }
+            }
+        }
+
         #endregion
     }
 }

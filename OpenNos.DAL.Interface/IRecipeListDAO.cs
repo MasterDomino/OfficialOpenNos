@@ -27,6 +27,10 @@ namespace OpenNos.DAL.Interface
 
         RecipeListDTO LoadById(int recipeListId);
 
+        IEnumerable<RecipeListDTO> LoadByMapNpcId(int mapNpcId);
+
+        IEnumerable<RecipeListDTO> LoadByItemVNum(short itemVNum);
+
         #endregion
     }
 }

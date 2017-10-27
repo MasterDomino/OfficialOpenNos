@@ -1,4 +1,5 @@
-﻿/*
+﻿using OpenNos.DAL.EF;
+/*
  * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify
@@ -1692,35 +1693,44 @@ namespace OpenNos.Import.Console
             Logger.Info(string.Format(Language.Instance.GetMessageFromKey("PORTALS_PARSED"), portalCounter));
         }
 
-        /*public void ImportRecipe()
+        public void ImportRecipe()
         {
             int count = 0;
-            int mapnpcid = 0;
-            short item = 0;
+            int mapNpcId = 0;
+            short itemVNum = 0;
             RecipeDTO recipe;
+            RecipeListDTO recipeListDTO;
 
             foreach (string[] currentPacket in _packetList.Where(o => o[0].Equals("n_run") || o[0].Equals("pdtse") || o[0].Equals("m_list")))
             {
                 if (currentPacket.Length > 4 && currentPacket[0] == "n_run")
                 {
-                    int.TryParse(currentPacket[4], out mapnpcid);
+                    int.TryParse(currentPacket[4], out mapNpcId);
                     continue;
                 }
                 if (currentPacket.Length > 1 && currentPacket[0] == "m_list" && (currentPacket[1] == "2" || currentPacket[1] == "4"))
                 {
                     for (int i = 2; i < currentPacket.Length - 1; i++)
                     {
-                        if (DAOFactory.MapNpcDAO.LoadById(mapnpcid) != null)
+                        short vNum = short.Parse(currentPacket[i]);
+                        if (DAOFactory.RecipeDAO.LoadByItemVNum(vNum) == null)
                         {
                             recipe = new RecipeDTO
                             {
-                                ItemVNum = short.Parse(currentPacket[i]),
+                                ItemVNum = vNum
                             };
-                            //if (DAOFactory.RecipeDAO.LoadByNpc(mapnpcid).Any(s => s.ItemVNum == recipe.ItemVNum))
-                            //{
-                            //    continue;
-                            //}
                             DAOFactory.RecipeDAO.Insert(recipe);
+                        }
+                        RecipeDTO recipeForId = DAOFactory.RecipeDAO.LoadByItemVNum(vNum);
+                        if (DAOFactory.MapNpcDAO.LoadById(mapNpcId) != null && !DAOFactory.RecipeListDAO.LoadByMapNpcId(mapNpcId).Any(r => r.RecipeId.Equals(recipeForId.RecipeId)))
+                        {
+                            recipeListDTO = new RecipeListDTO
+                            {
+                                MapNpcId = mapNpcId,
+                                RecipeId = recipeForId.RecipeId
+                            };
+
+                            DAOFactory.RecipeListDAO.Insert(recipeListDTO);
                             count++;
                         }
                     }
@@ -1728,44 +1738,36 @@ namespace OpenNos.Import.Console
                 }
                 if (currentPacket.Length > 2 && currentPacket[0] == "pdtse")
                 {
-                    item = short.Parse(currentPacket[2]);
+                    itemVNum = short.Parse(currentPacket[2]);
                     continue;
                 }
                 if (currentPacket.Length > 1 && currentPacket[0] == "m_list" && (currentPacket[1] == "3" || currentPacket[1] == "5"))
                 {
                     for (int i = 3; i < currentPacket.Length - 1; i += 2)
                     {
-                        RecipeDTO rec = DAOFactory.RecipeDAO.LoadByNpc(mapnpcid).FirstOrDefault(s => s.ItemVNum == item);
+                        RecipeDTO rec = DAOFactory.RecipeDAO.LoadByItemVNum(itemVNum);
                         if (rec != null)
                         {
                             rec.Amount = byte.Parse(currentPacket[2]);
                             DAOFactory.RecipeDAO.Update(rec);
-                            RecipeDTO recipedto = DAOFactory.RecipeDAO.LoadByNpc(mapnpcid).FirstOrDefault(s => s.ItemVNum == item);
-                            if (recipedto != null)
+                            RecipeItemDTO recipeitem = new RecipeItemDTO
                             {
-                                short recipeId = recipedto.RecipeId;
-
-                                RecipeItemDTO recipeitem = new RecipeItemDTO
-                                {
-                                    ItemVNum = short.Parse(currentPacket[i]),
-                                    Amount = byte.Parse(currentPacket[i + 1]),
-                                    RecipeId = recipeId
-                                };
-
-                                if (!DAOFactory.RecipeItemDAO.LoadByRecipeAndItem(recipeId, recipeitem.ItemVNum).Any())
-                                {
-                                    DAOFactory.RecipeItemDAO.Insert(recipeitem);
-                                }
+                                ItemVNum = short.Parse(currentPacket[i]),
+                                Amount = byte.Parse(currentPacket[i + 1]),
+                                RecipeId = rec.RecipeId
+                            };
+                            if (!DAOFactory.RecipeItemDAO.LoadByRecipeAndItem(rec.RecipeId, recipeitem.ItemVNum).Any())
+                            {
+                                DAOFactory.RecipeItemDAO.Insert(recipeitem);
                             }
                         }
                     }
-                    item = -1;
+                    itemVNum = -1;
                 }
             }
             Logger.Info(string.Format(Language.Instance.GetMessageFromKey("RECIPES_PARSED"), count));
         }
-        */
-        //Need fix
+
         public void ImportRespawnMapType()
         {
             List<RespawnMapTypeDTO> respawnmaptypemaps = new List<RespawnMapTypeDTO>

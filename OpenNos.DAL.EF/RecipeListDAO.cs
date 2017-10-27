@@ -58,6 +58,28 @@ namespace OpenNos.DAL.EF
             }
         }
 
+        public IEnumerable<RecipeListDTO> LoadByItemVNum(short itemVNum)
+        {
+            using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
+            {
+                foreach (RecipeList recipeList in context.RecipeList.Where(r => r.ItemVNum.Equals(itemVNum)))
+                {
+                    yield return _mapper.Map<RecipeListDTO>(recipeList);
+                }
+            }
+        }
+
+        public IEnumerable<RecipeListDTO> LoadByMapNpcId(int mapNpcId)
+        {
+            using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
+            {
+                foreach (RecipeList recipeList in context.RecipeList.Where(r => r.MapNpcId.Equals(mapNpcId)))
+                {
+                    yield return _mapper.Map<RecipeListDTO>(recipeList);
+                }
+            }
+        }
+
         #endregion
     }
 }

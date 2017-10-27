@@ -27,7 +27,9 @@ namespace OpenNos.DAL.Interface
 
         RecipeDTO LoadById(short recipeId);
 
-        IEnumerable<RecipeDTO> LoadByItemVNum(short itemVNum);
+        RecipeDTO LoadByItemVNum(short itemVNum);
+
+        void Update(RecipeDTO recipe);
 
         #endregion
     }

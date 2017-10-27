@@ -32,7 +32,6 @@ namespace OpenNos.DAL.EF
 
         public short RecipeId { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int RecipeListId { get; set; }
 
         #endregion
