@@ -28,9 +28,8 @@ namespace OpenNos.DAL
 
         private static IAccountDAO _accountDAO;
         private static IBazaarItemDAO _bazaarItemDAO;
-        private static ICardDAO _cardDAO;
         private static IBCardDAO _bcardDAO;
-        private static IRollGeneratedItemDAO _rollGeneratedItemDAO;
+        private static ICardDAO _cardDAO;
         private static ICellonOptionDAO _cellonoptionDAO;
         private static ICharacterDAO _characterDAO;
         private static ICharacterRelationDAO _characterRelationDAO;
@@ -44,6 +43,7 @@ namespace OpenNos.DAL
         private static IItemDAO _itemDAO;
         private static IItemInstanceDAO _iteminstanceDAO;
         private static IMailDAO _mailDAO;
+        private static IMaintenanceLogDAO _maintenanceLogDAO;
         private static IMapDAO _mapDAO;
         private static IMapMonsterDAO _mapmonsterDAO;
         private static IMapNpcDAO _mapnpcDAO;
@@ -58,9 +58,12 @@ namespace OpenNos.DAL
         private static IQuicklistEntryDAO _quicklistDAO;
         private static IRecipeDAO _recipeDAO;
         private static IRecipeItemDAO _recipeitemDAO;
+        private static IRecipeListDAO _recipeListDAO;
         private static IRespawnDAO _respawnDAO;
         private static IRespawnMapTypeDAO _respawnMapTypeDAO;
+        private static IRollGeneratedItemDAO _rollGeneratedItemDAO;
         private static IScriptedInstanceDAO _scriptedinstanceDAO;
+        private static IShellEffectDAO _shelleffectDAO;
         private static IShopDAO _shopDAO;
         private static IShopItemDAO _shopitemDAO;
         private static IShopSkillDAO _shopskillDAO;
@@ -68,8 +71,6 @@ namespace OpenNos.DAL
         private static IStaticBonusDAO _staticBonusDAO;
         private static IStaticBuffDAO _staticBuffDAO;
         private static ITeleporterDAO _teleporterDAO;
-        private static IMaintenanceLogDAO _maintenanceLogDAO;
-        private static IShellEffectDAO _shelleffectDAO;
 
         #endregion
 
@@ -111,26 +112,6 @@ namespace OpenNos.DAL
             }
         }
 
-        public static IMaintenanceLogDAO MaintenanceLogDAO
-        {
-            get
-            {
-                if (_maintenanceLogDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _maintenanceLogDAO = new MaintenanceLogDAO();
-                    }
-                    else
-                    {
-                        _maintenanceLogDAO = new EF.MaintenanceLogDAO();
-                    }
-                }
-
-                return _maintenanceLogDAO;
-            }
-        }
-
         public static IBazaarItemDAO BazaarItemDAO
         {
             get
@@ -148,6 +129,26 @@ namespace OpenNos.DAL
                 }
 
                 return _bazaarItemDAO;
+            }
+        }
+
+        public static IBCardDAO BCardDAO
+        {
+            get
+            {
+                if (_bcardDAO == null)
+                {
+                    if (_useMock)
+                    {
+                        _bcardDAO = new BCardDAO();
+                    }
+                    else
+                    {
+                        _bcardDAO = new EF.BCardDAO();
+                    }
+                }
+
+                return _bcardDAO;
             }
         }
 
@@ -431,6 +432,26 @@ namespace OpenNos.DAL
             }
         }
 
+        public static IMaintenanceLogDAO MaintenanceLogDAO
+        {
+            get
+            {
+                if (_maintenanceLogDAO == null)
+                {
+                    if (_useMock)
+                    {
+                        _maintenanceLogDAO = new MaintenanceLogDAO();
+                    }
+                    else
+                    {
+                        _maintenanceLogDAO = new EF.MaintenanceLogDAO();
+                    }
+                }
+
+                return _maintenanceLogDAO;
+            }
+        }
+
         public static IMapDAO MapDAO
         {
             get
@@ -711,6 +732,26 @@ namespace OpenNos.DAL
             }
         }
 
+        public static IRecipeListDAO RecipeListDAO
+        {
+            get
+            {
+                if (_recipeListDAO == null)
+                {
+                    if (_useMock)
+                    {
+                        _recipeListDAO = new RecipeListDAO();
+                    }
+                    else
+                    {
+                        _recipeListDAO = new EF.RecipeListDAO();
+                    }
+                }
+
+                return _recipeListDAO;
+            }
+        }
+
         public static IRespawnDAO RespawnDAO
         {
             get
@@ -748,6 +789,46 @@ namespace OpenNos.DAL
                 }
 
                 return _respawnMapTypeDAO;
+            }
+        }
+
+        public static IRollGeneratedItemDAO RollGeneratedItemDAO
+        {
+            get
+            {
+                if (_rollGeneratedItemDAO == null)
+                {
+                    if (_useMock)
+                    {
+                        _rollGeneratedItemDAO = new RollGeneratedItemDAO();
+                    }
+                    else
+                    {
+                        _rollGeneratedItemDAO = new EF.RollGeneratedItemDAO();
+                    }
+                }
+
+                return _rollGeneratedItemDAO;
+            }
+        }
+
+        public static IScriptedInstanceDAO ScriptedInstanceDAO
+        {
+            get
+            {
+                if (_scriptedinstanceDAO == null)
+                {
+                    if (_useMock)
+                    {
+                        _scriptedinstanceDAO = new ScriptedInstanceDAO();
+                    }
+                    else
+                    {
+                        _scriptedinstanceDAO = new EF.ScriptedInstanceDAO();
+                    }
+                }
+
+                return _scriptedinstanceDAO;
             }
         }
 
@@ -908,66 +989,6 @@ namespace OpenNos.DAL
                 }
 
                 return _teleporterDAO;
-            }
-        }
-
-        public static IScriptedInstanceDAO ScriptedInstanceDAO
-        {
-            get
-            {
-                if (_scriptedinstanceDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _scriptedinstanceDAO = new ScriptedInstanceDAO();
-                    }
-                    else
-                    {
-                        _scriptedinstanceDAO = new EF.ScriptedInstanceDAO();
-                    }
-                }
-
-                return _scriptedinstanceDAO;
-            }
-        }
-
-        public static IBCardDAO BCardDAO
-        {
-            get
-            {
-                if (_bcardDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _bcardDAO = new BCardDAO();
-                    }
-                    else
-                    {
-                        _bcardDAO = new EF.BCardDAO();
-                    }
-                }
-
-                return _bcardDAO;
-            }
-        }
-
-        public static IRollGeneratedItemDAO RollGeneratedItemDAO
-        {
-            get
-            {
-                if (_rollGeneratedItemDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _rollGeneratedItemDAO = new RollGeneratedItemDAO();
-                    }
-                    else
-                    {
-                        _rollGeneratedItemDAO = new EF.RollGeneratedItemDAO();
-                    }
-                }
-
-                return _rollGeneratedItemDAO;
             }
         }
 

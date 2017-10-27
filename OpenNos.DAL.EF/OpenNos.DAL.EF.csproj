@@ -173,6 +173,7 @@
     <Compile Include="Migrations\201710261852390_Aphrodite71.Designer.cs">
       <DependentUpon>201710261852390_Aphrodite71.cs</DependentUpon>
     </Compile>
+    <Compile Include="RecipeListDAO.cs" />
     <Compile Include="RollGeneratedItemDAO.cs" />
     <Compile Include="MateDAO.cs" />
     <Compile Include="Migrations\201702072152008_Aphrodite22.cs" />

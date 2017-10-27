@@ -99,6 +99,8 @@ namespace OpenNos.DAL.EF.DB
 
         public virtual DbSet<RecipeItem> RecipeItem { get; set; }
 
+        public virtual DbSet<RecipeList> RecipeList { get; set; }
+
         public virtual DbSet<Respawn> Respawn { get; set; }
 
         public virtual DbSet<RespawnMapType> RespawnMapType { get; set; }
@@ -122,8 +124,6 @@ namespace OpenNos.DAL.EF.DB
         public virtual DbSet<StaticBuff> StaticBuff { get; set; }
 
         public virtual DbSet<Teleporter> Teleporter { get; set; }
-
-        public virtual DbSet<RecipeList> RecipeList { get; set; }
 
         #endregion
 

@@ -96,6 +96,7 @@
     <Compile Include="INpcMonsterSkillDAO.cs" />
     <Compile Include="IPenaltyLogDAO.cs" />
     <Compile Include="IQuicklistEntryDAO.cs" />
+    <Compile Include="IRecipeListDAO.cs" />
     <Compile Include="IRollGeneratedItemDAO.cs" />
     <Compile Include="IRecipeDAO.cs" />
     <Compile Include="IRecipeItemDAO.cs" />

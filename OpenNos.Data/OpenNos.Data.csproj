@@ -79,6 +79,7 @@
     <Compile Include="Interfaces\ISpecialistInstanceDTO.cs" />
     <Compile Include="Interfaces\IWearableInstanceDTO.cs" />
     <Compile Include="MaintenanceLogDTO.cs" />
+    <Compile Include="RecipeListDTO.cs" />
     <Compile Include="RollGeneratedItemDTO.cs" />
     <Compile Include="CardDTO.cs" />
     <Compile Include="CellonOptionDTO.cs" />

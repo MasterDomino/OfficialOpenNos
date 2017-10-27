@@ -12,24 +12,19 @@
  * GNU General Public License for more details.
  */
 
-using OpenNos.DAL.Interface;
-using OpenNos.Data;
-using System;
-using System.Collections.Generic;
-
-namespace OpenNos.DAL.Mock
+namespace OpenNos.Data
 {
-    public class RecipeDAO : BaseDAO<RecipeDTO>, IRecipeDAO
+    public class RecipeListDTO : MappingBaseDTO
     {
-        #region Methods
+        #region Properties
 
-        public new RecipeDTO Insert(RecipeDTO recipe) => throw new NotImplementedException();
+        public short? ItemVNum { get; set; }
 
-        public RecipeDTO LoadById(short recipeId) => throw new NotImplementedException();
+        public int? MapNpcId { get; set; }
 
-        public IEnumerable<RecipeDTO> LoadByItemVNum(short itemVNum) => throw new NotImplementedException();
+        public short RecipeId { get; set; }
 
-        public IEnumerable<RecipeDTO> LoadByNpc(int mapNpcId) => throw new NotImplementedException();
+        public int RecipeListId { get; set; }
 
         #endregion
     }
