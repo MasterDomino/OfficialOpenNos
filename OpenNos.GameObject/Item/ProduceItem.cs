@@ -37,17 +37,12 @@ namespace OpenNos.GameObject
             switch (Effect)
             {
                 case 100:
-                    switch (EffectValue)
-                    {
-                        case 15:
-                            session.Character.LastNRunId = 0;
-                            session.Character.LastItemVNum = inv.ItemVNum;
-                            session.SendPacket("wopen 28 0");
-                            List<Recipe> tps = ServerManager.Instance.GetRecipesByItemVNum(VNum);
-                            string recipelist = tps.Where(s => s.Amount > 0).Aggregate("m_list 2", (current, s) => current + $" {s.ItemVNum}");
-                            session.SendPacket(recipelist);
-                            break;
-                    }
+                    session.Character.LastNRunId = 0;
+                    session.Character.LastItemVNum = inv.ItemVNum;
+                    session.SendPacket("wopen 28 0");
+                    List<Recipe> recipeList = ServerManager.Instance.GetRecipesByItemVNum(VNum);
+                    string list = recipeList.Where(s => s.Amount > 0).Aggregate("m_list 2", (current, s) => current + $" {s.ItemVNum}");
+                    session.SendPacket(list);
                     break;
 
                 default:

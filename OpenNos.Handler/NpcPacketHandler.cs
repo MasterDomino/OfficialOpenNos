@@ -530,16 +530,16 @@ namespace OpenNos.Handler
             {
                 if (recipe?.Amount > 0)
                 {
-                    string rece = $"m_list 3 {recipe.Amount}";
+                    string recipePacket = $"m_list 3 {recipe.Amount}";
                     foreach (RecipeItemDTO ite in recipe.Items)
                     {
                         if (ite.Amount > 0)
                         {
-                            rece += $" {ite.ItemVNum} {ite.Amount}";
+                            recipePacket += $" {ite.ItemVNum} {ite.Amount}";
                         }
                     }
-                    rece += " -1";
-                    Session.SendPacket(rece);
+                    recipePacket += " -1";
+                    Session.SendPacket(recipePacket);
                 }
             }
             else if (recipe != null)

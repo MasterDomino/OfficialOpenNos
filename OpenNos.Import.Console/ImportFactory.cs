@@ -1,5 +1,4 @@
-﻿using OpenNos.DAL.EF;
-/*
+﻿/*
  * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify
@@ -173,7 +172,6 @@ namespace OpenNos.Import.Console
                                     IsLevelDivided = Math.Abs(first % 4) == 2,
                                     FirstData = first / 4,
                                     SecondData = int.Parse(currentLine[7 + (i * 6)]) / 4
-
                                 };
                                 bcards.Add(bcard);
                             }
@@ -196,6 +194,15 @@ namespace OpenNos.Import.Console
                 DAOFactory.BCardDAO.Insert(bcards);
                 Logger.Info(string.Format(Language.Instance.GetMessageFromKey("CARDS_PARSED"), cards.Count));
             }
+        }
+
+        public void ImportHardcodedItemRecipes()
+        {
+            insertRecipe(1016, 1072, 1, new short[] { 2029, 3, 2097, 5, 2098, 10, 2099, 5 }); // these are just a example item recipes, add proper and non game breaking ones
+            insertRecipe(1018, 1072);
+
+            // implement this will have a FUCKTON of hardcoding, for fucks sake ENTWELL why u suck
+            // soo much -_-
         }
 
         public void ImportMapNpcs()
@@ -1693,62 +1700,6 @@ namespace OpenNos.Import.Console
             Logger.Info(string.Format(Language.Instance.GetMessageFromKey("PORTALS_PARSED"), portalCounter));
         }
 
-        public void ImportHardcodedItemRecipes()
-        {
-            insertRecipe(1016, 1072, 1, new short[] { 2029, 3, 2097, 5, 2098, 10, 2099, 5}); // these are just a example item recipes, add proper and non game breaking ones
-            insertRecipe(1018, 1072);
-            // implement this will have a FUCKTON of hardcoding, for fucks sake ENTWELL why u suck soo much -_-
-        }
-
-        private void insertRecipe(short itemVNum, short triggerVNum, byte amount = 1, short[] recipeItems = null)
-        {
-            RecipeDTO recipe = DAOFactory.RecipeDAO.LoadByItemVNum(itemVNum);
-            if (recipe != null)
-            {
-                RecipeListDTO recipeList = DAOFactory.RecipeListDAO.LoadByRecipeId(recipe.RecipeId).Where(r => r.ItemVNum != triggerVNum).FirstOrDefault(r => r.ItemVNum == null);
-                if (recipeList != null)
-                {
-                    recipeList.ItemVNum = triggerVNum;
-                    DAOFactory.RecipeListDAO.Update(recipeList);
-                }
-                else
-                {
-                    recipeList = new RecipeListDTO
-                    {
-                        ItemVNum = triggerVNum,
-                        RecipeId = recipe.RecipeId
-                    };
-                    DAOFactory.RecipeListDAO.Insert(recipeList);
-                }
-            }
-            else
-            {
-                recipe = new RecipeDTO
-                {
-                    ItemVNum = itemVNum,
-                    Amount = amount
-                };
-                DAOFactory.RecipeDAO.Insert(recipe);
-                recipe = DAOFactory.RecipeDAO.LoadByItemVNum(itemVNum);
-                if (recipe != null && recipeItems != null)
-                {
-                    for (int i = 0; i < recipeItems.Length; i += 2)
-                    {
-                        RecipeItemDTO recipeItem = new RecipeItemDTO
-                        {
-                            ItemVNum = recipeItems[i],
-                            Amount = recipeItems[i + 1],
-                            RecipeId = recipe.RecipeId
-                        };
-                        if (!DAOFactory.RecipeItemDAO.LoadByRecipeAndItem(recipe.RecipeId, recipeItem.ItemVNum).Any())
-                        {
-                            DAOFactory.RecipeItemDAO.Insert(recipeItem);
-                        }
-                    }
-                }
-            }
-        }
-
         public void ImportRecipe()
         {
             int count = 0;
@@ -1871,6 +1822,60 @@ namespace OpenNos.Import.Console
             };
             DAOFactory.RespawnMapTypeDAO.Insert(respawnmaptypemaps);
             Logger.Info(Language.Instance.GetMessageFromKey("RESPAWNTYPE_PARSED"));
+        }
+
+        public void ImportScriptedInstances()
+        {
+            short map = 0;
+            List<ScriptedInstanceDTO> listtimespace = new List<ScriptedInstanceDTO>();
+            List<ScriptedInstanceDTO> bddlist = new List<ScriptedInstanceDTO>();
+            foreach (string[] currentPacket in _packetList.Where(o => o[0].Equals("at") || o[0].Equals("wp") || o[0].Equals("gp") || o[0].Equals("rbr")))
+            {
+                if (currentPacket.Length > 5 && currentPacket[0] == "at")
+                {
+                    map = short.Parse(currentPacket[2]);
+                    bddlist = DAOFactory.ScriptedInstanceDAO.LoadByMap(map).ToList();
+                    continue;
+                }
+                else if (currentPacket.Length > 6 && currentPacket[0] == "wp")
+                {
+                    ScriptedInstanceDTO ts = new ScriptedInstanceDTO()
+                    {
+                        PositionX = short.Parse(currentPacket[1]),
+                        PositionY = short.Parse(currentPacket[2]),
+                        MapId = map,
+                    };
+
+                    if (!bddlist.Concat(listtimespace).Any(s => s.MapId == ts.MapId && s.PositionX == ts.PositionX && s.PositionY == ts.PositionY))
+                    {
+                        listtimespace.Add(ts);
+                    }
+                }
+                else if (currentPacket[0] == "gp")
+                {
+                    if (sbyte.Parse(currentPacket[4]) == (byte)PortalType.Raid)
+                    {
+                        ScriptedInstanceDTO ts = new ScriptedInstanceDTO()
+                        {
+                            PositionX = short.Parse(currentPacket[1]),
+                            PositionY = short.Parse(currentPacket[2]),
+                            MapId = map,
+                            Type = ScriptedInstanceType.Raid,
+                        };
+
+                        if (!bddlist.Concat(listtimespace).Any(s => s.MapId == ts.MapId && s.PositionX == ts.PositionX && s.PositionY == ts.PositionY))
+                        {
+                            listtimespace.Add(ts);
+                        }
+                    }
+                }
+                else if (currentPacket[0] == "rbr")
+                {
+                    //some info
+                }
+            }
+            DAOFactory.ScriptedInstanceDAO.Insert(listtimespace);
+            Logger.Info(string.Format(Language.Instance.GetMessageFromKey("TIMESPACES_PARSED"), listtimespace.Count));
         }
 
         public void ImportShopItems()
@@ -2321,60 +2326,6 @@ namespace OpenNos.Import.Console
             }
 
             Logger.Info(string.Format(Language.Instance.GetMessageFromKey("TELEPORTERS_PARSED"), teleporterCounter));
-        }
-
-        public void ImportScriptedInstances()
-        {
-            short map = 0;
-            List<ScriptedInstanceDTO> listtimespace = new List<ScriptedInstanceDTO>();
-            List<ScriptedInstanceDTO> bddlist = new List<ScriptedInstanceDTO>();
-            foreach (string[] currentPacket in _packetList.Where(o => o[0].Equals("at") || o[0].Equals("wp") || o[0].Equals("gp") || o[0].Equals("rbr")))
-            {
-                if (currentPacket.Length > 5 && currentPacket[0] == "at")
-                {
-                    map = short.Parse(currentPacket[2]);
-                    bddlist = DAOFactory.ScriptedInstanceDAO.LoadByMap(map).ToList();
-                    continue;
-                }
-                else if (currentPacket.Length > 6 && currentPacket[0] == "wp")
-                {
-                    ScriptedInstanceDTO ts = new ScriptedInstanceDTO()
-                    {
-                        PositionX = short.Parse(currentPacket[1]),
-                        PositionY = short.Parse(currentPacket[2]),
-                        MapId = map,
-                    };
-
-                    if (!bddlist.Concat(listtimespace).Any(s => s.MapId == ts.MapId && s.PositionX == ts.PositionX && s.PositionY == ts.PositionY))
-                    {
-                        listtimespace.Add(ts);
-                    }
-                }
-                else if (currentPacket[0] == "gp")
-                {
-                    if (sbyte.Parse(currentPacket[4]) == (byte)PortalType.Raid)
-                    {
-                        ScriptedInstanceDTO ts = new ScriptedInstanceDTO()
-                        {
-                            PositionX = short.Parse(currentPacket[1]),
-                            PositionY = short.Parse(currentPacket[2]),
-                            MapId = map,
-                            Type = ScriptedInstanceType.Raid,
-                        };
-
-                        if (!bddlist.Concat(listtimespace).Any(s => s.MapId == ts.MapId && s.PositionX == ts.PositionX && s.PositionY == ts.PositionY))
-                        {
-                            listtimespace.Add(ts);
-                        }
-                    }
-                }
-                else if (currentPacket[0] == "rbr")
-                {
-                    //some info
-                }
-            }
-            DAOFactory.ScriptedInstanceDAO.Insert(listtimespace);
-            Logger.Info(string.Format(Language.Instance.GetMessageFromKey("TIMESPACES_PARSED"), listtimespace.Count));
         }
 
         public void LoadMaps() => _maps = DAOFactory.MapDAO.LoadAll().ToList();
@@ -3362,8 +3313,8 @@ namespace OpenNos.Import.Console
                             case ItemType.Shell:
 
                                 // item.ShellMinimumLevel = short.Parse(linesave[3]);
-                                // item.ShellMaximumLevel = short.Parse(linesave[4]);
-                                // item.ShellType = byte.Parse(linesave[5]); // 3 shells of each type
+                                // item.ShellMaximumLevel = short.Parse(linesave[4]); item.ShellType
+                                // = byte.Parse(linesave[5]); // 3 shells of each type
                                 break;
 
                             case ItemType.Main:
@@ -3506,6 +3457,55 @@ namespace OpenNos.Import.Console
                 DAOFactory.ItemDAO.Insert(items);
                 DAOFactory.BCardDAO.Insert(itemCards);
                 Logger.Info(string.Format(Language.Instance.GetMessageFromKey("ITEMS_PARSED"), items.Count));
+            }
+        }
+
+        private void insertRecipe(short itemVNum, short triggerVNum, byte amount = 1, short[] recipeItems = null)
+        {
+            RecipeDTO recipe = DAOFactory.RecipeDAO.LoadByItemVNum(itemVNum);
+            if (recipe != null)
+            {
+                RecipeListDTO recipeList = DAOFactory.RecipeListDAO.LoadByRecipeId(recipe.RecipeId).Where(r => r.ItemVNum != triggerVNum).FirstOrDefault(r => r.ItemVNum == null);
+                if (recipeList != null)
+                {
+                    recipeList.ItemVNum = triggerVNum;
+                    DAOFactory.RecipeListDAO.Update(recipeList);
+                }
+                else
+                {
+                    recipeList = new RecipeListDTO
+                    {
+                        ItemVNum = triggerVNum,
+                        RecipeId = recipe.RecipeId
+                    };
+                    DAOFactory.RecipeListDAO.Insert(recipeList);
+                }
+            }
+            else
+            {
+                recipe = new RecipeDTO
+                {
+                    ItemVNum = itemVNum,
+                    Amount = amount
+                };
+                DAOFactory.RecipeDAO.Insert(recipe);
+                recipe = DAOFactory.RecipeDAO.LoadByItemVNum(itemVNum);
+                if (recipe != null && recipeItems != null)
+                {
+                    for (int i = 0; i < recipeItems.Length; i += 2)
+                    {
+                        RecipeItemDTO recipeItem = new RecipeItemDTO
+                        {
+                            ItemVNum = recipeItems[i],
+                            Amount = recipeItems[i + 1],
+                            RecipeId = recipe.RecipeId
+                        };
+                        if (!DAOFactory.RecipeItemDAO.LoadByRecipeAndItem(recipe.RecipeId, recipeItem.ItemVNum).Any())
+                        {
+                            DAOFactory.RecipeItemDAO.Insert(recipeItem);
+                        }
+                    }
+                }
             }
         }
 
