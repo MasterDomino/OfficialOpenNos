@@ -69,8 +69,8 @@ namespace OpenNos.Import.Console
 
         public void ImportCards()
         {
-            string fileCardDat = $"{_folder}\\Card.dat";
-            string fileCardLang = $"{_folder}\\_code_{ConfigurationManager.AppSettings["Language"]}_Card.txt";
+            string fileCardDat = $"{_folder}/Card.dat";
+            string fileCardLang = $"{_folder}/_code_{ConfigurationManager.AppSettings["Language"]}_Card.txt";
             List<CardDTO> cards = new List<CardDTO>();
             Dictionary<string, string> dictionaryIdLang = new Dictionary<string, string>();
             CardDTO card = new CardDTO();
@@ -273,9 +273,9 @@ namespace OpenNos.Import.Console
 
         public void ImportMaps()
         {
-            string fileMapIdDat = $"{_folder}\\MapIDData.dat";
-            string fileMapIdLang = $"{_folder}\\_code_{ConfigurationManager.AppSettings["Language"]}_MapIDData.txt";
-            string folderMap = $"{_folder}\\map";
+            string fileMapIdDat = $"{_folder}/MapIDData.dat";
+            string fileMapIdLang = $"{_folder}/_code_{ConfigurationManager.AppSettings["Language"]}_MapIDData.txt";
+            string folderMap = $"{_folder}/map";
             ThreadSafeSortedList<short, MapDTO> maps = new ThreadSafeSortedList<short, MapDTO>();
             Dictionary<int, string> dictionaryId = new Dictionary<int, string>();
             Dictionary<string, string> dictionaryIdLang = new Dictionary<string, string>();
@@ -895,8 +895,8 @@ namespace OpenNos.Import.Console
                 basicJXp[i] = 360;
             }
 
-            string fileNpcId = $"{_folder}\\monster.dat";
-            string fileNpcLang = $"{_folder}\\_code_{ConfigurationManager.AppSettings["Language"]}_monster.txt";
+            string fileNpcId = $"{_folder}/monster.dat";
+            string fileNpcLang = $"{_folder}/_code_{ConfigurationManager.AppSettings["Language"]}_monster.txt";
             List<NpcMonsterDTO> npcs = new List<NpcMonsterDTO>();
 
             // Store like this: (vnum, (name, level))
@@ -1564,7 +1564,7 @@ namespace OpenNos.Import.Console
 
         public void ImportPackets()
         {
-            string filePacket = $"{_folder}\\packet.txt";
+            string filePacket = $"{_folder}/packet.txt";
             using (StreamReader packetTxtStream = new StreamReader(filePacket, Encoding.GetEncoding(1252)))
             {
                 string line;
@@ -1992,8 +1992,8 @@ namespace OpenNos.Import.Console
 
         public void ImportSkills()
         {
-            string fileSkillId = $"{_folder}\\Skill.dat";
-            string fileSkillLang = $"{_folder}\\_code_{ConfigurationManager.AppSettings["Language"]}_Skill.txt";
+            string fileSkillId = $"{_folder}/Skill.dat";
+            string fileSkillLang = $"{_folder}/_code_{ConfigurationManager.AppSettings["Language"]}_Skill.txt";
             List<SkillDTO> skills = new List<SkillDTO>();
 
             Dictionary<string, string> dictionaryIdLang = new Dictionary<string, string>();
@@ -2372,8 +2372,8 @@ namespace OpenNos.Import.Console
 
         internal void ImportItems()
         {
-            string fileId = $"{_folder}\\Item.dat";
-            string fileLang = $"{_folder}\\_code_{ConfigurationManager.AppSettings["Language"]}_Item.txt";
+            string fileId = $"{_folder}/Item.dat";
+            string fileLang = $"{_folder}/_code_{ConfigurationManager.AppSettings["Language"]}_Item.txt";
             Dictionary<string, string> dictionaryName = new Dictionary<string, string>();
             string line;
             List<ItemDTO> items = new List<ItemDTO>();
