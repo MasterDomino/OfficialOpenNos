@@ -277,87 +277,91 @@ namespace OpenNos.Handler
                     }
                 }
 
-                hitRequest.Skill.BCards.Where(s => s.Type.Equals((byte)BCardType.CardType.Buff)).ToList().ForEach(s => s.ApplyBCards(target.Character, Session.Character));
-
-                if (battleEntity?.ShellWeaponEffects != null)
+                if (hitmode != 0)
                 {
-                    foreach (ShellEffectDTO shell in battleEntity.ShellWeaponEffects)
+                    hitRequest.Skill.BCards.Where(s => s.Type.Equals((byte)BCardType.CardType.Buff)).ToList().ForEach(s => s.ApplyBCards(target.Character, Session.Character));
+
+                    if (battleEntity?.ShellWeaponEffects != null)
                     {
-                        switch (shell.Effect)
+                        foreach (ShellEffectDTO shell in battleEntity.ShellWeaponEffects)
                         {
-                            case (byte)ShellWeaponEffectType.Blackout:
-                                {
-                                    Buff buff = new Buff(7, battleEntity.Level);
-                                    if (ServerManager.Instance.RandomNumber() < shell.Value
-                                        - (shell.Value * (battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedStun)?.Value
-                                        + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllStun)?.Value
-                                        + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllNegativeEffect)?.Value) / 100D))
+                            switch (shell.Effect)
+                            {
+                                case (byte)ShellWeaponEffectType.Blackout:
                                     {
-                                        target.Character.AddBuff(buff);
+                                        Buff buff = new Buff(7, battleEntity.Level);
+                                        if (ServerManager.Instance.RandomNumber() < shell.Value
+                                            - (shell.Value * (battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedStun)?.Value
+                                            + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllStun)?.Value
+                                            + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllNegativeEffect)?.Value) / 100D))
+                                        {
+                                            target.Character.AddBuff(buff);
+                                        }
+                                        break;
                                     }
-                                    break;
-                                }
-                            case (byte)ShellWeaponEffectType.DeadlyBlackout:
-                                {
-                                    Buff buff = new Buff(66, battleEntity.Level);
-                                    if (ServerManager.Instance.RandomNumber() < shell.Value
-                                        - (shell.Value * (battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllStun)?.Value
-                                        + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllNegativeEffect)?.Value) / 100D))
+                                case (byte)ShellWeaponEffectType.DeadlyBlackout:
                                     {
-                                        target.Character.AddBuff(buff);
+                                        Buff buff = new Buff(66, battleEntity.Level);
+                                        if (ServerManager.Instance.RandomNumber() < shell.Value
+                                            - (shell.Value * (battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllStun)?.Value
+                                            + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllNegativeEffect)?.Value) / 100D))
+                                        {
+                                            target.Character.AddBuff(buff);
+                                        }
+                                        break;
                                     }
-                                    break;
-                                }
-                            case (byte)ShellWeaponEffectType.MinorBleeding:
-                                {
-                                    Buff buff = new Buff(1, battleEntity.Level);
-                                    if (ServerManager.Instance.RandomNumber() < shell.Value
-                                        - (shell.Value * (battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedMinorBleeding)?.Value
-                                        + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedBleedingAndMinorBleeding)?.Value
-                                        + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllBleedingType)?.Value
-                                        + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllNegativeEffect)?.Value) / 100D))
+                                case (byte)ShellWeaponEffectType.MinorBleeding:
                                     {
-                                        target.Character.AddBuff(buff);
+                                        Buff buff = new Buff(1, battleEntity.Level);
+                                        if (ServerManager.Instance.RandomNumber() < shell.Value
+                                            - (shell.Value * (battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedMinorBleeding)?.Value
+                                            + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedBleedingAndMinorBleeding)?.Value
+                                            + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllBleedingType)?.Value
+                                            + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllNegativeEffect)?.Value) / 100D))
+                                        {
+                                            target.Character.AddBuff(buff);
+                                        }
+                                        break;
                                     }
-                                    break;
-                                }
-                            case (byte)ShellWeaponEffectType.Bleeding:
-                                {
-                                    Buff buff = new Buff(21, battleEntity.Level);
-                                    if (ServerManager.Instance.RandomNumber() < shell.Value
-                                        - (shell.Value * (battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedBleedingAndMinorBleeding)?.Value
-                                        + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllBleedingType)?.Value
-                                        + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllNegativeEffect)?.Value) / 100D))
+                                case (byte)ShellWeaponEffectType.Bleeding:
                                     {
-                                        target.Character.AddBuff(buff);
+                                        Buff buff = new Buff(21, battleEntity.Level);
+                                        if (ServerManager.Instance.RandomNumber() < shell.Value
+                                            - (shell.Value * (battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedBleedingAndMinorBleeding)?.Value
+                                            + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllBleedingType)?.Value
+                                            + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllNegativeEffect)?.Value) / 100D))
+                                        {
+                                            target.Character.AddBuff(buff);
+                                        }
+                                        break;
                                     }
-                                    break;
-                                }
-                            case (byte)ShellWeaponEffectType.HeavyBleeding:
-                                {
-                                    Buff buff = new Buff(42, battleEntity.Level);
-                                    if (ServerManager.Instance.RandomNumber() < shell.Value
-                                        - (shell.Value * (battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllBleedingType)?.Value
-                                        + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllNegativeEffect)?.Value) / 100D))
+                                case (byte)ShellWeaponEffectType.HeavyBleeding:
                                     {
-                                        target.Character.AddBuff(buff);
+                                        Buff buff = new Buff(42, battleEntity.Level);
+                                        if (ServerManager.Instance.RandomNumber() < shell.Value
+                                            - (shell.Value * (battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllBleedingType)?.Value
+                                            + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllNegativeEffect)?.Value) / 100D))
+                                        {
+                                            target.Character.AddBuff(buff);
+                                        }
+                                        break;
                                     }
-                                    break;
-                                }
-                            case (byte)ShellWeaponEffectType.Freeze:
-                                {
-                                    Buff buff = new Buff(27, battleEntity.Level);
-                                    if (ServerManager.Instance.RandomNumber() < shell.Value
-                                        - (shell.Value * (battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedFreeze)?.Value
-                                        + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllNegativeEffect)?.Value) / 100D))
+                                case (byte)ShellWeaponEffectType.Freeze:
                                     {
-                                        target.Character.AddBuff(buff);
+                                        Buff buff = new Buff(27, battleEntity.Level);
+                                        if (ServerManager.Instance.RandomNumber() < shell.Value
+                                            - (shell.Value * (battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedFreeze)?.Value
+                                            + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllNegativeEffect)?.Value) / 100D))
+                                        {
+                                            target.Character.AddBuff(buff);
+                                        }
+                                        break;
                                     }
-                                    break;
-                                }
+                            }
                         }
                     }
                 }
+
                 switch (hitRequest.TargetHitType)
                 {
                     case TargetHitType.SingleTargetHit:
