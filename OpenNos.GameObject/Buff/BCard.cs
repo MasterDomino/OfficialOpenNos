@@ -534,7 +534,7 @@ namespace OpenNos.GameObject
                     break;
 
                 default:
-                    Logger.Error(new ArgumentOutOfRangeException($"Card Type {Type} not defined!"));
+                    Logger.Warn($"Card Type {Type} not defined!");
                     break;
             }
         }
