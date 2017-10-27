@@ -62,11 +62,11 @@ namespace OpenNos.DAL.EF
 
                     if (entity == null)
                     {
-                        staticBonus = Insert(staticBonus, context);
+                        staticBonus = insert(staticBonus, context);
                         return SaveResult.Inserted;
                     }
                     staticBonus.StaticBonusId = entity.StaticBonusId;
-                    staticBonus = Update(entity, staticBonus, context);
+                    staticBonus = update(entity, staticBonus, context);
                     return SaveResult.Updated;
                 }
             }
@@ -120,7 +120,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        private StaticBonusDTO Insert(StaticBonusDTO sb, OpenNosContext context)
+        private StaticBonusDTO insert(StaticBonusDTO sb, OpenNosContext context)
         {
             try
             {
@@ -136,7 +136,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        private StaticBonusDTO Update(StaticBonus entity, StaticBonusDTO sb, OpenNosContext context)
+        private StaticBonusDTO update(StaticBonus entity, StaticBonusDTO sb, OpenNosContext context)
         {
             if (entity != null)
             {

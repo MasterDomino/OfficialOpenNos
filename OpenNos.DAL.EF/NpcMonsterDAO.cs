@@ -91,11 +91,11 @@ namespace OpenNos.DAL.EF
 
                     if (entity == null)
                     {
-                        npcMonster = Insert(npcMonster, context);
+                        npcMonster = insert(npcMonster, context);
                         return SaveResult.Inserted;
                     }
 
-                    npcMonster = Update(entity, npcMonster, context);
+                    npcMonster = update(entity, npcMonster, context);
                     return SaveResult.Updated;
                 }
             }
@@ -133,7 +133,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        private NpcMonsterDTO Insert(NpcMonsterDTO npcMonster, OpenNosContext context)
+        private NpcMonsterDTO insert(NpcMonsterDTO npcMonster, OpenNosContext context)
         {
             NpcMonster entity = _mapper.Map<NpcMonster>(npcMonster);
             context.NpcMonster.Add(entity);
@@ -141,7 +141,7 @@ namespace OpenNos.DAL.EF
             return _mapper.Map<NpcMonsterDTO>(entity);
         }
 
-        private NpcMonsterDTO Update(NpcMonster entity, NpcMonsterDTO npcMonster, OpenNosContext context)
+        private NpcMonsterDTO update(NpcMonster entity, NpcMonsterDTO npcMonster, OpenNosContext context)
         {
             if (entity != null)
             {

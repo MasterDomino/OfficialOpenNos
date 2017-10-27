@@ -28,6 +28,27 @@ namespace OpenNos.DAL.EF
     {
         #region Methods
 
+        public void Delete(short bonusToDelete, long characterId)
+        {
+            try
+            {
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
+                {
+                    StaticBuff bon = context.StaticBuff.FirstOrDefault(c => c.CardId == bonusToDelete && c.CharacterId == characterId);
+
+                    if (bon != null)
+                    {
+                        context.StaticBuff.Remove(bon);
+                        context.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(string.Format(Language.Instance.GetMessageFromKey("DELETE_ERROR"), bonusToDelete, e.Message), e);
+            }
+        }
+
         public SaveResult InsertOrUpdate(ref StaticBuffDTO staticBuff)
         {
             try
@@ -40,11 +61,11 @@ namespace OpenNos.DAL.EF
 
                     if (entity == null)
                     {
-                        staticBuff = Insert(staticBuff, context);
+                        staticBuff = insert(staticBuff, context);
                         return SaveResult.Inserted;
                     }
                     staticBuff.StaticBuffId = entity.StaticBuffId;
-                    staticBuff = Update(entity, staticBuff, context);
+                    staticBuff = update(entity, staticBuff, context);
                     return SaveResult.Updated;
                 }
             }
@@ -82,43 +103,6 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        private StaticBuffDTO Insert(StaticBuffDTO sb, OpenNosContext context)
-        {
-            try
-            {
-                StaticBuff entity = _mapper.Map<StaticBuff>(sb);
-                context.StaticBuff.Add(entity);
-                context.SaveChanges();
-                return _mapper.Map<StaticBuffDTO>(entity);
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e);
-                return null;
-            }
-        }
-
-        public void Delete(short bonusToDelete, long characterId)
-        {
-            try
-            {
-                using (OpenNosContext context = DataAccessHelper.CreateContext())
-                {
-                    StaticBuff bon = context.StaticBuff.FirstOrDefault(c => c.CardId == bonusToDelete && c.CharacterId == characterId);
-
-                    if (bon != null)
-                    {
-                        context.StaticBuff.Remove(bon);
-                        context.SaveChanges();
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(string.Format(Language.Instance.GetMessageFromKey("DELETE_ERROR"), bonusToDelete, e.Message), e);
-            }
-        }
-
         public IEnumerable<short> LoadByTypeCharacterId(long characterId)
         {
             try
@@ -135,7 +119,23 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        private StaticBuffDTO Update(StaticBuff entity, StaticBuffDTO sb, OpenNosContext context)
+        private StaticBuffDTO insert(StaticBuffDTO sb, OpenNosContext context)
+        {
+            try
+            {
+                StaticBuff entity = _mapper.Map<StaticBuff>(sb);
+                context.StaticBuff.Add(entity);
+                context.SaveChanges();
+                return _mapper.Map<StaticBuffDTO>(entity);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                return null;
+            }
+        }
+
+        private StaticBuffDTO update(StaticBuff entity, StaticBuffDTO sb, OpenNosContext context)
         {
             if (entity != null)
             {

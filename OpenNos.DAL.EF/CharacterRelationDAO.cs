@@ -64,10 +64,10 @@ namespace OpenNos.DAL.EF
 
                     if (entity == null)
                     {
-                        characterRelation = Insert(characterRelation, context);
+                        characterRelation = insert(characterRelation, context);
                         return SaveResult.Inserted;
                     }
-                    characterRelation = Update(entity, characterRelation, context);
+                    characterRelation = update(entity, characterRelation, context);
                     return SaveResult.Updated;
                 }
             }
@@ -105,7 +105,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        private CharacterRelationDTO Insert(CharacterRelationDTO relation, OpenNosContext context)
+        private CharacterRelationDTO insert(CharacterRelationDTO relation, OpenNosContext context)
         {
             CharacterRelation entity = _mapper.Map<CharacterRelation>(relation);
             context.CharacterRelation.Add(entity);
@@ -113,7 +113,7 @@ namespace OpenNos.DAL.EF
             return _mapper.Map<CharacterRelationDTO>(entity);
         }
 
-        private CharacterRelationDTO Update(CharacterRelation entity, CharacterRelationDTO relation, OpenNosContext context)
+        private CharacterRelationDTO update(CharacterRelation entity, CharacterRelationDTO relation, OpenNosContext context)
         {
             if (entity != null)
             {

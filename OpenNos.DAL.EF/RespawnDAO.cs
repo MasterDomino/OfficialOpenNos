@@ -40,12 +40,12 @@ namespace OpenNos.DAL.EF
 
                     if (entity == null)
                     {
-                        respawn = Insert(respawn, context);
+                        respawn = insert(respawn, context);
                         return SaveResult.Inserted;
                     }
 
                     respawn.RespawnId = entity.RespawnId;
-                    respawn = Update(entity, respawn, context);
+                    respawn = update(entity, respawn, context);
                     return SaveResult.Updated;
                 }
             }
@@ -83,7 +83,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        private RespawnDTO Insert(RespawnDTO respawn, OpenNosContext context)
+        private RespawnDTO insert(RespawnDTO respawn, OpenNosContext context)
         {
             try
             {
@@ -99,7 +99,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        private RespawnDTO Update(Respawn entity, RespawnDTO respawn, OpenNosContext context)
+        private RespawnDTO update(Respawn entity, RespawnDTO respawn, OpenNosContext context)
         {
             if (entity != null)
             {

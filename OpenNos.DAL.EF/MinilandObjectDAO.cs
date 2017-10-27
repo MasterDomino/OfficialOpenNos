@@ -63,12 +63,12 @@ namespace OpenNos.DAL.EF
 
                     if (entity == null)
                     {
-                        obj = Insert(obj, context);
+                        obj = insert(obj, context);
                         return SaveResult.Inserted;
                     }
 
                     obj.MinilandObjectId = entity.MinilandObjectId;
-                    obj = Update(entity, obj, context);
+                    obj = update(entity, obj, context);
                     return SaveResult.Updated;
                 }
             }
@@ -90,7 +90,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        private MinilandObjectDTO Insert(MinilandObjectDTO obj, OpenNosContext context)
+        private MinilandObjectDTO insert(MinilandObjectDTO obj, OpenNosContext context)
         {
             try
             {
@@ -106,7 +106,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        private MinilandObjectDTO Update(MinilandObject entity, MinilandObjectDTO respawn, OpenNosContext context)
+        private MinilandObjectDTO update(MinilandObject entity, MinilandObjectDTO respawn, OpenNosContext context)
         {
             if (entity != null)
             {

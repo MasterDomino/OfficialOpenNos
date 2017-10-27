@@ -63,11 +63,11 @@ namespace OpenNos.DAL.EF
 
                     if (entity == null)
                     {
-                        family = Insert(family, context);
+                        family = insert(family, context);
                         return SaveResult.Inserted;
                     }
 
-                    family = Update(entity, family, context);
+                    family = update(entity, family, context);
                     return SaveResult.Updated;
                 }
             }
@@ -153,7 +153,7 @@ namespace OpenNos.DAL.EF
             return null;
         }
 
-        private FamilyDTO Insert(FamilyDTO family, OpenNosContext context)
+        private FamilyDTO insert(FamilyDTO family, OpenNosContext context)
         {
             Family entity = _mapper.Map<Family>(family);
             context.Family.Add(entity);
@@ -161,7 +161,7 @@ namespace OpenNos.DAL.EF
             return _mapper.Map<FamilyDTO>(entity);
         }
 
-        private FamilyDTO Update(Family entity, FamilyDTO family, OpenNosContext context)
+        private FamilyDTO update(Family entity, FamilyDTO family, OpenNosContext context)
         {
             if (entity != null)
             {

@@ -63,11 +63,11 @@ namespace OpenNos.DAL.EF
 
                     if (entity == null)
                     {
-                        log = Insert(log, context);
+                        log = insert(log, context);
                         return SaveResult.Inserted;
                     }
 
-                    log = Update(entity, log, context);
+                    log = update(entity, log, context);
                     return SaveResult.Updated;
                 }
             }
@@ -116,7 +116,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        private PenaltyLogDTO Insert(PenaltyLogDTO penaltylog, OpenNosContext context)
+        private PenaltyLogDTO insert(PenaltyLogDTO penaltylog, OpenNosContext context)
         {
             PenaltyLog entity = _mapper.Map<PenaltyLog>(penaltylog);
             context.PenaltyLog.Add(entity);
@@ -124,7 +124,7 @@ namespace OpenNos.DAL.EF
             return _mapper.Map<PenaltyLogDTO>(entity);
         }
 
-        private PenaltyLogDTO Update(PenaltyLog entity, PenaltyLogDTO penaltylog, OpenNosContext context)
+        private PenaltyLogDTO update(PenaltyLog entity, PenaltyLogDTO penaltylog, OpenNosContext context)
         {
             if (entity != null)
             {

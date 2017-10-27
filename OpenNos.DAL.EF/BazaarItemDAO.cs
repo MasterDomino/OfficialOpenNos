@@ -64,11 +64,11 @@ namespace OpenNos.DAL.EF
 
                     if (entity == null)
                     {
-                        bazaarItem = Insert(bazaarItem, context);
+                        bazaarItem = insert(bazaarItem, context);
                         return SaveResult.Inserted;
                     }
 
-                    bazaarItem = Update(entity, bazaarItem, context);
+                    bazaarItem = update(entity, bazaarItem, context);
                     return SaveResult.Updated;
                 }
             }
@@ -124,7 +124,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        private BazaarItemDTO Insert(BazaarItemDTO bazaarItem, OpenNosContext context)
+        private BazaarItemDTO insert(BazaarItemDTO bazaarItem, OpenNosContext context)
         {
             BazaarItem entity = _mapper.Map<BazaarItem>(bazaarItem);
             context.BazaarItem.Add(entity);
@@ -132,7 +132,7 @@ namespace OpenNos.DAL.EF
             return _mapper.Map<BazaarItemDTO>(entity);
         }
 
-        private BazaarItemDTO Update(BazaarItem entity, BazaarItemDTO bazaarItem, OpenNosContext context)
+        private BazaarItemDTO update(BazaarItem entity, BazaarItemDTO bazaarItem, OpenNosContext context)
         {
             if (entity != null)
             {

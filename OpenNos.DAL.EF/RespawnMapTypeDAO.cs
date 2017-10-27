@@ -61,12 +61,12 @@ namespace OpenNos.DAL.EF
 
                     if (entity == null)
                     {
-                        respawnMapType = Insert(respawnMapType, context);
+                        respawnMapType = insert(respawnMapType, context);
                         return SaveResult.Inserted;
                     }
 
                     respawnMapType.RespawnMapTypeId = entity.RespawnMapTypeId;
-                    respawnMapType = Update(entity, respawnMapType, context);
+                    respawnMapType = update(entity, respawnMapType, context);
                     return SaveResult.Updated;
                 }
             }
@@ -109,7 +109,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        private RespawnMapTypeDTO Insert(RespawnMapTypeDTO respawnMapType, OpenNosContext context)
+        private RespawnMapTypeDTO insert(RespawnMapTypeDTO respawnMapType, OpenNosContext context)
         {
             try
             {
@@ -125,7 +125,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        private RespawnMapTypeDTO Update(RespawnMapType entity, RespawnMapTypeDTO respawnMapType, OpenNosContext context)
+        private RespawnMapTypeDTO update(RespawnMapType entity, RespawnMapTypeDTO respawnMapType, OpenNosContext context)
         {
             if (entity != null)
             {
