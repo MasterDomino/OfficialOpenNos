@@ -1130,14 +1130,14 @@ namespace OpenNos.Handler
         private void zoneHit(int castingId, short x, short y)
         {
             List<CharacterSkill> skills = Session.Character.UseSp ? Session.Character.SkillsSp.GetAllItems() : Session.Character.Skills.GetAllItems();
-            CharacterSkill characterSkill = skills?.Find(s => s.Skill.CastId == castingId);
-            if (!Session.Character.WeaponLoaded(characterSkill) || !Session.HasCurrentMapInstance)
+            CharacterSkill characterSkill = skills?.Find(s => s.Skill?.CastId == castingId);
+            if (characterSkill == null || !Session.Character.WeaponLoaded(characterSkill) || !Session.HasCurrentMapInstance)
             {
                 Session.SendPacket(StaticPacketHelper.Cancel(2));
                 return;
             }
 
-            if (characterSkill?.CanBeUsed() == true)
+            if (characterSkill.CanBeUsed())
             {
                 if (Session.Character.Mp >= characterSkill.Skill.MpCost)
                 {
@@ -1173,13 +1173,13 @@ namespace OpenNos.Handler
                                 {
                                     if (Session.Character.Family == null || character.Character.Family == null || Session.Character.Family.FamilyId != character.Character.Family.FamilyId)
                                     {
-                                        if (Session.Character.MapInstance.Map.MapId != 130 && Session.Character.MapInstance.Map.MapId != 131)
+                                        if (Session.CurrentMapInstance?.Map.MapId != 130 && Session.CurrentMapInstance?.Map.MapId != 131)
                                         {
                                             pvpHit(new HitRequest(TargetHitType.ZoneHit, Session, characterSkill.Skill, x, y), character);
                                         }
                                     }
                                 }
-                                else if (Session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                else if (Session.CurrentMapInstance?.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap) == true)
                                 {
                                     if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId))
                                     {

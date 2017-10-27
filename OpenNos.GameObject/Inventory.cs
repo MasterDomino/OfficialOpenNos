@@ -400,7 +400,7 @@ namespace OpenNos.GameObject
             }
             catch (InvalidOperationException ioEx)
             {
-                Logger.LogUserEventError("LoadBySlotAndType", Owner?.Session?.GenerateIdentity(), "MULTIPLE_ITEMS_IN_SLOT", ioEx);
+                Logger.LogUserEventError("LoadBySlotAndType", Owner?.Session?.GenerateIdentity(), "Multiple items in slot, Splitting...", ioEx);
                 bool isFirstItem = true;
                 foreach (ItemInstance item in Where(i => i?.GetType().Equals(typeof(T)) == true && i.Slot == slot && i.Type == type))
                 {
@@ -440,7 +440,7 @@ namespace OpenNos.GameObject
             }
             catch (InvalidOperationException ioEx)
             {
-                Logger.LogUserEventError("LoadBySlotAndType", Owner?.Session?.GenerateIdentity(), "MULTIPLE_ITEMS_IN_SLOT", ioEx);
+                Logger.LogUserEventError("LoadBySlotAndType", Owner?.Session?.GenerateIdentity(), "Multiple items in slot, Splitting...", ioEx);
                 bool isFirstItem = true;
                 foreach (ItemInstance item in Where(i => i.Slot.Equals(slot) && i.Type.Equals(type)))
                 {

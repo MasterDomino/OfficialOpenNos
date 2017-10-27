@@ -58,7 +58,7 @@ namespace OpenNos.DAL.EF
             }
             catch (Exception e)
             {
-                Logger.Error(e);
+                Logger.Error($"characterId: {characterId} slot: {slot} type: {type}", e);
                 return DeleteResult.Error;
             }
         }

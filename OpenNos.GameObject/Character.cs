@@ -3396,7 +3396,7 @@ namespace OpenNos.GameObject
                             }
                             catch (Exception ex)
                             {
-                                Logger.Error(ex);
+                                // TODO: Work on: statement conflicted with the REFERENCE constraint "FK_dbo.BazaarItem_dbo.ItemInstance_ItemInstanceId". The conflict occurred in database "opennos", table "dbo.BazaarItem", column 'ItemInstanceId'.
                                 Logger.LogUserEventError("ONSAVEDELETION_EXCEPTION", Name, $"Detailed Item Information: Item ID = {inventoryToDeleteId}", ex);
                             }
                         }
@@ -3462,9 +3462,7 @@ namespace OpenNos.GameObject
                     DAOFactory.QuicklistEntryDAO.InsertOrUpdate(quicklistEntry);
                 }
 
-                IEnumerable<MinilandObjectDTO> minilandobjectEntriesToInsertOrUpdate = MinilandObjects.ToList();
-
-                foreach (MinilandObjectDTO mobjEntry in minilandobjectEntriesToInsertOrUpdate)
+                foreach (MinilandObjectDTO mobjEntry in (IEnumerable<MinilandObjectDTO>)MinilandObjects.ToList())
                 {
                     MinilandObjectDTO mobj = mobjEntry;
                     DAOFactory.MinilandObjectDAO.InsertOrUpdate(ref mobj);

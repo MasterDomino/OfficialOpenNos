@@ -191,7 +191,6 @@ namespace OpenNos.Handler
         /// Load Characters, this is the Entrypoint for the Client, Wait for 3 Packets.
         /// </summary>
         /// <param name="packet"></param>
-        /// <returns></returns>
         [Packet("OpenNos.EntryPoint", 3)]
         public void LoadCharacters(string packet)
         {
@@ -238,21 +237,21 @@ namespace OpenNos.Handler
                         }
                         else
                         {
-                            Logger.Error($"Client {Session.ClientId} forced Disconnection, invalid Password or SessionId.");
+                            Logger.Debug($"Client {Session.ClientId} forced Disconnection, invalid Password.");
                             Session.Disconnect();
                             return;
                         }
                     }
                     else
                     {
-                        Logger.Error($"Client {Session.ClientId} forced Disconnection, invalid AccountName.");
+                        Logger.Debug($"Client {Session.ClientId} forced Disconnection, invalid AccountName.");
                         Session.Disconnect();
                         return;
                     }
                 }
                 else
                 {
-                    Logger.Error($"Client {Session.ClientId} forced Disconnection, login has not been registered or Account is already logged in.");
+                    Logger.Debug($"Client {Session.ClientId} forced Disconnection, login has not been registered or Account is already logged in.");
                     Session.Disconnect();
                     return;
                 }
