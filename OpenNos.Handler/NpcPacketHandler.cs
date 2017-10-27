@@ -525,92 +525,56 @@ namespace OpenNos.Handler
                 return;
             }
             short VNum = pdtsePacket.VNum;
+            Recipe recipe = ServerManager.Instance.GetAllRecipes().Find(s => s.ItemVNum == VNum);
             if (pdtsePacket.Type == 1)
             {
-                MapNpc npc = Session.CurrentMapInstance.Npcs.Find(s => s.MapNpcId == Session.Character.LastNRunId);
-                if (npc != null)
+                if (recipe?.Amount > 0)
                 {
-                    int distance = Map.GetDistance(new MapCell
+                    string rece = $"m_list 3 {recipe.Amount}";
+                    foreach (RecipeItemDTO ite in recipe.Items)
                     {
-                        X = Session.Character.PositionX,
-                        Y = Session.Character.PositionY
-                    }, new MapCell
-                    {
-                        X = npc.MapX,
-                        Y = npc.MapY
-                    });
-                    if (npc.MapInstance == Session.CurrentMapInstance && distance <= 5)
-                    {
-                        Recipe rec = npc.Recipes.Find(s => s.ItemVNum == VNum);
-                        if (rec?.Amount > 0)
+                        if (ite.Amount > 0)
                         {
-                            string rece = $"m_list 3 {rec.Amount}";
-                            foreach (RecipeItemDTO ite in rec.Items)
-                            {
-                                if (ite.Amount > 0)
-                                {
-                                    rece += $" {ite.ItemVNum} {ite.Amount}";
-                                }
-                            }
-                            rece += " -1";
-                            Session.SendPacket(rece);
+                            rece += $" {ite.ItemVNum} {ite.Amount}";
                         }
                     }
-                }
-                else if (Session.Character.LastItemVNum == 1072)
-                {
-                    //Session.SendPacket("m_list 3 10 2029 3 2097 5 2098 10 2099 5 -1");
+                    rece += " -1";
+                    Session.SendPacket(rece);
                 }
             }
-            else
+            else if (recipe != null)
             {
-                MapNpc npc = Session.CurrentMapInstance.Npcs.Find(s => s.MapNpcId == Session.Character.LastNRunId);
-                if (npc != null)
+                if (recipe.Amount <= 0)
                 {
-                    int distance = Map.GetDistance(new MapCell
-                    {
-                        X = Session.Character.PositionX,
-                        Y = Session.Character.PositionY
-                    }, new MapCell
-                    {
-                        X = npc.MapX,
-                        Y = npc.MapY
-                    });
-                    if (npc.MapInstance == Session.CurrentMapInstance && distance <= 5)
-                    {
-                        Recipe rec = npc.Recipes.Find(s => s.ItemVNum == VNum);
-                        if (rec != null)
-                        {
-                            if (rec.Amount <= 0)
-                            {
-                                return;
-                            }
-                            if (rec.Items.Any(ite => Session.Character.Inventory.CountItem(ite.ItemVNum) < ite.Amount))
-                            {
-                                return;
-                            }
-
-                            ItemInstance inv = Session.Character.Inventory.AddNewToInventory(rec.ItemVNum, rec.Amount).FirstOrDefault();
-                            if (inv != null)
-                            {
-                                if (inv.GetType() == typeof(WearableInstance) && inv is WearableInstance item && (item.Item.EquipmentSlot == EquipmentType.Armor || item.Item.EquipmentSlot == EquipmentType.MainWeapon || item.Item.EquipmentSlot == EquipmentType.SecondaryWeapon))
-                                {
-                                    item.SetRarityPoint();
-                                }
-                                foreach (RecipeItemDTO ite in rec.Items)
-                                {
-                                    Session.Character.Inventory.RemoveItemAmount(ite.ItemVNum, ite.Amount);
-                                }
-                                Session.SendPacket($"pdti 11 {inv.ItemVNum} {rec.Amount} 29 {inv.Upgrade} 0");
-                                Session.SendPacket(UserInterfaceHelper.Instance.GenerateGuri(19, 1, Session.Character.CharacterId, 1324));
-                                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("CRAFTED_OBJECT"), inv.Item.Name, rec.Amount), 0));
-                            }
-                        }
-                    }
+                    return;
                 }
-                else if (Session.Character.LastItemVNum == 1072)
+                if (recipe.Items.Any(ite => Session.Character.Inventory.CountItem(ite.ItemVNum) < ite.Amount))
                 {
-                    //Session.SendPacket("pdti 11 1018 2 29 0 0");
+                    return;
+                }
+                if (Session.Character.LastItemVNum != 0)
+                {
+                    if (Session.Character.Inventory.CountItem(Session.Character.LastItemVNum) < 1)
+                    {
+                        return;
+                    }
+                    Session.Character.Inventory.RemoveItemAmount(Session.Character.LastItemVNum);
+                }
+
+                ItemInstance inv = Session.Character.Inventory.AddNewToInventory(recipe.ItemVNum, recipe.Amount).FirstOrDefault();
+                if (inv != null)
+                {
+                    if (inv.GetType() == typeof(WearableInstance) && inv is WearableInstance item && (item.Item.EquipmentSlot == EquipmentType.Armor || item.Item.EquipmentSlot == EquipmentType.MainWeapon || item.Item.EquipmentSlot == EquipmentType.SecondaryWeapon))
+                    {
+                        item.SetRarityPoint();
+                    }
+                    foreach (RecipeItemDTO ite in recipe.Items)
+                    {
+                        Session.Character.Inventory.RemoveItemAmount(ite.ItemVNum, ite.Amount);
+                    }
+                    Session.SendPacket($"pdti 11 {inv.ItemVNum} {recipe.Amount} 29 {inv.Upgrade} 0");
+                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateGuri(19, 1, Session.Character.CharacterId, 1324));
+                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("CRAFTED_OBJECT"), inv.Item.Name, recipe.Amount), 0));
                 }
             }
         }

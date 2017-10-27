@@ -106,7 +106,7 @@ namespace OpenNos.GameObject
             EffectDelay = 4000;
             _movetime = ServerManager.Instance.RandomNumber(500, 3000);
             Path = new List<Node>();
-            Recipes = ServerManager.Instance.GetReceipesByMapNpcId(MapNpcId);
+            Recipes = ServerManager.Instance.GetRecipesByMapNpcId(MapNpcId);
             Target = -1;
             Teleporters = ServerManager.Instance.GetTeleportersByNpcVNum((short)MapNpcId);
             Shop shop = ServerManager.Instance.GetShopByMapNpcId(MapNpcId);

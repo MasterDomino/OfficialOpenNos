@@ -70,7 +70,9 @@ namespace OpenNos.GameObject
 
         private ThreadSafeSortedList<short, List<NpcMonsterSkill>> _monsterSkills;
 
-        private ThreadSafeSortedList<int, List<Recipe>> _recipes;
+        private ThreadSafeSortedList<short, Recipe> _recipes;
+
+        private ThreadSafeSortedList<int, RecipeListDTO> _recipeLists;
 
         private ThreadSafeSortedList<int, List<ShopItemDTO>> _shopItems;
 
@@ -597,7 +599,17 @@ namespace OpenNos.GameObject
             return (T)session.Character.GetType().GetProperties().Single(pi => pi.Name == property).GetValue(session.Character, null);
         }
 
-        public List<Recipe> GetReceipesByMapNpcId(int mapNpcId) => _recipes.ContainsKey(mapNpcId) ? _recipes[mapNpcId] : new List<Recipe>();
+        public List<Recipe> GetRecipesByMapNpcId(int mapNpcId)
+        {
+            List<Recipe> recipes = new List<Recipe>();
+            foreach (RecipeListDTO recipeList in _recipeLists.Where(r => r.MapNpcId == mapNpcId))
+            {
+                recipes.Add(_recipes[recipeList.RecipeId]);
+            }
+            return recipes;
+        }
+
+        public List<Recipe> GetAllRecipes() => _recipes.GetAllItems();
 
         public ClientSession GetSessionByCharacterName(string name) => Sessions.SingleOrDefault(s => s.Character.Name == name);
 
@@ -813,12 +825,14 @@ namespace OpenNos.GameObject
             Logger.Info(string.Format(Language.Instance.GetMessageFromKey("NPCMONSTERS_LOADED"), _npcs.Count));
 
             // intialize recipes
-            _recipes = new ThreadSafeSortedList<int, List<Recipe>>();
-            Parallel.ForEach(DAOFactory.RecipeDAO.LoadAll().GroupBy(r => r.RecipeId), recipeGrouping => _recipes[recipeGrouping.Key] = recipeGrouping.Select(r => r as Recipe).ToList());
-            Logger.Info(string.Format(Language.Instance.GetMessageFromKey("RECIPES_LOADED"), _recipes.Sum(i => i.Count)));
+            _recipes = new ThreadSafeSortedList<short, Recipe>();
+            Parallel.ForEach(DAOFactory.RecipeDAO.LoadAll(), recipeGrouping => _recipes[recipeGrouping.RecipeId] = recipeGrouping as Recipe);
+            Logger.Info(string.Format(Language.Instance.GetMessageFromKey("RECIPES_LOADED"), _recipes.Count));
 
             // initialize recipelist
-            // TODO: Implement that!
+            _recipeLists = new ThreadSafeSortedList<int, RecipeListDTO>();
+            Parallel.ForEach(DAOFactory.RecipeListDAO.LoadAll(), recipeListGrouping => _recipeLists[recipeListGrouping.RecipeListId] = recipeListGrouping);
+            Logger.Info(string.Format(Language.Instance.GetMessageFromKey("RECIPELISTS_LOADED"), _recipeLists.Count));
 
             // initialize shopitems
             _shopItems = new ThreadSafeSortedList<int, List<ShopItemDTO>>();
