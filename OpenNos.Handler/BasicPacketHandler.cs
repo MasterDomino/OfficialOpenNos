@@ -254,7 +254,8 @@ namespace OpenNos.Handler
                             {
                                 if (otherSession.Character.FriendRequestBlocked)
                                 {
-                                    Session.SendPacket(Language.Instance.GetMessageFromKey("FRIEND_REJECTED"));
+                                    otherSession.SendPacket($"info {Language.Instance.GetMessageFromKey("FRIEND_REJECTED")}");
+                                    return;
                                 }
 
                                 if (otherSession.Character.FriendRequestCharacters.Contains(Session.Character.CharacterId))
@@ -268,7 +269,7 @@ namespace OpenNos.Handler
                                             break;
 
                                         case 2:
-                                            otherSession.SendPacket(Language.Instance.GetMessageFromKey("FRIEND_REJECTED"));
+                                            otherSession.SendPacket($"info {Language.Instance.GetMessageFromKey("FRIEND_REJECTED")}");
                                             break;
 
                                         default:
