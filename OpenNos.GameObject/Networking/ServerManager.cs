@@ -609,6 +609,20 @@ namespace OpenNos.GameObject
             return recipes;
         }
 
+        public List<Recipe> GetRecipesByItemVNum(short itemVNum)
+        {
+            List<Recipe> recipes = new List<Recipe>();
+            foreach (RecipeListDTO recipeList in _recipeLists.Where(r => r.ItemVNum == itemVNum))
+            {
+                recipes.Add(_recipes[recipeList.RecipeId]);
+            }
+            return recipes;
+        }
+
+        public bool ItemHasRecipe(short itemVNum) => _recipeLists.Any(r => r.ItemVNum == itemVNum);
+
+        public bool MapNpcHasRecipe(int mapNpcId) => _recipeLists.Any(r => r.MapNpcId == mapNpcId);
+
         public List<Recipe> GetAllRecipes() => _recipes.GetAllItems();
 
         public ClientSession GetSessionByCharacterName(string name) => Sessions.SingleOrDefault(s => s.Character.Name == name);

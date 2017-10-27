@@ -15,6 +15,8 @@
 
 using OpenNos.Core;
 using OpenNos.Data;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenNos.GameObject
 {
@@ -40,8 +42,10 @@ namespace OpenNos.GameObject
                         case 15:
                             session.Character.LastNRunId = 0;
                             session.Character.LastItemVNum = inv.ItemVNum;
-                            session.SendPacket("m_list 2 1016 1018 1019 1020 1021 1022 1023 1024 1025 1026 1029 1030 1031 1032 1033 1034");
                             session.SendPacket("wopen 28 0");
+                            List<Recipe> tps = ServerManager.Instance.GetRecipesByItemVNum(VNum);
+                            string recipelist = tps.Where(s => s.Amount > 0).Aggregate("m_list 2", (current, s) => current + $" {s.ItemVNum}");
+                            session.SendPacket(recipelist);
                             break;
                     }
                     break;

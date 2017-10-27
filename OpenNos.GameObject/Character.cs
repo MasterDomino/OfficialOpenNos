@@ -206,7 +206,7 @@ namespace OpenNos.GameObject
 
         public int LastNRunId { get; set; }
 
-        public int LastItemVNum { get; set; }
+        public short LastItemVNum { get; set; }
 
         public DateTime LastPermBuffRefresh { get; set; }
 

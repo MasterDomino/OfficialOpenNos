@@ -544,21 +544,22 @@ namespace OpenNos.Handler
             }
             else if (recipe != null)
             {
-                if (recipe.Amount <= 0)
-                {
-                    return;
-                }
-                if (recipe.Items.Any(ite => Session.Character.Inventory.CountItem(ite.ItemVNum) < ite.Amount))
+                if (recipe.Amount <= 0 || recipe.Items.Any(ite => Session.Character.Inventory.CountItem(ite.ItemVNum) < ite.Amount))
                 {
                     return;
                 }
                 if (Session.Character.LastItemVNum != 0)
                 {
-                    if (Session.Character.Inventory.CountItem(Session.Character.LastItemVNum) < 1)
+                    if (Session.Character.Inventory.CountItem(Session.Character.LastItemVNum) < 1 || !ServerManager.Instance.ItemHasRecipe(Session.Character.LastItemVNum))
                     {
                         return;
                     }
                     Session.Character.Inventory.RemoveItemAmount(Session.Character.LastItemVNum);
+                    Session.Character.LastItemVNum = 0;
+                }
+                else if (!ServerManager.Instance.MapNpcHasRecipe(Session.Character.LastNpcMonsterId))
+                {
+                    return;
                 }
 
                 ItemInstance inv = Session.Character.Inventory.AddNewToInventory(recipe.ItemVNum, recipe.Amount).FirstOrDefault();
