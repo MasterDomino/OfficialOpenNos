@@ -531,7 +531,7 @@ namespace OpenNos.Handler
                 if (recipe?.Amount > 0)
                 {
                     string recipePacket = $"m_list 3 {recipe.Amount}";
-                    foreach (RecipeItemDTO ite in recipe.Items)
+                    foreach (RecipeItemDTO ite in recipe.Items.Where(s => s.ItemVNum != Session.Character.LastItemVNum))
                     {
                         if (ite.Amount > 0)
                         {
@@ -550,11 +550,10 @@ namespace OpenNos.Handler
                 }
                 if (Session.Character.LastItemVNum != 0)
                 {
-                    if (Session.Character.Inventory.CountItem(Session.Character.LastItemVNum) < 1 || !ServerManager.Instance.ItemHasRecipe(Session.Character.LastItemVNum))
+                    if (!ServerManager.Instance.ItemHasRecipe(Session.Character.LastItemVNum))
                     {
                         return;
                     }
-                    Session.Character.Inventory.RemoveItemAmount(Session.Character.LastItemVNum);
                     Session.Character.LastItemVNum = 0;
                 }
                 else if (!ServerManager.Instance.MapNpcHasRecipe(Session.Character.LastNpcMonsterId))

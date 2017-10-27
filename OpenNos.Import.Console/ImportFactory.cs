@@ -198,8 +198,122 @@ namespace OpenNos.Import.Console
 
         public void ImportHardcodedItemRecipes()
         {
-            insertRecipe(1016, 1072, 1, new short[] { 2029, 3, 2097, 5, 2098, 10, 2099, 5 }); // these are just a example item recipes, add proper and non game breaking ones
-            insertRecipe(1018, 1072);
+            // Production Tools for Adventurers
+            insertRecipe(6, 1035, 1, new short[] { 1027, 10, 2038, 8, 1035, 1 });
+            insertRecipe(16, 1035, 1, new short[] { 1027, 8, 2042, 6, 1035, 1 });
+            insertRecipe(204, 1035, 1, new short[] { 1027, 15, 2042, 10, 1035, 1 });
+            insertRecipe(206, 1035, 1, new short[] { 1027, 8, 2046, 7, 1035, 1 });
+            insertRecipe(501, 1035, 1, new short[] { 1027, 14, 500, 1, 1035, 1 });
+
+            // Production Tools for Swordsmen               
+            insertRecipe(22, 1039, 1, new short[] { 1027, 30, 2035, 32, 1039, 1 });
+            insertRecipe(26, 1039, 1, new short[] { 1027, 43, 2035, 44, 1039, 1 });
+            insertRecipe(30, 1039, 1, new short[] { 1027, 54, 2036, 56, 1039, 1 });
+            insertRecipe(73, 1039, 1, new short[] { 1027, 33, 2035, 10, 2039, 23, 1039, 1 });
+            insertRecipe(76, 1039, 1, new short[] { 1027, 53, 2036, 14, 2040, 39, 1039, 1 });
+            insertRecipe(96, 1039, 1, new short[] { 1027, 20, 2034, 6, 2046, 14, 1039, 1 });
+            insertRecipe(100, 1039, 1, new short[] { 1027, 35, 2035, 12, 2047, 23, 1039, 1 });
+            insertRecipe(104, 1039, 1, new short[] { 1027, 53, 2036, 18, 2048, 35, 1039, 1 });
+
+            // Production Tools for Archers
+            insertRecipe(36, 1040, 1, new short[] { 1027, 30, 2039, 32, 1040, 1 });
+            insertRecipe(40, 1040, 1, new short[] { 1027, 43, 2039, 35, 1040, 1 });
+            insertRecipe(44, 1040, 1, new short[] { 1027, 54, 2040, 56, 1040, 1 });
+            insertRecipe(81, 1040, 1, new short[] { 1027, 33, 2035, 32, 1040, 1 });
+            insertRecipe(84, 1040, 1, new short[] { 1027, 53, 2036, 54, 1040, 1 });
+            insertRecipe(109, 1040, 1, new short[] { 1027, 20, 2042, 8, 2046, 12, 1040, 1 });
+            insertRecipe(113, 1040, 1, new short[] { 1027, 35, 2043, 13, 2047, 22, 1040, 1 });
+            insertRecipe(117, 1040, 1, new short[] { 1027, 53, 2044, 20, 2048, 33, 1040, 1 });
+
+            // Production Tools for Sorcerers
+            insertRecipe(50, 1041, 1, new short[] { 1027, 30, 2039, 32, 1041, 1 });
+            insertRecipe(54, 1041, 1, new short[] { 1027, 43, 2039, 45, 1041, 1 });
+            insertRecipe(58, 1041, 1, new short[] { 1027, 54, 2040, 56, 1041, 1 });
+            insertRecipe(89, 1041, 1, new short[] { 1027, 33, 2035, 34, 1041, 1 });
+            insertRecipe(92, 1041, 1, new short[] { 1027, 53, 2036, 54, 1041, 1 });
+            insertRecipe(122, 1041, 1, new short[] { 1027, 20, 2042, 14, 2046, 6, 1041, 1 });
+            insertRecipe(126, 1041, 1, new short[] { 1027, 35, 2043, 28, 2047, 7, 1041, 1 });
+            insertRecipe(130, 1041, 1, new short[] { 1027, 53, 2044, 42, 2048, 11, 1041, 1 });
+
+            // Production Tools for Accessories
+            insertRecipe(508, 1047, 1, new short[] { 1027, 24, 1032, 5, 1047, 1 });
+            insertRecipe(509, 1047, 1, new short[] { 1027, 25, 1031, 5, 1047, 1 });
+            insertRecipe(510, 1047, 1, new short[] { 1027, 26, 1031, 7, 1047, 1 });
+            insertRecipe(514, 1047, 1, new short[] { 1027, 33, 1033, 10, 1047, 1 });
+            insertRecipe(516, 1047, 1, new short[] { 1027, 35, 1032, 12, 1047, 1 });
+            insertRecipe(517, 1047, 1, new short[] { 1027, 36, 1034, 15, 1047, 1 });
+            insertRecipe(522, 1047, 1, new short[] { 1027, 43, 1033, 20, 1047, 1 });
+            insertRecipe(523, 1047, 1, new short[] { 1027, 44, 1031, 24, 1047, 1 });
+            insertRecipe(525, 1047, 1, new short[] { 1027, 46, 1034, 28, 1047, 1 });
+            insertRecipe(531, 1047, 1, new short[] { 1027, 54, 1032, 36, 1047, 1 });
+            insertRecipe(534, 1047, 1, new short[] { 1027, 57, 1033, 42, 1047, 1 });
+
+            // Production Tools for Gems, Cellons and Crystals
+            insertRecipe(1016, 1072, 1, new short[] { 1014, 99, 1015, 5, 1072, 1 });
+            insertRecipe(1018, 1072, 1, new short[] { 1014, 5, 1017, 5, 1072, 1 });
+            insertRecipe(1019, 1072, 1, new short[] { 1014, 10, 1018, 5, 1072, 1 });
+            insertRecipe(1020, 1072, 1, new short[] { 1014, 17, 1019, 5, 1072, 1 });
+            insertRecipe(1021, 1072, 1, new short[] { 1014, 25, 1020, 5, 1072, 1 });
+            insertRecipe(1022, 1072, 1, new short[] { 1014, 35, 1021, 5, 1072, 1 });
+            insertRecipe(1023, 1072, 1, new short[] { 1014, 50, 1022, 5, 1072, 1 });
+            insertRecipe(1024, 1072, 1, new short[] { 1014, 75, 1023, 5, 1072, 1 });
+            insertRecipe(1025, 1072, 1, new short[] { 1014, 110, 1024, 5, 1072, 1 });
+            insertRecipe(1026, 1072, 1, new short[] { 1014, 160, 1025, 5, 1072, 1 });
+            insertRecipe(1029, 1072, 1, new short[] { 1014, 20, 1028, 5, 1072, 1 });
+            insertRecipe(1030, 1072, 1, new short[] { 1014, 50, 1029, 5, 1072, 1 });
+            insertRecipe(1031, 1072, 4, new short[] { 1028, 1, 2097, 5, 1072, 1 });
+            insertRecipe(1032, 1072, 4, new short[] { 1028, 1, 2097, 5, 1072, 1 });
+            insertRecipe(1033, 1072, 4, new short[] { 1028, 1, 2097, 5, 1072, 1 });
+            insertRecipe(1034, 1072, 4, new short[] { 1028, 1, 2097, 5, 1072, 1 });
+
+            // Production Tools for Raw Materials
+            insertRecipe(2035, 1073, 1, new short[] { 1014, 5, 2034, 5, 1073, 1 });
+            insertRecipe(2036, 1073, 1, new short[] { 1014, 10, 2035, 5, 1073, 1 });
+            insertRecipe(2037, 1073, 1, new short[] { 1014, 20, 2036, 5, 1073, 1 });
+            insertRecipe(2039, 1073, 1, new short[] { 1014, 5, 2038, 5, 1073, 1 });
+            insertRecipe(2040, 1073, 1, new short[] { 1014, 10, 2039, 5, 1073, 1 });
+            insertRecipe(2041, 1073, 1, new short[] { 1014, 20, 2040, 5, 1073, 1 });
+            insertRecipe(2043, 1073, 1, new short[] { 1014, 5, 2042, 5, 1073, 1 });
+            insertRecipe(2044, 1073, 1, new short[] { 1014, 10, 2043, 5, 1073, 1 });
+            insertRecipe(2045, 1073, 1, new short[] { 1014, 20, 2044, 5, 1073, 1 });
+            insertRecipe(2047, 1073, 1, new short[] { 1014, 5, 2046, 5, 1073, 1 });
+            insertRecipe(2048, 1073, 1, new short[] { 1014, 10, 2047, 5, 1073, 1 });
+            insertRecipe(2049, 1073, 1, new short[] { 1014, 20, 2048, 5, 1073, 1 });
+
+            // Production Tools for Gloves and Shoes
+            insertRecipe(718, 1083, 1, new short[] { 1027, 5, 1028, 1, 2042, 4, 1083, 1 });
+            insertRecipe(703, 1083, 1, new short[] { 1027, 7, 1028, 2, 2034, 5, 1083, 1 });
+            insertRecipe(705, 1083, 1, new short[] { 1027, 9, 1028, 3, 2035, 3, 1083, 1 });
+            insertRecipe(719, 1083, 1, new short[] { 1027, 12, 1028, 4, 2047, 5, 1083, 1 });
+            insertRecipe(722, 1083, 1, new short[] { 1027, 5, 1028, 1, 2046, 5, 1083, 1 });
+            insertRecipe(723, 1083, 1, new short[] { 1027, 7, 1028, 2, 2046, 7, 1083, 1 });
+            insertRecipe(724, 1083, 1, new short[] { 1027, 9, 1028, 3, 2047, 4, 1083, 1 });
+            insertRecipe(725, 1083, 1, new short[] { 1027, 14, 1028, 4, 2047, 7, 1083, 1 });
+            insertRecipe(325, 1083, 1, new short[] { 2044, 10, 2048, 10, 2093, 50, 1083, 1 });
+
+            // Consumables Recipe
+            insertRecipe(1245, 1241, 1, new short[] { 2029, 5, 2097, 5, 2196, 5, 2208, 5, 2215, 1, 1241, 1 });
+            insertRecipe(1246, 1241, 1, new short[] { 2029, 5, 2097, 5, 2193, 5, 2206, 5, 1241, 1 });
+            insertRecipe(1247, 1241, 1, new short[] { 2029, 5, 2097, 5, 2194, 5, 2207, 5, 1241, 1 });
+            insertRecipe(1248, 1241, 1, new short[] { 2029, 5, 2097, 5, 2195, 5, 2205, 5, 1241, 1 });
+            insertRecipe(1249, 1241, 1, new short[] { 2029, 5, 2097, 5, 2195, 5, 2205, 5, 1241, 1 });
+
+            // Amir's Weapon Parchment A
+            insertRecipe(400, 1313, 1, new short[] { 263, 1, 2036, 60, 2218, 40, 2250, 10, 1313, 1 });
+            insertRecipe(402, 1313, 1, new short[] { 292, 1, 2040, 60, 2217, 50, 2249, 5, 2263, 30, 2279, 3, 1313, 1 });
+            insertRecipe(403, 1313, 1, new short[] { 266, 1, 2040, 60, 2217, 40, 2249, 10, 1313, 1 });
+            insertRecipe(405, 1313, 1, new short[] { 290, 1, 2044, 60, 2224, 50, 2251, 5, 2262, 3, 2275, 30, 1313, 1 });
+            insertRecipe(406, 1313, 1, new short[] { 269, 1, 2048, 60, 2224, 40, 2251, 10, 1313, 1 });
+            insertRecipe(408, 1313, 1, new short[] { 264, 1, 2036, 60, 2218, 50, 2222, 3, 2250, 5, 2276, 30, 1313, 1 });
+
+            // Amir's Weapon Parchment B
+            insertRecipe(401, 1314, 1, new short[] { 400, 1, 2037, 99, 2222, 3, 2231, 70, 2257, 99, 1314, 1 });
+            insertRecipe(404, 1314, 1, new short[] { 403, 1, 2041, 99, 2219, 3, 2226, 70, 2277, 99, 1314, 1 });
+            insertRecipe(407, 1314, 1, new short[] { 406, 1, 2049, 99, 2245, 3, 2261, 70, 2269, 99, 1314, 1 });
+
+            // Charred Mask Parchment
+            insertRecipe(4927, 5900, 1, new short[] { 2505, 3, 2506, 2, 2353, 30, 2355, 20, 5900, 1 });
+            insertRecipe(4928, 5900, 1, new short[] { 2505, 10, 2506, 8, 2507, 1, 2353, 90, 2356, 60, 5900, 3 });
 
             // implement this will have a FUCKTON of hardcoding, for fucks sake ENTWELL why u suck
             // soo much -_-
