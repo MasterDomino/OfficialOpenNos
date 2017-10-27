@@ -1695,12 +1695,12 @@ namespace OpenNos.Import.Console
 
         public void ImportHardcodedItemRecipes()
         {
-            loadRecipe(1016, 1072);
-            loadRecipe(1018, 1072);
+            insertRecipe(1016, 1072, 1, new short[] { 2029, 3, 2097, 5, 2098, 10, 2099, 5}); // these are just a example item recipes, add proper and non game breaking ones
+            insertRecipe(1018, 1072);
             // implement this will have a FUCKTON of hardcoding, for fucks sake ENTWELL why u suck soo much -_-
         }
 
-        private void loadRecipe(short itemVNum, short triggerVNum)
+        private void insertRecipe(short itemVNum, short triggerVNum, byte amount = 1, short[] recipeItems = null)
         {
             RecipeDTO recipe = DAOFactory.RecipeDAO.LoadByItemVNum(itemVNum);
             if (recipe != null)
@@ -1714,7 +1714,29 @@ namespace OpenNos.Import.Console
             }
             else
             {
-                // add the missing recipes <hardcoded>
+                recipe = new RecipeDTO
+                {
+                    ItemVNum = itemVNum,
+                    Amount = amount
+                };
+                DAOFactory.RecipeDAO.Insert(recipe);
+                recipe = DAOFactory.RecipeDAO.LoadByItemVNum(itemVNum);
+                if (recipe != null && recipeItems != null)
+                {
+                    for (int i = 0; i < recipeItems.Length; i += 2)
+                    {
+                        RecipeItemDTO recipeItem = new RecipeItemDTO
+                        {
+                            ItemVNum = recipeItems[i],
+                            Amount = recipeItems[i + 1],
+                            RecipeId = recipe.RecipeId
+                        };
+                        if (!DAOFactory.RecipeItemDAO.LoadByRecipeAndItem(recipe.RecipeId, recipeItem.ItemVNum).Any())
+                        {
+                            DAOFactory.RecipeItemDAO.Insert(recipeItem);
+                        }
+                    }
+                }
             }
         }
 
