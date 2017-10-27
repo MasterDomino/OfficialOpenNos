@@ -292,6 +292,12 @@ namespace OpenNos.GameObject.Helpers
                                     }
                                     if (evt.MapInstance.InstanceBag.EndState == 1 && evt.MapInstance.Monsters.Any(s => s.IsBoss))
                                     {
+                                        foreach (MapMonster mon in evt.MapInstance.Monsters)
+                                        {
+                                            mon.CurrentHp = 0;
+                                            evt.MapInstance.Broadcast(StaticPacketHelper.Out(UserType.Monster, mon.MapMonsterId));
+                                            evt.MapInstance.RemoveMonster(mon);
+                                        }
                                         foreach (ClientSession sess in grp.Characters.Where(s => s.CurrentMapInstance.Monsters.Any(e => e.IsBoss)))
                                         {
                                             foreach (Gift gift in grp?.Raid?.GiftItems)

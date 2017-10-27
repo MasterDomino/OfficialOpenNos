@@ -447,33 +447,36 @@ namespace OpenNos.GameObject
         {
             Observable.Interval(TimeSpan.FromSeconds(1)).Subscribe(x =>
             {
-                WaveEvents.ForEach(s =>
+                if (InstanceBag?.EndState != 1)
                 {
-                    if (s.LastStart.AddSeconds(s.Delay) <= DateTime.Now)
+                    WaveEvents.ForEach(s =>
                     {
-                        if (s.Offset == 0)
+                        if (s.LastStart.AddSeconds(s.Delay) <= DateTime.Now)
                         {
-                            s.Events.ForEach(e => EventHelper.Instance.RunEvent(e));
+                            if (s.Offset == 0)
+                            {
+                                s.Events.ForEach(e => EventHelper.Instance.RunEvent(e));
+                            }
+                            s.Offset = s.Offset > 0 ? (byte)(s.Offset - 1) : (byte)0;
+                            s.LastStart = DateTime.Now;
                         }
-                        s.Offset = s.Offset > 0 ? (byte)(s.Offset - 1) : (byte)0;
-                        s.LastStart = DateTime.Now;
-                    }
-                });
-                try
-                {
-                    if (Monsters.Count(s => s.IsAlive) == 0)
+                    });
+                    try
                     {
-                        OnMapClean.ForEach(e => EventHelper.Instance.RunEvent(e));
-                        OnMapClean.RemoveAll(s => s != null);
+                        if (Monsters.Count(s => s.IsAlive) == 0)
+                        {
+                            OnMapClean.ForEach(e => EventHelper.Instance.RunEvent(e));
+                            OnMapClean.RemoveAll(s => s != null);
+                        }
+                        if (!IsSleeping)
+                        {
+                            RemoveMapItem();
+                        }
                     }
-                    if (!IsSleeping)
+                    catch (Exception e)
                     {
-                        RemoveMapItem();
+                        Logger.Error(e);
                     }
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e);
                 }
             });
         }
