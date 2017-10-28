@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenNos.XMLModel
+namespace OpenNos.XMLModel.Models.Raid
 {
-    public class RaidModel
+    public class Globals
     {
     }
 }
