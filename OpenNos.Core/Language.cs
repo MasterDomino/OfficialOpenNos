@@ -29,12 +29,16 @@ namespace OpenNos.Core
 
         private readonly CultureInfo _resourceCulture;
 
+        private readonly System.IO.StreamWriter _streamWriter;
+
         #endregion
 
         #region Instantiation
 
         private Language()
         {
+            _streamWriter = new System.IO.StreamWriter("MissingLanguageKeys.txt");
+            _streamWriter.AutoFlush = true;
             _resourceCulture = new CultureInfo(ConfigurationManager.AppSettings["Language"]);
             if (Assembly.GetEntryAssembly() != null)
             {
@@ -56,7 +60,13 @@ namespace OpenNos.Core
         {
             string resourceMessage = _manager != null ? _manager.GetString(message, _resourceCulture) : string.Empty;
 
-            return !string.IsNullOrEmpty(resourceMessage) ? resourceMessage : $"#<{message}>";
+            if (string.IsNullOrEmpty(resourceMessage))
+            {
+                _streamWriter.WriteLineAsync(message);
+                return $"#<{message}>";
+            }
+
+            return resourceMessage;
         }
 
         #endregion
