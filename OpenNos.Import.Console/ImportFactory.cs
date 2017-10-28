@@ -192,6 +192,29 @@ namespace OpenNos.Import.Console
                         itemAreaBegin = false;
                     }
                 }
+
+                BCardDTO returnBCard(short cardId, byte type, byte subType, int firstData, int secondData = 0, int thirdData = 0, byte castType = 0, bool isLevelScaled = false, bool isLevelDivided = false)
+                {
+                    return new BCardDTO()
+                    {
+                        CardId = cardId,
+                        Type = type,
+                        SubType = subType,
+                        FirstData = firstData,
+                        SecondData = secondData,
+                        ThirdData = thirdData,
+                        CastType = castType,
+                        IsLevelScaled = isLevelScaled,
+                        IsLevelDivided = isLevelDivided
+                    };
+                }
+
+                bcards.Add(returnBCard(146, 44, 6, 50));
+                bcards.Add(returnBCard(131, 8, 2, 30));
+                bcards.Add(returnBCard(131, 8, 3, 30));
+                bcards.Add(returnBCard(131, 8, 4, 30));
+                bcards.Add(returnBCard(131, 8, 5, 30));
+
                 DAOFactory.CardDAO.Insert(cards);
                 DAOFactory.BCardDAO.Insert(bcards);
                 Logger.Info(string.Format(Language.Instance.GetMessageFromKey("CARDS_PARSED"), cards.Count));

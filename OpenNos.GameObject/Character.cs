@@ -490,7 +490,7 @@ namespace OpenNos.GameObject
         public void AddPetWithSkill(Mate mate)
         {
             bool isUsingMate = true;
-            if (!Session.Character.Mates.Where(s => s.IsTeamMember).Any(s => s.MateType == mate.MateType))
+            if (!Session.Character.Mates.Any(s => s.IsTeamMember && s.MateType == mate.MateType))
             {
                 isUsingMate = false;
                 mate.IsTeamMember = true;

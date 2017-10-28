@@ -1,3 +1,4 @@
+using OpenNos.Domain;
 /*
  * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
  *
@@ -66,7 +67,7 @@ namespace OpenNos.DAL.EF
         public short Slot { get; set; }
 
         [Index("IX_SlotAndType", 3, IsUnique = false, Order = 2)]
-        public byte Type { get; set; }
+        public InventoryType Type { get; set; }
 
         public byte Upgrade { get; set; }
 
