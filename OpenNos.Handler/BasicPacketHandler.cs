@@ -565,7 +565,7 @@ namespace OpenNos.Handler
                             }
                             else
                             {
-                                targetSession.SendPacket($"qna #rd^1^{Session.Character.CharacterId}^1 {string.Format(Language.Instance.GetMessageFromKey("INVITED_YOU_RAID"), Session.Character.Name)}");
+                                targetSession.SendPacket($"qna #rd^1^{Session.Character.CharacterId}^1 {string.Format(Language.Instance.GetMessageFromKey("INVITE_RAID"), Session.Character.Name)}");
                             }
                         }
                     }
@@ -594,7 +594,7 @@ namespace OpenNos.Handler
                     }
                     catch (Exception ex)
                     {
-                        Logger.Error(ex, "GroupJoin");
+                        Logger.Error(ex);
                     }
                     if (ServerManager.Instance.IsCharacterMemberOfGroup(Session.Character.CharacterId)
                         && ServerManager.Instance.IsCharacterMemberOfGroup(pjoinPacket.CharacterId))
@@ -638,7 +638,7 @@ namespace OpenNos.Handler
                             }
                             else
                             {
-                                Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("RAID_JOIN"), Session.Character.Name), 10));
+                                Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("RAID_JOIN"), 10));
                                 if (Session.Character.Level > currentGroup.Raid?.LevelMaximum || Session.Character.Level < currentGroup.Raid?.LevelMinimum)
                                 {
                                     Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("RAID_LEVEL_INCORRECT"), 10));
@@ -1204,11 +1204,11 @@ namespace OpenNos.Handler
                             {
                                 if (Session.Character.Group.IsLeader(Session))
                                 {
-                                    Session.SendPacket($"qna #mkraid^0^275 {Language.Instance.GetMessageFromKey("DO_YOU_WANT_RAID")}");
+                                    Session.SendPacket($"qna #mkraid^0^275 {Language.Instance.GetMessageFromKey("RAID_START_QUESTION")}");
                                 }
                                 else
                                 {
-                                    Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("ONLY_TEAM_LEADER_CAN_START"), 10));
+                                    Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NOT_TEAM_LEADER"), 10));
                                 }
                             }
                             else
@@ -1226,7 +1226,7 @@ namespace OpenNos.Handler
                     {
                         if (Session.Character.CharacterId == Session.Character.Timespace.InstanceBag.Creator)
                         {
-                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#rstart^1 rstart {Language.Instance.GetMessageFromKey("ASK_ENTRY_IN_FIRST_ROOM")}"));
+                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#rstart^1 rstart {Language.Instance.GetMessageFromKey("FIRST_ROOM_START")}"));
                         }
                         return;
                     }
@@ -1338,7 +1338,8 @@ namespace OpenNos.Handler
             Group grp;
             switch (rdPacket.Type)
             {
-                case 1://Join
+                // Join Raid
+                case 1:
                     if (Session.CurrentMapInstance.MapInstanceType == MapInstanceType.RaidInstance)
                     {
                         return;
@@ -1354,7 +1355,8 @@ namespace OpenNos.Handler
                     }
                     break;
 
-                case 2://leave
+                // Leave Raid
+                case 2:
                     ClientSession sender = ServerManager.Instance.GetSessionByCharacterId(rdPacket.CharacterId);
                     if (sender?.Character?.Group == null)
                     {
@@ -1378,6 +1380,7 @@ namespace OpenNos.Handler
                     });
                     break;
 
+                // Kick from Raid
                 case 3:
                     if (Session.CurrentMapInstance.MapInstanceType == MapInstanceType.RaidInstance)
                     {
@@ -1391,7 +1394,7 @@ namespace OpenNos.Handler
                             return;
                         }
 
-                        chartokick.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("KICK_RAID")), 0));
+                        chartokick.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("KICK_RAID"), 0));
                         grp = chartokick.Character?.Group;
                         chartokick.SendPacket(chartokick.Character.GenerateRaid(1, true));
                         chartokick.SendPacket(chartokick.Character.GenerateRaid(2, true));
@@ -1405,7 +1408,8 @@ namespace OpenNos.Handler
 
                     break;
 
-                case 4://disolve
+                // Disolve Raid
+                case 4:
                     if (Session.CurrentMapInstance.MapInstanceType == MapInstanceType.RaidInstance)
                     {
                         return;

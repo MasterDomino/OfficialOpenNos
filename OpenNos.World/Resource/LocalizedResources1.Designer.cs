@@ -3366,9 +3366,9 @@ namespace OpenNos.World.Resource {
         /// <summary>
         ///   Looks up a localized string similar to Sold: {0} &lt;{1} : piece &gt;.
         /// </summary>
-        internal static string SELL_ITEM_VALIDE {
+        internal static string SELL_ITEM_VALID {
             get {
-                return ResourceManager.GetString("SELL_ITEM_VALIDE", resourceCulture);
+                return ResourceManager.GetString("SELL_ITEM_VALID", resourceCulture);
             }
         }
         

@@ -514,7 +514,7 @@
   <data name="REP_CHANGED" xml:space="preserve">
     <value>Reputation changed</value>
   </data>
-  <data name="SELL_ITEM_VALIDE" xml:space="preserve">
+  <data name="SELL_ITEM_VALID" xml:space="preserve">
     <value>Sold: {0} &lt;{1} : piece &gt;</value>
   </data>
   <data name="SEX_CHANGED" xml:space="preserve">
@@ -1109,7 +1109,7 @@
     <value>Sending message to  '{0}' on channel {1}.</value>
   </data>
   <data name="NO_WINGS" xml:space="preserve">
-    <value>You don't have any friend wing!</value>
+    <value>You don't have any Wings of Friendship!</value>
   </data>
   <data name="WANT_TO_SAVE_POSITION" xml:space="preserve">
     <value>Do you want to save your position?</value>
@@ -1467,5 +1467,47 @@
   </data>
   <data name="RECIPELISTS_LOADED" xml:space="preserve">
     <value>{0} RecipeLists loaded!</value>
+  </data>
+  <data name="INVITE_RAID" xml:space="preserve">
+    <value>{0} Invited you to the raid</value>
+  </data>
+  <data name="RAID_JOIN" xml:space="preserve">
+    <value>You've joined the raid</value>
+  </data>
+  <data name="RAID_LEVEL_INCORRECT" xml:space="preserve">
+    <value>Since your level doesn't match the recommended level, you will not receive any rewards.</value>
+  </data>
+  <data name="RAID_START_QUESTION" xml:space="preserve">
+    <value>Do you want to start the raid?</value>
+  </data>
+  <data name="NOT_TEAM_LEADER" xml:space="preserve">
+    <value>Only team leader can start the raid.</value>
+  </data>
+  <data name="NEED_TEAM" xml:space="preserve">
+    <value>You need to form a team to start the raid.</value>
+  </data>
+  <data name="FIRST_ROOM_START" xml:space="preserve">
+    <value>Do you want to enter the first room?</value>
+  </data>
+  <data name="RAID_REGISTERED" xml:space="preserve">
+    <value>Raid has been registered.</value>
+  </data>
+  <data name="SEARCH_TEAM_MEMBERS" xml:space="preserve">
+    <value>{0} is searching for team members, Raid of {1}</value>
+  </data>
+  <data name="RAID_UNREGISTERED" xml:space="preserve">
+    <value>Raid has been unregistered.</value>
+  </data>
+  <data name="LEFT_RAID" xml:space="preserve">
+    <value>You have left the raid.</value>
+  </data>
+  <data name="KICK_RAID" xml:space="preserve">
+    <value>You have been kicked from the raid.</value>
+  </data>
+  <data name="RAID_DISOLVED" xml:space="preserve">
+    <value>Raid has been canceled.</value>
+  </data>
+  <data name="RAID_LEADER" xml:space="preserve">
+    <value>You are the raid leader.</value>
   </data>
 </root>

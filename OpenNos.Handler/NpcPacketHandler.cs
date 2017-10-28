@@ -88,13 +88,13 @@ namespace OpenNos.Handler
 
                     // check if the item has been removed successfully from previous owner and
                     // remove it
-                    if (BuyValidate(Session, shop, buyPacket.Slot, amount))
+                    if (buyValidate(Session, shop, buyPacket.Slot, amount))
                     {
                         Session.Character.Gold -= item.Price * amount;
                         Session.SendPacket(Session.Character.GenerateGold());
 
                         KeyValuePair<long, MapShop> shop2 = Session.CurrentMapInstance.UserShops.FirstOrDefault(s => s.Value.OwnerId.Equals(buyPacket.OwnerId));
-                        LoadShopItem(buyPacket.OwnerId, shop2);
+                        loadShopItem(buyPacket.OwnerId, shop2);
                     }
                     else
                     {
@@ -531,7 +531,7 @@ namespace OpenNos.Handler
                 if (recipe?.Amount > 0)
                 {
                     string recipePacket = $"m_list 3 {recipe.Amount}";
-                    foreach (RecipeItemDTO ite in recipe.Items.Where(s => s.ItemVNum != Session.Character.LastItemVNum))
+                    foreach (RecipeItemDTO ite in recipe.Items.Where(s => s.ItemVNum != Session.Character.LastItemVNum || Session.Character.LastItemVNum == 0))
                     {
                         if (ite.Amount > 0)
                         {
@@ -548,7 +548,7 @@ namespace OpenNos.Handler
                 //pdtse 0 4955 0 0 1
                 // random
                 //pdtse 0 4955 0 0 2
-                if (recipe.Amount <= 0 || recipe.Items.Any(ite => Session.Character.Inventory.CountItem(ite.ItemVNum) < ite.Amount))
+                if (recipe.Items.Count < 1 || recipe.Amount <= 0 || recipe.Items.Any(ite => Session.Character.Inventory.CountItem(ite.ItemVNum) < ite.Amount))
                 {
                     return;
                 }
@@ -665,7 +665,7 @@ namespace OpenNos.Handler
                     return;
                 }
                 Session.Character.Gold += price * amount;
-                Session.SendPacket(UserInterfaceHelper.Instance.GenerateShopMemo(1, string.Format(Language.Instance.GetMessageFromKey("SELL_ITEM_VALIDE"), inv.Item.Name, amount)));
+                Session.SendPacket(UserInterfaceHelper.Instance.GenerateShopMemo(1, string.Format(Language.Instance.GetMessageFromKey("SELL_ITEM_VALID"), inv.Item.Name, amount)));
 
                 Session.Character.Inventory.RemoveItemFromInventory(inv.Id, amount);
                 Session.SendPacket(Session.Character.GenerateGold());
@@ -824,7 +824,7 @@ namespace OpenNos.Handler
             {
                 // User Shop
                 KeyValuePair<long, MapShop> shopList = Session.CurrentMapInstance.UserShops.FirstOrDefault(s => s.Value.OwnerId.Equals(owner));
-                LoadShopItem(owner, shopList);
+                loadShopItem(owner, shopList);
             }
             else
             {
@@ -853,7 +853,7 @@ namespace OpenNos.Handler
             }
         }
 
-        private bool BuyValidate(ClientSession clientSession, KeyValuePair<long, MapShop> shop, short slot, byte amount)
+        private bool buyValidate(ClientSession clientSession, KeyValuePair<long, MapShop> shop, short slot, byte amount)
         {
             if (!clientSession.HasCurrentMapInstance)
             {
@@ -935,7 +935,7 @@ namespace OpenNos.Handler
             return true;
         }
 
-        private void LoadShopItem(long owner, KeyValuePair<long, MapShop> shop)
+        private void loadShopItem(long owner, KeyValuePair<long, MapShop> shop)
         {
             string packetToSend = $"n_inv 1 {owner} 0 0";
 

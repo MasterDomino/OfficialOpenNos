@@ -508,7 +508,7 @@
   <data name="REP_CHANGED" xml:space="preserve">
     <value>Dein Ruf wurde verändert.</value>
   </data>
-  <data name="SELL_ITEM_VALIDE" xml:space="preserve">
+  <data name="SELL_ITEM_VALID" xml:space="preserve">
     <value>{0}: Verkauft &lt;{1} : Stück &gt;</value>
   </data>
   <data name="SEX_CHANGED" xml:space="preserve">
