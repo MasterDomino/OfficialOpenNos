@@ -1178,7 +1178,7 @@
     <value>You were killed by an enemy! Due to the curse of the Frozen Crown, you can't be revived for 30 seconds!</value>
   </data>
   <data name="EFFECT_ACTIVATED" xml:space="preserve">
-    <value>The {0} effect has been actived!</value>
+    <value>The {0} effect has been activated!</value>
   </data>
   <data name="INFO_BAZAAR" xml:space="preserve">
     <value>You cannot open the bazaar because you do not possess the required object.</value>
@@ -1358,7 +1358,7 @@
     <value>Do you want to take out your NosMate ?</value>
   </data>
   <data name="GET_PET_PLACES" xml:space="preserve">
-    <value>Right now, you can have more NosMate.</value>
+    <value>You have more space for your Pets.</value>
   </data>
   <data name="PET_CAN_PICK_UP" xml:space="preserve">
     <value>Now, your NosMate can drop items.</value>
@@ -1509,5 +1509,17 @@
   </data>
   <data name="RAID_LEADER" xml:space="preserve">
     <value>You are the raid leader.</value>
+  </data>
+  <data name="ITEM_IN_USE" xml:space="preserve">
+    <value>This item is in use.</value>
+  </data>
+  <data name="OPTION_DELETE" xml:space="preserve">
+    <value>Shell effect erased.</value>
+  </data>
+  <data name="IN_FAMILY" xml:space="preserve">
+    <value>You're in family, you can't use individual faction egg.</value>
+  </data>
+  <data name="ASK_PET_MAX" xml:space="preserve">
+    <value>Do you want to expand the pet slots?</value>
   </data>
 </root>

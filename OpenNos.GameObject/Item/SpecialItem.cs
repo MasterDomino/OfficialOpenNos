@@ -127,13 +127,13 @@ namespace OpenNos.GameObject
                     {
                         session.Character.AddStaticBuff(new StaticBuffDTO() { CardId = 131 });
                         session.CurrentMapInstance?.Broadcast(session.Character.GeneratePairy());
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("EFFECT_START"), inv.Item.Name), 0));
+                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("EFFECT_ACTIVATED"), inv.Item.Name), 0));
                         session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 3014), session.Character.MapX, session.Character.MapY);
                         session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
                     else
                     {
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("THIS_ITEM_IN_USE"), 0));
+                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("ITEM_IN_USE"), 0));
                     }
                     break;
 
@@ -171,7 +171,7 @@ namespace OpenNos.GameObject
                     }
                     else
                     {
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("THIS_ITEM_IN_USE"), 0));
+                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("ITEM_IN_USE"), 0));
                     }
                     break;
 
