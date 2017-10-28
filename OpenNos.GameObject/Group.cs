@@ -140,8 +140,7 @@ namespace OpenNos.GameObject
         {
             if (Characters.Count > 0)
             {
-                //Yes, this should be like this...
-                return Characters.GetAllItems().FirstOrDefault() == session;
+                return Characters.FirstOrDefault() == session;
             }
             else
             {

@@ -63,7 +63,7 @@ namespace OpenNos.GameObject
 
         public int Reputation { get; set; }
 
-        public List<Gift> RequieredItems { get; set; }
+        public List<Gift> RequiredItems { get; set; }
 
         public int RoomAmount { get; internal set; }
 
@@ -117,14 +117,14 @@ namespace OpenNos.GameObject
             }
             const int WinnerScore = 0;
             const string Winner = "";
-            return $"rbr 0.0.0 4 15 {LevelMinimum}.{LevelMaximum} {RequieredItems.Sum(s => s.Amount)} {drawgift} {specialitems} {bonusitems} {WinnerScore}.{(WinnerScore > 0 ? Winner : string.Empty)} 0 0 {Language.Instance.GetMessageFromKey("TS_TUTORIAL")}\n{Label}";
+            return $"rbr 0.0.0 4 15 {LevelMinimum}.{LevelMaximum} {RequiredItems.Sum(s => s.Amount)} {drawgift} {specialitems} {bonusitems} {WinnerScore}.{(WinnerScore > 0 ? Winner : string.Empty)} 0 0 {Language.Instance.GetMessageFromKey("TS_TUTORIAL")}\n{Label}";
         }
 
         public string GenerateWp() => $"wp {PositionX} {PositionY} {ScriptedInstanceId} 0 {LevelMinimum} {LevelMaximum}";
 
         public void LoadGlobals()
         {
-            RequieredItems = new List<Gift>();
+            RequiredItems = new List<Gift>();
             DrawItems = new List<Gift>();
             SpecialItems = new List<Gift>();
             GiftItems = new List<Gift>();
@@ -155,9 +155,9 @@ namespace OpenNos.GameObject
                 Lives = lives;
                 if (def.SelectSingleNode("RequieredItems")?.ChildNodes != null)
                 {
-                    foreach (XmlNode node in def.SelectSingleNode("RequieredItems")?.ChildNodes)
+                    foreach (XmlNode node in def.SelectSingleNode("RequiredItems")?.ChildNodes)
                     {
-                        RequieredItems.Add(new Gift(short.Parse(node.Attributes["VNum"].Value), byte.Parse(node.Attributes["Amount"].Value)));
+                        RequiredItems.Add(new Gift(short.Parse(node.Attributes["VNum"].Value), byte.Parse(node.Attributes["Amount"].Value)));
                     }
                 }
                 if (def.SelectSingleNode("DrawItems")?.ChildNodes != null)

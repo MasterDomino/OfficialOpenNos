@@ -284,6 +284,54 @@ namespace OpenNos.Core
         }
 
         /// <summary>
+        /// Searches for an element that matches the conditions defined by the specified predicate,
+        /// and returns the first occurrence within the entire List&lt;T&gt;.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns>T object</returns>
+        public T FirstOrDefault()
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _items.FirstOrDefault();
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return default;
+        }
+
+        /// <summary>
+        /// Searches for an element that matches the conditions defined by the specified predicate,
+        /// and returns the first occurrence within the entire List&lt;T&gt;.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns>T object</returns>
+        public T FirstOrDefault(Func<T, bool> predicate)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+#pragma warning disable RCS1119 // Call 'Find' instead of 'FirstOrDefault'.
+                    return _items.FirstOrDefault(predicate);
+#pragma warning restore RCS1119 // Call 'Find' instead of 'FirstOrDefault'.
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+            return default;
+        }
+
+        /// <summary>
         /// Performs the specified action on each element of the List&lt;T&gt;.
         /// </summary>
         /// <param name="action"></param>
