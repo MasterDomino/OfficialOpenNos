@@ -20,6 +20,7 @@ using OpenNos.Data;
 using System;
 using System.Configuration;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 
@@ -31,20 +32,38 @@ namespace OpenNos.Import.Console
 
         public static void Main(string[] args)
         {
+            bool isDebug = false;
+#if DEBUG
+            isDebug = true;
+#endif
+            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
+            System.Console.Title = $"OpenNos Import Console{(isDebug ? " Development Environment" : string.Empty)}";
+
+            bool ignoreStartupMessages = false;
+            foreach (string arg in args)
+            {
+                if (arg == "--nomsg")
+                {
+                    ignoreStartupMessages = true;
+                }
+            }
+
             // initialize logger
             Logger.InitializeLogger(LogManager.GetLogger(typeof(Program)));
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-            System.Console.Title = $"OpenNos Import Console v{fileVersionInfo.ProductVersion}dev";
-            string text = $"IMPORT CONSOLE VERSION {fileVersionInfo.ProductVersion} by OpenNos Team";
-            int offset = (System.Console.WindowWidth / 2) + (text.Length / 2);
-            string separator = new string('=', System.Console.WindowWidth);
-            System.Console.WriteLine(separator + string.Format("{0," + offset + "}\n", text) + separator);
+
+            if (!ignoreStartupMessages)
+            {
+                Assembly assembly = Assembly.GetExecutingAssembly();
+                FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+                string text = $"IMPORT CONSOLE VERSION {fileVersionInfo.ProductVersion} by OpenNos Team";
+                int offset = (System.Console.WindowWidth / 2) + (text.Length / 2);
+                string separator = new string('=', System.Console.WindowWidth);
+                System.Console.WriteLine(separator + string.Format("{0," + offset + "}\n", text) + separator);
+            }
             if (DataAccessHelper.Initialize())
             {
                 registerMappings();
             }
-            ConsoleKeyInfo key = new ConsoleKeyInfo();
             Logger.Warn(Language.Instance.GetMessageFromKey("NEED_TREE"));
             System.Console.BackgroundColor = ConsoleColor.Blue;
             System.Console.WriteLine("Root");
@@ -70,20 +89,11 @@ namespace OpenNos.Import.Console
             try
             {
                 Logger.Warn(Language.Instance.GetMessageFromKey("ENTER_PATH"));
-                string folder = string.Empty;
-                if (args.Length == 0)
-                {
-                    folder = System.Console.ReadLine();
-                    System.Console.WriteLine($"{Language.Instance.GetMessageFromKey("PARSE_ALL")} [Y/n]");
-                    key = System.Console.ReadKey(true);
-                }
-                else
-                {
-                    foreach (string str in args)
-                    {
-                        folder += str + " ";
-                    }
-                }
+
+                string folder = System.Console.ReadLine();
+                System.Console.WriteLine($"{Language.Instance.GetMessageFromKey("PARSE_ALL")} [Y/n]");
+                ConsoleKeyInfo key = System.Console.ReadKey(true);
+
                 ImportFactory factory = null;
                 if (!string.IsNullOrWhiteSpace(folder))
                 {

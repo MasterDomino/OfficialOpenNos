@@ -497,7 +497,27 @@ namespace OpenNos.GameObject
                     break;
 
                 default:
-                    Logger.Warn(string.Format(Language.Instance.GetMessageFromKey("NO_HANDLER_ITEM"), GetType()) + $" ItemVNum: {this.VNum} Effect: {Effect} EffectValue: {EffectValue}");
+                    switch (VNum)
+                    {
+                        case 5841:
+                            int rnd = ServerManager.Instance.RandomNumber(0, 1000);
+                            short[] vnums = null;
+                            if (rnd < 900)
+                            {
+                                vnums = new short[] { 4356, 4357, 4358, 4359 };
+                            }
+                            else
+                            {
+                                vnums = new short[] { 4360, 4361, 4362, 4363 };
+                            }
+                            session.Character.GiftAdd(vnums[ServerManager.Instance.RandomNumber(0, 4)], 1);
+                            session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                            break;
+
+                        default:
+                            Logger.Warn(string.Format(Language.Instance.GetMessageFromKey("NO_HANDLER_ITEM"), GetType()) + $" ItemVNum: {this.VNum} Effect: {Effect} EffectValue: {EffectValue}");
+                            break;
+                    }
                     break;
             }
         }

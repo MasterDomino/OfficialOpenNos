@@ -79,6 +79,7 @@ namespace OpenNos.GameObject
                         }
                         break;
                     }
+
                 case BCardType.CardType.Move:
                     {
                         if (type == typeof(Character) && session is Character character)
