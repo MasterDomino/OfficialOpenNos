@@ -52,7 +52,7 @@ namespace OpenNos.Master.Library.Interface
         /// <param name="accountId">Id of the connecting Account</param>
         /// <param name="sessionId">Id of the Session requesting the Login</param>
         /// <returns>true if the Login was successful, otherwise false</returns>
-        bool ConnectAccountCrossServer(Guid worldId, long accountId, long sessionId);
+        bool ConnectAccountCrossServer(Guid worldId, long accountId, int sessionId);
 
         /// <summary>
         /// Registers the Login of the given Character
@@ -111,7 +111,7 @@ namespace OpenNos.Master.Library.Interface
         /// <param name="accountId">Id of the Account</param>
         /// <param name="sessionId">Id of the Session that should be validated</param>
         /// <returns></returns>
-        bool IsCrossServerLoginPermitted(long accountId, long sessionId);
+        bool IsCrossServerLoginPermitted(long accountId, int sessionId);
 
         /// <summary>
         /// Kicks a Session by their Id or Account
@@ -145,7 +145,7 @@ namespace OpenNos.Master.Library.Interface
         /// </summary>
         /// <param name="accountId">Id of the Account to register</param>
         /// <param name="sessionId">Id of the Session to register</param>
-        void RegisterCrossServerAccountLogin(long accountId, long sessionId);
+        void RegisterCrossServerAccountLogin(long accountId, int sessionId);
 
         /// <summary>
         /// Registers a WorldServer

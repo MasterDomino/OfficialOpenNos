@@ -102,7 +102,7 @@ namespace OpenNos.Master.Library.Client
 
         public bool ConnectAccount(Guid worldId, long accountId, int sessionId) => _client.ServiceProxy.ConnectAccount(worldId, accountId, sessionId);
 
-        public bool ConnectAccountCrossServer(Guid worldId, long accountId, long sessionId) => _client.ServiceProxy.ConnectAccountCrossServer(worldId, accountId, sessionId);
+        public bool ConnectAccountCrossServer(Guid worldId, long accountId, int sessionId) => _client.ServiceProxy.ConnectAccountCrossServer(worldId, accountId, sessionId);
 
         public bool ConnectCharacter(Guid worldId, long characterId) => _client.ServiceProxy.ConnectCharacter(worldId, characterId);
 
@@ -116,7 +116,7 @@ namespace OpenNos.Master.Library.Client
 
         public bool IsCharacterConnected(string worldGroup, long characterId) => _client.ServiceProxy.IsCharacterConnected(worldGroup, characterId);
 
-        public bool IsCrossServerLoginPermitted(long accountId, long sessionId) => _client.ServiceProxy.IsCrossServerLoginPermitted(accountId, sessionId);
+        public bool IsCrossServerLoginPermitted(long accountId, int sessionId) => _client.ServiceProxy.IsCrossServerLoginPermitted(accountId, sessionId);
 
         public bool IsLoginPermitted(long accountId, int sessionId) => _client.ServiceProxy.IsLoginPermitted(accountId, sessionId);
 
@@ -128,7 +128,7 @@ namespace OpenNos.Master.Library.Client
 
         public void RegisterAccountLogin(long accountId, int sessionId, string ipAddress) => _client.ServiceProxy.RegisterAccountLogin(accountId, sessionId, ipAddress);
 
-        public void RegisterCrossServerAccountLogin(long accountId, long sessionId) => _client.ServiceProxy.RegisterCrossServerAccountLogin(accountId, sessionId);
+        public void RegisterCrossServerAccountLogin(long accountId, int sessionId) => _client.ServiceProxy.RegisterCrossServerAccountLogin(accountId, sessionId);
 
         public int? RegisterWorldServer(SerializableWorldServer worldServer) => _client.ServiceProxy.RegisterWorldServer(worldServer);
 

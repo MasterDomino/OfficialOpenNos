@@ -227,6 +227,18 @@ namespace OpenNos.Handler
                 {
                     if (target.CurrentMapInstance?.Map?.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
                     {
+                        if (ServerManager.Instance.ChannelId == 51 && ServerManager.Instance.Act4DemonStat.Mode == 0 && ServerManager.Instance.Act4AngelStat.Mode == 0)
+                        {
+                            switch (Session.Character.Faction)
+                            {
+                                case FactionType.Angel:
+                                    ServerManager.Instance.Act4AngelStat.Percentage += 100;
+                                    break;
+                                case FactionType.Demon:
+                                    ServerManager.Instance.Act4DemonStat.Percentage += 100;
+                                    break;
+                            }
+                        }
                         hitRequest.Session.Character.Act4Kill++;
                         target.Character.Act4Dead++;
                         target.Character.GetAct4Points(-1);
@@ -244,6 +256,17 @@ namespace OpenNos.Handler
                             hitRequest.Session.Character.Reputation += target.Character.Level * 50;
                             hitRequest.Session.SendPacket(hitRequest.Session.Character.GenerateLev());
                             target.SendPacket(target.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("LOSE_REP"), (short)(target.Character.Level * 50)), 11));
+                        }
+                        foreach (ClientSession sess in ServerManager.Instance.Sessions.Where(s => s.HasSelectedCharacter))
+                        {
+                            if (sess.Character.Faction == Session.Character.Faction)
+                            {
+                                sess.SendPacket(sess.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey($"ACT4_PVP_KILL{(int)target.Character.Faction}"), Session.Character.Name), 12));
+                            }
+                            else if (sess.Character.Faction == target.Character.Faction)
+                            {
+                                sess.SendPacket(sess.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey($"ACT4_PVP_DEATH{(int)target.Character.Faction}"), target.Character.Name), 11));
+                            }
                         }
                         target.SendPacket(target.Character.GenerateFd());
                         List<BuffType> bufftodisable = new List<BuffType>

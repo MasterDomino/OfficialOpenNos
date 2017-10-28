@@ -432,6 +432,11 @@ namespace OpenNos.GameObject
                     if (ChannelId == 51)
                     {
                         session.SendPacket(session.Character.GenerateFc());
+
+                        if (MapInstanceId == session.Character.Family?.Act4Raid?.MapInstanceId || MapInstanceId == session.Character.Family?.Act4RaidBossMap?.MapInstanceId)
+                        {
+                            session.SendPacket(session.Character.GenerateDG());
+                        }
                     }
                     if (session.Character.Group?.Raid != null && session.Character.Group.Raid.InstanceBag?.Lock == true)
                     {
@@ -440,16 +445,22 @@ namespace OpenNos.GameObject
 
                     Parallel.ForEach(session.CurrentMapInstance.Sessions.Where(s => s.Character?.InvisibleGm == false && s.Character.CharacterId != session.Character.CharacterId), visibleSession =>
                     {
-                        if (!session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.Act4) || session.Character.Faction == visibleSession.Character.Faction)
+                        if (ChannelId != 51 || session.Character.Faction == visibleSession.Character.Faction)
                         {
                             session.SendPacket(visibleSession.Character.GenerateIn());
                             session.SendPacket(visibleSession.Character.GenerateGidx());
-                            visibleSession.Character.Mates.Where(m => m.IsTeamMember && m.CharacterId != session.Character.CharacterId).ToList().ForEach(m => session.SendPacket(m.GenerateIn()));
+                            visibleSession.Character.Mates.Where(m => m.IsTeamMember && m.CharacterId != session.Character.CharacterId).ToList().ForEach(m =>
+                            {
+                                session.SendPacket(m.GenerateIn());
+                            });
                         }
                         else
                         {
                             session.SendPacket(visibleSession.Character.GenerateIn(true));
-                            visibleSession.Character.Mates.Where(m => m.IsTeamMember && m.CharacterId != session.Character.CharacterId).ToList().ForEach(m => session.SendPacket(m.GenerateIn(true)));
+                            visibleSession.Character.Mates.Where(m => m.IsTeamMember && m.CharacterId != session.Character.CharacterId).ToList().ForEach(m =>
+                            {
+                                session.SendPacket(m.GenerateIn(true));
+                            });
                         }
                     });
 
@@ -472,18 +483,29 @@ namespace OpenNos.GameObject
                     }
                     if (!session.Character.InvisibleGm)
                     {
-                        Parallel.ForEach(session.CurrentMapInstance.Sessions.Where(s => s.Character != null && s.Character.CharacterId != session.Character.CharacterId), s =>
+                        Parallel.ForEach(session.Character.Mates.Where(m => m.IsTeamMember), mate =>
                         {
-                            if (!session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.Act4) || session.Character.Faction == s.Character.Faction)
+                            mate.PositionX = (short)(session.Character.PositionX + (mate.MateType == MateType.Partner ? -1 : 1));
+                            mate.PositionY = (short)(session.Character.PositionY + 1);
+                        });
+                        Parallel.ForEach(session.CurrentMapInstance.Sessions.Where(s => s.Character != null), s =>
+                        {
+                            if (ChannelId != 51 || session.Character.Faction == s.Character.Faction)
                             {
                                 s.SendPacket(session.Character.GenerateIn());
                                 s.SendPacket(session.Character.GenerateGidx());
-                                session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m => s.SendPacket(m.GenerateIn()));
+                                session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
+                                {
+                                    s.SendPacket(m.GenerateIn());
+                                });
                             }
                             else
                             {
                                 s.SendPacket(session.Character.GenerateIn(true));
-                                session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m => s.SendPacket(m.GenerateIn(true)));
+                                session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
+                                {
+                                    s.SendPacket(m.GenerateIn(true));
+                                });
                             }
                         });
                     }
@@ -572,6 +594,8 @@ namespace OpenNos.GameObject
         public IEnumerable<Skill> GetAllSkill() => _skills;
 
         public IEnumerable<Card> GetAllCard() => _cards;
+
+        public List<MapInstance> GetAllMapInstances() => _mapinstances.Values.ToList();
 
         public Guid GetBaseMapInstanceIdByMapId(short MapId) => _mapinstances.FirstOrDefault(s => s.Value?.Map.MapId == MapId && s.Value.MapInstanceType == MapInstanceType.BaseMapInstance).Key;
 
@@ -1187,6 +1211,7 @@ namespace OpenNos.GameObject
                         {
                             session.SendPacket(session.Character.GeneratePinit());
                             session.SendPackets(session.Character.GeneratePst());
+                            session.SendPacket(session.Character.GenerateStat());
                         }
                     }
                 }
@@ -1276,6 +1301,8 @@ namespace OpenNos.GameObject
             GroupsThreadSafe = new ThreadSafeSortedList<long, Group>();
 
             Observable.Interval(TimeSpan.FromMinutes(5)).Subscribe(x => saveAllProcess());
+
+            Observable.Interval(TimeSpan.FromMinutes(1)).Subscribe(x => Act4Process());
 
             Observable.Interval(TimeSpan.FromSeconds(2)).Subscribe(x => groupProcess());
 

@@ -14,6 +14,7 @@
 
 using OpenNos.Data;
 using System;
+using System.Linq;
 
 namespace OpenNos.GameObject
 {
@@ -31,7 +32,11 @@ namespace OpenNos.GameObject
 
         public override void Use(ClientSession session, ref ItemInstance inv, byte Option = 0, string[] packetsplit = null)
         {
-            if ((DateTime.Now - session.Character.LastPotion).TotalMilliseconds < 750)
+            if (!session.HasCurrentMapInstance)
+            {
+                return;
+            }
+            if ((DateTime.Now - session.Character.LastPotion).TotalMilliseconds < (session.CurrentMapInstance.Map.MapTypes.OrderByDescending(s => s.PotionDelay).FirstOrDefault()?.PotionDelay ?? 750))
             {
                 return;
             }
@@ -66,20 +71,23 @@ namespace OpenNos.GameObject
                     {
                         session.Character.Hp = (int)session.Character.HPLoad();
                     }
-                    if (inv.ItemVNum == 1242 || inv.ItemVNum == 5582)
+                    if (ServerManager.Instance.ChannelId != 51 || session.Character.MapId == 130 || session.Character.MapId == 131)
                     {
-                        session.CurrentMapInstance?.Broadcast(session.Character.GenerateRc((int)session.Character.HPLoad() - session.Character.Hp));
-                        session.Character.Hp = (int)session.Character.HPLoad();
-                    }
-                    else if (inv.ItemVNum == 1243 || inv.ItemVNum == 5583)
-                    {
-                        session.Character.Mp = (int)session.Character.MPLoad();
-                    }
-                    else if (inv.ItemVNum == 1244 || inv.ItemVNum == 5584)
-                    {
-                        session.CurrentMapInstance?.Broadcast(session.Character.GenerateRc((int)session.Character.HPLoad() - session.Character.Hp));
-                        session.Character.Hp = (int)session.Character.HPLoad();
-                        session.Character.Mp = (int)session.Character.MPLoad();
+                        if (inv.ItemVNum == 1242 || inv.ItemVNum == 5582)
+                        {
+                            session.CurrentMapInstance?.Broadcast(session.Character.GenerateRc((int)session.Character.HPLoad() - session.Character.Hp));
+                            session.Character.Hp = (int)session.Character.HPLoad();
+                        }
+                        else if (inv.ItemVNum == 1243 || inv.ItemVNum == 5583)
+                        {
+                            session.Character.Mp = (int)session.Character.MPLoad();
+                        }
+                        else if (inv.ItemVNum == 1244 || inv.ItemVNum == 5584)
+                        {
+                            session.CurrentMapInstance?.Broadcast(session.Character.GenerateRc((int)session.Character.HPLoad() - session.Character.Hp));
+                            session.Character.Hp = (int)session.Character.HPLoad();
+                            session.Character.Mp = (int)session.Character.MPLoad();
+                        }
                     }
                     session.SendPacket(session.Character.GenerateStat());
                     break;

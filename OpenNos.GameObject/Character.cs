@@ -1190,6 +1190,32 @@ namespace OpenNos.GameObject
 
         public string GenerateCond() => $"cond 1 {CharacterId} {(NoAttack ? 1 : 0)} {(NoMove ? 1 : 0)} {Speed}";
 
+        public string GenerateDG()
+        {
+            byte raidType = 0;
+            if (ServerManager.Instance.Act4RaidStart.AddMinutes(60) < DateTime.Now)
+            {
+                ServerManager.Instance.Act4RaidStart = DateTime.Now;
+            }
+            double seconds = (ServerManager.Instance.Act4RaidStart.AddMinutes(60) - DateTime.Now).TotalSeconds;
+            switch (Session.Character.Family?.Act4Raid?.MapInstanceType)
+            {
+                case MapInstanceType.Act4Morcos:
+                    raidType = 1;
+                    break;
+                case MapInstanceType.Act4Hatus:
+                    raidType = 2;
+                    break;
+                case MapInstanceType.Act4Calvina:
+                    raidType = 3;
+                    break;
+                case MapInstanceType.Act4Berios:
+                    raidType = 4;
+                    break;
+            }
+            return $"dg {raidType} {(seconds > 1800 ? 1 : 2)} {(int)seconds} 0";
+        }
+
         public void GenerateDignity(NpcMonster monsterinfo)
         {
             if (Level < monsterinfo.Level && Dignity < 100 && Level > 20)
@@ -1564,6 +1590,18 @@ namespace OpenNos.GameObject
                 if (dropOwner != null)
                 {
                     group = ServerManager.Instance.Groups.Find(g => g.IsMemberOfGroup((long)dropOwner));
+                }
+
+                if (ServerManager.Instance.ChannelId == 51 && ServerManager.Instance.Act4DemonStat.Mode == 0 && ServerManager.Instance.Act4AngelStat.Mode == 0)
+                {
+                    if (Faction == FactionType.Angel)
+                    {
+                        ServerManager.Instance.Act4AngelStat.Percentage += 1;
+                    }
+                    else if (Faction == FactionType.Demon)
+                    {
+                        ServerManager.Instance.Act4DemonStat.Percentage += 1;
+                    }
                 }
 
                 // end owner set

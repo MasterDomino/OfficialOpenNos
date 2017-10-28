@@ -116,6 +116,7 @@ namespace OpenNos.DAL.EF
                     {
                         context.BazaarItem.Remove(entity);
                     }
+                    context.SaveChanges();
                 }
             }
             catch (Exception e)

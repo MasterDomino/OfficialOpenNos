@@ -267,7 +267,8 @@ namespace OpenNos.GameObject
                         Session.Character.LastPortal = currentRunningSeconds;
                         Session.Character.Gold -= 500 * (1 + packet.Type);
                         Session.SendPacket(Session.Character.GenerateGold());
-                        ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, packet.Type == 0 ? ServerManager.Instance.ArenaInstance.MapInstanceId : ServerManager.Instance.FamilyArenaInstance.MapInstanceId, packet.Type == 0 ? ServerManager.Instance.ArenaInstance.Map.GetRandomPosition().X : ServerManager.Instance.FamilyArenaInstance.Map.GetRandomPosition().X, packet.Type == 0 ? ServerManager.Instance.ArenaInstance.Map.GetRandomPosition().Y : ServerManager.Instance.FamilyArenaInstance.Map.GetRandomPosition().Y);
+                        MapCell pos = packet.Type == 0 ? ServerManager.Instance.ArenaInstance.Map.GetRandomPosition() : ServerManager.Instance.FamilyArenaInstance.Map.GetRandomPosition();
+                        ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, packet.Type == 0 ? ServerManager.Instance.ArenaInstance.MapInstanceId : ServerManager.Instance.FamilyArenaInstance.MapInstanceId, pos.X, pos.Y);
                     }
                     else
                     {
@@ -542,24 +543,34 @@ namespace OpenNos.GameObject
                 case 5001:
                     if (npc != null)
                     {
-                        // after Ship
+                        MapInstance map = null;
                         switch (Session.Character.Faction)
                         {
                             case FactionType.None:
                                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo("You need to be part of a faction to join Act 4"));
                                 return;
                             case FactionType.Angel:
-                                Session.Character.MapId = 130;
-                                Session.Character.MapX = 12;
-                                Session.Character.MapY = 40;
+                                map = ServerManager.Instance.GetAllMapInstances().Where(s => s.MapInstanceType.Equals(MapInstanceType.Act4ShipAngel)).FirstOrDefault();
+
                                 break;
                             case FactionType.Demon:
-                                Session.Character.MapId = 131;
-                                Session.Character.MapX = 12;
-                                Session.Character.MapY = 40;
+                                map = ServerManager.Instance.GetAllMapInstances().Where(s => s.MapInstanceType.Equals(MapInstanceType.Act4ShipDemon)).FirstOrDefault();
+
                                 break;
                         }
-                        Session.Character.ChangeChannel("5.9.104.35", 4002, 1);
+                        if (map == null || npc.EffectActivated)
+                        {
+                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("SHIP_NOTARRIVED"), 0));
+                            return;
+                        }
+                        if (3000 > Session.Character.Gold)
+                        {
+                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NOT_ENOUGH_MONEY"), 10));
+                            return;
+                        }
+                        Session.Character.Gold -= 3000;
+                        MapCell pos = map.Map.GetRandomPosition();
+                        ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, map.MapInstanceId, pos.X, pos.Y);
                         //ServerManager.Instance.ChangeMap(Session.Character.CharacterId, 130, 12, 40);
 
                     }

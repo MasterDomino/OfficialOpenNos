@@ -93,7 +93,7 @@ namespace OpenNos.GameObject
 
                 //respawn objects
                 case 1:
-                    if (session.Character.MapInstance.MapInstanceType != MapInstanceType.BaseMapInstance)
+                    if (session.Character.MapInstance.MapInstanceType != MapInstanceType.BaseMapInstance || ServerManager.Instance.ChannelId == 51)
                     {
                         session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("CANT_USE_THAT"), 10));
                         return;

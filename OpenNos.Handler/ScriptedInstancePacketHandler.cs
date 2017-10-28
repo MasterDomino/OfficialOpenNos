@@ -114,7 +114,7 @@ namespace OpenNos.Handler
                         return;
                     }
 
-                    foreach (Gift gift in timespace.RequieredItems)
+                    foreach (Gift gift in timespace.RequiredItems)
                     {
                         if (Session.Character.Inventory.CountItem(gift.VNum) < gift.Amount)
                         {
