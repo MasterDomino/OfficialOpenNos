@@ -1216,6 +1216,33 @@ namespace OpenNos.Handler
                                 Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NEED_TEAM"), 10));
                             }
                             return;
+                        case (sbyte)PortalType.BlueRaid:
+                        case (sbyte)PortalType.DarkRaid:
+                            if ((int)Session.Character.Faction == portal.Type - 9 && Session.Character.Family?.Act4Raid != null)
+                            {
+                                Session.Character.LastPortal = currentRunningSeconds;
+
+                                switch (Session.Character.Family.Act4Raid.MapInstanceType)
+                                {
+                                    case MapInstanceType.Act4Morcos:
+                                        ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, Session.Character.Family.Act4Raid.MapInstanceId, 43, 179);
+                                        break;
+                                    case MapInstanceType.Act4Hatus:
+                                        ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, Session.Character.Family.Act4Raid.MapInstanceId, 15, 9);
+                                        break;
+                                    case MapInstanceType.Act4Calvina:
+                                        ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, Session.Character.Family.Act4Raid.MapInstanceId, 24, 6);
+                                        break;
+                                    case MapInstanceType.Act4Berios:
+                                        ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, Session.Character.Family.Act4Raid.MapInstanceId, 20, 20);
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("PORTAL_BLOCKED"), 10));
+                            }
+                            return;
 
                         default:
                             Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("PORTAL_BLOCKED"), 10));
@@ -1796,7 +1823,8 @@ namespace OpenNos.Handler
             }
             if (Session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.Act4) && ServerManager.Instance.ChannelId != 51)
             {
-                Session.Character.ChangeChannel("5.9.104.35", 4002, 2);
+                // Change IP to yours
+                Session.Character.ChangeChannel("127.0.0.1", 4003, 2);
             }
             Session.CurrentMapInstance = Session.Character.MapInstance;
             if (string.Equals(ConfigurationManager.AppSettings["SceneOnCreate"], "true", StringComparison.CurrentCultureIgnoreCase) && Session.Character.GeneralLogs.CountLinq(s => s.LogType == "Connection") < 2)

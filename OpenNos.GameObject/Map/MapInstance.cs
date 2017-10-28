@@ -399,7 +399,11 @@ namespace OpenNos.GameObject
 
         public void ThrowItems(Tuple<int, short, byte, int, int> parameter)
         {
-            MapMonster mon = Monsters.Find(s => s.MapMonsterId == parameter.Item1) ?? Monsters.Find(s => s.MonsterVNum == parameter.Item1);
+            MapMonster mon = Monsters.Find(s => s.MapMonsterId == parameter.Item1);
+            if (mon == null)
+            {
+                mon = Monsters.Find(s => s.MonsterVNum == parameter.Item1);
+            }
             if (mon == null)
             {
                 return;

@@ -99,7 +99,8 @@ namespace OpenNos.GameObject.Event
                         break;
                 }
                 //todo: get act4 channel dynamically
-                s.Character.ChangeChannel("94.130.39.93", 4003, 1);
+                // Change IP to yours
+                s.Character.ChangeChannel("127.0.0.1", 4003, 1);
             }
         }
 

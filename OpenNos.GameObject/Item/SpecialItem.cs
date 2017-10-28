@@ -201,9 +201,21 @@ namespace OpenNos.GameObject
                     {
                         return;
                     }
-                    session.SendPacket(session.Character.Family == null
-                        ? $"qna #guri^750^{EffectValue} {Language.Instance.GetMessageFromKey($"ASK_CHANGE_FACTION{EffectValue}")}"
-                        : UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("IN_FAMILY"), 0));
+                    if (EffectValue < 3)
+                    {
+                        session.SendPacket(session.Character.Family == null
+                            ? $"qna #guri^750^{EffectValue} {Language.Instance.GetMessageFromKey($"ASK_CHANGE_FACTION{EffectValue}")}"
+                            : UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("IN_FAMILY"),
+                            0));
+                    }
+                    else
+                    {
+                        session.SendPacket(session.Character.Family != null
+                            ? $"qna #guri^750^{EffectValue} {Language.Instance.GetMessageFromKey($"ASK_CHANGE_FACTION{EffectValue}")}"
+                            : UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_FAMILY"),
+                            0));
+                    }
+
                     break;
 
                 // SP Wings

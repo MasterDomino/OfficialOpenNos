@@ -476,7 +476,7 @@ namespace OpenNos.Master.Server
                 world.ServiceClient.GetClientProxy<ICommunicationClient>().UpdateRelation(relationId);
             }
         }
-        public bool ConnectAccountCrossServer(Guid worldId, long accountId, long sessionId)
+        public bool ConnectAccountCrossServer(Guid worldId, long accountId, int sessionId)
         {
             if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
             {
@@ -496,7 +496,7 @@ namespace OpenNos.Master.Server
             return false;
         }
 
-        public void RegisterCrossServerAccountLogin(long accountId, long sessionId)
+        public void RegisterCrossServerAccountLogin(long accountId, int sessionId)
         {
             if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
             {
@@ -510,7 +510,7 @@ namespace OpenNos.Master.Server
             }
         }
 
-        public bool IsCrossServerLoginPermitted(long accountId, long sessionId)
+        public bool IsCrossServerLoginPermitted(long accountId, int sessionId)
         {
             if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
             {

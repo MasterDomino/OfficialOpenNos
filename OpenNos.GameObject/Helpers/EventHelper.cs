@@ -343,6 +343,74 @@ namespace OpenNos.GameObject.Helpers
                                     });
                                 }
                                 break;
+                            case MapInstanceType.Act4Morcos:
+                            case MapInstanceType.Act4Hatus:
+                            case MapInstanceType.Act4Calvina:
+                            case MapInstanceType.Act4Berios:
+                                client = evt.MapInstance.Sessions.FirstOrDefault();
+                                if (client != null)
+                                {
+                                    Family fam = evt.MapInstance.Sessions.FirstOrDefault(s => s?.Character?.Family != null).Character.Family;
+                                    if (fam != null)
+                                    {
+                                        fam.Act4Raid.Portals.RemoveAll(s => s.DestinationMapInstanceId.Equals(fam.Act4RaidBossMap.MapInstanceId));
+                                        short destX = 38;
+                                        short destY = 179;
+                                        short rewardVNum = 882;
+                                        switch (evt.MapInstance.MapInstanceType)
+                                        {
+                                            //Morcos is default
+                                            case MapInstanceType.Act4Hatus:
+                                                destX = 18;
+                                                destY = 10;
+                                                rewardVNum = 185;
+                                                break;
+                                            case MapInstanceType.Act4Calvina:
+                                                destX = 25;
+                                                destY = 7;
+                                                rewardVNum = 942;
+                                                break;
+                                            case MapInstanceType.Act4Berios:
+                                                destX = 16;
+                                                destY = 25;
+                                                rewardVNum = 999;
+                                                break;
+                                        }
+                                        int count = evt.MapInstance.Sessions.Where(s => s != null && s.Character != null).Count();
+                                        foreach (ClientSession sess in evt.MapInstance.Sessions)
+                                        {
+                                            if (sess != null && sess.Character != null)
+                                            {
+                                                sess.Character.GiftAdd(rewardVNum, 1, forceRandom: true, minRare: 1, design: 255);
+                                                sess.Character.GenerateFamilyXp(10000 / count);
+                                            }
+                                        }
+                                        Logger.LogEvent("FAMILYRAID_SUCCESS", $"[fam.Name]FamilyRaidId: {evt.MapInstance.MapInstanceType.ToString()}");
+
+                                        //TODO: Raid Ending Messages, Famlog etc
+                                        //ServerManager.Instance.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("FAMILYRAID_SUCCESS"), grp?.Raid?.Label, grp.Characters.ElementAt(0).Character.Name), 0));
+
+                                        Observable.Timer(TimeSpan.FromSeconds(30)).Subscribe(o =>
+                                        {
+                                            foreach (ClientSession targetSession in evt.MapInstance.Sessions.ToArray())
+                                            {
+                                                if (targetSession != null)
+                                                {
+                                                    if (targetSession.Character.Hp <= 0)
+                                                    {
+                                                        targetSession.Character.Hp = 1;
+                                                        targetSession.Character.Mp = 1;
+                                                    }
+
+                                                    ServerManager.Instance.ChangeMapInstance(targetSession.Character.CharacterId, fam.Act4Raid.MapInstanceId, destX, destY);
+                                                }
+                                            }
+                                            evt.MapInstance.Dispose();
+                                        });
+                                    }
+                                }
+                                break;
+
                         }
                         break;
 

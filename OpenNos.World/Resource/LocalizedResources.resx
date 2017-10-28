@@ -1174,9 +1174,6 @@
   <data name="LOSE_REP" xml:space="preserve">
     <value>You've lost {0} reputation</value>
   </data>
-  <data name="ACT4_PVP_DIE" xml:space="preserve">
-    <value>You were killed by an enemy! Due to the curse of the Frozen Crown, you can't be revived for 30 seconds!</value>
-  </data>
   <data name="EFFECT_ACTIVATED" xml:space="preserve">
     <value>The {0} effect has been activated!</value>
   </data>
@@ -1521,5 +1518,20 @@
   </data>
   <data name="ASK_PET_MAX" xml:space="preserve">
     <value>Do you want to expand the pet slots?</value>
+  </data>
+  <data name="ACT4_PVP_DEATH1" xml:space="preserve">
+    <value>{0}'s Power of Protection has been stolen by a Demon Guardian</value>
+  </data>
+  <data name="ACT4_PVP_DEATH2" xml:space="preserve">
+    <value>{0}'s Power of Protection has been stolen by an Angel Guardian</value>
+  </data>
+  <data name="ACT4_PVP_DIE" xml:space="preserve">
+    <value>You were killed by an enemy! Due to the curse of the Frozen Crown, you can't be revived for 30 seconds!</value>
+  </data>
+  <data name="ACT4_PVP_KILL1" xml:space="preserve">
+    <value>{0} stole the Power of Protection of an Angel Guardian</value>
+  </data>
+  <data name="ACT4_PVP_KILL2" xml:space="preserve">
+    <value>{0} stole the Power of Protection of a Demon Guardian</value>
   </data>
 </root>
