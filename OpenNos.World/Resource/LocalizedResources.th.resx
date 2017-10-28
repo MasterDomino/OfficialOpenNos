@@ -866,7 +866,7 @@
   <data name="SEED_USED" xml:space="preserve">
     <value>คุณใช้ Seed of Chaos 10 ชิ้น</value>
   </data>
-  <data name="SELL_ITEM_VALIDE" xml:space="preserve">
+  <data name="SELL_ITEM_VALID" xml:space="preserve">
     <value>Sold: {0} &lt;{1} : piece &gt;</value>
     <comment>[ONONLY]</comment>
   </data>

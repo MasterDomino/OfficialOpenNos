@@ -514,7 +514,7 @@
   <data name="REP_CHANGED" xml:space="preserve">
     <value>Reputation changed</value>
   </data>
-  <data name="SELL_ITEM_VALIDE" xml:space="preserve">
+  <data name="SELL_ITEM_VALID" xml:space="preserve">
     <value>Sold: {0} &lt;{1} : piece &gt;</value>
   </data>
   <data name="SEX_CHANGED" xml:space="preserve">
@@ -1109,7 +1109,7 @@
     <value>Sending message to  '{0}' on channel {1}.</value>
   </data>
   <data name="NO_WINGS" xml:space="preserve">
-    <value>You don't have any friend wing!</value>
+    <value>You don't have any Wings of Friendship!</value>
   </data>
   <data name="WANT_TO_SAVE_POSITION" xml:space="preserve">
     <value>Do you want to save your position?</value>
@@ -1178,7 +1178,7 @@
     <value>You were killed by an enemy! Due to the curse of the Frozen Crown, you can't be revived for 30 seconds!</value>
   </data>
   <data name="EFFECT_ACTIVATED" xml:space="preserve">
-    <value>The {0} effect has been actived!</value>
+    <value>The {0} effect has been activated!</value>
   </data>
   <data name="INFO_BAZAAR" xml:space="preserve">
     <value>You cannot open the bazaar because you do not possess the required object.</value>
@@ -1358,7 +1358,7 @@
     <value>Do you want to take out your NosMate ?</value>
   </data>
   <data name="GET_PET_PLACES" xml:space="preserve">
-    <value>Right now, you can have more NosMate.</value>
+    <value>You have more space for your Pets.</value>
   </data>
   <data name="PET_CAN_PICK_UP" xml:space="preserve">
     <value>Now, your NosMate can drop items.</value>
@@ -1467,5 +1467,59 @@
   </data>
   <data name="RECIPELISTS_LOADED" xml:space="preserve">
     <value>{0} RecipeLists loaded!</value>
+  </data>
+  <data name="INVITE_RAID" xml:space="preserve">
+    <value>{0} Invited you to the raid</value>
+  </data>
+  <data name="RAID_JOIN" xml:space="preserve">
+    <value>You've joined the raid</value>
+  </data>
+  <data name="RAID_LEVEL_INCORRECT" xml:space="preserve">
+    <value>Since your level doesn't match the recommended level, you will not receive any rewards.</value>
+  </data>
+  <data name="RAID_START_QUESTION" xml:space="preserve">
+    <value>Do you want to start the raid?</value>
+  </data>
+  <data name="NOT_TEAM_LEADER" xml:space="preserve">
+    <value>Only team leader can start the raid.</value>
+  </data>
+  <data name="NEED_TEAM" xml:space="preserve">
+    <value>You need to form a team to start the raid.</value>
+  </data>
+  <data name="FIRST_ROOM_START" xml:space="preserve">
+    <value>Do you want to enter the first room?</value>
+  </data>
+  <data name="RAID_REGISTERED" xml:space="preserve">
+    <value>Raid has been registered.</value>
+  </data>
+  <data name="SEARCH_TEAM_MEMBERS" xml:space="preserve">
+    <value>{0} is searching for team members, Raid of {1}</value>
+  </data>
+  <data name="RAID_UNREGISTERED" xml:space="preserve">
+    <value>Raid has been unregistered.</value>
+  </data>
+  <data name="LEFT_RAID" xml:space="preserve">
+    <value>You have left the raid.</value>
+  </data>
+  <data name="KICK_RAID" xml:space="preserve">
+    <value>You have been kicked from the raid.</value>
+  </data>
+  <data name="RAID_DISOLVED" xml:space="preserve">
+    <value>Raid has been canceled.</value>
+  </data>
+  <data name="RAID_LEADER" xml:space="preserve">
+    <value>You are the raid leader.</value>
+  </data>
+  <data name="ITEM_IN_USE" xml:space="preserve">
+    <value>This item is in use.</value>
+  </data>
+  <data name="OPTION_DELETE" xml:space="preserve">
+    <value>Shell effect erased.</value>
+  </data>
+  <data name="IN_FAMILY" xml:space="preserve">
+    <value>You're in family, you can't use individual faction egg.</value>
+  </data>
+  <data name="ASK_PET_MAX" xml:space="preserve">
+    <value>Do you want to expand the pet slots?</value>
   </data>
 </root>

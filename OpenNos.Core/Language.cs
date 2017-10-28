@@ -37,8 +37,10 @@ namespace OpenNos.Core
 
         private Language()
         {
-            _streamWriter = new System.IO.StreamWriter("MissingLanguageKeys.txt");
-            _streamWriter.AutoFlush = true;
+            _streamWriter = new System.IO.StreamWriter("MissingLanguageKeys.txt")
+            {
+                AutoFlush = true
+            };
             _resourceCulture = new CultureInfo(ConfigurationManager.AppSettings["Language"]);
             if (Assembly.GetEntryAssembly() != null)
             {

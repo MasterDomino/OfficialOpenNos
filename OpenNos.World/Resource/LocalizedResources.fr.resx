@@ -486,7 +486,7 @@
   <data name="REP_CHANGED" xml:space="preserve">
     <value>Réputation modifiée.</value>
   </data>
-  <data name="SELL_ITEM_VALIDE" xml:space="preserve">
+  <data name="SELL_ITEM_VALID" xml:space="preserve">
     <value>{0}: vendu &lt;{1} : pièces &gt;</value>
   </data>
   <data name="SEX_CHANGED" xml:space="preserve">
