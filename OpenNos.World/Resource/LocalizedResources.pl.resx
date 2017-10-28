@@ -606,9 +606,6 @@
   <data name="UPDATE_ACCOUNT_ERROR" xml:space="preserve">
     <value>Bład przy zapisywaniu badź odswieżaniu konta {0} , {1}</value>
   </data>
-  <data name="UPDATE_ERROR" xml:space="preserve">
-    <value>{0}</value>
-  </data>
   <data name="UPGRADE_FAILED" xml:space="preserve">
     <value>Ulepszanie nie powiodlo sie!</value>
   </data>
@@ -1225,9 +1222,6 @@
   <data name="ASSISTANT" xml:space="preserve">
     <value>Asystent</value>
   </data>
-  <data name="BAZAR_LOADED" xml:space="preserve">
-    <value>Bazar załadowany!</value>
-  </data>
   <data name="CHANNEL" xml:space="preserve">
     <value>kanał</value>
   </data>
@@ -1341,5 +1335,14 @@
   </data>
   <data name="MUTED_PLURAL" xml:space="preserve">
     <value>Zostałeś uciszony! Powód: {0} na: {1} minut</value>
+  </data>
+  <data name="CARDS_LOADED" xml:space="preserve">
+    <value>{0} Załadowanych Kart</value>
+  </data>
+  <data name="BAZAAR_LOADED" xml:space="preserve">
+    <value>{0} Załadowanych BazaarItems</value>
+  </data>
+  <data name="RECIPELISTS_LOADED" xml:space="preserve">
+    <value>{0} Załadowanych RecipeLists</value>
   </data>
 </root>
