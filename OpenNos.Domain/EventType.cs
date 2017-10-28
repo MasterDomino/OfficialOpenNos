@@ -21,6 +21,8 @@ namespace OpenNos.Domain
         MINILANDREFRESHEVENT,
         LODDH,
         RANKINGREFRESH,
+        ACT4SHIP,
+        Act4Raid,
         METEORITEGAME
     }
 }

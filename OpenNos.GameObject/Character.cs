@@ -581,6 +581,19 @@ namespace OpenNos.GameObject
             Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), bf.Card.Name), 12));
         }
 
+        public void ChangeChannel(string ip, int port, byte mode)
+        {
+            Session.SendPacket($"mz {ip} {port} {Session.Character.Slot}");
+            Session.SendPacket($"it {mode}");
+            Session.IsDisposing = true;
+            CommunicationServiceClient.Instance.RegisterCrossServerAccountLogin(Session.Account.AccountId, Session.SessionId);
+
+            //explictly save data before disconnecting to prevent data loss
+            Session.Character.Save();
+
+            Session.Disconnect();
+        }
+
         public bool CanAddMate(Mate mate) => mate.MateType == MateType.Pet ? MaxMateCount > Mates.Count : 3 > Mates.Count(s => s.MateType == MateType.Partner);
 
         public void ChangeClass(ClassType characterClass)
@@ -1409,6 +1422,17 @@ namespace OpenNos.GameObject
                     Type = MessageType.Family
                 });
             }
+        }
+
+        public string GenerateFc()
+        {
+            return $"fc {(byte)Faction} {ServerManager.Instance.Act4AngelStat.MinutesUntilReset} {ServerManager.Instance.Act4AngelStat.Percentage / 100} {ServerManager.Instance.Act4AngelStat.Mode}" +
+                $" {ServerManager.Instance.Act4AngelStat.CurrentTime} {ServerManager.Instance.Act4AngelStat.TotalTime} {Convert.ToByte(ServerManager.Instance.Act4AngelStat.IsMorcos)}" +
+                $" {Convert.ToByte(ServerManager.Instance.Act4AngelStat.IsHatus)} {Convert.ToByte(ServerManager.Instance.Act4AngelStat.IsCalvina)} {Convert.ToByte(ServerManager.Instance.Act4AngelStat.IsBerios)}" +
+                $" 0 {ServerManager.Instance.Act4DemonStat.Percentage / 100} {ServerManager.Instance.Act4DemonStat.Mode} {ServerManager.Instance.Act4DemonStat.CurrentTime} {ServerManager.Instance.Act4DemonStat.TotalTime}" +
+                $" {Convert.ToByte(ServerManager.Instance.Act4DemonStat.IsMorcos)} {Convert.ToByte(ServerManager.Instance.Act4DemonStat.IsHatus)} {Convert.ToByte(ServerManager.Instance.Act4DemonStat.IsCalvina)} " +
+                $"{Convert.ToByte(ServerManager.Instance.Act4DemonStat.IsBerios)} 0";
+            //return $"fc {Faction} 0 69 0 0 0 1 1 1 1 0 34 0 0 0 1 1 1 1 0";
         }
 
         public string GenerateFd() => $"fd {Reputation} {GetReputationIco()} {(int)Dignity} {Math.Abs(GetDignityIco())}";

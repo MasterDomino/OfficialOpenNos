@@ -221,10 +221,17 @@ namespace OpenNos.GameObject
             generateHandlerReferences(packetHandler, isWorldServer);
         }
 
-        public void InitializeAccount(Account account)
+        public void InitializeAccount(Account account, bool crossServer = false)
         {
             Account = account;
-            CommunicationServiceClient.Instance.ConnectAccount(ServerManager.Instance.WorldId, account.AccountId, SessionId);
+            if (crossServer)
+            {
+                CommunicationServiceClient.Instance.ConnectAccountCrossServer(ServerManager.Instance.WorldId, account.AccountId, SessionId);
+            }
+            else
+            {
+                CommunicationServiceClient.Instance.ConnectAccount(ServerManager.Instance.WorldId, account.AccountId, SessionId);
+            }
             IsAuthenticated = true;
         }
 
@@ -414,13 +421,14 @@ namespace OpenNos.GameObject
 
                         if (_waitForPacketsAmount.HasValue)
                         {
-                            if (_waitForPacketList.Count != _waitForPacketsAmount - 1)
+                            _waitForPacketList.Add(packetstring);
+                            string[] packetssplit = packetstring.Split(' ');
+                            if (packetssplit.Length > 3 && packetsplit[1] == "DAC")
                             {
-                                _waitForPacketList.Add(packetstring);
+                                _waitForPacketList.Add("0 CrossServerAuthenticate");
                             }
-                            else
+                            if (_waitForPacketList.Count == _waitForPacketsAmount)
                             {
-                                _waitForPacketList.Add(packetstring);
                                 _waitForPacketsAmount = null;
                                 string queuedPackets = string.Join(" ", _waitForPacketList.ToArray());
                                 string header = queuedPackets.Split(' ', '^')[1];

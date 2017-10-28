@@ -97,6 +97,12 @@ namespace OpenNos.GameObject
 
         #region Properties
 
+        public DateTime Act4RaidStart { get; set; }
+
+        public Act4Stat Act4AngelStat { get; set; }
+
+        public Act4Stat Act4DemonStat { get; set; }
+
         public static ServerManager Instance => _instance ?? (_instance = new ServerManager());
 
         public MapInstance ArenaInstance { get; private set; }
@@ -423,6 +429,10 @@ namespace OpenNos.GameObject
                     session.SendPackets(session.Character.GeneratePst());
                     session.SendPacket(session.Character.GenerateAct());
                     session.SendPacket(session.Character.GenerateScpStc());
+                    if (ChannelId == 51)
+                    {
+                        session.SendPacket(session.Character.GenerateFc());
+                    }
                     if (session.Character.Group?.Raid != null && session.Character.Group.Raid.InstanceBag?.Lock == true)
                     {
                         session.SendPacket(session.Character.Group.GeneraterRaidmbf(session));
@@ -714,6 +724,9 @@ namespace OpenNos.GameObject
 
         public void Initialize()
         {
+            Act4RaidStart = DateTime.Now;
+            Act4AngelStat = new Act4Stat();
+            Act4DemonStat = new Act4Stat();
             // parse rates
             XPRate = int.Parse(ConfigurationManager.AppSettings["RateXp"]);
             HeroXpRate = int.Parse(ConfigurationManager.AppSettings["RateHeroicXp"]);
@@ -1272,6 +1285,7 @@ namespace OpenNos.GameObject
 
             EventHelper.Instance.RunEvent(new EventContainer(Instance.GetMapInstance(Instance.GetBaseMapInstanceIdByMapId(98)), EventActionType.NPCSEFFECTCHANGESTATE, true));
             Parallel.ForEach(Schedules, schedule => Observable.Timer(TimeSpan.FromSeconds(EventHelper.Instance.GetMilisecondsBeforeTime(schedule.Time).TotalSeconds), TimeSpan.FromDays(1)).Subscribe(e => EventHelper.Instance.GenerateEvent(schedule.Event)));
+            EventHelper.Instance.GenerateEvent(EventType.ACT4SHIP);
 
             Observable.Interval(TimeSpan.FromSeconds(30)).Subscribe(x => mailProcess());
 
@@ -1441,6 +1455,8 @@ namespace OpenNos.GameObject
                     if (fam != null)
                     {
                         newFam.LandOfDeath = fam.LandOfDeath;
+                        newFam.Act4Raid = fam.Act4Raid;
+                        newFam.Act4RaidBossMap = fam.Act4RaidBossMap;
                     }
 
                     newFam.FamilyCharacters = new List<FamilyCharacter>();
@@ -1681,6 +1697,117 @@ namespace OpenNos.GameObject
                 Logger.Error(e);
             }
         }
+
+        private void Act4Process()
+        {
+            if (ChannelId != 51)
+            {
+                return;
+            }
+
+            MapInstance angelMapInstance = GetMapInstance(GetBaseMapInstanceIdByMapId(132));
+            MapInstance demonMapInstance = GetMapInstance(GetBaseMapInstanceIdByMapId(133));
+
+            void SummonMukraju(MapInstance instance, byte faction)
+            {
+                MapMonster monster = new MapMonster
+                {
+                    MonsterVNum = 556,
+                    MapY = (faction == 1 ? (short)92 : (short)95),
+                    MapX = (faction == 1 ? (short)114 : (short)20),
+                    MapId = (short)(131 + faction),
+                    IsMoving = true,
+                    MapMonsterId = instance.GetNextMonsterId(),
+                    ShouldRespawn = false
+                };
+                monster.Initialize(instance);
+                instance.AddMonster(monster);
+                instance.Broadcast(monster.GenerateIn());
+            }
+
+            int CreateRaid(byte faction)
+            {
+                MapInstanceType raidType = MapInstanceType.Act4Morcos;
+                int rng = RandomNumber(1, 5);
+                switch (rng)
+                {
+                    case 2:
+                        raidType = MapInstanceType.Act4Hatus;
+                        break;
+                    case 3:
+                        raidType = MapInstanceType.Act4Calvina;
+                        break;
+                    case 4:
+                        raidType = MapInstanceType.Act4Berios;
+                        break;
+                }
+                Event.Act4Raid.GenerateRaid(raidType, faction);
+                return rng;
+            }
+
+            if (Act4AngelStat.Percentage > 10000)
+            {
+                Act4AngelStat.Mode = 1;
+                Act4AngelStat.Percentage = 0;
+                Act4AngelStat.TotalTime = 300;
+                SummonMukraju(angelMapInstance, 1);
+            }
+
+            if (Act4AngelStat.Mode == 1 && !angelMapInstance.Monsters.Any(s => s.MonsterVNum == 556))
+            {
+                Act4AngelStat.Mode = 3;
+                Act4AngelStat.TotalTime = 3600;
+
+                switch (CreateRaid(1))
+                {
+                    case 1:
+                        Act4AngelStat.IsMorcos = true;
+                        break;
+                    case 2:
+                        Act4AngelStat.IsHatus = true;
+                        break;
+                    case 3:
+                        Act4AngelStat.IsCalvina = true;
+                        break;
+                    case 4:
+                        Act4AngelStat.IsBerios = true;
+                        break;
+                }
+            }
+
+            if (Act4DemonStat.Percentage > 10000)
+            {
+                Act4DemonStat.Mode = 1;
+                Act4DemonStat.Percentage = 0;
+                Act4DemonStat.TotalTime = 300;
+                SummonMukraju(demonMapInstance, 2);
+            }
+
+            if (Act4DemonStat.Mode == 1 && !demonMapInstance.Monsters.Any(s => s.MonsterVNum == 556))
+            {
+                Act4DemonStat.Mode = 3;
+                Act4DemonStat.TotalTime = 3600;
+
+                switch (CreateRaid(2))
+                {
+                    case 1:
+                        Act4DemonStat.IsMorcos = true;
+                        break;
+                    case 2:
+                        Act4DemonStat.IsHatus = true;
+                        break;
+                    case 3:
+                        Act4DemonStat.IsCalvina = true;
+                        break;
+                    case 4:
+                        Act4DemonStat.IsBerios = true;
+                        break;
+                }
+            }
+
+            Parallel.ForEach(Sessions, sess => sess.SendPacket(sess.Character.GenerateFc()));
+        }
+
 
         #endregion
     }

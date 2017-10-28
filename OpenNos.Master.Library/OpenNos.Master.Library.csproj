@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="Client\CommunicationClient.cs" />
     <Compile Include="Client\CommunicationServiceClient.cs" />
+    <Compile Include="Data\AccountConnection.cs" />
     <Compile Include="Interface\ICommunicationClient.cs" />
     <Compile Include="Interface\ICommunicationService.cs" />
     <Compile Include="Data\SCSCharacterMessage.cs" />

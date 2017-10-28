@@ -497,7 +497,7 @@ namespace OpenNos.Handler
                                     {
                                         if (Session.CurrentMapInstance.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4))
                                         {
-                                            if (Session.Character.Family == null || character.Character.Family == null || Session.Character.Family.FamilyId != character.Character.Family.FamilyId)
+                                            if (Session.Character.Faction != character.Character.Faction)
                                             {
                                                 if (Session.Character.MapInstance.Map.MapId != 130 && Session.Character.MapInstance.Map.MapId != 131)
                                                 {
@@ -606,7 +606,7 @@ namespace OpenNos.Handler
                                             {
                                                 if (Session.CurrentMapInstance?.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
                                                 {
-                                                    if (Session.Character.Family == null || playerToAttack.Character.Family == null || Session.Character.Family.FamilyId != playerToAttack.Character.Family.FamilyId)
+                                                    if (Session.Character.Faction != playerToAttack.Character.Faction)
                                                     {
                                                         if (Session.Character.MapInstance.Map.MapId != 130 && Session.Character.MapInstance.Map.MapId != 131)
                                                         {
@@ -640,7 +640,7 @@ namespace OpenNos.Handler
                                                 {
                                                     if (Session.CurrentMapInstance?.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
                                                     {
-                                                        if (Session.Character.Family == null || character.Character.Family == null || Session.Character.Family.FamilyId != character.Character.Family.FamilyId)
+                                                        if (Session.Character.Faction != character.Character.Faction)
                                                         {
                                                             if (Session.Character.MapInstance.Map.MapId != 130 && Session.Character.MapInstance.Map.MapId != 131)
                                                             {
@@ -689,7 +689,7 @@ namespace OpenNos.Handler
                                                     int count = 0;
                                                     if (Session.CurrentMapInstance?.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
                                                     {
-                                                        if (Session.Character.Family == null || playerToAttack.Character.Family == null || Session.Character.Family.FamilyId != playerToAttack.Character.Family.FamilyId)
+                                                        if (Session.Character.Faction != playerToAttack.Character.Faction)
                                                         {
                                                             if (Session.Character.MapInstance.Map.MapId != 130 && Session.Character.MapInstance.Map.MapId != 131)
                                                             {
@@ -718,7 +718,7 @@ namespace OpenNos.Handler
                                                     {
                                                         if (Session.CurrentMapInstance?.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
                                                         {
-                                                            if (Session.Character.Family == null || character.Character.Family == null || Session.Character.Family.FamilyId != character.Character.Family.FamilyId)
+                                                            if (Session.Character.Faction != character.Character.Faction)
                                                             {
                                                                 if (Session.Character.MapInstance.Map.MapId != 130 && Session.Character.MapInstance.Map.MapId != 131)
                                                                 {
@@ -756,7 +756,7 @@ namespace OpenNos.Handler
                                                     // hit the targetted monster
                                                     if (Session.CurrentMapInstance?.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
                                                     {
-                                                        if (Session.Character.Family == null || playerToAttack.Character.Family == null || Session.Character.Family.FamilyId != playerToAttack.Character.Family.FamilyId)
+                                                        if (Session.Character.Faction != playerToAttack.Character.Faction)
                                                         {
                                                             if (Session.Character.MapInstance.Map.MapId != 130 && Session.Character.MapInstance.Map.MapId != 131)
                                                             {
@@ -804,7 +804,7 @@ namespace OpenNos.Handler
                                                     {
                                                         if (Session.CurrentMapInstance?.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
                                                         {
-                                                            if (Session.Character.Family == null || character.Character.Family == null || Session.Character.Family.FamilyId != character.Character.Family.FamilyId)
+                                                            if (Session.Character.Faction != character.Character.Faction)
                                                             {
                                                                 if (Session.Character.MapInstance.Map.MapId != 130 && Session.Character.MapInstance.Map.MapId != 131)
                                                                 {
@@ -844,7 +844,7 @@ namespace OpenNos.Handler
                                                     }
                                                     if (Session.CurrentMapInstance?.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
                                                     {
-                                                        if (Session.Character.Family == null || playerToAttack.Character.Family == null || Session.Character.Family.FamilyId != playerToAttack.Character.Family.FamilyId)
+                                                        if (Session.Character.Faction != playerToAttack.Character.Faction)
                                                         {
                                                             if (Session.Character.MapInstance.Map.MapId != 130 && Session.Character.MapInstance.Map.MapId != 131)
                                                             {
@@ -887,7 +887,7 @@ namespace OpenNos.Handler
                                                         }
                                                         else
                                                         {
-                                                            if (Session.Character.Family == null || Session.Character.Family.FamilyCharacters.Any(s => s.Character.CharacterId != playerToAttack.Character.CharacterId))
+                                                            if (Session.Character.Faction != playerToAttack.Character.Faction)
                                                             {
                                                                 pvpHit(new HitRequest(TargetHitType.SingleTargetHit, Session, ski.Skill), playerToAttack);
                                                             }
@@ -906,7 +906,7 @@ namespace OpenNos.Handler
                                                 {
                                                     if (Session.CurrentMapInstance?.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
                                                     {
-                                                        if (Session.Character.Family == null || playerToAttack.Character.Family == null || Session.Character.Family.FamilyId != playerToAttack.Character.Family.FamilyId)
+                                                        if (Session.Character.Faction != playerToAttack.Character.Faction)
                                                         {
                                                             if (Session.Character.MapInstance.Map.MapId != 130 && Session.Character.MapInstance.Map.MapId != 131)
                                                             {
@@ -1175,7 +1175,7 @@ namespace OpenNos.Handler
                             {
                                 if (Session.CurrentMapInstance?.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
                                 {
-                                    if (Session.Character.Family == null || character.Character.Family == null || Session.Character.Family.FamilyId != character.Character.Family.FamilyId)
+                                    if (Session.Character.Faction != character.Character.Faction)
                                     {
                                         if (Session.CurrentMapInstance?.Map.MapId != 130 && Session.CurrentMapInstance?.Map.MapId != 131)
                                         {

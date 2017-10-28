@@ -38,6 +38,10 @@ namespace OpenNos.GameObject
 
         public MapInstance LandOfDeath { get; set; }
 
+        public MapInstance Act4Raid { get; set; }
+
+        public MapInstance Act4RaidBossMap { get; set; }
+
         public Inventory Warehouse { get; set; }
 
         #endregion

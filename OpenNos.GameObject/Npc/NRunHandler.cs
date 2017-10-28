@@ -17,6 +17,7 @@ using OpenNos.DAL;
 using OpenNos.Data;
 using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
+using OpenNos.Master.Library.Client;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -517,15 +518,50 @@ namespace OpenNos.GameObject
                     tp = npc?.Teleporters?.FirstOrDefault(s => s.Index == packet.Type);
                     if (tp != null)
                     {
-                        Session.SendPacket("it 3");
-                        ServerManager.Instance.ChangeMap(Session.Character.CharacterId, tp.MapId, tp.MapX, tp.MapY);
+                        //Session.SendPacket("it 3");
+                        if (ServerManager.Instance.ChannelId == 51)
+                        {
+                            string connection = CommunicationServiceClient.Instance.RetrieveOriginWorld(Session.Account.AccountId);
+                            if (string.IsNullOrWhiteSpace(connection))
+                            {
+                                return;
+                            }
+                            Session.Character.MapId = tp.MapId;
+                            Session.Character.MapX = tp.MapX;
+                            Session.Character.MapY = tp.MapY;
+                            int port = Convert.ToInt32(connection.Split(':')[1]);
+                            Session.Character.ChangeChannel(connection.Split(':')[0], port, 3);
+                        }
+                        else
+                        {
+                            ServerManager.Instance.ChangeMap(Session.Character.CharacterId, tp.MapId, tp.MapX, tp.MapY);
+                        }
                     }
                     break;
 
                 case 5001:
                     if (npc != null)
                     {
-                        ServerManager.Instance.ChangeMap(Session.Character.CharacterId, 130, 12, 40);
+                        // after Ship
+                        switch (Session.Character.Faction)
+                        {
+                            case FactionType.None:
+                                Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo("You need to be part of a faction to join Act 4"));
+                                return;
+                            case FactionType.Angel:
+                                Session.Character.MapId = 130;
+                                Session.Character.MapX = 12;
+                                Session.Character.MapY = 40;
+                                break;
+                            case FactionType.Demon:
+                                Session.Character.MapId = 131;
+                                Session.Character.MapX = 12;
+                                Session.Character.MapY = 40;
+                                break;
+                        }
+                        Session.Character.ChangeChannel("5.9.104.35", 4002, 1);
+                        //ServerManager.Instance.ChangeMap(Session.Character.CharacterId, 130, 12, 40);
+
                     }
                     break;
 

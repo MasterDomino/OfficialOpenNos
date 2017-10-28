@@ -87,6 +87,11 @@ namespace OpenNos.GameObject.Helpers
                         case EventType.METEORITEGAME:
                             MeteoriteGame.GenerateMeteoriteGame();
                             break;
+
+                        case EventType.ACT4SHIP:
+                            ACT4SHIP.GenerateAct4Ship(1);
+                            ACT4SHIP.GenerateAct4Ship(2);
+                            break;
                     }
                 });
             }

@@ -1794,6 +1794,10 @@ namespace OpenNos.Handler
                 // character should have been selected in SelectCharacter
                 return;
             }
+            if (Session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.Act4) && ServerManager.Instance.ChannelId != 51)
+            {
+                Session.Character.ChangeChannel("5.9.104.35", 4002, 2);
+            }
             Session.CurrentMapInstance = Session.Character.MapInstance;
             if (string.Equals(ConfigurationManager.AppSettings["SceneOnCreate"], "true", StringComparison.CurrentCultureIgnoreCase) && Session.Character.GeneralLogs.CountLinq(s => s.LogType == "Connection") < 2)
             {
@@ -1858,6 +1862,29 @@ namespace OpenNos.Handler
             Session.SendPacket("zzim");
             Session.SendPacket($"twk 1 {Session.Character.CharacterId} {Session.Account.Name} {Session.Character.Name} shtmxpdlfeoqkr");
 
+            if (Session.Character.Family != null && Session.Character.FamilyCharacter != null)
+            {
+                Session.SendPacket(Session.Character.GenerateGInfo());
+                Session.SendPackets(Session.Character.GetFamilyHistory());
+                Session.SendPacket(Session.Character.GenerateFamilyMember());
+                Session.SendPacket(Session.Character.GenerateFamilyMemberMessage());
+                Session.SendPacket(Session.Character.GenerateFamilyMemberExp());
+                try
+                {
+                    Session.Character.Faction = Session.Character.Family.FamilyCharacters.Where(s => s.Authority.Equals(FamilyAuthority.Head)).FirstOrDefault().Character.Faction;
+
+                }
+                catch
+                {
+
+                }
+                if (!string.IsNullOrWhiteSpace(Session.Character.Family.FamilyMessage))
+                {
+                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo("--- Family Message ---\n" + Session.Character.Family.FamilyMessage));
+                }
+            }
+
+
             long? familyId = DAOFactory.FamilyCharacterDAO.LoadByCharacterId(Session.Character.CharacterId)?.FamilyId;
             if (familyId.HasValue)
             {
@@ -1901,19 +1928,6 @@ namespace OpenNos.Handler
             Session.SendPacket(kdlinit);
 
             Session.Character.LastPVPRevive = DateTime.Now;
-
-            if (Session.Character.Family != null && Session.Character.FamilyCharacter != null)
-            {
-                Session.SendPacket(Session.Character.GenerateGInfo());
-                Session.SendPackets(Session.Character.GetFamilyHistory());
-                Session.SendPacket(Session.Character.GenerateFamilyMember());
-                Session.SendPacket(Session.Character.GenerateFamilyMemberMessage());
-                Session.SendPacket(Session.Character.GenerateFamilyMemberExp());
-                if (!string.IsNullOrWhiteSpace(Session.Character.Family.FamilyMessage))
-                {
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo("--- Family Message ---\n" + Session.Character.Family.FamilyMessage));
-                }
-            }
 
             IEnumerable<PenaltyLogDTO> warning = DAOFactory.PenaltyLogDAO.LoadByAccount(Session.Character.AccountId).Where(p => p.Penalty == PenaltyType.Warning);
             if (warning.Any())

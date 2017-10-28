@@ -1055,6 +1055,11 @@ namespace OpenNos.Handler
             }
         }
 
+        public void DirectConnect(DirectConnectPacket directConnectPacket)
+        {
+            Session.Character.ChangeChannel(directConnectPacket.IPAddress, directConnectPacket.Port, 3);
+        }
+
         /// <summary>
         /// $DropRate Command
         /// </summary>

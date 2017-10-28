@@ -16,7 +16,7 @@ using System;
 
 namespace OpenNos.Master.Library.Data
 {
-    internal class AccountConnection
+    public class AccountConnection
     {
         #region Instantiation
 
@@ -34,6 +34,8 @@ namespace OpenNos.Master.Library.Data
 
         public long AccountId { get; }
 
+        public bool CanLoginCrossServer { get; set; }
+
         public long CharacterId { get; set; }
 
         public WorldServer ConnectedWorld { get; set; }
@@ -41,6 +43,8 @@ namespace OpenNos.Master.Library.Data
         public string IpAddress { get; }
 
         public DateTime LastPulse { get; set; }
+
+        public WorldServer OriginWorld { get; set; }
 
         public int SessionId { get; }
 

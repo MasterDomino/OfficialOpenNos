@@ -46,6 +46,15 @@ namespace OpenNos.Master.Library.Interface
         bool ConnectAccount(Guid worldId, long accountId, int sessionId);
 
         /// <summary>
+        /// Registers the Cross Server Login of the given Account and removes the permission to login
+        /// </summary>
+        /// <param name="worldId">World the Account connects to</param>
+        /// <param name="accountId">Id of the connecting Account</param>
+        /// <param name="sessionId">Id of the Session requesting the Login</param>
+        /// <returns>true if the Login was successful, otherwise false</returns>
+        bool ConnectAccountCrossServer(Guid worldId, long accountId, long sessionId);
+
+        /// <summary>
         /// Registers the Login of the given Character
         /// </summary>
         /// <param name="worldId">World the Character connects to</param>
@@ -97,6 +106,14 @@ namespace OpenNos.Master.Library.Interface
         bool IsLoginPermitted(long accountId, int sessionId);
 
         /// <summary>
+        /// Checks if the Account is allowed to login across multiple servers
+        /// </summary>
+        /// <param name="accountId">Id of the Account</param>
+        /// <param name="sessionId">Id of the Session that should be validated</param>
+        /// <returns></returns>
+        bool IsCrossServerLoginPermitted(long accountId, long sessionId);
+
+        /// <summary>
         /// Kicks a Session by their Id or Account
         /// </summary>
         /// <param name="accountId">Id of the Account</param>
@@ -124,6 +141,13 @@ namespace OpenNos.Master.Library.Interface
         void RegisterAccountLogin(long accountId, int sessionId, string ipAddress);
 
         /// <summary>
+        /// Registers the Account for Login across the Servers
+        /// </summary>
+        /// <param name="accountId">Id of the Account to register</param>
+        /// <param name="sessionId">Id of the Session to register</param>
+        void RegisterCrossServerAccountLogin(long accountId, long sessionId);
+
+        /// <summary>
         /// Registers a WorldServer
         /// </summary>
         /// <param name="worldServer">
@@ -146,6 +170,13 @@ namespace OpenNos.Master.Library.Interface
         /// </summary>
         /// <returns>the actual result</returns>
         IEnumerable<string> RetrieveServerStatistics();
+
+        /// <summary>
+        /// Retrieves the IP and Port of the Origin World 
+        /// </summary>
+        /// <param name="accountId">Id of the Account</param>
+        /// <returns>IP:Port of the Server, null if not existing</returns>
+        string RetrieveOriginWorld(long accountId);
 
         /// <summary>
         /// Generates list of sessionId for given IpAddress

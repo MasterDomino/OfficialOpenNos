@@ -86,9 +86,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Act4Stat.cs" />
     <Compile Include="Buff\Buff.cs" />
     <Compile Include="Buff\BCard.cs" />
     <Compile Include="Buff\Card.cs" />
+    <Compile Include="Event\ACT4\Act4Raid.cs" />
+    <Compile Include="Event\ACT4\Act4Ship.cs" />
     <Compile Include="Event\EventWave.cs" />
     <Compile Include="Event\GAMES\MeteoriteGame.cs" />
     <Compile Include="Helpers\StaticPacketHelper.cs" />
@@ -142,6 +145,7 @@
     <Compile Include="Packets\ClientPackets\SortOpenPacket.cs" />
     <Compile Include="Packets\ClientPackets\UseItemPacket.cs" />
     <Compile Include="Packets\CommandPackets\AddPartnerPacket.cs" />
+    <Compile Include="Packets\CommandPackets\DirectConnectPacket.cs" />
     <Compile Include="Packets\CommandPackets\HelpMePacket.cs" />
     <Compile Include="Packets\CommandPackets\AddPortalPacket.cs" />
     <Compile Include="Packets\CommandPackets\AddShellEffectPacket.cs" />

@@ -101,7 +101,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccountConnection.cs" />
     <Compile Include="CommunicationService.cs" />
     <Compile Include="MSManager.cs" />
     <Compile Include="Program.cs" />
