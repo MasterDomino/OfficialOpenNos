@@ -490,8 +490,7 @@ namespace OpenNos.GameObject
         public void AddPetWithSkill(Mate mate)
         {
             bool isUsingMate = true;
-            Mate teammate = Session.Character.Mates.Where(s => s.IsTeamMember).FirstOrDefault(s => s.MateType == mate.MateType);
-            if (teammate == null)
+            if (!Session.Character.Mates.Where(s => s.IsTeamMember).Any(s => s.MateType == mate.MateType))
             {
                 isUsingMate = false;
                 mate.IsTeamMember = true;
@@ -499,8 +498,8 @@ namespace OpenNos.GameObject
             else
             {
                 //set position to mate because mate will send to miniland
-                mate.MapX = 9;
-                mate.MapY = 11;
+                mate.MapX = 5;
+                mate.MapY = 8;
             }
             Session.SendPacket($"ctl 2 {mate.MateTransportId} 3");
             Mates.Add(mate);
