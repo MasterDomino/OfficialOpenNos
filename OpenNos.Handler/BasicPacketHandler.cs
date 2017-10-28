@@ -1582,7 +1582,7 @@ namespace OpenNos.Handler
                 return;
             }
             Session.Character.MessageCounter += 2;
-            if (Session.Character.MessageCounter < 11)
+            if (Session.Character.MessageCounter > 11)
             {
                 return;
             }
