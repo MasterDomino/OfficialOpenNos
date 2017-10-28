@@ -3841,15 +3841,6 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}.
-        /// </summary>
-        internal static string UPDATE_ERROR {
-            get {
-                return ResourceManager.GetString("UPDATE_ERROR", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Upgrade failed!.
         /// </summary>
         internal static string UPGRADE_FAILED {

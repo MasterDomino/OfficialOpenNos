@@ -74,7 +74,7 @@ namespace OpenNos.DAL.EF
             }
             catch (Exception e)
             {
-                Logger.Error(string.Format(Language.Instance.GetMessageFromKey("UPDATE_ERROR"), bazaarItem.BazaarItemId, e.Message), e);
+                Logger.Error($"BazaarItemId: {bazaarItem.BazaarItemId} Message: {e.Message}", e);
                 return SaveResult.Error;
             }
         }

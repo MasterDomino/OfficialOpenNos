@@ -1005,10 +1005,6 @@
     <value>Error inserting or updating Account {0} , {1}</value>
     <comment>[ONONLY]</comment>
   </data>
-  <data name="UPDATE_ERROR" xml:space="preserve">
-    <value>{0}</value>
-    <comment>[ONONLY]</comment>
-  </data>
   <data name="UPGRADESP_DESTROYED" xml:space="preserve">
     <value>วิญญาณของ Special list card ถูกทำลาย</value>
   </data>
