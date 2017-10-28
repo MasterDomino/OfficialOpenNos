@@ -527,7 +527,7 @@ namespace OpenNos.GameObject
                             break;
 
                         default:
-                            Logger.Warn(string.Format(Language.Instance.GetMessageFromKey("NO_HANDLER_ITEM"), GetType()) + $" ItemVNum: {this.VNum} Effect: {Effect} EffectValue: {EffectValue}");
+                            Logger.Warn(string.Format(Language.Instance.GetMessageFromKey("NO_HANDLER_ITEM"), GetType()) + $" ItemVNum: {VNum} Effect: {Effect} EffectValue: {EffectValue}");
                             break;
                     }
                     break;

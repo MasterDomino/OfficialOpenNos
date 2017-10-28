@@ -114,9 +114,7 @@ namespace OpenNos.DAL.EF
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    byte inventoryType = (byte)type;
-                    byte equipmentType = (byte)slot;
-                    ItemInstance entity = context.ItemInstance.FirstOrDefault(i => i.CharacterId == characterId && i.Slot == equipmentType && i.Type == inventoryType);
+                    ItemInstance entity = context.ItemInstance.FirstOrDefault(i => i.CharacterId == characterId && i.Slot == slot && i.Type == type);
                     return _mapper.Map<ItemInstanceDTO>(entity);
                 }
             }
@@ -131,8 +129,7 @@ namespace OpenNos.DAL.EF
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
-                byte inventoryType = (byte)type;
-                foreach (ItemInstance itemInstance in context.ItemInstance.Where(i => i.CharacterId == characterId && i.Type == inventoryType))
+                foreach (ItemInstance itemInstance in context.ItemInstance.Where(i => i.CharacterId == characterId && i.Type == type))
                 {
                     yield return _mapper.Map<ItemInstanceDTO>(itemInstance);
                 }
