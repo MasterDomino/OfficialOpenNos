@@ -1288,8 +1288,11 @@ namespace OpenNos.Handler
         /// <param name="pulsepacket"></param>
         public void Pulse(PulsePacket pulsepacket)
         {
-            Session.Character.LastPulse += 60;
-            if (pulsepacket.Tick != Session.Character.LastPulse)
+            if (Session.Character.LastPulse.AddMilliseconds(80000) >= DateTime.Now && DateTime.Now >= Session.Character.LastPulse.AddMilliseconds(40000))
+            {
+                Session.Character.LastPulse = DateTime.Now;
+            }
+            else
             {
                 Session.Disconnect();
             }

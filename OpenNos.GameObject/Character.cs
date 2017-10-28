@@ -216,7 +216,7 @@ namespace OpenNos.GameObject
 
         public DateTime LastPotion { get; set; }
 
-        public int LastPulse { get; set; }
+        public DateTime LastPulse { get; set; }
 
         public DateTime LastPVPRevive { get; set; }
 
