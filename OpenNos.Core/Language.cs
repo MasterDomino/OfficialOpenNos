@@ -64,7 +64,7 @@ namespace OpenNos.Core
 
             if (string.IsNullOrEmpty(resourceMessage))
             {
-                _streamWriter.WriteLineAsync(message);
+                _streamWriter.WriteLine(message);
                 return $"#<{message}>";
             }
 
