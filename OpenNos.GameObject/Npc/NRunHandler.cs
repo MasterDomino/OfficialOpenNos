@@ -267,7 +267,8 @@ namespace OpenNos.GameObject
                         Session.Character.LastPortal = currentRunningSeconds;
                         Session.Character.Gold -= 500 * (1 + packet.Type);
                         Session.SendPacket(Session.Character.GenerateGold());
-                        ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, packet.Type == 0 ? ServerManager.Instance.ArenaInstance.MapInstanceId : ServerManager.Instance.FamilyArenaInstance.MapInstanceId, packet.Type == 0 ? ServerManager.Instance.ArenaInstance.Map.GetRandomPosition().X : ServerManager.Instance.FamilyArenaInstance.Map.GetRandomPosition().X, packet.Type == 0 ? ServerManager.Instance.ArenaInstance.Map.GetRandomPosition().Y : ServerManager.Instance.FamilyArenaInstance.Map.GetRandomPosition().Y);
+                        MapCell pos = packet.Type == 0 ? ServerManager.Instance.ArenaInstance.Map.GetRandomPosition() : ServerManager.Instance.FamilyArenaInstance.Map.GetRandomPosition();
+                        ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, packet.Type == 0 ? ServerManager.Instance.ArenaInstance.MapInstanceId : ServerManager.Instance.FamilyArenaInstance.MapInstanceId, pos.X, pos.Y);
                     }
                     else
                     {
