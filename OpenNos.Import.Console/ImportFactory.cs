@@ -2599,9 +2599,15 @@ namespace OpenNos.Import.Console
                                 item.Type = (InventoryType)Enum.Parse(typeof(InventoryType), currentLine[2]);
                                 break;
                         }
-                        item.ItemType = currentLine[3] != "-1" ? (ItemType)Enum.Parse(typeof(ItemType), $"{(short)item.Type}{currentLine[3]}") : ItemType.Weapon;
+                        item.ItemType = currentLine[3] != "-1" ? (ItemType)Enum.Parse(typeof(ItemType), $"{currentLine[2]}{currentLine[3]}") : ItemType.Weapon;
                         item.ItemSubType = byte.Parse(currentLine[4]);
-                        item.EquipmentSlot = (EquipmentType)Enum.Parse(typeof(EquipmentType), currentLine[5] != "-1" ? currentLine[5] : "0");
+                        item.EquipmentSlot = (EquipmentType)Enum.Parse(typeof(EquipmentType), currentLine[5] != "-1" && item.Type == InventoryType.Equipment ? currentLine[5] : "0");
+
+                        if (item.ItemType == ItemType.Special)
+                        {
+                            // add a value for design here
+                            // design id might also come in handy
+                        }
 
                         // item.DesignId = short.Parse(currentLine[6]);
                         switch (item.VNum)
@@ -3377,6 +3383,15 @@ namespace OpenNos.Import.Console
                                         item.Effect = 6969; // imagined number as for I = √(-1), complex z = a + bi
                                         break;
 
+                                    case 1904:
+                                        item.Effect = 1894;
+                                        break;
+
+                                    case 1972:
+                                    case 1973:
+                                        item.Effect = 1005;
+                                        break;
+
                                     case 1429:
                                         item.Effect = 666;
                                         break;
@@ -3390,6 +3405,10 @@ namespace OpenNos.Import.Console
                                         if ((item.VNum > 5891 && item.VNum < 5900) || (item.VNum > 9100 && item.VNum < 9109))
                                         {
                                             item.Effect = 69; // imagined number as for I = √(-1), complex z = a + bi
+                                        }
+                                        else if (item.VNum > 1893 && item.VNum < 1904)
+                                        {
+                                            item.Effect = 2152;
                                         }
                                         else
                                         {

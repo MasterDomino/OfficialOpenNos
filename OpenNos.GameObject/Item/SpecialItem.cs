@@ -40,7 +40,14 @@ namespace OpenNos.GameObject
 
             switch (Effect)
             {
-                // sp point potions
+                // Honour Medals
+                case 69:
+                    session.Character.Reputation += ReputPrice;
+                    session.SendPacket(session.Character.GenerateFd());
+                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                    break;
+
+                // SP Potions
                 case 150:
                 case 151:
                     session.Character.SpAdditionPoint += EffectValue;
@@ -53,6 +60,7 @@ namespace OpenNos.GameObject
                     session.SendPacket(session.Character.GenerateSpPoint());
                     break;
 
+                // Specialist Medal
                 case 204:
                     session.Character.SpPoint += EffectValue;
                     session.Character.SpAdditionPoint += EffectValue * 3;
@@ -69,6 +77,7 @@ namespace OpenNos.GameObject
                     session.SendPacket(session.Character.GenerateSpPoint());
                     break;
 
+                // Raid Seals
                 case 301:
                     if (ServerManager.Instance.IsCharacterMemberOfGroup(session.Character.CharacterId))
                     {
@@ -101,6 +110,7 @@ namespace OpenNos.GameObject
                     }
                     break;
 
+                // Partner Suits/Skins
                 case 305:
                     Mate mate = session.Character.Mates.Find(s => s.MateTransportId == int.Parse(packetsplit[3]));
                     if (mate != null && EffectValue == mate.NpcMonsterVNum && mate.Skin == 0)
@@ -111,8 +121,9 @@ namespace OpenNos.GameObject
                     }
                     break;
 
+                // Fairy Booster
                 case 250:
-                    if(!session.Character.Buff.ContainsKey(131))
+                    if (!session.Character.Buff.ContainsKey(131))
                     {
                         session.Character.AddStaticBuff(new StaticBuffDTO() { CardId = 131 });
                         session.CurrentMapInstance?.Broadcast(session.Character.GeneratePairy());
@@ -126,6 +137,7 @@ namespace OpenNos.GameObject
                     }
                     break;
 
+                // Rainbow Pearl/Magic Eraser
                 case 666:
                     if (EffectValue == 1 && byte.TryParse(packetsplit[9], out byte islot))
                     {
@@ -145,13 +157,14 @@ namespace OpenNos.GameObject
                     }
                     break;
 
-                //Atk/Def/HP/Exp potions
+                // Atk/Def/HP/Exp potions
                 case 6600:
                     session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     break;
 
+                // Ancelloan's Blessing
                 case 208:
-                    if(!session.Character.Buff.ContainsKey(121))
+                    if (!session.Character.Buff.ContainsKey(121))
                     {
                         session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                         session.Character.AddStaticBuff(new StaticBuffDTO() { CardId = 121 });
@@ -170,6 +183,7 @@ namespace OpenNos.GameObject
                 case 34: // this is imaginary number I = √(-1)
                     break;
 
+                // Faction Egg
                 case 570:
                     if (session.Character.Faction == (FactionType)EffectValue)
                     {
@@ -180,7 +194,7 @@ namespace OpenNos.GameObject
                         : UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("IN_FAMILY"), 0));
                     break;
 
-                // wings
+                // SP Wings
                 case 650:
                     SpecialistInstance specialistInstance = session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear);
                     if (session.Character.UseSp && specialistInstance != null)
@@ -225,7 +239,7 @@ namespace OpenNos.GameObject
                     }
                     break;
 
-                // presentation messages
+                // Self-Introduction
                 case 203:
                     if (!session.Character.IsVehicled && Option == 0)
                     {
@@ -233,7 +247,7 @@ namespace OpenNos.GameObject
                     }
                     break;
 
-                // magic lamps
+                // Magic Lamp
                 case 651:
                     if (session.Character.Inventory.All(i => i.Type != InventoryType.Wear))
                     {
@@ -253,9 +267,9 @@ namespace OpenNos.GameObject
                     }
                     break;
 
-                // vehicles
+                // Vehicles
                 case 1000:
-                    if (ServerManager.Instance.ChannelId == 51 || session.CurrentMapInstance?.MapInstanceType == MapInstanceType.EventGameInstance)
+                    if (EffectValue != 0 || ServerManager.Instance.ChannelId == 51 || session.CurrentMapInstance?.MapInstanceType == MapInstanceType.EventGameInstance)
                     {
                         return;
                     }
@@ -284,7 +298,7 @@ namespace OpenNos.GameObject
                                     session.Character.MorphUpgrade = 0;
                                     session.Character.MorphUpgrade2 = 0;
                                     session.Character.Morph = Morph + (byte)session.Character.Gender;
-                                    session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId,196), session.Character.MapX, session.Character.MapY);
+                                    session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 196), session.Character.MapX, session.Character.MapY);
                                     session.CurrentMapInstance?.Broadcast(session.Character.GenerateCMode());
                                     session.SendPacket(session.Character.GenerateCond());
                                     session.Character.LastSpeedChange = DateTime.Now;
@@ -298,6 +312,7 @@ namespace OpenNos.GameObject
                     }
                     break;
 
+                // Sealed Vessel
                 case 1002:
                     if (EffectValue == 69)
                     {
@@ -311,7 +326,6 @@ namespace OpenNos.GameObject
                             };
                             byte[] counts = { 1, 1, 1, 1, 10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
                             int item = ServerManager.Instance.RandomNumber(0, 17);
-
                             session.Character.GiftAdd(vnums[item], counts[item]);
                         }
                         else if (rnd < 30)
@@ -339,11 +353,7 @@ namespace OpenNos.GameObject
                     }
                     else if (session.HasCurrentMapInstance && session.CurrentMapInstance.Map.MapTypes.All(m => m.MapTypeId != (short)MapTypeEnum.Act4))
                     {
-                        short[] vnums =
-                        {
-                                    1386, 1387, 1388, 1389, 1390, 1391, 1392, 1393, 1394, 1395, 1396, 1397, 1398, 1399,
-                                    1400, 1401, 1402, 1403, 1404, 1405
-                                };
+                        short[] vnums = { 1386, 1387, 1388, 1389, 1390, 1391, 1392, 1393, 1394, 1395, 1396, 1397, 1398, 1399, 1400, 1401, 1402, 1403, 1404, 1405 };
                         short vnum = vnums[ServerManager.Instance.RandomNumber(0, 20)];
 
                         NpcMonster npcmonster = ServerManager.Instance.GetNpc(vnum);
@@ -369,28 +379,7 @@ namespace OpenNos.GameObject
                     }
                     break;
 
-                case 420:
-                    if (EffectValue == 0)
-                    {
-                        for (int i = 0; i < 5; i++)
-                        {
-                            session.Character.GiftAdd((short)(1894 + ServerManager.Instance.RandomNumber(0, 10)), 1);
-                        }
-                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
-                    }
-                    else
-                    {
-                        session.Character.GiftAdd((short)EffectValue, 1);
-                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
-                    }
-                    break;
-
-                case 69:
-                    session.Character.Reputation += ReputPrice;
-                    session.SendPacket(session.Character.GenerateFd());
-                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
-                    break;
-
+                // Golden Bazaar Medal
                 case 1003:
                     if (!session.Character.StaticBonusList.Any(s => s.StaticBonusType == StaticBonusType.BazaarMedalGold || s.StaticBonusType == StaticBonusType.BazaarMedalSilver))
                     {
@@ -405,6 +394,7 @@ namespace OpenNos.GameObject
                     }
                     break;
 
+                // Silver Bazaar Medal
                 case 1004:
                     if (!session.Character.StaticBonusList.Any(s => s.StaticBonusType == StaticBonusType.BazaarMedalGold || s.StaticBonusType == StaticBonusType.BazaarMedalGold))
                     {
@@ -419,21 +409,7 @@ namespace OpenNos.GameObject
                     }
                     break;
 
-                case 1005:
-                    if (session.Character.StaticBonusList.All(s => s.StaticBonusType != StaticBonusType.BackPack))
-                    {
-                        session.Character.StaticBonusList.Add(new StaticBonusDTO
-                        {
-                            CharacterId = session.Character.CharacterId,
-                            DateEnd = DateTime.Now.AddDays(EffectValue),
-                            StaticBonusType = StaticBonusType.BackPack
-                        });
-                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
-                        session.SendPacket(session.Character.GenerateExts());
-                        session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("EFFECT_ACTIVATED"), Name), 12));
-                    }
-                    break;
-
+                // Pet Slot Expansion
                 case 1006:
                     if (Option == 0)
                     {
@@ -447,6 +423,7 @@ namespace OpenNos.GameObject
                     }
                     break;
 
+                // Pet Basket
                 case 1007:
                     if (session.Character.StaticBonusList.All(s => s.StaticBonusType != StaticBonusType.PetBasket))
                     {
@@ -463,6 +440,7 @@ namespace OpenNos.GameObject
                     }
                     break;
 
+                // Partner's Backpack
                 case 1008:
                     if (session.Character.StaticBonusList.All(s => s.StaticBonusType != StaticBonusType.PetBackPack))
                     {
@@ -478,8 +456,48 @@ namespace OpenNos.GameObject
                     }
                     break;
 
+                // Backpack Expansion
+                case 1009:
+                    if (session.Character.StaticBonusList.All(s => s.StaticBonusType != StaticBonusType.BackPack))
+                    {
+                        session.Character.StaticBonusList.Add(new StaticBonusDTO
+                        {
+                            CharacterId = session.Character.CharacterId,
+                            DateEnd = DateTime.Now.AddDays(EffectValue),
+                            StaticBonusType = StaticBonusType.BackPack
+                        });
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                        session.SendPacket(session.Character.GenerateExts());
+                        session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("EFFECT_ACTIVATED"), Name), 12));
+                    }
+                    break;
+
+                // Sealed Tarot Card
+                case 1005:
+                    session.Character.GiftAdd((short)(VNum - Effect), 1);
+                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                    break;
+
+                // Tarot Card Game
+                case 1894:
+                    if (EffectValue == 0)
+                    {
+                        for (int i = 0; i < 5; i++)
+                        {
+                            session.Character.GiftAdd((short)(Effect + ServerManager.Instance.RandomNumber(0, 10)), 1);
+                        }
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                    }
+                    break;
+
+                // Sealed Tarot Card
+                case 2152:
+                    session.Character.GiftAdd((short)(VNum + Effect), 1);
+                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                    break;
+
                 default:
-                    Logger.Warn(string.Format(Language.Instance.GetMessageFromKey("NO_HANDLER_ITEM"), GetType()));
+                    Logger.Warn(string.Format(Language.Instance.GetMessageFromKey("NO_HANDLER_ITEM"), GetType()) + $" ItemVNum: {this.VNum} Effect: {Effect} EffectValue: {EffectValue}");
                     break;
             }
         }

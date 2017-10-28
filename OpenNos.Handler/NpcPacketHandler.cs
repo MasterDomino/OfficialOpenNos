@@ -544,6 +544,10 @@ namespace OpenNos.Handler
             }
             else if (recipe != null)
             {
+                // sequential
+                //pdtse 0 4955 0 0 1
+                // random
+                //pdtse 0 4955 0 0 2
                 if (recipe.Amount <= 0 || recipe.Items.Any(ite => Session.Character.Inventory.CountItem(ite.ItemVNum) < ite.Amount))
                 {
                     return;
@@ -572,7 +576,8 @@ namespace OpenNos.Handler
                     {
                         Session.Character.Inventory.RemoveItemAmount(ite.ItemVNum, ite.Amount);
                     }
-                    Session.SendPacket($"pdti 11 {inv.ItemVNum} {recipe.Amount} 29 {inv.Upgrade} 0");
+                    // pdti {WindowType} {inv.ItemVNum} {recipe.Amount} {Unknown} {inv.Upgrade} {inv.Rare}
+                    Session.SendPacket($"pdti 11 {inv.ItemVNum} {recipe.Amount} 29 {inv.Upgrade} {inv.Rare}");
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateGuri(19, 1, Session.Character.CharacterId, 1324));
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("CRAFTED_OBJECT"), inv.Item.Name, recipe.Amount), 0));
                 }
