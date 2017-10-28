@@ -2599,7 +2599,7 @@ namespace OpenNos.Import.Console
                                 item.Type = (InventoryType)Enum.Parse(typeof(InventoryType), currentLine[2]);
                                 break;
                         }
-                        item.ItemType = currentLine[3] != "-1" ? (ItemType)Enum.Parse(typeof(ItemType), $"{currentLine[2]}{currentLine[3]}") : ItemType.Weapon;
+                        item.ItemType = currentLine[3] != "-1" ? (ItemType)Enum.Parse(typeof(ItemType), $"{(byte)item.Type}{currentLine[3]}") : ItemType.Weapon;
                         item.ItemSubType = byte.Parse(currentLine[4]);
                         item.EquipmentSlot = (EquipmentType)Enum.Parse(typeof(EquipmentType), currentLine[5] != "-1" && item.Type == InventoryType.Equipment ? currentLine[5] : "0");
 
@@ -3677,7 +3677,6 @@ namespace OpenNos.Import.Console
 
         private void insertRecipe(short itemVNum, short triggerVNum, byte amount = 1, short[] recipeItems = null)
         {
-
             void recipeAdd(RecipeDTO recipeDTO)
             {
                 RecipeListDTO recipeList = DAOFactory.RecipeListDAO.LoadByRecipeId(recipeDTO.RecipeId).Where(r => r.ItemVNum != triggerVNum).FirstOrDefault(r => r.ItemVNum == null);
