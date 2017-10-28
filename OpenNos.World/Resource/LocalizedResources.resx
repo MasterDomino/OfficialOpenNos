@@ -163,13 +163,13 @@
     <value>Greetings^from^OpenNos^Team!</value>
   </data>
   <data name="BN4" xml:space="preserve">
-    <value>Do^you^want^to^contribute?^https://github.com/OpenNos/OpenNos</value>
+    <value>Do^you^want^to^contribute?^git.opennos.io/OpenNos/OpenNos-BugRepor</value>
   </data>
   <data name="BN5" xml:space="preserve">
-    <value>OpenNos^developed^by:^0Lucifer0,^chucktheripper,^Ciapa1,^MasterDomino,^genyx,^Martazza,^KrisYiu,^Uppermost</value>
+    <value>OpenNos^developed^by:^OpenNos^Team</value>
   </data>
   <data name="BN6" xml:space="preserve">
-    <value>Check^out:^https://github.com/OpenNos/OpenNos^for^latest^updates.</value>
+    <value>Check^out:^OpenNos.io^for^latest^updates.</value>
   </data>
   <data name="BUFF_BLOCKED" xml:space="preserve">
     <value>Buff icons disabled</value>
@@ -812,10 +812,10 @@
     <value>You joined {0}'s group!</value>
   </data>
   <data name="BN7" xml:space="preserve">
-    <value>We^don't^support^private^servers!</value>
+    <value>Active^Maintainers:^ChuckTheRipper,^Ciapa,^MasterDomino,^Martazza,^Earthquake</value>
   </data>
   <data name="BN8" xml:space="preserve">
-    <value>That's^a^cool^message!</value>
+    <value>Make^sure^you've^read^the^Readme.md</value>
   </data>
   <data name="BN9" xml:space="preserve">
     <value>Thanks^for^all^of^your^contributions!</value>
@@ -980,16 +980,16 @@
     <value>Packet with Header {0} is corrupt or PacketDefinition is invalid. Content: {1}</value>
   </data>
   <data name="BOT_MESSAGE_0" xml:space="preserve">
-    <value>Don't share you password with anyone!</value>
+    <value>Don't share you Password or Id with anyone!</value>
   </data>
   <data name="BOT_MESSAGE_1" xml:space="preserve">
-    <value>Report bugs to our github page!</value>
+    <value>Report bugs to our gitlab issue tracker git.opennos.io/OpenNos/OpenNos-BugReport!</value>
   </data>
   <data name="BOT_MESSAGE_2" xml:space="preserve">
-    <value>That's a cool message!</value>
+    <value>OpenNos developed by: OpenNos Team</value>
   </data>
   <data name="BOT_MESSAGE_3" xml:space="preserve">
-    <value>Thanks for all of your contributions!</value>
+    <value>Active Maintainers: ChuckTheRipper, Ciapa, MasterDomino, Martazza, Earthquake</value>
   </data>
   <data name="INTRODUCTION_SET" xml:space="preserve">
     <value>Your description has been updated!</value>
@@ -1121,7 +1121,7 @@
     <value>Never open any suspicious links!</value>
   </data>
   <data name="BOT_MESSAGE_5" xml:space="preserve">
-    <value>Never give anyone your password or username!</value>
+    <value>Greetings from OpenNos Team!</value>
   </data>
   <data name="DEMON" xml:space="preserve">
     <value>Demon</value>
