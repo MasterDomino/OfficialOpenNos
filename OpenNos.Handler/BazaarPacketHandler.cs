@@ -129,41 +129,48 @@ namespace OpenNos.Handler
             BazaarItemDTO bz = DAOFactory.BazaarItemDAO.LoadAll().FirstOrDefault(s => s.BazaarItemId == cScalcPacket.BazaarId);
             if (bz != null)
             {
-                ItemInstance Item = (ItemInstance)DAOFactory.IteminstanceDAO.LoadById(bz.ItemInstanceId);
-                if (Item == null || bz.SellerId != Session.Character.CharacterId)
+                ItemInstance itemInstance = (ItemInstance)DAOFactory.IteminstanceDAO.LoadById(bz.ItemInstanceId);
+                if (itemInstance == null || bz.SellerId != Session.Character.CharacterId)
                 {
                     return;
                 }
 
-                int soldedamount = bz.Amount - Item.Amount;
+                int soldedamount = bz.Amount - itemInstance.Amount;
                 long taxes = bz.MedalUsed ? 0 : (long)(bz.Price * 0.10 * soldedamount);
                 long price = (bz.Price * soldedamount) - taxes;
-                if (Session.Character.Inventory.CanAddItem(Item.ItemVNum))
+                if (Session.Character.Inventory.CanAddItem(itemInstance.ItemVNum))
                 {
                     if (Session.Character.Gold + price <= ServerManager.Instance.MaxGold)
                     {
+                        itemInstance = Session.Character.Inventory.RemoveFromBazaarInventory(bz.ItemInstanceId);
+                        if (itemInstance == null)
+                        {
+                            return;
+                        }
+
                         Session.Character.Gold += price;
                         Session.SendPacket(Session.Character.GenerateGold());
                         Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("REMOVE_FROM_BAZAAR"), price), 10));
-                        Guid? newId = null;
-                        if (Item.Amount != 0)
-                        {
-                            ItemInstance newBz = Item.DeepCopy();
-                            newBz.Id = Guid.NewGuid();
-                            newBz.Type = newBz.Item.Type;
-                            newId = newBz.Id;
-                            List<ItemInstance> newInv = Session.Character.Inventory.AddToInventory(newBz);
-                        }
-                        Session.SendPacket($"rc_scalc 1 {bz.Price} {bz.Amount - Item.Amount} {bz.Amount} {taxes} {price + taxes}");
 
-                        Logger.LogUserEvent("BAZAAR_REMOVE", Session.GenerateIdentity(), $"BazaarId: {cScalcPacket.BazaarId}, OldIIId: {bz.ItemInstanceId} NewIIId: {newId} VNum: {Item.ItemVNum} Amount: {bz.Amount} RemainingAmount: {Item.Amount} Price: {bz.Price}");
+                        //Guid? newId = null;
+                        //if (Item.Amount != 0)
+                        //{
+                        //    ItemInstance newBz = Item.DeepCopy();
+                        //    newBz.Id = Guid.NewGuid();
+                        //    newBz.Type = newBz.Item.Type;
+                        //    newId = newBz.Id;
+                        //    List<ItemInstance> newInv = Session.Character.Inventory.AddToInventory(newBz);
+                        //}
+                        Session.SendPacket($"rc_scalc 1 {bz.Price} {bz.Amount - itemInstance.Amount} {bz.Amount} {taxes} {price + taxes}");
+
+                        Logger.LogUserEvent("BAZAAR_REMOVE", Session.GenerateIdentity(), $"BazaarId: {cScalcPacket.BazaarId}, IId: {itemInstance.Id} VNum: {itemInstance.ItemVNum} Amount: {bz.Amount} RemainingAmount: {itemInstance.Amount} Price: {bz.Price}");
 
                         if (DAOFactory.BazaarItemDAO.LoadById(bz.BazaarItemId) != null)
                         {
                             DAOFactory.BazaarItemDAO.Delete(bz.BazaarItemId);
                         }
 
-                        DAOFactory.IteminstanceDAO.Delete(Item.Id);
+                        DAOFactory.IteminstanceDAO.Delete(itemInstance.Id);
 
                         ServerManager.Instance.BazaarRefresh(bz.BazaarItemId);
                     }

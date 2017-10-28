@@ -91,6 +91,20 @@ namespace OpenNos.GameObject
 
         public int BackpackSize() => DEFAULT_BACKPACK_SIZE + ((Owner.HaveBackpack() ? 1 : 0) * 12);
 
+        public ItemInstance RemoveFromBazaarInventory(Guid itemInstanceId)
+        {
+            ItemInstance itemInstance = LoadByItemInstance<ItemInstance>(itemInstanceId);
+            short? nextFreeSlot = getFreeSlot(itemInstance.Item.Type);
+            if (itemInstance != null && nextFreeSlot.HasValue)
+            {
+                itemInstance.Slot = nextFreeSlot.Value;
+                itemInstance.Type = itemInstance.Item.Type;
+                Owner.Session?.SendPacket(itemInstance.GenerateInventoryAdd());
+                return itemInstance;
+            }
+            return null;
+        }
+
         public ItemInstance AddIntoBazaarInventory(InventoryType inventory, byte slot, byte amount)
         {
             ItemInstance inv = LoadBySlotAndType(slot, inventory);
@@ -99,24 +113,20 @@ namespace OpenNos.GameObject
                 return null;
             }
 
-            ItemInstance invcopy = inv.DeepCopy();
-            invcopy.Id = Guid.NewGuid();
             if (inv.Item.Type == InventoryType.Equipment)
             {
                 for (short i = 0; i < 255; i++)
                 {
                     if (LoadBySlotAndType<ItemInstance>(i, InventoryType.Bazaar) == null)
                     {
-                        invcopy.Type = InventoryType.Bazaar;
-                        invcopy.Slot = i;
-                        invcopy.CharacterId = Owner.CharacterId;
-                        DeleteFromSlotAndType(inv.Slot, inv.Type);
-                        putItem(invcopy);
+                        inv.Type = InventoryType.Bazaar;
+                        inv.Slot = i;
+                        inv.CharacterId = Owner.CharacterId;
                         break;
                     }
                 }
                 Owner.Session.SendPacket(UserInterfaceHelper.Instance.GenerateInventoryRemove(inventory, slot));
-                return invcopy;
+                return inv;
             }
             if (amount >= inv.Amount)
             {
@@ -124,35 +134,32 @@ namespace OpenNos.GameObject
                 {
                     if (LoadBySlotAndType<ItemInstance>(i, InventoryType.Bazaar) == null)
                     {
-                        invcopy.Type = InventoryType.Bazaar;
-                        invcopy.Slot = i;
-                        invcopy.CharacterId = Owner.CharacterId;
-                        DeleteFromSlotAndType(inv.Slot, inv.Type);
-                        putItem(invcopy);
+                        inv.Type = InventoryType.Bazaar;
+                        inv.Slot = i;
+                        inv.CharacterId = Owner.CharacterId;
                         break;
                     }
                 }
                 Owner.Session.SendPacket(UserInterfaceHelper.Instance.GenerateInventoryRemove(inventory, slot));
-                return invcopy;
+                return inv;
             }
 
-            invcopy.Amount = amount;
+            inv.Amount = amount;
             inv.Amount -= amount;
 
             for (short i = 0; i < 255; i++)
             {
                 if (LoadBySlotAndType<ItemInstance>(i, InventoryType.Bazaar) == null)
                 {
-                    invcopy.Type = InventoryType.Bazaar;
-                    invcopy.Slot = i;
-                    invcopy.CharacterId = Owner.CharacterId;
-                    putItem(invcopy);
+                    inv.Type = InventoryType.Bazaar;
+                    inv.Slot = i;
+                    inv.CharacterId = Owner.CharacterId;
                     break;
                 }
             }
 
-            Owner.Session.SendPacket(inv.GenerateInventoryAdd());
-            return invcopy;
+            Owner.Session?.SendPacket(inv.GenerateInventoryAdd());
+            return inv;
         }
 
         public List<ItemInstance> AddNewToInventory(short vnum, byte amount = 1, InventoryType? type = null, sbyte Rare = 0, byte Upgrade = 0, byte Design = 0)
@@ -753,7 +760,8 @@ namespace OpenNos.GameObject
             IEnumerable<int> itemInstanceSlotsByType = Where(i => i.Type == type).OrderBy(i => i.Slot).Select(i => (int)i.Slot);
             IEnumerable<int> instanceSlotsByType = itemInstanceSlotsByType as int[] ?? itemInstanceSlotsByType.ToArray();
             int backpackSize = BackpackSize();
-            int nextFreeSlot = instanceSlotsByType.Any() ? Enumerable.Range(0, (type != InventoryType.Miniland ? backpackSize : 50) + 1).Except(instanceSlotsByType).FirstOrDefault() : 0;
+            int maxRange = (type != InventoryType.Miniland ? backpackSize : 50) + 1;
+            int? nextFreeSlot = instanceSlotsByType.Any() ? Enumerable.Range(0, maxRange).Except(instanceSlotsByType).Cast<int?>().FirstOrDefault() : 0;
             return (short?)nextFreeSlot < (type != InventoryType.Miniland ? backpackSize : 50) ? (short?)nextFreeSlot : null;
         }
 
