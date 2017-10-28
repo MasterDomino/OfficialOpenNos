@@ -666,7 +666,9 @@ namespace OpenNos.Domain
             ScrollPower = 41,
             ScrollPowerNegated = 42,
             IncreaseEarnedGold = 51,
-            IncreaseEarnedGoldNegated = 52
+            IncreaseEarnedGoldNegated = 52,
+            IncreaseSPXP = 61,
+            IncreaseSPXPNegated = 62
         }
 
         public enum DebuffResistance : byte
