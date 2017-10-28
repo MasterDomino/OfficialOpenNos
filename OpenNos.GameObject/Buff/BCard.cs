@@ -282,7 +282,7 @@ namespace OpenNos.GameObject
                                             int[] chance = { 100, 80, 60, 40, 20, 0 };
                                             if (ServerManager.Instance.RandomNumber() < chance[ServerManager.Instance.RandomNumber(0, 5)])
                                             {
-                                                Mate mate = new Mate(senderSession.Character, mateNpc, (byte)(mapMonster.Monster.Level - 5 >= 1 ? mapMonster.Monster.Level - 5 : mapMonster.Monster.Level), MateType.Pet);
+                                                Mate mate = new Mate(senderSession.Character, mateNpc, (byte)(mapMonster.Monster.Level - 15 > 0 ? mapMonster.Monster.Level - 15 : mapMonster.Monster.Level), MateType.Pet);
                                                 if (senderSession.Character.CanAddMate(mate))
                                                 {
                                                     senderSession.Character.AddPetWithSkill(mate);
