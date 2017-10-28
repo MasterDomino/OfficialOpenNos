@@ -175,6 +175,18 @@ namespace OpenNos.GameObject
                     }
                     break;
 
+                case 2081:
+                    if (!session.Character.Buff.ContainsKey(146))
+                    {
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                        session.Character.AddStaticBuff(new StaticBuffDTO() { CardId = 146 });
+                    }
+                    else
+                    {
+                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("ITEM_IN_USE"), 0));
+                    }
+                    break;
+
                 // Divorce letter
                 case 6969: // this is imaginary number I = √(-1)
                     break;
