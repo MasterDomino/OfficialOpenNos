@@ -1,9 +1,14 @@
-﻿using System;
+﻿using System.Xml.Serialization;
+using OpenNos.XMLModel.Objects;
+using System;
 
-namespace OpenNos.XMLModel
+namespace OpenNos.XMLModel.Models.ScriptedInstance
 {
-    [Serializable]
+    [XmlRoot("Definition"), Serializable]
     public class ScriptedInstanceModel
     {
+        public Globals Globals { get; set; }
+
+        public InstanceEvent InstanceEvent { get; set; }
     }
 }

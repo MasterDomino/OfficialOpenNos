@@ -40,14 +40,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\QuestModel.cs" />
-    <Compile Include="Models\RaidModel.cs" />
+    <Compile Include="Events\End.cs" />
+    <Compile Include="Events\OnDeath.cs" />
+    <Compile Include="Events\SummonMonster.cs" />
+    <Compile Include="Events\ThrowItem.cs" />
+    <Compile Include="Models\Quest\Globals.cs" />
+    <Compile Include="Models\Quest\QuestModel.cs" />
+    <Compile Include="Models\Raid\Globals.cs" />
+    <Compile Include="Models\Raid\RaidModel.cs" />
+    <Compile Include="Models\ScriptedInstance\Globals.cs" />
     <Compile Include="Models\ScriptedInstance\ScriptedInstanceModel.cs" />
+    <Compile Include="Objects\CreateMap.cs" />
+    <Compile Include="Objects\Gold.cs" />
+    <Compile Include="Objects\InstanceEvent.cs" />
+    <Compile Include="Objects\Item.cs" />
+    <Compile Include="Objects\Label.cs" />
+    <Compile Include="Objects\Level.cs" />
+    <Compile Include="Objects\Lives.cs" />
+    <Compile Include="Objects\Reputation.cs" />
+    <Compile Include="Objects\StartPosition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\ScriptedInstance\Events\" />
-    <Folder Include="Models\ScriptedInstance\Objects\SubObjects\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
