@@ -60,6 +60,7 @@ namespace OpenNos.GameObject
             MinilandObjects = new List<MinilandObject>();
             Mates = new List<Mate>();
             LastMonsterAggro = DateTime.Now;
+            LastPulse = DateTime.Now;
             MTListTargetQueue = new ConcurrentStack<MTListHitTarget>();
             EquipmentBCards = new ThreadSafeGenericList<BCard>();
             MeditationDictionary = new Dictionary<short, DateTime>();
