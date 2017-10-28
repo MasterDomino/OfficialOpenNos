@@ -3319,19 +3319,19 @@ namespace OpenNos.Import.Console
                                     case 1272:
                                     case 1858:
                                     case 9047:
-                                        item.Effect = 1005;
+                                        item.Effect = 1009;
                                         item.EffectValue = 10;
                                         break;
 
                                     case 1273:
                                     case 9024:
-                                        item.Effect = 1005;
+                                        item.Effect = 1009;
                                         item.EffectValue = 30;
                                         break;
 
                                     case 1274:
                                     case 9025:
-                                        item.Effect = 1005;
+                                        item.Effect = 1009;
                                         item.EffectValue = 60;
                                         break;
 
@@ -3408,11 +3408,6 @@ namespace OpenNos.Import.Console
 
                                     case 1904:
                                         item.Effect = 1894;
-                                        break;
-
-                                    case 1972:
-                                    case 1973:
-                                        item.Effect = 1005;
                                         break;
 
                                     case 1429:
