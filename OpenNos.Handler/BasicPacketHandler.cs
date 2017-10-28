@@ -254,7 +254,7 @@ namespace OpenNos.Handler
                             {
                                 if (otherSession.Character.FriendRequestBlocked)
                                 {
-                                    otherSession.SendPacket($"info {Language.Instance.GetMessageFromKey("FRIEND_REJECTED")}");
+                                    Session.SendPacket($"info {Language.Instance.GetMessageFromKey("FRIEND_REJECTED")}");
                                     return;
                                 }
 
