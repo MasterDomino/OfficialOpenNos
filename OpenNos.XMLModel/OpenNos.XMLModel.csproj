@@ -52,6 +52,7 @@
     <Compile Include="Models\ScriptedInstance\ScriptedInstanceModel.cs" />
     <Compile Include="Objects\CreateMap.cs" />
     <Compile Include="Objects\Gold.cs" />
+    <Compile Include="Objects\Id.cs" />
     <Compile Include="Objects\InstanceEvent.cs" />
     <Compile Include="Objects\Item.cs" />
     <Compile Include="Objects\Label.cs" />
