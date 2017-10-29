@@ -29,6 +29,9 @@ namespace OpenNos.XMLModel.Events
         [XmlAttribute]
         public int PositionY { get; set; }
 
+        [XmlElement]
+        public Roam Roam { get; set; }
+
         [XmlAttribute]
         public int VNum { get; set; }
 
