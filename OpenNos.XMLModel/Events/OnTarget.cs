@@ -14,6 +14,9 @@ namespace OpenNos.XMLModel.Events
         [XmlElement]
         public Move Move { get; set; }
 
+        [XmlElement]
+        public ControlMonsterInRange ControlMonsterInRange { get; set; }
+
         #endregion
     }
 }

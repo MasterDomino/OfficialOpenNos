@@ -43,7 +43,7 @@ namespace OpenNos.XMLModel.Objects
         public SpawnButton[] SpawnButton { get; set; }
 
         [XmlElement]
-        public SpawnPortal SpawnPortal { get; set; }
+        public SpawnPortal[] SpawnPortal { get; set; }
 
         [XmlElement]
         public object StartClock { get; set; }
