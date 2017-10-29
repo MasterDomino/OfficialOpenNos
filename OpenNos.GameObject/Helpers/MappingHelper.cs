@@ -21,6 +21,7 @@ namespace OpenNos.GameObject
         #region Instantiation
 
         static MappingHelper() =>
+
             // intialize hardcode in waiting for better solution
             GuriItemEffects = new Dictionary<int, int>
             {
@@ -33,9 +34,11 @@ namespace OpenNos.GameObject
                 [878] = 1560,
                 [879] = 1561,
                 [880] = 1561
-            };// effect items aka. fireworks
+            };
 
         #endregion
+
+        // effect items aka. fireworks
 
         #region Properties
 

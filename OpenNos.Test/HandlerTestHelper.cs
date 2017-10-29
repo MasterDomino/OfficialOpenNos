@@ -119,7 +119,7 @@ namespace OpenNos.Test
                 // exit token
                 if (startTime.AddSeconds(10) < DateTime.Now)
                 {
-                    Assert.Fail($"Timed out while waiting for a Packet.");
+                    Assert.Fail("Timed out while waiting for a Packet.");
                     return string.Empty;
                 }
             }

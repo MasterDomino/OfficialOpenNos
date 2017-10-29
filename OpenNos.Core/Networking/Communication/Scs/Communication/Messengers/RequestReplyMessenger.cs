@@ -379,6 +379,10 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
             /// </summary>
             public ManualResetEventSlim WaitEvent { get; }
 
+            #endregion
+
+            #region Methods
+
             public void Dispose() => throw new NotImplementedException();
 
             #endregion

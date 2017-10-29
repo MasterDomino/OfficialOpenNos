@@ -86,6 +86,26 @@ namespace OpenNos.Master.Server
             return account.ConnectedWorld != null;
         }
 
+        public bool ConnectAccountCrossServer(Guid worldId, long accountId, int sessionId)
+        {
+            if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
+            {
+                return false;
+            }
+            AccountConnection account = MSManager.Instance.ConnectedAccounts.Where(a => a.AccountId.Equals(accountId) && a.SessionId.Equals(sessionId)).FirstOrDefault();
+            if (account != null)
+            {
+                account.CanLoginCrossServer = false;
+                account.OriginWorld = account.ConnectedWorld;
+                account.ConnectedWorld = MSManager.Instance.WorldServers.Find(s => s.Id.Equals(worldId));
+                if (account.ConnectedWorld != null)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public bool ConnectCharacter(Guid worldId, long characterId)
         {
             if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
@@ -115,7 +135,7 @@ namespace OpenNos.Master.Server
             {
                 return;
             }
-            if (MSManager.Instance.ConnectedAccounts.Any(s => s.AccountId.Equals(accountId) && s.CanLoginCrossServer == true))
+            if (MSManager.Instance.ConnectedAccounts.Any(s => s.AccountId.Equals(accountId) && s.CanLoginCrossServer))
             {
             }
             else
@@ -165,6 +185,16 @@ namespace OpenNos.Master.Server
             }
 
             return MSManager.Instance.ConnectedAccounts.Any(c => c.ConnectedWorld != null && c.ConnectedWorld.WorldGroup == worldGroup && c.CharacterId == characterId);
+        }
+
+        public bool IsCrossServerLoginPermitted(long accountId, int sessionId)
+        {
+            if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
+            {
+                return false;
+            }
+
+            return MSManager.Instance.ConnectedAccounts.Any(s => s.AccountId.Equals(accountId) && s.SessionId.Equals(sessionId) && s.CanLoginCrossServer);
         }
 
         public bool IsLoginPermitted(long accountId, int sessionId)
@@ -238,6 +268,20 @@ namespace OpenNos.Master.Server
             MSManager.Instance.ConnectedAccounts.Add(new AccountConnection(accountId, sessionId, ipAddress));
         }
 
+        public void RegisterCrossServerAccountLogin(long accountId, int sessionId)
+        {
+            if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
+            {
+                return;
+            }
+            AccountConnection account = MSManager.Instance.ConnectedAccounts.Where(a => a.AccountId.Equals(accountId) && a.SessionId.Equals(sessionId)).FirstOrDefault();
+
+            if (account != null)
+            {
+                account.CanLoginCrossServer = true;
+            }
+        }
+
         public int? RegisterWorldServer(SerializableWorldServer worldServer)
         {
             if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
@@ -272,6 +316,21 @@ namespace OpenNos.Master.Server
                 i++;
             }
             return result;
+        }
+
+        public string RetrieveOriginWorld(long accountId)
+        {
+            if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
+            {
+                return null;
+            }
+
+            AccountConnection account = MSManager.Instance.ConnectedAccounts.FirstOrDefault(s => s.AccountId.Equals(accountId));
+            if (account?.OriginWorld != null)
+            {
+                return $"{account.OriginWorld.Endpoint.IpAddress}:{account.OriginWorld.Endpoint.TcpPort}";
+            }
+            return null;
         }
 
         public string RetrieveRegisteredWorldServers(string username, int sessionId, bool ignoreUserName)
@@ -475,64 +534,6 @@ namespace OpenNos.Master.Server
             {
                 world.ServiceClient.GetClientProxy<ICommunicationClient>().UpdateRelation(relationId);
             }
-        }
-        public bool ConnectAccountCrossServer(Guid worldId, long accountId, int sessionId)
-        {
-            if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
-            {
-                return false;
-            }
-            AccountConnection account = MSManager.Instance.ConnectedAccounts.Where(a => a.AccountId.Equals(accountId) && a.SessionId.Equals(sessionId)).FirstOrDefault();
-            if (account != null)
-            {
-                account.CanLoginCrossServer = false;
-                account.OriginWorld = account.ConnectedWorld;
-                account.ConnectedWorld = MSManager.Instance.WorldServers.Where(s => s.Id.Equals(worldId)).FirstOrDefault();
-                if (account.ConnectedWorld != null)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public void RegisterCrossServerAccountLogin(long accountId, int sessionId)
-        {
-            if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
-            {
-                return;
-            }
-            AccountConnection account = MSManager.Instance.ConnectedAccounts.Where(a => a.AccountId.Equals(accountId) && a.SessionId.Equals(sessionId)).FirstOrDefault();
-
-            if (account != null)
-            {
-                account.CanLoginCrossServer = true;
-            }
-        }
-
-        public bool IsCrossServerLoginPermitted(long accountId, int sessionId)
-        {
-            if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
-            {
-                return false;
-            }
-
-            return MSManager.Instance.ConnectedAccounts.Any(s => s.AccountId.Equals(accountId) && s.SessionId.Equals(sessionId) && s.CanLoginCrossServer == true);
-        }
-
-        public string RetrieveOriginWorld(long accountId)
-        {
-            if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
-            {
-                return null;
-            }
-
-            AccountConnection account = MSManager.Instance.ConnectedAccounts.Where(s => s.AccountId.Equals(accountId)).FirstOrDefault();
-            if (account != null && account.OriginWorld != null)
-            {
-                return $"{account.OriginWorld.Endpoint.IpAddress}:{account.OriginWorld.Endpoint.TcpPort}";
-            }
-            return null;
         }
 
         #endregion

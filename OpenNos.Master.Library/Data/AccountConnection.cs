@@ -18,8 +18,6 @@ namespace OpenNos.Master.Library.Data
 {
     public class AccountConnection
     {
-        #region Instantiation
-
         public AccountConnection(long accountId, int sessionId, string ipAddress)
         {
             AccountId = accountId;
@@ -27,10 +25,6 @@ namespace OpenNos.Master.Library.Data
             IpAddress = ipAddress;
             LastPulse = DateTime.Now;
         }
-
-        #endregion
-
-        #region Properties
 
         public long AccountId { get; }
 
@@ -47,7 +41,5 @@ namespace OpenNos.Master.Library.Data
         public WorldServer OriginWorld { get; set; }
 
         public int SessionId { get; }
-
-        #endregion
     }
 }

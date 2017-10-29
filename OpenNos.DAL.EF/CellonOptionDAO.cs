@@ -28,14 +28,6 @@ namespace OpenNos.DAL.EF
     {
         #region Methods
 
-        public IEnumerable<CellonOptionDTO> GetOptionsByWearableInstanceId(Guid wearableInstanceId)
-        {
-            using (OpenNosContext context = DataAccessHelper.CreateContext())
-            {
-                return context.CellonOption.Where(c => c.EquipmentSerialId == wearableInstanceId).ToList().Select(c => _mapper.Map<CellonOptionDTO>(c)).ToList();
-            }
-        }
-
         public DeleteResult DeleteByEquipmentSerialId(Guid id)
         {
             try
@@ -56,6 +48,14 @@ namespace OpenNos.DAL.EF
             {
                 Logger.Error(string.Format(Language.Instance.GetMessageFromKey("DELETE_ERROR"), id, e.Message), e);
                 return DeleteResult.Error;
+            }
+        }
+
+        public IEnumerable<CellonOptionDTO> GetOptionsByWearableInstanceId(Guid wearableInstanceId)
+        {
+            using (OpenNosContext context = DataAccessHelper.CreateContext())
+            {
+                return context.CellonOption.Where(c => c.EquipmentSerialId == wearableInstanceId).ToList().Select(c => _mapper.Map<CellonOptionDTO>(c)).ToList();
             }
         }
 

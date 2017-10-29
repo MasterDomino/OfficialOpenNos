@@ -42,6 +42,7 @@ namespace OpenNos.GameObject
 
         public bool ShutdownStop;
 
+        private static readonly ConcurrentBag<Card> _cards = new ConcurrentBag<Card>();
         private static readonly ConcurrentBag<Item> _items = new ConcurrentBag<Item>();
 
         private static readonly ConcurrentDictionary<Guid, MapInstance> _mapinstances = new ConcurrentDictionary<Guid, MapInstance>();
@@ -50,18 +51,13 @@ namespace OpenNos.GameObject
 
         private static readonly ConcurrentBag<NpcMonster> _npcs = new ConcurrentBag<NpcMonster>();
 
-        private static readonly ConcurrentBag<Skill> _skills = new ConcurrentBag<Skill>();
-
         private static readonly CryptoRandom _random = new CryptoRandom();
-
-        private static readonly ConcurrentBag<Card> _cards = new ConcurrentBag<Card>();
-
-        private static ServerManager _instance;
-
         private static readonly int _seed = Environment.TickCount;
-
+        private static readonly ConcurrentBag<Skill> _skills = new ConcurrentBag<Skill>();
+        private static ServerManager _instance;
         private List<DropDTO> _generalDrops;
 
+        private bool _inRelationRefreshMode;
         private long _lastGroupId;
 
         private ThreadSafeSortedList<short, List<MapNpc>> _mapNpcs;
@@ -70,10 +66,8 @@ namespace OpenNos.GameObject
 
         private ThreadSafeSortedList<short, List<NpcMonsterSkill>> _monsterSkills;
 
-        private ThreadSafeSortedList<short, Recipe> _recipes;
-
         private ThreadSafeSortedList<int, RecipeListDTO> _recipeLists;
-
+        private ThreadSafeSortedList<short, Recipe> _recipes;
         private ThreadSafeSortedList<int, List<ShopItemDTO>> _shopItems;
 
         private ThreadSafeSortedList<int, Shop> _shops;
@@ -81,8 +75,6 @@ namespace OpenNos.GameObject
         private ThreadSafeSortedList<int, List<ShopSkillDTO>> _shopSkills;
 
         private ThreadSafeSortedList<int, List<TeleporterDTO>> _teleporters;
-
-        private bool _inRelationRefreshMode;
 
         #endregion
 
@@ -97,13 +89,13 @@ namespace OpenNos.GameObject
 
         #region Properties
 
-        public DateTime Act4RaidStart { get; set; }
+        public static ServerManager Instance => _instance ?? (_instance = new ServerManager());
 
         public Act4Stat Act4AngelStat { get; set; }
 
         public Act4Stat Act4DemonStat { get; set; }
 
-        public static ServerManager Instance => _instance ?? (_instance = new ServerManager());
+        public DateTime Act4RaidStart { get; set; }
 
         public MapInstance ArenaInstance { get; private set; }
 
@@ -205,27 +197,6 @@ namespace OpenNos.GameObject
                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#revival^2 #revival^1 {Language.Instance.GetMessageFromKey("ASK_REVIVE_PVP")}"));
                 reviveTask(Session);
             }
-        }
-
-        private void reviveTask(ClientSession Session)
-        {
-            Task.Factory.StartNew(async () =>
-            {
-                bool revive = true;
-                for (int i = 1; i <= 30; i++)
-                {
-                    await Task.Delay(1000).ConfigureAwait(false);
-                    if (Session.Character.Hp > 0)
-                    {
-                        revive = false;
-                        break;
-                    }
-                }
-                if (revive)
-                {
-                    Instance.ReviveFirstPosition(Session.Character.CharacterId);
-                }
-            });
         }
 
         // PacketHandler -> with Callback?
@@ -449,18 +420,12 @@ namespace OpenNos.GameObject
                         {
                             session.SendPacket(visibleSession.Character.GenerateIn());
                             session.SendPacket(visibleSession.Character.GenerateGidx());
-                            visibleSession.Character.Mates.Where(m => m.IsTeamMember && m.CharacterId != session.Character.CharacterId).ToList().ForEach(m =>
-                            {
-                                session.SendPacket(m.GenerateIn());
-                            });
+                            visibleSession.Character.Mates.Where(m => m.IsTeamMember && m.CharacterId != session.Character.CharacterId).ToList().ForEach(m => session.SendPacket(m.GenerateIn()));
                         }
                         else
                         {
                             session.SendPacket(visibleSession.Character.GenerateIn(true));
-                            visibleSession.Character.Mates.Where(m => m.IsTeamMember && m.CharacterId != session.Character.CharacterId).ToList().ForEach(m =>
-                            {
-                                session.SendPacket(m.GenerateIn(true));
-                            });
+                            visibleSession.Character.Mates.Where(m => m.IsTeamMember && m.CharacterId != session.Character.CharacterId).ToList().ForEach(m => session.SendPacket(m.GenerateIn(true)));
                         }
                     });
 
@@ -494,18 +459,12 @@ namespace OpenNos.GameObject
                             {
                                 s.SendPacket(session.Character.GenerateIn());
                                 s.SendPacket(session.Character.GenerateGidx());
-                                session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
-                                {
-                                    s.SendPacket(m.GenerateIn());
-                                });
+                                session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m => s.SendPacket(m.GenerateIn()));
                             }
                             else
                             {
                                 s.SendPacket(session.Character.GenerateIn(true));
-                                session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
-                                {
-                                    s.SendPacket(m.GenerateIn(true));
-                                });
+                                session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m => s.SendPacket(m.GenerateIn(true)));
                             }
                         });
                     }
@@ -591,13 +550,17 @@ namespace OpenNos.GameObject
             return null;
         }
 
-        public IEnumerable<Skill> GetAllSkill() => _skills;
-
         public IEnumerable<Card> GetAllCard() => _cards;
 
         public List<MapInstance> GetAllMapInstances() => _mapinstances.Values.ToList();
 
+        public List<Recipe> GetAllRecipes() => _recipes.GetAllItems();
+
+        public IEnumerable<Skill> GetAllSkill() => _skills;
+
         public Guid GetBaseMapInstanceIdByMapId(short MapId) => _mapinstances.FirstOrDefault(s => s.Value?.Map.MapId == MapId && s.Value.MapInstanceType == MapInstanceType.BaseMapInstance).Key;
+
+        public Card GetCard(short cardId) => _cards.FirstOrDefault(m => m.CardId.Equals(cardId));
 
         public List<DropDTO> GetDropsByMonsterVNum(short monsterVNum) => _monsterDrops.ContainsKey(monsterVNum) ? _generalDrops.Concat(_monsterDrops[monsterVNum]).ToList() : new List<DropDTO>();
 
@@ -633,16 +596,6 @@ namespace OpenNos.GameObject
             return (T)session.Character.GetType().GetProperties().Single(pi => pi.Name == property).GetValue(session.Character, null);
         }
 
-        public List<Recipe> GetRecipesByMapNpcId(int mapNpcId)
-        {
-            List<Recipe> recipes = new List<Recipe>();
-            foreach (RecipeListDTO recipeList in _recipeLists.Where(r => r.MapNpcId == mapNpcId))
-            {
-                recipes.Add(_recipes[recipeList.RecipeId]);
-            }
-            return recipes;
-        }
-
         public List<Recipe> GetRecipesByItemVNum(short itemVNum)
         {
             List<Recipe> recipes = new List<Recipe>();
@@ -653,19 +606,21 @@ namespace OpenNos.GameObject
             return recipes;
         }
 
-        public bool ItemHasRecipe(short itemVNum) => _recipeLists.Any(r => r.ItemVNum == itemVNum);
-
-        public bool MapNpcHasRecipe(int mapNpcId) => _recipeLists.Any(r => r.MapNpcId == mapNpcId);
-
-        public List<Recipe> GetAllRecipes() => _recipes.GetAllItems();
+        public List<Recipe> GetRecipesByMapNpcId(int mapNpcId)
+        {
+            List<Recipe> recipes = new List<Recipe>();
+            foreach (RecipeListDTO recipeList in _recipeLists.Where(r => r.MapNpcId == mapNpcId))
+            {
+                recipes.Add(_recipes[recipeList.RecipeId]);
+            }
+            return recipes;
+        }
 
         public ClientSession GetSessionByCharacterName(string name) => Sessions.SingleOrDefault(s => s.Character.Name == name);
 
         public ClientSession GetSessionBySessionId(int sessionId) => Sessions.SingleOrDefault(s => s.SessionId == sessionId);
 
         public Skill GetSkill(short skillVNum) => _skills.FirstOrDefault(m => m.SkillVNum.Equals(skillVNum));
-
-        public Card GetCard(short cardId) => _cards.FirstOrDefault(m => m.CardId.Equals(cardId));
 
         public T GetUserMethod<T>(long characterId, string methodName)
         {
@@ -751,6 +706,7 @@ namespace OpenNos.GameObject
             Act4RaidStart = DateTime.Now;
             Act4AngelStat = new Act4Stat();
             Act4DemonStat = new Act4Stat();
+
             // parse rates
             XPRate = int.Parse(ConfigurationManager.AppSettings["RateXp"]);
             HeroXpRate = int.Parse(ConfigurationManager.AppSettings["RateHeroicXp"]);
@@ -1006,6 +962,8 @@ namespace OpenNos.GameObject
 
         public bool IsCharactersGroupFull(long characterId) => Groups?.Any(g => g.IsMemberOfGroup(characterId) && g.CharacterCount == (byte)g.GroupType) == true;
 
+        public bool ItemHasRecipe(short itemVNum) => _recipeLists.Any(r => r.ItemVNum == itemVNum);
+
         public void JoinMiniland(ClientSession Session, ClientSession MinilandOwner)
         {
             ChangeMapInstance(Session.Character.CharacterId, MinilandOwner.Character.Miniland.MapInstanceId, 5, 8);
@@ -1048,6 +1006,8 @@ namespace OpenNos.GameObject
                 session.CurrentMapInstance?.Broadcast(session, StaticPacketHelper.Out(UserType.Player, session.Character.CharacterId), ReceiverType.AllExceptMe);
             }
         }
+
+        public bool MapNpcHasRecipe(int mapNpcId) => _recipeLists.Any(r => r.MapNpcId == mapNpcId);
 
         public int RandomNumber(int min = 0, int max = 100) => _random.Next(min, max);
 
@@ -1277,6 +1237,124 @@ namespace OpenNos.GameObject
             }
         }
 
+        private void act4Process()
+        {
+            if (ChannelId != 51)
+            {
+                return;
+            }
+
+            MapInstance angelMapInstance = GetMapInstance(GetBaseMapInstanceIdByMapId(132));
+            MapInstance demonMapInstance = GetMapInstance(GetBaseMapInstanceIdByMapId(133));
+
+            void summonMukraju(MapInstance instance, byte faction)
+            {
+                MapMonster monster = new MapMonster
+                {
+                    MonsterVNum = 556,
+                    MapY = (faction == 1 ? (short)92 : (short)95),
+                    MapX = (faction == 1 ? (short)114 : (short)20),
+                    MapId = (short)(131 + faction),
+                    IsMoving = true,
+                    MapMonsterId = instance.GetNextMonsterId(),
+                    ShouldRespawn = false
+                };
+                monster.Initialize(instance);
+                instance.AddMonster(monster);
+                instance.Broadcast(monster.GenerateIn());
+            }
+
+            int createRaid(byte faction)
+            {
+                MapInstanceType raidType = MapInstanceType.Act4Morcos;
+                int rng = RandomNumber(1, 5);
+                switch (rng)
+                {
+                    case 2:
+                        raidType = MapInstanceType.Act4Hatus;
+                        break;
+
+                    case 3:
+                        raidType = MapInstanceType.Act4Calvina;
+                        break;
+
+                    case 4:
+                        raidType = MapInstanceType.Act4Berios;
+                        break;
+                }
+                Event.Act4Raid.GenerateRaid(raidType, faction);
+                return rng;
+            }
+
+            if (Act4AngelStat.Percentage > 10000)
+            {
+                Act4AngelStat.Mode = 1;
+                Act4AngelStat.Percentage = 0;
+                Act4AngelStat.TotalTime = 300;
+                summonMukraju(angelMapInstance, 1);
+            }
+
+            if (Act4AngelStat.Mode == 1 && !angelMapInstance.Monsters.Any(s => s.MonsterVNum == 556))
+            {
+                Act4AngelStat.Mode = 3;
+                Act4AngelStat.TotalTime = 3600;
+
+                switch (createRaid(1))
+                {
+                    case 1:
+                        Act4AngelStat.IsMorcos = true;
+                        break;
+
+                    case 2:
+                        Act4AngelStat.IsHatus = true;
+                        break;
+
+                    case 3:
+                        Act4AngelStat.IsCalvina = true;
+                        break;
+
+                    case 4:
+                        Act4AngelStat.IsBerios = true;
+                        break;
+                }
+            }
+
+            if (Act4DemonStat.Percentage > 10000)
+            {
+                Act4DemonStat.Mode = 1;
+                Act4DemonStat.Percentage = 0;
+                Act4DemonStat.TotalTime = 300;
+                summonMukraju(demonMapInstance, 2);
+            }
+
+            if (Act4DemonStat.Mode == 1 && !demonMapInstance.Monsters.Any(s => s.MonsterVNum == 556))
+            {
+                Act4DemonStat.Mode = 3;
+                Act4DemonStat.TotalTime = 3600;
+
+                switch (createRaid(2))
+                {
+                    case 1:
+                        Act4DemonStat.IsMorcos = true;
+                        break;
+
+                    case 2:
+                        Act4DemonStat.IsHatus = true;
+                        break;
+
+                    case 3:
+                        Act4DemonStat.IsCalvina = true;
+                        break;
+
+                    case 4:
+                        Act4DemonStat.IsBerios = true;
+                        break;
+                }
+            }
+
+            Parallel.ForEach(Sessions, sess => sess.SendPacket(sess.Character.GenerateFc()));
+        }
+
         // Server
         private void botProcess()
         {
@@ -1317,7 +1395,7 @@ namespace OpenNos.GameObject
 
             Observable.Interval(TimeSpan.FromMinutes(5)).Subscribe(x => saveAllProcess());
 
-            Observable.Interval(TimeSpan.FromMinutes(1)).Subscribe(x => Act4Process());
+            Observable.Interval(TimeSpan.FromMinutes(1)).Subscribe(x => act4Process());
 
             Observable.Interval(TimeSpan.FromSeconds(2)).Subscribe(x => groupProcess());
 
@@ -1351,8 +1429,6 @@ namespace OpenNos.GameObject
             CommunicationServiceClient.Instance.ShutdownEvent += onShutdown;
             _lastGroupId = 1;
         }
-
-        private void onGlobalEvent(object sender, EventArgs e) => EventHelper.Instance.GenerateEvent((EventType)sender);
 
         private void loadFamilies()
         {
@@ -1538,6 +1614,8 @@ namespace OpenNos.GameObject
                 }
             }
         }
+
+        private void onGlobalEvent(object sender, EventArgs e) => EventHelper.Instance.GenerateEvent((EventType)sender);
 
         private void onMessageSentToCharacter(object sender, EventArgs e)
         {
@@ -1726,6 +1804,27 @@ namespace OpenNos.GameObject
             }
         }
 
+        private void reviveTask(ClientSession Session)
+        {
+            Task.Factory.StartNew(async () =>
+            {
+                bool revive = true;
+                for (int i = 1; i <= 30; i++)
+                {
+                    await Task.Delay(1000).ConfigureAwait(false);
+                    if (Session.Character.Hp > 0)
+                    {
+                        revive = false;
+                        break;
+                    }
+                }
+                if (revive)
+                {
+                    Instance.ReviveFirstPosition(Session.Character.CharacterId);
+                }
+            });
+        }
+
         // Server
         private void saveAllProcess()
         {
@@ -1739,117 +1838,6 @@ namespace OpenNos.GameObject
                 Logger.Error(e);
             }
         }
-
-        private void Act4Process()
-        {
-            if (ChannelId != 51)
-            {
-                return;
-            }
-
-            MapInstance angelMapInstance = GetMapInstance(GetBaseMapInstanceIdByMapId(132));
-            MapInstance demonMapInstance = GetMapInstance(GetBaseMapInstanceIdByMapId(133));
-
-            void SummonMukraju(MapInstance instance, byte faction)
-            {
-                MapMonster monster = new MapMonster
-                {
-                    MonsterVNum = 556,
-                    MapY = (faction == 1 ? (short)92 : (short)95),
-                    MapX = (faction == 1 ? (short)114 : (short)20),
-                    MapId = (short)(131 + faction),
-                    IsMoving = true,
-                    MapMonsterId = instance.GetNextMonsterId(),
-                    ShouldRespawn = false
-                };
-                monster.Initialize(instance);
-                instance.AddMonster(monster);
-                instance.Broadcast(monster.GenerateIn());
-            }
-
-            int CreateRaid(byte faction)
-            {
-                MapInstanceType raidType = MapInstanceType.Act4Morcos;
-                int rng = RandomNumber(1, 5);
-                switch (rng)
-                {
-                    case 2:
-                        raidType = MapInstanceType.Act4Hatus;
-                        break;
-                    case 3:
-                        raidType = MapInstanceType.Act4Calvina;
-                        break;
-                    case 4:
-                        raidType = MapInstanceType.Act4Berios;
-                        break;
-                }
-                Event.Act4Raid.GenerateRaid(raidType, faction);
-                return rng;
-            }
-
-            if (Act4AngelStat.Percentage > 10000)
-            {
-                Act4AngelStat.Mode = 1;
-                Act4AngelStat.Percentage = 0;
-                Act4AngelStat.TotalTime = 300;
-                SummonMukraju(angelMapInstance, 1);
-            }
-
-            if (Act4AngelStat.Mode == 1 && !angelMapInstance.Monsters.Any(s => s.MonsterVNum == 556))
-            {
-                Act4AngelStat.Mode = 3;
-                Act4AngelStat.TotalTime = 3600;
-
-                switch (CreateRaid(1))
-                {
-                    case 1:
-                        Act4AngelStat.IsMorcos = true;
-                        break;
-                    case 2:
-                        Act4AngelStat.IsHatus = true;
-                        break;
-                    case 3:
-                        Act4AngelStat.IsCalvina = true;
-                        break;
-                    case 4:
-                        Act4AngelStat.IsBerios = true;
-                        break;
-                }
-            }
-
-            if (Act4DemonStat.Percentage > 10000)
-            {
-                Act4DemonStat.Mode = 1;
-                Act4DemonStat.Percentage = 0;
-                Act4DemonStat.TotalTime = 300;
-                SummonMukraju(demonMapInstance, 2);
-            }
-
-            if (Act4DemonStat.Mode == 1 && !demonMapInstance.Monsters.Any(s => s.MonsterVNum == 556))
-            {
-                Act4DemonStat.Mode = 3;
-                Act4DemonStat.TotalTime = 3600;
-
-                switch (CreateRaid(2))
-                {
-                    case 1:
-                        Act4DemonStat.IsMorcos = true;
-                        break;
-                    case 2:
-                        Act4DemonStat.IsHatus = true;
-                        break;
-                    case 3:
-                        Act4DemonStat.IsCalvina = true;
-                        break;
-                    case 4:
-                        Act4DemonStat.IsBerios = true;
-                        break;
-                }
-            }
-
-            Parallel.ForEach(Sessions, sess => sess.SendPacket(sess.Character.GenerateFc()));
-        }
-
 
         #endregion
     }

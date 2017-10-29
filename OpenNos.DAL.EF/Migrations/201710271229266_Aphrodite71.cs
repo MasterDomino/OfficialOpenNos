@@ -4,28 +4,7 @@ namespace OpenNos.DAL.EF.Migrations
 
     public partial class Aphrodite71 : DbMigration
     {
-        public override void Up()
-        {
-            DropForeignKey("dbo.Recipe", "MapNpcId", "dbo.MapNpc");
-            DropIndex("dbo.Recipe", new[] { "MapNpcId" });
-            CreateTable(
-                "dbo.RecipeList",
-                c => new
-                    {
-                        RecipeListId = c.Int(nullable: false, identity: true),
-                        ItemVNum = c.Short(),
-                        MapNpcId = c.Int(),
-                        RecipeId = c.Short(nullable: false),
-                    })
-                .PrimaryKey(t => t.RecipeListId)
-                .ForeignKey("dbo.Item", t => t.ItemVNum)
-                .ForeignKey("dbo.MapNpc", t => t.MapNpcId)
-                .ForeignKey("dbo.Recipe", t => t.RecipeId)
-                .Index(t => t.ItemVNum)
-                .Index(t => t.MapNpcId)
-                .Index(t => t.RecipeId);
-            DropColumn("dbo.Recipe", "MapNpcId");
-        }
+        #region Methods
 
         public override void Down()
         {
@@ -40,5 +19,30 @@ namespace OpenNos.DAL.EF.Migrations
             CreateIndex("dbo.Recipe", "MapNpcId");
             AddForeignKey("dbo.Recipe", "MapNpcId", "dbo.MapNpc", "MapNpcId");
         }
+
+        public override void Up()
+        {
+            DropForeignKey("dbo.Recipe", "MapNpcId", "dbo.MapNpc");
+            DropIndex("dbo.Recipe", new[] { "MapNpcId" });
+            CreateTable(
+                "dbo.RecipeList",
+                c => new
+                {
+                    RecipeListId = c.Int(nullable: false, identity: true),
+                    ItemVNum = c.Short(),
+                    MapNpcId = c.Int(),
+                    RecipeId = c.Short(nullable: false),
+                })
+                .PrimaryKey(t => t.RecipeListId)
+                .ForeignKey("dbo.Item", t => t.ItemVNum)
+                .ForeignKey("dbo.MapNpc", t => t.MapNpcId)
+                .ForeignKey("dbo.Recipe", t => t.RecipeId)
+                .Index(t => t.ItemVNum)
+                .Index(t => t.MapNpcId)
+                .Index(t => t.RecipeId);
+            DropColumn("dbo.Recipe", "MapNpcId");
+        }
+
+        #endregion
     }
 }

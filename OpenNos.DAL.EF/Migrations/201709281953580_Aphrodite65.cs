@@ -4,8 +4,12 @@ namespace OpenNos.DAL.EF.Migrations
 
     public partial class Aphrodite65 : DbMigration
     {
-        public override void Up() => AddColumn("dbo.Mail", "AttachmentLevel", c => c.Byte(nullable: false));
+        #region Methods
 
         public override void Down() => DropColumn("dbo.Mail", "AttachmentLevel");
+
+        public override void Up() => AddColumn("dbo.Mail", "AttachmentLevel", c => c.Byte(nullable: false));
+
+        #endregion
     }
 }

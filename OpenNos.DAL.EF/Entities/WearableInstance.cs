@@ -13,7 +13,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 
 namespace OpenNos.DAL.EF
 {
@@ -24,8 +23,6 @@ namespace OpenNos.DAL.EF
         public byte? Ammo { get; set; }
 
         public byte? Cellon { get; set; }
-
-        public Guid? EquipmentSerialId { get; set; }
 
         public short? CloseDefence { get; set; }
 
@@ -52,6 +49,8 @@ namespace OpenNos.DAL.EF
         public short? DistanceDefenceDodge { get; set; }
 
         public short? ElementRate { get; set; }
+
+        public Guid? EquipmentSerialId { get; set; }
 
         public byte? FireElement { get; set; }
 

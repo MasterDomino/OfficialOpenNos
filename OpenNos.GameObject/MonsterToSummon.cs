@@ -20,7 +20,7 @@ namespace OpenNos.GameObject
     {
         #region Instantiation
 
-        public MonsterToSummon(short vnum, MapCell spawnCell, long target, bool move, bool isTarget = false, bool isBonus = false, bool isHostile = true, bool isBoss=false)
+        public MonsterToSummon(short vnum, MapCell spawnCell, long target, bool move, bool isTarget = false, bool isBonus = false, bool isHostile = true, bool isBoss = false)
         {
             VNum = vnum;
             SpawnCell = spawnCell;
@@ -40,9 +40,9 @@ namespace OpenNos.GameObject
 
         public List<EventContainer> DeathEvents { get; set; }
 
-        public List<EventContainer> NoticingEvents { get; set; }
-
         public bool IsBonus { get; set; }
+
+        public bool IsBoss { get; set; }
 
         public bool IsHostile { get; set; }
 
@@ -50,14 +50,15 @@ namespace OpenNos.GameObject
 
         public bool IsTarget { get; set; }
 
+        public byte NoticeRange { get; internal set; }
+
+        public List<EventContainer> NoticingEvents { get; set; }
+
         public MapCell SpawnCell { get; set; }
 
         public long Target { get; set; }
 
         public short VNum { get; set; }
-
-        public bool IsBoss { get;  set; }
-        public byte NoticeRange { get; internal set; }
 
         #endregion
     }

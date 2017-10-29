@@ -80,8 +80,10 @@ namespace OpenNos.Domain
             BearSpirit = 58,
             SummonSkill = 59,
             InflictSkill = 60,
+
             // 61 missingno ?
             HideBarrelSkill = 62,
+
             FocusEnemyAttentionSkill = 63,
             TauntSkill = 64,
             FireCannoneerRangeBuff = 65,
@@ -1082,9 +1084,10 @@ namespace OpenNos.Domain
         {
             // TODO
             LastSkillReset = 11,
+
             DamageBoostOnHigherLvl = 31
         }
-    }
 
-    #endregion
+        #endregion
+    }
 }

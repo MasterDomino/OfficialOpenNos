@@ -172,7 +172,8 @@ namespace OpenNos.Handler
                     SourceWorldId = ServerManager.Instance.WorldId,
                     Message = "fhis_stc",
                     Type = MessageType.Family
-                }); Session.Character.Group.Characters.ForEach(s => s.CurrentMapInstance.Broadcast(s.Character.GenerateGidx()));
+                });
+                Session.Character.Group.Characters.ForEach(s => s.CurrentMapInstance.Broadcast(s.Character.GenerateGidx()));
             }
         }
 
@@ -941,7 +942,8 @@ namespace OpenNos.Handler
                         SourceWorldId = ServerManager.Instance.WorldId,
                         Message = "fhis_stc",
                         Type = MessageType.Family
-                    }); Session.SendPacket(Session.Character.GenerateFamilyMember());
+                    });
+                    Session.SendPacket(Session.Character.GenerateFamilyMember());
                     Session.SendPacket(Session.Character.GenerateFamilyMemberMessage());
                 }
             }

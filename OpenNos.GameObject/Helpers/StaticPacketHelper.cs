@@ -23,22 +23,6 @@ namespace OpenNos.GameObject.Helpers
 
         public static string Cancel(byte type = 0, long callerId = 0) => $"cancel {type} {callerId}";
 
-        public static string Say(byte type, long callerId, byte secondaryType, string message) => $"say {type} {callerId} {secondaryType} {message}";
-
-        public static string In(UserType type, short callerVNum, long callerId, short mapX, short mapY, int direction, int currentHp, int currentMp, short dialog, InRespawnType respawnType, bool isSitting)
-        {
-            switch (type)
-            {
-                case UserType.Npc:
-                case UserType.Monster:
-                    return $"in {(byte)type} {callerVNum} {callerId} {mapX} {mapY} {direction} {currentHp} {currentMp} {dialog} 0 0 -1 {(byte)respawnType} {(isSitting ? 1 : 0)} -1 - 0 -1 0 0 0 0 0 0 0 0";
-                case UserType.Object:
-                    return $"in 9 {callerVNum} {callerId} {mapX} {mapY} {direction} 0 0 -1";
-                default:
-                    return string.Empty;
-            }
-        }
-
         public static string CastOnTarget(UserType type, long callerId, byte secondaryType, long targetId, short castAnimation, short castEffect, short skillVNum) => $"ct {(byte)type} {callerId} {secondaryType} {targetId} {castAnimation} {castEffect} {skillVNum}";
 
         public static EffectPacket GenerateEff(UserType effectType, long callerId, int effectId)
@@ -49,6 +33,22 @@ namespace OpenNos.GameObject.Helpers
                 CallerId = callerId,
                 EffectId = effectId
             };
+        }
+
+        public static string In(UserType type, short callerVNum, long callerId, short mapX, short mapY, int direction, int currentHp, int currentMp, short dialog, InRespawnType respawnType, bool isSitting)
+        {
+            switch (type)
+            {
+                case UserType.Npc:
+                case UserType.Monster:
+                    return $"in {(byte)type} {callerVNum} {callerId} {mapX} {mapY} {direction} {currentHp} {currentMp} {dialog} 0 0 -1 {(byte)respawnType} {(isSitting ? 1 : 0)} -1 - 0 -1 0 0 0 0 0 0 0 0";
+
+                case UserType.Object:
+                    return $"in 9 {callerVNum} {callerId} {mapX} {mapY} {direction} 0 0 -1";
+
+                default:
+                    return string.Empty;
+            }
         }
 
         public static MovePacket Move(UserType type, long callerId, short positionX, short positionY, byte speed)
@@ -64,6 +64,8 @@ namespace OpenNos.GameObject.Helpers
         }
 
         public static string Out(UserType type, long callerId) => $"out {(byte)type} {callerId}";
+
+        public static string Say(byte type, long callerId, byte secondaryType, string message) => $"say {type} {callerId} {secondaryType} {message}";
 
         public static string SkillReset(int castId) => $"sr {castId}";
 

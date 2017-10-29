@@ -61,11 +61,11 @@ namespace OpenNos.DAL.EF
 
         public byte Position { get; set; }
 
+        public virtual ICollection<RecipeList> RecipeList { get; set; }
+
         public virtual ICollection<Shop> Shop { get; set; }
 
         public virtual ICollection<Teleporter> Teleporter { get; set; }
-
-        public virtual ICollection<RecipeList> RecipeList { get; set; }
 
         #endregion
     }

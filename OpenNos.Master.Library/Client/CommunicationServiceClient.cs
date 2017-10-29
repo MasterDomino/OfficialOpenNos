@@ -12,13 +12,13 @@
  * GNU General Public License for more details.
  */
 
-using OpenNos.SCS.Communication.Scs.Communication;
-using OpenNos.SCS.Communication.Scs.Communication.EndPoints.Tcp;
-using OpenNos.SCS.Communication.ScsServices.Client;
 using OpenNos.Core;
 using OpenNos.DAL;
 using OpenNos.Master.Library.Data;
 using OpenNos.Master.Library.Interface;
+using OpenNos.SCS.Communication.Scs.Communication;
+using OpenNos.SCS.Communication.Scs.Communication.EndPoints.Tcp;
+using OpenNos.SCS.Communication.ScsServices.Client;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -132,13 +132,13 @@ namespace OpenNos.Master.Library.Client
 
         public int? RegisterWorldServer(SerializableWorldServer worldServer) => _client.ServiceProxy.RegisterWorldServer(worldServer);
 
+        public long[][] RetrieveOnlineCharacters(long characterId) => _client.ServiceProxy.RetrieveOnlineCharacters(characterId);
+
         public string RetrieveOriginWorld(long accountId) => _client.ServiceProxy.RetrieveOriginWorld(accountId);
 
         public string RetrieveRegisteredWorldServers(string username, int sessionId, bool ignoreUserName) => _client.ServiceProxy.RetrieveRegisteredWorldServers(username, sessionId, ignoreUserName);
 
         public IEnumerable<string> RetrieveServerStatistics() => _client.ServiceProxy.RetrieveServerStatistics();
-
-        public long[][] RetrieveOnlineCharacters(long characterId) => _client.ServiceProxy.RetrieveOnlineCharacters(characterId);
 
         public void RunGlobalEvent(Domain.EventType eventType) => _client.ServiceProxy.RunGlobalEvent(eventType);
 

@@ -33,6 +33,8 @@ namespace OpenNos.GameObject
 
         #region Properties
 
+        public Locker ButtonLocker { get; set; }
+
         public Clock Clock { get; set; }
 
         public int Combo { get; set; }
@@ -47,6 +49,8 @@ namespace OpenNos.GameObject
 
         public bool Lock { get; set; }
 
+        public Locker MonsterLocker { get; set; }
+
         public int MonstersKilled { get; set; }
 
         public int NpcsKilled { get; set; }
@@ -55,11 +59,7 @@ namespace OpenNos.GameObject
 
         public int RoomsVisited { get; set; }
 
-        public Locker MonsterLocker { get;  set; }
-
-        public Locker ButtonLocker { get;  set; }
-
-        public List<EventContainer> UnlockEvents { get;  set; }
+        public List<EventContainer> UnlockEvents { get; set; }
 
         #endregion
 

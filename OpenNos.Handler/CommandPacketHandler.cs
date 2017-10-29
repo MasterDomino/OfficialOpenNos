@@ -1055,10 +1055,7 @@ namespace OpenNos.Handler
             }
         }
 
-        public void DirectConnect(DirectConnectPacket directConnectPacket)
-        {
-            Session.Character.ChangeChannel(directConnectPacket.IPAddress, directConnectPacket.Port, 3);
-        }
+        public void DirectConnect(DirectConnectPacket directConnectPacket) => Session.Character.ChangeChannel(directConnectPacket.IPAddress, directConnectPacket.Port, 3);
 
         /// <summary>
         /// $DropRate Command
@@ -1353,6 +1350,7 @@ namespace OpenNos.Handler
                 if (team.HasSelectedCharacter)
                 {
                     count++;
+
                     // TODO: move that to resx soo we follow i18n
                     team.SendPacket(team.Character.GenerateSay($"User {Session.Character.Name} needs your help!", 12));
                     team.SendPacket(team.Character.GenerateSay("Please inform the family chat when you take care of!", 12));
@@ -2134,7 +2132,7 @@ namespace OpenNos.Handler
                 {
                     SpecialistInstance specialistInstance = Session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>(setPerfectionPacket.Slot, 0);
 
-                    if(specialistInstance != null)
+                    if (specialistInstance != null)
                     {
                         switch (setPerfectionPacket.Type)
                         {

@@ -32,15 +32,15 @@ namespace OpenNos.GameObject
 
         #region Properties
 
+        public MapInstance Act4Raid { get; set; }
+
+        public MapInstance Act4RaidBossMap { get; set; }
+
         public List<FamilyCharacter> FamilyCharacters { get; set; }
 
         public List<FamilyLogDTO> FamilyLogs { get; set; }
 
         public MapInstance LandOfDeath { get; set; }
-
-        public MapInstance Act4Raid { get; set; }
-
-        public MapInstance Act4RaidBossMap { get; set; }
 
         public Inventory Warehouse { get; set; }
 

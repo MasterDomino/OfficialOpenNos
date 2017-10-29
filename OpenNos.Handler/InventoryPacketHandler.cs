@@ -1557,7 +1557,9 @@ namespace OpenNos.Handler
                         }
                     }
                     break;
+
                 case 3:
+
                     //up_gr 3 0 0 7 1 1 20 99
                     string[] originalSplit = upgradePacket.OriginalContent.Split(' ');
                     if (originalSplit.Length == 10
@@ -1740,7 +1742,7 @@ namespace OpenNos.Handler
                 {
                     inv.Item.Use(Session, ref inv, wearPacket.Type);
                     Session.Character.LoadSpeed();
-                    Session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId,123));
+                    Session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId, 123));
                 }
             }
         }
@@ -1800,7 +1802,7 @@ namespace OpenNos.Handler
                 Session.Character.MorphUpgrade2 = sp.Design;
                 Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateCMode());
                 Session.SendPacket(Session.Character.GenerateLev());
-                Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId,196), Session.Character.PositionX, Session.Character.PositionY);
+                Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId, 196), Session.Character.PositionX, Session.Character.PositionY);
                 Session.CurrentMapInstance?.Broadcast(UserInterfaceHelper.Instance.GenerateGuri(6, 1, Session.Character.CharacterId), Session.Character.PositionX, Session.Character.PositionY);
                 Session.SendPacket(Session.Character.GenerateSpPoint());
                 Session.Character.LoadSpeed();

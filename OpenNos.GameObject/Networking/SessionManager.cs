@@ -111,6 +111,7 @@ namespace OpenNos.GameObject
 
                 client.Disconnect();
                 Logger.Info(Language.Instance.GetMessageFromKey("DISCONNECT") + client.ClientId);
+
                 // session = null;
             }
         }

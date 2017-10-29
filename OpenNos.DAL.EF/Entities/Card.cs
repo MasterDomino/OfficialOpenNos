@@ -29,9 +29,15 @@ namespace OpenNos.DAL.EF
 
         #region Properties
 
+        public virtual ICollection<BCard> BCards { get; set; }
+
+        public CardType BuffType { get; set; }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public short CardId { get; set; }
+
+        public int Delay { get; set; }
 
         public int Duration { get; set; }
 
@@ -42,19 +48,13 @@ namespace OpenNos.DAL.EF
         [MaxLength(255)]
         public string Name { get; set; }
 
-        public int Delay { get; set; }
+        public byte Propability { get; set; }
+
+        public virtual ICollection<StaticBuff> StaticBuff { get; set; }
 
         public short TimeoutBuff { get; set; }
 
         public byte TimeoutBuffChance { get; set; }
-
-        public CardType BuffType { get; set; }
-
-        public byte Propability { get; set; }
-
-        public virtual ICollection<BCard> BCards { get; set; }
-
-        public virtual ICollection<StaticBuff> StaticBuff { get; set; }
 
         #endregion
     }

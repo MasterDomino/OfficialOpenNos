@@ -21,8 +21,12 @@ namespace OpenNos.DAL.Mock
 {
     public class RollGeneratedItemDAO : BaseDAO<RollGeneratedItemDTO>, IRollGeneratedItemDAO
     {
+        #region Methods
+
         public RollGeneratedItemDTO LoadById(short id) => throw new NotImplementedException();
 
         public IEnumerable<RollGeneratedItemDTO> LoadByItemVNum(short vnum) => throw new NotImplementedException();
+
+        #endregion
     }
 }

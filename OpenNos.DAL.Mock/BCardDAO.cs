@@ -27,9 +27,9 @@ namespace OpenNos.DAL.Mock
 
         public BCardDTO Insert(ref BCardDTO cardObject) => throw new NotImplementedException();
 
-        public BCardDTO LoadById(short cardId) => throw new NotImplementedException();
-
         public IEnumerable<BCardDTO> LoadByCardId(short cardId) => throw new NotImplementedException();
+
+        public BCardDTO LoadById(short cardId) => throw new NotImplementedException();
 
         public IEnumerable<BCardDTO> LoadByItemVNum(short vNum) => throw new NotImplementedException();
 

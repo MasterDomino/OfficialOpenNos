@@ -18,21 +18,29 @@ namespace OpenNos.GameObject
 {
     public class ZoneEvent
     {
-        #region Properties
-
-        public short X { get; set; }
-
-        public short Y { get; set; }
-
-        public short Range { get; set; }
-
-        public List<EventContainer> Events { get; set; }
+        #region Instantiation
 
         public ZoneEvent()
         {
             Events = new List<EventContainer>();
             Range = 1;
         }
+
+        #endregion
+
+        #region Properties
+
+        public List<EventContainer> Events { get; set; }
+
+        public short Range { get; set; }
+
+        public short X { get; set; }
+
+        public short Y { get; set; }
+
+        #endregion
+
+        #region Methods
 
         public bool InZone(short positionX, short positionY) => positionX <= X + Range && positionX >= X - Range && positionY <= Y + Range && positionY >= Y - Range;
 

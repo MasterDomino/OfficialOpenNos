@@ -126,19 +126,19 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        public IEnumerable<CharacterDTO> LoadByAccount(long accountId)
-        {
-            using (OpenNosContext context = DataAccessHelper.CreateContext())
-            {
-                return context.Character.Where(c => c.AccountId.Equals(accountId) && c.State.Equals((byte)CharacterState.Active)).OrderByDescending(c => c.Slot).ToList().Select(c => _mapper.Map<CharacterDTO>(c)).ToList();
-            }
-        }
-
         public IEnumerable<CharacterDTO> LoadAllByAccount(long accountId)
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 return context.Character.Where(c => c.AccountId.Equals(accountId)).OrderByDescending(c => c.Slot).ToList().Select(c => _mapper.Map<CharacterDTO>(c)).ToList();
+            }
+        }
+
+        public IEnumerable<CharacterDTO> LoadByAccount(long accountId)
+        {
+            using (OpenNosContext context = DataAccessHelper.CreateContext())
+            {
+                return context.Character.Where(c => c.AccountId.Equals(accountId) && c.State.Equals((byte)CharacterState.Active)).OrderByDescending(c => c.Slot).ToList().Select(c => _mapper.Map<CharacterDTO>(c)).ToList();
             }
         }
 

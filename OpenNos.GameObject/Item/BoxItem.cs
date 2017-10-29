@@ -94,6 +94,7 @@ namespace OpenNos.GameObject
                                         session.SendPacket($"rdi {rollitem.ItemGeneratedVNum} {rollitem.ItemGeneratedAmount}");
                                         session.Character.Inventory.RemoveItemFromInventory(box.Id);
                                         return;
+
                                         //newInv = session.Character.Inventory.AddNewToInventory(rollitem.ItemGeneratedVNum, amount: rollitem.ItemGeneratedAmount, Design: design, Rare: rare);
                                         //if (newInv.Count > 0)
                                         //{

@@ -22,6 +22,18 @@ namespace OpenNos.PathFinder
     {
         #region Methods
 
+        public static List<Node> Backtrace(Node end)
+        {
+            List<Node> path = new List<Node>();
+            while (end.Parent != null)
+            {
+                end = end.Parent;
+                path.Add(end);
+            }
+            path.Reverse();
+            return path;
+        }
+
         public static List<Node> FindPath(GridPos start, GridPos end, GridPos[,] Grid)
         {
             if (Grid.GetLength(0) <= start.X || Grid.GetLength(1) <= start.Y || start.X < 0 || start.Y < 0)
@@ -93,82 +105,6 @@ namespace OpenNos.PathFinder
                 }
             }
             return new List<Node>();
-        }
-
-        public static Node[,] LoadBrushFire(GridPos user, GridPos[,] mapGrid, short MaxDistance = 22)
-        {
-            Node[,] grid = new Node[mapGrid.GetLength(0), mapGrid.GetLength(1)];
-
-            Node node = new Node();
-            if (grid[user.X, user.Y] == null)
-            {
-                grid[user.X, user.Y] = new Node(mapGrid[user.X, user.Y]);
-            }
-            Node Start = grid[user.X, user.Y];
-            MinHeap path = new MinHeap();
-
-            // push the start node into the open list
-            path.Push(Start);
-            Start.Opened = true;
-
-            // while the open list is not empty
-            while (path.Count > 0)
-            {
-                // pop the position of node which has the minimum `f` value.
-                node = path.Pop();
-                if (grid[node.X, node.Y] == null)
-                {
-                    grid[node.X, node.Y] = new Node(mapGrid[node.X, node.Y]);
-                }
-
-                grid[node.X, node.Y].Closed = true;
-
-                // get neighbors of the current node
-                List<Node> neighbors = GetNeighbors(grid, node, mapGrid);
-
-                for (int i = 0, l = neighbors.Count; i < l; ++i)
-                {
-                    Node neighbor = neighbors[i];
-
-                    if (neighbor.Closed)
-                    {
-                        continue;
-                    }
-
-                    // check if the neighbor has not been inspected yet, or can be reached with
-                    // smaller cost from the current node
-                    if (!neighbor.Opened)
-                    {
-                        if (neighbor.F == 0)
-                        {
-                            double distance = Heuristic.Octile(Math.Abs(neighbor.X - node.X), Math.Abs(neighbor.Y - node.Y)) + node.F;
-                            if (distance > MaxDistance)
-                            {
-                                neighbor.Value = 1;
-                                continue;
-                            }
-                            else
-                            {
-                                neighbor.F = distance;
-                            }
-                            grid[neighbor.X, neighbor.Y].F = neighbor.F;
-                        }
-
-                        neighbor.Parent = node;
-
-                        if (!neighbor.Opened)
-                        {
-                            path.Push(neighbor);
-                            neighbor.Opened = true;
-                        }
-                        else
-                        {
-                            neighbor.Parent = node;
-                        }
-                    }
-                }
-            }
-            return grid;
         }
 
         public static List<Node> GetNeighbors(Node[,] Grid, Node node, GridPos[,] MapGrid)
@@ -290,16 +226,80 @@ namespace OpenNos.PathFinder
             return neighbors;
         }
 
-        public static List<Node> Backtrace(Node end)
+        public static Node[,] LoadBrushFire(GridPos user, GridPos[,] mapGrid, short MaxDistance = 22)
         {
-            List<Node> path = new List<Node>();
-            while (end.Parent != null)
+            Node[,] grid = new Node[mapGrid.GetLength(0), mapGrid.GetLength(1)];
+
+            Node node = new Node();
+            if (grid[user.X, user.Y] == null)
             {
-                end = end.Parent;
-                path.Add(end);
+                grid[user.X, user.Y] = new Node(mapGrid[user.X, user.Y]);
             }
-            path.Reverse();
-            return path;
+            Node Start = grid[user.X, user.Y];
+            MinHeap path = new MinHeap();
+
+            // push the start node into the open list
+            path.Push(Start);
+            Start.Opened = true;
+
+            // while the open list is not empty
+            while (path.Count > 0)
+            {
+                // pop the position of node which has the minimum `f` value.
+                node = path.Pop();
+                if (grid[node.X, node.Y] == null)
+                {
+                    grid[node.X, node.Y] = new Node(mapGrid[node.X, node.Y]);
+                }
+
+                grid[node.X, node.Y].Closed = true;
+
+                // get neighbors of the current node
+                List<Node> neighbors = GetNeighbors(grid, node, mapGrid);
+
+                for (int i = 0, l = neighbors.Count; i < l; ++i)
+                {
+                    Node neighbor = neighbors[i];
+
+                    if (neighbor.Closed)
+                    {
+                        continue;
+                    }
+
+                    // check if the neighbor has not been inspected yet, or can be reached with
+                    // smaller cost from the current node
+                    if (!neighbor.Opened)
+                    {
+                        if (neighbor.F == 0)
+                        {
+                            double distance = Heuristic.Octile(Math.Abs(neighbor.X - node.X), Math.Abs(neighbor.Y - node.Y)) + node.F;
+                            if (distance > MaxDistance)
+                            {
+                                neighbor.Value = 1;
+                                continue;
+                            }
+                            else
+                            {
+                                neighbor.F = distance;
+                            }
+                            grid[neighbor.X, neighbor.Y].F = neighbor.F;
+                        }
+
+                        neighbor.Parent = node;
+
+                        if (!neighbor.Opened)
+                        {
+                            path.Push(neighbor);
+                            neighbor.Opened = true;
+                        }
+                        else
+                        {
+                            neighbor.Parent = node;
+                        }
+                    }
+                }
+            }
+            return grid;
         }
 
         public static List<Node> TracePath(Node node, Node[,] Grid, GridPos[,] MapGrid)
@@ -323,6 +323,7 @@ namespace OpenNos.PathFinder
             }
             return list;
         }
+
         #endregion
     }
 }

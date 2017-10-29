@@ -89,22 +89,6 @@ namespace OpenNos.GameObject
             return newItem;
         }
 
-        public int BackpackSize() => DEFAULT_BACKPACK_SIZE + ((Owner.HaveBackpack() ? 1 : 0) * 12);
-
-        public ItemInstance RemoveFromBazaarInventory(Guid itemInstanceId)
-        {
-            ItemInstance itemInstance = LoadByItemInstance<ItemInstance>(itemInstanceId);
-            short? nextFreeSlot = getFreeSlot(itemInstance.Item.Type);
-            if (itemInstance != null && nextFreeSlot.HasValue)
-            {
-                itemInstance.Slot = nextFreeSlot.Value;
-                itemInstance.Type = itemInstance.Item.Type;
-                Owner.Session?.SendPacket(itemInstance.GenerateInventoryAdd());
-                return itemInstance;
-            }
-            return null;
-        }
-
         public ItemInstance AddIntoBazaarInventory(InventoryType inventory, byte slot, byte amount)
         {
             ItemInstance inv = LoadBySlotAndType(slot, inventory);
@@ -271,6 +255,8 @@ namespace OpenNos.GameObject
             return null;
         }
 
+        public int BackpackSize() => DEFAULT_BACKPACK_SIZE + ((Owner.HaveBackpack() ? 1 : 0) * 12);
+
         public bool CanAddItem(short itemVnum) => canAddItem(ServerManager.Instance.GetItem(itemVnum).Type);
 
         public int CountItem(int itemVNum) => Where(s => s.ItemVNum == itemVNum && s.Type != InventoryType.FamilyWareHouse && s.Type != InventoryType.Bazaar && s.Type != InventoryType.Warehouse && s.Type != InventoryType.PetWarehouse).Sum(i => i.Amount);
@@ -391,8 +377,6 @@ namespace OpenNos.GameObject
 
         public ItemInstance GetItemInstanceById(Guid id) => this[id];
 
-        public T LoadByVNum<T>(short vNum) where T : ItemInstance => (T)FirstOrDefault(i => i.ItemVNum.Equals(vNum));
-
         public T LoadByItemInstance<T>(Guid id) where T : ItemInstance => (T)this[id];
 
         public T LoadBySlotAndType<T>(short slot, InventoryType type) where T : ItemInstance
@@ -474,6 +458,8 @@ namespace OpenNos.GameObject
             }
             return retItem;
         }
+
+        public T LoadByVNum<T>(short vNum) where T : ItemInstance => (T)FirstOrDefault(i => i.ItemVNum.Equals(vNum));
 
         /// <summary>
         /// Moves one item from one Inventory to another. Example: Equipment &lt;-&gt; Wear,
@@ -631,6 +617,20 @@ namespace OpenNos.GameObject
             }
             sourceInventory = LoadBySlotAndType(sourceSlot, sourcetype);
             destinationInventory = LoadBySlotAndType(destinationSlot, desttype);
+        }
+
+        public ItemInstance RemoveFromBazaarInventory(Guid itemInstanceId)
+        {
+            ItemInstance itemInstance = LoadByItemInstance<ItemInstance>(itemInstanceId);
+            short? nextFreeSlot = getFreeSlot(itemInstance.Item.Type);
+            if (itemInstance != null && nextFreeSlot.HasValue)
+            {
+                itemInstance.Slot = nextFreeSlot.Value;
+                itemInstance.Type = itemInstance.Item.Type;
+                Owner.Session?.SendPacket(itemInstance.GenerateInventoryAdd());
+                return itemInstance;
+            }
+            return null;
         }
 
         public void RemoveItemAmount(int vnum, int amount = 1)

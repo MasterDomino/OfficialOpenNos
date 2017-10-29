@@ -54,6 +54,7 @@ namespace OpenNos.Handler
             {
                 return;
             }
+
             // TODO: Hold Account Information in Authorized object
             long accountId = Session.Account.AccountId;
             Logger.LogUserEvent("CREATECHARACTER", Session.GenerateIdentity(), $"[CreateCharacter]Name: {characterCreatePacket.Name} Slot: {characterCreatePacket.Slot} Gender: {characterCreatePacket.Gender} HairStyle: {characterCreatePacket.HairStyle} HairColor: {characterCreatePacket.HairColor}");
@@ -196,6 +197,7 @@ namespace OpenNos.Handler
         {
             string[] loginPacketParts = packet.Split(' ');
             bool isCrossServerLogin = false;
+
             // Load account by given SessionId
             if (Session.Account == null)
             {
@@ -273,12 +275,10 @@ namespace OpenNos.Handler
             }
             if (isCrossServerLogin)
             {
-                byte slot;
-                if (byte.TryParse(loginPacketParts[6], out slot))
+                if (byte.TryParse(loginPacketParts[6], out byte slot))
                 {
                     SelectCharacter(new SelectPacket() { Slot = slot });
                 }
-
             }
             else
             {

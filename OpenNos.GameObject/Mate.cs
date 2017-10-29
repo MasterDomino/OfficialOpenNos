@@ -62,20 +62,9 @@ namespace OpenNos.GameObject
 
         public bool IsSitting { get; set; }
 
+        public int MagicalDefense => Monster.MagicDefence;
+
         public int MateTransportId { get; set; }
-
-        public int MaxHp => Monster.MaxHP;
-
-        public int MaxMp => Monster.MaxMP;
-
-        public int MinHit
-        {
-            get
-            {
-                const int dmg = 100; //TODO: get proper Damage
-                return Monster.DamageMinimum + dmg;
-            }
-        }
 
         public int MaxHit
         {
@@ -83,6 +72,23 @@ namespace OpenNos.GameObject
             {
                 const int dmg = 100; //TODO: get proper Damage
                 return Monster.DamageMaximum + dmg;
+            }
+        }
+
+        public int MaxHp => Monster.MaxHP;
+
+        public int MaxMp => Monster.MaxMP;
+
+        public int MeleeDefense => Monster.CloseDefence;
+
+        public int MeleeDefenseRate => Monster.DefenceDodge;
+
+        public int MinHit
+        {
+            get
+            {
+                const int dmg = 100; //TODO: get proper Damage
+                return Monster.DamageMinimum + dmg;
             }
         }
 
@@ -104,17 +110,19 @@ namespace OpenNos.GameObject
 
         public short PositionY { get; set; }
 
-        public int MeleeDefense => Monster.CloseDefence; //TODO: get proper Defense
+        //TODO: get proper Defense
 
-        public int MeleeDefenseRate => Monster.DefenceDodge; //TODO: get proper Defense
+        //TODO: get proper Defense
 
         public int RangeDefense => Monster.DistanceDefence; //TODO: get proper Defense
 
-        public int RangeDefenseRate => Monster.DistanceDefenceDodge; //TODO: get proper Defense
-
-        public int MagicalDefense => Monster.MagicDefence; //TODO: get proper Defense
+        public int RangeDefenseRate => Monster.DistanceDefenceDodge;
 
         #endregion
+
+        //TODO: get proper Defense
+
+        //TODO: get proper Defense
 
         #region Methods
 

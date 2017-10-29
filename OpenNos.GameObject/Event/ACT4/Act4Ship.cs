@@ -23,7 +23,7 @@ using System.Threading;
 
 namespace OpenNos.GameObject.Event
 {
-    public class ACT4SHIP
+    public static class ACT4SHIP
     {
         #region Methods
 
@@ -51,7 +51,7 @@ namespace OpenNos.GameObject.Event
             MapInstance map = ServerManager.Instance.GenerateMapInstance(149, faction == 1 ? MapInstanceType.Act4ShipAngel : MapInstanceType.Act4ShipDemon, null);
             while (true)
             {
-                OpenShip();
+                openShip();
                 Thread.Sleep(60 * 1000);
                 map.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("SHIP_MINUTES"), 4), 0));
                 Thread.Sleep(60 * 1000);
@@ -60,24 +60,23 @@ namespace OpenNos.GameObject.Event
                 map.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("SHIP_MINUTES"), 2), 0));
                 Thread.Sleep(60 * 1000);
                 map.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("SHIP_MINUTE"), 0));
-                LockShip();
+                lockShip();
                 Thread.Sleep(30 * 1000);
                 map.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("SHIP_SECONDS"), 30), 0));
                 Thread.Sleep(20 * 1000);
                 map.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("SHIP_SECONDS"), 10), 0));
                 Thread.Sleep(10 * 1000);
                 map.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("SHIP_SETOFF"), 0));
-                List<ClientSession> sessions = map.Sessions.Where(s => s != null && s.Character != null).ToList();
-                Observable.Timer(TimeSpan.FromSeconds(0)).Subscribe(X => TeleportPlayers(sessions));
+                List<ClientSession> sessions = map.Sessions.Where(s => s?.Character != null).ToList();
+                Observable.Timer(TimeSpan.FromSeconds(0)).Subscribe(X => teleportPlayers(sessions));
             }
         }
 
-        private void LockShip()
-        {
-            EventHelper.Instance.RunEvent(new EventContainer(ServerManager.Instance.GetMapInstance(ServerManager.Instance.GetBaseMapInstanceIdByMapId(145)), EventActionType.NPCSEFFECTCHANGESTATE, true));
-        }
+        private void lockShip() => EventHelper.Instance.RunEvent(new EventContainer(ServerManager.Instance.GetMapInstance(ServerManager.Instance.GetBaseMapInstanceIdByMapId(145)), EventActionType.NPCSEFFECTCHANGESTATE, true));
 
-        private void TeleportPlayers(List<ClientSession> sessions)
+        private void openShip() => EventHelper.Instance.RunEvent(new EventContainer(ServerManager.Instance.GetMapInstance(ServerManager.Instance.GetBaseMapInstanceIdByMapId(145)), EventActionType.NPCSEFFECTCHANGESTATE, false));
+
+        private void teleportPlayers(List<ClientSession> sessions)
         {
             foreach (ClientSession s in sessions)
             {
@@ -87,26 +86,24 @@ namespace OpenNos.GameObject.Event
                         ServerManager.Instance.ChangeMap(s.Character.CharacterId, 145, 51, 41);
                         s.SendPacket(UserInterfaceHelper.Instance.GenerateInfo("You need to be part of a faction to join Act 4"));
                         return;
+
                     case FactionType.Angel:
                         s.Character.MapId = 130;
                         s.Character.MapX = 12;
                         s.Character.MapY = 40;
                         break;
+
                     case FactionType.Demon:
                         s.Character.MapId = 131;
                         s.Character.MapX = 12;
                         s.Character.MapY = 40;
                         break;
                 }
+
                 //todo: get act4 channel dynamically
                 // Change IP to yours
                 s.Character.ChangeChannel("127.0.0.1", 4003, 1);
             }
-        }
-
-        private void OpenShip()
-        {
-            EventHelper.Instance.RunEvent(new EventContainer(ServerManager.Instance.GetMapInstance(ServerManager.Instance.GetBaseMapInstanceIdByMapId(145)), EventActionType.NPCSEFFECTCHANGESTATE, false));
         }
 
         #endregion

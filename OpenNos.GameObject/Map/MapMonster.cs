@@ -33,11 +33,9 @@ namespace OpenNos.GameObject
 
         private int _movetime;
 
-        private Random _random;
-
-        private bool _noMove;
-
         private bool _noAttack;
+        private bool _noMove;
+        private Random _random;
 
         #endregion
 
@@ -155,7 +153,7 @@ namespace OpenNos.GameObject
         {
             if (IsAlive && !IsDisabled)
             {
-                return StaticPacketHelper.In(UserType.Monster, MonsterVNum, MapMonsterId, MapX, MapY, Position, (int)((float)CurrentHp / (float)MaxHp * 100), (int)((float)CurrentMp / (float)MaxMp * 100), 0, NoAggresiveIcon ? InRespawnType.NoEffect: InRespawnType.TeleportationEffect, false);
+                return StaticPacketHelper.In(UserType.Monster, MonsterVNum, MapMonsterId, MapX, MapY, Position, (int)((float)CurrentHp / (float)MaxHp * 100), (int)((float)CurrentMp / (float)MaxMp * 100), 0, NoAggresiveIcon ? InRespawnType.NoEffect : InRespawnType.TeleportationEffect, false);
             }
             return string.Empty;
         }
@@ -450,7 +448,7 @@ namespace OpenNos.GameObject
                             MapInstance.Broadcast(StaticPacketHelper.Out(UserType.Monster, onyx.MapMonsterId));
                         });
                     }
-                    if(hitmode != 1)
+                    if (hitmode != 1)
                     {
                         hitRequest.Skill.BCards.Where(s => s.Type.Equals((byte)CardType.Buff)).ToList().ForEach(s => s.ApplyBCards(this, hitRequest.Session));
                         hitRequest.Skill.BCards.Where(s => s.Type.Equals((byte)CardType.Capture)).ToList().ForEach(s => s.ApplyBCards(this, hitRequest.Session));
@@ -526,7 +524,7 @@ namespace OpenNos.GameObject
                     {
                         DamageList.Add(hitRequest.Session.Character.CharacterId, damage);
                     }
-                    if(isCaptureSkill)
+                    if (isCaptureSkill)
                     {
                         damage = 0;
                     }

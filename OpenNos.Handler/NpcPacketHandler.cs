@@ -86,8 +86,7 @@ namespace OpenNos.Handler
                         return;
                     }
 
-                    // check if the item has been removed successfully from previous owner and
-                    // remove it
+                    // check if the item has been removed successfully from previous owner and remove it
                     if (buyValidate(Session, shop, buyPacket.Slot, amount))
                     {
                         Session.Character.Gold -= item.Price * amount;
@@ -576,6 +575,7 @@ namespace OpenNos.Handler
                     {
                         Session.Character.Inventory.RemoveItemAmount(ite.ItemVNum, ite.Amount);
                     }
+
                     // pdti {WindowType} {inv.ItemVNum} {recipe.Amount} {Unknown} {inv.Upgrade} {inv.Rare}
                     Session.SendPacket($"pdti 11 {inv.ItemVNum} {recipe.Amount} 29 {inv.Upgrade} {inv.Rare}");
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateGuri(19, 1, Session.Character.CharacterId, 1324));

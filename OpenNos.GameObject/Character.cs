@@ -122,8 +122,6 @@ namespace OpenNos.GameObject
 
         public int ElementRateSP { get; private set; }
 
-        public int MessageCounter { get; set; }
-
         public ThreadSafeGenericList<BCard> EquipmentBCards { get; set; }
 
         public ExchangeInfo ExchangeInfo { get; set; }
@@ -162,6 +160,8 @@ namespace OpenNos.GameObject
 
         public int HitRate { get; set; }
 
+        public int HPMax { get; set; }
+
         public bool InExchangeOrTrade => ExchangeInfo != null || Speed == 0;
 
         public Inventory Inventory { get; set; }
@@ -199,6 +199,8 @@ namespace OpenNos.GameObject
 
         public DateTime LastHealth { get; set; }
 
+        public short LastItemVNum { get; set; }
+
         public DateTime LastMapObject { get; set; }
 
         public DateTime LastMonsterAggro { get; set; }
@@ -208,8 +210,6 @@ namespace OpenNos.GameObject
         public int LastNpcMonsterId { get; set; }
 
         public int LastNRunId { get; set; }
-
-        public short LastItemVNum { get; set; }
 
         public DateTime LastPermBuffRefresh { get; set; }
 
@@ -255,6 +255,8 @@ namespace OpenNos.GameObject
 
         public Dictionary<short, DateTime> MeditationDictionary { get; set; }
 
+        public int MessageCounter { get; set; }
+
         public int MinDistance { get; set; }
 
         public int MinHit { get; set; }
@@ -268,6 +270,8 @@ namespace OpenNos.GameObject
         public int MorphUpgrade { get; set; }
 
         public int MorphUpgrade2 { get; set; }
+
+        public int MPMax { get; set; }
 
         public ConcurrentStack<MTListHitTarget> MTListTargetQueue { get; set; }
 
@@ -419,10 +423,6 @@ namespace OpenNos.GameObject
         public int WareHouseSize { get; set; }
 
         public int WaterResistance { get; set; }
-
-        public int HPMax { get; set; }
-
-        public int MPMax { get; set; }
 
         #endregion
 
@@ -582,6 +582,8 @@ namespace OpenNos.GameObject
             Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), bf.Card.Name), 12));
         }
 
+        public bool CanAddMate(Mate mate) => mate.MateType == MateType.Pet ? MaxMateCount > Mates.Count : 3 > Mates.Count(s => s.MateType == MateType.Partner);
+
         public void ChangeChannel(string ip, int port, byte mode)
         {
             Session.SendPacket($"mz {ip} {port} {Session.Character.Slot}");
@@ -594,8 +596,6 @@ namespace OpenNos.GameObject
 
             Session.Disconnect();
         }
-
-        public bool CanAddMate(Mate mate) => mate.MateType == MateType.Pet ? MaxMateCount > Mates.Count : 3 > Mates.Count(s => s.MateType == MateType.Partner);
 
         public void ChangeClass(ClassType characterClass)
         {
@@ -1204,12 +1204,15 @@ namespace OpenNos.GameObject
                 case MapInstanceType.Act4Morcos:
                     raidType = 1;
                     break;
+
                 case MapInstanceType.Act4Hatus:
                     raidType = 2;
                     break;
+
                 case MapInstanceType.Act4Calvina:
                     raidType = 3;
                     break;
+
                 case MapInstanceType.Act4Berios:
                     raidType = 4;
                     break;
@@ -1459,6 +1462,7 @@ namespace OpenNos.GameObject
                 $" 0 {ServerManager.Instance.Act4DemonStat.Percentage / 100} {ServerManager.Instance.Act4DemonStat.Mode} {ServerManager.Instance.Act4DemonStat.CurrentTime} {ServerManager.Instance.Act4DemonStat.TotalTime}" +
                 $" {Convert.ToByte(ServerManager.Instance.Act4DemonStat.IsMorcos)} {Convert.ToByte(ServerManager.Instance.Act4DemonStat.IsHatus)} {Convert.ToByte(ServerManager.Instance.Act4DemonStat.IsCalvina)} " +
                 $"{Convert.ToByte(ServerManager.Instance.Act4DemonStat.IsBerios)} 0";
+
             //return $"fc {Faction} 0 69 0 0 0 1 1 1 1 0 34 0 0 0 1 1 1 1 0";
         }
 
@@ -1597,11 +1601,11 @@ namespace OpenNos.GameObject
                 {
                     if (Faction == FactionType.Angel)
                     {
-                        ServerManager.Instance.Act4AngelStat.Percentage += 1;
+                        ServerManager.Instance.Act4AngelStat.Percentage++;
                     }
                     else if (Faction == FactionType.Demon)
                     {
-                        ServerManager.Instance.Act4DemonStat.Percentage += 1;
+                        ServerManager.Instance.Act4DemonStat.Percentage++;
                     }
                 }
 
@@ -3143,7 +3147,7 @@ namespace OpenNos.GameObject
             {
                 inventory.CharacterId = CharacterId;
                 Inventory[inventory.Id] = (ItemInstance)inventory;
-                if(Inventory[inventory.Id] is WearableInstance wearable && wearable.EquipmentSerialId == Guid.Empty)
+                if (Inventory[inventory.Id] is WearableInstance wearable && wearable.EquipmentSerialId == Guid.Empty)
                 {
                     wearable.EquipmentSerialId = Guid.NewGuid();
                 }
@@ -3461,7 +3465,10 @@ namespace OpenNos.GameObject
                             }
                             catch (Exception ex)
                             {
-                                // TODO: Work on: statement conflicted with the REFERENCE constraint "FK_dbo.BazaarItem_dbo.ItemInstance_ItemInstanceId". The conflict occurred in database "opennos", table "dbo.BazaarItem", column 'ItemInstanceId'.
+                                // TODO: Work on: statement conflicted with the REFERENCE constraint
+                                //       "FK_dbo.BazaarItem_dbo.ItemInstance_ItemInstanceId". The
+                                //       conflict occurred in database "opennos", table
+                                //       "dbo.BazaarItem", column 'ItemInstanceId'.
                                 Logger.LogUserEventError("ONSAVEDELETION_EXCEPTION", Name, $"Detailed Item Information: Item ID = {inventoryToDeleteId}", ex);
                             }
                         }

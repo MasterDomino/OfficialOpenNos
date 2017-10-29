@@ -4,6 +4,10 @@ namespace OpenNos.DAL.EF.Migrations
 
     public partial class Aphrodite62 : DbMigration
     {
+        #region Methods
+
+        public override void Down() => DropTable("dbo.ShellEffectGeneration");
+
         public override void Up()
         {
             CreateTable(
@@ -21,6 +25,6 @@ namespace OpenNos.DAL.EF.Migrations
                 .PrimaryKey(t => t.Id);
         }
 
-        public override void Down() => DropTable("dbo.ShellEffectGeneration");
+        #endregion
     }
 }

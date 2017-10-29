@@ -49,7 +49,14 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         /// </summary>
         private readonly Socket _clientSocket;
 
+        private readonly ConcurrentQueue<byte[]> _highPriorityBuffer;
+        private readonly ConcurrentQueue<byte[]> _lowPriorityBuffer;
+        private readonly Random _random = new Random();
         private readonly ScsTcpEndPoint _remoteEndPoint;
+
+        private readonly CancellationTokenSource _sendCancellationToken = new CancellationTokenSource();
+
+        private readonly Task _sendTask;
 
         /// <summary>
         /// This object is just used for thread synchronizing (locking).
@@ -57,18 +64,11 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         private readonly object _syncLock;
 
         private bool _disposed;
-        private readonly ConcurrentQueue<byte[]> _highPriorityBuffer;
-        private readonly ConcurrentQueue<byte[]> _lowPriorityBuffer;
-        private readonly Random _random = new Random();
 
         /// <summary>
         /// A flag to control thread's running
         /// </summary>
         private volatile bool _running;
-
-        private readonly CancellationTokenSource _sendCancellationToken = new CancellationTokenSource();
-
-        private readonly Task _sendTask;
 
         #endregion
 
@@ -281,7 +281,8 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
                     byte[] receivedBytes = new byte[bytesRead];
                     Array.Copy(_buffer, receivedBytes, bytesRead);
 
-                    // Read messages according to current wire protocol and raise MessageReceived event for all received messages
+                    // Read messages according to current wire protocol and raise MessageReceived
+                    // event for all received messages
                     foreach (IScsMessage message in WireProtocol.CreateMessages(receivedBytes))
                     {
                         OnMessageReceived(message, DateTime.Now);

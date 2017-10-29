@@ -22,35 +22,34 @@ namespace OpenNos.DAL.EF
 
         public RollGeneratedItem()
         {
-
         }
 
         #endregion
 
         #region Properties
 
-        [Key]
-        public short RollGeneratedItemId { get; set; }
+        public bool IsRareRandom { get; set; }
 
-        public short OriginalItemDesign { get; set; }
-
-        public virtual Item OriginalItem { get; set; }
-
-        public short OriginalItemVNum { get; set; }
-
-        public short Probability { get; set; }
+        public virtual Item ItemGenerated { get; set; }
 
         public byte ItemGeneratedAmount { get; set; }
 
         public short ItemGeneratedVNum { get; set; }
 
-        public bool IsRareRandom { get; set; }
+        public byte MaximumOriginalItemRare { get; set; }
 
         public byte MinimumOriginalItemRare { get; set; }
 
-        public byte MaximumOriginalItemRare { get; set; }
+        public virtual Item OriginalItem { get; set; }
 
-        public virtual Item ItemGenerated { get; set; }
+        public short OriginalItemDesign { get; set; }
+
+        public short OriginalItemVNum { get; set; }
+
+        public short Probability { get; set; }
+
+        [Key]
+        public short RollGeneratedItemId { get; set; }
 
         #endregion
     }

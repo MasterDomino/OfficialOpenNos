@@ -21,9 +21,13 @@ namespace OpenNos.GameObject
 {
     public class UpgradeItem : Item
     {
+        #region Instantiation
+
         public UpgradeItem(ItemDTO item) : base(item)
         {
         }
+
+        #endregion
 
         #region Methods
 
@@ -59,7 +63,7 @@ namespace OpenNos.GameObject
                                     if (equip?.IsFixed == true)
                                     {
                                         equip.IsFixed = false;
-                                        session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId,3003));
+                                        session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 3003));
                                         session.SendPacket(UserInterfaceHelper.Instance.GenerateGuri(17, 1, session.Character.CharacterId, SlotEquip));
                                         session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("ITEM_UNFIXED"), 12));
                                         isUsed = true;
@@ -106,7 +110,7 @@ namespace OpenNos.GameObject
                 Logger.Warn(string.Format(Language.Instance.GetMessageFromKey("NO_HANDLER_ITEM"), GetType()));
             }
         }
-    }
 
-    #endregion
+        #endregion
+    }
 }

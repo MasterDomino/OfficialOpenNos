@@ -1217,6 +1217,7 @@ namespace OpenNos.Handler
                                 Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NEED_TEAM"), 10));
                             }
                             return;
+
                         case (sbyte)PortalType.BlueRaid:
                         case (sbyte)PortalType.DarkRaid:
                             if ((int)Session.Character.Faction == portal.Type - 9 && Session.Character.Family?.Act4Raid != null)
@@ -1228,12 +1229,15 @@ namespace OpenNos.Handler
                                     case MapInstanceType.Act4Morcos:
                                         ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, Session.Character.Family.Act4Raid.MapInstanceId, 43, 179);
                                         break;
+
                                     case MapInstanceType.Act4Hatus:
                                         ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, Session.Character.Family.Act4Raid.MapInstanceId, 15, 9);
                                         break;
+
                                     case MapInstanceType.Act4Calvina:
                                         ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, Session.Character.Family.Act4Raid.MapInstanceId, 24, 6);
                                         break;
+
                                     case MapInstanceType.Act4Berios:
                                         ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, Session.Character.Family.Act4Raid.MapInstanceId, 20, 20);
                                         break;
@@ -1610,10 +1614,7 @@ namespace OpenNos.Handler
                         Session.Character.Gold -= 100;
                         Session.SendPacket(Session.Character.GenerateGold());
                         Session.Character.LastPVPRevive = DateTime.Now;
-                        Observable.Timer(TimeSpan.FromSeconds(5)).Subscribe(observer =>
-                        {
-                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("PVP_ACTIVE"), 10));
-                        });
+                        Observable.Timer(TimeSpan.FromSeconds(5)).Subscribe(observer => Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("PVP_ACTIVE"), 10)));
                     }
                     else
                     {
@@ -1920,19 +1921,16 @@ namespace OpenNos.Handler
                 Session.SendPacket(Session.Character.GenerateFamilyMemberExp());
                 try
                 {
-                    Session.Character.Faction = Session.Character.Family.FamilyCharacters.Where(s => s.Authority.Equals(FamilyAuthority.Head)).FirstOrDefault().Character.Faction;
-
+                    Session.Character.Faction = Session.Character.Family.FamilyCharacters.Find(s => s.Authority.Equals(FamilyAuthority.Head)).Character.Faction;
                 }
                 catch
                 {
-
                 }
                 if (!string.IsNullOrWhiteSpace(Session.Character.Family.FamilyMessage))
                 {
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo("--- Family Message ---\n" + Session.Character.Family.FamilyMessage));
                 }
             }
-
 
             long? familyId = DAOFactory.FamilyCharacterDAO.LoadByCharacterId(Session.Character.CharacterId)?.FamilyId;
             if (familyId.HasValue)

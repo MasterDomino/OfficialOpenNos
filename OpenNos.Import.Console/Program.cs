@@ -17,7 +17,6 @@ using OpenNos.Core;
 using OpenNos.DAL;
 using OpenNos.DAL.EF.Helpers;
 using OpenNos.Data;
-using OpenNos.Import.Console.Resource;
 using System;
 using System.Configuration;
 using System.Diagnostics;

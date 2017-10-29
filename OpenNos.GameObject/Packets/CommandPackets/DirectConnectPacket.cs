@@ -14,10 +14,11 @@ namespace OpenNos.GameObject
         [PacketIndex(1)]
         public int Port { get; set; }
 
-        public override string ToString()
-        {
-            return $"DirectConnect Command IPAddress: {IPAddress} Port: {Port}";
-        }
+        #endregion
+
+        #region Methods
+
+        public override string ToString() => $"DirectConnect Command IPAddress: {IPAddress} Port: {Port}";
 
         #endregion
     }

@@ -20,9 +20,11 @@ namespace OpenNos.Data
     {
         #region Instantiation
 
-        protected SynchronizableBaseDTO() => Id = Guid.NewGuid(); // make unique
+        protected SynchronizableBaseDTO() => Id = Guid.NewGuid();
 
         #endregion
+
+        // make unique
 
         #region Properties
 

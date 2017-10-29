@@ -343,6 +343,7 @@ namespace OpenNos.GameObject.Helpers
                                     });
                                 }
                                 break;
+
                             case MapInstanceType.Act4Morcos:
                             case MapInstanceType.Act4Hatus:
                             case MapInstanceType.Act4Calvina:
@@ -350,7 +351,7 @@ namespace OpenNos.GameObject.Helpers
                                 client = evt.MapInstance.Sessions.FirstOrDefault();
                                 if (client != null)
                                 {
-                                    Family fam = evt.MapInstance.Sessions.FirstOrDefault(s => s?.Character?.Family != null).Character.Family;
+                                    Family fam = evt.MapInstance.Sessions.FirstOrDefault(s => s?.Character?.Family != null)?.Character.Family;
                                     if (fam != null)
                                     {
                                         fam.Act4Raid.Portals.RemoveAll(s => s.DestinationMapInstanceId.Equals(fam.Act4RaidBossMap.MapInstanceId));
@@ -365,21 +366,23 @@ namespace OpenNos.GameObject.Helpers
                                                 destY = 10;
                                                 rewardVNum = 185;
                                                 break;
+
                                             case MapInstanceType.Act4Calvina:
                                                 destX = 25;
                                                 destY = 7;
                                                 rewardVNum = 942;
                                                 break;
+
                                             case MapInstanceType.Act4Berios:
                                                 destX = 16;
                                                 destY = 25;
                                                 rewardVNum = 999;
                                                 break;
                                         }
-                                        int count = evt.MapInstance.Sessions.Where(s => s != null && s.Character != null).Count();
+                                        int count = evt.MapInstance.Sessions.Count(s => s?.Character != null);
                                         foreach (ClientSession sess in evt.MapInstance.Sessions)
                                         {
-                                            if (sess != null && sess.Character != null)
+                                            if (sess?.Character != null)
                                             {
                                                 sess.Character.GiftAdd(rewardVNum, 1, forceRandom: true, minRare: 1, design: 255);
                                                 sess.Character.GenerateFamilyXp(10000 / count);
@@ -410,7 +413,6 @@ namespace OpenNos.GameObject.Helpers
                                     }
                                 }
                                 break;
-
                         }
                         break;
 
@@ -500,6 +502,7 @@ namespace OpenNos.GameObject.Helpers
                     case EventActionType.SPAWNMONSTERS:
                         evt.MapInstance.SummonMonsters((List<MonsterToSummon>)evt.Parameter);
                         break;
+
                     case EventActionType.REFRESHRAIDGOAL:
                         ClientSession cl = evt.MapInstance.Sessions.FirstOrDefault();
                         if (cl?.Character != null)
@@ -508,6 +511,7 @@ namespace OpenNos.GameObject.Helpers
                             ServerManager.Instance.Broadcast(cl, UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NEW_MISSION"), 0), ReceiverType.Group);
                         }
                         break;
+
                     case EventActionType.SPAWNNPCS:
                         evt.MapInstance.SummonNpcs((List<NpcToSummon>)evt.Parameter);
                         break;

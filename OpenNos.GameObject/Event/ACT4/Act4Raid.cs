@@ -25,7 +25,6 @@ namespace OpenNos.GameObject.Event
 {
     public static class Act4Raid
     {
-
         #region Methods
 
         public static void GenerateRaid(MapInstanceType raidType, byte faction)
@@ -50,19 +49,24 @@ namespace OpenNos.GameObject.Event
 
     public class Act4RaidThread
     {
-        List<long> wonFamilies = new List<long>();
-        short mapId = 135;
-        short bossMapId = 136;
-        short bossVNum = 563;
-        short bossX = 55;
-        short bossY = 11;
-        short sourcePortalX = 146;
-        short sourcePortalY = 43;
-        short destPortalX = 55;
-        short destPortalY = 80;
-        bool bossMove = false;
-        MapInstanceType _raidType;
-        byte _faction = 0;
+        #region Members
+
+        private readonly List<long> _wonFamilies = new List<long>();
+        private short _bossMapId = 136;
+        private bool _bossMove;
+        private short _bossVNum = 563;
+        private short _bossX = 55;
+        private short _bossY = 11;
+        private short _destPortalX = 55;
+        private short _destPortalY = 80;
+        private byte _faction;
+        private short _mapId = 135;
+        private MapInstanceType _raidType;
+        private short _sourcePortalX = 146;
+        private short _sourcePortalY = 43;
+
+        #endregion
+
         #region Methods
 
         public void Run(MapInstanceType raidType, byte faction)
@@ -73,40 +77,42 @@ namespace OpenNos.GameObject.Event
             {
                 // Morcos is default
                 case MapInstanceType.Act4Hatus:
-                    mapId = 137;
-                    bossMapId = 138;
-                    bossVNum = 577;
-                    bossX = 36;
-                    bossY = 18;
-                    sourcePortalX = 37;
-                    sourcePortalY = 156;
-                    destPortalX = 36;
-                    destPortalY = 58;
-                    bossMove = false;
+                    _mapId = 137;
+                    _bossMapId = 138;
+                    _bossVNum = 577;
+                    _bossX = 36;
+                    _bossY = 18;
+                    _sourcePortalX = 37;
+                    _sourcePortalY = 156;
+                    _destPortalX = 36;
+                    _destPortalY = 58;
+                    _bossMove = false;
                     break;
+
                 case MapInstanceType.Act4Calvina:
-                    mapId = 139;
-                    bossMapId = 140;
-                    bossVNum = 629;
-                    bossX = 26;
-                    bossY = 26;
-                    sourcePortalX = 194;
-                    sourcePortalY = 17;
-                    destPortalX = 9;
-                    destPortalY = 41;
-                    bossMove = true;
+                    _mapId = 139;
+                    _bossMapId = 140;
+                    _bossVNum = 629;
+                    _bossX = 26;
+                    _bossY = 26;
+                    _sourcePortalX = 194;
+                    _sourcePortalY = 17;
+                    _destPortalX = 9;
+                    _destPortalY = 41;
+                    _bossMove = true;
                     break;
+
                 case MapInstanceType.Act4Berios:
-                    mapId = 141;
-                    bossMapId = 142;
-                    bossVNum = 624;
-                    bossX = 29;
-                    bossY = 29;
-                    sourcePortalX = 188;
-                    sourcePortalY = 96;
-                    destPortalX = 29;
-                    destPortalY = 54;
-                    bossMove = true;
+                    _mapId = 141;
+                    _bossMapId = 142;
+                    _bossVNum = 624;
+                    _bossX = 29;
+                    _bossY = 29;
+                    _sourcePortalX = 188;
+                    _sourcePortalY = 96;
+                    _destPortalX = 29;
+                    _destPortalY = 54;
+                    _bossMove = true;
                     break;
             }
 
@@ -114,7 +120,7 @@ namespace OpenNos.GameObject.Event
             const int interval = 30;
 
             //Run once to load everything in place
-            RefreshRaid(raidTime);
+            refreshRaid(raidTime);
 
             ServerManager.Instance.Act4RaidStart = DateTime.Now;
 
@@ -122,13 +128,13 @@ namespace OpenNos.GameObject.Event
             {
                 raidTime -= interval;
                 Thread.Sleep(interval * 1000);
-                RefreshRaid(raidTime);
+                refreshRaid(raidTime);
             }
 
-            EndRaid();
+            endRaid();
         }
 
-        private void EndRaid()
+        private void endRaid()
         {
             foreach (Family fam in ServerManager.Instance.FamilyList.GetAllItems())
             {
@@ -155,6 +161,7 @@ namespace OpenNos.GameObject.Event
                     ServerManager.Instance.Act4AngelStat.IsCalvina = false;
                     ServerManager.Instance.Act4AngelStat.IsBerios = false;
                     break;
+
                 case 2:
                     ServerManager.Instance.Act4DemonStat.Mode = 0;
                     ServerManager.Instance.Act4DemonStat.IsMorcos = false;
@@ -167,30 +174,58 @@ namespace OpenNos.GameObject.Event
             ServerManager.Instance.StartedEvents.Remove(EventType.Act4Raid);
         }
 
-        private void RefreshRaid(int remaining)
+        private void openRaid(Family fami)
+        {
+            List<MonsterToSummon> summonParameters = new List<MonsterToSummon>();
+            List<EventContainer> onDeathEvents = new List<EventContainer>
+            {
+                new EventContainer(fami.Act4RaidBossMap, EventActionType.THROWITEMS, new Tuple<int, short, byte, int, int>(_bossVNum, 1046, 10, 20000, 20001)),
+                new EventContainer(fami.Act4RaidBossMap, EventActionType.THROWITEMS, new Tuple<int, short, byte, int, int>(_bossVNum, 1244, 10, 5, 6))
+            };
+            if (_raidType.Equals(MapInstanceType.Act4Berios))
+            {
+                onDeathEvents.Add(new EventContainer(fami.Act4RaidBossMap, EventActionType.THROWITEMS, new Tuple<int, short, byte, int, int>(_bossVNum, 2395, 3, 1, 2)));
+                onDeathEvents.Add(new EventContainer(fami.Act4RaidBossMap, EventActionType.THROWITEMS, new Tuple<int, short, byte, int, int>(_bossVNum, 2396, 5, 1, 2)));
+                onDeathEvents.Add(new EventContainer(fami.Act4RaidBossMap, EventActionType.THROWITEMS, new Tuple<int, short, byte, int, int>(_bossVNum, 2397, 10, 1, 2)));
+            }
+            onDeathEvents.Add(new EventContainer(fami.Act4RaidBossMap, EventActionType.SCRIPTEND, (byte)1));
+            MonsterToSummon bossMob = new MonsterToSummon(_bossVNum, new MapCell() { X = _bossX, Y = _bossY }, -1, _bossMove)
+            {
+                DeathEvents = onDeathEvents
+            };
+            summonParameters.Add(bossMob);
+            EventHelper.Instance.RunEvent(new EventContainer(fami.Act4RaidBossMap, EventActionType.SPAWNMONSTERS, summonParameters));
+            EventHelper.Instance.RunEvent(new EventContainer(fami.Act4Raid, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("ACT4RAID_OPEN"), 0)));
+
+            Observable.Timer(TimeSpan.FromSeconds(90)).Subscribe(o =>
+            {
+                //TODO: Summon Monsters
+            });
+        }
+
+        private void refreshRaid(int remaining)
         {
             foreach (Family fam in ServerManager.Instance.FamilyList.GetAllItems())
             {
                 if (fam.Act4Raid == null)
                 {
-                    fam.Act4Raid = ServerManager.Instance.GenerateMapInstance(mapId, _raidType, new InstanceBag());
+                    fam.Act4Raid = ServerManager.Instance.GenerateMapInstance(_mapId, _raidType, new InstanceBag());
                 }
                 if (fam.Act4RaidBossMap == null)
                 {
-                    fam.Act4RaidBossMap = ServerManager.Instance.GenerateMapInstance(bossMapId, _raidType, new InstanceBag());
+                    fam.Act4RaidBossMap = ServerManager.Instance.GenerateMapInstance(_bossMapId, _raidType, new InstanceBag());
                 }
                 if (remaining <= 1800 && !fam.Act4Raid.Portals.Any(s => s.DestinationMapInstanceId.Equals(fam.Act4RaidBossMap.MapInstanceId)))
                 {
                     fam.Act4Raid.CreatePortal(new Portal()
                     {
                         DestinationMapInstanceId = fam.Act4RaidBossMap.MapInstanceId,
-                        DestinationX = destPortalX,
-                        DestinationY = destPortalY,
-                        SourceX = sourcePortalX,
-                        SourceY = sourcePortalY,
-
+                        DestinationX = _destPortalX,
+                        DestinationY = _destPortalY,
+                        SourceX = _sourcePortalX,
+                        SourceY = _sourcePortalY,
                     });
-                    OpenRaid(fam);
+                    openRaid(fam);
                 }
 
                 int count = fam.Act4RaidBossMap.Sessions.Count();
@@ -214,6 +249,7 @@ namespace OpenNos.GameObject.Event
                                 mobWave.Add(new MonsterToSummon(562, fam.Act4RaidBossMap.Map.GetRandomPosition(), -1, true));
                                 mobWave.Add(new MonsterToSummon(562, fam.Act4RaidBossMap.Map.GetRandomPosition(), -1, true));
                                 break;
+
                             case MapInstanceType.Act4Hatus:
                                 mobWave.Add(new MonsterToSummon(574, fam.Act4RaidBossMap.Map.GetRandomPosition(), -1, true));
                                 mobWave.Add(new MonsterToSummon(574, fam.Act4RaidBossMap.Map.GetRandomPosition(), -1, true));
@@ -222,6 +258,7 @@ namespace OpenNos.GameObject.Event
                                 mobWave.Add(new MonsterToSummon(576, fam.Act4RaidBossMap.Map.GetRandomPosition(), -1, true));
                                 mobWave.Add(new MonsterToSummon(576, fam.Act4RaidBossMap.Map.GetRandomPosition(), -1, true));
                                 break;
+
                             case MapInstanceType.Act4Calvina:
                                 mobWave.Add(new MonsterToSummon(770, fam.Act4RaidBossMap.Map.GetRandomPosition(), -1, true));
                                 mobWave.Add(new MonsterToSummon(770, fam.Act4RaidBossMap.Map.GetRandomPosition(), -1, true));
@@ -230,6 +267,7 @@ namespace OpenNos.GameObject.Event
                                 mobWave.Add(new MonsterToSummon(771, fam.Act4RaidBossMap.Map.GetRandomPosition(), -1, true));
                                 mobWave.Add(new MonsterToSummon(771, fam.Act4RaidBossMap.Map.GetRandomPosition(), -1, true));
                                 break;
+
                             case MapInstanceType.Act4Berios:
                                 mobWave.Add(new MonsterToSummon(780, fam.Act4RaidBossMap.Map.GetRandomPosition(), -1, true));
                                 mobWave.Add(new MonsterToSummon(781, fam.Act4RaidBossMap.Map.GetRandomPosition(), -1, true));
@@ -243,31 +281,6 @@ namespace OpenNos.GameObject.Event
                     fam.Act4RaidBossMap.SummonMonsters(mobWave);
                 }
             }
-        }
-
-        private void OpenRaid(Family fami)
-        {
-            List<MonsterToSummon> summonParameters = new List<MonsterToSummon>();
-            List<EventContainer> onDeathEvents = new List<EventContainer>();
-            onDeathEvents.Add(new EventContainer(fami.Act4RaidBossMap, EventActionType.THROWITEMS, new Tuple<int, short, byte, int, int>(bossVNum, 1046, 10, 20000, 20001)));
-            onDeathEvents.Add(new EventContainer(fami.Act4RaidBossMap, EventActionType.THROWITEMS, new Tuple<int, short, byte, int, int>(bossVNum, 1244, 10, 5, 6)));
-            if (_raidType.Equals(MapInstanceType.Act4Berios))
-            {
-                onDeathEvents.Add(new EventContainer(fami.Act4RaidBossMap, EventActionType.THROWITEMS, new Tuple<int, short, byte, int, int>(bossVNum, 2395, 3, 1, 2)));
-                onDeathEvents.Add(new EventContainer(fami.Act4RaidBossMap, EventActionType.THROWITEMS, new Tuple<int, short, byte, int, int>(bossVNum, 2396, 5, 1, 2)));
-                onDeathEvents.Add(new EventContainer(fami.Act4RaidBossMap, EventActionType.THROWITEMS, new Tuple<int, short, byte, int, int>(bossVNum, 2397, 10, 1, 2)));
-            }
-            onDeathEvents.Add(new EventContainer(fami.Act4RaidBossMap, EventActionType.SCRIPTEND, (byte)1));
-            MonsterToSummon bossMob = new MonsterToSummon(bossVNum, new MapCell() { X = bossX, Y = bossY }, -1, bossMove);
-            bossMob.DeathEvents = onDeathEvents;
-            summonParameters.Add(bossMob);
-            EventHelper.Instance.RunEvent(new EventContainer(fami.Act4RaidBossMap, EventActionType.SPAWNMONSTERS, summonParameters));
-            EventHelper.Instance.RunEvent(new EventContainer(fami.Act4Raid, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("ACT4RAID_OPEN"), 0)));
-
-            Observable.Timer(TimeSpan.FromSeconds(90)).Subscribe(o =>
-            {
-                //TODO: Summon Monsters
-            });
         }
 
         #endregion

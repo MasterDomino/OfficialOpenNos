@@ -14,7 +14,6 @@
 
 using OpenNos.Domain;
 using System;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OpenNos.DAL.EF
 {
@@ -24,13 +23,13 @@ namespace OpenNos.DAL.EF
 
         public long CellonOptionId { get; set; }
 
+        public Guid EquipmentSerialId { get; set; }
+
         public byte Level { get; set; }
 
         public CellonOptionType Type { get; set; }
 
         public int Value { get; set; }
-
-        public Guid EquipmentSerialId { get; set; }
 
         #endregion
     }

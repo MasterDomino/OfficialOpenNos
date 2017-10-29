@@ -4,6 +4,32 @@ namespace OpenNos.DAL.EF.Migrations
 
     public partial class Aphrodite50 : DbMigration
     {
+        #region Methods
+
+        public override void Down()
+        {
+            CreateTable(
+                "dbo.ItemCard",
+                c => new
+                {
+                    ItemVNum = c.Short(nullable: false),
+                    CardId = c.Short(nullable: false),
+                    CardChance = c.Short(nullable: false),
+                })
+                .PrimaryKey(t => new { t.ItemVNum, t.CardId });
+
+            DropForeignKey("dbo.BCard", "ItemVnum", "dbo.Item");
+            DropIndex("dbo.BCard", new[] { "ItemVnum" });
+            DropIndex("dbo.BCard", new[] { "CardId" });
+            AlterColumn("dbo.BCard", "CardId", c => c.Short(nullable: false));
+            DropColumn("dbo.BCard", "ItemVnum");
+            CreateIndex("dbo.ItemCard", "CardId");
+            CreateIndex("dbo.ItemCard", "ItemVNum");
+            CreateIndex("dbo.BCard", "CardId");
+            AddForeignKey("dbo.ItemCard", "ItemVNum", "dbo.Item", "VNum");
+            AddForeignKey("dbo.ItemCard", "CardId", "dbo.Card", "CardId");
+        }
+
         public override void Up()
         {
             DropForeignKey("dbo.ItemCard", "CardId", "dbo.Card");
@@ -19,28 +45,6 @@ namespace OpenNos.DAL.EF.Migrations
             DropTable("dbo.ItemCard");
         }
 
-        public override void Down()
-        {
-            CreateTable(
-                "dbo.ItemCard",
-                c => new
-                    {
-                        ItemVNum = c.Short(nullable: false),
-                        CardId = c.Short(nullable: false),
-                        CardChance = c.Short(nullable: false),
-                    })
-                .PrimaryKey(t => new { t.ItemVNum, t.CardId });
-
-            DropForeignKey("dbo.BCard", "ItemVnum", "dbo.Item");
-            DropIndex("dbo.BCard", new[] { "ItemVnum" });
-            DropIndex("dbo.BCard", new[] { "CardId" });
-            AlterColumn("dbo.BCard", "CardId", c => c.Short(nullable: false));
-            DropColumn("dbo.BCard", "ItemVnum");
-            CreateIndex("dbo.ItemCard", "CardId");
-            CreateIndex("dbo.ItemCard", "ItemVNum");
-            CreateIndex("dbo.BCard", "CardId");
-            AddForeignKey("dbo.ItemCard", "ItemVNum", "dbo.Item", "VNum");
-            AddForeignKey("dbo.ItemCard", "CardId", "dbo.Card", "CardId");
-        }
+        #endregion
     }
 }

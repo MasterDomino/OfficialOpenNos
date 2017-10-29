@@ -32,9 +32,46 @@ namespace OpenNos.GameObject
 
         #region Methods
 
+        public override void Use(ClientSession session, ref ItemInstance inv, byte Option = 0, string[] packetsplit = null)
+        {
+            if ((DateTime.Now - session.Character.LastPotion).TotalMilliseconds < 750)
+            {
+                return;
+            }
+            session.Character.LastPotion = DateTime.Now;
+            Item item = inv.Item;
+            switch (Effect)
+            {
+                default:
+                    if (session.Character.Hp <= 0)
+                    {
+                        return;
+                    }
+                    int amount = session.Character.SnackAmount;
+                    if (amount < 5)
+                    {
+                        Thread workerThread = new Thread(() => regenerate(session, item));
+                        workerThread.Start();
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                    }
+                    else
+                    {
+                        session.SendPacket(session.Character.Gender == GenderType.Female
+                            ? session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NOT_HUNGRY_FEMALE"), 1)
+                            : session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NOT_HUNGRY_MALE"), 1));
+                    }
+                    if (amount == 0)
+                    {
+                        Thread workerThread2 = new Thread(() => sync(session));
+                        workerThread2.Start();
+                    }
+                    break;
+            }
+        }
+
         private void regenerate(ClientSession session, Item item)
         {
-            session.SendPacket(Helpers.StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId,6000));
+            session.SendPacket(Helpers.StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 6000));
             session.Character.SnackAmount++;
             session.Character.MaxSnack = 0;
             session.Character.SnackHp += item.Hp / 5;
@@ -79,43 +116,6 @@ namespace OpenNos.GameObject
                     return;
                 }
                 Thread.Sleep(1800);
-            }
-        }
-
-        public override void Use(ClientSession session, ref ItemInstance inv, byte Option = 0, string[] packetsplit = null)
-        {
-            if ((DateTime.Now - session.Character.LastPotion).TotalMilliseconds < 750)
-            {
-                return;
-            }
-            session.Character.LastPotion = DateTime.Now;
-            Item item = inv.Item;
-            switch (Effect)
-            {
-                default:
-                    if (session.Character.Hp <= 0)
-                    {
-                        return;
-                    }
-                    int amount = session.Character.SnackAmount;
-                    if (amount < 5)
-                    {
-                        Thread workerThread = new Thread(() => regenerate(session, item));
-                        workerThread.Start();
-                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
-                    }
-                    else
-                    {
-                        session.SendPacket(session.Character.Gender == GenderType.Female
-                            ? session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NOT_HUNGRY_FEMALE"), 1)
-                            : session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NOT_HUNGRY_MALE"), 1));
-                    }
-                    if (amount == 0)
-                    {
-                        Thread workerThread2 = new Thread(() => sync(session));
-                        workerThread2.Start();
-                    }
-                    break;
             }
         }
 

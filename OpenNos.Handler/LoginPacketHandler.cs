@@ -75,6 +75,7 @@ namespace OpenNos.Handler
             {
                 string ipAddress = _session.IpAddress;
                 DAOFactory.AccountDAO.WriteGeneralLog(loadedAccount.AccountId, ipAddress, null, GeneralLogType.Connection, "LoginServer");
+
                 //NoS0575 3151710 MasterDomino PASS 0074E795\v0.9.3.3075 0 8B52893122F546170026401556D30AF5
 
                 //check if the account is connected

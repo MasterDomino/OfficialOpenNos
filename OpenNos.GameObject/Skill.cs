@@ -31,8 +31,9 @@ namespace OpenNos.GameObject
 
         #region Properties
 
-        public List<ComboDTO> Combos { get; set; }
         public List<BCard> BCards { get; set; }
+
+        public List<ComboDTO> Combos { get; set; }
 
         #endregion
 

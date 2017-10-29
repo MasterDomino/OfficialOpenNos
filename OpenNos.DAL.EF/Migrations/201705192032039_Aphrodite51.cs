@@ -4,6 +4,38 @@ namespace OpenNos.DAL.EF.Migrations
 
     public partial class Aphrodite51 : DbMigration
     {
+        #region Methods
+
+        public override void Down()
+        {
+            CreateTable(
+                "dbo.SkillCard",
+                c => new
+                {
+                    SkillVNum = c.Short(nullable: false),
+                    CardId = c.Short(nullable: false),
+                    CardChance = c.Short(nullable: false),
+                })
+                .PrimaryKey(t => new { t.SkillVNum, t.CardId });
+
+            AddColumn("dbo.Skill", "SkillChance", c => c.Short(nullable: false));
+            AddColumn("dbo.Skill", "SecondarySkillVNum", c => c.Short(nullable: false));
+            AddColumn("dbo.Skill", "ElementalDamage", c => c.Short(nullable: false));
+            AddColumn("dbo.Skill", "Damage", c => c.Short(nullable: false));
+            DropForeignKey("dbo.BCard", "SkillVNum", "dbo.Skill");
+            DropForeignKey("dbo.BCard", "NpcMonsterVNum", "dbo.NpcMonster");
+            DropIndex("dbo.BCard", new[] { "NpcMonsterVNum" });
+            DropIndex("dbo.BCard", new[] { "SkillVNum" });
+            DropIndex("dbo.BCard", new[] { "ItemVNum" });
+            DropColumn("dbo.BCard", "NpcMonsterVNum");
+            DropColumn("dbo.BCard", "SkillVNum");
+            CreateIndex("dbo.SkillCard", "CardId");
+            CreateIndex("dbo.SkillCard", "SkillVNum");
+            CreateIndex("dbo.BCard", "ItemVnum");
+            AddForeignKey("dbo.SkillCard", "SkillVNum", "dbo.Skill", "SkillVNum");
+            AddForeignKey("dbo.SkillCard", "CardId", "dbo.Card", "CardId");
+        }
+
         public override void Up()
         {
             DropForeignKey("dbo.SkillCard", "CardId", "dbo.Card");
@@ -25,34 +57,6 @@ namespace OpenNos.DAL.EF.Migrations
             DropTable("dbo.SkillCard");
         }
 
-        public override void Down()
-        {
-            CreateTable(
-                "dbo.SkillCard",
-                c => new
-                    {
-                        SkillVNum = c.Short(nullable: false),
-                        CardId = c.Short(nullable: false),
-                        CardChance = c.Short(nullable: false),
-                    })
-                .PrimaryKey(t => new { t.SkillVNum, t.CardId });
-
-            AddColumn("dbo.Skill", "SkillChance", c => c.Short(nullable: false));
-            AddColumn("dbo.Skill", "SecondarySkillVNum", c => c.Short(nullable: false));
-            AddColumn("dbo.Skill", "ElementalDamage", c => c.Short(nullable: false));
-            AddColumn("dbo.Skill", "Damage", c => c.Short(nullable: false));
-            DropForeignKey("dbo.BCard", "SkillVNum", "dbo.Skill");
-            DropForeignKey("dbo.BCard", "NpcMonsterVNum", "dbo.NpcMonster");
-            DropIndex("dbo.BCard", new[] { "NpcMonsterVNum" });
-            DropIndex("dbo.BCard", new[] { "SkillVNum" });
-            DropIndex("dbo.BCard", new[] { "ItemVNum" });
-            DropColumn("dbo.BCard", "NpcMonsterVNum");
-            DropColumn("dbo.BCard", "SkillVNum");
-            CreateIndex("dbo.SkillCard", "CardId");
-            CreateIndex("dbo.SkillCard", "SkillVNum");
-            CreateIndex("dbo.BCard", "ItemVnum");
-            AddForeignKey("dbo.SkillCard", "SkillVNum", "dbo.Skill", "SkillVNum");
-            AddForeignKey("dbo.SkillCard", "CardId", "dbo.Card", "CardId");
-        }
+        #endregion
     }
 }

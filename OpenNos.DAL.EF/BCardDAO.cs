@@ -82,40 +82,7 @@ namespace OpenNos.DAL.EF
         {
             using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
             {
-                foreach (BCard card in context.BCard.Where(s=>s.CardId == cardId))
-                {
-                    yield return _mapper.Map<BCardDTO>(card);
-                }
-            }
-        }
-
-        public IEnumerable<BCardDTO> LoadByItemVNum(short vNum)
-        {
-            using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
-            {
-                foreach (BCard card in context.BCard.Where(s => s.ItemVNum == vNum))
-                {
-                    yield return _mapper.Map<BCardDTO>(card);
-                }
-            }
-        }
-
-        public IEnumerable<BCardDTO> LoadBySkillVNum(short vNum)
-        {
-            using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
-            {
-                foreach (BCard card in context.BCard.Where(s => s.SkillVNum == vNum))
-                {
-                    yield return _mapper.Map<BCardDTO>(card);
-                }
-            }
-        }
-
-        public IEnumerable<BCardDTO> LoadByNpcMonsterVNum(short vNum)
-        {
-            using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
-            {
-                foreach (BCard card in context.BCard.Where(s => s.NpcMonsterVNum == vNum))
+                foreach (BCard card in context.BCard.Where(s => s.CardId == cardId))
                 {
                     yield return _mapper.Map<BCardDTO>(card);
                 }
@@ -135,6 +102,39 @@ namespace OpenNos.DAL.EF
             {
                 Logger.Error(e);
                 return null;
+            }
+        }
+
+        public IEnumerable<BCardDTO> LoadByItemVNum(short vNum)
+        {
+            using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
+            {
+                foreach (BCard card in context.BCard.Where(s => s.ItemVNum == vNum))
+                {
+                    yield return _mapper.Map<BCardDTO>(card);
+                }
+            }
+        }
+
+        public IEnumerable<BCardDTO> LoadByNpcMonsterVNum(short vNum)
+        {
+            using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
+            {
+                foreach (BCard card in context.BCard.Where(s => s.NpcMonsterVNum == vNum))
+                {
+                    yield return _mapper.Map<BCardDTO>(card);
+                }
+            }
+        }
+
+        public IEnumerable<BCardDTO> LoadBySkillVNum(short vNum)
+        {
+            using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
+            {
+                foreach (BCard card in context.BCard.Where(s => s.SkillVNum == vNum))
+                {
+                    yield return _mapper.Map<BCardDTO>(card);
+                }
             }
         }
 

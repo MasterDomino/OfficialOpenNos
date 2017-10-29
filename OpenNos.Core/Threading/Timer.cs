@@ -24,6 +24,8 @@ namespace OpenNos.Core.Threading
     {
         #region Members
 
+        private readonly object _lock = new object();
+
         /// <summary>
         /// This timer is used to perfom the task at spesified intervals.
         /// </summary>
@@ -41,8 +43,6 @@ namespace OpenNos.Core.Threading
         /// Indicates that whether timer is running or stopped.
         /// </summary>
         private volatile bool _running;
-
-        private readonly object _lock = new object();
 
         #endregion
 

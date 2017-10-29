@@ -34,9 +34,9 @@ namespace OpenNos.DAL.Interface
 
         IEnumerable<CharacterDTO> LoadAll();
 
-        IEnumerable<CharacterDTO> LoadByAccount(long accountId);
-
         IEnumerable<CharacterDTO> LoadAllByAccount(long accountId);
+
+        IEnumerable<CharacterDTO> LoadByAccount(long accountId);
 
         CharacterDTO LoadById(long characterId);
 

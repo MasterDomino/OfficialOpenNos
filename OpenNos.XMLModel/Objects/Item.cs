@@ -12,13 +12,13 @@ namespace OpenNos.XMLModel.Objects
         public byte Amount { get; set; }
 
         [XmlAttribute]
-        public short VNum { get; set; }
+        public short Design { get; set; }
 
         [XmlAttribute]
         public bool IsRandomRare { get; set; }
 
         [XmlAttribute]
-        public short Design { get; set; }
+        public short VNum { get; set; }
 
         #endregion
     }

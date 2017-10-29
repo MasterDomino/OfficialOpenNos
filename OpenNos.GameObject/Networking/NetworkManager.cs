@@ -25,13 +25,10 @@ namespace OpenNos.GameObject
     {
         #region Members
 
-        private IDictionary<string, DateTime> _connectionLog;
-
         private readonly EncryptorT _encryptor;
-
         private readonly CryptographyBase _fallbackEncryptor;
-
         private readonly IScsServer _server;
+        private IDictionary<string, DateTime> _connectionLog;
 
         #endregion
 

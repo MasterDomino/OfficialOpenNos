@@ -25,6 +25,7 @@ namespace OpenNos.DAL.EF
     public class RollGeneratedItemDAO : MappingBaseDAO<RollGeneratedItem, RollGeneratedItemDTO>, IRollGeneratedItemDAO
     {
         #region Methods
+
         public RollGeneratedItemDTO Insert(RollGeneratedItemDTO item)
         {
             try

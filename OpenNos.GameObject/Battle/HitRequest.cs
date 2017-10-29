@@ -73,6 +73,5 @@ namespace OpenNos.GameObject.Battle
         public TargetHitType TargetHitType { get; set; }
 
         #endregion
-
     }
 }

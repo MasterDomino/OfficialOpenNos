@@ -25,11 +25,9 @@ namespace OpenNos.GameObject
     {
         #region Members
 
-        private int _order;
-
         private readonly object _syncObj = new object();
-
         private bool _disposed;
+        private int _order;
 
         #endregion
 
@@ -58,6 +56,10 @@ namespace OpenNos.GameObject
 
         public byte SharingMode { get; set; }
 
+        #endregion
+
+        #region Methods
+
         public void Dispose()
         {
             if (!_disposed)
@@ -67,17 +69,6 @@ namespace OpenNos.GameObject
                 _disposed = true;
             }
         }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                Characters.Dispose();
-            }
-        }
-        #endregion
-
-        #region Methods
 
         public List<string> GeneratePst(ClientSession player)
         {
@@ -175,6 +166,14 @@ namespace OpenNos.GameObject
                 Characters.ForEach(s => s.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("TEAM_LEADER_CHANGE"), Characters.ElementAt(0).Character?.Name), 0)));
             }
             Characters.RemoveAll(s => s?.Character.CharacterId == session.Character.CharacterId);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Characters.Dispose();
+            }
         }
 
         #endregion

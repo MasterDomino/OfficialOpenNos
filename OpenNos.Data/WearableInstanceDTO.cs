@@ -12,8 +12,8 @@
  * GNU General Public License for more details.
  */
 
-using System;
 using OpenNos.Data.Interfaces;
+using System;
 
 namespace OpenNos.Data
 {
@@ -51,6 +51,8 @@ namespace OpenNos.Data
 
         public short ElementRate { get; set; }
 
+        public Guid EquipmentSerialId { get; set; }
+
         public byte FireElement { get; set; }
 
         public short FireResistance { get; set; }
@@ -78,7 +80,6 @@ namespace OpenNos.Data
         public short WaterResistance { get; set; }
 
         public long XP { get; set; }
-        public Guid EquipmentSerialId { get; set; }
 
         #endregion
     }

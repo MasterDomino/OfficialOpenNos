@@ -12,8 +12,8 @@
  * GNU General Public License for more details.
  */
 
-using OpenNos.SCS.Communication.ScsServices.Service;
 using OpenNos.Master.Library.Data;
+using OpenNos.SCS.Communication.ScsServices.Service;
 using System;
 using System.Collections.Generic;
 
@@ -98,20 +98,20 @@ namespace OpenNos.Master.Library.Interface
         bool IsCharacterConnected(string worldGroup, long characterId);
 
         /// <summary>
-        /// Checks if the Account is allowed to login
-        /// </summary>
-        /// <param name="accountId">Id of the Account</param>
-        /// <param name="sessionId">Id of the Session that should be validated</param>
-        /// <returns></returns>
-        bool IsLoginPermitted(long accountId, int sessionId);
-
-        /// <summary>
         /// Checks if the Account is allowed to login across multiple servers
         /// </summary>
         /// <param name="accountId">Id of the Account</param>
         /// <param name="sessionId">Id of the Session that should be validated</param>
         /// <returns></returns>
         bool IsCrossServerLoginPermitted(long accountId, int sessionId);
+
+        /// <summary>
+        /// Checks if the Account is allowed to login
+        /// </summary>
+        /// <param name="accountId">Id of the Account</param>
+        /// <param name="sessionId">Id of the Session that should be validated</param>
+        /// <returns></returns>
+        bool IsLoginPermitted(long accountId, int sessionId);
 
         /// <summary>
         /// Kicks a Session by their Id or Account
@@ -157,6 +157,21 @@ namespace OpenNos.Master.Library.Interface
         int? RegisterWorldServer(SerializableWorldServer worldServer);
 
         /// <summary>
+        /// Generates list of sessionId for given IpAddress
+        /// </summary>
+        /// <param name="ipAddress">IpAddress to gather wanted SessionIds</param>
+        /// <param name="characterId"></param>
+        /// <returns>List of SessionId</returns>
+        long[][] RetrieveOnlineCharacters(long characterId);
+
+        /// <summary>
+        /// Retrieves the IP and Port of the Origin World
+        /// </summary>
+        /// <param name="accountId">Id of the Account</param>
+        /// <returns>IP:Port of the Server, null if not existing</returns>
+        string RetrieveOriginWorld(long accountId);
+
+        /// <summary>
         /// Generates the Channel Selection Packet
         /// </summary>
         /// <param name="username"></param>
@@ -170,21 +185,6 @@ namespace OpenNos.Master.Library.Interface
         /// </summary>
         /// <returns>the actual result</returns>
         IEnumerable<string> RetrieveServerStatistics();
-
-        /// <summary>
-        /// Retrieves the IP and Port of the Origin World 
-        /// </summary>
-        /// <param name="accountId">Id of the Account</param>
-        /// <returns>IP:Port of the Server, null if not existing</returns>
-        string RetrieveOriginWorld(long accountId);
-
-        /// <summary>
-        /// Generates list of sessionId for given IpAddress
-        /// </summary>
-        /// <param name="ipAddress">IpAddress to gather wanted SessionIds</param>
-        /// <param name="characterId"></param>
-        /// <returns>List of SessionId</returns>
-        long[][] RetrieveOnlineCharacters(long characterId);
 
         /// <summary>
         /// Runs an event on all registered Worlds

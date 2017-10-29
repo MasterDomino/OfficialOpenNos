@@ -23,9 +23,8 @@ namespace OpenNos.GameObject
 
         protected ItemInstance _itemInstance;
 
-        private long _transportId;
-
         private readonly object _lockObject = new object();
+        private long _transportId;
 
         #endregion
 

@@ -16,8 +16,12 @@ namespace OpenNos.GameObject
 {
     public class Locker
     {
-        public byte Initial { get; set; }
+        #region Properties
 
         public byte Current { get; set; }
+
+        public byte Initial { get; set; }
+
+        #endregion
     }
 }

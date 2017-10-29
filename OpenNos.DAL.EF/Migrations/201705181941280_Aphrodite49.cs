@@ -4,14 +4,7 @@ namespace OpenNos.DAL.EF.Migrations
 
     public partial class Aphrodite49 : DbMigration
     {
-        public override void Up()
-        {
-            AddColumn("dbo.Card", "Delay", c => c.Int(nullable: false));
-            AddColumn("dbo.Card", "TimeoutBuff", c => c.Short(nullable: false));
-            AddColumn("dbo.Card", "TimeoutBuffChance", c => c.Byte(nullable: false));
-            AddColumn("dbo.Card", "BuffType", c => c.Byte(nullable: false));
-            DropColumn("dbo.Card", "Period");
-        }
+        #region Methods
 
         public override void Down()
         {
@@ -21,5 +14,16 @@ namespace OpenNos.DAL.EF.Migrations
             DropColumn("dbo.Card", "TimeoutBuff");
             DropColumn("dbo.Card", "Delay");
         }
+
+        public override void Up()
+        {
+            AddColumn("dbo.Card", "Delay", c => c.Int(nullable: false));
+            AddColumn("dbo.Card", "TimeoutBuff", c => c.Short(nullable: false));
+            AddColumn("dbo.Card", "TimeoutBuffChance", c => c.Byte(nullable: false));
+            AddColumn("dbo.Card", "BuffType", c => c.Byte(nullable: false));
+            DropColumn("dbo.Card", "Period");
+        }
+
+        #endregion
     }
 }

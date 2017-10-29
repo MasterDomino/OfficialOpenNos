@@ -22,6 +22,8 @@ namespace OpenNos.DAL.Interface
     {
         #region Methods
 
+        void Delete(short bonusToDelete, long characterId);
+
         /// <summary>
         /// Inserts new object to database context
         /// </summary>
@@ -38,8 +40,6 @@ namespace OpenNos.DAL.Interface
         IEnumerable<StaticBuffDTO> LoadByCharacterId(long characterId);
 
         IEnumerable<short> LoadByTypeCharacterId(long characterId);
-
-        void Delete(short bonusToDelete, long characterId);
 
         #endregion
     }

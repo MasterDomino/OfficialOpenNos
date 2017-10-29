@@ -732,7 +732,7 @@ namespace OpenNos.GameObject
             attacker.CritChance -= GetShellArmorEffectValue(ShellArmorEffectType.ReducedCritChanceRecive);
             attacker.CritRate += GetShellWeaponEffectValue(ShellWeaponEffectType.CriticalDamage);
 
-            if(defender.CellonOptions != null)
+            if (defender.CellonOptions != null)
             {
                 attacker.CritRate -= defender.CellonOptions.Where(s => s.Type == CellonOptionType.CritReduce).Sum(s => s.Value);
             }

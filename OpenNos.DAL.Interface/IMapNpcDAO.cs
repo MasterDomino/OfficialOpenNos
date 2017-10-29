@@ -22,6 +22,8 @@ namespace OpenNos.DAL.Interface
     {
         #region Methods
 
+        DeleteResult DeleteById(int mapNpcId);
+
         MapNpcDTO Insert(MapNpcDTO npc);
 
         void Insert(List<MapNpcDTO> npcs);
@@ -31,8 +33,6 @@ namespace OpenNos.DAL.Interface
         MapNpcDTO LoadById(int mapNpcId);
 
         IEnumerable<MapNpcDTO> LoadFromMap(short mapId);
-
-        DeleteResult DeleteById(int mapNpcId);
 
         #endregion
     }

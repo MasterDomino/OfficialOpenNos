@@ -18,13 +18,13 @@ namespace OpenNos.DAL.EF
     {
         #region Properties
 
-        public virtual Character Character { get; set; }
-
-        public long CharacterId { get; set; }
-
         public virtual Card Card { get; set; }
 
         public short CardId { get; set; }
+
+        public virtual Character Character { get; set; }
+
+        public long CharacterId { get; set; }
 
         public int RemainingTime { get; set; }
 

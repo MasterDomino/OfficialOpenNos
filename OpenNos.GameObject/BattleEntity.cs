@@ -7,6 +7,8 @@ namespace OpenNos.GameObject
 {
     public class BattleEntity
     {
+        #region Instantiation
+
         public BattleEntity(Character character, Skill skill)
         {
             Session = character.Session;
@@ -82,9 +84,11 @@ namespace OpenNos.GameObject
                             case ClassType.Swordman:
                                 AttackType = AttackType.Melee;
                                 break;
+
                             case ClassType.Archer:
                                 AttackType = AttackType.Range;
                                 break;
+
                             case ClassType.Magician:
                                 AttackType = AttackType.Magical;
                                 break;
@@ -100,6 +104,7 @@ namespace OpenNos.GameObject
                             case ClassType.Magician:
                                 weapon = character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.MainWeapon, InventoryType.Wear);
                                 break;
+
                             case ClassType.Archer:
                                 weapon = character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.SecondaryWeapon, InventoryType.Wear);
                                 break;
@@ -149,7 +154,6 @@ namespace OpenNos.GameObject
 
             CellonOptions = Session.Character.CellonOptions.GetAllItems();
 
-
             MeleeDefense = character.Defence;
             MeleeDefenseDodge = character.DefenceRate;
             RangeDefense = character.DistanceDefence;
@@ -163,6 +167,7 @@ namespace OpenNos.GameObject
         {
             HPMax = mate.MaxHp;
             MPMax = mate.MaxMp;
+
             //Buffs = mate.Monster.Buff.ToList();
             BCards = mate.Monster.BCards.ToList();
             Level = mate.Level;
@@ -237,6 +242,7 @@ namespace OpenNos.GameObject
         {
             HPMax = npc.Npc.MaxHP;
             MPMax = npc.Npc.MaxMP;
+
             //npc.Buff.CopyTo(Buffs);
             BCards = npc.Npc.BCards.ToList();
             Level = npc.Npc.Level;
@@ -270,87 +276,94 @@ namespace OpenNos.GameObject
             ElementRate = npc.Npc.ElementRate;
         }
 
-        public byte Level { get; set; }
+        #endregion
 
-        public ClientSession Session { get; set; }
+        #region Properties
 
-        public EntityType EntityType { get; set; }
+        public int ArmorDefense { get; set; }
 
-        public List<Buff> Buffs { get; set; }
+        public int ArmorMagicalDefense { get; set; }
 
-        public List<BCard> BCards { get; set; }
+        public int ArmorMeleeDefense { get; set; }
 
-        public List<ShellEffectDTO> ShellArmorEffects { get; set; }
+        public int ArmorRangeDefense { get; set; }
 
-        public List<ShellEffectDTO> ShellWeaponEffects { get; set; }
-
-        public List<CellonOptionDTO> CellonOptions { get; set; }
-
-        public bool Invincible { get; set; }
-
-        public int DamageMinimum { get; set; }
-
-        public int DamageMaximum { get; set; }
-
-        public int WeaponDamageMinimum { get; set; }
-
-        public int WeaponDamageMaximum { get; set; }
-
-        public int Morale { get; set; }
+        public AttackType AttackType { get; set; }
 
         public short AttackUpgrade { get; set; }
 
-        public int Hitrate { get; set; }
+        public List<BCard> BCards { get; set; }
+
+        public List<Buff> Buffs { get; set; }
+
+        public List<CellonOptionDTO> CellonOptions { get; set; }
 
         public int CritChance { get; set; }
 
         public int CritRate { get; set; }
 
-        public AttackType AttackType { get; set; }
+        public int DamageMaximum { get; set; }
 
-        public short DefenseUpgrade { get; set; }
+        public int DamageMinimum { get; set; }
 
         public int Defense { get; set; }
 
-        public int ArmorDefense { get; set; }
+        public short DefenseUpgrade { get; set; }
 
         public int Dodge { get; set; }
-
-        public int MeleeDefense { get; set; }
-        public int ArmorMeleeDefense { get; set; }
-
-        public int MeleeDefenseDodge { get; set; }
-
-        public int RangeDefense { get; set; }
-
-        public int ArmorRangeDefense { get; set; }
-
-        public int RangeDefenseDodge { get; set; }
-
-        public int MagicalDefense { get; set; }
-
-        public int ArmorMagicalDefense { get; set; }
-
-        public int FireResistance { get; set; }
-
-        public int WaterResistance { get; set; }
-
-        public int LightResistance { get; set; }
-
-        public int ShadowResistance { get; set; }
-
-        public int Resistance { get; set; }
 
         public byte Element { get; set; }
 
         public int ElementRate { get; set; }
 
+        public EntityType EntityType { get; set; }
+
+        public int FireResistance { get; set; }
+
+        public int Hitrate { get; set; }
+
+        public int HPMax { get; set; }
+
+        public bool Invincible { get; set; }
+
+        public byte Level { get; set; }
+
+        public int LightResistance { get; set; }
+
+        public int MagicalDefense { get; set; }
+
+        public int MeleeDefense { get; set; }
+
+        public int MeleeDefenseDodge { get; set; }
+
+        public int Morale { get; set; }
+
+        public int MPMax { get; set; }
+
         public short PositionX { get; set; }
 
         public short PositionY { get; set; }
 
-        public int HPMax { get; set; }
+        public int RangeDefense { get; set; }
 
-        public int MPMax { get; set; }
+        public int RangeDefenseDodge { get; set; }
+
+        public int Resistance { get; set; }
+
+        public ClientSession Session { get; set; }
+
+        public int ShadowResistance { get; set; }
+
+        public List<ShellEffectDTO> ShellArmorEffects { get; set; }
+
+        public List<ShellEffectDTO> ShellWeaponEffects { get; set; }
+
+        public int WaterResistance { get; set; }
+
+        public int WeaponDamageMaximum { get; set; }
+
+        public int WeaponDamageMinimum { get; set; }
+
+        #endregion
     }
 }

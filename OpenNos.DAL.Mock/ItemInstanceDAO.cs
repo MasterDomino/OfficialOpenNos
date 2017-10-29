@@ -27,8 +27,8 @@ namespace OpenNos.DAL.Mock
     {
         #region Members
 
-        private Type _baseType;
         private readonly IDictionary<Type, Type> itemInstanceMappings = new Dictionary<Type, Type>();
+        private Type _baseType;
 
         #endregion
 

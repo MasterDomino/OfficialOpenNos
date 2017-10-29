@@ -47,6 +47,61 @@ namespace OpenNos.Handler
         }
 
         /// <summary>
+        /// mkraid packet
+        /// </summary>
+        /// <param name="mkRaidPacket"></param>
+        public void GenerateRaid(MkRaidPacket mkRaidPacket)
+        {
+            if (Session.Character.Group?.Raid != null && Session.Character.Group.IsLeader(Session))
+            {
+                if (Session.Character.Group.CharacterCount > 4 && Session.Character.Group.Characters.All(s => s.CurrentMapInstance.Portals.Any(p => p.Type == (short)PortalType.Raid)))
+                {
+                    if (Session.Character.Group.Raid.FirstMap == null)
+                    {
+                        Session.Character.Group.Raid.LoadScript(MapInstanceType.RaidInstance);
+                    }
+                    if (Session.Character.Group.Raid.FirstMap == null)
+                    {
+                        return;
+                    }
+
+                    Session.Character.Group.Raid.InstanceBag.Lock = true;
+
+                    //Session.Character.Group.Characters.Where(s => s.CurrentMapInstance != Session.CurrentMapInstance).ToList().ForEach(
+                    //session =>
+                    //{
+                    //    Session.Character.Group.LeaveGroup(session);
+                    //    session.SendPacket(session.Character.GenerateRaid(1, true));
+                    //    session.SendPacket(session.Character.GenerateRaid(2, true));
+                    //});
+
+                    Session.Character.Group.Raid.InstanceBag.Lives = (short)Session.Character.Group.CharacterCount;
+
+                    foreach (ClientSession session in Session.Character.Group.Characters.GetAllItems())
+                    {
+                        if (session != null)
+                        {
+                            ServerManager.Instance.ChangeMapInstance(session.Character.CharacterId, session.Character.Group.Raid.FirstMap.MapInstanceId, session.Character.Group.Raid.StartX, session.Character.Group.Raid.StartY);
+                            session.SendPacket("raidbf 0 0 25");
+                            session.SendPacket(session.Character.Group.GeneraterRaidmbf(session));
+                            session.SendPacket(session.Character.GenerateRaid(5, false));
+                            session.SendPacket(session.Character.GenerateRaid(4, false));
+                            session.SendPacket(session.Character.GenerateRaid(3, false));
+                        }
+                    }
+
+                    ServerManager.Instance.GroupList.Remove(Session.Character.Group);
+
+                    Logger.LogUserEvent("RAID_START", Session.GenerateIdentity(), $"RaidId: {Session.Character.Group.GroupId}");
+                }
+                else
+                {
+                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg("RAID_TEAM_NOT_READY", 0));
+                }
+            }
+        }
+
+        /// <summary>
         /// RSelPacket packet
         /// </summary>
         /// <param name="rSelPacket"></param>
@@ -142,60 +197,6 @@ namespace OpenNos.Handler
                 else
                 {
                     Session.SendPacket(timespace.GenerateRbr());
-                }
-            }
-        }
-        /// <summary>
-        /// mkraid packet
-        /// </summary>
-        /// <param name="mkRaidPacket"></param>
-        public void GenerateRaid(MkRaidPacket mkRaidPacket)
-        {
-            if (Session.Character.Group?.Raid != null && Session.Character.Group.IsLeader(Session))
-            {
-                if (Session.Character.Group.CharacterCount > 4 && Session.Character.Group.Characters.All(s => s.CurrentMapInstance.Portals.Any(p => p.Type == (short)PortalType.Raid)))
-                {
-                    if (Session.Character.Group.Raid.FirstMap == null)
-                    {
-                        Session.Character.Group.Raid.LoadScript(MapInstanceType.RaidInstance);
-                    }
-                    if (Session.Character.Group.Raid.FirstMap == null)
-                    {
-                        return;
-                    }
-
-                    Session.Character.Group.Raid.InstanceBag.Lock = true;
-
-                    //Session.Character.Group.Characters.Where(s => s.CurrentMapInstance != Session.CurrentMapInstance).ToList().ForEach(
-                    //session =>
-                    //{
-                    //    Session.Character.Group.LeaveGroup(session);
-                    //    session.SendPacket(session.Character.GenerateRaid(1, true));
-                    //    session.SendPacket(session.Character.GenerateRaid(2, true));
-                    //});
-
-                    Session.Character.Group.Raid.InstanceBag.Lives = (short)Session.Character.Group.CharacterCount;
-
-                    foreach (ClientSession session in Session.Character.Group.Characters.GetAllItems())
-                    {
-                        if (session != null)
-                        {
-                            ServerManager.Instance.ChangeMapInstance(session.Character.CharacterId, session.Character.Group.Raid.FirstMap.MapInstanceId, session.Character.Group.Raid.StartX, session.Character.Group.Raid.StartY);
-                            session.SendPacket("raidbf 0 0 25");
-                            session.SendPacket(session.Character.Group.GeneraterRaidmbf(session));
-                            session.SendPacket(session.Character.GenerateRaid(5, false));
-                            session.SendPacket(session.Character.GenerateRaid(4, false));
-                            session.SendPacket(session.Character.GenerateRaid(3, false));
-                        }
-                    }
-
-                    ServerManager.Instance.GroupList.Remove(Session.Character.Group);
-
-                    Logger.LogUserEvent("RAID_START", Session.GenerateIdentity(), $"RaidId: {Session.Character.Group.GroupId}");
-                }
-                else
-                {
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg("RAID_TEAM_NOT_READY", 0));
                 }
             }
         }

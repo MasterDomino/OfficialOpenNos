@@ -230,7 +230,7 @@ namespace OpenNos.Import.Console
             insertRecipe(206, 1035, 1, new short[] { 1027, 8, 2046, 7, 1035, 1 });
             insertRecipe(501, 1035, 1, new short[] { 1027, 14, 500, 1, 1035, 1 });
 
-            // Production Tools for Swordsmen               
+            // Production Tools for Swordsmen
             insertRecipe(22, 1039, 1, new short[] { 1027, 30, 2035, 32, 1039, 1 });
             insertRecipe(26, 1039, 1, new short[] { 1027, 43, 2035, 44, 1039, 1 });
             insertRecipe(30, 1039, 1, new short[] { 1027, 54, 2036, 56, 1039, 1 });
@@ -416,12 +416,13 @@ namespace OpenNos.Import.Console
             insertRecipe(4927, 5900, 1, new short[] { 2505, 3, 2506, 2, 2353, 30, 2355, 20, 5900, 1 });
             insertRecipe(4928, 5900, 1, new short[] { 2505, 10, 2506, 8, 2507, 1, 2353, 90, 2356, 60, 5900, 3 });
 
-            // Grenigas Accessories Parchment              
+            // Grenigas Accessories Parchment
             insertRecipe(4936, 5901, 1, new short[] { 4935, 1, 2505, 4, 2506, 4, 2359, 20, 2360, 20, 2509, 5, 5901, 1 });
             insertRecipe(4938, 5901, 1, new short[] { 4937, 1, 2505, 6, 2506, 2, 2359, 20, 2360, 20, 2510, 5, 5901, 1 });
             insertRecipe(4940, 5901, 1, new short[] { 4939, 1, 2505, 2, 2506, 6, 2359, 20, 2360, 20, 2508, 5, 5901, 1 });
 
-            // implement this will have a FUCKTON of hardcoding, for fucks sake ENTWELL why u suck soo much -_-
+            // implement this will have a FUCKTON of hardcoding, for fucks sake ENTWELL why u suck
+            // soo much -_-
         }
 
         public void ImportMapNpcs()
@@ -2628,8 +2629,7 @@ namespace OpenNos.Import.Console
 
                         if (item.ItemType == ItemType.Special)
                         {
-                            // add a value for design here
-                            // design id might also come in handy
+                            // add a value for design here design id might also come in handy
                         }
 
                         // item.DesignId = short.Parse(currentLine[6]);

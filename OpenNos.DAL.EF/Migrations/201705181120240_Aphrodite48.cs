@@ -4,29 +4,7 @@ namespace OpenNos.DAL.EF.Migrations
 
     public partial class Aphrodite48 : DbMigration
     {
-        public override void Up()
-        {
-            CreateTable(
-                "dbo.BCard",
-                c => new
-                    {
-                        BCardId = c.Short(nullable: false, identity: true),
-                        SubType = c.Byte(nullable: false),
-                        Type = c.Byte(nullable: false),
-                        FirstData = c.Int(nullable: false),
-                        SecondData = c.Int(nullable: false),
-                        CardId = c.Short(nullable: false),
-                        Delayed = c.Boolean(nullable: false),
-                    })
-                .PrimaryKey(t => t.BCardId)
-                .ForeignKey("dbo.Card", t => t.CardId)
-                .Index(t => t.CardId);
-
-            DropColumn("dbo.Card", "FirstData");
-            DropColumn("dbo.Card", "SecondData");
-            DropColumn("dbo.Card", "SubType");
-            DropColumn("dbo.Card", "Type");
-        }
+        #region Methods
 
         public override void Down()
         {
@@ -38,5 +16,31 @@ namespace OpenNos.DAL.EF.Migrations
             DropIndex("dbo.BCard", new[] { "CardId" });
             DropTable("dbo.BCard");
         }
+
+        public override void Up()
+        {
+            CreateTable(
+                "dbo.BCard",
+                c => new
+                {
+                    BCardId = c.Short(nullable: false, identity: true),
+                    SubType = c.Byte(nullable: false),
+                    Type = c.Byte(nullable: false),
+                    FirstData = c.Int(nullable: false),
+                    SecondData = c.Int(nullable: false),
+                    CardId = c.Short(nullable: false),
+                    Delayed = c.Boolean(nullable: false),
+                })
+                .PrimaryKey(t => t.BCardId)
+                .ForeignKey("dbo.Card", t => t.CardId)
+                .Index(t => t.CardId);
+
+            DropColumn("dbo.Card", "FirstData");
+            DropColumn("dbo.Card", "SecondData");
+            DropColumn("dbo.Card", "SubType");
+            DropColumn("dbo.Card", "Type");
+        }
+
+        #endregion
     }
 }

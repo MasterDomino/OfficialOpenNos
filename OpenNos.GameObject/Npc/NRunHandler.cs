@@ -249,7 +249,7 @@ namespace OpenNos.GameObject
                         }
                         else
                         {
-                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NOT_ENOUGH_MONEY"),10));
+                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NOT_ENOUGH_MONEY"), 10));
                         }
                     }
                     break;
@@ -308,7 +308,7 @@ namespace OpenNos.GameObject
                         }
                         else
                         {
-                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NOT_ENOUGH_MONEY"),10));
+                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NOT_ENOUGH_MONEY"), 10));
                         }
                     }
                     break;
@@ -549,12 +549,14 @@ namespace OpenNos.GameObject
                             case FactionType.None:
                                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo("You need to be part of a faction to join Act 4"));
                                 return;
+
                             case FactionType.Angel:
-                                map = ServerManager.Instance.GetAllMapInstances().Where(s => s.MapInstanceType.Equals(MapInstanceType.Act4ShipAngel)).FirstOrDefault();
+                                map = ServerManager.Instance.GetAllMapInstances().Find(s => s.MapInstanceType.Equals(MapInstanceType.Act4ShipAngel));
 
                                 break;
+
                             case FactionType.Demon:
-                                map = ServerManager.Instance.GetAllMapInstances().Where(s => s.MapInstanceType.Equals(MapInstanceType.Act4ShipDemon)).FirstOrDefault();
+                                map = ServerManager.Instance.GetAllMapInstances().Find(s => s.MapInstanceType.Equals(MapInstanceType.Act4ShipDemon));
 
                                 break;
                         }
@@ -571,8 +573,8 @@ namespace OpenNos.GameObject
                         Session.Character.Gold -= 3000;
                         MapCell pos = map.Map.GetRandomPosition();
                         ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, map.MapInstanceId, pos.X, pos.Y);
-                        //ServerManager.Instance.ChangeMap(Session.Character.CharacterId, 130, 12, 40);
 
+                        //ServerManager.Instance.ChangeMap(Session.Character.CharacterId, 130, 12, 40);
                     }
                     break;
 

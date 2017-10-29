@@ -27,9 +27,9 @@ namespace OpenNos.DAL.Interface
 
         IEnumerable<BCardDTO> LoadAll();
 
-        BCardDTO LoadById(short cardId);
-
         IEnumerable<BCardDTO> LoadByCardId(short cardId);
+
+        BCardDTO LoadById(short cardId);
 
         IEnumerable<BCardDTO> LoadByItemVNum(short vNum);
 

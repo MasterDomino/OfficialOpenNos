@@ -30,6 +30,7 @@ namespace OpenNos.GameObject
         public void ApplyBCards(object session, object sender = null)
         {
             Type type = session.GetType();
+
             // int counterBuff = 0;
             if (type == null)
             {
@@ -51,7 +52,7 @@ namespace OpenNos.GameObject
                                     {
                                         buff = new Buff((short)SecondData, sendingCharacter.Level);
 
-                                        //Todo: Get anti stats from BCard                                        
+                                        //Todo: Get anti stats from BCard
                                     }
                                 }
                             }
@@ -79,7 +80,6 @@ namespace OpenNos.GameObject
                         }
                         break;
                     }
-
                 case BCardType.CardType.Move:
                     {
                         if (type == typeof(Character) && session is Character character)
@@ -112,6 +112,7 @@ namespace OpenNos.GameObject
                                     case 2:
                                         EventHelper.Instance.RunEvent(new EventContainer(mapMonster.MapInstance, EventActionType.SPAWNMONSTERS, summonParameters));
                                         break;
+
                                     default:
                                         if (mapMonster.OnDeathEvents.Any(s => s.EventActionType == EventActionType.SPAWNMONSTERS))
                                         {
@@ -469,9 +470,11 @@ namespace OpenNos.GameObject
                                 case 2:
                                     character.MeditationDictionary[(short)SecondData] = DateTime.Now.AddSeconds(4);
                                     break;
+
                                 case 3:
                                     character.MeditationDictionary[(short)SecondData] = DateTime.Now.AddSeconds(8);
                                     break;
+
                                 case 4:
                                     character.MeditationDictionary[(short)SecondData] = DateTime.Now.AddSeconds(12);
                                     break;

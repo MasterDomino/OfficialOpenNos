@@ -4,22 +4,7 @@ namespace OpenNos.DAL.EF.Migrations
 
     public partial class Aphrodite61 : DbMigration
     {
-        public override void Up()
-        {
-            CreateTable(
-                "dbo.ShellEffect",
-                c => new
-                    {
-                        ShellEffectId = c.Long(nullable: false, identity: true),
-                        EffectLevel = c.Byte(nullable: false),
-                        Effect = c.Byte(nullable: false),
-                        Value = c.Short(nullable: false),
-                        ItemInstanceId = c.Guid(nullable: false),
-                    })
-                .PrimaryKey(t => t.ShellEffectId)
-                .ForeignKey("dbo.ItemInstance", t => t.ItemInstanceId)
-                .Index(t => t.ItemInstanceId);
-        }
+        #region Methods
 
         public override void Down()
         {
@@ -27,5 +12,24 @@ namespace OpenNos.DAL.EF.Migrations
             DropIndex("dbo.ShellEffect", new[] { "ItemInstanceId" });
             DropTable("dbo.ShellEffect");
         }
+
+        public override void Up()
+        {
+            CreateTable(
+                "dbo.ShellEffect",
+                c => new
+                {
+                    ShellEffectId = c.Long(nullable: false, identity: true),
+                    EffectLevel = c.Byte(nullable: false),
+                    Effect = c.Byte(nullable: false),
+                    Value = c.Short(nullable: false),
+                    ItemInstanceId = c.Guid(nullable: false),
+                })
+                .PrimaryKey(t => t.ShellEffectId)
+                .ForeignKey("dbo.ItemInstance", t => t.ItemInstanceId)
+                .Index(t => t.ItemInstanceId);
+        }
+
+        #endregion
     }
 }

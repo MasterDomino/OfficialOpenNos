@@ -20,7 +20,11 @@ namespace OpenNos.Data
     {
         #region Properties
 
+        public BuffType BuffType { get; set; }
+
         public short CardId { get; set; }
+
+        public int Delay { get; set; }
 
         public int Duration { get; set; }
 
@@ -30,15 +34,11 @@ namespace OpenNos.Data
 
         public string Name { get; set; }
 
+        public byte Propability { get; set; }
+
         public short TimeoutBuff { get; set; }
 
-        public BuffType BuffType { get; set; }
-
         public byte TimeoutBuffChance { get; set; }
-
-        public int Delay { get; set; }
-
-        public byte Propability { get; set; }
 
         #endregion
     }

@@ -27,28 +27,6 @@ namespace OpenNos.DAL.EF
     {
         #region Methods
 
-        public void Insert(List<ShopDTO> shops)
-        {
-            try
-            {
-                using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
-                {
-                    context.Configuration.AutoDetectChangesEnabled = false;
-                    foreach (ShopDTO Item in shops)
-                    {
-                        Shop entity = _mapper.Map<Shop>(Item);
-                        context.Shop.Add(entity);
-                    }
-                    context.Configuration.AutoDetectChangesEnabled = true;
-                    context.SaveChanges();
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e);
-            }
-        }
-
         public DeleteResult DeleteById(int mapNpcId)
         {
             try
@@ -80,6 +58,28 @@ namespace OpenNos.DAL.EF
             {
                 Logger.Error(e);
                 return DeleteResult.Error;
+            }
+        }
+
+        public void Insert(List<ShopDTO> shops)
+        {
+            try
+            {
+                using (DB.OpenNosContext context = DataAccessHelper.CreateContext())
+                {
+                    context.Configuration.AutoDetectChangesEnabled = false;
+                    foreach (ShopDTO Item in shops)
+                    {
+                        Shop entity = _mapper.Map<Shop>(Item);
+                        context.Shop.Add(entity);
+                    }
+                    context.Configuration.AutoDetectChangesEnabled = true;
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
             }
         }
 

@@ -42,7 +42,9 @@ namespace OpenNos.Core
         /// </summary>
         /// <param name="packetContent">The content to deseralize</param>
         /// <param name="packetType">The type of the packet to deserialize to</param>
-        /// <param name="includesKeepAliveIdentity">Include the keep alive identity or exclude it</param>
+        /// <param name="includesKeepAliveIdentity">
+        /// Include the keep alive identity or exclude it
+        /// </param>
         /// <returns>The deserialized packet.</returns>
         public static PacketDefinition Deserialize(string packetContent, Type packetType, bool includesKeepAliveIdentity = false)
         {
@@ -66,7 +68,9 @@ namespace OpenNos.Core
         /// </summary>
         /// <typeparam name="TPacket"></typeparam>
         /// <param name="packetContent">The content to deseralize</param>
-        /// <param name="includesKeepAliveIdentity">Include the keep alive identity or exclude it</param>
+        /// <param name="includesKeepAliveIdentity">
+        /// Include the keep alive identity or exclude it
+        /// </param>
         /// <returns>The deserialized packet.</returns>
         public static TPacket Deserialize<TPacket>(string packetContent, bool includesKeepAliveIdentity = false)
             where TPacket : PacketDefinition
@@ -87,7 +91,8 @@ namespace OpenNos.Core
         }
 
         /// <summary>
-        /// Initializes the PacketFactory and generates the serialization informations based on the given BaseType.
+        /// Initializes the PacketFactory and generates the serialization informations based on the
+        /// given BaseType.
         /// </summary>
         /// <typeparam name="TBaseType">The BaseType to generate serialization informations</typeparam>
         public static void Initialize<TBaseType>() where TBaseType : PacketDefinition
@@ -185,7 +190,9 @@ namespace OpenNos.Core
             return deserializedPacket;
         }
 
-        /// <summary> Converts simple list to List of Bytes </summary>
+        /// <summary>
+        /// Converts simple list to List of Bytes
+        /// </summary>
         /// <param name="currentValues">String to convert</param>
         /// <param name="genericListType">Type of the property to convert</param>
         /// <returns>The string as converted List</returns>
@@ -222,10 +229,10 @@ namespace OpenNos.Core
         /// </summary>
         /// <param name="currentValue">The value as String</param>
         /// <param name="packetBasePropertyType">Type of the Property to convert to</param>
-        /// <param name="shouldRemoveSeparator"></param> 
+        /// <param name="shouldRemoveSeparator"></param>
         /// <param name="packetMatchCollections"></param>
-        /// <param name="currentIndex"></param> 
-        /// <param name="includesKeepAliveIdentity"></param> 
+        /// <param name="currentIndex"></param>
+        /// <param name="includesKeepAliveIdentity"></param>
         /// <returns>List of Deserialized subpackets</returns>
         private static IList deserializeSubpackets(string currentValue, Type packetBasePropertyType, bool shouldRemoveSeparator, MatchCollection packetMatchCollections, int? currentIndex, bool includesKeepAliveIdentity)
         {
@@ -397,10 +404,12 @@ namespace OpenNos.Core
                                               : generateSerializationInformations(serializationType); // generic runtime serialization parameter generation
         }
 
-        /// <summary> Converts List of Bytes to Simple list </summary> 
+        /// <summary>
+        /// Converts List of Bytes to Simple list
+        /// </summary>
         /// <param name="listValues">Values in List of simple type.</param>
-        /// <param name="propertyType">The simple type.</param> 
-        /// <returns> String of serialized bytes </returns>
+        /// <param name="propertyType">The simple type.</param>
+        /// <returns>String of serialized bytes</returns>
         private static string serializeSimpleList(IList listValues, Type propertyType)
         {
             string resultListPacket = string.Empty;

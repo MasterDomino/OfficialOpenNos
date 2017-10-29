@@ -18,7 +18,15 @@ namespace OpenNos.Data
     {
         #region Properties
 
-        public short RollGeneratedItemId { get; set; }
+        public bool IsRareRandom { get; set; }
+
+        public byte ItemGeneratedAmount { get; set; }
+
+        public short ItemGeneratedVNum { get; set; }
+
+        public byte MaximumOriginalItemRare { get; set; }
+
+        public byte MinimumOriginalItemRare { get; set; }
 
         public short OriginalItemDesign { get; set; }
 
@@ -26,15 +34,7 @@ namespace OpenNos.Data
 
         public short Probability { get; set; }
 
-        public byte ItemGeneratedAmount { get; set; }
-
-        public short ItemGeneratedVNum { get; set; }
-
-        public bool IsRareRandom { get; set; }
-
-        public byte MinimumOriginalItemRare { get; set; }
-
-        public byte MaximumOriginalItemRare { get; set; }
+        public short RollGeneratedItemId { get; set; }
 
         #endregion
     }

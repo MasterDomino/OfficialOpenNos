@@ -35,8 +35,6 @@ namespace OpenNos.GameObject.Helpers
 
         #region Methods
 
-        public string GenerateSay(string message, int type, long callerId = 0) => $"say 1 {callerId} {type} {message}";
-
         public string GenerateDelay(int delay, int type, string argument) => $"delay {delay} {type} {argument}";
 
         public string GenerateDialog(string dialog) => $"dlg {dialog}";
@@ -59,7 +57,8 @@ namespace OpenNos.GameObject.Helpers
                     break;
 
                 case 2:
-                    familyordered = ServerManager.Instance.FamilyList.GetAllItems().OrderByDescending(s => s.FamilyCharacters.Sum(c => c.Character.Reputation)).ToList();//use month instead log
+                    // use month instead log
+                    familyordered = ServerManager.Instance.FamilyList.GetAllItems().OrderByDescending(s => s.FamilyCharacters.Sum(c => c.Character.Reputation)).ToList();
                     break;
 
                 case 3:
@@ -462,6 +461,8 @@ namespace OpenNos.GameObject.Helpers
             return $"rc_blist {packet.Index} {itembazar} ";
         }
 
+        public string GenerateRemovePacket(short slot) => $"{slot}.-1.0.0.0";
+
         public string GenerateRl(byte type)
         {
             string str = $"rl {type}";
@@ -473,9 +474,9 @@ namespace OpenNos.GameObject.Helpers
             return str;
         }
 
-        public string GenerateRemovePacket(short slot) => $"{slot}.-1.0.0.0";
-
         public string GenerateRp(int mapid, int x, int y, string param) => $"rp {mapid} {x} {y} {param}";
+
+        public string GenerateSay(string message, int type, long callerId = 0) => $"say 1 {callerId} {type} {message}";
 
         public string GenerateShopMemo(int type, string message) => $"s_memo {type} {message}";
 

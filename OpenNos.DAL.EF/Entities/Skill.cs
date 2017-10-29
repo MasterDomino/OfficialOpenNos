@@ -37,6 +37,8 @@ namespace OpenNos.DAL.EF
 
         public short AttackAnimation { get; set; }
 
+        public virtual ICollection<BCard> BCards { get; set; }
+
         public short CastAnimation { get; set; }
 
         public short CastEffect { get; set; }
@@ -105,8 +107,6 @@ namespace OpenNos.DAL.EF
         public short UpgradeSkill { get; set; }
 
         public short UpgradeType { get; set; }
-
-        public virtual ICollection<BCard> BCards { get; set; }
 
         #endregion
     }

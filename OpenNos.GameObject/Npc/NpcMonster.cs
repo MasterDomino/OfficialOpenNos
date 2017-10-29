@@ -22,13 +22,13 @@ namespace OpenNos.GameObject
     {
         #region Properties
 
+        public List<BCard> BCards { get; set; }
+
         public List<DropDTO> Drops { get; set; }
 
         public short FirstX { get; set; }
 
         public short FirstY { get; set; }
-
-        public List<BCard> BCards { get; set; }
 
         public DateTime LastEffect { get; private set; }
 

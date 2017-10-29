@@ -20,8 +20,6 @@ namespace OpenNos.Data.Interfaces
     {
         #region Properties
 
-        Guid EquipmentSerialId { get; set; }
-
         byte Ammo { get; set; }
 
         byte Cellon { get; set; }
@@ -51,6 +49,8 @@ namespace OpenNos.Data.Interfaces
         short DistanceDefenceDodge { get; set; }
 
         short ElementRate { get; set; }
+
+        Guid EquipmentSerialId { get; set; }
 
         byte FireElement { get; set; }
 
