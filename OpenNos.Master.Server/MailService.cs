@@ -78,15 +78,18 @@ namespace OpenNos.Master.Server
             DAOFactory.MailDAO.InsertOrUpdate(ref mailDTO);
             mail.MailId = mailDTO.MailId;
 
-            AccountConnection account = MSManager.Instance.ConnectedAccounts.Find(a => a.CharacterId.Equals(mail.ReceiverId));
-            if (account?.ConnectedWorld != null)
-            {
-                account.ConnectedWorld.ServiceClient.GetClientProxy<IMailClient>().MailSent(mail);
-            }
             if (mail.IsSenderCopy)
             {
 
-                account = MSManager.Instance.ConnectedAccounts.Find(a => a.CharacterId.Equals(mail.SenderId));
+                AccountConnection account = MSManager.Instance.ConnectedAccounts.Find(a => a.CharacterId.Equals(mail.SenderId));
+                if (account?.ConnectedWorld != null)
+                {
+                    account.ConnectedWorld.ServiceClient.GetClientProxy<IMailClient>().MailSent(mail);
+                }
+            }
+            else
+            {
+                AccountConnection account = MSManager.Instance.ConnectedAccounts.Find(a => a.CharacterId.Equals(mail.ReceiverId));
                 if (account?.ConnectedWorld != null)
                 {
                     account.ConnectedWorld.ServiceClient.GetClientProxy<IMailClient>().MailSent(mail);
