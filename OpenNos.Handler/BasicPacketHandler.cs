@@ -71,6 +71,12 @@ namespace OpenNos.Handler
         }
 
         /// <summary>
+        /// bldel packet
+        /// </summary>
+        /// <param name="raidExitPacket"></param>
+        public void RaidExit(RaidExitPacket raidExitPacket) => ServerManager.Instance.GroupLeave(Session);
+
+        /// <summary>
         /// gop packet
         /// </summary>
         /// <param name="characterOptionPacket"></param>

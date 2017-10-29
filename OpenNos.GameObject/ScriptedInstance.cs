@@ -137,7 +137,7 @@ namespace OpenNos.GameObject
                 MemoryStream memoryStream = new MemoryStream(xml);
                 XmlReader reader = XmlReader.Create(memoryStream);
                 XmlSerializer serializer = new XmlSerializer(typeof(ScriptedInstanceModel));
-                ScriptedInstanceModel model = (ScriptedInstanceModel)serializer.Deserialize(reader);
+                Model = (ScriptedInstanceModel)serializer.Deserialize(reader);
                 memoryStream.Close();
 
                 RequiredItems = new List<Gift>();
@@ -146,36 +146,36 @@ namespace OpenNos.GameObject
                 GiftItems = new List<Gift>();
 
                 // set the values
-                Id = model.Globals.Id?.Value ?? 0;
-                Gold = model.Globals.Gold?.Value ?? 0;
-                Reputation = model.Globals.Reputation?.Value ?? 0;
-                StartX = model.Globals.StartX?.Value ?? 0;
-                StartY = model.Globals.StartY?.Value ?? 0;
-                Lives = model.Globals.Lives?.Value ?? 0;
-                if (model.Globals.RequiredItems != null)
+                Id = Model.Globals.Id?.Value ?? 0;
+                Gold = Model.Globals.Gold?.Value ?? 0;
+                Reputation = Model.Globals.Reputation?.Value ?? 0;
+                StartX = Model.Globals.StartX?.Value ?? 0;
+                StartY = Model.Globals.StartY?.Value ?? 0;
+                Lives = Model.Globals.Lives?.Value ?? 0;
+                if (Model.Globals.RequiredItems != null)
                 {
-                    foreach (XMLModel.Objects.Item item in model.Globals.RequiredItems)
+                    foreach (XMLModel.Objects.Item item in Model.Globals.RequiredItems)
                     {
                         RequiredItems.Add(new Gift(item.VNum, item.Amount, item.Design, item.IsRandomRare));
                     }
                 }
-                if (model.Globals.DrawItems != null)
+                if (Model.Globals.DrawItems != null)
                 {
-                    foreach (XMLModel.Objects.Item item in model.Globals.DrawItems)
+                    foreach (XMLModel.Objects.Item item in Model.Globals.DrawItems)
                     {
                         DrawItems.Add(new Gift(item.VNum, item.Amount, item.Design, item.IsRandomRare));
                     }
                 }
-                if (model.Globals.SpecialItems != null)
+                if (Model.Globals.SpecialItems != null)
                 {
-                    foreach (XMLModel.Objects.Item item in model.Globals.SpecialItems)
+                    foreach (XMLModel.Objects.Item item in Model.Globals.SpecialItems)
                     {
                         SpecialItems.Add(new Gift(item.VNum, item.Amount, item.Design, item.IsRandomRare));
                     }
                 }
-                if (model.Globals.GiftItems != null)
+                if (Model.Globals.GiftItems != null)
                 {
-                    foreach (XMLModel.Objects.Item item in model.Globals.GiftItems)
+                    foreach (XMLModel.Objects.Item item in Model.Globals.GiftItems)
                     {
                         GiftItems.Add(new Gift(item.VNum, item.Amount, item.Design, item.IsRandomRare));
                     }
@@ -186,30 +186,18 @@ namespace OpenNos.GameObject
         public void LoadScript(MapInstanceType mapinstancetype)
         {
             XmlDocument doc = new XmlDocument();
-            if (Script != null)
+            if (Model != null)
             {
-                doc.LoadXml(Script);
-                XmlNode InstanceEvents = doc.SelectSingleNode("Definition");
-
-                //CreateMaps
-                foreach (XmlNode variable in InstanceEvents.SelectSingleNode("InstanceEvents").ChildNodes)
+                InstanceBag.Lives = Lives;
+                foreach (XMLModel.Objects.CreateMap createMap in Model.InstanceEvents.CreateMap)
                 {
-                    if (variable.Name == "CreateMap")
+                    MapInstance mapInstance = ServerManager.Instance.GenerateMapInstance(createMap.VNum, mapinstancetype, new InstanceBag());
+                    mapInstance.Portals?.Clear();
+                    mapInstance.MapIndexX = createMap.IndexX;
+                    mapInstance.MapIndexY = createMap.IndexY;
+                    if (!_mapInstanceDictionary.ContainsKey(createMap.Map))
                     {
-                        InstanceBag.Lives = Lives;
-                        MapInstance newmap = ServerManager.Instance.GenerateMapInstance(short.Parse(variable?.Attributes["VNum"].Value), mapinstancetype, new InstanceBag());
-                        newmap.Portals?.Clear();
-
-                        byte.TryParse(variable?.Attributes["IndexX"]?.Value, out byte indexx);
-                        newmap.MapIndexX = indexx;
-
-                        byte.TryParse(variable?.Attributes["IndexY"]?.Value, out byte indexy);
-                        newmap.MapIndexY = indexy;
-
-                        if (!_mapInstanceDictionary.ContainsKey(int.Parse(variable?.Attributes["Map"].Value)))
-                        {
-                            _mapInstanceDictionary.Add(int.Parse(variable?.Attributes["Map"].Value), newmap);
-                        }
+                        _mapInstanceDictionary.Add(createMap.Map, mapInstance);
                     }
                 }
 
@@ -237,6 +225,12 @@ namespace OpenNos.GameObject
                         _disposable.Dispose();
                     }
                 });
+            }
+
+            if (Script != null)
+            {
+                doc.LoadXml(Script);
+                XmlNode InstanceEvents = doc.SelectSingleNode("Definition");
                 generateEvent(InstanceEvents, FirstMap);
             }
         }

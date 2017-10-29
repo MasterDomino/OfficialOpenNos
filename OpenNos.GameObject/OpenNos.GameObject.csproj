@@ -132,6 +132,7 @@
     <Compile Include="Packets\ClientPackets\PstPacket.cs" />
     <Compile Include="Packets\ClientPackets\QSetPacket.cs" />
     <Compile Include="Packets\ClientPackets\MkraidPacket.cs" />
+    <Compile Include="Packets\ClientPackets\RaidExitPacket.cs" />
     <Compile Include="Packets\ClientPackets\RlPacket.cs" />
     <Compile Include="Packets\ClientPackets\ReqInfoPacket.cs" />
     <Compile Include="Packets\ClientPackets\RequestNpcPacket.cs" />

@@ -65,9 +65,9 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         /// </summary>
         public override void Start()
         {
-            StartSocket();
+            startSocket();
             _running = true;
-            _thread = new Thread(DoListenAsThread);
+            _thread = new Thread(doListenAsThread);
             _thread.Start();
         }
 
@@ -77,13 +77,13 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         public override void Stop()
         {
             _running = false;
-            StopSocket();
+            stopSocket();
         }
 
         /// <summary>
         /// Entrance point of the thread. This method is used by the thread to listen incoming requests.
         /// </summary>
-        private void DoListenAsThread()
+        private void doListenAsThread()
         {
             while (_running)
             {
@@ -98,7 +98,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
                 catch
                 {
                     // Disconnect, wait for a while and connect again.
-                    StopSocket();
+                    stopSocket();
                     Thread.Sleep(1000);
                     if (!_running)
                     {
@@ -106,7 +106,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
                     }
                     try
                     {
-                        StartSocket();
+                        startSocket();
                     }
                     catch
                     {
@@ -118,7 +118,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         /// <summary>
         /// Starts listening socket.
         /// </summary>
-        private void StartSocket()
+        private void startSocket()
         {
             _listenerSocket = new TcpListener(IPAddress.Any, _endPoint.TcpPort);
             _listenerSocket.Start();
@@ -127,7 +127,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         /// <summary>
         /// Stops listening socket.
         /// </summary>
-        private void StopSocket()
+        private void stopSocket()
         {
             try
             {

@@ -11,7 +11,7 @@ namespace OpenNos.XMLModel.Models.ScriptedInstance
 
         public Globals Globals { get; set; }
 
-        public InstanceEvent InstanceEvent { get; set; }
+        public InstanceEvent InstanceEvents { get; set; }
 
         #endregion
     }
