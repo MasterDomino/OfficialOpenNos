@@ -142,25 +142,19 @@ namespace OpenNos.Handler
                 {
                     if (Session.Character.Gold + price <= ServerManager.Instance.MaxGold)
                     {
-                        itemInstance = Session.Character.Inventory.RemoveFromBazaarInventory(bz.ItemInstanceId);
-                        if (itemInstance == null)
-                        {
-                            return;
-                        }
-
                         Session.Character.Gold += price;
                         Session.SendPacket(Session.Character.GenerateGold());
                         Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("REMOVE_FROM_BAZAAR"), price), 10));
 
-                        //Guid? newId = null;
-                        //if (Item.Amount != 0)
-                        //{
-                        //    ItemInstance newBz = Item.DeepCopy();
-                        //    newBz.Id = Guid.NewGuid();
-                        //    newBz.Type = newBz.Item.Type;
-                        //    newId = newBz.Id;
-                        //    List<ItemInstance> newInv = Session.Character.Inventory.AddToInventory(newBz);
-                        //}
+                        Guid? newId = null;
+                        if (itemInstance.Amount != 0)
+                        {
+                            ItemInstance newBz = itemInstance.DeepCopy();
+                            newBz.Id = Guid.NewGuid();
+                            newBz.Type = newBz.Item.Type;
+                            newId = newBz.Id;
+                            List<ItemInstance> newInv = Session.Character.Inventory.AddToInventory(newBz);
+                        }
                         Session.SendPacket($"rc_scalc 1 {bz.Price} {bz.Amount - itemInstance.Amount} {bz.Amount} {taxes} {price + taxes}");
 
                         Logger.LogUserEvent("BAZAAR_REMOVE", Session.GenerateIdentity(), $"BazaarId: {cScalcPacket.BazaarId}, IId: {itemInstance.Id} VNum: {itemInstance.ItemVNum} Amount: {bz.Amount} RemainingAmount: {itemInstance.Amount} Price: {bz.Price}");
