@@ -690,6 +690,7 @@ namespace OpenNos.GameObject
 
             // Load Configuration 
 
+            MailServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["MasterAuthKey"]);
             ConfigurationServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["MasterAuthKey"]);
             Configuration = ConfigurationServiceClient.Instance.GetConfigurationObject();
         
