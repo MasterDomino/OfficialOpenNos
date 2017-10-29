@@ -586,7 +586,7 @@ namespace OpenNos.Handler
                         else if (ski.Skill.TargetType == 1 && ski.Skill.HitType != 1)
                         {
                             Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.CastOnTarget(UserType.Player, Session.Character.CharacterId, 1, Session.Character.CharacterId, ski.Skill.CastAnimation, ski.Skill.CastEffect, ski.Skill.SkillVNum));
-                            Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.SkillUsed(UserType.Player, Session.Character.CharacterId, 1, Session.Character.CharacterId, ski.Skill.SkillVNum, ski.Skill.Cooldown, ski.Skill.AttackAnimation, ski.Skill.Effect, Session.Character.PositionX, Session.Character.PositionY, true, (int)((double)Session.Character.Hp / Session.Character.HPLoad() * 100), 0, 0, (byte)(ski.Skill.SkillType - 1)));
+                            Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.SkillUsed(UserType.Player, Session.Character.CharacterId, 1, Session.Character.CharacterId, ski.Skill.SkillVNum, ski.Skill.Cooldown, ski.Skill.AttackAnimation, ski.Skill.Effect, Session.Character.PositionX, Session.Character.PositionY, true, (int)((double)Session.Character.Hp / Session.Character.HPLoad() * 100), 0, -1, (byte)(ski.Skill.SkillType - 1)));
                             switch (ski.Skill.HitType)
                             {
                                 case 2:
