@@ -1409,7 +1409,7 @@ namespace OpenNos.Handler
                 {
                     try
                     {
-                        foreach (MapInstance instance in ServerManager.Instance.GetMapInstances())
+                        foreach (GameObject.MapInstance instance in ServerManager.Instance.GetMapInstances())
                         {
                             if (!isRevert && int.TryParse(instanceMusicPacket.Music, out int mapMusic))
                             {
@@ -1497,7 +1497,7 @@ namespace OpenNos.Handler
                 byte amount = itemRainPacket.Amount;
                 int count = itemRainPacket.Count;
                 int time = itemRainPacket.Time;
-                MapInstance instance = Session.CurrentMapInstance;
+                GameObject.MapInstance instance = Session.CurrentMapInstance;
 
                 Observable.Timer(TimeSpan.FromSeconds(0)).Subscribe(observer =>
                 {
