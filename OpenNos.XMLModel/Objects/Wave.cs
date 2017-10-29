@@ -5,27 +5,21 @@ using System.Xml.Serialization;
 namespace OpenNos.XMLModel.Objects
 {
     [Serializable]
-    public class CreateMap
+    public class Wave
     {
         #region Properties
 
         [XmlAttribute]
-        public byte IndexX { get; set; }
+        public byte Delay { get; set; }
 
         [XmlAttribute]
-        public byte IndexY { get; set; }
-
-        [XmlAttribute]
-        public int Map { get; set; }
+        public byte Offset { get; set; }
 
         [XmlElement]
-        public OnMoveOnMap[] OnMoveOnMap { get; set; }
+        public SendMessage SendMessage { get; set; }
 
         [XmlElement]
         public SummonMonster[] SummonMonster { get; set; }
-
-        [XmlAttribute]
-        public short VNum { get; set; }
 
         #endregion
     }

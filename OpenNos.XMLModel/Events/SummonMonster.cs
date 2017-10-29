@@ -20,7 +20,7 @@ namespace OpenNos.XMLModel.Events
         [XmlAttribute]
         public bool Move { get; set; }
 
-        [XmlElement(IsNullable = false)]
+        [XmlElement]
         public OnDeath OnDeath { get; set; }
 
         [XmlAttribute]

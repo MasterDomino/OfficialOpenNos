@@ -8,16 +8,19 @@ namespace OpenNos.XMLModel.Events
     {
         #region Properties
 
-        [XmlElement(IsNullable = false, Order = 2)]
+        [XmlElement(Order = 3)]
         public End End { get; set; }
 
-        [XmlElement(IsNullable = false, Order = 1)]
+        [XmlElement(Order = 2)]
         public object RefreshRaidGoals { get; set; }
 
-        [XmlElement(IsNullable = false, Order = 0)]
+        [XmlElement(Order = 1)]
+        public object RemoveButtonLocker { get; set; }
+
+        [XmlElement(Order = 0)]
         public object RemoveMonsterLocker { get; set; }
 
-        [XmlElement(IsNullable = false, Order = 3)]
+        [XmlElement(Order = 3)]
         public ThrowItem[] ThrowItem { get; set; }
 
         #endregion
