@@ -3296,43 +3296,36 @@ namespace OpenNos.GameObject
             return GenerateFamilyWarehouseHist();
         }
 
-        public void RefreshMail()
+        public void LoadMail()
         {
-            int i = 0;
-            int j = 0;
-            try
+            int parcel = 0, letter = 0;
+            foreach(MailDTO mail in DAOFactory.MailDAO.LoadSentToCharacter(CharacterId))
             {
-                List<MailDTO> mails = ServerManager.Instance.Mails.Where(s => s.ReceiverId == CharacterId && !s.IsSenderCopy && MailList.All(m => m.Value.MailId != s.MailId)).Take(50).ToList();
-                for (int x = 0; x < mails.Count; x++)
+                MailList.Add((MailList.Count > 0 ? MailList.OrderBy(s => s.Key).Last().Key : 0) + 1, mail);
+
+                if (mail.AttachmentVNum != null)
                 {
-                    MailList.Add((MailList.Count > 0 ? MailList.OrderBy(s => s.Key).Last().Key : 0) + 1, mails[x]);
-                    if (mails[x].AttachmentVNum != null)
-                    {
-                        i++;
-                        Session.SendPacket(GenerateParcel(mails[x]));
-                    }
-                    else
-                    {
-                        if (!mails[x].IsOpened)
-                        {
-                            j++;
-                        }
-                        Session.SendPacket(GeneratePost(mails[x], 1));
-                    }
+                    parcel++;
+                    Session.SendPacket(GenerateParcel(mail));
                 }
-                if (i > 0)
+                else
                 {
-                    Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("GIFTED"), i), 11));
-                }
-                if (j > 0)
-                {
-                    Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("NEW_MAIL"), j), 10));
+                    if (!mail.IsOpened)
+                    {
+                        letter++;
+                    }
+                    Session.SendPacket(GeneratePost(mail, 1));
                 }
             }
-            catch (Exception ex)
+            if (parcel > 0)
             {
-                Logger.Debug("Error while refreshing mail: " + ex.Message);
+                Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("GIFTED"), parcel), 11));
             }
+            if (letter > 0)
+            {
+                Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("NEW_MAIL"), letter), 10));
+            }
+
         }
 
         public void RemoveBuff(short id)

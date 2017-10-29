@@ -78,6 +78,7 @@
     <Compile Include="Client\ConfigurationServiceClient.cs" />
     <Compile Include="Data\AccountConnection.cs" />
     <Compile Include="Data\ConfigurationObject.cs" />
+    <Compile Include="Data\Mail.cs" />
     <Compile Include="Data\MapInstance.cs" />
     <Compile Include="Interface\IAdminToolService.cs" />
     <Compile Include="Interface\ICommunicationClient.cs" />

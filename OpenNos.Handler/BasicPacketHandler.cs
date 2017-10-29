@@ -1983,7 +1983,7 @@ namespace OpenNos.Handler
             }
 
             // finfo - friends info
-            Session.Character.RefreshMail();
+            Session.Character.LoadMail();
             Session.Character.LoadSentMail();
             Session.Character.DeleteTimeout();
 

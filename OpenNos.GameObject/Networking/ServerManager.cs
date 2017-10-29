@@ -697,7 +697,6 @@ namespace OpenNos.GameObject
         
 
             Schedules = ConfigurationManager.GetSection("eventScheduler") as List<Schedule>;
-            Mails = DAOFactory.MailDAO.LoadAll().ToList();
 
             OrderablePartitioner<ItemDTO> itemPartitioner = Partitioner.Create(DAOFactory.ItemDAO.LoadAll(), EnumerablePartitionerOptions.NoBuffering);
             Parallel.ForEach(itemPartitioner, new ParallelOptions { MaxDegreeOfParallelism = 4 }, itemDTO =>
@@ -1381,8 +1380,6 @@ namespace OpenNos.GameObject
             Parallel.ForEach(Schedules, schedule => Observable.Timer(TimeSpan.FromSeconds(EventHelper.Instance.GetMilisecondsBeforeTime(schedule.Time).TotalSeconds), TimeSpan.FromDays(1)).Subscribe(e => EventHelper.Instance.GenerateEvent(schedule.Event)));
             EventHelper.Instance.GenerateEvent(EventType.ACT4SHIP);
 
-            Observable.Interval(TimeSpan.FromSeconds(30)).Subscribe(x => mailProcess());
-
             Observable.Interval(TimeSpan.FromSeconds(1)).Subscribe(x => removeItemProcess());
             Observable.Interval(TimeSpan.FromMilliseconds(400)).Subscribe(x =>
             {
@@ -1463,19 +1460,6 @@ namespace OpenNos.GameObject
                     }
                 }
             });
-        }
-
-        private void mailProcess()
-        {
-            try
-            {
-                Mails = DAOFactory.MailDAO.LoadAll().ToList();
-                Parallel.ForEach(Sessions.Where(c => c.IsConnected), session => session.Character?.RefreshMail());
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e);
-            }
         }
 
         private void maintenanceProcess()
