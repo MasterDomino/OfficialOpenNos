@@ -205,6 +205,7 @@ namespace OpenNos.Handler
                 {
                     // User in SafeZone
                     hitRequest.Session.SendPacket(StaticPacketHelper.Cancel(2, target.Character.CharacterId));
+                    return;
                 }
                 if (target.Character.IsSitting)
                 {
