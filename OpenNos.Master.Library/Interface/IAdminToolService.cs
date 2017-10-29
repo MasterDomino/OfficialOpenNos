@@ -4,13 +4,10 @@ using OpenNos.Domain;
 using OpenNos.Master.Library.Data;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OpenNos.Master.Library.Interface
 {
-    [ScsService(Version = "1.0.0.0")]
+    [ScsService(Version = "1.1.0.0")]
     public interface IAdminToolService
     {
         /// <summary>

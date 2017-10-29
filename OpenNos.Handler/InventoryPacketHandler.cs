@@ -399,7 +399,7 @@ namespace OpenNos.Handler
                                     Inventory inventory = targetSession.Character.Inventory;
 
                                     long gold = targetSession.Character.Gold;
-                                    long maxGold = ServerManager.Instance.MaxGold;
+                                    long maxGold = ServerManager.Instance.Configuration.MaxGold;
 
                                     if (targetExchange == null || Session.Character.ExchangeInfo == null)
                                     {
@@ -655,7 +655,7 @@ namespace OpenNos.Handler
                         else
                         {
                             // handle gold drop
-                            long maxGold = ServerManager.Instance.MaxGold;
+                            long maxGold = ServerManager.Instance.Configuration.MaxGold;
                             if (mapItem is MonsterMapItem droppedGold && Session.Character.Gold + droppedGold.GoldAmount <= maxGold)
                             {
                                 if (getPacket.PickerType == 2)

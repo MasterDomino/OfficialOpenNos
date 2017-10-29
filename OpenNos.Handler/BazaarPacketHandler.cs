@@ -142,7 +142,7 @@ namespace OpenNos.Handler
                 long price = (bz.Price * soldedamount) - taxes;
                 if (Session.Character.Inventory.CanAddItem(itemInstance.ItemVNum))
                 {
-                    if (Session.Character.Gold + price <= ServerManager.Instance.MaxGold)
+                    if (Session.Character.Gold + price <= ServerManager.Instance.Configuration.MaxGold)
                     {
                         Session.Character.Gold += price;
                         Session.SendPacket(Session.Character.GenerateGold());
@@ -243,7 +243,7 @@ namespace OpenNos.Handler
             long taxmax = price > 100000 ? price / 200 : 500;
             long taxmin = price >= 4000 ? (60 + ((price - 4000) / 2000 * 30) > 10000 ? 10000 : 60 + ((price - 4000) / 2000 * 30)) : 50;
             long tax = medal == null ? taxmax : taxmin;
-            long maxGold = ServerManager.Instance.MaxGold;
+            long maxGold = ServerManager.Instance.Configuration.MaxGold;
             if (Session.Character.Gold < tax || cRegPacket.Amount <= 0 || Session.Character.ExchangeInfo?.ExchangeList.Count > 0 || Session.Character.IsShopping)
             {
                 return;

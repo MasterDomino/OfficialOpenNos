@@ -105,45 +105,23 @@ namespace OpenNos.GameObject
 
         public List<CharacterRelationDTO> CharacterRelations { get; set; }
 
-        public int DropRate { get; set; }
+        public ConfigurationObject Configuration { get; set; }
 
         public bool EventInWaiting { get; set; }
-
-        public int FairyXpRate { get; set; }
 
         public MapInstance FamilyArenaInstance { get; private set; }
 
         public ThreadSafeSortedList<long, Family> FamilyList { get; set; }
 
-        public int GoldDropRate { get; set; }
-
-        public int GoldRate { get; set; }
-
         public List<Group> GroupList { get; set; } = new List<Group>();
 
         public List<Group> Groups => GroupsThreadSafe.GetAllItems();
-
-        public int HeroicStartLevel { get; set; }
-
-        public int HeroXpRate { get; set; }
 
         public bool InBazaarRefreshMode { get; set; }
 
         public List<MailDTO> Mails { get; private set; }
 
         public List<int> MateIds { get; internal set; } = new List<int>();
-
-        public long MaxGold { get; set; }
-
-        public byte MaxHeroLevel { get; set; }
-
-        public byte MaxJobLevel { get; set; }
-
-        public byte MaxLevel { get; set; }
-
-        public byte MaxSPLevel { get; set; }
-
-        public byte MaxUpgrade { get; set; }
 
         public List<PenaltyLogDTO> PenaltyLogs { get; set; }
 
@@ -164,8 +142,6 @@ namespace OpenNos.GameObject
         public List<CharacterDTO> TopReputation { get; set; }
 
         public Guid WorldId { get; private set; }
-
-        public int XPRate { get; set; }
 
         #endregion
 
@@ -714,20 +690,12 @@ namespace OpenNos.GameObject
             Act4AngelStat = new Act4Stat();
             Act4DemonStat = new Act4Stat();
 
-            // parse rates
-            XPRate = int.Parse(ConfigurationManager.AppSettings["RateXp"]);
-            HeroXpRate = int.Parse(ConfigurationManager.AppSettings["RateHeroicXp"]);
-            DropRate = int.Parse(ConfigurationManager.AppSettings["RateDrop"]);
-            MaxGold = long.Parse(ConfigurationManager.AppSettings["MaxGold"]);
-            GoldDropRate = int.Parse(ConfigurationManager.AppSettings["GoldRateDrop"]);
-            GoldRate = int.Parse(ConfigurationManager.AppSettings["RateGold"]);
-            FairyXpRate = int.Parse(ConfigurationManager.AppSettings["RateFairyXp"]);
-            MaxLevel = byte.Parse(ConfigurationManager.AppSettings["MaxLevel"]);
-            MaxJobLevel = byte.Parse(ConfigurationManager.AppSettings["MaxJobLevel"]);
-            MaxSPLevel = byte.Parse(ConfigurationManager.AppSettings["MaxSPLevel"]);
-            MaxHeroLevel = byte.Parse(ConfigurationManager.AppSettings["MaxHeroLevel"]);
-            HeroicStartLevel = byte.Parse(ConfigurationManager.AppSettings["HeroicStartLevel"]);
-            MaxUpgrade = byte.Parse(ConfigurationManager.AppSettings["MaxUpgrade"]);
+            // Load Configuration 
+
+            ConfigurationServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["MasterAuthKey"]);
+            Configuration = ConfigurationServiceClient.Instance.GetConfigurationObject();
+        
+
             Schedules = ConfigurationManager.GetSection("eventScheduler") as List<Schedule>;
             Mails = DAOFactory.MailDAO.LoadAll().ToList();
 

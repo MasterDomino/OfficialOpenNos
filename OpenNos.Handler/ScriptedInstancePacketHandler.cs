@@ -114,7 +114,7 @@ namespace OpenNos.Handler
                 {
                     Session.Character.SetReputation(Session.Character.Timespace.Reputation);
 
-                    Session.Character.Gold = Session.Character.Gold + Session.Character.Timespace.Gold > ServerManager.Instance.MaxGold ? ServerManager.Instance.MaxGold : Session.Character.Gold + Session.Character.Timespace.Gold;
+                    Session.Character.Gold = Session.Character.Gold + Session.Character.Timespace.Gold > ServerManager.Instance.Configuration.MaxGold ? ServerManager.Instance.Configuration.MaxGold : Session.Character.Gold + Session.Character.Timespace.Gold;
                     Session.SendPacket(Session.Character.GenerateGold());
                     Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("GOLD_TS_END"), Session.Character.Timespace.Gold), 10));
 

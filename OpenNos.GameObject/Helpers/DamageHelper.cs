@@ -576,9 +576,9 @@ namespace OpenNos.GameObject
             {
                 attacker.AttackUpgrade = -10;
             }
-            else if (attacker.AttackUpgrade > ServerManager.Instance.MaxUpgrade)
+            else if (attacker.AttackUpgrade > ServerManager.Instance.Configuration.MaxUpgrade)
             {
-                attacker.AttackUpgrade = ServerManager.Instance.MaxUpgrade;
+                attacker.AttackUpgrade = ServerManager.Instance.Configuration.MaxUpgrade;
             }
 
             switch (attacker.AttackUpgrade)

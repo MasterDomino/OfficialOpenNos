@@ -1069,7 +1069,7 @@ namespace OpenNos.Handler
 
                 if (dropRatePacket.Value <= 1000)
                 {
-                    ServerManager.Instance.DropRate = dropRatePacket.Value;
+                    ServerManager.Instance.Configuration.RateDrop = dropRatePacket.Value;
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("DROP_RATE_CHANGED"), 0));
                 }
                 else
@@ -1138,7 +1138,7 @@ namespace OpenNos.Handler
 
                 if (fairyXpRatePacket.Value <= 1000)
                 {
-                    ServerManager.Instance.FairyXpRate = fairyXpRatePacket.Value;
+                    ServerManager.Instance.Configuration.RateFairyXP = fairyXpRatePacket.Value;
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("FAIRYXP_RATE_CHANGED"), 0));
                 }
                 else
@@ -1213,7 +1213,7 @@ namespace OpenNos.Handler
                 Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Gold]Amount: {goldPacket.Amount}");
 
                 long gold = goldPacket.Amount;
-                long maxGold = ServerManager.Instance.MaxGold;
+                long maxGold = ServerManager.Instance.Configuration.MaxGold;
                 gold = gold > maxGold ? maxGold : gold;
                 if (gold >= 0)
                 {
@@ -1244,7 +1244,7 @@ namespace OpenNos.Handler
 
                 if (goldDropRatePacket.Value <= 1000)
                 {
-                    ServerManager.Instance.GoldDropRate = goldDropRatePacket.Value;
+                    ServerManager.Instance.Configuration.RateGoldDrop = goldDropRatePacket.Value;
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("GOLD_DROP_RATE_CHANGED"), 0));
                 }
                 else
@@ -1270,7 +1270,7 @@ namespace OpenNos.Handler
 
                 if (goldRatePacket.Value <= 1000)
                 {
-                    ServerManager.Instance.GoldRate = goldRatePacket.Value;
+                    ServerManager.Instance.Configuration.RateGold = goldRatePacket.Value;
 
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("GOLD_RATE_CHANGED"), 0));
                 }
@@ -1381,7 +1381,7 @@ namespace OpenNos.Handler
 
                 if (heroXpRatePacket.Value <= 1000)
                 {
-                    ServerManager.Instance.HeroXpRate = heroXpRatePacket.Value;
+                    ServerManager.Instance.Configuration.RateHeroicXP = heroXpRatePacket.Value;
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("HEROXP_RATE_CHANGED"), 0));
                 }
                 else
@@ -2383,12 +2383,12 @@ namespace OpenNos.Handler
         {
             Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Stat]");
 
-            Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("XP_RATE_NOW")}: {ServerManager.Instance.XPRate} ", 13));
-            Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("DROP_RATE_NOW")}: {ServerManager.Instance.DropRate} ", 13));
-            Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("GOLD_RATE_NOW")}: {ServerManager.Instance.GoldRate} ", 13));
-            Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("GOLD_DROPRATE_NOW")}: {ServerManager.Instance.GoldDropRate} ", 13));
-            Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("HERO_XPRATE_NOW")}: {ServerManager.Instance.HeroXpRate} ", 13));
-            Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("FAIRYXP_RATE_NOW")}: {ServerManager.Instance.FairyXpRate} ", 13));
+            Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("XP_RATE_NOW")}: {ServerManager.Instance.Configuration.RateDrop} ", 13));
+            Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("DROP_RATE_NOW")}: {ServerManager.Instance.Configuration.RateDrop} ", 13));
+            Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("GOLD_RATE_NOW")}: {ServerManager.Instance.Configuration.RateGold} ", 13));
+            Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("GOLD_DROPRATE_NOW")}: {ServerManager.Instance.Configuration.RateGoldDrop} ", 13));
+            Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("HERO_XPRATE_NOW")}: {ServerManager.Instance.Configuration.RateHeroicXP} ", 13));
+            Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("FAIRYXP_RATE_NOW")}: {ServerManager.Instance.Configuration.RateFairyXP} ", 13));
             Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("SERVER_WORKING_TIME")}: {(Process.GetCurrentProcess().StartTime - DateTime.Now).ToString(@"d\ hh\:mm\:ss")} ", 13));
 
             foreach (string message in CommunicationServiceClient.Instance.RetrieveServerStatistics())
@@ -2944,7 +2944,7 @@ namespace OpenNos.Handler
 
                 if (xpRatePacket.Value <= 1000)
                 {
-                    ServerManager.Instance.XPRate = xpRatePacket.Value;
+                    ServerManager.Instance.Configuration.RateXP = xpRatePacket.Value;
 
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("XP_RATE_CHANGED"), 0));
                 }

@@ -1620,7 +1620,7 @@ namespace OpenNos.GameObject
                         int levelDifference = Session.Character.Level - monsterToAttack.Monster.Level;
                         if ((levelDifference <= 15 && levelDifference >= -15) || ServerManager.Instance.ChannelId == 51)
                         {
-                            int dropRate = ServerManager.Instance.DropRate * MapInstance.DropRate;
+                            int dropRate = ServerManager.Instance.Configuration.RateDrop * MapInstance.DropRate;
                             int x = 0;
                             foreach (DropDTO drop in droplist.OrderBy(s => random.Next()))
                             {
@@ -1685,11 +1685,11 @@ namespace OpenNos.GameObject
 
                         // gold calculation
                         int gold = getGold(monsterToAttack);
-                        long maxGold = ServerManager.Instance.MaxGold;
+                        long maxGold = ServerManager.Instance.Configuration.MaxGold;
                         gold = gold > maxGold ? (int)maxGold : gold;
                         double randChance = ServerManager.Instance.RandomNumber() * random.NextDouble();
 
-                        if (gold > 0 && randChance <= (int)(ServerManager.Instance.GoldDropRate * 10 * CharacterHelper.GoldPenalty(Level, monsterToAttack.Monster.Level)))
+                        if (gold > 0 && randChance <= (int)(ServerManager.Instance.Configuration.RateGoldDrop * 10 * CharacterHelper.GoldPenalty(Level, monsterToAttack.Monster.Level)))
                         {
                             DropDTO drop2 = new DropDTO
                             {
@@ -3858,7 +3858,7 @@ namespace OpenNos.GameObject
                     specialist = Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear);
                 }
 
-                if (Level < ServerManager.Instance.MaxLevel)
+                if (Level < ServerManager.Instance.Configuration.MaxLevel)
                 {
                     if (isMonsterOwner)
                     {
@@ -3869,9 +3869,9 @@ namespace OpenNos.GameObject
                         LevelXp += (int)(getXP(monsterinfo, grp) / 3D * (1 + (GetBuff(CardType.Item, (byte)AdditionalTypes.Item.EXPIncreased)[0] / 100D)));
                     }
                 }
-                if ((Class == 0 && JobLevel < 20) || (Class != 0 && JobLevel < ServerManager.Instance.MaxJobLevel))
+                if ((Class == 0 && JobLevel < 20) || (Class != 0 && JobLevel < ServerManager.Instance.Configuration.MaxJobLevel))
                 {
-                    if (specialist != null && UseSp && specialist.SpLevel < ServerManager.Instance.MaxSPLevel && specialist.SpLevel > 19)
+                    if (specialist != null && UseSp && specialist.SpLevel < ServerManager.Instance.Configuration.MaxSPLevel && specialist.SpLevel > 19)
                     {
                         JobLevelXp += (int)(getJXP(monsterinfo, grp) / 2D * (1 + (GetBuff(CardType.Item, (byte)AdditionalTypes.Item.EXPIncreased)[0] / 100D)));
                     }
@@ -3880,12 +3880,12 @@ namespace OpenNos.GameObject
                         JobLevelXp += (int)(getJXP(monsterinfo, grp) * (1 + (GetBuff(CardType.Item, (byte)AdditionalTypes.Item.EXPIncreased)[0] / 100D)));
                     }
                 }
-                if (specialist != null && UseSp && specialist.SpLevel < ServerManager.Instance.MaxSPLevel)
+                if (specialist != null && UseSp && specialist.SpLevel < ServerManager.Instance.Configuration.MaxSPLevel)
                 {
                     int multiplier = specialist.SpLevel < 10 ? 10 : specialist.SpLevel < 19 ? 5 : 1;
                     specialist.XP += (int)(getJXP(monsterinfo, grp) * (multiplier + (GetBuff(CardType.Item, (byte)AdditionalTypes.Item.EXPIncreased)[0] / 100D)));
                 }
-                if (HeroLevel > 0 && HeroLevel < ServerManager.Instance.MaxHeroLevel)
+                if (HeroLevel > 0 && HeroLevel < ServerManager.Instance.Configuration.MaxHeroLevel)
                 {
                     if (isMonsterOwner)
                     {
@@ -3902,12 +3902,12 @@ namespace OpenNos.GameObject
                     LevelXp -= (long)experience;
                     Level++;
                     experience = xpLoad();
-                    if (Level >= ServerManager.Instance.MaxLevel)
+                    if (Level >= ServerManager.Instance.Configuration.MaxLevel)
                     {
-                        Level = ServerManager.Instance.MaxLevel;
+                        Level = ServerManager.Instance.Configuration.MaxLevel;
                         LevelXp = 0;
                     }
-                    else if (Level == ServerManager.Instance.HeroicStartLevel)
+                    else if (Level == ServerManager.Instance.Configuration.HeroicStartLevel)
                     {
                         HeroLevel = 1;
                         HeroXp = 0;
@@ -3954,7 +3954,7 @@ namespace OpenNos.GameObject
                     if (fairy.ElementRate + fairy.Item.ElementRate < fairy.Item.MaxElementRate
                         && Level <= monsterinfo.Level + 15 && Level >= monsterinfo.Level - 15)
                     {
-                        fairy.XP += ServerManager.Instance.FairyXpRate;
+                        fairy.XP += ServerManager.Instance.Configuration.RateFairyXP;
                     }
                     experience = CharacterHelper.LoadFairyXPData(fairy.ElementRate + fairy.Item.ElementRate);
                     while (fairy.XP >= experience)
@@ -3985,9 +3985,9 @@ namespace OpenNos.GameObject
                         JobLevel = 20;
                         JobLevelXp = 0;
                     }
-                    else if (JobLevel >= ServerManager.Instance.MaxJobLevel)
+                    else if (JobLevel >= ServerManager.Instance.Configuration.MaxJobLevel)
                     {
-                        JobLevel = ServerManager.Instance.MaxJobLevel;
+                        JobLevel = ServerManager.Instance.Configuration.MaxJobLevel;
                         JobLevelXp = 0;
                     }
                     Hp = (int)HPLoad();
@@ -4010,9 +4010,9 @@ namespace OpenNos.GameObject
                         experience = spXpLoad();
                         Session.SendPacket(GenerateStat());
                         Session.SendPacket(GenerateLevelUp());
-                        if (specialist.SpLevel >= ServerManager.Instance.MaxSPLevel)
+                        if (specialist.SpLevel >= ServerManager.Instance.Configuration.MaxSPLevel)
                         {
-                            specialist.SpLevel = ServerManager.Instance.MaxSPLevel;
+                            specialist.SpLevel = ServerManager.Instance.Configuration.MaxSPLevel;
                             specialist.XP = 0;
                         }
                         LearnSPSkill();
@@ -4031,9 +4031,9 @@ namespace OpenNos.GameObject
                     HeroXp -= (long)experience;
                     HeroLevel++;
                     experience = heroXPLoad();
-                    if (HeroLevel >= ServerManager.Instance.MaxHeroLevel)
+                    if (HeroLevel >= ServerManager.Instance.Configuration.MaxHeroLevel)
                     {
-                        HeroLevel = ServerManager.Instance.MaxHeroLevel;
+                        HeroLevel = ServerManager.Instance.Configuration.MaxHeroLevel;
                         HeroXp = 0;
                     }
                     Hp = (int)HPLoad();
@@ -4061,7 +4061,7 @@ namespace OpenNos.GameObject
             {
                 actMultiplier = 5;
             }
-            return (int)(lowBaseGold * ServerManager.Instance.GoldRate * actMultiplier * eqMultiplier);
+            return (int)(lowBaseGold * ServerManager.Instance.Configuration.RateGold * actMultiplier * eqMultiplier);
         }
 
         private int getHXP(NpcMonsterDTO monster, Group group)
@@ -4076,7 +4076,7 @@ namespace OpenNos.GameObject
                 partyPenalty = (6f / partySize) / levelSum;
             }
 
-            int heroXp = (int)Math.Round(monster.HeroXp * CharacterHelper.ExperiencePenalty(Level, monster.Level) * ServerManager.Instance.HeroXpRate * MapInstance.XpRate);
+            int heroXp = (int)Math.Round(monster.HeroXp * CharacterHelper.ExperiencePenalty(Level, monster.Level) * ServerManager.Instance.Configuration.RateHeroicXP * MapInstance.XpRate);
 
             // divide jobexp by multiplication of partyPenalty with level e.g. 57 * 0,014...
             if (partySize > 1 && group != null)
@@ -4099,7 +4099,7 @@ namespace OpenNos.GameObject
                 partyPenalty = (6f / partySize) / levelSum;
             }
 
-            int jobxp = (int)Math.Round(monster.JobXP * CharacterHelper.ExperiencePenalty(JobLevel, monster.Level) * ServerManager.Instance.XPRate * MapInstance.XpRate);
+            int jobxp = (int)Math.Round(monster.JobXP * CharacterHelper.ExperiencePenalty(JobLevel, monster.Level) * ServerManager.Instance.Configuration.RateXP * MapInstance.XpRate);
 
             if (partySize > 1 && group != null)
             {
@@ -4124,7 +4124,7 @@ namespace OpenNos.GameObject
 
             int xpcalculation = levelDifference < 5 ? monster.XP : monster.XP / 3 * 2;
 
-            int xp = (int)Math.Round(xpcalculation * CharacterHelper.ExperiencePenalty(Level, monster.Level) * ServerManager.Instance.XPRate * MapInstance.XpRate);
+            int xp = (int)Math.Round(xpcalculation * CharacterHelper.ExperiencePenalty(Level, monster.Level) * ServerManager.Instance.Configuration.RateXP * MapInstance.XpRate);
 
             if (Level <= 5 && levelDifference < -4)
             {
