@@ -1401,7 +1401,13 @@ namespace OpenNos.GameObject
             CommunicationServiceClient.Instance.PenaltyLogRefresh += onPenaltyLogRefresh;
             CommunicationServiceClient.Instance.GlobalEvent += onGlobalEvent;
             CommunicationServiceClient.Instance.ShutdownEvent += onShutdown;
+            ConfigurationServiceClient.Instance.ConfigurationUpdate += onConfiguratinEvent; ;
             _lastGroupId = 1;
+        }
+
+        private void onConfiguratinEvent(object sender, EventArgs e)
+        {
+            Configuration = (ConfigurationObject)sender;
         }
 
         private void loadFamilies()
