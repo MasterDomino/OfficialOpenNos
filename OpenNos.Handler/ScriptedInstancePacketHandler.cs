@@ -297,6 +297,10 @@ namespace OpenNos.Handler
                 }
                 ServerManager.Instance.ChangeMap(Session.Character.CharacterId, Session.Character.MapId, Session.Character.MapX, Session.Character.MapY);
             }
+            else if (rxitPacket?.State == 1 && Session.CurrentMapInstance?.MapInstanceType == MapInstanceType.RaidInstance)
+            {
+                // TODO: Raid leave
+            }
         }
 
         #endregion
