@@ -573,8 +573,13 @@ namespace OpenNos.GameObject
                         Session.Character.Gold -= 3000;
                         MapCell pos = map.Map.GetRandomPosition();
                         ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, map.MapInstanceId, pos.X, pos.Y);
+                    }
+                    break;
 
-                        //ServerManager.Instance.ChangeMap(Session.Character.CharacterId, 130, 12, 40);
+                case 5004:
+                    if (npc != null)
+                    {
+                        ServerManager.Instance.ChangeMap(Session.Character.CharacterId, 145, 50, 41);
                     }
                     break;
 

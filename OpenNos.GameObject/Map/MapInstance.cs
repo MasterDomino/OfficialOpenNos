@@ -168,7 +168,7 @@ namespace OpenNos.GameObject
 
         public void AddMonster(MapMonster monster) => _monsters[monster.MapMonsterId] = monster;
 
-        public void AddNPC(MapNpc monster) => _npcs[monster.MapNpcId] = monster;
+        public void AddNPC(MapNpc npc) => _npcs[npc.MapNpcId] = npc;
 
         public void DespawnMonster(int monsterVnum)
         {
