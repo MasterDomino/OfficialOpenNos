@@ -230,9 +230,9 @@ namespace OpenNos.Handler
                 target.Character.LastDefence = DateTime.Now;
                 target.SendPacket(target.Character.GenerateStat());
                 bool IsAlive = target.Character.Hp > 0;
-                if (!IsAlive)
+                if (!IsAlive && target.HasCurrentMapInstance)
                 {
-                    if (target.CurrentMapInstance?.Map?.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
+                    if (target.CurrentMapInstance.Map?.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
                     {
                         if (ServerManager.Instance.ChannelId == 51 && ServerManager.Instance.Act4DemonStat.Mode == 0 && ServerManager.Instance.Act4AngelStat.Mode == 0)
                         {
@@ -284,8 +284,8 @@ namespace OpenNos.Handler
                             BuffType.Neutral
                         };
                         target.Character.DisableBuffs(bufftodisable);
-                        target.CurrentMapInstance?.Broadcast(target, target.Character.GenerateIn(), ReceiverType.AllExceptMe);
-                        target.CurrentMapInstance?.Broadcast(target, target.Character.GenerateGidx(), ReceiverType.AllExceptMe);
+                        target.CurrentMapInstance.Broadcast(target, target.Character.GenerateIn(), ReceiverType.AllExceptMe);
+                        target.CurrentMapInstance.Broadcast(target, target.Character.GenerateGidx(), ReceiverType.AllExceptMe);
                         target.SendPacket(target.Character.GenerateSay(Language.Instance.GetMessageFromKey("ACT4_PVP_DIE"), 11));
                         target.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("ACT4_PVP_DIE"), 0));
                         Observable.Timer(TimeSpan.FromMilliseconds(30000)).Subscribe(o =>
@@ -316,8 +316,8 @@ namespace OpenNos.Handler
                                 Session.Character.ChangeChannel(connection.Split(':')[0], port, 3);
                                 return;
                             }
-                            target.CurrentMapInstance?.Broadcast(target, target.Character.GenerateTp());
-                            target.CurrentMapInstance?.Broadcast(target.Character.GenerateRevive());
+                            target.CurrentMapInstance.Broadcast(target, target.Character.GenerateTp());
+                            target.CurrentMapInstance.Broadcast(target.Character.GenerateRevive());
                             target.SendPacket(target.Character.GenerateStat());
                         });
                     }
@@ -516,7 +516,7 @@ namespace OpenNos.Handler
                         bc.ApplyBCards(Session.Character);
                     }
 
-                    if (Session.Character.Mp >= ski.Skill.MpCost)
+                    if (Session.Character.Mp >= ski.Skill.MpCost && Session.HasCurrentMapInstance)
                     {
                         // AOE Target hit
                         if (ski.Skill.TargetType == 1 && ski.Skill.HitType == 1)
@@ -533,7 +533,7 @@ namespace OpenNos.Handler
 
                             Session.SendPacket(Session.Character.GenerateStat());
                             CharacterSkill skillinfo = Session.Character.Skills.FirstOrDefault(s => s.Skill.UpgradeSkill == ski.Skill.SkillVNum && s.Skill.Effect > 0 && s.Skill.SkillType == 2);
-                            Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.CastOnTarget(UserType.Player, Session.Character.CharacterId, 1, Session.Character.CharacterId, ski.Skill.CastAnimation, skillinfo?.Skill.CastEffect ?? ski.Skill.CastEffect, ski.Skill.SkillVNum));
+                            Session.CurrentMapInstance.Broadcast(StaticPacketHelper.CastOnTarget(UserType.Player, Session.Character.CharacterId, 1, Session.Character.CharacterId, ski.Skill.CastAnimation, skillinfo?.Skill.CastEffect ?? ski.Skill.CastEffect, ski.Skill.SkillVNum));
 
                             // Generate scp
                             ski.LastUse = DateTime.Now;
@@ -541,64 +541,58 @@ namespace OpenNos.Handler
                             {
                                 Thread.Sleep(ski.Skill.CastTime * 100);
                             }
-                            if (Session.HasCurrentMapInstance)
+                            Session.CurrentMapInstance.Broadcast(StaticPacketHelper.SkillUsed(UserType.Player, Session.Character.CharacterId, 1, Session.Character.CharacterId, ski.Skill.SkillVNum, ski.Skill.Cooldown, ski.Skill.AttackAnimation, skillinfo?.Skill.Effect ?? ski.Skill.Effect, Session.Character.PositionX, Session.Character.PositionY, true, (int)((double)Session.Character.Hp / Session.Character.HPLoad() * 100), 0, -2, (byte)(ski.Skill.SkillType - 1)));
+                            if (ski.Skill.TargetRange != 0)
                             {
-                                Session.CurrentMapInstance.Broadcast(StaticPacketHelper.SkillUsed(UserType.Player, Session.Character.CharacterId, 1, Session.Character.CharacterId, ski.Skill.SkillVNum, ski.Skill.Cooldown, ski.Skill.AttackAnimation, skillinfo?.Skill.Effect ?? ski.Skill.Effect, Session.Character.PositionX, Session.Character.PositionY, true, (int)((double)Session.Character.Hp / Session.Character.HPLoad() * 100), 0, -2, (byte)(ski.Skill.SkillType - 1)));
-                                if (ski.Skill.TargetRange != 0 && Session.HasCurrentMapInstance)
+                                foreach (ClientSession character in ServerManager.Instance.Sessions.Where(s => s.CurrentMapInstance == Session.CurrentMapInstance && s.Character.CharacterId != Session.Character.CharacterId && s.Character.IsInRange(Session.Character.PositionX, Session.Character.PositionY, ski.Skill.TargetRange)))
                                 {
-                                    foreach (ClientSession character in ServerManager.Instance.Sessions.Where(s => s.CurrentMapInstance == Session.CurrentMapInstance && s.Character.CharacterId != Session.Character.CharacterId && s.Character.IsInRange(Session.Character.PositionX, Session.Character.PositionY, ski.Skill.TargetRange)))
+                                    if (Session.CurrentMapInstance.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4))
                                     {
-                                        if (Session.CurrentMapInstance.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4))
+                                        if (Session.Character.Faction != character.Character.Faction && Session.CurrentMapInstance.Map.MapId != 130 && Session.CurrentMapInstance.Map.MapId != 131)
                                         {
-                                            if (Session.Character.Faction != character.Character.Faction)
-                                            {
-                                                if (Session.Character.MapInstance.Map.MapId != 130 && Session.Character.MapInstance.Map.MapId != 131)
-                                                {
-                                                    pvpHit(new HitRequest(TargetHitType.AOETargetHit, Session, ski.Skill), character);
-                                                }
-                                            }
-                                        }
-                                        else if (Session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
-                                        {
-                                            if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId))
-                                            {
-                                                pvpHit(new HitRequest(TargetHitType.AOETargetHit, Session, ski.Skill), character);
-                                            }
-                                        }
-                                        else if (Session.CurrentMapInstance.IsPVP)
-                                        {
-                                            if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId))
-                                            {
-                                                pvpHit(new HitRequest(TargetHitType.AOETargetHit, Session, ski.Skill), character);
-                                            }
-                                        }
-                                        else
-                                        {
-                                            Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
+                                            pvpHit(new HitRequest(TargetHitType.AOETargetHit, Session, ski.Skill), character);
                                         }
                                     }
-                                    foreach (MapMonster mon in Session.CurrentMapInstance.GetListMonsterInRange(Session.Character.PositionX, Session.Character.PositionY, ski.Skill.TargetRange).Where(s => s.CurrentHp > 0))
+                                    else if (Session.CurrentMapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
                                     {
-                                        mon.HitQueue.Enqueue(new HitRequest(TargetHitType.AOETargetHit, Session, ski.Skill, skillinfo?.Skill.Effect ?? ski.Skill.Effect));
+                                        if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId))
+                                        {
+                                            pvpHit(new HitRequest(TargetHitType.AOETargetHit, Session, ski.Skill), character);
+                                        }
                                     }
+                                    else if (Session.CurrentMapInstance.IsPVP)
+                                    {
+                                        if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId))
+                                        {
+                                            pvpHit(new HitRequest(TargetHitType.AOETargetHit, Session, ski.Skill), character);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
+                                    }
+                                }
+                                foreach (MapMonster mon in Session.CurrentMapInstance.GetListMonsterInRange(Session.Character.PositionX, Session.Character.PositionY, ski.Skill.TargetRange).Where(s => s.CurrentHp > 0))
+                                {
+                                    mon.HitQueue.Enqueue(new HitRequest(TargetHitType.AOETargetHit, Session, ski.Skill, skillinfo?.Skill.Effect ?? ski.Skill.Effect));
                                 }
                             }
                         }
                         else if (ski.Skill.TargetType == 2 && ski.Skill.HitType == 0)
                         {
-                            Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.CastOnTarget(UserType.Player, Session.Character.CharacterId, 1, Session.Character.CharacterId, ski.Skill.CastAnimation, ski.Skill.CastEffect, ski.Skill.SkillVNum));
-                            Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.SkillUsed(UserType.Player, Session.Character.CharacterId, 1, targetId, ski.Skill.SkillVNum, ski.Skill.Cooldown, ski.Skill.AttackAnimation, ski.Skill.Effect, Session.Character.PositionX, Session.Character.PositionY, true, (int)((double)Session.Character.Hp / Session.Character.HPLoad() * 100), 0, -1, (byte)(ski.Skill.SkillType - 1)));
+                            Session.CurrentMapInstance.Broadcast(StaticPacketHelper.CastOnTarget(UserType.Player, Session.Character.CharacterId, 1, Session.Character.CharacterId, ski.Skill.CastAnimation, ski.Skill.CastEffect, ski.Skill.SkillVNum));
+                            Session.CurrentMapInstance.Broadcast(StaticPacketHelper.SkillUsed(UserType.Player, Session.Character.CharacterId, 1, targetId, ski.Skill.SkillVNum, ski.Skill.Cooldown, ski.Skill.AttackAnimation, ski.Skill.Effect, Session.Character.PositionX, Session.Character.PositionY, true, (int)((double)Session.Character.Hp / Session.Character.HPLoad() * 100), 0, -1, (byte)(ski.Skill.SkillType - 1)));
                             ClientSession target = ServerManager.Instance.GetSessionByCharacterId(targetId) ?? Session;
                             ski.Skill.BCards.Where(s => !s.Type.Equals((byte)BCardType.CardType.MeditationSkill)).ToList().ForEach(s => s.ApplyBCards(target.Character, Session.Character));
                         }
                         else if (ski.Skill.TargetType == 1 && ski.Skill.HitType != 1)
                         {
-                            Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.CastOnTarget(UserType.Player, Session.Character.CharacterId, 1, Session.Character.CharacterId, ski.Skill.CastAnimation, ski.Skill.CastEffect, ski.Skill.SkillVNum));
-                            Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.SkillUsed(UserType.Player, Session.Character.CharacterId, 1, Session.Character.CharacterId, ski.Skill.SkillVNum, ski.Skill.Cooldown, ski.Skill.AttackAnimation, ski.Skill.Effect, Session.Character.PositionX, Session.Character.PositionY, true, (int)((double)Session.Character.Hp / Session.Character.HPLoad() * 100), 0, -1, (byte)(ski.Skill.SkillType - 1)));
+                            Session.CurrentMapInstance.Broadcast(StaticPacketHelper.CastOnTarget(UserType.Player, Session.Character.CharacterId, 1, Session.Character.CharacterId, ski.Skill.CastAnimation, ski.Skill.CastEffect, ski.Skill.SkillVNum));
+                            Session.CurrentMapInstance.Broadcast(StaticPacketHelper.SkillUsed(UserType.Player, Session.Character.CharacterId, 1, Session.Character.CharacterId, ski.Skill.SkillVNum, ski.Skill.Cooldown, ski.Skill.AttackAnimation, ski.Skill.Effect, Session.Character.PositionX, Session.Character.PositionY, true, (int)((double)Session.Character.Hp / Session.Character.HPLoad() * 100), 0, -1, (byte)(ski.Skill.SkillType - 1)));
                             switch (ski.Skill.HitType)
                             {
                                 case 2:
-                                    IEnumerable<ClientSession> clientSessions = Session.CurrentMapInstance?.Sessions?.Where(s => s.Character.IsInRange(Session.Character.PositionX, Session.Character.PositionY, ski.Skill.TargetRange));
+                                    IEnumerable<ClientSession> clientSessions = Session.CurrentMapInstance.Sessions?.Where(s => s.Character.IsInRange(Session.Character.PositionX, Session.Character.PositionY, ski.Skill.TargetRange));
                                     if (clientSessions != null)
                                     {
                                         foreach (ClientSession target in clientSessions)
@@ -614,7 +608,7 @@ namespace OpenNos.Handler
                                     break;
                             }
                         }
-                        else if (ski.Skill.TargetType == 0 && Session.HasCurrentMapInstance) // monster target
+                        else if (ski.Skill.TargetType == 0) // monster target
                         {
                             if (isPvp)
                             {
@@ -633,7 +627,7 @@ namespace OpenNos.Handler
                                         }
                                         Session.SendPacket(Session.Character.GenerateStat());
                                         CharacterSkill characterSkillInfo = Session.Character.Skills.FirstOrDefault(s => s.Skill.UpgradeSkill == ski.Skill.SkillVNum && s.Skill.Effect > 0 && s.Skill.SkillType == 2);
-                                        Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.CastOnTarget(UserType.Player, Session.Character.CharacterId, 3, targetId, ski.Skill.CastAnimation, characterSkillInfo?.Skill.CastEffect ?? ski.Skill.CastEffect, ski.Skill.SkillVNum));
+                                        Session.CurrentMapInstance.Broadcast(StaticPacketHelper.CastOnTarget(UserType.Player, Session.Character.CharacterId, 3, targetId, ski.Skill.CastAnimation, characterSkillInfo?.Skill.CastEffect ?? ski.Skill.CastEffect, ski.Skill.SkillVNum));
                                         Session.Character.Skills.Where(s => s.Id != ski.Id).ForEach(i => i.Hit = 0);
 
                                         // Generate scp
@@ -657,18 +651,15 @@ namespace OpenNos.Handler
                                             int count = 0;
                                             if (playerToAttack != null && playerToAttack.CurrentMapInstance == Session.CurrentMapInstance && playerToAttack.Character.CharacterId != Session.Character.CharacterId)
                                             {
-                                                if (Session.CurrentMapInstance?.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
+                                                if (Session.CurrentMapInstance.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4))
                                                 {
-                                                    if (Session.Character.Faction != playerToAttack.Character.Faction)
+                                                    if (Session.Character.Faction != playerToAttack.Character.Faction && Session.CurrentMapInstance.Map.MapId != 130 && Session.CurrentMapInstance.Map.MapId != 131)
                                                     {
-                                                        if (Session.Character.MapInstance.Map.MapId != 130 && Session.Character.MapInstance.Map.MapId != 131)
-                                                        {
-                                                            count++;
-                                                            pvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), playerToAttack);
-                                                        }
+                                                        count++;
+                                                        pvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), playerToAttack);
                                                     }
                                                 }
-                                                else if (Session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                                else if (Session.CurrentMapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
                                                 {
                                                     if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(playerToAttack.Character.CharacterId))
                                                     {
@@ -676,7 +667,7 @@ namespace OpenNos.Handler
                                                         pvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), playerToAttack);
                                                     }
                                                 }
-                                                else if (Session.CurrentMapInstance?.IsPVP == true)
+                                                else if (Session.CurrentMapInstance.IsPVP)
                                                 {
                                                     if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(playerToAttack.Character.CharacterId))
                                                     {
@@ -691,18 +682,15 @@ namespace OpenNos.Handler
                                                 ClientSession character = ServerManager.Instance.GetSessionByCharacterId(id);
                                                 if (character != null && character.CurrentMapInstance == Session.CurrentMapInstance && character.Character.CharacterId != Session.Character.CharacterId)
                                                 {
-                                                    if (Session.CurrentMapInstance?.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
+                                                    if (Session.CurrentMapInstance.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4))
                                                     {
-                                                        if (Session.Character.Faction != character.Character.Faction)
+                                                        if (Session.Character.Faction != character.Character.Faction && Session.CurrentMapInstance.Map.MapId != 130 && Session.CurrentMapInstance.Map.MapId != 131)
                                                         {
-                                                            if (Session.Character.MapInstance.Map.MapId != 130 && Session.Character.MapInstance.Map.MapId != 131)
-                                                            {
-                                                                count++;
-                                                                pvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), character);
-                                                            }
+                                                            count++;
+                                                            pvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), character);
                                                         }
                                                     }
-                                                    else if (Session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                                    else if (Session.CurrentMapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
                                                     {
                                                         if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId))
                                                         {
@@ -710,7 +698,7 @@ namespace OpenNos.Handler
                                                             pvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), character);
                                                         }
                                                     }
-                                                    else if (Session.CurrentMapInstance?.IsPVP == true)
+                                                    else if (Session.CurrentMapInstance.IsPVP)
                                                     {
                                                         if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId))
                                                         {
@@ -740,18 +728,15 @@ namespace OpenNos.Handler
                                                     }
                                                     IEnumerable<ClientSession> playersInAOERange = ServerManager.Instance.Sessions.Where(s => s.CurrentMapInstance == Session.CurrentMapInstance && s.Character.CharacterId != Session.Character.CharacterId && s.Character.IsInRange(Session.Character.PositionX, Session.Character.PositionY, ski.Skill.TargetRange));
                                                     int count = 0;
-                                                    if (Session.CurrentMapInstance?.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
+                                                    if (Session.CurrentMapInstance.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4))
                                                     {
-                                                        if (Session.Character.Faction != playerToAttack.Character.Faction)
+                                                        if (Session.Character.Faction != playerToAttack.Character.Faction && Session.CurrentMapInstance.Map.MapId != 130 && Session.CurrentMapInstance.Map.MapId != 131)
                                                         {
-                                                            if (Session.Character.MapInstance.Map.MapId != 130 && Session.Character.MapInstance.Map.MapId != 131)
-                                                            {
-                                                                count++;
-                                                                pvpHit(new HitRequest(TargetHitType.SingleTargetHitCombo, Session, ski.Skill, skillCombo: skillCombo), playerToAttack);
-                                                            }
+                                                            count++;
+                                                            pvpHit(new HitRequest(TargetHitType.SingleTargetHitCombo, Session, ski.Skill, skillCombo: skillCombo), playerToAttack);
                                                         }
                                                     }
-                                                    else if (Session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                                    else if (Session.CurrentMapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
                                                     {
                                                         if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(playerToAttack.Character.CharacterId))
                                                         {
@@ -759,7 +744,7 @@ namespace OpenNos.Handler
                                                             pvpHit(new HitRequest(TargetHitType.SingleTargetHitCombo, Session, ski.Skill, skillCombo: skillCombo), playerToAttack);
                                                         }
                                                     }
-                                                    else if (Session.CurrentMapInstance?.IsPVP == true)
+                                                    else if (Session.CurrentMapInstance.IsPVP)
                                                     {
                                                         if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(playerToAttack.Character.CharacterId))
                                                         {
@@ -769,18 +754,15 @@ namespace OpenNos.Handler
                                                     }
                                                     foreach (ClientSession character in playersInAOERange)
                                                     {
-                                                        if (Session.CurrentMapInstance?.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
+                                                        if (Session.CurrentMapInstance.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4))
                                                         {
-                                                            if (Session.Character.Faction != character.Character.Faction)
+                                                            if (Session.Character.Faction != character.Character.Faction && Session.CurrentMapInstance.Map.MapId != 130 && Session.CurrentMapInstance.Map.MapId != 131)
                                                             {
-                                                                if (Session.Character.MapInstance.Map.MapId != 130 && Session.Character.MapInstance.Map.MapId != 131)
-                                                                {
-                                                                    count++;
-                                                                    pvpHit(new HitRequest(TargetHitType.SingleTargetHitCombo, Session, ski.Skill, skillCombo: skillCombo), character);
-                                                                }
+                                                                count++;
+                                                                pvpHit(new HitRequest(TargetHitType.SingleTargetHitCombo, Session, ski.Skill, skillCombo: skillCombo), character);
                                                             }
                                                         }
-                                                        else if (Session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                                        else if (Session.CurrentMapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
                                                         {
                                                             if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId))
                                                             {
@@ -788,7 +770,7 @@ namespace OpenNos.Handler
                                                                 pvpHit(new HitRequest(TargetHitType.SingleTargetHitCombo, Session, ski.Skill, skillCombo: skillCombo), character);
                                                             }
                                                         }
-                                                        else if (Session.CurrentMapInstance?.IsPVP == true)
+                                                        else if (Session.CurrentMapInstance.IsPVP)
                                                         {
                                                             if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId))
                                                             {
@@ -807,11 +789,11 @@ namespace OpenNos.Handler
                                                     IEnumerable<ClientSession> playersInAOERange = ServerManager.Instance.Sessions.Where(s => s.CurrentMapInstance == Session.CurrentMapInstance && s.Character.CharacterId != Session.Character.CharacterId && s.Character.IsInRange(Session.Character.PositionX, Session.Character.PositionY, ski.Skill.TargetRange));
 
                                                     // hit the targetted monster
-                                                    if (Session.CurrentMapInstance?.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
+                                                    if (Session.CurrentMapInstance.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4))
                                                     {
                                                         if (Session.Character.Faction != playerToAttack.Character.Faction)
                                                         {
-                                                            if (Session.Character.MapInstance.Map.MapId != 130 && Session.Character.MapInstance.Map.MapId != 131)
+                                                            if (Session.CurrentMapInstance.Map.MapId != 130 && Session.CurrentMapInstance.Map.MapId != 131)
                                                             {
                                                                 pvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), playerToAttack);
                                                             }
@@ -825,7 +807,7 @@ namespace OpenNos.Handler
                                                             Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                         }
                                                     }
-                                                    else if (Session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                                    else if (Session.CurrentMapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
                                                     {
                                                         if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(playerToAttack.Character.CharacterId))
                                                         {
@@ -836,7 +818,7 @@ namespace OpenNos.Handler
                                                             Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                         }
                                                     }
-                                                    else if (Session.CurrentMapInstance?.IsPVP == true)
+                                                    else if (Session.CurrentMapInstance.IsPVP)
                                                     {
                                                         if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(playerToAttack.Character.CharacterId))
                                                         {
@@ -855,17 +837,14 @@ namespace OpenNos.Handler
                                                     //hit all other monsters
                                                     foreach (ClientSession character in playersInAOERange)
                                                     {
-                                                        if (Session.CurrentMapInstance?.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
+                                                        if (Session.CurrentMapInstance.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4))
                                                         {
-                                                            if (Session.Character.Faction != character.Character.Faction)
+                                                            if (Session.Character.Faction != character.Character.Faction && Session.CurrentMapInstance.Map.MapId != 130 && Session.CurrentMapInstance.Map.MapId != 131)
                                                             {
-                                                                if (Session.Character.MapInstance.Map.MapId != 130 && Session.Character.MapInstance.Map.MapId != 131)
-                                                                {
-                                                                    pvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), character);
-                                                                }
+                                                                pvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), character);
                                                             }
                                                         }
-                                                        else if (Session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                                        else if (Session.CurrentMapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
                                                         {
                                                             if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId))
                                                             {
@@ -895,11 +874,11 @@ namespace OpenNos.Handler
                                                     {
                                                         ski.Hit = 0;
                                                     }
-                                                    if (Session.CurrentMapInstance?.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
+                                                    if (Session.CurrentMapInstance.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4))
                                                     {
                                                         if (Session.Character.Faction != playerToAttack.Character.Faction)
                                                         {
-                                                            if (Session.Character.MapInstance.Map.MapId != 130 && Session.Character.MapInstance.Map.MapId != 131)
+                                                            if (Session.CurrentMapInstance.Map.MapId != 130 && Session.CurrentMapInstance.Map.MapId != 131)
                                                             {
                                                                 pvpHit(new HitRequest(TargetHitType.SingleTargetHitCombo, Session, ski.Skill, skillCombo: skillCombo), playerToAttack);
                                                             }
@@ -913,7 +892,7 @@ namespace OpenNos.Handler
                                                             Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                         }
                                                     }
-                                                    else if (Session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                                    else if (Session.CurrentMapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
                                                     {
                                                         if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(playerToAttack.Character.CharacterId))
                                                         {
@@ -924,7 +903,7 @@ namespace OpenNos.Handler
                                                             Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                         }
                                                     }
-                                                    else if (Session.CurrentMapInstance?.IsPVP == true)
+                                                    else if (Session.CurrentMapInstance.IsPVP)
                                                     {
                                                         if (Session.CurrentMapInstance.MapInstanceId != ServerManager.Instance.FamilyArenaInstance.MapInstanceId)
                                                         {
@@ -957,11 +936,11 @@ namespace OpenNos.Handler
                                                 }
                                                 else
                                                 {
-                                                    if (Session.CurrentMapInstance?.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
+                                                    if (Session.CurrentMapInstance.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4))
                                                     {
                                                         if (Session.Character.Faction != playerToAttack.Character.Faction)
                                                         {
-                                                            if (Session.Character.MapInstance.Map.MapId != 130 && Session.Character.MapInstance.Map.MapId != 131)
+                                                            if (Session.CurrentMapInstance.Map.MapId != 130 && Session.CurrentMapInstance.Map.MapId != 131)
                                                             {
                                                                 pvpHit(new HitRequest(TargetHitType.SingleTargetHit, Session, ski.Skill), playerToAttack);
                                                             }
@@ -975,7 +954,7 @@ namespace OpenNos.Handler
                                                             Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                         }
                                                     }
-                                                    else if (Session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                                    else if (Session.CurrentMapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
                                                     {
                                                         if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(playerToAttack.Character.CharacterId))
                                                         {
@@ -986,7 +965,7 @@ namespace OpenNos.Handler
                                                             Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                         }
                                                     }
-                                                    else if (Session.CurrentMapInstance?.IsPVP == true)
+                                                    else if (Session.CurrentMapInstance.IsPVP)
                                                     {
                                                         if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(playerToAttack.Character.CharacterId))
                                                         {
@@ -1036,7 +1015,7 @@ namespace OpenNos.Handler
                                         Session.SendPacket(Session.Character.GenerateStat());
                                         CharacterSkill characterSkillInfo = Session.Character.Skills.FirstOrDefault(s => s.Skill.UpgradeSkill == ski.Skill.SkillVNum && s.Skill.Effect > 0 && s.Skill.SkillType == 2);
 
-                                        Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.CastOnTarget(UserType.Player, Session.Character.CharacterId, 3, monsterToAttack.MapMonsterId, ski.Skill.CastAnimation, characterSkillInfo?.Skill.CastEffect ?? ski.Skill.CastEffect, ski.Skill.SkillVNum));
+                                        Session.CurrentMapInstance.Broadcast(StaticPacketHelper.CastOnTarget(UserType.Player, Session.Character.CharacterId, 3, monsterToAttack.MapMonsterId, ski.Skill.CastAnimation, characterSkillInfo?.Skill.CastEffect ?? ski.Skill.CastEffect, ski.Skill.SkillVNum));
                                         Session.Character.Skills.Where(s => s.Id != ski.Id).ForEach(i => i.Hit = 0);
 
                                         // Generate scp
@@ -1060,7 +1039,7 @@ namespace OpenNos.Handler
 
                                             foreach (long id in Session.Character.MTListTargetQueue.Where(s => s.EntityType == UserType.Monster).Select(s => s.TargetId))
                                             {
-                                                MapMonster mon = Session.CurrentMapInstance?.GetMonster(id);
+                                                MapMonster mon = Session.CurrentMapInstance.GetMonster(id);
                                                 if (mon?.CurrentHp > 0)
                                                 {
                                                     mon.HitQueue.Enqueue(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill, characterSkillInfo?.Skill.Effect ?? ski.Skill.Effect));
@@ -1078,7 +1057,7 @@ namespace OpenNos.Handler
                                                     {
                                                         ski.Hit = 0;
                                                     }
-                                                    IEnumerable<MapMonster> monstersInAOERange = Session.CurrentMapInstance?.GetListMonsterInRange(monsterToAttack.MapX, monsterToAttack.MapY, ski.Skill.TargetRange).ToList();
+                                                    IEnumerable<MapMonster> monstersInAOERange = Session.CurrentMapInstance.GetListMonsterInRange(monsterToAttack.MapX, monsterToAttack.MapY, ski.Skill.TargetRange).ToList();
                                                     if (monstersInAOERange != null)
                                                     {
                                                         foreach (MapMonster mon in monstersInAOERange)
@@ -1097,7 +1076,7 @@ namespace OpenNos.Handler
                                                 }
                                                 else
                                                 {
-                                                    IEnumerable<MapMonster> monstersInAOERange = Session.CurrentMapInstance?.GetListMonsterInRange(monsterToAttack.MapX, monsterToAttack.MapY, ski.Skill.TargetRange).ToList();
+                                                    IEnumerable<MapMonster> monstersInAOERange = Session.CurrentMapInstance.GetListMonsterInRange(monsterToAttack.MapX, monsterToAttack.MapY, ski.Skill.TargetRange).ToList();
 
                                                     //hit the targetted monster
                                                     monsterToAttack.HitQueue.Enqueue(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill, characterSkillInfo?.Skill.Effect ?? ski.Skill.Effect, showTargetAnimation: true));
@@ -1148,7 +1127,6 @@ namespace OpenNos.Handler
                                     Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                 }
                             }
-
                             if (ski.Skill.HitType == 3)
                             {
                                 Session.Character.MTListTargetQueue.Clear();
@@ -1196,9 +1174,9 @@ namespace OpenNos.Handler
 
             if (characterSkill.CanBeUsed())
             {
-                if (Session.Character.Mp >= characterSkill.Skill.MpCost)
+                if (Session.Character.Mp >= characterSkill.Skill.MpCost && Session.HasCurrentMapInstance)
                 {
-                    Session.CurrentMapInstance?.Broadcast($"ct_n 1 {Session.Character.CharacterId} 3 -1 {characterSkill.Skill.CastAnimation} {characterSkill.Skill.CastEffect} {characterSkill.Skill.SkillVNum}");
+                    Session.CurrentMapInstance.Broadcast($"ct_n 1 {Session.Character.CharacterId} 3 -1 {characterSkill.Skill.CastAnimation} {characterSkill.Skill.CastEffect} {characterSkill.Skill.SkillVNum}");
                     characterSkill.LastUse = DateTime.Now;
                     if (!Session.Character.HasGodMode)
                     {
@@ -1210,11 +1188,11 @@ namespace OpenNos.Handler
                     {
                         Session.Character.LastSkillUse = DateTime.Now;
 
-                        Session.CurrentMapInstance?.Broadcast($"bs 1 {Session.Character.CharacterId} {x} {y} {characterSkill.Skill.SkillVNum} {characterSkill.Skill.Cooldown} {characterSkill.Skill.AttackAnimation} {characterSkill.Skill.Effect} 0 0 1 1 0 0 0");
+                        Session.CurrentMapInstance.Broadcast($"bs 1 {Session.Character.CharacterId} {x} {y} {characterSkill.Skill.SkillVNum} {characterSkill.Skill.Cooldown} {characterSkill.Skill.AttackAnimation} {characterSkill.Skill.Effect} 0 0 1 1 0 0 0");
 
                         foreach (long id in Session.Character.MTListTargetQueue.Where(s => s.EntityType == UserType.Monster).Select(s => s.TargetId))
                         {
-                            MapMonster mon = Session.CurrentMapInstance?.GetMonster(id);
+                            MapMonster mon = Session.CurrentMapInstance.GetMonster(id);
                             if (mon?.CurrentHp > 0)
                             {
                                 mon.HitQueue.Enqueue(new HitRequest(TargetHitType.ZoneHit, Session, characterSkill.Skill, characterSkill.Skill.Effect, x, y));
@@ -1226,24 +1204,21 @@ namespace OpenNos.Handler
                             ClientSession character = ServerManager.Instance.GetSessionByCharacterId(id);
                             if (character != null && character.CurrentMapInstance == Session.CurrentMapInstance && character.Character.CharacterId != Session.Character.CharacterId)
                             {
-                                if (Session.CurrentMapInstance?.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4) == true)
+                                if (Session.CurrentMapInstance.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4))
                                 {
-                                    if (Session.Character.Faction != character.Character.Faction)
+                                    if (Session.Character.Faction != character.Character.Faction && Session.CurrentMapInstance.Map.MapId != 130 && Session.CurrentMapInstance.Map.MapId != 131)
                                     {
-                                        if (Session.CurrentMapInstance?.Map.MapId != 130 && Session.CurrentMapInstance?.Map.MapId != 131)
-                                        {
-                                            pvpHit(new HitRequest(TargetHitType.ZoneHit, Session, characterSkill.Skill, x, y), character);
-                                        }
+                                        pvpHit(new HitRequest(TargetHitType.ZoneHit, Session, characterSkill.Skill, x, y), character);
                                     }
                                 }
-                                else if (Session.CurrentMapInstance?.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap) == true)
+                                else if (Session.CurrentMapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
                                 {
                                     if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId))
                                     {
                                         pvpHit(new HitRequest(TargetHitType.ZoneHit, Session, characterSkill.Skill, x, y), character);
                                     }
                                 }
-                                else if (Session.CurrentMapInstance?.IsPVP == true)
+                                else if (Session.CurrentMapInstance.IsPVP)
                                 {
                                     if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId))
                                     {
