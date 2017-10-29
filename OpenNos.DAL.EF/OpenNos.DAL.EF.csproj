@@ -90,6 +90,10 @@
   <ItemGroup>
     <Compile Include="CellonOption.cs" />
     <Compile Include="MaintenanceLog.cs" />
+    <Compile Include="Migrations\201710292243021_Aphrodite72.cs" />
+    <Compile Include="Migrations\201710292243021_Aphrodite72.Designer.cs">
+      <DependentUpon>201710292243021_Aphrodite72.cs</DependentUpon>
+    </Compile>
     <Compile Include="RecipeList.cs" />
     <Compile Include="RollGeneratedItem.cs" />
     <Compile Include="Mate.cs" />
@@ -678,6 +682,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201710271229266_Aphrodite71.resx">
       <DependentUpon>201710271229266_Aphrodite71.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710292243021_Aphrodite72.resx">
+      <DependentUpon>201710292243021_Aphrodite72.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

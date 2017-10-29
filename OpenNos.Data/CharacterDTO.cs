@@ -56,6 +56,8 @@ namespace OpenNos.Data
 
         public long Gold { get; set; }
 
+        public long GoldBank { get; set; }
+
         public bool GroupRequestBlocked { get; set; }
 
         public HairColorType HairColor { get; set; }
