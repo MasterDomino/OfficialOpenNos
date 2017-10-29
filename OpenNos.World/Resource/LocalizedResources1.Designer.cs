@@ -3283,6 +3283,24 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to PVP is now enabled!.
+        /// </summary>
+        internal static string PVP_ACTIVE {
+            get {
+                return ResourceManager.GetString("PVP_ACTIVE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [{1}] was slain by [{0}].
+        /// </summary>
+        internal static string PVP_KILL {
+            get {
+                return ResourceManager.GetString("PVP_KILL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Do you want to use this item?.
         /// </summary>
         internal static string QNA_ITEM {

@@ -323,6 +323,7 @@ namespace OpenNos.Handler
                     {
                         hitRequest.Session.Character.TalentWin++;
                         target.Character.TalentLose++;
+                        hitRequest.Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PVP_KILL"), hitRequest.Session.Character.Name, target.Character.Name), 10));
                         Observable.Timer(TimeSpan.FromMilliseconds(1000)).Subscribe(o => ServerManager.Instance.AskPVPRevive(target.Character.CharacterId));
                     }
                 }

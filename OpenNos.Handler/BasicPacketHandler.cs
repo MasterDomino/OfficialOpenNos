@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -1609,6 +1610,10 @@ namespace OpenNos.Handler
                         Session.Character.Gold -= 100;
                         Session.SendPacket(Session.Character.GenerateGold());
                         Session.Character.LastPVPRevive = DateTime.Now;
+                        Observable.Timer(TimeSpan.FromSeconds(5)).Subscribe(observer =>
+                        {
+                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("PVP_ACTIVE"), 10));
+                        });
                     }
                     else
                     {
