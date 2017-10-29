@@ -12,7 +12,7 @@ namespace OpenNos.XMLModel.Events
         public bool IsMate { get; set; }
 
         [XmlAttribute]
-        public short IsProtected { get; set; }
+        public bool IsProtected { get; set; }
 
         [XmlElement]
         public OnDeath OnDeath { get; set; }
