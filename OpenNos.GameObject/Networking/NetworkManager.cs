@@ -92,7 +92,7 @@ namespace OpenNos.GameObject
 
         private bool checkGeneralLog(INetworkClient client)
         {
-            if (!client.IpAddress.Contains("127.0.0.1"))
+            if (!client.IpAddress.Contains("127.0.0.1") && ServerManager.Instance.ChannelId != 51)
             {
                 if (ConnectionLog.Count > 0)
                 {
