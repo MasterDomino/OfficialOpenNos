@@ -290,10 +290,11 @@ namespace OpenNos.GameObject
                 int distance = 100;
                 List<ClientSession> sess = new List<ClientSession>();
                 DamageList.Keys.ToList().ForEach(s => sess.Add(MapInstance.GetSessionByCharacterId(s)));
-                ClientSession session = sess.OrderBy(s => distance = Map.GetDistance(new MapCell { X = MapX, Y = MapY }, new MapCell { X = s.Character.PositionX, Y = s.Character.PositionY })).FirstOrDefault();
-                if (distance < maxDistance && session != null)
+                //ClientSession session = sess.OrderBy(s => distance = Map.GetDistance(new MapCell { X = MapX, Y = MapY }, new MapCell { X = s.Character.PositionX, Y = s.Character.PositionY })).FirstOrDefault();
+                Character character = sess.Where(s => s?.Character != null && (ServerManager.Instance.ChannelId != 51 || MonsterVNum - (byte)s.Character.Faction != 678) && s.Character.Hp > 0 && !s.Character.InvisibleGm && !s.Character.Invisible && s.Character.MapInstance == MapInstance && Map.GetDistance(new MapCell { X = MapX, Y = MapY }, new MapCell { X = s.Character.PositionX, Y = s.Character.PositionY }) < Monster.NoticeRange).OrderBy(s => distance = Map.GetDistance(new MapCell { X = MapX, Y = MapY }, new MapCell { X = s.Character.PositionX, Y = s.Character.PositionY })).FirstOrDefault()?.Character;
+                if (distance < maxDistance && character != null)
                 {
-                    Target = session.Character.CharacterId;
+                    Target = character.CharacterId;
                 }
             }
         }
