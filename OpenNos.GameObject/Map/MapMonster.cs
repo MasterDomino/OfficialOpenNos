@@ -914,7 +914,7 @@ namespace OpenNos.GameObject
             }
             if (npcMonsterSkill != null && (npcMonsterSkill.Skill.Range > 0 || npcMonsterSkill.Skill.TargetRange > 0))
             {
-                foreach (Character characterInRange in MapInstance.GetCharactersInRange(npcMonsterSkill.Skill.TargetRange == 0 ? MapX : targetSession.Character.PositionX, npcMonsterSkill.Skill.TargetRange == 0 ? MapY : targetSession.Character.PositionY, npcMonsterSkill.Skill.TargetRange).Where(s => s.CharacterId != Target && s.Hp > 0 && !s.InvisibleGm))
+                foreach (Character characterInRange in MapInstance.GetCharactersInRange(npcMonsterSkill.Skill.TargetRange == 0 ? MapX : targetSession.Character.PositionX, npcMonsterSkill.Skill.TargetRange == 0 ? MapY : targetSession.Character.PositionY, npcMonsterSkill.Skill.TargetRange).Where(s => s.CharacterId != Target && (ServerManager.Instance.ChannelId != 51 || MonsterVNum - (byte)s.Faction != 678) && s.Hp > 0 && !s.InvisibleGm))
                 {
                     if (characterInRange.IsSitting)
                     {
