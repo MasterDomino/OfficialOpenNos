@@ -252,6 +252,10 @@ namespace OpenNos.Core
                 {
                     return _items[v];
                 }
+                catch
+                {
+                    Logger.Error("Tell Master that i dropped and IOR exception somewhere, also stop crying about it.");
+                }
                 finally
                 {
                     _lock.ExitReadLock();
