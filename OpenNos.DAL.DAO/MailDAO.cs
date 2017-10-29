@@ -106,6 +106,24 @@ namespace OpenNos.DAL.DAO
             }
         }
 
+        public IEnumerable<MailDTO> LoadSentByCharacter(long characterId)
+        {
+            //Where(s => s.SenderId == CharacterId && s.IsSenderCopy && MailList.All(m => m.Value.MailId != s.MailId))
+            using (OpenNosContext context = DataAccessHelper.CreateContext())
+            {
+                return context.Mail.Where(s => s.SenderId == characterId && s.IsSenderCopy).Take(40).ToList().ToList().Select(c => _mapper.Map<MailDTO>(c));
+            }
+        }
+
+        public IEnumerable<MailDTO> LoadSentToCharacter(long characterId)
+        {
+            //s => s.ReceiverId == CharacterId && !s.IsSenderCopy && MailList.All(m => m.Value.MailId != s.MailId)).Take(50)
+            using (OpenNosContext context = DataAccessHelper.CreateContext())
+            {
+                return context.Mail.Where(s => s.ReceiverId == characterId && !s.IsSenderCopy).Take(40).ToList().Select(c => _mapper.Map<MailDTO>(c));
+            }
+        }
+
         private MailDTO insert(MailDTO mail, OpenNosContext context)
         {
             try

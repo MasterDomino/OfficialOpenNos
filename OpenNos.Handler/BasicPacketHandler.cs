@@ -383,15 +383,12 @@ namespace OpenNos.Handler
 
                             Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_GIFTED")}: {newInv.Item.Name} x {mail.AttachmentAmount}", 12));
 
-                            if (DAOFactory.MailDAO.LoadById(mail.MailId) != null)
-                            {
-                                DAOFactory.MailDAO.DeleteById(mail.MailId);
-                            }
+
+                            DAOFactory.MailDAO.DeleteById(mail.MailId);
+
                             Session.SendPacket($"parcel 2 1 {giftId}");
-                            if (Session.Character.MailList.ContainsKey(giftId))
-                            {
-                                Session.Character.MailList.Remove(giftId);
-                            }
+
+                            Session.Character.MailList.Remove(giftId);
                         }
                     }
                     else
@@ -1672,7 +1669,7 @@ namespace OpenNos.Handler
                     }
                     WearableInstance headWearable = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.Hat, InventoryType.Wear);
                     byte color = headWearable?.Item.IsColored == true ? (byte)headWearable.Design : (byte)Session.Character.HairColor;
-                    MailDTO mailcopy = new MailDTO
+                    Mail mailcopy = new Mail
                     {
                         AttachmentAmount = 0,
                         IsOpened = false,
@@ -1689,7 +1686,7 @@ namespace OpenNos.Handler
                         EqPacket = Session.Character.GenerateEqListForPacket(),
                         SenderMorphId = Session.Character.Morph == 0 ? (short)-1 : (short)(Session.Character.Morph > short.MaxValue ? 0 : Session.Character.Morph)
                     };
-                    MailDTO mail = new MailDTO
+                    Mail mail = new Mail
                     {
                         AttachmentAmount = 0,
                         IsOpened = false,
@@ -1707,12 +1704,12 @@ namespace OpenNos.Handler
                         SenderMorphId = Session.Character.Morph == 0 ? (short)-1 : (short)(Session.Character.Morph > short.MaxValue ? 0 : Session.Character.Morph)
                     };
 
-                    DAOFactory.MailDAO.InsertOrUpdate(ref mailcopy);
-                    DAOFactory.MailDAO.InsertOrUpdate(ref mail);
+                    MailServiceClient.Instance.SendMail(mailcopy);
+                    MailServiceClient.Instance.SendMail(mail);
 
-                    Session.Character.MailList.Add((Session.Character.MailList.Count > 0 ? Session.Character.MailList.OrderBy(s => s.Key).Last().Key : 0) + 1, mailcopy);
+                    //Session.Character.MailList.Add((Session.Character.MailList.Count > 0 ? Session.Character.MailList.OrderBy(s => s.Key).Last().Key : 0) + 1, mailcopy);
                     Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("MAILED"), 11));
-                    Session.SendPacket(Session.Character.GeneratePost(mailcopy, 2));
+                    //Session.SendPacket(Session.Character.GeneratePost(mailcopy, 2));
                 }
                 else
                 {
@@ -1983,7 +1980,7 @@ namespace OpenNos.Handler
             }
 
             // finfo - friends info
-            Session.Character.RefreshMail();
+            Session.Character.LoadMail();
             Session.Character.LoadSentMail();
             Session.Character.DeleteTimeout();
 

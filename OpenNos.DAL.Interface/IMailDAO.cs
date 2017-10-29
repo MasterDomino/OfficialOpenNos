@@ -30,6 +30,10 @@ namespace OpenNos.DAL.Interface
 
         MailDTO LoadById(long mailId);
 
+        IEnumerable<MailDTO> LoadSentToCharacter(long characterId);
+
+        IEnumerable<MailDTO> LoadSentByCharacter(long characterId);
+        //
         #endregion
     }
 }

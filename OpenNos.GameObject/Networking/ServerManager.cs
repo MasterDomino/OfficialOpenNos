@@ -119,8 +119,6 @@ namespace OpenNos.GameObject
 
         public bool InBazaarRefreshMode { get; set; }
 
-        public List<MailDTO> Mails { get; private set; }
-
         public List<int> MateIds { get; internal set; } = new List<int>();
 
         public List<PenaltyLogDTO> PenaltyLogs { get; set; }
@@ -692,12 +690,12 @@ namespace OpenNos.GameObject
 
             // Load Configuration 
 
+            MailServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["MasterAuthKey"]);
             ConfigurationServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["MasterAuthKey"]);
             Configuration = ConfigurationServiceClient.Instance.GetConfigurationObject();
         
 
             Schedules = ConfigurationManager.GetSection("eventScheduler") as List<Schedule>;
-            Mails = DAOFactory.MailDAO.LoadAll().ToList();
 
             OrderablePartitioner<ItemDTO> itemPartitioner = Partitioner.Create(DAOFactory.ItemDAO.LoadAll(), EnumerablePartitionerOptions.NoBuffering);
             Parallel.ForEach(itemPartitioner, new ParallelOptions { MaxDegreeOfParallelism = 4 }, itemDTO =>
@@ -1381,8 +1379,6 @@ namespace OpenNos.GameObject
             Parallel.ForEach(Schedules, schedule => Observable.Timer(TimeSpan.FromSeconds(EventHelper.Instance.GetMilisecondsBeforeTime(schedule.Time).TotalSeconds), TimeSpan.FromDays(1)).Subscribe(e => EventHelper.Instance.GenerateEvent(schedule.Event)));
             EventHelper.Instance.GenerateEvent(EventType.ACT4SHIP);
 
-            Observable.Interval(TimeSpan.FromSeconds(30)).Subscribe(x => mailProcess());
-
             Observable.Interval(TimeSpan.FromSeconds(1)).Subscribe(x => removeItemProcess());
             Observable.Interval(TimeSpan.FromMilliseconds(400)).Subscribe(x =>
             {
@@ -1402,7 +1398,57 @@ namespace OpenNos.GameObject
             CommunicationServiceClient.Instance.GlobalEvent += onGlobalEvent;
             CommunicationServiceClient.Instance.ShutdownEvent += onShutdown;
             ConfigurationServiceClient.Instance.ConfigurationUpdate += onConfiguratinEvent; ;
+            MailServiceClient.Instance.MailSent += onMailSent;
             _lastGroupId = 1;
+        }
+
+        private void onMailSent(object sender, EventArgs e)
+        {
+            Mail mail = (Mail)sender;
+
+            ClientSession session = GetSessionByCharacterId(mail.IsSenderCopy ? mail.SenderId : mail.ReceiverId);
+            if(session != null)
+            {
+                MailDTO mailDTO = new MailDTO
+                {
+                    AttachmentAmount = mail.AttachmentAmount,
+                    AttachmentRarity = mail.AttachmentRarity,
+                    AttachmentUpgrade = mail.AttachmentUpgrade,
+                    AttachmentVNum = mail.AttachmentVNum,
+                    Date = mail.Date,
+                    EqPacket = mail.EqPacket,
+                    IsOpened = mail.IsOpened,
+                    IsSenderCopy = mail.IsSenderCopy,
+                    MailId = mail.MailId,
+                    Message = mail.Message,
+                    ReceiverId = mail.ReceiverId,
+                    SenderClass = mail.SenderClass,
+                    SenderGender = mail.SenderGender,
+                    SenderHairColor = mail.SenderHairColor,
+                    SenderHairStyle = mail.SenderHairStyle,
+                    SenderId = mail.SenderId,
+                    SenderMorphId = mail.SenderMorphId,
+                    Title = mail.Title
+                };
+
+                if (mail.AttachmentVNum != null)
+                {
+                    session.SendPacket(session.Character.GenerateParcel(mailDTO));
+                }
+                else
+                {
+                    session.SendPacket(session.Character.GeneratePost(mailDTO, 1));
+                }
+            }
+
+            // Parcel
+            //    MailList.Add((MailList.Count > 0 ? MailList.OrderBy(s => s.Key).Last().Key : 0) + 1, mail);
+            //    Session.SendPacket(GenerateParcel(mail));
+            //    Session.SendPacket(GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_GIFTED")} {mail.AttachmentAmount}", 12));
+
+            // Letter
+            //    Session.Character.MailList.Add((Session.Character.MailList.Count > 0 ? Session.Character.MailList.OrderBy(s => s.Key).Last().Key : 0) + 1, mailcopy);
+            //    Session.SendPacket(Session.Character.GeneratePost(mailcopy, 2));
         }
 
         private void onConfiguratinEvent(object sender, EventArgs e)
@@ -1463,19 +1509,6 @@ namespace OpenNos.GameObject
                     }
                 }
             });
-        }
-
-        private void mailProcess()
-        {
-            try
-            {
-                Mails = DAOFactory.MailDAO.LoadAll().ToList();
-                Parallel.ForEach(Sessions.Where(c => c.IsConnected), session => session.Character?.RefreshMail());
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e);
-            }
         }
 
         private void maintenanceProcess()
