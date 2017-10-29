@@ -286,7 +286,28 @@ namespace OpenNos.Handler
                             target.Character.Mp = (int)target.Character.MPLoad();
                             short x = (short)(39 + ServerManager.Instance.RandomNumber(-2, 3));
                             short y = (short)(42 + ServerManager.Instance.RandomNumber(-2, 3));
-                            ServerManager.Instance.ChangeMap(target.Character.CharacterId, 130, x, y);
+                            if (target.Character.Faction == FactionType.Angel)
+                            {
+                                ServerManager.Instance.ChangeMap(target.Character.CharacterId, 130, x, y);
+                            }
+                            else if (target.Character.Faction == FactionType.Demon)
+                            {
+                                ServerManager.Instance.ChangeMap(target.Character.CharacterId, 131, x, y);
+                            }
+                            else
+                            {
+                                target.Character.MapId = 145;
+                                target.Character.MapX = 51;
+                                target.Character.MapY = 41;
+                                string connection = CommunicationServiceClient.Instance.RetrieveOriginWorld(Session.Account.AccountId);
+                                if (string.IsNullOrWhiteSpace(connection))
+                                {
+                                    return;
+                                }
+                                int port = Convert.ToInt32(connection.Split(':')[1]);
+                                Session.Character.ChangeChannel(connection.Split(':')[0], port, 3);
+                                return;
+                            }
                             target.CurrentMapInstance?.Broadcast(target, target.Character.GenerateTp());
                             target.CurrentMapInstance?.Broadcast(target.Character.GenerateRevive());
                             target.SendPacket(target.Character.GenerateStat());
