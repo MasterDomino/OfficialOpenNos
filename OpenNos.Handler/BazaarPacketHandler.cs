@@ -89,12 +89,14 @@ namespace OpenNos.Handler
                             DAOFactory.IteminstanceDAO.InsertOrUpdate(bzitemdto);
                             ServerManager.Instance.BazaarRefresh(bzcree.BazaarItem.BazaarItemId);
                             Session.SendPacket($"rc_buy 1 {bzcree.Item.Item.VNum} {bzcree.Owner} {cBuyPacket.Amount} {cBuyPacket.Price} 0 0 0");
+
+                            // Edit this soo we dont generate new guid every single time we take something out.
                             ItemInstance newBz = bzcree.Item.DeepCopy();
                             newBz.Id = Guid.NewGuid();
                             newBz.Amount = cBuyPacket.Amount;
                             newBz.Type = newBz.Item.Type;
-
                             List<ItemInstance> newInv = Session.Character.Inventory.AddToInventory(newBz);
+
                             if (newInv.Count > 0)
                             {
                                 Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: { bzcree.Item.Item.Name} x {cBuyPacket.Amount}", 10));
@@ -146,6 +148,7 @@ namespace OpenNos.Handler
                         Session.SendPacket(Session.Character.GenerateGold());
                         Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("REMOVE_FROM_BAZAAR"), price), 10));
 
+                        // Edit this soo we dont generate new guid every single time we take something out.
                         Guid? newId = null;
                         if (itemInstance.Amount != 0)
                         {

@@ -10,11 +10,11 @@ namespace OpenNos.GameObject.CommandPackets
     {
         #region Properties
 
-        [PacketIndex(1)]
-        public byte EffectLevel { get; set; }
-
         [PacketIndex(0)]
         public byte Slot { get; set; }
+
+        [PacketIndex(1)]
+        public byte EffectLevel { get; set; }
 
         [PacketIndex(2)]
         public byte Effect { get; set; }

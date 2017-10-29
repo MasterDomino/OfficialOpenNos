@@ -619,20 +619,6 @@ namespace OpenNos.GameObject
             destinationInventory = LoadBySlotAndType(destinationSlot, desttype);
         }
 
-        public ItemInstance RemoveFromBazaarInventory(Guid itemInstanceId)
-        {
-            ItemInstance itemInstance = LoadByItemInstance<ItemInstance>(itemInstanceId);
-            short? nextFreeSlot = getFreeSlot(itemInstance.Item.Type);
-            if (itemInstance != null && nextFreeSlot.HasValue)
-            {
-                itemInstance.Slot = nextFreeSlot.Value;
-                itemInstance.Type = itemInstance.Item.Type;
-                Owner.Session?.SendPacket(itemInstance.GenerateInventoryAdd());
-                return itemInstance;
-            }
-            return null;
-        }
-
         public void RemoveItemAmount(int vnum, int amount = 1)
         {
             if (Owner != null)
@@ -645,14 +631,14 @@ namespace OpenNos.GameObject
                     {
                         if (inventory.Amount > remainingAmount)
                         {
-                            // amount completely removed
+                            // Amount completely removed
                             inventory.Amount -= (byte)remainingAmount;
                             remainingAmount = 0;
                             Owner.Session.SendPacket(inventory.GenerateInventoryAdd());
                         }
                         else
                         {
-                            // amount partly removed
+                            // Amount partly removed
                             remainingAmount -= inventory.Amount;
                             DeleteById(inventory.Id);
                             Owner.Session.SendPacket(UserInterfaceHelper.Instance.GenerateInventoryRemove(inventory.Type, inventory.Slot));
@@ -660,7 +646,7 @@ namespace OpenNos.GameObject
                     }
                     else
                     {
-                        // amount to remove reached
+                        // Amount to remove reached
                         break;
                     }
                 }
@@ -687,7 +673,7 @@ namespace OpenNos.GameObject
         }
 
         /// <summary>
-        /// reorders item in given inventorytype
+        /// Reorders item in given inventorytype
         /// </summary>
         /// <param name="session"></param>
         /// <param name="inventoryType"></param>
