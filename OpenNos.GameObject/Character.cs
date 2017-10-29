@@ -1979,7 +1979,7 @@ namespace OpenNos.GameObject
             return pktQs;
         }
 
-        public string GenerateRaid(int Type, bool Exit)
+        public string GenerateRaid(int Type, bool exit = false)
         {
             string result = string.Empty;
             switch (Type)
@@ -1990,11 +1990,11 @@ namespace OpenNos.GameObject
                     break;
 
                 case 2:
-                    result = $"raid 2 {(Exit ? "-1" : $"{CharacterId}")}";
+                    result = $"raid 2 {(exit ? "-1" : $"{CharacterId}")}";
                     break;
 
                 case 1:
-                    result = $"raid 1 {(Exit ? 0 : 1)}";
+                    result = $"raid 1 {(exit ? 0 : 1)}";
                     break;
 
                 case 3:

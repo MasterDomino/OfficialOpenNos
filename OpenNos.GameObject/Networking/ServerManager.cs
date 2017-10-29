@@ -641,16 +641,53 @@ namespace OpenNos.GameObject
                 Group grp = Instance.Groups.Find(s => s.IsMemberOfGroup(session.Character.CharacterId));
                 if (grp != null)
                 {
-                    if ((grp.CharacterCount >= 3 && grp.GroupType == GroupType.Group) || (grp.CharacterCount >= 2 && grp.GroupType != GroupType.Group))
+                    switch (grp.GroupType)
                     {
-                        if (grp.Characters.ElementAt(0) == session)
-                        {
-                            Broadcast(session, UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("NEW_LEADER")), ReceiverType.OnlySomeone, string.Empty, grp.Characters.ElementAt(1).Character.CharacterId);
-                        }
-                        grp.LeaveGroup(session);
+                        case GroupType.BigTeam:
+                        case GroupType.Team:
+                            if (grp.Characters.ElementAt(0) == session && grp.CharacterCount > 1)
+                            {
+                                Broadcast(session, UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("NEW_LEADER")), ReceiverType.OnlySomeone, string.Empty, grp.Characters.ElementAt(1).Character.CharacterId);
+                            }
+                            grp.LeaveGroup(session);
+                            session.SendPacket(session.Character.GenerateRaid(1, true));
+                            session.SendPacket(session.Character.GenerateRaid(2, true));
+                            foreach (ClientSession groupSession in grp.Characters.GetAllItems())
+                            {
+                                groupSession.SendPacket(grp.GenerateRdlst());
+                                groupSession.SendPacket(groupSession.Character.GenerateRaid(0));
+                            }
+                            if (session?.CurrentMapInstance?.MapInstanceType == MapInstanceType.RaidInstance)
+                            {
+                                ChangeMap(session.Character.CharacterId, session.Character.MapId, session.Character.MapX, session.Character.MapY);
+                            }
+                            session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("RAID_LEFT"), 0));
+                            break;
 
-                        if (grp.GroupType == GroupType.Group)
-                        {
+                        case GroupType.GiantTeam:
+                            ClientSession[] grpmembers = new ClientSession[40];
+                            grp.Characters.CopyTo(grpmembers);
+                            foreach (ClientSession targetSession in grpmembers)
+                            {
+                                if (targetSession != null)
+                                {
+                                    targetSession.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("GROUP_CLOSED"), 0));
+                                    Broadcast(targetSession.Character.GeneratePidx(true));
+                                    grp.LeaveGroup(targetSession);
+                                    targetSession.SendPacket(targetSession.Character.GeneratePinit());
+                                    targetSession.SendPackets(targetSession.Character.GeneratePst());
+                                }
+                            }
+                            GroupList.RemoveAll(s => s.GroupId == grp.GroupId);
+                            GroupsThreadSafe.Remove(grp.GroupId);
+                            break;
+
+                        case GroupType.Group:
+                            if (grp.Characters.ElementAt(0) == session && grp.CharacterCount > 1)
+                            {
+                                Broadcast(session, UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("NEW_LEADER")), ReceiverType.OnlySomeone, string.Empty, grp.Characters.ElementAt(1).Character.CharacterId);
+                            }
+                            grp.LeaveGroup(session);
                             foreach (ClientSession groupSession in grp.Characters.GetAllItems())
                             {
                                 groupSession.SendPacket(groupSession.Character.GeneratePinit());
@@ -661,40 +698,10 @@ namespace OpenNos.GameObject
                             session.SendPackets(session.Character.GeneratePst());
                             Broadcast(session.Character.GeneratePidx(true));
                             session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("GROUP_LEFT"), 0));
-                        }
-                        else
-                        {
-                            foreach (ClientSession groupSession in grp.Characters.GetAllItems())
-                            {
-                                session.SendPacket(session.Character.GenerateRaid(1, true));
-                                session.SendPacket(session.Character.GenerateRaid(2, true));
-                                groupSession.SendPacket(grp.GenerateRdlst());
-                                groupSession.SendPacket(groupSession.Character.GenerateRaid(0, false));
-                            }
-                            if (session?.CurrentMapInstance?.MapInstanceType == MapInstanceType.RaidInstance)
-                            {
-                                ChangeMap(session.Character.CharacterId, session.Character.MapId, session.Character.MapX, session.Character.MapY);
-                            }
-                            session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("RAID_LEFT"), 0));
-                        }
-                    }
-                    else
-                    {
-                        ClientSession[] grpmembers = new ClientSession[40];
-                        grp.Characters.CopyTo(grpmembers);
-                        foreach (ClientSession targetSession in grpmembers)
-                        {
-                            if (targetSession != null)
-                            {
-                                targetSession.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("GROUP_CLOSED"), 0));
-                                Broadcast(targetSession.Character.GeneratePidx(true));
-                                grp.LeaveGroup(targetSession);
-                                targetSession.SendPacket(targetSession.Character.GeneratePinit());
-                                targetSession.SendPackets(targetSession.Character.GeneratePst());
-                            }
-                        }
-                        GroupList.RemoveAll(s => s.GroupId == grp.GroupId);
-                        GroupsThreadSafe.Remove(grp.GroupId);
+                            break;
+
+                        default:
+                            return;
                     }
                     session.Character.Group = null;
                 }
