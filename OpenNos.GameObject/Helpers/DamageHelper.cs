@@ -293,13 +293,9 @@ namespace OpenNos.GameObject
             }
 
             int[] def = GetAttackerBenefitingBuffs(CardType.Block, (byte)AdditionalTypes.Block.ChanceAllIncreased);
-            if (ServerManager.Instance.RandomNumber() < soft[0])
+            if (ServerManager.Instance.RandomNumber() < def[0])
             {
-                boostCategory3 += soft[1] / 100D;
-                if (attacker.EntityType.Equals(EntityType.Player) && attacker.Session != null)
-                {
-                    attacker.Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, attacker.Session.Character.CharacterId, 15));
-                }
+                boostCategory3 += def[1] / 100D;
             }
 
             #endregion
