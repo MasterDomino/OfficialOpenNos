@@ -1090,6 +1090,21 @@ namespace OpenNos.GameObject
                 }
                 else
                 {
+                    if (ChannelId == 51)
+                    {
+                        session.Character.Hp = (int)session.Character.HPLoad();
+                        session.Character.Mp = (int)session.Character.MPLoad();
+                        short x = (short)(39 + RandomNumber(-2, 3));
+                        short y = (short)(42 + RandomNumber(-2, 3));
+                        if (session.Character.Faction == FactionType.Angel)
+                        {
+                            ChangeMap(session.Character.CharacterId, 130, x, y);
+                        }
+                        else if (session.Character.Faction == FactionType.Demon)
+                        {
+                            ChangeMap(session.Character.CharacterId, 131, x, y);
+                        }
+                    }
                     session.Character.Hp = 1;
                     session.Character.Mp = 1;
                     if (session.CurrentMapInstance.MapInstanceType == MapInstanceType.BaseMapInstance)

@@ -1534,4 +1534,10 @@
   <data name="ACT4_PVP_KILL2" xml:space="preserve">
     <value>{0} stole the Power of Protection of a Demon Guardian</value>
   </data>
+  <data name="PVP_ACTIVE" xml:space="preserve">
+    <value>PVP is now enabled!</value>
+  </data>
+  <data name="PVP_KILL" xml:space="preserve">
+    <value>[{1}] was slain by [{0}]</value>
+  </data>
 </root>
