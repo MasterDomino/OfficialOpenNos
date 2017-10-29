@@ -383,15 +383,12 @@ namespace OpenNos.Handler
 
                             Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_GIFTED")}: {newInv.Item.Name} x {mail.AttachmentAmount}", 12));
 
-                            if (DAOFactory.MailDAO.LoadById(mail.MailId) != null)
-                            {
-                                DAOFactory.MailDAO.DeleteById(mail.MailId);
-                            }
+
+                            DAOFactory.MailDAO.DeleteById(mail.MailId);
+
                             Session.SendPacket($"parcel 2 1 {giftId}");
-                            if (Session.Character.MailList.ContainsKey(giftId))
-                            {
-                                Session.Character.MailList.Remove(giftId);
-                            }
+
+                            Session.Character.MailList.Remove(giftId);
                         }
                     }
                     else
