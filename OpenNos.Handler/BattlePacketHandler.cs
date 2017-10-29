@@ -322,7 +322,7 @@ namespace OpenNos.Handler
                     }
                 }
 
-                if (hitmode != 0)
+                if (hitmode != 1)
                 {
                     hitRequest.Skill.BCards.Where(s => s.Type.Equals((byte)BCardType.CardType.Buff)).ToList().ForEach(s => s.ApplyBCards(target.Character, Session.Character));
 
