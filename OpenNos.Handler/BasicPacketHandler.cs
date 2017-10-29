@@ -1262,6 +1262,19 @@ namespace OpenNos.Handler
                     {
                         return;
                     }
+                    if (ServerManager.Instance.ChannelId == 51)
+                    {
+                        if ((Session.Character.Faction == FactionType.Angel && portal.DestinationMapId == 131) || (Session.Character.Faction == FactionType.Demon && portal.DestinationMapId == 130))
+                        {
+                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("PORTAL_BLOCKED"), 10));
+                            return;
+                        }
+                        if ((portal.DestinationMapId == 130 || portal.DestinationMapId == 131) && timeSpanSinceLastPortal < 60)
+                        {
+                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("CANT_MOVE"), 10));
+                            return;
+                        }
+                    }
                     Session.SendPacket(Session.CurrentMapInstance.GenerateRsfn());
 
                     Session.Character.LastPortal = currentRunningSeconds;
