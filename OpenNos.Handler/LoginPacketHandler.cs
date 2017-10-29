@@ -45,9 +45,9 @@ namespace OpenNos.Handler
         {
             string channelpacket = CommunicationServiceClient.Instance.RetrieveRegisteredWorldServers(username, sessionId, ignoreUserName);
 
-            if (channelpacket == null)
+            if (channelpacket == null || !channelpacket.Contains(':'))
             {
-                Logger.Error("Could not retrieve Worldserver groups. Please make sure they've already been registered.");
+                Logger.Debug("Could not retrieve Worldserver groups. Please make sure they've already been registered.");
                 _session.SendPacket($"fail {Language.Instance.GetMessageFromKey("NO_WORLDSERVERS")}");
             }
 
@@ -75,8 +75,6 @@ namespace OpenNos.Handler
             {
                 string ipAddress = _session.IpAddress;
                 DAOFactory.AccountDAO.WriteGeneralLog(loadedAccount.AccountId, ipAddress, null, GeneralLogType.Connection, "LoginServer");
-
-                //NoS0575 3151710 MasterDomino PASS 0074E795\v0.9.3.3075 0 8B52893122F546170026401556D30AF5
 
                 //check if the account is connected
                 if (!CommunicationServiceClient.Instance.IsAccountConnected(loadedAccount.AccountId))
