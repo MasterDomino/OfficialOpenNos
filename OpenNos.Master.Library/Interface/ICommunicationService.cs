@@ -19,7 +19,7 @@ using System.Collections.Generic;
 
 namespace OpenNos.Master.Library.Interface
 {
-    [ScsService(Version = "1.0.0.0")]
+    [ScsService(Version = "1.1.0.0")]
     public interface ICommunicationService
     {
         #region Methods

@@ -113,7 +113,7 @@ namespace OpenNos.GameObject.Event
 
             public void Run(Tuple<MapInstance, byte> mapinstance)
             {
-                long maxGold = ServerManager.Instance.MaxGold;
+                long maxGold = ServerManager.Instance.Configuration.MaxGold;
                 Thread.Sleep(10 * 1000);
                 if (!mapinstance.Item1.Sessions.Skip(3 - 1).Any())
                 {

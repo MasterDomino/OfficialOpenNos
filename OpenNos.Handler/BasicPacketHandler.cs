@@ -854,7 +854,7 @@ namespace OpenNos.Handler
                     {
                         NpcMonster mapobject = ServerManager.Instance.GetNpc(npc.NpcVNum);
 
-                        int RateDrop = ServerManager.Instance.DropRate;
+                        int RateDrop = ServerManager.Instance.Configuration.RateDrop;
                         int delay = (int)Math.Round((3 + (mapobject.RespawnTime / 1000d)) * Session.Character.TimesUsed);
                         delay = delay > 11 ? 8 : delay;
                         if (Session.Character.LastMapObject.AddSeconds(delay) < DateTime.Now)
@@ -1849,11 +1849,11 @@ namespace OpenNos.Handler
                 Session.Character.ChangeChannel("127.0.0.1", 4003, 2);
             }
             Session.CurrentMapInstance = Session.Character.MapInstance;
-            if (string.Equals(ConfigurationManager.AppSettings["SceneOnCreate"], "true", StringComparison.CurrentCultureIgnoreCase) && Session.Character.GeneralLogs.CountLinq(s => s.LogType == "Connection") < 2)
+            if (ServerManager.Instance.Configuration.SceneOnCreate && Session.Character.GeneralLogs.CountLinq(s => s.LogType == "Connection") < 2)
             {
                 Session.SendPacket("scene 40");
             }
-            if (string.Equals(ConfigurationManager.AppSettings["WorldInformation"], "true", StringComparison.CurrentCultureIgnoreCase))
+            if (ServerManager.Instance.Configuration.WorldInformation)
             {
                 Assembly assembly = Assembly.GetEntryAssembly();
                 string productVersion = assembly?.Location != null ? FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion : "1337";

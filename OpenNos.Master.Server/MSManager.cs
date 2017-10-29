@@ -16,6 +16,7 @@ using OpenNos.Core;
 using OpenNos.Master.Library.Data;
 using OpenNos.SCS.Communication.ScsServices.Service;
 using System.Collections.Generic;
+using System.Configuration;
 
 namespace OpenNos.Master.Server
 {
@@ -35,6 +36,25 @@ namespace OpenNos.Master.Server
             LoginServers = new List<IScsServiceClient>();
             ConnectedAccounts = new ThreadSafeGenericList<AccountConnection>();
             AuthentificatedClients = new List<long>();
+            ConfigurationObject = new ConfigurationObject()
+            {
+                RateXP = int.Parse(ConfigurationManager.AppSettings["RateXp"]),
+                RateHeroicXP = int.Parse(ConfigurationManager.AppSettings["RateHeroicXp"]),
+                RateDrop = int.Parse(ConfigurationManager.AppSettings["RateDrop"]),
+                MaxGold = long.Parse(ConfigurationManager.AppSettings["MaxGold"]),
+                RateGoldDrop = int.Parse(ConfigurationManager.AppSettings["GoldRateDrop"]),
+                RateGold = int.Parse(ConfigurationManager.AppSettings["RateGold"]),
+                RateFairyXP = int.Parse(ConfigurationManager.AppSettings["RateFairyXp"]),
+                MaxLevel = byte.Parse(ConfigurationManager.AppSettings["MaxLevel"]),
+                MaxJobLevel = byte.Parse(ConfigurationManager.AppSettings["MaxJobLevel"]),
+                MaxSPLevel = byte.Parse(ConfigurationManager.AppSettings["MaxSPLevel"]),
+                MaxHeroLevel = byte.Parse(ConfigurationManager.AppSettings["MaxHeroLevel"]),
+                HeroicStartLevel = byte.Parse(ConfigurationManager.AppSettings["HeroicStartLevel"]),
+                MaxUpgrade = byte.Parse(ConfigurationManager.AppSettings["MaxUpgrade"]),
+                SceneOnCreate = bool.Parse(ConfigurationManager.AppSettings["SceneOnCreate"]),
+                SessionLimit = int.Parse(ConfigurationManager.AppSettings["SessionLimit"]),
+                WorldInformation = bool.Parse(ConfigurationManager.AppSettings["WorldInformation"])
+            };
         }
 
         #endregion
@@ -44,6 +64,8 @@ namespace OpenNos.Master.Server
         public static MSManager Instance => _instance ?? (_instance = new MSManager());
 
         public List<long> AuthentificatedClients { get; set; }
+
+        public ConfigurationObject ConfigurationObject { get; set; }
 
         public ThreadSafeGenericList<AccountConnection> ConnectedAccounts { get; set; }
 

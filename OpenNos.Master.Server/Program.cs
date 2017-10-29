@@ -106,6 +106,7 @@ namespace OpenNos.Master.Server
                     IScsServiceApplication _server = ScsServiceBuilder.CreateService(new ScsTcpEndPoint(ipAddress, port));
 
                     _server.AddService<ICommunicationService, CommunicationService>(new CommunicationService());
+                    _server.AddService<IConfigurationService, ConfigurationService>(new ConfigurationService());
                     _server.ClientConnected += onClientConnected;
                     _server.ClientDisconnected += onClientDisconnected;
 
