@@ -18,6 +18,7 @@ using OpenNos.Domain;
 using OpenNos.GameObject;
 using OpenNos.GameObject.Battle;
 using OpenNos.GameObject.Helpers;
+using OpenNos.Master.Library.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
