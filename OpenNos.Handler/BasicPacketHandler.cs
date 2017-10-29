@@ -815,7 +815,7 @@ namespace OpenNos.Handler
                             {
                                 if (session.CurrentMapInstance.MapInstanceType == MapInstanceType.BaseMapInstance)
                                 {
-                                    if (Session.Character.MapInstance.MapInstanceType != MapInstanceType.BaseMapInstance)
+                                    if (Session.Character.MapInstance.MapInstanceType != MapInstanceType.BaseMapInstance || (ServerManager.Instance.ChannelId == 51 && Session.Character.Faction != session.Character.Faction))
                                     {
                                         Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("CANT_USE_THAT"), 10));
                                         return;
