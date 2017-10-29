@@ -31,12 +31,8 @@ namespace OpenNos.GameObject.Event
         {
             EventHelper.Instance.RunEvent(new EventContainer(ServerManager.Instance.GetMapInstance(ServerManager.Instance.GetBaseMapInstanceIdByMapId(145)), EventActionType.NPCSEFFECTCHANGESTATE, true));
             Act4ShipThread shipThread = new Act4ShipThread();
-            DateTime now = DateTime.Now;
-            DateTime result = new DateTime(now.Year, now.Month, now.Day, now.Hour, 0, 0);
-
-            result = result.AddMinutes(((now.Minute / 5) + 1) * 5);
-
-            Observable.Timer(result - now).Subscribe(X => shipThread.Run(faction));
+            DateTime result = TimeExtensions.RoundUp(DateTime.Now, TimeSpan.FromMinutes(5));
+            Observable.Timer(result - DateTime.Now).Subscribe(X => shipThread.Run(faction));
         }
 
         #endregion
@@ -49,6 +45,12 @@ namespace OpenNos.GameObject.Event
         public void Run(byte faction)
         {
             MapInstance map = ServerManager.Instance.GenerateMapInstance(149, faction == 1 ? MapInstanceType.Act4ShipAngel : MapInstanceType.Act4ShipDemon, null);
+            MapNpc mapNpc1 = new MapNpc() { NpcVNum = 613, MapNpcId = map.GetNextNpcId(), Dialog = 434, MapId = 149, MapX = 8, MapY = 28, IsMoving = false, Position = 1, IsSitting = false };
+            mapNpc1.Initialize(map);
+            map.AddNPC(mapNpc1);
+            MapNpc mapNpc2 = new MapNpc() { NpcVNum = 540, MapNpcId = map.GetNextNpcId(), Dialog = 433, MapId = 149, MapX = 31, MapY = 28, IsMoving = false, Position = 3, IsSitting = false };
+            mapNpc2.Initialize(map);
+            map.AddNPC(mapNpc2);
             while (true)
             {
                 openShip();

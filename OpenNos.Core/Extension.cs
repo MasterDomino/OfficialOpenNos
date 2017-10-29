@@ -90,6 +90,11 @@ namespace OpenNos.Core
         }
     }
 
+    public static class TimeExtensions
+    {
+        public static DateTime RoundUp(DateTime dt, TimeSpan d) => new DateTime(((dt.Ticks + d.Ticks - 1) / d.Ticks) * d.Ticks);
+    }
+
     public static class ConcurrentBagExtensions
     {
         #region Methods
