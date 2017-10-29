@@ -111,7 +111,7 @@ namespace OpenNos.DAL.DAO
             //Where(s => s.SenderId == CharacterId && s.IsSenderCopy && MailList.All(m => m.Value.MailId != s.MailId))
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
-                return context.Mail.Where(s => s.SenderId == characterId && s.IsSenderCopy).Take(50).Select(c => _mapper.Map<MailDTO>(c)).ToList();
+                return context.Mail.Where(s => s.SenderId == characterId && s.IsSenderCopy).Take(50).ToList().ToList().Select(c => _mapper.Map<MailDTO>(c));
             }
         }
 
@@ -120,7 +120,7 @@ namespace OpenNos.DAL.DAO
             //s => s.ReceiverId == CharacterId && !s.IsSenderCopy && MailList.All(m => m.Value.MailId != s.MailId)).Take(50)
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
-                return context.Mail.Where(s => s.ReceiverId == characterId && !s.IsSenderCopy).Take(50).Select(c => _mapper.Map<MailDTO>(c)).ToList();
+                return context.Mail.Where(s => s.ReceiverId == characterId && !s.IsSenderCopy).Take(50).ToList().Select(c => _mapper.Map<MailDTO>(c));
             }
         }
 

@@ -3166,7 +3166,7 @@ namespace OpenNos.GameObject
 
         public void LoadSentMail()
         {
-            foreach (MailDTO mail in ServerManager.Instance.Mails.Where(s => s.SenderId == CharacterId && s.IsSenderCopy && MailList.All(m => m.Value.MailId != s.MailId)))
+            foreach (MailDTO mail in DAOFactory.MailDAO.LoadSentByCharacter(CharacterId))
             {
                 MailList.Add((MailList.Count > 0 ? MailList.OrderBy(s => s.Key).Last().Key : 0) + 1, mail);
 
