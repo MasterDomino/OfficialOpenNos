@@ -135,8 +135,8 @@ namespace OpenNos.GameObject
             if (weapon != null)
             {
                 AttackUpgrade = weapon.Upgrade;
-                WeaponDamageMinimum = weapon.DamageMinimum;
-                WeaponDamageMaximum = weapon.DamageMaximum;
+                WeaponDamageMinimum = weapon.DamageMinimum + weapon.Item.DamageMinimum;
+                WeaponDamageMaximum = weapon.DamageMaximum + weapon.Item.DamageMinimum;
 
                 ShellWeaponEffects = new List<ShellEffectDTO>(weapon.ShellEffects);
             }
@@ -145,9 +145,9 @@ namespace OpenNos.GameObject
             if (armor != null)
             {
                 DefenseUpgrade = armor.Upgrade;
-                ArmorMeleeDefense = armor.CloseDefence;
-                ArmorRangeDefense = armor.DistanceDefence;
-                ArmorMagicalDefense = armor.MagicDefence;
+                ArmorMeleeDefense = armor.CloseDefence + armor.Item.CloseDefence;
+                ArmorRangeDefense = armor.DistanceDefence + armor.Item.DistanceDefence;
+                ArmorMagicalDefense = armor.MagicDefence + armor.Item.MagicDefence;
 
                 ShellArmorEffects = new List<ShellEffectDTO>(armor.ShellEffects);
             }
