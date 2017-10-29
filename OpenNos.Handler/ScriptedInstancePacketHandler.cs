@@ -280,7 +280,7 @@ namespace OpenNos.Handler
         /// rxitPacket packet
         /// </summary>
         /// <param name="rxitPacket"></param>
-        public void InstanceExit(RxitPacket rxitPacket)
+        public void InstanceExit(RaidExitPacket rxitPacket)
         {
             if (rxitPacket?.State == 1 && Session.CurrentMapInstance?.MapInstanceType == MapInstanceType.TimeSpaceInstance)
             {

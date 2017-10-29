@@ -2,7 +2,7 @@
 
 using OpenNos.Core;
 
-namespace OpenNos.GameObject.Packets.ClientPackets
+namespace OpenNos.GameObject.Packets.ServerPackets
 {
     [PacketHeader("rxit")]
     public class RaidExitPacket : PacketDefinition
@@ -10,7 +10,7 @@ namespace OpenNos.GameObject.Packets.ClientPackets
         #region Properties
 
         [PacketIndex(0)]
-        public byte Type { get; set; }
+        public byte State { get; set; }
 
         #endregion
     }
