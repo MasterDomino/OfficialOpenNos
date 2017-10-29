@@ -29,6 +29,7 @@ namespace OpenNos.GameObject
         #region Members
 
         private List<CellonOptionDTO> _cellonOptions;
+
         private Random _random;
 
         private List<ShellEffectDTO> _shellEffects;

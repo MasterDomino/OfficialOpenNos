@@ -13,7 +13,6 @@
  */
 
 using OpenNos.Core;
-using OpenNos.DAL.EF.DB;
 using System;
 using System.Data;
 using System.Data.Common;

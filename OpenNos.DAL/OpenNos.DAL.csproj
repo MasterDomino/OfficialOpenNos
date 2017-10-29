@@ -80,9 +80,9 @@
       <Project>{C93A0A40-0551-4732-B594-171B87679AC1}</Project>
       <Name>OpenNos.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OpenNos.DAL.EF\OpenNos.DAL.EF.csproj">
-      <Project>{4aecc47d-098a-4493-8e1e-d10edbb7a189}</Project>
-      <Name>OpenNos.DAL.EF</Name>
+    <ProjectReference Include="..\OpenNos.DAL.DAO\OpenNos.DAL.DAO.csproj">
+      <Project>{b438a1df-0cfb-4854-82b5-2751793279bf}</Project>
+      <Name>OpenNos.DAL.DAO</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpenNos.DAL.Interface\OpenNos.DAL.Interface.csproj">
       <Project>{175c851b-8dc8-43a5-af93-af32d106cd77}</Project>
@@ -95,7 +95,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

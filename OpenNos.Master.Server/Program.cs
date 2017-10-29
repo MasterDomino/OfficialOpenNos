@@ -163,7 +163,7 @@ namespace OpenNos.Master.Server
 
         private static void registerMappings()
         {
-            //Prepare mappings for future use
+            // Prepare mappings for future use
 
             // register mappings for items
             DAOFactory.IteminstanceDAO.RegisterMapping(typeof(BoxInstance));

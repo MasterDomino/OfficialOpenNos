@@ -48,7 +48,6 @@ namespace OpenNos.DAL.Mock
                 {
                     cfg.CreateMap(entry.Key, entry.Value).IncludeBase(baseType, typeof(ItemInstanceDTO));
                     cfg.CreateMap(entry.Value, entry.Key).IncludeBase(typeof(ItemInstanceDTO), baseType);
-                    Type retrieveDTOType = Type.GetType($"OpenNos.Data.{entry.Key.Name}DTO, OpenNos.Data");
                     cfg.CreateMap(entry.Value, typeof(ItemInstanceDTO)).As(entry.Key);
                 }
             });
@@ -76,15 +75,9 @@ namespace OpenNos.DAL.Mock
             return this;
         }
 
-        public DeleteResult DeleteGuidList(IEnumerable<Guid> guids)
-        {
-            throw new NotImplementedException();
-        }
+        public DeleteResult DeleteGuidList(IEnumerable<Guid> guids) => throw new NotImplementedException();
 
-        public SaveResult InsertOrUpdateFromList(IEnumerable<ItemInstanceDTO> guids)
-        {
-            throw new NotImplementedException();
-        }
+        public SaveResult InsertOrUpdateFromList(IEnumerable<ItemInstanceDTO> items) => throw new NotImplementedException();
 
         #endregion
     }

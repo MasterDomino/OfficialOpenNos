@@ -1,4 +1,3 @@
-using OpenNos.DAL.EF.DB;
 using System.Data.Entity.Migrations;
 
 namespace OpenNos.DAL.EF.Migrations

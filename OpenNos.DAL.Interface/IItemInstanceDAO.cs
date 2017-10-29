@@ -26,7 +26,7 @@ namespace OpenNos.DAL.Interface
 
         DeleteResult DeleteGuidList(IEnumerable<Guid> guids);
 
-        SaveResult InsertOrUpdateFromList(IEnumerable<ItemInstanceDTO> guids);
+        SaveResult InsertOrUpdateFromList(IEnumerable<ItemInstanceDTO> items);
 
         DeleteResult DeleteFromSlotAndType(long characterId, short slot, InventoryType type);
 
