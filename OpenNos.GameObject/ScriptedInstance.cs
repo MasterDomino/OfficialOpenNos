@@ -57,6 +57,8 @@ namespace OpenNos.GameObject
 
         public string Label { get; set; }
 
+        public string Name { get; set; }
+
         public byte LevelMaximum { get; set; }
 
         public byte LevelMinimum { get; set; }
@@ -107,23 +109,23 @@ namespace OpenNos.GameObject
 
             for (int i = 0; i < 5; i++)
             {
-                Gift gift = DrawItems.ElementAtOrDefault(i);
+                Gift gift = DrawItems?.ElementAtOrDefault(i);
                 drawgift += $" {(gift == null ? "-1.0" : $"{gift.VNum}.{gift.Amount}")}";
             }
             for (int i = 0; i < 2; i++)
             {
-                Gift gift = SpecialItems.ElementAtOrDefault(i);
+                Gift gift = SpecialItems?.ElementAtOrDefault(i);
                 specialitems += $" {(gift == null ? "-1.0" : $"{gift.VNum}.{gift.Amount}")}";
             }
 
             for (int i = 0; i < 3; i++)
             {
-                Gift gift = GiftItems.ElementAtOrDefault(i);
+                Gift gift = GiftItems?.ElementAtOrDefault(i);
                 bonusitems += $"{(i == 0 ? string.Empty : " ")}{(gift == null ? "-1.0" : $"{gift.VNum}.{gift.Amount}")}";
             }
             const int WinnerScore = 0;
             const string Winner = "";
-            return $"rbr 0.0.0 4 15 {LevelMinimum}.{LevelMaximum} {RequiredItems.Sum(s => s.Amount)} {drawgift} {specialitems} {bonusitems} {WinnerScore}.{(WinnerScore > 0 ? Winner : string.Empty)} 0 0 {Language.Instance.GetMessageFromKey("TS_TUTORIAL")}\n{Label}";
+            return $"rbr 0.0.0 4 15 {LevelMinimum}.{LevelMaximum} {RequiredItems?.Sum(s => s.Amount)} {drawgift} {specialitems} {bonusitems} {WinnerScore}.{(WinnerScore > 0 ? Winner : string.Empty)} 0 0 {Name}\n{Label}";
         }
 
         public string GenerateWp() => $"wp {PositionX} {PositionY} {ScriptedInstanceId} 0 {LevelMinimum} {LevelMaximum}";
@@ -152,6 +154,10 @@ namespace OpenNos.GameObject
                 StartX = Model.Globals.StartX?.Value ?? 0;
                 StartY = Model.Globals.StartY?.Value ?? 0;
                 Lives = Model.Globals.Lives?.Value ?? 0;
+                LevelMinimum = Model.Globals.LevelMinimum?.Value ?? 1;
+                LevelMaximum = Model.Globals.LevelMaximum?.Value ?? 99;
+                Name = Model.Globals.Name?.Value ?? "No Name";
+                Label = Model.Globals.Label?.Value ?? "No Description";
                 if (Model.Globals.RequiredItems != null)
                 {
                     foreach (XMLModel.Objects.Item item in Model.Globals.RequiredItems)
@@ -225,20 +231,130 @@ namespace OpenNos.GameObject
                         _disposable.Dispose();
                     }
                 });
-            }
-
-            if (Script != null)
-            {
-                doc.LoadXml(Script);
-                XmlNode InstanceEvents = doc.SelectSingleNode("Definition");
-                generateEvent(InstanceEvents, FirstMap);
+                if (Script != null)
+                {
+                    doc.LoadXml(Script);
+                    XmlNode InstanceEvents = doc.SelectSingleNode("Definition");
+                    generateEvent(InstanceEvents, FirstMap);
+                }
             }
         }
 
-        private List<EventContainer> generateEvent(XmlNode node, MapInstance parentmapinstance)
+        private List<EventContainer> generateEventWIP(MapInstance parentMapInstance)
+        {
+            List<EventContainer> evts = new List<EventContainer>();
+            foreach (XMLModel.Objects.CreateMap createMap in Model.InstanceEvents.CreateMap)
+            {
+                MapInstance mapInstance = _mapInstanceDictionary.FirstOrDefault(s => s.Key == createMap.Map).Value ?? parentMapInstance;
+                generateEventWIP(mapInstance).ForEach(e => EventHelper.Instance.RunEvent(e));
+
+                // SpawnPortal
+                foreach (XMLModel.Events.SpawnPortal portalEvent in createMap.SpawnPortal)
+                {
+                    MapInstance destinationMap = _mapInstanceDictionary.First(s => s.Key == portalEvent.ToMap).Value;
+                    Portal portal = new Portal()
+                    {
+                        PortalId = portalEvent.IdOnMap,
+                        SourceX = portalEvent.PositionX,
+                        SourceY = portalEvent.PositionY,
+                        Type = portalEvent.Type,
+                        DestinationX = portalEvent.ToX,
+                        DestinationY = portalEvent.ToY,
+                        DestinationMapId = (short)(destinationMap.MapInstanceId == default ? -1 : 0),
+                        SourceMapInstanceId = mapInstance.MapInstanceId,
+                        DestinationMapInstanceId = destinationMap.MapInstanceId,
+                    };
+                    foreach (XMLModel.Events.OnTraversal onTraversal in portalEvent.OnTraversal)
+                    {
+                        portal.OnTraversalEvents.AddRange(generateEventWIP(mapInstance));
+                    }
+                    evts.Add(new EventContainer(mapInstance, EventActionType.SPAWNPORTAL, portal));
+                }
+
+                // OnCharacterDiscoveringMap
+                if (createMap.OnCharacterDiscoveringMap != null)
+                {
+                    evts.Add(new EventContainer(mapInstance, EventActionType.REGISTEREVENT, new Tuple<string, List<EventContainer>>(nameof(XMLModel.Events.OnCharacterDiscoveringMap), generateEventWIP(mapInstance))));
+                }
+
+                // OnLockerOpen
+                if (createMap.OnLockerOpen != null)
+                {
+                    evts.Add(new EventContainer(mapInstance, EventActionType.REGISTEREVENT, new Tuple<string, List<EventContainer>>(nameof(XMLModel.Events.OnLockerOpen), generateEventWIP(mapInstance))));
+                }
+
+                // OnMoveOnMap
+                foreach (XMLModel.Events.OnMoveOnMap onMove in createMap.OnMoveOnMap)
+                {
+                    // OnMapClean
+                    if (onMove.OnMapClean != null)
+                    {
+                        evts.Add(new EventContainer(mapInstance, EventActionType.REGISTEREVENT, new Tuple<string, List<EventContainer>>(nameof(XMLModel.Events.OnMapClean), generateEventWIP(mapInstance))));
+                    }
+
+                    // Wave
+                    foreach (XMLModel.Objects.Wave wave in onMove.Wave)
+                    {
+                        // SummonMonster
+                        foreach (XMLModel.Events.SummonMonster summon in wave.SummonMonster)
+                        {
+
+                        }
+
+                        // SendMessage
+                        if (wave.SendMessage != null)
+                        {
+
+                        }
+                        evts.Add(new EventContainer(mapInstance, EventActionType.REGISTERWAVE, new EventWave(wave.Delay, generateEventWIP(mapInstance), wave.Offset)));
+                    }
+                    evts.Add(new EventContainer(mapInstance, EventActionType.REGISTEREVENT, new Tuple<string, List<EventContainer>>(nameof(XMLModel.Events.OnMoveOnMap), generateEventWIP(mapInstance))));
+                }
+
+                // OnAreaEntry
+                foreach (XMLModel.Events.OnAreaEntry onAreaEntry in createMap.OnAreaEntry)
+                {
+                    evts.Add(new EventContainer(mapInstance, EventActionType.SETAREAENTRY, new ZoneEvent() { X = onAreaEntry.PositionX, Y = onAreaEntry.PositionY, Range = onAreaEntry.Range, Events = generateEventWIP(mapInstance) }));
+                }
+
+                // SetButtonLockers
+                if (createMap.SetButtonLockers != null)
+                {
+                    evts.Add(new EventContainer(mapInstance, EventActionType.SETBUTTONLOCKERS, createMap.SetButtonLockers.Value));
+                }
+
+                // SetMonsterLockers
+                if (createMap.SetMonsterLockers != null)
+                {
+                    evts.Add(new EventContainer(mapInstance, EventActionType.SETMONSTERLOCKERS, createMap.SetMonsterLockers.Value));
+                }
+
+                // SummonMonster
+                foreach (XMLModel.Events.SummonMonster summon in createMap.SummonMonster)
+                {
+                    short positionX = summon.PositionX;
+                    short positionY = summon.PositionY;
+                    if (positionX == -1 || positionY == -1)
+                    {
+                        MapCell cell = mapInstance?.Map?.GetRandomPosition();
+                        if (cell != null)
+                        {
+                            positionX = cell.X;
+                            positionY = cell.Y;
+                        }
+                    }
+                    MonsterAmount++;
+                    evts.Add(new EventContainer(mapInstance, EventActionType.SPAWNMONSTERS, null));
+                }
+            }
+            return evts;
+        }
+
+        private List<EventContainer> generateEvent(XmlNode node, MapInstance parentMapInstance)
         {
             List<EventContainer> evts = new List<EventContainer>();
 
+            // IMPERFORMANT AS FUCK OPTIMIZE AS HELL!!!
             foreach (XmlNode mapEvent in node.ChildNodes)
             {
                 if (mapEvent.Name == "#comment")
@@ -297,7 +413,7 @@ namespace OpenNos.GameObject
                 {
                     isHostile = true;
                 }
-                MapInstance mapInstance = _mapInstanceDictionary.FirstOrDefault(s => s.Key == mapid).Value ?? parentmapinstance;
+                MapInstance mapInstance = _mapInstanceDictionary.FirstOrDefault(s => s.Key == mapid).Value ?? parentMapInstance;
                 MapCell cell;
                 switch (mapEvent.Name)
                 {
@@ -335,6 +451,7 @@ namespace OpenNos.GameObject
                     case "SetButtonLockers":
                         evts.Add(new EventContainer(mapInstance, EventActionType.SETBUTTONLOCKERS, byte.Parse(mapEvent?.Attributes["Value"]?.Value)));
                         break;
+
                     case "ControlMonsterInRange":
                         short.TryParse(mapEvent?.Attributes["VNum"]?.Value, out short vNum);
                         evts.Add(new EventContainer(mapInstance, EventActionType.CONTROLEMONSTERINRANGE, new Tuple<short, byte, List<EventContainer>>(vNum, byte.Parse(mapEvent?.Attributes["Range"]?.Value), generateEvent(mapEvent, mapInstance))));
@@ -410,9 +527,9 @@ namespace OpenNos.GameObject
                         break;
 
                     case "Move":
-                        List<EventContainer> moveevents = new List<EventContainer>();
-                        moveevents.AddRange(generateEvent(mapEvent, mapInstance));
-                        evts.Add(new EventContainer(mapInstance, EventActionType.MOVE, new ZoneEvent() { X = positionX, Y = positionY, Events = moveevents }));
+                        List<EventContainer> moveEvents = new List<EventContainer>();
+                        moveEvents.AddRange(generateEvent(mapEvent, mapInstance));
+                        evts.Add(new EventContainer(mapInstance, EventActionType.MOVE, new ZoneEvent() { X = positionX, Y = positionY, Events = moveEvents }));
                         break;
 
                     case "SummonNpc":
@@ -526,16 +643,16 @@ namespace OpenNos.GameObject
 
                     case "StartClock":
                         Tuple<List<EventContainer>, List<EventContainer>> eve = new Tuple<List<EventContainer>, List<EventContainer>>(new List<EventContainer>(), new List<EventContainer>());
-                        foreach (XmlNode var in mapEvent.ChildNodes)
+                        foreach (XmlNode childEvent in mapEvent.ChildNodes)
                         {
-                            switch (var.Name)
+                            switch (childEvent.Name)
                             {
                                 case "OnTimeout":
-                                    eve.Item1.AddRange(generateEvent(var, mapInstance));
+                                    eve.Item1.AddRange(generateEvent(childEvent, mapInstance));
                                     break;
 
                                 case "OnStop":
-                                    eve.Item2.AddRange(generateEvent(var, mapInstance));
+                                    eve.Item2.AddRange(generateEvent(childEvent, mapInstance));
                                     break;
                             }
                         }
@@ -544,16 +661,16 @@ namespace OpenNos.GameObject
 
                     case "StartMapClock":
                         eve = new Tuple<List<EventContainer>, List<EventContainer>>(new List<EventContainer>(), new List<EventContainer>());
-                        foreach (XmlNode var in mapEvent.ChildNodes)
+                        foreach (XmlNode childEvent in mapEvent.ChildNodes)
                         {
-                            switch (var.Name)
+                            switch (childEvent.Name)
                             {
                                 case "OnTimeout":
-                                    eve.Item1.AddRange(generateEvent(var, mapInstance));
+                                    eve.Item1.AddRange(generateEvent(childEvent, mapInstance));
                                     break;
 
                                 case "OnStop":
-                                    eve.Item2.AddRange(generateEvent(var, mapInstance));
+                                    eve.Item2.AddRange(generateEvent(childEvent, mapInstance));
                                     break;
                             }
                         }
@@ -573,11 +690,11 @@ namespace OpenNos.GameObject
                             SourceMapInstanceId = mapInstance.MapInstanceId,
                             DestinationMapInstanceId = destmapInstanceId,
                         };
-                        foreach (XmlNode var in mapEvent.ChildNodes)
+                        foreach (XmlNode childEvent in mapEvent.ChildNodes)
                         {
-                            if (var.Name == "OnTraversal")
+                            if (childEvent.Name == "OnTraversal")
                             {
-                                portal.OnTraversalEvents.AddRange(generateEvent(var, mapInstance));
+                                portal.OnTraversalEvents.AddRange(generateEvent(childEvent, mapInstance));
                             }
                         }
                         evts.Add(new EventContainer(mapInstance, EventActionType.SPAWNPORTAL, portal));

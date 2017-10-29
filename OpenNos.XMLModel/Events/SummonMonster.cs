@@ -24,10 +24,10 @@ namespace OpenNos.XMLModel.Events
         public OnDeath OnDeath { get; set; }
 
         [XmlAttribute]
-        public int PositionX { get; set; }
+        public short PositionX { get; set; }
 
         [XmlAttribute]
-        public int PositionY { get; set; }
+        public short PositionY { get; set; }
 
         [XmlElement]
         public Roam Roam { get; set; }

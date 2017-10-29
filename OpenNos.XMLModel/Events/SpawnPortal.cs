@@ -12,7 +12,7 @@ namespace OpenNos.XMLModel.Events
         public byte IdOnMap { get; set; }
 
         [XmlElement]
-        public OnTraversal OnTraversal { get; set; }
+        public OnTraversal[] OnTraversal { get; set; }
 
         [XmlAttribute]
         public short PositionX { get; set; }

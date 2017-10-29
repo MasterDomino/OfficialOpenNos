@@ -72,6 +72,7 @@
     <Compile Include="Events\SummonNpc.cs" />
     <Compile Include="Events\Teleport.cs" />
     <Compile Include="Events\ThrowItem.cs" />
+    <Compile Include="Objects\Name.cs" />
     <Compile Include="Objects\Wave.cs" />
     <Compile Include="Models\Quest\Globals.cs" />
     <Compile Include="Models\Quest\QuestModel.cs" />

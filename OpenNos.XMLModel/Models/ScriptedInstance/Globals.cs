@@ -18,6 +18,8 @@ namespace OpenNos.XMLModel.Models.ScriptedInstance
 
         public Label Label { get; set; }
 
+        public Name Name { get; set; }
+
         public Level LevelMaximum { get; set; }
 
         public Level LevelMinimum { get; set; }
