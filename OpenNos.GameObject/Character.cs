@@ -1871,15 +1871,18 @@ namespace OpenNos.GameObject
             }
             ElementRate = 0;
             Element = 0;
+            bool shouldChangeMorph = false;
 
             if (fairy != null)
             {
+                //exclude magical fairy
+                shouldChangeMorph = IsUsingFairyBooster ? (fairy.Item.Morph > 4 && fairy.Item.Morph != 9 && fairy.Item.Morph != 14) : false;
                 ElementRate += fairy.ElementRate + fairy.Item.ElementRate + (IsUsingFairyBooster ? 30 : 0);
                 Element = fairy.Item.Element;
             }
 
             return fairy != null
-                ? $"pairy 1 {CharacterId} 4 {fairy.Item.Element} {fairy.ElementRate + fairy.Item.ElementRate} {fairy.Item.Morph + (IsUsingFairyBooster ? 5 : 0)}"
+                ? $"pairy 1 {CharacterId} 4 {fairy.Item.Element} {fairy.ElementRate + fairy.Item.ElementRate} {fairy.Item.Morph + (shouldChangeMorph ? 5 : 0)}"
                 : $"pairy 1 {CharacterId} 0 0 0 0";
         }
 
