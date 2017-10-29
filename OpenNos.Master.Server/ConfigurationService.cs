@@ -47,12 +47,20 @@ namespace OpenNos.Master.Server
 
         public ConfigurationObject GetConfigurationObject()
         {
-            throw new NotImplementedException();
+            if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
+            {
+                return null;
+            }
+            return MSManager.Instance.ConfigurationObject;
         }
 
         public void UpdateConfigurationObject(ConfigurationObject configurationObject)
         {
-            throw new NotImplementedException();
+            if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
+            {
+                return;
+            }
+            MSManager.Instance.ConfigurationObject = configurationObject;
         }
     }
 }
