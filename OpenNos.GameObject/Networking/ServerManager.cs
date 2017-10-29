@@ -1397,7 +1397,57 @@ namespace OpenNos.GameObject
             CommunicationServiceClient.Instance.GlobalEvent += onGlobalEvent;
             CommunicationServiceClient.Instance.ShutdownEvent += onShutdown;
             ConfigurationServiceClient.Instance.ConfigurationUpdate += onConfiguratinEvent; ;
+            MailServiceClient.Instance.MailSent += onMailSent;
             _lastGroupId = 1;
+        }
+
+        private void onMailSent(object sender, EventArgs e)
+        {
+            Mail mail = (Mail)sender;
+
+            ClientSession session = GetSessionByCharacterId(mail.IsSenderCopy ? mail.SenderId : mail.ReceiverId);
+            if(session != null)
+            {
+                MailDTO mailDTO = new MailDTO
+                {
+                    AttachmentAmount = mail.AttachmentAmount,
+                    AttachmentRarity = mail.AttachmentRarity,
+                    AttachmentUpgrade = mail.AttachmentUpgrade,
+                    AttachmentVNum = mail.AttachmentVNum,
+                    Date = mail.Date,
+                    EqPacket = mail.EqPacket,
+                    IsOpened = mail.IsOpened,
+                    IsSenderCopy = mail.IsSenderCopy,
+                    MailId = mail.MailId,
+                    Message = mail.Message,
+                    ReceiverId = mail.ReceiverId,
+                    SenderClass = mail.SenderClass,
+                    SenderGender = mail.SenderGender,
+                    SenderHairColor = mail.SenderHairColor,
+                    SenderHairStyle = mail.SenderHairStyle,
+                    SenderId = mail.SenderId,
+                    SenderMorphId = mail.SenderMorphId,
+                    Title = mail.Title
+                };
+
+                if (mail.AttachmentVNum != null)
+                {
+                    session.SendPacket(session.Character.GenerateParcel(mailDTO));
+                }
+                else
+                {
+                    session.SendPacket(session.Character.GeneratePost(mailDTO, 1));
+                }
+            }
+
+            // Parcel
+            //    MailList.Add((MailList.Count > 0 ? MailList.OrderBy(s => s.Key).Last().Key : 0) + 1, mail);
+            //    Session.SendPacket(GenerateParcel(mail));
+            //    Session.SendPacket(GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_GIFTED")} {mail.AttachmentAmount}", 12));
+
+            // Letter
+            //    Session.Character.MailList.Add((Session.Character.MailList.Count > 0 ? Session.Character.MailList.OrderBy(s => s.Key).Last().Key : 0) + 1, mailcopy);
+            //    Session.SendPacket(Session.Character.GeneratePost(mailcopy, 2));
         }
 
         private void onConfiguratinEvent(object sender, EventArgs e)

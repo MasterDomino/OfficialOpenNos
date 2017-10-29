@@ -3603,7 +3603,7 @@ namespace OpenNos.GameObject
                     amount = 99;
                 }
 
-                MailDTO mail = new MailDTO
+                Mail mail = new Mail
                 {
                     AttachmentAmount = it.Type == InventoryType.Etc || it.Type == InventoryType.Main ? amount : (byte)1,
                     IsOpened = false,
@@ -3622,13 +3622,7 @@ namespace OpenNos.GameObject
                     EqPacket = GenerateEqListForPacket(),
                     SenderMorphId = Morph == 0 ? (short)-1 : (short)(Morph > short.MaxValue ? 0 : Morph)
                 };
-                DAOFactory.MailDAO.InsertOrUpdate(ref mail);
-                if (id == CharacterId)
-                {
-                    MailList.Add((MailList.Count > 0 ? MailList.OrderBy(s => s.Key).Last().Key : 0) + 1, mail);
-                    Session.SendPacket(GenerateParcel(mail));
-                    Session.SendPacket(GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_GIFTED")} {mail.AttachmentAmount}", 12));
-                }
+                MailServiceClient.Instance.SendMail(mail);
             }
         }
 
