@@ -386,6 +386,12 @@ namespace OpenNos.GameObject
                     session.SendPacket(session.Character.GenerateGold());
                 }
             }
+
+            foreach (CellonOptionDTO effect in CellonOptions)
+            {
+                effect.EquipmentSerialId = EquipmentSerialId;
+                effect.CellonOptionId = DAOFactory.CellonOptionDAO.InsertOrUpdate(effect).CellonOptionId;
+            }
         }
 
         public void RarifyItem(ClientSession session, RarifyMode mode, RarifyProtection protection, bool isCommand = false, byte forceRare = 0)
@@ -2001,6 +2007,12 @@ namespace OpenNos.GameObject
 
             ShellEffects.Clear();
             ShellEffects.AddRange(effectsList);
+
+            foreach (ShellEffectDTO effect in ShellEffects)
+            {
+                effect.EquipmentSerialId = EquipmentSerialId;
+                effect.ShellEffectId = DAOFactory.ShellEffectDAO.InsertOrUpdate(effect).ShellEffectId;
+            }
         }
 
         public void Sum(ClientSession session, WearableInstance itemToSum)
