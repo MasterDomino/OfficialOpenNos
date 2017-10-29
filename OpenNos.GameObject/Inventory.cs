@@ -547,7 +547,7 @@ namespace OpenNos.GameObject
         {
             Logger.LogUserEvent("ITEM_MOVE", Owner.GenerateIdentity(), $"SourceType: {sourcetype.ToString()} DestType: {desttype.ToString()} SourceSlot: {sourceSlot} Amount: {amount} DestSlot: {destinationSlot}");
 
-            // load source and destination slots
+            // Load source and destination slots
             sourceInventory = LoadBySlotAndType(sourceSlot, sourcetype);
             destinationInventory = LoadBySlotAndType(destinationSlot, desttype);
             if (sourceInventory != null && amount <= sourceInventory.Amount)
