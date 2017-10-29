@@ -16,12 +16,16 @@ using OpenNos.Core;
 using OpenNos.Data;
 using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
+using OpenNos.XMLModel.Models.ScriptedInstance;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Text;
 using System.Threading;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace OpenNos.GameObject
 {
@@ -42,6 +46,8 @@ namespace OpenNos.GameObject
         public MapInstance FirstMap { get; set; }
 
         public List<Gift> GiftItems { get; set; }
+
+        public ScriptedInstanceModel Model { get; set; }
 
         public long Gold { get; set; }
 
@@ -124,67 +130,54 @@ namespace OpenNos.GameObject
 
         public void LoadGlobals()
         {
-            RequiredItems = new List<Gift>();
-            DrawItems = new List<Gift>();
-            SpecialItems = new List<Gift>();
-            GiftItems = new List<Gift>();
-
-            XmlDocument doc = new XmlDocument();
+            // initialize script as byte stream
             if (Script != null)
             {
-                doc.LoadXml(Script);
+                byte[] xml = Encoding.UTF8.GetBytes(Script);
+                MemoryStream memoryStream = new MemoryStream(xml);
+                XmlReader reader = XmlReader.Create(memoryStream);
+                XmlSerializer serializer = new XmlSerializer(typeof(ScriptedInstanceModel));
+                ScriptedInstanceModel model = (ScriptedInstanceModel)serializer.Deserialize(reader);
+                memoryStream.Close();
 
-                XmlNode def = doc.SelectSingleNode("Definition").SelectSingleNode("Globals");
-                LevelMinimum = byte.Parse(def.SelectSingleNode("LevelMinimum")?.Attributes["Value"].Value);
-                LevelMaximum = byte.Parse(def.SelectSingleNode("LevelMaximum")?.Attributes["Value"].Value);
-                Label = def.SelectSingleNode("Label")?.Attributes["Value"].Value;
-                byte.TryParse(def.SelectSingleNode("Id")?.Attributes["Value"].Value, out byte id);
-                Id = id;
-                long.TryParse(def.SelectSingleNode("Gold")?.Attributes["Value"].Value, out long gold);
-                Gold = gold;
-                int.TryParse(def.SelectSingleNode("Reputation")?.Attributes["Value"].Value, out int reputation);
-                Reputation = reputation;
+                RequiredItems = new List<Gift>();
+                DrawItems = new List<Gift>();
+                SpecialItems = new List<Gift>();
+                GiftItems = new List<Gift>();
 
-                short.TryParse(def.SelectSingleNode("StartX")?.Attributes["Value"].Value, out short startx);
-                StartX = startx;
-
-                short.TryParse(def.SelectSingleNode("StartY")?.Attributes["Value"].Value, out short starty);
-                StartY = starty;
-
-                byte.TryParse(def.SelectSingleNode("Lives")?.Attributes["Value"].Value, out byte lives);
-                Lives = lives;
-                if (def.SelectSingleNode("RequieredItems")?.ChildNodes != null)
+                // set the values
+                Id = model.Globals.Id?.Value ?? 0;
+                Gold = model.Globals.Gold?.Value ?? 0;
+                Reputation = model.Globals.Reputation?.Value ?? 0;
+                StartX = model.Globals.StartX?.Value ?? 0;
+                StartY = model.Globals.StartY?.Value ?? 0;
+                Lives = model.Globals.Lives?.Value ?? 0;
+                if (model.Globals.RequiredItems != null)
                 {
-                    foreach (XmlNode node in def.SelectSingleNode("RequiredItems")?.ChildNodes)
+                    foreach (XMLModel.Objects.Item item in model.Globals.RequiredItems)
                     {
-                        RequiredItems.Add(new Gift(short.Parse(node.Attributes["VNum"].Value), byte.Parse(node.Attributes["Amount"].Value)));
+                        RequiredItems.Add(new Gift(item.VNum, item.Amount, item.Design, item.IsRandomRare));
                     }
                 }
-                if (def.SelectSingleNode("DrawItems")?.ChildNodes != null)
+                if (model.Globals.DrawItems != null)
                 {
-                    foreach (XmlNode node in def.SelectSingleNode("DrawItems")?.ChildNodes)
+                    foreach (XMLModel.Objects.Item item in model.Globals.DrawItems)
                     {
-                        bool.TryParse(node.Attributes["IsRandomRare"]?.Value, out bool IsRandomRare);
-                        short.TryParse(node.Attributes["Design"]?.Value, out short design);
-                        DrawItems.Add(new Gift(short.Parse(node.Attributes["VNum"].Value), byte.Parse(node.Attributes["Amount"].Value), design, IsRandomRare));
+                        DrawItems.Add(new Gift(item.VNum, item.Amount, item.Design, item.IsRandomRare));
                     }
                 }
-                if (def.SelectSingleNode("SpecialItems")?.ChildNodes != null)
+                if (model.Globals.SpecialItems != null)
                 {
-                    foreach (XmlNode node in def.SelectSingleNode("SpecialItems")?.ChildNodes)
+                    foreach (XMLModel.Objects.Item item in model.Globals.SpecialItems)
                     {
-                        short.TryParse(node.Attributes["Design"]?.Value, out short design);
-                        bool.TryParse(node.Attributes["IsRandomRare"]?.Value, out bool IsRandomRare);
-                        SpecialItems.Add(new Gift(short.Parse(node.Attributes["VNum"].Value), byte.Parse(node.Attributes["Amount"].Value), design, IsRandomRare));
+                        SpecialItems.Add(new Gift(item.VNum, item.Amount, item.Design, item.IsRandomRare));
                     }
                 }
-                if (def.SelectSingleNode("GiftItems")?.ChildNodes != null)
+                if (model.Globals.GiftItems != null)
                 {
-                    foreach (XmlNode node in def.SelectSingleNode("GiftItems")?.ChildNodes)
+                    foreach (XMLModel.Objects.Item item in model.Globals.GiftItems)
                     {
-                        bool.TryParse(node.Attributes["IsRandomRare"]?.Value, out bool IsRandomRare);
-                        short.TryParse(node.Attributes["Design"]?.Value, out short design);
-                        GiftItems.Add(new Gift(short.Parse(node.Attributes["VNum"].Value), byte.Parse(node.Attributes["Amount"].Value), design, IsRandomRare));
+                        GiftItems.Add(new Gift(item.VNum, item.Amount, item.Design, item.IsRandomRare));
                     }
                 }
             }
@@ -359,7 +352,7 @@ namespace OpenNos.GameObject
                         break;
 
                     case "OnTarget":
-                        evts.Add(new EventContainer(mapInstance, EventActionType.ONTARGET,  generateEvent(mapEvent, mapInstance)));
+                        evts.Add(new EventContainer(mapInstance, EventActionType.ONTARGET, generateEvent(mapEvent, mapInstance)));
                         break;
 
                     case "Effect":

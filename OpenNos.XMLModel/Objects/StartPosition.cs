@@ -9,7 +9,7 @@ namespace OpenNos.XMLModel.Objects
         #region Properties
 
         [XmlAttribute]
-        public int Value { get; set; }
+        public short Value { get; set; }
 
         #endregion
     }

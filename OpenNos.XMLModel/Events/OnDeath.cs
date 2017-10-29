@@ -20,7 +20,7 @@ namespace OpenNos.XMLModel.Events
         [XmlElement(Order = 0)]
         public object RemoveMonsterLocker { get; set; }
 
-        [XmlElement(Order = 3)]
+        [XmlElement(Order = 4)]
         public ThrowItem[] ThrowItem { get; set; }
 
         #endregion
