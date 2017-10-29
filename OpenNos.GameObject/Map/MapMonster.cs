@@ -302,7 +302,7 @@ namespace OpenNos.GameObject
         {
             if (IsHostile && Target == -1)
             {
-                Character character = ServerManager.Instance.Sessions.Where(s => s?.Character != null && s.Character.Hp > 0 && !s.Character.InvisibleGm && !s.Character.Invisible && s.Character.MapInstance == MapInstance && Map.GetDistance(new MapCell { X = MapX, Y = MapY }, new MapCell { X = s.Character.PositionX, Y = s.Character.PositionY }) < Monster.NoticeRange).OrderBy(s => ServerManager.Instance.RandomNumber(0, int.MaxValue)).FirstOrDefault()?.Character;
+                Character character = ServerManager.Instance.Sessions.Where(s => s?.Character != null && (ServerManager.Instance.ChannelId != 51 || MonsterVNum - (byte)s.Character.Faction != 678) && s.Character.Hp > 0 && !s.Character.InvisibleGm && !s.Character.Invisible && s.Character.MapInstance == MapInstance && Map.GetDistance(new MapCell { X = MapX, Y = MapY }, new MapCell { X = s.Character.PositionX, Y = s.Character.PositionY }) < Monster.NoticeRange).OrderBy(s => ServerManager.Instance.RandomNumber(0, int.MaxValue)).FirstOrDefault()?.Character;
                 if (character != null)
                 {
                     if (OnNoticeEvents.Count == 0 && MoveEvent == null)
@@ -421,7 +421,7 @@ namespace OpenNos.GameObject
             // handle hit queue
             while (HitQueue.TryDequeue(out HitRequest hitRequest))
             {
-                if (IsAlive && hitRequest.Session.Character.Hp > 0)
+                if (IsAlive && hitRequest.Session.Character.Hp > 0 && (ServerManager.Instance.ChannelId != 51 || MonsterVNum - (byte)hitRequest.Session.Character.Faction != 678))
                 {
                     int hitmode = 0;
                     bool isCaptureSkill = hitRequest.Skill.BCards.Any(s => s.Type.Equals((byte)CardType.Capture));
