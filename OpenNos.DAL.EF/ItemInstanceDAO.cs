@@ -44,22 +44,53 @@ namespace OpenNos.DAL.EF
                 ItemInstanceDTO dto = LoadBySlotAndType(characterId, slot, type);
                 if (dto != null)
                 {
-                    using (OpenNosContext context = DataAccessHelper.CreateContext())
-                    {
-                        List<ShellEffect> deleteentities = context.ShellEffect.Where(s => s.EquipmentSerialId == dto.Id).ToList();
-                        if (deleteentities.Count != 0)
-                        {
-                            context.ShellEffect.RemoveRange(deleteentities);
-                        }
-                    }
+                    return Delete(dto.Id);
                 }
 
-                return Delete(dto.Id);
+                return DeleteResult.Unknown;
             }
             catch (Exception e)
             {
                 Logger.Error($"characterId: {characterId} slot: {slot} type: {type}", e);
                 return DeleteResult.Error;
+            }
+        }
+
+        public DeleteResult DeleteGuidList(IEnumerable<Guid> guids)
+        {
+            using (OpenNosContext context = DataAccessHelper.CreateContext())
+            {
+                try
+                {
+                    foreach (Guid id in guids)
+                    {
+                        ItemInstance entity = context.ItemInstance.FirstOrDefault(i => i.Id == id);
+                        if (entity != null)
+                        {
+                            context.ItemInstance.Remove(entity);
+                        }
+                    }
+                    context.SaveChanges();
+                }
+                catch
+                {
+                    foreach(Guid id in guids)
+                    {
+                        try
+                        {
+                            Delete(id);
+                        }
+                        catch (Exception ex)
+                        {
+                            // TODO: Work on: statement conflicted with the REFERENCE constraint
+                            //       "FK_dbo.BazaarItem_dbo.ItemInstance_ItemInstanceId". The
+                            //       conflict occurred in database "opennos", table
+                            //       "dbo.BazaarItem", column 'ItemInstanceId'.
+                            Logger.LogUserEventError("ONSAVEDELETION_EXCEPTION", "Saving Process", $"Detailed Item Information: Item ID = {id}", ex);
+                        }
+                    }
+                }
+                return DeleteResult.Deleted;
             }
         }
 
@@ -95,6 +126,49 @@ namespace OpenNos.DAL.EF
             });
 
             _mapper = config.CreateMapper();
+        }
+
+        public SaveResult InsertOrUpdateFromList(IEnumerable<ItemInstanceDTO> items)
+        {
+            try
+            {
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
+                {
+                    void insert(ItemInstanceDTO iteminstance)
+                    {
+                        ItemInstance _entity = _mapper.Map<ItemInstance>(iteminstance);
+                        context.ItemInstance.Add(_entity);
+                    }
+
+                    void update(ItemInstance _entity, ItemInstanceDTO iteminstance)
+                    {
+                        if (_entity != null)
+                        {
+                            _mapper.Map(iteminstance, _entity);
+                            context.SaveChanges();
+                        }
+                    }
+
+                    foreach (ItemInstanceDTO item in items)
+                    {
+                        ItemInstance entity = context.ItemInstance.FirstOrDefault(c => c.Id == item.Id);
+
+                        if (entity == null)
+                        {
+                            insert(item);
+                        }
+                        update(entity, item);
+                    }
+
+                    context.SaveChanges();
+                    return SaveResult.Updated;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                return SaveResult.Error;
+            }
         }
 
         public IEnumerable<ItemInstanceDTO> LoadByCharacterId(long characterId)

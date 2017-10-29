@@ -82,6 +82,47 @@ namespace OpenNos.DAL.EF
             }
         }
 
+        public void InsertOrUpdateFromList(List<CellonOptionDTO> cellonOption)
+        {
+            try
+            {
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
+                {
+                    void insert(CellonOptionDTO cellonoption)
+                    {
+                        CellonOption _entity = _mapper.Map<CellonOption>(cellonoption);
+                        context.CellonOption.Add(_entity);
+                    }
+
+                    void update(CellonOption _entity, CellonOptionDTO cellonoption)
+                    {
+                        if (_entity != null)
+                        {
+                            _mapper.Map(cellonoption, _entity);
+                            context.SaveChanges();
+                        }
+                    }
+
+                    foreach (CellonOptionDTO item in cellonOption)
+                    {
+                        CellonOption entity = context.CellonOption.FirstOrDefault(c => c.CellonOptionId == item.CellonOptionId);
+
+                        if (entity == null)
+                        {
+                            insert(item);
+                        }
+                        update(entity, item);
+                    }
+
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+            }
+        }
+
         private CellonOptionDTO insert(CellonOptionDTO cellonOption, OpenNosContext context)
         {
             CellonOption entity = _mapper.Map<CellonOption>(cellonOption);

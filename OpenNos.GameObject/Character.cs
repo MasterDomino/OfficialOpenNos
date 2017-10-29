@@ -3455,40 +3455,29 @@ namespace OpenNos.GameObject
                             DAOFactory.MinilandObjectDAO.DeleteById(mobjToDelete.MinilandObjectId);
                         }
 
-                        // remove all which are saved but not in our current enumerable
-                        foreach (Guid inventoryToDeleteId in currentlySavedInventoryIds.Except(inventories.Select(i => i.Id)))
-                        {
-                            try
-                            {
-                                ItemInstanceDTO itemInstance = DAOFactory.IteminstanceDAO.LoadById(inventoryToDeleteId);
-                                DAOFactory.IteminstanceDAO.Delete(inventoryToDeleteId);
-                            }
-                            catch (Exception ex)
-                            {
-                                // TODO: Work on: statement conflicted with the REFERENCE constraint
-                                //       "FK_dbo.BazaarItem_dbo.ItemInstance_ItemInstanceId". The
-                                //       conflict occurred in database "opennos", table
-                                //       "dbo.BazaarItem", column 'ItemInstanceId'.
-                                Logger.LogUserEventError("ONSAVEDELETION_EXCEPTION", Name, $"Detailed Item Information: Item ID = {inventoryToDeleteId}", ex);
-                            }
-                        }
+                        DAOFactory.IteminstanceDAO.DeleteGuidList(currentlySavedInventoryIds.Except(inventories.Select(i => i.Id)));
 
                         // create or update all which are new or do still exist
-                        foreach (ItemInstance itemInstance in inventories.Where(s => s.Type != InventoryType.Bazaar && s.Type != InventoryType.FamilyWareHouse))
+                        List<ItemInstance> saveInventory = inventories.Where(s => s.Type != InventoryType.Bazaar && s.Type != InventoryType.FamilyWareHouse).ToList();
+
+                        DAOFactory.IteminstanceDAO.InsertOrUpdateFromList(saveInventory);
+
+                        foreach (ItemInstance itemInstance in saveInventory)
                         {
-                            DAOFactory.IteminstanceDAO.InsertOrUpdate(itemInstance);
                             if (itemInstance is WearableInstance wearInstance)
                             {
-                                foreach (ShellEffectDTO effect in wearInstance.ShellEffects)
-                                {
-                                    effect.EquipmentSerialId = wearInstance.EquipmentSerialId;
-                                    effect.ShellEffectId = DAOFactory.ShellEffectDAO.InsertOrUpdate(effect).ShellEffectId;
-                                }
-                                foreach (CellonOptionDTO effect in wearInstance.CellonOptions)
-                                {
-                                    effect.EquipmentSerialId = wearInstance.EquipmentSerialId;
-                                    effect.CellonOptionId = DAOFactory.CellonOptionDAO.InsertOrUpdate(effect).CellonOptionId;
-                                }
+                                DAOFactory.ShellEffectDAO.InsertOrUpdateFromList(wearInstance.ShellEffects);
+                                DAOFactory.CellonOptionDAO.InsertOrUpdateFromList(wearInstance.CellonOptions);
+                                //foreach (ShellEffectDTO effect in wearInstance.ShellEffects)
+                                //{
+                                //    effect.EquipmentSerialId = wearInstance.EquipmentSerialId;
+                                //    effect.ShellEffectId = DAOFactory.ShellEffectDAO.InsertOrUpdate(effect).ShellEffectId;
+                                //}
+                                //foreach (CellonOptionDTO effect in wearInstance.CellonOptions)
+                                //{
+                                //    effect.EquipmentSerialId = wearInstance.EquipmentSerialId;
+                                //    effect.CellonOptionId = DAOFactory.CellonOptionDAO.InsertOrUpdate(effect).CellonOptionId;
+                                //}
                             }
                         }
                     }

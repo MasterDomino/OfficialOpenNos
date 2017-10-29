@@ -24,6 +24,10 @@ namespace OpenNos.DAL.Interface
     {
         #region Methods
 
+        DeleteResult DeleteGuidList(IEnumerable<Guid> guids);
+
+        SaveResult InsertOrUpdateFromList(IEnumerable<ItemInstanceDTO> guids);
+
         DeleteResult DeleteFromSlotAndType(long characterId, short slot, InventoryType type);
 
         void InitializeMapper(Type baseType);

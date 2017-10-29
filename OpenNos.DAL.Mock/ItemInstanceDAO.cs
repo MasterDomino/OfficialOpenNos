@@ -76,6 +76,16 @@ namespace OpenNos.DAL.Mock
             return this;
         }
 
+        public DeleteResult DeleteGuidList(IEnumerable<Guid> guids)
+        {
+            throw new NotImplementedException();
+        }
+
+        public SaveResult InsertOrUpdateFromList(IEnumerable<ItemInstanceDTO> guids)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

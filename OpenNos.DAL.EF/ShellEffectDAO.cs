@@ -74,6 +74,48 @@ namespace OpenNos.DAL.EF
             }
         }
 
+        public void InsertOrUpdateFromList(List<ShellEffectDTO> shellEffects)
+        {
+            try
+            {
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
+                {
+                    void insert(ShellEffectDTO shelleffect)
+                    {
+                        ShellEffect _entity = _mapper.Map<ShellEffect>(shelleffect);
+                        context.ShellEffect.Add(_entity);
+                    }
+
+                    void update(ShellEffect _entity, ShellEffectDTO shelleffect)
+                    {
+                        if (_entity != null)
+                        {
+                            _mapper.Map(shelleffect, _entity);
+                            context.SaveChanges();
+                        }
+                    }
+
+                    foreach (ShellEffectDTO item in shellEffects)
+                    {
+                        ShellEffect entity = context.ShellEffect.FirstOrDefault(c => c.ShellEffectId == item.ShellEffectId);
+
+                        if (entity == null)
+                        {
+                            insert(item);
+                        }
+                        update(entity, item);
+                    }
+
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+            }
+        }
+
+
         public IEnumerable<ShellEffectDTO> LoadByEquipmentSerialId(Guid id)
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())

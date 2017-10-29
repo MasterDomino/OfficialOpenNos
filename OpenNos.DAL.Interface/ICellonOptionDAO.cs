@@ -27,6 +27,8 @@ namespace OpenNos.DAL.Interface
 
         IEnumerable<CellonOptionDTO> GetOptionsByWearableInstanceId(Guid wearableInstanceId);
 
+        void InsertOrUpdateFromList(List<CellonOptionDTO> cellonOption);
+
         CellonOptionDTO InsertOrUpdate(CellonOptionDTO cellonOption);
 
         #endregion
