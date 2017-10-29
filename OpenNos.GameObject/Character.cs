@@ -3545,16 +3545,18 @@ namespace OpenNos.GameObject
                 {
                     DAOFactory.StaticBuffDAO.Delete(bonusToDelete, CharacterId);
                 }
-
-                foreach (Buff buff in Buff.Where(s => s.StaticBuff).ToArray())
+                if (_isStaticBuffListInitial)
                 {
-                    StaticBuffDTO bf = new StaticBuffDTO()
+                    foreach (Buff buff in Buff.Where(s => s.StaticBuff).ToArray())
                     {
-                        CharacterId = CharacterId,
-                        RemainingTime = (int)(buff.RemainingTime - (DateTime.Now - buff.Start).TotalSeconds),
-                        CardId = buff.Card.CardId
-                    };
-                    DAOFactory.StaticBuffDAO.InsertOrUpdate(ref bf);
+                        StaticBuffDTO bf = new StaticBuffDTO()
+                        {
+                            CharacterId = CharacterId,
+                            RemainingTime = (int)(buff.RemainingTime - (DateTime.Now - buff.Start).TotalSeconds),
+                            CardId = buff.Card.CardId
+                        };
+                        DAOFactory.StaticBuffDAO.InsertOrUpdate(ref bf);
+                    }
                 }
 
                 foreach (StaticBonusDTO bonus in StaticBonusList.ToArray())
