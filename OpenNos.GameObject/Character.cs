@@ -1098,7 +1098,7 @@ namespace OpenNos.GameObject
                 Session.SendPacket(GenerateFinit());
                 if (charac != null)
                 {
-                    List<CharacterRelationDTO> lst = ServerManager.Instance.CharacterRelations.Where(s => s.CharacterId == CharacterId || s.RelatedCharacterId == CharacterId).ToList();
+                    List<CharacterRelationDTO> lst = ServerManager.Instance.CharacterRelations.Where(s => s.CharacterId == id || s.RelatedCharacterId == id).ToList();
                     string result = "finit";
                     foreach (CharacterRelationDTO relation in lst.Where(c => c.RelationType == CharacterRelationType.Friend))
                     {
