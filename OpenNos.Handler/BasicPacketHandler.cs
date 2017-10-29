@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -465,7 +466,7 @@ namespace OpenNos.Handler
                                 return;
                             }
                             Session.Character.LastNpcMonsterId = monster.MapMonsterId;
-                            Session.SendPacket($"st 3 {ncifPacket.TargetId} {monsterinfo.Level} {monsterinfo.HeroLevel} {(int)((float)monster.CurrentHp / (float)monster.Monster.MaxHP * 100)} {(int)((float)monster.CurrentMp / (float)monster.Monster.MaxMP * 100)} {monster.CurrentHp} {monster.CurrentMp}{monster.Buff.GetAllItems().Aggregate(string.Empty, (current, buff) => current + $" {buff.Card.CardId}")}");
+                            Session.SendPacket($"st 3 {ncifPacket.TargetId} {monsterinfo.Level} {monsterinfo.HeroLevel} {(int)((float)monster.CurrentHp / (float)monster.MaxHp * 100)} {(int)((float)monster.CurrentMp / (float)monster.MaxMp * 100)} {monster.CurrentHp} {monster.CurrentMp}{monster.Buff.GetAllItems().Aggregate(string.Empty, (current, buff) => current + $" {buff.Card.CardId}")}");
                         });
                     }
                     break;
@@ -1262,6 +1263,19 @@ namespace OpenNos.Handler
                     {
                         return;
                     }
+                    if (ServerManager.Instance.ChannelId == 51)
+                    {
+                        if ((Session.Character.Faction == FactionType.Angel && portal.DestinationMapId == 131) || (Session.Character.Faction == FactionType.Demon && portal.DestinationMapId == 130))
+                        {
+                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("PORTAL_BLOCKED"), 10));
+                            return;
+                        }
+                        if ((portal.DestinationMapId == 130 || portal.DestinationMapId == 131) && timeSpanSinceLastPortal < 60)
+                        {
+                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("CANT_MOVE"), 10));
+                            return;
+                        }
+                    }
                     Session.SendPacket(Session.CurrentMapInstance.GenerateRsfn());
 
                     Session.Character.LastPortal = currentRunningSeconds;
@@ -1288,8 +1302,11 @@ namespace OpenNos.Handler
         /// <param name="pulsepacket"></param>
         public void Pulse(PulsePacket pulsepacket)
         {
-            Session.Character.LastPulse += 60;
-            if (pulsepacket.Tick != Session.Character.LastPulse)
+            if (Session.Character.LastPulse.AddMilliseconds(80000) >= DateTime.Now && DateTime.Now >= Session.Character.LastPulse.AddMilliseconds(40000))
+            {
+                Session.Character.LastPulse = DateTime.Now;
+            }
+            else
             {
                 Session.Disconnect();
             }
@@ -1593,6 +1610,10 @@ namespace OpenNos.Handler
                         Session.Character.Gold -= 100;
                         Session.SendPacket(Session.Character.GenerateGold());
                         Session.Character.LastPVPRevive = DateTime.Now;
+                        Observable.Timer(TimeSpan.FromSeconds(5)).Subscribe(observer =>
+                        {
+                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("PVP_ACTIVE"), 10));
+                        });
                     }
                     else
                     {

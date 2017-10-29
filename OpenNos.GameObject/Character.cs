@@ -60,6 +60,7 @@ namespace OpenNos.GameObject
             MinilandObjects = new List<MinilandObject>();
             Mates = new List<Mate>();
             LastMonsterAggro = DateTime.Now;
+            LastPulse = DateTime.Now;
             MTListTargetQueue = new ConcurrentStack<MTListHitTarget>();
             EquipmentBCards = new ThreadSafeGenericList<BCard>();
             MeditationDictionary = new Dictionary<short, DateTime>();
@@ -216,7 +217,7 @@ namespace OpenNos.GameObject
 
         public DateTime LastPotion { get; set; }
 
-        public int LastPulse { get; set; }
+        public DateTime LastPulse { get; set; }
 
         public DateTime LastPVPRevive { get; set; }
 
@@ -1097,7 +1098,7 @@ namespace OpenNos.GameObject
                 Session.SendPacket(GenerateFinit());
                 if (charac != null)
                 {
-                    List<CharacterRelationDTO> lst = ServerManager.Instance.CharacterRelations.Where(s => s.CharacterId == CharacterId || s.RelatedCharacterId == CharacterId).ToList();
+                    List<CharacterRelationDTO> lst = ServerManager.Instance.CharacterRelations.Where(s => s.CharacterId == id || s.RelatedCharacterId == id).ToList();
                     string result = "finit";
                     foreach (CharacterRelationDTO relation in lst.Where(c => c.RelationType == CharacterRelationType.Friend))
                     {
@@ -1870,15 +1871,18 @@ namespace OpenNos.GameObject
             }
             ElementRate = 0;
             Element = 0;
+            bool shouldChangeMorph = false;
 
             if (fairy != null)
             {
+                //exclude magical fairy
+                shouldChangeMorph = IsUsingFairyBooster ? (fairy.Item.Morph > 4 && fairy.Item.Morph != 9 && fairy.Item.Morph != 14) : false;
                 ElementRate += fairy.ElementRate + fairy.Item.ElementRate + (IsUsingFairyBooster ? 30 : 0);
                 Element = fairy.Item.Element;
             }
 
             return fairy != null
-                ? $"pairy 1 {CharacterId} 4 {fairy.Item.Element} {fairy.ElementRate + fairy.Item.ElementRate} {fairy.Item.Morph + (IsUsingFairyBooster ? 5 : 0)}"
+                ? $"pairy 1 {CharacterId} 4 {fairy.Item.Element} {fairy.ElementRate + fairy.Item.ElementRate} {fairy.Item.Morph + (shouldChangeMorph ? 5 : 0)}"
                 : $"pairy 1 {CharacterId} 0 0 0 0";
         }
 

@@ -18,6 +18,7 @@ using OpenNos.Domain;
 using OpenNos.GameObject;
 using OpenNos.GameObject.Battle;
 using OpenNos.GameObject.Helpers;
+using OpenNos.Master.Library.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -200,6 +201,12 @@ namespace OpenNos.Handler
         {
             if (target?.Character.Hp > 0 && hitRequest?.Session.Character.Hp > 0)
             {
+                if ((Session.CurrentMapInstance.MapInstanceId == ServerManager.Instance.ArenaInstance.MapInstanceId || Session.CurrentMapInstance.MapInstanceId == ServerManager.Instance.FamilyArenaInstance.MapInstanceId) && Session.CurrentMapInstance.Map.Grid[Session.Character.PositionX, Session.Character.PositionY]?.Value != 0)
+                {
+                    // User in SafeZone
+                    hitRequest.Session.SendPacket(StaticPacketHelper.Cancel(2, target.Character.CharacterId));
+                    return;
+                }
                 if (target.Character.IsSitting)
                 {
                     target.Character.Rest();
@@ -286,7 +293,28 @@ namespace OpenNos.Handler
                             target.Character.Mp = (int)target.Character.MPLoad();
                             short x = (short)(39 + ServerManager.Instance.RandomNumber(-2, 3));
                             short y = (short)(42 + ServerManager.Instance.RandomNumber(-2, 3));
-                            ServerManager.Instance.ChangeMap(target.Character.CharacterId, 130, x, y);
+                            if (target.Character.Faction == FactionType.Angel)
+                            {
+                                ServerManager.Instance.ChangeMap(target.Character.CharacterId, 130, x, y);
+                            }
+                            else if (target.Character.Faction == FactionType.Demon)
+                            {
+                                ServerManager.Instance.ChangeMap(target.Character.CharacterId, 131, x, y);
+                            }
+                            else
+                            {
+                                target.Character.MapId = 145;
+                                target.Character.MapX = 51;
+                                target.Character.MapY = 41;
+                                string connection = CommunicationServiceClient.Instance.RetrieveOriginWorld(Session.Account.AccountId);
+                                if (string.IsNullOrWhiteSpace(connection))
+                                {
+                                    return;
+                                }
+                                int port = Convert.ToInt32(connection.Split(':')[1]);
+                                Session.Character.ChangeChannel(connection.Split(':')[0], port, 3);
+                                return;
+                            }
                             target.CurrentMapInstance?.Broadcast(target, target.Character.GenerateTp());
                             target.CurrentMapInstance?.Broadcast(target.Character.GenerateRevive());
                             target.SendPacket(target.Character.GenerateStat());
@@ -296,11 +324,12 @@ namespace OpenNos.Handler
                     {
                         hitRequest.Session.Character.TalentWin++;
                         target.Character.TalentLose++;
+                        hitRequest.Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PVP_KILL"), hitRequest.Session.Character.Name, target.Character.Name), 10));
                         Observable.Timer(TimeSpan.FromMilliseconds(1000)).Subscribe(o => ServerManager.Instance.AskPVPRevive(target.Character.CharacterId));
                     }
                 }
 
-                if (hitmode != 0)
+                if (hitmode != 1)
                 {
                     hitRequest.Skill.BCards.Where(s => s.Type.Equals((byte)BCardType.CardType.Buff)).ToList().ForEach(s => s.ApplyBCards(target.Character, Session.Character));
 
@@ -516,7 +545,7 @@ namespace OpenNos.Handler
                                 Session.CurrentMapInstance.Broadcast(StaticPacketHelper.SkillUsed(UserType.Player, Session.Character.CharacterId, 1, Session.Character.CharacterId, ski.Skill.SkillVNum, ski.Skill.Cooldown, ski.Skill.AttackAnimation, skillinfo?.Skill.Effect ?? ski.Skill.Effect, Session.Character.PositionX, Session.Character.PositionY, true, (int)((double)Session.Character.Hp / Session.Character.HPLoad() * 100), 0, -2, (byte)(ski.Skill.SkillType - 1)));
                                 if (ski.Skill.TargetRange != 0 && Session.HasCurrentMapInstance)
                                 {
-                                    foreach (ClientSession character in ServerManager.Instance.Sessions.Where(s => s.CurrentMapInstance == Session.CurrentMapInstance && s.Character.CharacterId != Session.Character.CharacterId && s.Character.IsInRange(Session.Character.PositionX, Session.Character.PositionY, ski.Skill.TargetRange + 5)))
+                                    foreach (ClientSession character in ServerManager.Instance.Sessions.Where(s => s.CurrentMapInstance == Session.CurrentMapInstance && s.Character.CharacterId != Session.Character.CharacterId && s.Character.IsInRange(Session.Character.PositionX, Session.Character.PositionY, ski.Skill.TargetRange)))
                                     {
                                         if (Session.CurrentMapInstance.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4))
                                         {
