@@ -9,6 +9,9 @@ namespace OpenNos.XMLModel.Objects
     {
         #region Properties
 
+        [XmlElement]
+        public GenerateClock GenerateClock { get; set; }
+
         [XmlAttribute]
         public byte IndexX { get; set; }
 
@@ -19,7 +22,31 @@ namespace OpenNos.XMLModel.Objects
         public int Map { get; set; }
 
         [XmlElement]
+        public OnAreaEntry[] OnAreaEntry { get; set; }
+
+        [XmlElement]
+        public OnCharacterDiscoveringMap OnCharacterDiscoveringMap { get; set; }
+
+        [XmlElement]
+        public OnLockerOpen OnLockerOpen { get; set; }
+
+        [XmlElement]
         public OnMoveOnMap[] OnMoveOnMap { get; set; }
+
+        [XmlElement]
+        public SetButtonLockers SetButtonLockers { get; set; }
+
+        [XmlElement]
+        public SetMonsterLockers SetMonsterLockers { get; set; }
+
+        [XmlElement]
+        public SpawnButton[] SpawnButton { get; set; }
+
+        [XmlElement]
+        public SpawnPortal SpawnPortal { get; set; }
+
+        [XmlElement]
+        public object StartClock { get; set; }
 
         [XmlElement]
         public SummonMonster[] SummonMonster { get; set; }

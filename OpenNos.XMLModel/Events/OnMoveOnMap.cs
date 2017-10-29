@@ -9,6 +9,9 @@ namespace OpenNos.XMLModel.Events
     {
         #region Properties
 
+        [XmlElement]
+        public OnMapClean OnMapClean { get; set; }
+
         [XmlElement(Order = 4)]
         public object RefreshRaidGoals { get; set; }
 
