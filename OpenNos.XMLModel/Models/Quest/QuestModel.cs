@@ -11,6 +11,10 @@ namespace OpenNos.XMLModel.Models.Quest
     {
         public QuestGiver QuestGiver { get; set; }
 
+        public short QuestDataVNum { get; set; }
+
+        public short QuestGoalType { get; set; }
+
         public Script Script { get; set; }
 
         public Reward Reward { get; set; }

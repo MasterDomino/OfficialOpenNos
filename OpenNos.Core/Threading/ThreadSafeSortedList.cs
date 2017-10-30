@@ -474,6 +474,33 @@ namespace OpenNos.Core
         }
 
         /// <summary>
+        /// Removes an item from collection.
+        /// </summary>
+        /// <param name="value">Value of item to remove</param>
+        public bool Remove(TV value)
+        {
+            if (!_disposed)
+            {
+                _lock.EnterWriteLock();
+                try
+                {
+                    if (!_items.ContainsValue(value))
+                    {
+                        return false;
+                    }
+
+                    _items.RemoveAt(_items.IndexOfValue(value));
+                    return true;
+                }
+                finally
+                {
+                    _lock.ExitWriteLock();
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Projects each element of a sequence into a new form.
         /// </summary>
         /// <typeparam name="TResult"></typeparam>

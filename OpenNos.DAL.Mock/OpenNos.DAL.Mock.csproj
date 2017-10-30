@@ -83,6 +83,8 @@
     <Compile Include="CharacterSkillDAO.cs" />
     <Compile Include="ComboDAO.cs" />
     <Compile Include="MaintenanceLogDAO.cs" />
+    <Compile Include="QuestProgressDAO.cs" />
+    <Compile Include="QuestDAO.cs" />
     <Compile Include="RecipeListDAO.cs" />
     <Compile Include="RollGeneratedItemDAO.cs" />
     <Compile Include="DropDAO.cs" />

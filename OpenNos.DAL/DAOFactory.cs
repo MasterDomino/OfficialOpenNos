@@ -56,6 +56,8 @@ namespace OpenNos.DAL
         private static INpcMonsterSkillDAO _npcmonsterskillDAO;
         private static IPenaltyLogDAO _penaltylogDAO;
         private static IPortalDAO _portalDAO;
+        private static IQuestDAO _questDAO;
+        private static IQuestProgressDAO _questProgressDAO;
         private static IQuicklistEntryDAO _quicklistDAO;
         private static IRecipeDAO _recipeDAO;
         private static IRecipeItemDAO _recipeitemDAO;
@@ -670,6 +672,46 @@ namespace OpenNos.DAL
                 }
 
                 return _portalDAO;
+            }
+        }
+
+        public static IQuestDAO QuestDAO
+        {
+            get
+            {
+                if (_questDAO == null)
+                {
+                    if (_useMock)
+                    {
+                        _questDAO = new Mock.QuestDAO();
+                    }
+                    else
+                    {
+                        _questDAO = new DAO.QuestDAO();
+                    }
+                }
+
+                return _questDAO;
+            }
+        }
+
+        public static IQuestProgressDAO QuestProgressDAO
+        {
+            get
+            {
+                if (_questProgressDAO == null)
+                {
+                    if (_useMock)
+                    {
+                        _questProgressDAO = new Mock.QuestProgressDAO();
+                    }
+                    else
+                    {
+                        _questProgressDAO = new DAO.QuestProgressDAO();
+                    }
+                }
+
+                return _questProgressDAO;
             }
         }
 

@@ -22,6 +22,7 @@ using OpenNos.GameObject.Packets.ServerPackets;
 using OpenNos.Master.Library.Client;
 using OpenNos.Master.Library.Data;
 using OpenNos.PathFinder;
+using OpenNos.XMLModel.Models.Quest;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -282,6 +283,8 @@ namespace OpenNos.GameObject
         public short PositionX { get; set; }
 
         public short PositionY { get; set; }
+
+        public ThreadSafeSortedList<long, QuestModel> Quests { get; internal set; }
 
         public List<QuicklistEntryDTO> QuicklistEntries { get; private set; }
 
@@ -685,8 +688,27 @@ namespace OpenNos.GameObject
             Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 196), PositionX, PositionY);
         }
 
+        public void UpdateQuests()
+        {
+
+        }
+
         public void CharacterLife()
         {
+
+            //foreach (QuestModel quest in Quests.GetAllItems().Where(q => q.WalkObjective != null))
+            //{
+            //    if (Session.CurrentMapInstance.Map.MapId == quest.WalkObjective.MapId && IsInRange(quest.WalkObjective.MapX, quest.WalkObjective.MapY, 3))
+            //    {
+            //        Quests.Remove(quest);
+            //        if (quest.Reward.QuestId != -1)
+            //        {
+            //            Quests[quest.Reward.QuestId] = ServerManager.Instance.QuestList[quest.Reward.QuestId].Copy();
+            //            UpdateQuests();
+            //        }
+            //    }
+            //}
+
             int x = 1;
             bool change = false;
             if (Hp == 0 && LastHealth.AddSeconds(2) <= DateTime.Now)

@@ -21,6 +21,7 @@ using OpenNos.GameObject.Helpers;
 using OpenNos.GameObject.Packets.ClientPackets;
 using OpenNos.Master.Library.Client;
 using OpenNos.Master.Library.Data;
+using OpenNos.XMLModel.Models.Quest;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -1999,6 +2000,31 @@ namespace OpenNos.Handler
                     Type = MessageType.Shout
                 });
             }
+
+            //QuestModel quest = ServerManager.Instance.QuestList.Where(s => s.QuestGiver.Type == QuestGiverType.InitialQuest).FirstOrDefault();
+            //if(quest != null)
+            //{
+            //    quest = quest.Copy();
+
+            //    int current = 0;
+            //    int max = 0;
+
+            //    if (quest.KillObjectives != null)
+            //    {
+            //        max = quest.KillObjectives[0].GoalAmount;
+            //        current = quest.KillObjectives[0].CurrentAmount;
+            //    }
+
+            //    if(quest.WalkObjective != null)
+            //    {
+            //        Session.SendPacket($"target {quest.WalkObjective.MapX} {quest.WalkObjective.MapY} {quest.WalkObjective.MapId} {quest.QuestDataVNum}");
+            //    }
+
+            //    //Quest Packet Definition: qstlist {Unknown}.{QuestVNUM}.{QuestVNUM}.{GoalType}.{Current}.{Goal}.{Finished}.{GoalType}.{Current}.{Goal}.{Finished}.{GoalType}.{Current}.{Goal}.{Finished}.{ShowDialog}
+            //    //Same for qsti
+            //    Session.SendPacket($"qstlist 5.{quest.QuestDataVNum}.{quest.QuestDataVNum}.{quest.QuestGoalType}.{current}.{max}.0.0.0.0.0.0.0.0.0.1");
+
+            //}
         }
 
         /// <summary>

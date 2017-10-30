@@ -1,5 +1,6 @@
 ﻿using OpenNos.XMLModel.Events.Quest;
 using OpenNos.XMLModel.Models.Quest;
+using OpenNos.XMLModel.Objects;
 using OpenNos.XMLModel.Objects.Quest;
 using System;
 using System.Collections.Generic;
@@ -28,29 +29,58 @@ namespace OpenNos.QuestGenerator.CLITest
             questModel.WalkObjective = new WalkObjective()
             {
                 MapId = 1,
-                MapX = 53,
-                MapY = 154
+                MapX = 57,
+                MapY = 149
             };
 
             questModel.Reward = new Reward()
             {
-                DisplayRewardWindow = true,
-                ForceLevelUp = 5,
-                QuestId = -1,
-                TeleportPosition = new TeleportTo()
-                {
-                    MapId = 1,
-                    MapX = 75,
-                    MapY = 75
-                },
-                Buff = 116
+                QuestId = 2,
             };
-            
+
             using (StreamWriter sw = new StreamWriter("output.xml"))
             {
                 new XmlSerializer(typeof(QuestModel)).Serialize(sw, questModel);
                 sw.Flush();
             }
+
+
+            questModel = new QuestModel();
+
+            questModel.KillObjectives = new KillObjective[] { new KillObjective()
+            {
+                MonsterVNum=24,
+                GoalAmount=5
+            }};
+
+            questModel.Reward = new Reward()
+            {
+                QuestId = -1,
+                ForceLevelUp = 15,
+                ForceJobUp = 15,
+                Script = new Script()
+                {
+                    Type = 1,
+                    Value = 52
+                },
+                GiftItems = new Item[]
+                {
+                    new Item()
+                    {
+                        VNum=2339,
+                        Amount=5
+                    }
+                }
+
+            };
+
+            using (StreamWriter sw = new StreamWriter("output2.xml"))
+            {
+                new XmlSerializer(typeof(QuestModel)).Serialize(sw, questModel);
+                sw.Flush();
+            }
+
+
 
         }
     }
