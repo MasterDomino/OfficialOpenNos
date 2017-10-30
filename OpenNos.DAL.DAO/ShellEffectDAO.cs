@@ -84,6 +84,8 @@ namespace OpenNos.DAL.DAO
                     {
                         ShellEffect _entity = _mapper.Map<ShellEffect>(shelleffect);
                         context.ShellEffect.Add(_entity);
+                        context.SaveChanges();
+                        shelleffect.ShellEffectId = _entity.ShellEffectId;
                     }
 
                     void update(ShellEffect _entity, ShellEffectDTO shelleffect)
@@ -91,7 +93,6 @@ namespace OpenNos.DAL.DAO
                         if (_entity != null)
                         {
                             _mapper.Map(shelleffect, _entity);
-                            context.SaveChanges();
                         }
                     }
 
@@ -108,6 +109,7 @@ namespace OpenNos.DAL.DAO
                     }
 
                     context.SaveChanges();
+
                 }
             }
             catch (Exception e)

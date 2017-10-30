@@ -92,6 +92,8 @@ namespace OpenNos.DAL.DAO
                     {
                         CellonOption _entity = _mapper.Map<CellonOption>(cellonoption);
                         context.CellonOption.Add(_entity);
+                        context.SaveChanges();
+                        cellonoption.CellonOptionId = _entity.CellonOptionId;
                     }
 
                     void update(CellonOption _entity, CellonOptionDTO cellonoption)
@@ -99,7 +101,6 @@ namespace OpenNos.DAL.DAO
                         if (_entity != null)
                         {
                             _mapper.Map(cellonoption, _entity);
-                            context.SaveChanges();
                         }
                     }
 
