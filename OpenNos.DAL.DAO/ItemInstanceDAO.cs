@@ -136,7 +136,7 @@ namespace OpenNos.DAL.DAO
                         ItemInstance _entity = _mapper.Map<ItemInstance>(iteminstance);
                         context.ItemInstance.Add(_entity);
                         context.SaveChanges();
-                        iteminstance.Id = _entity.Id
+                        iteminstance.Id = _entity.Id;
                     }
 
                     void update(ItemInstance _entity, ItemInstanceDTO iteminstance)
