@@ -1,4 +1,5 @@
 ﻿using OpenNos.XMLModel.Events;
+using OpenNos.XMLModel.Events.Quest;
 using OpenNos.XMLModel.Objects.Quest;
 using System;
 using System.Xml.Serialization;
@@ -10,7 +11,11 @@ namespace OpenNos.XMLModel.Models.Quest
     {
         public QuestGiver QuestGiver { get; set; }
 
-        public NpcDialog Dialog { get; set; }
+        public short QuestDataVNum { get; set; }
+
+        public short QuestGoalType { get; set; }
+
+        public Script Script { get; set; }
 
         public Reward Reward { get; set; }
 

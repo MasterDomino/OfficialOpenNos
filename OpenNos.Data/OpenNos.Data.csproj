@@ -143,6 +143,10 @@
       <Project>{20addddd-dad9-44f3-9beb-026c73090660}</Project>
       <Name>OpenNos.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OpenNos.XMLModel\OpenNos.XMLModel.csproj">
+      <Project>{ce1bcbe7-edb7-4564-a11e-8d90868df9d0}</Project>
+      <Name>OpenNos.XMLModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -19,16 +19,19 @@ using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
 using OpenNos.Master.Library.Client;
 using OpenNos.Master.Library.Data;
+using OpenNos.XMLModel.Models.Quest;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace OpenNos.GameObject
 {
@@ -122,6 +125,8 @@ namespace OpenNos.GameObject
         public List<int> MateIds { get; internal set; } = new List<int>();
 
         public List<PenaltyLogDTO> PenaltyLogs { get; set; }
+
+        public ThreadSafeSortedList<long, QuestModel> QuestList { get; set; }
 
         public ConcurrentBag<ScriptedInstance> Raids { get; set; }
 
@@ -921,6 +926,21 @@ namespace OpenNos.GameObject
                     FamilyArenaInstance.IsPVP = true;
                 }
                 loadScriptedInstances();
+
+                XmlSerializer serializer = new XmlSerializer(typeof(QuestModel));
+                QuestList = new ThreadSafeSortedList<long, QuestModel>();
+                Parallel.ForEach(DAOFactory.QuestDAO.LoadAll(), s =>
+                {
+                    if (s.QuestData != null)
+                    {
+                        using (TextReader reader = new StringReader(s.QuestData))
+                        {
+                            QuestList[s.QuestId] = (QuestModel)serializer.Deserialize(reader);
+                        }
+                    }
+                });
+
+                Logger.Info(string.Format(Language.Instance.GetMessageFromKey("QUESTS_LOADED"), QuestList.Count));
             }
             catch (Exception ex)
             {
