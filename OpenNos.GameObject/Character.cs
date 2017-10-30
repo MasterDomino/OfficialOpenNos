@@ -3459,8 +3459,8 @@ namespace OpenNos.GameObject
                         {
                             if (itemInstance is WearableInstance wearInstance)
                             {
-                                DAOFactory.ShellEffectDAO.InsertOrUpdateFromList(wearInstance.ShellEffects);
-                                DAOFactory.CellonOptionDAO.InsertOrUpdateFromList(wearInstance.CellonOptions);
+                                DAOFactory.ShellEffectDAO.InsertOrUpdateFromList(wearInstance.ShellEffects, wearInstance.EquipmentSerialId);
+                                DAOFactory.CellonOptionDAO.InsertOrUpdateFromList(wearInstance.CellonOptions, wearInstance.EquipmentSerialId);
                                 //foreach (ShellEffectDTO effect in wearInstance.ShellEffects)
                                 //{
                                 //    effect.EquipmentSerialId = wearInstance.EquipmentSerialId;

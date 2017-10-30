@@ -82,7 +82,7 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        public void InsertOrUpdateFromList(List<CellonOptionDTO> cellonOption)
+        public void InsertOrUpdateFromList(List<CellonOptionDTO> cellonOption, Guid equipmentSerialId)
         {
             try
             {
@@ -105,6 +105,7 @@ namespace OpenNos.DAL.DAO
 
                     foreach (CellonOptionDTO item in cellonOption)
                     {
+                        item.EquipmentSerialId = equipmentSerialId;
                         CellonOption entity = context.CellonOption.FirstOrDefault(c => c.CellonOptionId == item.CellonOptionId);
 
                         if (entity == null)

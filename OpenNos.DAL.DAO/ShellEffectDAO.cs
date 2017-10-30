@@ -74,7 +74,7 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        public void InsertOrUpdateFromList(List<ShellEffectDTO> shellEffects)
+        public void InsertOrUpdateFromList(List<ShellEffectDTO> shellEffects, Guid equipmentSerialId)
         {
             try
             {
@@ -97,6 +97,7 @@ namespace OpenNos.DAL.DAO
 
                     foreach (ShellEffectDTO item in shellEffects)
                     {
+                        item.EquipmentSerialId = equipmentSerialId;
                         ShellEffect entity = context.ShellEffect.FirstOrDefault(c => c.ShellEffectId == item.ShellEffectId);
 
                         if (entity == null)

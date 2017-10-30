@@ -147,6 +147,10 @@ namespace OpenNos.GameObject
                         {
                             wearInstance.ShellEffects.Clear();
                             DAOFactory.ShellEffectDAO.DeleteByEquipmentSerialId(wearInstance.EquipmentSerialId);
+                            if (wearInstance.EquipmentSerialId == Guid.Empty)
+                            {
+                                wearInstance.EquipmentSerialId = Guid.NewGuid();
+                            }
                             session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                             session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_DELETE"), 0));
                         }

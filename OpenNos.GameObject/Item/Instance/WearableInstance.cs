@@ -252,6 +252,10 @@ namespace OpenNos.GameObject
 
         public void OptionItem(ClientSession session, short cellonVNum)
         {
+            if(EquipmentSerialId == Guid.Empty)
+            {
+                EquipmentSerialId = Guid.NewGuid();
+            }
             if (session.Character.Inventory.CountItem(cellonVNum) > 0 && Item.MaxCellon > CellonOptions.Count)
             {
                 byte dataIndex = 0;
@@ -1405,7 +1409,10 @@ namespace OpenNos.GameObject
             {
                 SPVPMax = 2;
             }
-
+            if (EquipmentSerialId == Guid.Empty)
+            {
+                EquipmentSerialId = Guid.NewGuid();
+            }
             short CalculateEffect(short maximum)
             {
                 if (maximum == 0)
@@ -2009,11 +2016,7 @@ namespace OpenNos.GameObject
             ShellEffects.Clear();
             ShellEffects.AddRange(effectsList);
 
-            foreach (ShellEffectDTO effect in ShellEffects)
-            {
-                effect.EquipmentSerialId = EquipmentSerialId;
-                effect.ShellEffectId = DAOFactory.ShellEffectDAO.InsertOrUpdate(effect).ShellEffectId;
-            }
+            DAOFactory.ShellEffectDAO.InsertOrUpdateFromList(ShellEffects, EquipmentSerialId);
         }
 
         public void Sum(ClientSession session, WearableInstance itemToSum)

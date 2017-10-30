@@ -72,12 +72,11 @@ namespace OpenNos.GameObject
                                     wearable.ShellEffects.Clear();
                                     DAOFactory.ShellEffectDAO.DeleteByEquipmentSerialId(wearable.EquipmentSerialId);
                                     wearable.ShellEffects.AddRange(wearInstance.ShellEffects);
-
-                                    foreach (ShellEffectDTO effect in wearInstance.ShellEffects)
+                                    if(wearable.EquipmentSerialId == Guid.Empty)
                                     {
-                                        effect.EquipmentSerialId = wearInstance.EquipmentSerialId;
-                                        effect.ShellEffectId = DAOFactory.ShellEffectDAO.InsertOrUpdate(effect).ShellEffectId;
+                                        wearable.EquipmentSerialId = Guid.NewGuid();
                                     }
+                                    DAOFactory.ShellEffectDAO.InsertOrUpdateFromList(wearable.ShellEffects, wearable.EquipmentSerialId);
 
                                     session.Character.DeleteItemByItemInstanceId(inv.Id);
                                     session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_APPLY_SUCCESS"), 0));
