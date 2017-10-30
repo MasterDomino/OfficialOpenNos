@@ -60,6 +60,7 @@
     <Compile Include="Events\OnNoticing.cs" />
     <Compile Include="Events\OnTarget.cs" />
     <Compile Include="Events\OnTraversal.cs" />
+    <Compile Include="Events\Quest\TeleportTo.cs" />
     <Compile Include="Events\Roam.cs" />
     <Compile Include="Events\SendMessage.cs" />
     <Compile Include="Events\SendPacket.cs" />
@@ -72,9 +73,13 @@
     <Compile Include="Events\SummonNpc.cs" />
     <Compile Include="Events\Teleport.cs" />
     <Compile Include="Events\ThrowItem.cs" />
+    <Compile Include="Models\Quest\QuestGiver.cs" />
+    <Compile Include="Models\Quest\Reward.cs" />
     <Compile Include="Objects\Name.cs" />
+    <Compile Include="Objects\Quest\LootObjective.cs" />
+    <Compile Include="Objects\Quest\WalkObjective.cs" />
+    <Compile Include="Objects\Quest\KillObjective.cs" />
     <Compile Include="Objects\Wave.cs" />
-    <Compile Include="Models\Quest\Globals.cs" />
     <Compile Include="Models\Quest\QuestModel.cs" />
     <Compile Include="Models\ScriptedInstance\Globals.cs" />
     <Compile Include="Models\ScriptedInstance\ScriptedInstanceModel.cs" />
@@ -91,5 +96,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\OpenNos.Domain\OpenNos.Domain.csproj">
+      <Project>{20addddd-dad9-44f3-9beb-026c73090660}</Project>
+      <Name>OpenNos.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

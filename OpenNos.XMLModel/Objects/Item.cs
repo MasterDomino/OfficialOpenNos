@@ -12,6 +12,9 @@ namespace OpenNos.XMLModel.Objects
         public byte Amount { get; set; }
 
         [XmlAttribute]
+        public int Volume { get; set; }
+
+        [XmlAttribute]
         public short Design { get; set; }
 
         [XmlAttribute]
