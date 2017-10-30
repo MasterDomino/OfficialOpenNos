@@ -60,6 +60,7 @@
     <Compile Include="Events\OnNoticing.cs" />
     <Compile Include="Events\OnTarget.cs" />
     <Compile Include="Events\OnTraversal.cs" />
+    <Compile Include="Events\Quest\Script.cs" />
     <Compile Include="Events\Quest\TeleportTo.cs" />
     <Compile Include="Events\Roam.cs" />
     <Compile Include="Events\SendMessage.cs" />

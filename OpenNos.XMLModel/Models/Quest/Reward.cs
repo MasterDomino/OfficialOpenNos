@@ -29,6 +29,8 @@ namespace OpenNos.XMLModel.Models.Quest
 
         public long QuestId { get; set; }
 
+        public Script Script { get; set; }
+
 
     }
 }
