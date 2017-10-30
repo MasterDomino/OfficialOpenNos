@@ -498,6 +498,10 @@ namespace OpenNos.GameObject.Helpers
                         evt.MapInstance.DespawnMonster((int)evt.Parameter);
                         break;
 
+                    case EventActionType.SPAWNMONSTER:
+                        evt.MapInstance.SummonMonster((MonsterToSummon)evt.Parameter);
+                        break;
+
                     case EventActionType.SPAWNMONSTERS:
                         evt.MapInstance.SummonMonsters((List<MonsterToSummon>)evt.Parameter);
                         break;

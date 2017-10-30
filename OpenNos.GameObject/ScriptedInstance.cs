@@ -242,11 +242,12 @@ namespace OpenNos.GameObject
 
         private List<EventContainer> generateEventWIP(MapInstance parentMapInstance)
         {
+            // Rewrite this shit soo it uses proper separate private methods for example onTraversalEvents way of doing things, we want to avoid loop calls
             List<EventContainer> evts = new List<EventContainer>();
             foreach (XMLModel.Objects.CreateMap createMap in Model.InstanceEvents.CreateMap)
             {
                 MapInstance mapInstance = _mapInstanceDictionary.FirstOrDefault(s => s.Key == createMap.Map).Value ?? parentMapInstance;
-                generateEventWIP(mapInstance).ForEach(e => EventHelper.Instance.RunEvent(e));
+                //generateEventWIP(mapInstance).ForEach(e => EventHelper.Instance.RunEvent(e));
 
                 // SpawnPortal
                 foreach (XMLModel.Events.SpawnPortal portalEvent in createMap.SpawnPortal)
@@ -264,9 +265,9 @@ namespace OpenNos.GameObject
                         SourceMapInstanceId = mapInstance.MapInstanceId,
                         DestinationMapInstanceId = destinationMap.MapInstanceId,
                     };
-                    foreach (XMLModel.Events.OnTraversal onTraversal in portalEvent.OnTraversal)
+                    if (portalEvent.OnTraversal?.End != null)
                     {
-                        portal.OnTraversalEvents.AddRange(generateEventWIP(mapInstance));
+                        portal.OnTraversalEvent = new EventContainer(mapInstance, EventActionType.SCRIPTEND, portalEvent.OnTraversal.End.Type);
                     }
                     evts.Add(new EventContainer(mapInstance, EventActionType.SPAWNPORTAL, portal));
                 }
@@ -344,7 +345,15 @@ namespace OpenNos.GameObject
                         }
                     }
                     MonsterAmount++;
-                    evts.Add(new EventContainer(mapInstance, EventActionType.SPAWNMONSTERS, null));
+                    if (summon.OnDeath != null)
+                    {
+
+                    }
+                    if (summon.OnNoticing != null)
+                    {
+                    }
+                    MonsterToSummon monster = new MonsterToSummon(summon.VNum, new MapCell() { X = positionX, Y = positionY }, -1, summon.Move, summon.IsTarget, summon.IsBonus, summon.IsHostile, summon.IsBoss);
+                    evts.Add(new EventContainer(mapInstance, EventActionType.SPAWNMONSTER, null));
                 }
             }
             return evts;
@@ -503,16 +512,13 @@ namespace OpenNos.GameObject
                                     break;
                             }
                         }
-                        List<MonsterToSummon> lst = new List<MonsterToSummon>
+                        MonsterToSummon monster = new MonsterToSummon(short.Parse(mapEvent?.Attributes["VNum"].Value), new MapCell() { X = positionX, Y = positionY }, -1, move, isTarget, isBonus, isHostile, isBoss)
                         {
-                            new MonsterToSummon(short.Parse(mapEvent?.Attributes["VNum"].Value), new MapCell() { X = positionX, Y = positionY }, -1, move, isTarget, isBonus, isHostile, isBoss)
-                            {
-                                DeathEvents = death,
-                                NoticingEvents = notice,
-                                NoticeRange = noticeRange
-                            }
+                            DeathEvents = death,
+                            NoticingEvents = notice,
+                            NoticeRange = noticeRange
                         };
-                        evts.Add(new EventContainer(mapInstance, EventActionType.SPAWNMONSTERS, lst.AsEnumerable()));
+                        evts.Add(new EventContainer(mapInstance, EventActionType.SPAWNMONSTER, monster));
                         break;
 
                     case "SummonNpcs":
@@ -694,7 +700,7 @@ namespace OpenNos.GameObject
                         {
                             if (childEvent.Name == "OnTraversal")
                             {
-                                portal.OnTraversalEvents.AddRange(generateEvent(childEvent, mapInstance));
+                                portal.OnTraversalEvent = generateEvent(childEvent, mapInstance).FirstOrDefault();
                             }
                         }
                         evts.Add(new EventContainer(mapInstance, EventActionType.SPAWNPORTAL, portal));

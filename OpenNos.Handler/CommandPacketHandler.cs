@@ -262,6 +262,10 @@ namespace OpenNos.Handler
             }
         }
 
+        /// <summary>
+        /// $Ban Command
+        /// </summary>
+        /// <param name="bankPacket"></param>
         public void BankManagement(BankPacket bankPacket)
         {
             if (bankPacket != null)
@@ -274,12 +278,11 @@ namespace OpenNos.Handler
                             Session.SendPacket(Session.Character.GenerateSay($"Current Balance: {Session.Character.GoldBank} Gold.", 10));
                             return;
                         }
-
                     case "deposit":
                         {
-                            if (bankPacket.Param1 != null && (long.TryParse(bankPacket.Param1, out long amount) || bankPacket.Param1.ToLower() == "all"))
+                            if (bankPacket.Param1 != null && (long.TryParse(bankPacket.Param1, out long amount) || string.Equals(bankPacket.Param1, "all", StringComparison.OrdinalIgnoreCase)))
                             {
-                                if ((bankPacket.Param1.ToLower() == "all" && Session.Character.Gold > 0))
+                                if (string.Equals(bankPacket.Param1, "all", StringComparison.OrdinalIgnoreCase) && Session.Character.Gold > 0)
                                 {
                                     Logger.LogEvent("BANK", $"[{Session.GenerateIdentity()}][Deposit]Amount: {Session.Character.Gold} OldBank: {Session.Character.GoldBank} NewBank: {Session.Character.GoldBank + Session.Character.Gold}");
                                     Session.SendPacket(Session.Character.GenerateSay($"Deposited ALL({Session.Character.Gold}) Gold.", 10));
@@ -288,7 +291,6 @@ namespace OpenNos.Handler
                                     Session.SendPacket(Session.Character.GenerateGold());
                                     Session.SendPacket(Session.Character.GenerateSay($"New Balance: {Session.Character.GoldBank} Gold.", 10));
                                 }
-
                                 else if (amount <= Session.Character.Gold && Session.Character.Gold > 0)
                                 {
                                     if (amount < 1)
@@ -309,34 +311,29 @@ namespace OpenNos.Handler
                             }
                             return;
                         }
-
                     case "withdraw":
                         {
-                            if (bankPacket.Param1 != null && long.TryParse(bankPacket.Param1, out long amount))
+                            if (bankPacket.Param1 != null && long.TryParse(bankPacket.Param1, out long amount) && amount <= Session.Character.GoldBank && Session.Character.GoldBank > 0 && (Session.Character.Gold + amount) <= ServerManager.Instance.Configuration.MaxGold)
                             {
-                                if (amount <= Session.Character.GoldBank && Session.Character.GoldBank > 0 && (Session.Character.Gold + amount) <= ServerManager.Instance.Configuration.MaxGold)
+                                if (amount < 1)
                                 {
-                                    if (amount < 1)
-                                    {
-                                        Logger.LogEvent("BANK", $"[{Session.GenerateIdentity()}][Illegal]Mode: {bankPacket.Mode} Param1: {bankPacket.Param1} Param2: {bankPacket.Param2}");
+                                    Logger.LogEvent("BANK", $"[{Session.GenerateIdentity()}][Illegal]Mode: {bankPacket.Mode} Param1: {bankPacket.Param1} Param2: {bankPacket.Param2}");
 
-                                        Session.SendPacket(Session.Character.GenerateSay("I'm afraid I can't let you do that. This incident has been logged.", 10));
-                                    }
-                                    else
-                                    {
-                                        Logger.LogEvent("BANK", $"[{Session.GenerateIdentity()}][Withdraw]Amount: {amount} OldBank: {Session.Character.GoldBank} NewBank: {Session.Character.GoldBank - amount}");
+                                    Session.SendPacket(Session.Character.GenerateSay("I'm afraid I can't let you do that. This incident has been logged.", 10));
+                                }
+                                else
+                                {
+                                    Logger.LogEvent("BANK", $"[{Session.GenerateIdentity()}][Withdraw]Amount: {amount} OldBank: {Session.Character.GoldBank} NewBank: {Session.Character.GoldBank - amount}");
 
-                                        Session.SendPacket(Session.Character.GenerateSay($"Withdrawn {amount} Gold.", 10));
-                                        Session.Character.GoldBank -= amount;
-                                        Session.Character.Gold += amount;
-                                        Session.SendPacket(Session.Character.GenerateGold());
-                                        Session.SendPacket(Session.Character.GenerateSay($"New Balance: {Session.Character.GoldBank} Gold.", 10));
-                                    }
+                                    Session.SendPacket(Session.Character.GenerateSay($"Withdrawn {amount} Gold.", 10));
+                                    Session.Character.GoldBank -= amount;
+                                    Session.Character.Gold += amount;
+                                    Session.SendPacket(Session.Character.GenerateGold());
+                                    Session.SendPacket(Session.Character.GenerateSay($"New Balance: {Session.Character.GoldBank} Gold.", 10));
                                 }
                             }
                             return;
                         }
-
                     case "send":
                         {
                             if (bankPacket.Param1 != null)
@@ -364,10 +361,8 @@ namespace OpenNos.Handler
                                     }
                                 }
                             }
-
                             return;
                         }
-
                     default:
                         {
                             Session.SendPacket(Session.Character.GenerateSay(BankPacket.ReturnHelp(), 10));
@@ -378,10 +373,8 @@ namespace OpenNos.Handler
             else
             {
                 Session.SendPacket(Session.Character.GenerateSay(BankPacket.ReturnHelp(), 10));
-                return;
             }
         }
-
 
         /// <summary>
         /// $BlockExp Command

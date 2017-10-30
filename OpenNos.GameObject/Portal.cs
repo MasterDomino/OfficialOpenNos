@@ -30,7 +30,7 @@ namespace OpenNos.GameObject
 
         #region Instantiation
 
-        public Portal() => OnTraversalEvents = new List<EventContainer>();
+        public Portal() => OnTraversalEvent = null;
 
         #endregion
 
@@ -49,7 +49,7 @@ namespace OpenNos.GameObject
             set => _destinationMapInstanceId = value;
         }
 
-        public List<EventContainer> OnTraversalEvents { get; set; }
+        public EventContainer OnTraversalEvent { get; set; }
 
         public Guid SourceMapInstanceId
         {

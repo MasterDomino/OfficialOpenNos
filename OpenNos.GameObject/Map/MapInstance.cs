@@ -481,6 +481,21 @@ namespace OpenNos.GameObject
             });
         }
 
+        internal int SummonMonster(MonsterToSummon summon)
+        {
+            NpcMonster npcmonster = ServerManager.Instance.GetNpc(summon.VNum);
+            if (npcmonster != null)
+            {
+                MapMonster mapMonster = new MapMonster { MonsterVNum = npcmonster.NpcMonsterVNum, MapY = summon.SpawnCell.Y, MapX = summon.SpawnCell.X, MapId = Map.MapId, IsMoving = summon.IsMoving, MapMonsterId = GetNextMonsterId(), ShouldRespawn = false, Target = summon.Target, OnDeathEvents = summon.DeathEvents, OnNoticeEvents = summon.NoticingEvents, IsTarget = summon.IsTarget, IsBonus = summon.IsBonus, IsBoss = summon.IsBoss, NoticeRange = summon.NoticeRange };
+                mapMonster.Initialize(this);
+                mapMonster.IsHostile = summon.IsHostile;
+                AddMonster(mapMonster);
+                Broadcast(mapMonster.GenerateIn());
+                return mapMonster.MapMonsterId;
+            }
+            return default;
+        }
+
         internal ConcurrentBag<int> SummonMonsters(List<MonsterToSummon> summonParameters)
         {
             ConcurrentBag<int> ids = new ConcurrentBag<int>();

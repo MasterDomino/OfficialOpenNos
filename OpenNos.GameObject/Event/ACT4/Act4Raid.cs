@@ -176,7 +176,6 @@ namespace OpenNos.GameObject.Event
 
         private void openRaid(Family fami)
         {
-            List<MonsterToSummon> summonParameters = new List<MonsterToSummon>();
             List<EventContainer> onDeathEvents = new List<EventContainer>
             {
                 new EventContainer(fami.Act4RaidBossMap, EventActionType.THROWITEMS, new Tuple<int, short, byte, int, int>(_bossVNum, 1046, 10, 20000, 20001)),
@@ -193,8 +192,7 @@ namespace OpenNos.GameObject.Event
             {
                 DeathEvents = onDeathEvents
             };
-            summonParameters.Add(bossMob);
-            EventHelper.Instance.RunEvent(new EventContainer(fami.Act4RaidBossMap, EventActionType.SPAWNMONSTERS, summonParameters));
+            EventHelper.Instance.RunEvent(new EventContainer(fami.Act4RaidBossMap, EventActionType.SPAWNMONSTER, bossMob));
             EventHelper.Instance.RunEvent(new EventContainer(fami.Act4Raid, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("ACT4RAID_OPEN"), 0)));
 
             Observable.Timer(TimeSpan.FromSeconds(90)).Subscribe(o =>

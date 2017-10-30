@@ -23,6 +23,7 @@ namespace OpenNos.Domain
         UNSPAWNMONSTERS,
         SPAWNONLASTENTRY,
         CLOCK,
+        SPAWNMONSTER,
         SPAWNMONSTERS,
         DROPITEMS,
         NPCDIALOG,
