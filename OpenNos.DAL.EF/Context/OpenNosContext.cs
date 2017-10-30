@@ -93,6 +93,10 @@ namespace OpenNos.DAL.EF
 
         public virtual DbSet<Portal> Portal { get; set; }
 
+        public virtual DbSet<Quest> Quest { get; set; }
+
+        public virtual DbSet<QuestProgress> QuestProgress { get; set; }
+
         public virtual DbSet<QuicklistEntry> QuicklistEntry { get; set; }
 
         public virtual DbSet<Recipe> Recipe { get; set; }
@@ -211,6 +215,18 @@ namespace OpenNos.DAL.EF
                 .HasMany(e => e.QuicklistEntry)
                 .WithRequired(e => e.Character)
                 .HasForeignKey(e => e.CharacterId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Character>()
+                .HasMany(e => e.QuestProgress)
+                .WithRequired(e => e.Character)
+                .HasForeignKey(e => e.CharacterId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<QuestProgress>()
+                .HasRequired(e => e.Quest)
+                .WithMany(e => e.QuestProgress)
+                .HasForeignKey(e => e.QuestId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Character>()

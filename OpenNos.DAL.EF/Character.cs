@@ -32,6 +32,7 @@ namespace OpenNos.DAL.EF
             StaticBuff = new HashSet<StaticBuff>();
             BazaarItem = new HashSet<BazaarItem>();
             Inventory = new HashSet<ItemInstance>();
+            QuestProgress = new HashSet<QuestProgress>();
             QuicklistEntry = new HashSet<QuicklistEntry>();
             Respawn = new HashSet<Respawn>();
             GeneralLog = new HashSet<GeneralLog>();
@@ -161,6 +162,8 @@ namespace OpenNos.DAL.EF
 
         [MaxLength(255)]
         public string Name { get; set; }
+
+        public virtual ICollection<QuestProgress> QuestProgress { get; set; }
 
         public bool QuickGetUp { get; set; }
 
