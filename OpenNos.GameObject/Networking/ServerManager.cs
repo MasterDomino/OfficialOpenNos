@@ -1080,7 +1080,10 @@ namespace OpenNos.GameObject
 
         public void SaveAll()
         {
-            Parallel.ForEach(Sessions, sess => sess.Character?.Save());
+            foreach(ClientSession sess in Sessions)
+            {
+                sess.Character?.Save();
+            }
             DAOFactory.BazaarItemDAO.RemoveOutDated();
         }
 
