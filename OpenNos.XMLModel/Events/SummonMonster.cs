@@ -20,8 +20,14 @@ namespace OpenNos.XMLModel.Events
         [XmlAttribute]
         public bool Move { get; set; }
 
+        [XmlAttribute]
+        public bool IsBonus { get; set; }
+
         [XmlElement]
         public OnDeath OnDeath { get; set; }
+
+        [XmlElement]
+        public OnNoticing OnNoticing { get; set; }
 
         [XmlAttribute]
         public short PositionX { get; set; }
@@ -33,7 +39,7 @@ namespace OpenNos.XMLModel.Events
         public Roam Roam { get; set; }
 
         [XmlAttribute]
-        public int VNum { get; set; }
+        public short VNum { get; set; }
 
         #endregion
     }

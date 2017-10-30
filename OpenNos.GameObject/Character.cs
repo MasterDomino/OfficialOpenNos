@@ -3347,7 +3347,6 @@ namespace OpenNos.GameObject
             {
                 Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("NEW_MAIL"), letter), 10));
             }
-
         }
 
         public void RemoveBuff(short id)

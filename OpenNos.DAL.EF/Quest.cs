@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace OpenNos.DAL.EF
 {
@@ -10,21 +6,17 @@ namespace OpenNos.DAL.EF
     {
         #region Instantiation
 
-        public Quest()
-        {
-            QuestProgress = new HashSet<QuestProgress>();
-        }
+        public Quest() => QuestProgress = new HashSet<QuestProgress>();
 
         #endregion
 
         #region Properties
 
-        public long QuestId { get; set; }
-
         public string QuestData { get; set; }
 
-        public virtual ICollection<QuestProgress> QuestProgress { get; set; }
+        public long QuestId { get; set; }
 
+        public virtual ICollection<QuestProgress> QuestProgress { get; set; }
 
         #endregion
     }
