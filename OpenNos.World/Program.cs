@@ -248,6 +248,8 @@ namespace OpenNos.World
             DAOFactory.ScriptedInstanceDAO.RegisterMapping(typeof(ScriptedInstanceDTO)).InitializeMapper();
             DAOFactory.ScriptedInstanceDAO.RegisterMapping(typeof(ScriptedInstance)).InitializeMapper();
             DAOFactory.MaintenanceLogDAO.RegisterMapping(typeof(MaintenanceLogDTO)).InitializeMapper();
+            DAOFactory.QuestDAO.RegisterMapping(typeof(QuestDTO)).InitializeMapper();
+            DAOFactory.QuestProgressDAO.RegisterMapping(typeof(QuestProgressDTO)).InitializeMapper();
         }
 
         private static void unhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
