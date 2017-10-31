@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace OpenNos.Data
 {
+    [Serializable]
     public class QuestProgressDTO : MappingBaseDTO
     {
         public long QuestProgressId { get; set; }

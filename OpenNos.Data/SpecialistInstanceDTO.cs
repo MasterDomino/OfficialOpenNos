@@ -13,9 +13,11 @@
  */
 
 using OpenNos.Data.Interfaces;
+using System;
 
 namespace OpenNos.Data
 {
+    [Serializable]
     public class SpecialistInstanceDTO : WearableInstanceDTO, ISpecialistInstanceDTO
     {
         #region Properties

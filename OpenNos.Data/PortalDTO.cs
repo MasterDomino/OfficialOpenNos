@@ -12,8 +12,11 @@
  * GNU General Public License for more details.
  */
 
+using System;
+
 namespace OpenNos.Data
 {
+    [Serializable]
     public class PortalDTO : MappingBaseDTO
     {
         #region Properties
