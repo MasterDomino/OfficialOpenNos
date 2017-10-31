@@ -84,6 +84,8 @@ namespace OpenNos.Master.Library.Client
 
         public event EventHandler ShutdownEvent;
 
+        public event EventHandler RestartEvent;
+
         #endregion
 
         #region Properties
@@ -132,6 +134,8 @@ namespace OpenNos.Master.Library.Client
 
         public int? RegisterWorldServer(SerializableWorldServer worldServer) => _client.ServiceProxy.RegisterWorldServer(worldServer);
 
+        public void Restart(string worldGroup) => _client.ServiceProxy.Restart(worldGroup);
+
         public long[][] RetrieveOnlineCharacters(long characterId) => _client.ServiceProxy.RetrieveOnlineCharacters(characterId);
 
         public string RetrieveOriginWorld(long accountId) => _client.ServiceProxy.RetrieveOriginWorld(accountId);
@@ -173,6 +177,8 @@ namespace OpenNos.Master.Library.Client
         internal void OnSendMessageToCharacter(SCSCharacterMessage message) => MessageSentToCharacter?.Invoke(message, null);
 
         internal void OnShutdown() => ShutdownEvent?.Invoke(null, null);
+
+        internal void OnRestart() => RestartEvent?.Invoke(null, null);
 
         internal void OnUpdateBazaar(long bazaarItemId) => BazaarRefresh?.Invoke(bazaarItemId, null);
 

@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Threading;
 
 namespace OpenNos.Master.Server
 {
@@ -299,6 +300,29 @@ namespace OpenNos.Master.Server
             }
             MSManager.Instance.WorldServers.Add(ws);
             return ws.ChannelId;
+        }
+
+        public void Restart(string worldGroup)
+        {
+            if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
+            {
+                return;
+            }
+
+            if (worldGroup == "*")
+            {
+                foreach (WorldServer world in MSManager.Instance.WorldServers)
+                {
+                    world.ServiceClient.GetClientProxy<ICommunicationClient>().Restart();
+                }
+            }
+            else
+            {
+                foreach (WorldServer world in MSManager.Instance.WorldServers.Where(w => w.WorldGroup.Equals(worldGroup)))
+                {
+                    world.ServiceClient.GetClientProxy<ICommunicationClient>().Restart();
+                }
+            }
         }
 
         public long[][] RetrieveOnlineCharacters(long characterId)

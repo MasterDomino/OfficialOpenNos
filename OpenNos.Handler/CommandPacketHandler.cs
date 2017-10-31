@@ -2392,6 +2392,49 @@ namespace OpenNos.Handler
             }
         }
 
+        public void Restart(RestartPacket restartPacket)
+        {
+            Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Restart]");
+
+            if (ServerManager.Instance.TaskShutdown != null)
+            {
+                ServerManager.Instance.ShutdownStop = true;
+                ServerManager.Instance.TaskShutdown = null;
+            }
+            else
+            {
+                ServerManager.Instance.IsReboot = true;
+                ServerManager.Instance.TaskShutdown = new Task(ServerManager.Instance.ShutdownTask);
+                ServerManager.Instance.TaskShutdown.Start();
+            }
+        }
+
+        /// <summary>
+        /// $ShutdownAll Command
+        /// </summary>
+        /// <param name="shutdownAllPacket"></param>
+        public void RestartAll(RestartAllPacket restartAllPacket)
+        {
+            if (restartAllPacket != null)
+            {
+                Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[RestartAll]");
+
+                if (!string.IsNullOrEmpty(restartAllPacket.WorldGroup))
+                {
+                    CommunicationServiceClient.Instance.Restart(restartAllPacket.WorldGroup);
+                }
+                else
+                {
+                    CommunicationServiceClient.Instance.Restart(ServerManager.Instance.ServerGroup);
+                }
+                Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay(RestartAllPacket.ReturnHelp(), 10));
+            }
+        }
+
         /// <summary>
         /// $Sort Command
         /// </summary>

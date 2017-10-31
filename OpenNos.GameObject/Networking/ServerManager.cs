@@ -25,6 +25,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
@@ -42,6 +43,8 @@ namespace OpenNos.GameObject
         public ThreadSafeSortedList<long, Group> GroupsThreadSafe;
 
         public bool InShutdown;
+
+        public bool IsReboot { get; set; }
 
         public bool ShutdownStop;
 
@@ -1164,6 +1167,18 @@ namespace OpenNos.GameObject
             InShutdown = true;
             Instance.SaveAll();
             CommunicationServiceClient.Instance.UnregisterWorldServer(WorldId);
+            if (IsReboot)
+            {
+                if (ChannelId == 51)
+                {
+                    Thread.Sleep(16000);
+                }
+                else
+                {
+                    Thread.Sleep(ChannelId - 1 * 2000);
+                }
+                Process.Start("OpenNos.World.exe", "--nomsg");
+            }
             Environment.Exit(0);
         }
 
@@ -1435,6 +1450,7 @@ namespace OpenNos.GameObject
             CommunicationServiceClient.Instance.PenaltyLogRefresh += onPenaltyLogRefresh;
             CommunicationServiceClient.Instance.GlobalEvent += onGlobalEvent;
             CommunicationServiceClient.Instance.ShutdownEvent += onShutdown;
+            CommunicationServiceClient.Instance.RestartEvent += onShutdown;
             ConfigurationServiceClient.Instance.ConfigurationUpdate += onConfiguratinEvent; ;
             MailServiceClient.Instance.MailSent += onMailSent;
             _lastGroupId = 1;
@@ -1838,6 +1854,22 @@ namespace OpenNos.GameObject
             }
             else
             {
+                Instance.TaskShutdown = new Task(Instance.ShutdownTask);
+                Instance.TaskShutdown.Start();
+            }
+        }
+
+        private void onRestart(object sender, EventArgs e)
+        {
+            if (Instance.TaskShutdown != null)
+            {
+                Instance.IsReboot = false;
+                Instance.ShutdownStop = true;
+                Instance.TaskShutdown = null;
+            }
+            else
+            {
+                Instance.IsReboot = true;
                 Instance.TaskShutdown = new Task(Instance.ShutdownTask);
                 Instance.TaskShutdown.Start();
             }
