@@ -667,11 +667,26 @@ namespace OpenNos.GameObject
                                 Broadcast(session, UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("NEW_LEADER")), ReceiverType.OnlySomeone, string.Empty, grp.Characters.ElementAt(1).Character.CharacterId);
                             }
                             grp.LeaveGroup(session);
-                            foreach (ClientSession groupSession in grp.Characters.GetAllItems())
+                            if (grp.CharacterCount == 1)
                             {
-                                groupSession.SendPacket(groupSession.Character.GeneratePinit());
-                                groupSession.SendPackets(session.Character.GeneratePst());
-                                groupSession.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("LEAVE_GROUP"), session.Character.Name), 0));
+                                ClientSession targetSession = grp.Characters.ElementAt(0);
+                                if (targetSession != null)
+                                {
+                                    targetSession.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("GROUP_CLOSED"), 0));
+                                    Broadcast(targetSession.Character.GeneratePidx(true));
+                                    grp.LeaveGroup(targetSession);
+                                    targetSession.SendPacket(targetSession.Character.GeneratePinit());
+                                    targetSession.SendPackets(targetSession.Character.GeneratePst());
+                                }
+                            }
+                            else
+                            {
+                                foreach (ClientSession groupSession in grp.Characters.GetAllItems())
+                                {
+                                    groupSession.SendPacket(groupSession.Character.GeneratePinit());
+                                    groupSession.SendPackets(session.Character.GeneratePst());
+                                    groupSession.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("LEAVE_GROUP"), session.Character.Name), 0));
+                                }
                             }
                             session.SendPacket(session.Character.GeneratePinit());
                             session.SendPackets(session.Character.GeneratePst());
