@@ -144,6 +144,7 @@
     <Compile Include="Packets\ClientPackets\ShoppingPacket.cs" />
     <Compile Include="Packets\ClientPackets\SortOpenPacket.cs" />
     <Compile Include="Packets\ClientPackets\UseItemPacket.cs" />
+    <Compile Include="Packets\CommandPackets\BenchmarkPacket.cs" />
     <Compile Include="Packets\CommandPackets\AddPartnerPacket.cs" />
     <Compile Include="Packets\CommandPackets\BankPacket.cs" />
     <Compile Include="Packets\CommandPackets\DirectConnectPacket.cs" />

@@ -47,6 +47,55 @@ namespace OpenNos.Handler
 
         #region Methods
 
+
+        public void Benchmark(BenchmarkPacket benchmarkPacket)
+        {
+            if(benchmarkPacket != null)
+            {
+                double totalMiliseconds = 0;
+                switch (benchmarkPacket.Test)
+                {
+                    case 1:
+                        {
+                            Session.SendPacket(Session.Character.GenerateSay($"=== TEST: Receive Object from MS ===", 12));
+                            Stopwatch sw = Stopwatch.StartNew();
+                            for (int i = 0; i < benchmarkPacket.Iterations; i++)
+                            {
+                                ConfigurationServiceClient.Instance.GetConfigurationObject();
+                            }
+                            sw.Stop();
+                            totalMiliseconds = sw.Elapsed.TotalMilliseconds;
+                        }
+                        break;
+
+                    case 2:
+                        {
+                            ConfigurationObject conf = ConfigurationServiceClient.Instance.GetConfigurationObject();
+                            Session.SendPacket(Session.Character.GenerateSay($"=== TEST: Send Object to MS ===", 12));
+                            Stopwatch sw = Stopwatch.StartNew();
+                            for (int i = 0; i < benchmarkPacket.Iterations; i++)
+                            {
+                                ConfigurationServiceClient.Instance.UpdateConfigurationObject(conf);
+                            }
+                            sw.Stop();
+                            totalMiliseconds = sw.Elapsed.TotalMilliseconds;
+                        }
+                        break;
+
+                    default:
+                        Session.SendPacket(Session.Character.GenerateSay(BenchmarkPacket.ReturnHelp(), 10));
+                        return;
+                }
+
+                Session.SendPacket(Session.Character.GenerateSay($"The test with {benchmarkPacket.Iterations} iterations took {totalMiliseconds} ms", 12));
+                Session.SendPacket(Session.Character.GenerateSay($"The each iteration took {((totalMiliseconds * 1000000) / benchmarkPacket.Iterations).ToString("0.00 ns")}", 12));
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay(BenchmarkPacket.ReturnHelp(), 10));
+            }
+        }
+
         /// <summary>
         /// $AddMonster Command
         /// </summary>
