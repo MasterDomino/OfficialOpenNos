@@ -33,8 +33,6 @@ namespace OpenNos.Master.Library.Client
 
         private readonly IScsServiceClient<IMallService> _client;
 
-        private readonly MallClient _mallClient;
-
         #endregion
 
         #region Instantiation
@@ -43,8 +41,7 @@ namespace OpenNos.Master.Library.Client
         {
             string ip = ConfigurationManager.AppSettings["MasterIP"];
             int port = Convert.ToInt32(ConfigurationManager.AppSettings["MasterPort"]);
-            _mallClient = new MallClient();
-            _client = ScsServiceClientBuilder.CreateClient<IMallService>(new ScsTcpEndPoint(ip, port), _mallClient);
+            _client = ScsServiceClientBuilder.CreateClient<IMallService>(new ScsTcpEndPoint(ip, port));
             System.Threading.Thread.Sleep(5000);
             while (_client.CommunicationState != CommunicationStates.Connected)
             {

@@ -53,7 +53,9 @@ namespace OpenNos.Master.Server
                 MaxUpgrade = byte.Parse(ConfigurationManager.AppSettings["MaxUpgrade"]),
                 SceneOnCreate = bool.Parse(ConfigurationManager.AppSettings["SceneOnCreate"]),
                 SessionLimit = int.Parse(ConfigurationManager.AppSettings["SessionLimit"]),
-                WorldInformation = bool.Parse(ConfigurationManager.AppSettings["WorldInformation"])
+                WorldInformation = bool.Parse(ConfigurationManager.AppSettings["WorldInformation"]),
+                Act4IP = ConfigurationManager.AppSettings["Act4IP"],
+                Act4Port = int.Parse(ConfigurationManager.AppSettings["Act4Port"])
             };
         }
 

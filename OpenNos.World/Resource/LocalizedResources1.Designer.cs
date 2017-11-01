@@ -727,6 +727,24 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Capture failed..
+        /// </summary>
+        internal static string CATCH_FAIL {
+            get {
+                return ResourceManager.GetString("CATCH_FAIL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Capture successful..
+        /// </summary>
+        internal static string CATCH_SUCCESS {
+            get {
+                return ResourceManager.GetString("CATCH_SUCCESS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You have changed the common point of return of the members of the group..
         /// </summary>
         internal static string CHANGED_SHARE {
@@ -912,6 +930,15 @@ namespace OpenNos.World.Resource {
         internal static string CREATE_FAMILY {
             get {
                 return ResourceManager.GetString("CREATE_FAMILY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can only capture animals whose HP is 50% or lower..
+        /// </summary>
+        internal static string CURRENT_HP_TOO_HIGH {
+            get {
+                return ResourceManager.GetString("CURRENT_HP_TOO_HIGH", resourceCulture);
             }
         }
         
@@ -1969,7 +1996,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You get an item &gt;&gt;.
+        ///   Looks up a localized string similar to You got an item: {0} x{1}.
         /// </summary>
         internal static string ITEM_GIFTED {
             get {
@@ -2136,6 +2163,15 @@ namespace OpenNos.World.Resource {
         internal static string LEVEL_CHANGED {
             get {
                 return ResourceManager.GetString("LEVEL_CHANGED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can only capture animals of a lower level than you..
+        /// </summary>
+        internal static string LEVEL_LOWER_THAN_MONSTER {
+            get {
+                return ResourceManager.GetString("LEVEL_LOWER_THAN_MONSTER", resourceCulture);
             }
         }
         
@@ -2478,6 +2514,15 @@ namespace OpenNos.World.Resource {
         internal static string MINILAND_WELCOME_MESSAGE {
             get {
                 return ResourceManager.GetString("MINILAND_WELCOME_MESSAGE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Monsters cannot be captured..
+        /// </summary>
+        internal static string MONSTER_CANT_BE_CAPTURED {
+            get {
+                return ResourceManager.GetString("MONSTER_CANT_BE_CAPTURED", resourceCulture);
             }
         }
         
@@ -3207,6 +3252,15 @@ namespace OpenNos.World.Resource {
         internal static string PET_RELEASED {
             get {
                 return ResourceManager.GetString("PET_RELEASED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string PET_SLOT_FULL {
+            get {
+                return ResourceManager.GetString("PET_SLOT_FULL", resourceCulture);
             }
         }
         

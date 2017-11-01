@@ -154,7 +154,7 @@
     <value>You need a directory tree like this :</value>
   </data>
   <data name="NO_ITEM" xml:space="preserve">
-    <value>This item id is not valid!</value>
+    <value>ไม่สามารถค้นหาไอเท็มชิ้นนี้ได้</value>
   </data>
   <data name="NPCMONSTERS_PARSED" xml:space="preserve">
     <value>{0} npc-monsters parsed</value>

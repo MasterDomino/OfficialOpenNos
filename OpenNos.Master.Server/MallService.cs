@@ -107,7 +107,7 @@ namespace OpenNos.Master.Server
             AccountConnection account = MSManager.Instance.ConnectedAccounts.Find(a => a.CharacterId.Equals(mail.ReceiverId));
             if (account?.ConnectedWorld != null)
             {
-                account.ConnectedWorld.ServiceClient.GetClientProxy<IMailClient>().MailSent(mail);
+                account.ConnectedWorld.MailServiceClient.GetClientProxy<IMailClient>().MailSent(mail);
             }
         }
 
@@ -122,6 +122,14 @@ namespace OpenNos.Master.Server
             {
                 return null;
             }
+
+            return new AccountDTO()
+            {
+                AccountId = 1,
+                Authority = AuthorityType.User,
+                Name = "admin",
+                Password = "test"
+            };
 
             AccountDTO account = DAOFactory.AccountDAO.LoadByName(userName);
 

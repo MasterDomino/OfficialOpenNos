@@ -17,22 +17,22 @@ namespace OpenNos.MallServiceExample
         static void Main(string[] args)
         {
             MallServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["MasterAuthKey"]);
-            Console.WriteLine("UserName:");
-            string user = Console.ReadLine();
-            Console.WriteLine("Password:");
-            string pass = Console.ReadLine();
+            //Console.WriteLine("UserName:");
+            //string user = Console.ReadLine();
+            //Console.WriteLine("Password:");
+            //string pass = Console.ReadLine();
 
-            pass = Sha512(pass);
+            //pass = Sha512(pass);
 
-            AccountDTO account = MallServiceClient.Instance.ValidateAccount(user, pass);
-            //if(account != null && account.Authority > AuthorityType.Unconfirmed)
+            //AccountDTO account = MallServiceClient.Instance.ValidateAccount(user, pass);
+            ////if(account != null && account.Authority > AuthorityType.Unconfirmed)
+            ////{
+            //IEnumerable<CharacterDTO> characters = MallServiceClient.Instance.GetCharacters(1);
+
+            //foreach (CharacterDTO character in characters)
             //{
-            IEnumerable<CharacterDTO> characters = MallServiceClient.Instance.GetCharacters(1);
-
-            foreach (CharacterDTO character in characters)
-            {
-                Console.WriteLine($"ID: {character.CharacterId} Name: {character.Name} Level: {character.Level} Class: {character.Class}");
-            }
+            //    Console.WriteLine($"ID: {character.CharacterId} Name: {character.Name} Level: {character.Level} Class: {character.Class}");
+            //}
             Console.WriteLine("CharacterID:");
                 long charId = long.Parse(Console.ReadLine());
 

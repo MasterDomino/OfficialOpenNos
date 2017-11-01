@@ -953,7 +953,7 @@
     <value>You received {0} gift/s!</value>
   </data>
   <data name="ITEM_GIFTED" xml:space="preserve">
-    <value>You get an item &gt;&gt;</value>
+    <value>You got an item: {0} x{1}</value>
   </data>
   <data name="GIFT_SENDED" xml:space="preserve">
     <value>The gift has been sent!</value>
@@ -1539,5 +1539,23 @@
   </data>
   <data name="PVP_KILL" xml:space="preserve">
     <value>[{1}] was slain by [{0}]</value>
+  </data>
+  <data name="CATCH_SUCCESS" xml:space="preserve">
+    <value>Capture successful.</value>
+  </data>
+  <data name="CATCH_FAIL" xml:space="preserve">
+    <value>Capture failed.</value>
+  </data>
+  <data name="LEVEL_LOWER_THAN_MONSTER" xml:space="preserve">
+    <value>You can only capture animals of a lower level than you.</value>
+  </data>
+  <data name="CURRENT_HP_TOO_HIGH" xml:space="preserve">
+    <value>You can only capture animals whose HP is 50% or lower.</value>
+  </data>
+  <data name="MONSTER_CANT_BE_CAPTURED" xml:space="preserve">
+    <value>Monsters cannot be captured.</value>
+  </data>
+  <data name="PET_SLOT_FULL" xml:space="preserve">
+    <value></value>
   </data>
 </root>

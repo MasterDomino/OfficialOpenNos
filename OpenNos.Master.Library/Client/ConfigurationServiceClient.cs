@@ -76,7 +76,7 @@ namespace OpenNos.Master.Library.Client
 
         #region Methods
 
-        public bool Authenticate(string authKey) => _client.ServiceProxy.Authenticate(authKey);
+        public bool Authenticate(string authKey, Guid serverId) => _client.ServiceProxy.Authenticate(authKey, serverId);
 
         public void UpdateConfigurationObject(ConfigurationObject configurationObject) => _client.ServiceProxy.UpdateConfigurationObject(configurationObject);
 

@@ -104,7 +104,7 @@ namespace OpenNos.GameObject.Event
 
                 //todo: get act4 channel dynamically
                 // Change IP to yours
-                s.Character.ChangeChannel("127.0.0.1", 4003, 1);
+                s.Character.ChangeChannel(ServerManager.Instance.Configuration.Act4IP, ServerManager.Instance.Configuration.Act4Port, 1);
             }
         }
 

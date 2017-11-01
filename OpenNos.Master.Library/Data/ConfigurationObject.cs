@@ -5,6 +5,10 @@ namespace OpenNos.Master.Library.Data
     [Serializable]
     public class ConfigurationObject
     {
+        public string Act4IP { get; set; }
+
+        public int Act4Port { get; set; }
+
         public int SessionLimit { get; set; }
 
         public bool SceneOnCreate { get; set; }
