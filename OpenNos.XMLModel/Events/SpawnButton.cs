@@ -11,13 +11,13 @@ namespace OpenNos.XMLModel.Events
         [XmlAttribute]
         public int Id { get; set; }
 
-        [XmlElement(Order = 2, IsNullable = false)]
+        [XmlElement(IsNullable = false)]
         public OnDisable OnDisable { get; set; }
 
-        [XmlElement(Order = 1, IsNullable = false)]
+        [XmlElement(IsNullable = false)]
         public OnEnable OnEnable { get; set; }
 
-        [XmlElement(Order = 0, IsNullable = false)]
+        [XmlElement(IsNullable = false)]
         public OnFirstEnable OnFirstEnable { get; set; }
 
         [XmlAttribute]

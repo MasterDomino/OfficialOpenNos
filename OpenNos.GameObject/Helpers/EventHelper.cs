@@ -157,7 +157,7 @@ namespace OpenNos.GameObject.Helpers
                                     break;
 
                                 case "OnMoveOnMap":
-                                    evt.MapInstance.OnMoveOnMapEvents.AddRange(even.Item2);
+                                    evt.MapInstance.OnMoveOnMapEvents.GetAllItems().AddRange(even.Item2);
                                     break;
 
                                 case "OnMapClean":

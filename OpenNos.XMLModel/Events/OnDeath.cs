@@ -8,19 +8,34 @@ namespace OpenNos.XMLModel.Events
     {
         #region Properties
 
-        [XmlElement(Order = 3)]
+        [XmlElement]
+        public ChangePortalType[] ChangePortalType { get; set; }
+
+        [XmlElement]
+        public SendMessage SendMessage { get; set; }
+
+        [XmlElement]
+        public SendPacket SendPacket { get; set; }
+
+        [XmlElement]
         public End End { get; set; }
 
-        [XmlElement(Order = 2)]
+        [XmlElement]
+        public object RefreshMapItems { get; set; }
+
+        [XmlElement]
         public object RefreshRaidGoals { get; set; }
 
-        [XmlElement(Order = 1)]
+        [XmlElement]
         public object RemoveButtonLocker { get; set; }
 
-        [XmlElement(Order = 0)]
+        [XmlElement]
         public object RemoveMonsterLocker { get; set; }
 
-        [XmlElement(Order = 4)]
+        [XmlElement]
+        public SummonMonster[] SummonMonster { get; set; }
+
+        [XmlElement]
         public ThrowItem[] ThrowItem { get; set; }
 
         #endregion
