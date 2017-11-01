@@ -1,10 +1,6 @@
 ﻿using OpenNos.XMLModel.Events.Quest;
 using OpenNos.XMLModel.Objects;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OpenNos.XMLModel.Models.Quest
 {
@@ -30,7 +26,5 @@ namespace OpenNos.XMLModel.Models.Quest
         public long QuestId { get; set; }
 
         public Script Script { get; set; }
-
-
     }
 }

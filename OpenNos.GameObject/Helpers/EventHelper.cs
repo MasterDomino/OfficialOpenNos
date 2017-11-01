@@ -517,6 +517,10 @@ namespace OpenNos.GameObject.Helpers
                             }
                             break;
 
+                        case EventActionType.SPAWNNPC:
+                            evt.MapInstance.SummonNpc((NpcToSummon)evt.Parameter);
+                            break;
+
                         case EventActionType.SPAWNNPCS:
                             evt.MapInstance.SummonNpcs((List<NpcToSummon>)evt.Parameter);
                             break;

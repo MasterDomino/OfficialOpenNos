@@ -47,10 +47,9 @@ namespace OpenNos.Handler
 
         #region Methods
 
-
         public void Benchmark(BenchmarkPacket benchmarkPacket)
         {
-            if(benchmarkPacket != null)
+            if (benchmarkPacket != null)
             {
                 double totalMiliseconds = 0;
                 switch (benchmarkPacket.Test)
@@ -2461,7 +2460,7 @@ namespace OpenNos.Handler
         /// <summary>
         /// $ShutdownAll Command
         /// </summary>
-        /// <param name="shutdownAllPacket"></param>
+        /// <param name="restartAllPacket"></param>
         public void RestartAll(RestartAllPacket restartAllPacket)
         {
             if (restartAllPacket != null)

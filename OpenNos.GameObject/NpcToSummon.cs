@@ -20,14 +20,14 @@ namespace OpenNos.GameObject
     {
         #region Instantiation
 
-        public NpcToSummon(short vnum, MapCell spawnCell, long target, List<EventContainer> deathEvents, bool isProtected = false, bool isMate = false)
+        public NpcToSummon(short vnum, MapCell spawnCell, long target, bool isProtected = false, bool isMate = false)
         {
             VNum = vnum;
             SpawnCell = spawnCell;
             Target = target;
-            DeathEvents = deathEvents;
             IsProtected = isProtected;
             IsMate = isMate;
+            DeathEvents = new List<EventContainer>();
         }
 
         #endregion

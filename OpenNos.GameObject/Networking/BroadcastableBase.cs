@@ -162,7 +162,7 @@ namespace OpenNos.GameObject
                                 {
                                     if (sentPacket.Sender != null)
                                     {
-                                        if (sentPacket.Sender?.Character.IsBlockedByCharacter(session.Character.CharacterId) == false)
+                                        if (sentPacket.Sender.Character.IsBlockedByCharacter(session.Character.CharacterId))
                                         {
                                             session.SendPacket(sentPacket.Packet);
                                         }
@@ -182,7 +182,7 @@ namespace OpenNos.GameObject
                                 {
                                     if (sentPacket.Sender != null)
                                     {
-                                        if (sentPacket.Sender?.Character.IsBlockedByCharacter(session.Character.CharacterId) == false)
+                                        if (sentPacket.Sender.Character.IsBlockedByCharacter(session.Character.CharacterId))
                                         {
                                             session.SendPacket(sentPacket.Packet);
                                         }
@@ -264,12 +264,9 @@ namespace OpenNos.GameObject
                         {
                             foreach (ClientSession session in Sessions.Where(s => s.SessionId != sentPacket.Sender.SessionId && (s.Character?.Group == null || (s.Character?.Group?.GroupId != sentPacket.Sender?.Character?.Group?.GroupId))))
                             {
-                                if (session.HasSelectedCharacter)
+                                if (session.HasSelectedCharacter && !sentPacket.Sender.Character.IsBlockedByCharacter(session.Character.CharacterId))
                                 {
-                                    if (!sentPacket.Sender.Character.IsBlockedByCharacter(session.Character.CharacterId))
-                                    {
-                                        session.SendPacket(sentPacket.Packet);
-                                    }
+                                    session.SendPacket(sentPacket.Packet);
                                 }
                             }
                         }
@@ -278,18 +275,25 @@ namespace OpenNos.GameObject
                     case ReceiverType.AllExceptMeAct4: // send to everyone except the sender(Act4)
                         Parallel.ForEach(Sessions.Where(s => s.SessionId != sentPacket.Sender.SessionId), session =>
                         {
-                            if (session.HasSelectedCharacter)
+                            if (session?.HasSelectedCharacter == true)
                             {
-                                if (!sentPacket.Sender.Character.IsBlockedByCharacter(session.Character.CharacterId))
+                                if (sentPacket.Sender != null)
                                 {
-                                    if (session.Character.Faction == sentPacket.Sender.Character.Faction)
+                                    if (!sentPacket.Sender.Character.IsBlockedByCharacter(session.Character.CharacterId))
                                     {
-                                        session.SendPacket(sentPacket.Packet);
-                                    }
-                                    else
-                                    {
+                                        if (session.Character.Faction == sentPacket.Sender.Character.Faction)
+                                        {
+                                            session.SendPacket(sentPacket.Packet);
+                                        }
+                                        else
+                                        {
 #warning TODO: Scrambled Packet for Act4
+                                        }
                                     }
+                                }
+                                else
+                                {
+                                    session.SendPacket(sentPacket.Packet);
                                 }
                             }
                         });

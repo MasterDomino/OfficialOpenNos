@@ -13,7 +13,7 @@ namespace OpenNos.DAL.Interface
 
         ShellEffectDTO InsertOrUpdate(ShellEffectDTO shelleffect);
 
-        void InsertOrUpdateFromList(List<ShellEffectDTO> shelleffect, Guid equipmentSerialId);
+        void InsertOrUpdateFromList(List<ShellEffectDTO> shellEffects, Guid equipmentSerialId);
 
         IEnumerable<ShellEffectDTO> LoadByEquipmentSerialId(Guid id);
 

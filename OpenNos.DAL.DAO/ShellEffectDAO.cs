@@ -109,7 +109,6 @@ namespace OpenNos.DAL.DAO
                     }
 
                     context.SaveChanges();
-
                 }
             }
             catch (Exception e)
@@ -117,7 +116,6 @@ namespace OpenNos.DAL.DAO
                 Logger.Error(e);
             }
         }
-
 
         public IEnumerable<ShellEffectDTO> LoadByEquipmentSerialId(Guid id)
         {

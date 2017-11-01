@@ -695,7 +695,6 @@ namespace OpenNos.GameObject
 
         public void CharacterLife()
         {
-
             //foreach (QuestModel quest in Quests.GetAllItems().Where(q => q.WalkObjective != null))
             //{
             //    if (Session.CurrentMapInstance.Map.MapId == quest.WalkObjective.MapId && IsInRange(quest.WalkObjective.MapX, quest.WalkObjective.MapY, 3))

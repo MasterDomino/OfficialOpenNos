@@ -28,14 +28,13 @@ namespace OpenNos.DAL.DAO
     {
         #region Methods
 
-
         public DeleteResult DeleteById(long id)
         {
             try
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    QuestProgress deleteEntity = context.QuestProgress.FirstOrDefault(s=>s.QuestProgressId == id);
+                    QuestProgress deleteEntity = context.QuestProgress.FirstOrDefault(s => s.QuestProgressId == id);
                     if (deleteEntity != null)
                     {
                         context.QuestProgress.Remove(deleteEntity);
@@ -52,29 +51,29 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        public QuestProgressDTO InsertOrUpdate(QuestProgressDTO quest)
+        public QuestProgressDTO InsertOrUpdate(QuestProgressDTO questProgress)
         {
             try
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    QuestProgress entity = context.QuestProgress.FirstOrDefault(s=>s.QuestProgressId == quest.QuestProgressId);
+                    QuestProgress entity = context.QuestProgress.FirstOrDefault(s => s.QuestProgressId == questProgress.QuestProgressId);
 
                     if (entity == null)
                     {
-                        return insert(quest, context);
+                        return insert(questProgress, context);
                     }
-                    return update(entity, quest, context);
+                    return update(entity, questProgress, context);
                 }
             }
             catch (Exception e)
             {
-                Logger.Error(string.Format(Language.Instance.GetMessageFromKey("INSERT_ERROR"), quest, e.Message), e);
-                return quest;
+                Logger.Error(string.Format(Language.Instance.GetMessageFromKey("INSERT_ERROR"), questProgress, e.Message), e);
+                return questProgress;
             }
         }
 
-        public void InsertOrUpdateFromList(List<QuestProgressDTO> questList)
+        public void InsertOrUpdateFromList(List<QuestProgressDTO> questProgressList)
         {
             try
             {
@@ -95,7 +94,7 @@ namespace OpenNos.DAL.DAO
                         }
                     }
 
-                    foreach (QuestProgressDTO item in questList)
+                    foreach (QuestProgressDTO item in questProgressList)
                     {
                         QuestProgress entity = context.QuestProgress.FirstOrDefault(s => s.QuestProgressId == item.QuestProgressId);
 

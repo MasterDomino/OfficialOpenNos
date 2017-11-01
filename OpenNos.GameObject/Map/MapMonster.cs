@@ -735,7 +735,6 @@ namespace OpenNos.GameObject
                     followTarget(targetSession);
                 }
             }
-
         }
 
         private void move()

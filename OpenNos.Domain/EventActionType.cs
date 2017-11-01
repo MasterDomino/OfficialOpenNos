@@ -38,6 +38,7 @@ namespace OpenNos.Domain
         STOPCLOCK,
         MAPCLOCK,
         REGISTEREVENT,
+        SPAWNNPC,
         SPAWNNPCS,
         SCRIPTEND,
         REMOVEBUTTONLOCKER,

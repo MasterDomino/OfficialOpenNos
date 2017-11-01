@@ -80,10 +80,7 @@ namespace OpenNos.Master.Library.Client
 
         public void SendMail(Mail mail) => _client.ServiceProxy.SendMail(mail);
 
-        internal void OnMailSent(Mail mail)
-        {
-            MailSent?.Invoke(mail, null);
-        }
+        internal void OnMailSent(Mail mail) => MailSent?.Invoke(mail, null);
 
         #endregion
     }
