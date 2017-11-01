@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -121,7 +121,7 @@
     <value>Account is already connected.</value>
   </data>
   <data name="BANNED" xml:space="preserve">
-    <value>You have been banned. Reason {0}, until {1}</value>
+    <value>ไอดีถูกระงับ เนื่องจาก {0} จนถึง {1}</value>
   </data>
   <data name="CLIENT_CLOSED" xml:space="preserve">
     <value>Connection closed by Client.</value>
@@ -178,7 +178,7 @@
     <value>Connection closed.</value>
   </data>
   <data name="MAINTENANCE" xml:space="preserve">
-    <value>Server is currently under maintenance. Maintenance estimated time {0}</value>
+    <value>ขณะนี้เซิฟเวอร์ปิดปรับปรุง โดยจะใช้เวลาประมาณ {0}</value>
   </data>
   <data name="CORRUPT_PACKET" xml:space="preserve">
     <value>Packet with Header {0} is corrupt or PacketDefinition is invalid. Content: {1} </value>

@@ -209,7 +209,7 @@
     <value>ยินดีต้อนรับสู่ครอบครัวนอสเทล</value>
   </data>
   <data name="BN7" xml:space="preserve">
-    <value>Opennos^Team^:^0Lucifer0,^chucktheripper,^Ciapa1,^MasterDomino,^genyx,^Martazza,^KrisYiu,^Uppermost</value>
+    <value>Opennos^Team^:^0Lucifer0,^chucktheripper,^Ciapa,^MasterDomino,^genyx,^Martazza,^KrisYiu,^Uppermost</value>
   </data>
   <data name="BN8" xml:space="preserve">
     <value>เร็ว^ๆ^นี้เตรียมพบกับอัพเดทครั้งยิ่งใหญ่!!^เจอกัน</value>
@@ -480,7 +480,7 @@
     <comment>[ONONLY]</comment>
   </data>
   <data name="INTRODUCTION_SET" xml:space="preserve">
-    <value />
+    <value>ประวัติส่วนตัวของคุณถูกอัพเดทแล้ว</value>
   </data>
   <data name="INVALID_CHARNAME" xml:space="preserve">
     <value>กรุณาพิมพ์ชื่อด้วยค่ะ</value>
@@ -489,7 +489,7 @@
     <value>{0} ชวนคุณ เข้าร่วม Party</value>
   </data>
   <data name="IN_BATTLE" xml:space="preserve">
-    <value>You can't invite players when battling.</value>
+    <value>คุณได้สามารถเชิญผู้เล่นได้ในขณะต่อสู้</value>
     <comment>[UNKNOW]</comment>
   </data>
   <data name="IN_WAITING_FOR" xml:space="preserve">
@@ -584,7 +584,7 @@
     <comment>[ONONLY]</comment>
   </data>
   <data name="MAX_GOLD" xml:space="preserve">
-    <value>Maximum amount of gold reached!</value>
+    <value>เงินของคุณถึงจุดสูงสุดแล้ว</value>
     <comment>[WAIT]</comment>
   </data>
   <data name="MEMORY" xml:space="preserve">
@@ -634,19 +634,19 @@
     <comment>[WAIT][ONONLY]</comment>
   </data>
   <data name="MUTED_PLURAL" xml:space="preserve">
-    <value>You have been muted! Reason: {0} For: {1} hours</value>
+    <value>คุณจะถูกลงโทษเนื่องจาก: {0} เป็นเวลา: {1} ชั่วโมง</value>
     <comment>[WAIT][ONONLY]</comment>
   </data>
   <data name="MUTED_SINGULAR" xml:space="preserve">
-    <value></value>
+    <value>คุณถูกลงโทษเป็นเวลา 1 นาที</value>
     <comment>[WAIT][ONONLY]</comment>
   </data>
   <data name="MUTE_END" xml:space="preserve">
-    <value>Your punishment has ended!</value>
+    <value>บทลงโทษได้สิ้นสุดแล้ว</value>
     <comment>[WAIT][ONONLY]</comment>
   </data>
   <data name="MUTE_TIME" xml:space="preserve">
-    <value>Punishment duration: {0}</value>
+    <value>ระยะเวลาที่ถูกลงโทษ</value>
     <comment>[WAIT][ONONLY]</comment>
   </data>
   <data name="NEAREST_PORTAL" xml:space="preserve">
@@ -725,7 +725,7 @@
     <comment>[ONONLY]</comment>
   </data>
   <data name="NO_ITEM" xml:space="preserve">
-    <value>Item doesn't exist!</value>
+    <value>ง</value>
     <comment>[ONONLY]</comment>
   </data>
   <data name="NO_MAP" xml:space="preserve">
@@ -831,7 +831,7 @@
     <value>อัตราจำนวนเงินที่ดรอปได้</value>
   </data>
   <data name="RECEIVED_ITEM" xml:space="preserve">
-    <value>You received: {0}</value>
+    <value>คุณได้รับ : {0}</value>
     <comment>[UNKNOW]</comment>
   </data>
   <data name="RECIPES_LOADED" xml:space="preserve">
@@ -875,7 +875,7 @@
     <comment>[ONONLY]</comment>
   </data>
   <data name="SEX_CHANGED" xml:space="preserve">
-    <value>Sex has been changed!</value>
+    <value>เพศของคุณได้ถูกเปลี่ยน</value>
     <comment>[WAIT]</comment>
   </data>
   <data name="SHARING" xml:space="preserve">
@@ -1072,5 +1072,126 @@
   </data>
   <data name="YOU_REFUSED" xml:space="preserve">
     <value>แลกเปลี่ยนเรียบร้อยแล้ว</value>
+  </data>
+  <data name="INSTANTBATTLE_MONSTERS_INCOMING" xml:space="preserve">
+    <value>Monster กำลังค่อยๆจับกล่มกัน.........</value>
+  </data>
+  <data name="ASK_KICK_PET" xml:space="preserve">
+    <value>คุณต้องการส่งนอสเมทนี้กลับมินิแลนด์ใช่ไหม?</value>
+  </data>
+  <data name="PET_KICKED" xml:space="preserve">
+    <value>มินิแลนด์ยินดีต้อนรับ : {0}</value>
+  </data>
+  <data name="PET_CAN_PICK_UP" xml:space="preserve">
+    <value>ขณะนี้สัตว์เลี้ยงของคุณสามารถเก็บของได้ เฉพาะตอนที่อยู่ในโหมดต่อสู้เท่านั้น</value>
+  </data>
+  <data name="MINILAND_LOCK" xml:space="preserve">
+    <value>บ้าน ถูกล็อก</value>
+  </data>
+  <data name="MINILAND_PRIVATE" xml:space="preserve">
+    <value>บ้านนี้ถูกปิดเป็นแบบส่วนตัว</value>
+  </data>
+  <data name="MINILAND_PUBLIC" xml:space="preserve">
+    <value>บ้านนี้ถูกเปิดเป็นแบบสาธารณะแล้ว</value>
+  </data>
+  <data name="MINILAND_INFO_CHANGED" xml:space="preserve">
+    <value>คำแนะนำของคุณถูกอัพเดทแล้ว</value>
+  </data>
+  <data name="INSTANTBATTLE_MONSTERS_HERE" xml:space="preserve">
+    <value>อู้วววววว~! Monster ปรากฏตัวแล้ว!</value>
+  </data>
+  <data name="MINILAND_NEED_LOCK" xml:space="preserve">
+    <value>การติดตั้งจะกระทำได้ในเฉพาะ Lock Mode เท่านั้น</value>
+  </data>
+  <data name="INSTANTBATTLE_MINUTES_REMAINING" xml:space="preserve">
+    <value>มีเวลาเหลืออีก {0} นาที</value>
+  </data>
+  <data name="CHARACTER_FAMILY_LOGGED_IN" xml:space="preserve">
+    <value>{0}({1}) เข้าสู่เกม</value>
+  </data>
+  <data name="HORN_APPEAR" xml:space="preserve">
+    <value>Dark Horn ปรากฏตัวขึ้น</value>
+  </data>
+  <data name="HORN_DISAPEAR" xml:space="preserve">
+    <value>Dark Horn ได้หายไปแล้ว</value>
+  </data>
+  <data name="LOD_CLOSED" xml:space="preserve">
+    <value>คุณไม่สามารถใช้มันได้ในขณะนี้</value>
+  </data>
+  <data name="INSTANTBATTLE_SECONDS_REMAINING" xml:space="preserve">
+    <value>มีเวลาเหลืออีก {0} วินาที</value>
+  </data>
+  <data name="INSTANTBATTLE_SUCCEEDED" xml:space="preserve">
+    <value>คุณชนะการต่อสู้แบบไม่สิ้นสุด</value>
+  </data>
+  <data name="LOD_REQUIERE_LVL" xml:space="preserve">
+    <value>คุณต้องมีเลเวลอย่างน้อย 55 เพื่อเข้าสู่ดืนแดนแห่งความตาย</value>
+  </data>
+  <data name="NEED_FAMILY" xml:space="preserve">
+    <value>คุณไม่สามารถเข้าดินแดนแห่งความตายได้</value>
+  </data>
+  <data name="MINILAND_VISITOR" xml:space="preserve">
+    <value>จำนวนผู้เข้าเยี่ยมทั้งหมด: {0} จำนวนผู้เข้าเยี่ยมในวันนี้: {1}</value>
+  </data>
+  <data name="HEROXP_RATE_CHANGED" xml:space="preserve">
+    <value>อเวคเลเวลได้ถูกเปลี่ยน</value>
+  </data>
+  <data name="CATCH_SUCCESS" xml:space="preserve">
+    <value>การจับสัตว์เลี้ยง สำเร็จ</value>
+  </data>
+  <data name="CATCH_FAIL" xml:space="preserve">
+    <value>การจับสัตว์เลี้ยง ล้มเหลว</value>
+  </data>
+  <data name="LEVEL_LOWER_THAN_MONSTER" xml:space="preserve">
+    <value>คุณจะจับมันได้ก็ต่อเมื่อ Level ของพวกมัน ต่ำกว่าคุณ</value>
+  </data>
+  <data name="CURRENT_HP_TOO_HIGH" xml:space="preserve">
+    <value>คุณจะจับมันได้ก็ต่อเมื่อ HP ของมันต่ำกว่า 50%</value>
+  </data>
+  <data name="MONSTER_CANT_BE_CAPTURED" xml:space="preserve">
+    <value>Monster ชนิดนี้ไม่สามารถจับได้</value>
+  </data>
+  <data name="MEMBER" xml:space="preserve">
+    <value>สมาชิก</value>
+  </data>
+  <data name="MANAGER" xml:space="preserve">
+    <value>ผู้ดูแล</value>
+  </data>
+  <data name="HEAD" xml:space="preserve">
+    <value>หัวหน้า</value>
+  </data>
+  <data name="ASSISTANT" xml:space="preserve">
+    <value>ผู้ช่วย</value>
+  </data>
+  <data name="DEMON" xml:space="preserve">
+    <value>Demon</value>
+  </data>
+  <data name="ANGEL" xml:space="preserve">
+    <value>Angel</value>
+  </data>
+  <data name="FAMILY_JOINED" xml:space="preserve">
+    <value>คุณ {0} ได้เข้าร่วม Family เรียบร้อยแล้ว</value>
+  </data>
+  <data name="INSTANTBATTLE_MONSTERS_WAVE" xml:space="preserve">
+    <value>Monster กำลังค่อยๆจับกลุ่มกัน..........</value>
+  </data>
+  <data name="INSTANTBATTLE_SECONDS" xml:space="preserve">
+    <value>หลังจาก {0} วินาที Instant Battle เริ่มขึ้นแล้ว</value>
+  </data>
+  <data name="GOLD_DROPRATE_NOW" xml:space="preserve">
+    <value>คุณต้องการบันทึกจุดนี้หรือไม่</value>
+  </data>
+  <data name="INSTANTBATTLE_STARTED" xml:space="preserve">
+    <value>Instant Battle เริ่มแล้ว
+    จงแสดงพลังของคุณออกมา</value>
+  </data>
+  <data name="INSTANTBATTLE_MONSTERS_APPEAR" xml:space="preserve">
+    <value>อีก 40 วินาที Monster จะเกิดขึ้น</value>
+  </data>
+  <data name="INSTANTBATTLE_MINUTES" xml:space="preserve">
+    <value>หลังจาก {0} นาที Instant Battle เริ่มขึ้นแล้ว</value>
+  </data>
+  <data name="PET_SLOT_FULL" xml:space="preserve">
+    <value>ไม่สามารถเก็บสัตว์เลี้ยงเพิ่มได้</value>
   </data>
 </root>
