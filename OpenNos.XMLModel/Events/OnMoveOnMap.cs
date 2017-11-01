@@ -9,31 +9,43 @@ namespace OpenNos.XMLModel.Events
     {
         #region Properties
 
-        [XmlElement(Order = 7)]
+        [XmlElement]
+        public GenerateClock GenerateClock { get; set; }
+
+        [XmlElement]
         public OnMapClean OnMapClean { get; set; }
 
-        [XmlElement(Order = 4)]
+        [XmlElement]
         public object RefreshRaidGoals { get; set; }
 
-        [XmlElement(Order = 0)]
+        [XmlElement]
         public object RemoveButtonLocker { get; set; }
 
-        [XmlElement(Order = 1)]
+        [XmlElement]
         public object RemoveMonsterLocker { get; set; }
 
-        [XmlElement(Order = 2)]
+        [XmlElement]
+        public SendMessage SendMessage { get; set; }
+
+        [XmlElement]
+        public SendPacket SendPacket { get; set; }
+
+        [XmlElement]
         public SetButtonLockers SetButtonLockers { get; set; }
 
-        [XmlElement(Order = 3)]
+        [XmlElement]
         public SetMonsterLockers SetMonsterLockers { get; set; }
 
-        [XmlElement(Order = 5)]
+        [XmlElement]
         public StartClock StartClock { get; set; }
 
-        [XmlElement(Order = 6)]
+        [XmlElement]
         public StartClock StartMapClock { get; set; }
 
-        [XmlElement(Order = 8)]
+        [XmlElement]
+        public SummonMonster[] SummonMonster { get; set; }
+
+        [XmlElement]
         public Wave[] Wave { get; set; }
 
         #endregion

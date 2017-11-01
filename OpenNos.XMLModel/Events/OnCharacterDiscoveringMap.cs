@@ -9,10 +9,16 @@ namespace OpenNos.XMLModel.Events
         #region Properties
 
         [XmlElement]
+        public GenerateMapClock GenerateMapClock { get; set; }
+
+        [XmlElement]
         public NpcDialog NpcDialog { get; set; }
 
         [XmlElement]
         public OnMoveOnMap OnMoveOnMap { get; set; }
+
+        [XmlElement]
+        public SendMessage SendMessage { get; set; }
 
         [XmlElement]
         public SendPacket SendPacket { get; set; }

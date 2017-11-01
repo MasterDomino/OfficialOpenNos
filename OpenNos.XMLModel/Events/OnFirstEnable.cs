@@ -8,22 +8,22 @@ namespace OpenNos.XMLModel.Events
     {
         #region Properties
 
-        [XmlElement(Order = 1)]
+        [XmlElement]
         public object RefreshRaidGoals { get; set; }
 
-        [XmlElement(Order = 0)]
+        [XmlElement]
         public object RemoveButtonLocker { get; set; }
 
-        [XmlElement(Order = 4)]
+        [XmlElement]
         public SummonMonster[] SummonMonster { get; set; }
 
-        [XmlElement(Order = 3)]
+        [XmlElement]
         public Teleport Teleport { get; set; }
 
-        [XmlElement(Order = 2)]
+        [XmlElement]
         public SendMessage SendMessage { get; set; }
 
-        [XmlElement(Order = 5)]
+        [XmlElement]
         public OnMapClean OnMapClean { get; set; }
 
         #endregion

@@ -9,7 +9,7 @@ namespace OpenNos.XMLModel.Events
         #region Properties
 
         [XmlAttribute]
-        public int Type { get; set; }
+        public byte Type { get; set; }
 
         #endregion
     }
