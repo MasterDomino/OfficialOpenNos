@@ -122,7 +122,7 @@ namespace OpenNos.Master.Server
                 account.CharacterId = characterId;
                 foreach (WorldServer world in MSManager.Instance.WorldServers.Where(w => w.WorldGroup.Equals(account.ConnectedWorld.WorldGroup)))
                 {
-                    world.ServiceClient.GetClientProxy<ICommunicationClient>().CharacterConnected(characterId);
+                    world.CommunicationServiceClient.GetClientProxy<ICommunicationClient>().CharacterConnected(characterId);
                 }
                 return true;
             }
@@ -155,7 +155,7 @@ namespace OpenNos.Master.Server
             {
                 foreach (WorldServer world in MSManager.Instance.WorldServers.Where(w => w.WorldGroup.Equals(account.ConnectedWorld.WorldGroup)))
                 {
-                    world.ServiceClient.GetClientProxy<ICommunicationClient>().CharacterDisconnected(characterId);
+                    world.CommunicationServiceClient.GetClientProxy<ICommunicationClient>().CharacterDisconnected(characterId);
                 }
                 if (!account.CanLoginCrossServer)
                 {
@@ -216,7 +216,7 @@ namespace OpenNos.Master.Server
 
             foreach (WorldServer world in MSManager.Instance.WorldServers)
             {
-                world.ServiceClient.GetClientProxy<ICommunicationClient>().KickSession(accountId, sessionId);
+                world.CommunicationServiceClient.GetClientProxy<ICommunicationClient>().KickSession(accountId, sessionId);
             }
             if (accountId.HasValue)
             {
@@ -250,7 +250,7 @@ namespace OpenNos.Master.Server
 
             foreach (WorldServer world in MSManager.Instance.WorldServers)
             {
-                world.ServiceClient.GetClientProxy<ICommunicationClient>().UpdatePenaltyLog(penaltyId);
+                world.CommunicationServiceClient.GetClientProxy<ICommunicationClient>().UpdatePenaltyLog(penaltyId);
             }
             foreach (IScsServiceClient login in MSManager.Instance.LoginServers)
             {
@@ -290,7 +290,7 @@ namespace OpenNos.Master.Server
             }
             WorldServer ws = new WorldServer(worldServer.Id, new ScsTcpEndPoint(worldServer.EndPointIP, worldServer.EndPointPort), worldServer.AccountLimit, worldServer.WorldGroup)
             {
-                ServiceClient = CurrentClient,
+                CommunicationServiceClient = CurrentClient,
                 ChannelId = Enumerable.Range(1, 30).Except(MSManager.Instance.WorldServers.Where(w => w.WorldGroup.Equals(worldServer.WorldGroup)).OrderBy(w => w.ChannelId).Select(w => w.ChannelId)).First()
             };
             if (worldServer.EndPointPort == 4003)
@@ -312,14 +312,14 @@ namespace OpenNos.Master.Server
             {
                 foreach (WorldServer world in MSManager.Instance.WorldServers)
                 {
-                    world.ServiceClient.GetClientProxy<ICommunicationClient>().Restart();
+                    world.CommunicationServiceClient.GetClientProxy<ICommunicationClient>().Restart();
                 }
             }
             else
             {
                 foreach (WorldServer world in MSManager.Instance.WorldServers.Where(w => w.WorldGroup.Equals(worldGroup)))
                 {
-                    world.ServiceClient.GetClientProxy<ICommunicationClient>().Restart();
+                    world.CommunicationServiceClient.GetClientProxy<ICommunicationClient>().Restart();
                 }
             }
         }
@@ -435,7 +435,7 @@ namespace OpenNos.Master.Server
 
             foreach (WorldServer world in MSManager.Instance.WorldServers)
             {
-                world.ServiceClient.GetClientProxy<ICommunicationClient>().RunGlobalEvent(eventType);
+                world.CommunicationServiceClient.GetClientProxy<ICommunicationClient>().RunGlobalEvent(eventType);
             }
         }
 
@@ -457,7 +457,7 @@ namespace OpenNos.Master.Server
                 case MessageType.FamilyChat:
                     foreach (WorldServer world in MSManager.Instance.WorldServers.Where(w => w.WorldGroup.Equals(sourceWorld.WorldGroup)))
                     {
-                        world.ServiceClient.GetClientProxy<ICommunicationClient>().SendMessageToCharacter(message);
+                        world.CommunicationServiceClient.GetClientProxy<ICommunicationClient>().SendMessageToCharacter(message);
                     }
                     return -1;
 
@@ -470,7 +470,7 @@ namespace OpenNos.Master.Server
                         AccountConnection account = MSManager.Instance.ConnectedAccounts.Find(a => a.CharacterId.Equals(message.DestinationCharacterId.Value));
                         if (account?.ConnectedWorld != null)
                         {
-                            account.ConnectedWorld.ServiceClient.GetClientProxy<ICommunicationClient>().SendMessageToCharacter(message);
+                            account.ConnectedWorld.CommunicationServiceClient.GetClientProxy<ICommunicationClient>().SendMessageToCharacter(message);
                             return account.ConnectedWorld.ChannelId;
                         }
                     }
@@ -479,7 +479,7 @@ namespace OpenNos.Master.Server
                 case MessageType.Shout:
                     foreach (WorldServer world in MSManager.Instance.WorldServers)
                     {
-                        world.ServiceClient.GetClientProxy<ICommunicationClient>().SendMessageToCharacter(message);
+                        world.CommunicationServiceClient.GetClientProxy<ICommunicationClient>().SendMessageToCharacter(message);
                     }
                     return -1;
             }
@@ -497,14 +497,14 @@ namespace OpenNos.Master.Server
             {
                 foreach (WorldServer world in MSManager.Instance.WorldServers)
                 {
-                    world.ServiceClient.GetClientProxy<ICommunicationClient>().Shutdown();
+                    world.CommunicationServiceClient.GetClientProxy<ICommunicationClient>().Shutdown();
                 }
             }
             else
             {
                 foreach (WorldServer world in MSManager.Instance.WorldServers.Where(w => w.WorldGroup.Equals(worldGroup)))
                 {
-                    world.ServiceClient.GetClientProxy<ICommunicationClient>().Shutdown();
+                    world.CommunicationServiceClient.GetClientProxy<ICommunicationClient>().Shutdown();
                 }
             }
         }
@@ -529,7 +529,7 @@ namespace OpenNos.Master.Server
 
             foreach (WorldServer world in MSManager.Instance.WorldServers.Where(w => w.WorldGroup.Equals(worldGroup)))
             {
-                world.ServiceClient.GetClientProxy<ICommunicationClient>().UpdateBazaar(bazaarItemId);
+                world.CommunicationServiceClient.GetClientProxy<ICommunicationClient>().UpdateBazaar(bazaarItemId);
             }
         }
 
@@ -542,7 +542,7 @@ namespace OpenNos.Master.Server
 
             foreach (WorldServer world in MSManager.Instance.WorldServers.Where(w => w.WorldGroup.Equals(worldGroup)))
             {
-                world.ServiceClient.GetClientProxy<ICommunicationClient>().UpdateFamily(familyId);
+                world.CommunicationServiceClient.GetClientProxy<ICommunicationClient>().UpdateFamily(familyId);
             }
         }
 
@@ -555,7 +555,7 @@ namespace OpenNos.Master.Server
 
             foreach (WorldServer world in MSManager.Instance.WorldServers.Where(w => w.WorldGroup.Equals(worldGroup)))
             {
-                world.ServiceClient.GetClientProxy<ICommunicationClient>().UpdateRelation(relationId);
+                world.CommunicationServiceClient.GetClientProxy<ICommunicationClient>().UpdateRelation(relationId);
             }
         }
 

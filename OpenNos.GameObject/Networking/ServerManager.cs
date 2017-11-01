@@ -711,12 +711,7 @@ namespace OpenNos.GameObject
             Act4AngelStat = new Act4Stat();
             Act4DemonStat = new Act4Stat();
 
-            // Load Configuration 
-
-            MailServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["MasterAuthKey"]);
-            ConfigurationServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["MasterAuthKey"]);
-            Configuration = ConfigurationServiceClient.Instance.GetConfigurationObject();
-        
+            // Load Configuration         
 
             Schedules = ConfigurationManager.GetSection("eventScheduler") as List<Schedule>;
 
@@ -964,8 +959,6 @@ namespace OpenNos.GameObject
             {
                 Logger.Error("General Error", ex);
             }
-
-            //Register the new created TCPIP server to the api
             WorldId = Guid.NewGuid();
         }
 
@@ -1487,22 +1480,16 @@ namespace OpenNos.GameObject
 
                 if (mail.AttachmentVNum != null)
                 {
+                    session.Character.MailList.Add((session.Character.MailList.Count > 0 ? session.Character.MailList.OrderBy(s => s.Key).Last().Key : 0) + 1, mailDTO);
                     session.SendPacket(session.Character.GenerateParcel(mailDTO));
+                    session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("ITEM_GIFTED"), GetItem(mailDTO.AttachmentVNum.Value)?.Name, mailDTO.AttachmentAmount), 12));
                 }
                 else
                 {
-                    session.SendPacket(session.Character.GeneratePost(mailDTO, 1));
+                    session.Character.MailList.Add((session.Character.MailList.Count > 0 ? session.Character.MailList.OrderBy(s => s.Key).Last().Key : 0) + 1, mailDTO);
+                    session.SendPacket(session.Character.GeneratePost(mailDTO, mailDTO.IsSenderCopy ? (byte)2 : (byte)1));
                 }
             }
-
-            // Parcel
-            //    MailList.Add((MailList.Count > 0 ? MailList.OrderBy(s => s.Key).Last().Key : 0) + 1, mail);
-            //    Session.SendPacket(GenerateParcel(mail));
-            //    Session.SendPacket(GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_GIFTED")} {mail.AttachmentAmount}", 12));
-
-            // Letter
-            //    Session.Character.MailList.Add((Session.Character.MailList.Count > 0 ? Session.Character.MailList.OrderBy(s => s.Key).Last().Key : 0) + 1, mailcopy);
-            //    Session.SendPacket(Session.Character.GeneratePost(mailcopy, 2));
         }
 
         private void onConfiguratinEvent(object sender, EventArgs e) => Configuration = (ConfigurationObject)sender;

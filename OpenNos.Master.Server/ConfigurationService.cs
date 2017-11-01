@@ -15,6 +15,7 @@
 using OpenNos.Master.Library.Data;
 using OpenNos.Master.Library.Interface;
 using OpenNos.SCS.Communication.ScsServices.Service;
+using System;
 using System.Configuration;
 using System.Linq;
 using System.Reactive.Linq;
@@ -23,7 +24,7 @@ namespace OpenNos.Master.Server
 {
     internal class ConfigurationService : ScsService, IConfigurationService
     {
-        public bool Authenticate(string authKey)
+        public bool Authenticate(string authKey, Guid serverId)
         {
             if (string.IsNullOrWhiteSpace(authKey))
             {
@@ -33,6 +34,12 @@ namespace OpenNos.Master.Server
             if (authKey == ConfigurationManager.AppSettings["MasterAuthKey"])
             {
                 MSManager.Instance.AuthentificatedClients.Add(CurrentClient.ClientId);
+
+                WorldServer ws = MSManager.Instance.WorldServers.Find(s => s.Id == serverId);
+                if (ws != null)
+                {
+                    ws.ConfigurationServiceClient = CurrentClient;
+                }
                 return true;
             }
 
@@ -55,6 +62,11 @@ namespace OpenNos.Master.Server
                 return;
             }
             MSManager.Instance.ConfigurationObject = configurationObject;
+
+            foreach(WorldServer ws in MSManager.Instance.WorldServers)
+            {
+                ws.ConfigurationServiceClient.GetClientProxy<IConfigurationClient>().ConfigurationUpdated(MSManager.Instance.ConfigurationObject);
+            }
         }
     }
 }

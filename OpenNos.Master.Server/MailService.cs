@@ -17,6 +17,7 @@ using OpenNos.Data;
 using OpenNos.Master.Library.Data;
 using OpenNos.Master.Library.Interface;
 using OpenNos.SCS.Communication.ScsServices.Service;
+using System;
 using System.Configuration;
 using System.Linq;
 using System.Reactive.Linq;
@@ -25,7 +26,7 @@ namespace OpenNos.Master.Server
 {
     internal class MailService : ScsService, IMailService
     {
-        public bool Authenticate(string authKey)
+        public bool Authenticate(string authKey, Guid serverId)
         {
             if (string.IsNullOrWhiteSpace(authKey))
             {
@@ -35,6 +36,12 @@ namespace OpenNos.Master.Server
             if (authKey == ConfigurationManager.AppSettings["MasterAuthKey"])
             {
                 MSManager.Instance.AuthentificatedClients.Add(CurrentClient.ClientId);
+
+                WorldServer ws = MSManager.Instance.WorldServers.Find(s => s.Id == serverId);
+                if (ws != null)
+                {
+                    ws.MailServiceClient = CurrentClient;
+                }
                 return true;
             }
 
@@ -48,7 +55,7 @@ namespace OpenNos.Master.Server
                 return;
             }
 
-            MailDTO mailDTO = new Data.MailDTO
+            MailDTO mailDTO = new MailDTO
             {
                 AttachmentAmount = mail.AttachmentAmount,
                 AttachmentRarity = mail.AttachmentRarity,
@@ -78,7 +85,7 @@ namespace OpenNos.Master.Server
                 AccountConnection account = MSManager.Instance.ConnectedAccounts.Find(a => a.CharacterId.Equals(mail.SenderId));
                 if (account?.ConnectedWorld != null)
                 {
-                    account.ConnectedWorld.ServiceClient.GetClientProxy<IMailClient>().MailSent(mail);
+                    account.ConnectedWorld.MailServiceClient.GetClientProxy<IMailClient>().MailSent(mail);
                 }
             }
             else
@@ -86,7 +93,7 @@ namespace OpenNos.Master.Server
                 AccountConnection account = MSManager.Instance.ConnectedAccounts.Find(a => a.CharacterId.Equals(mail.ReceiverId));
                 if (account?.ConnectedWorld != null)
                 {
-                    account.ConnectedWorld.ServiceClient.GetClientProxy<IMailClient>().MailSent(mail);
+                    account.ConnectedWorld.MailServiceClient.GetClientProxy<IMailClient>().MailSent(mail);
                 }
             }
         }

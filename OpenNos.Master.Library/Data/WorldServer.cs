@@ -44,7 +44,12 @@ namespace OpenNos.Master.Library.Data
 
         public SerializableWorldServer Serializable { get; }
 
-        public IScsServiceClient ServiceClient { get; set; }
+        public IScsServiceClient CommunicationServiceClient { get; set; }
+
+        public IScsServiceClient ConfigurationServiceClient { get; set; }
+
+        public IScsServiceClient MailServiceClient { get; set; }
+
 
         public string WorldGroup { get; set; }
 

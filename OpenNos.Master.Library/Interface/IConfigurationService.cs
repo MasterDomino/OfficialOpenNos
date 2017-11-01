@@ -1,5 +1,6 @@
 ﻿using OpenNos.SCS.Communication.ScsServices.Service;
 using OpenNos.Master.Library.Data;
+using System;
 
 namespace OpenNos.Master.Library.Interface
 {
@@ -11,7 +12,7 @@ namespace OpenNos.Master.Library.Interface
         /// </summary>
         /// <param name="authKey">The private Authentication key</param>
         /// <returns>true if successful, else false</returns>
-        bool Authenticate(string authKey);
+        bool Authenticate(string authKey, Guid serverId);
 
         /// <summary>
         /// Get the Configuration Object from the Service
