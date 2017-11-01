@@ -1793,6 +1793,7 @@ namespace OpenNos.GameObject
                                         targetSession.SendPacket(targetSession.Character.GenerateSay(Language.Instance.GetMessageFromKey("XP_NOTFIRSTHIT"), 10));
                                         targetSession.Character.generateXp(monsterToAttack, false);
                                     }
+                                    targetSession.Character.SetReputation(monsterToAttack.Monster.Level);
                                 }
                             }
                             else
@@ -1806,6 +1807,7 @@ namespace OpenNos.GameObject
                                     Session.SendPacket(GenerateSay(Language.Instance.GetMessageFromKey("XP_NOTFIRSTHIT"), 10));
                                     generateXp(monsterToAttack, false);
                                 }
+                                SetReputation(monsterToAttack.Monster.Level);
                             }
                             GenerateDignity(monsterToAttack.Monster);
                         }
