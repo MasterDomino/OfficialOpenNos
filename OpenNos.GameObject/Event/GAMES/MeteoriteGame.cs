@@ -200,17 +200,17 @@ namespace OpenNos.GameObject.Event.GAMES
                 Thread.Sleep(5000);
 
                 // Your dropped reward
-                //_map.DropItems(GenerateDrop(_map.Map, 1046, 20, 20000 * (number + 1)).ToList());
-                //_map.DropItems(GenerateDrop(_map.Map, 1030, 20, 5 * (number + 1)).ToList());
-                //_map.DropItems(GenerateDrop(_map.Map, 2282, 20, 3 * (number + 1)).ToList());
-                //_map.DropItems(GenerateDrop(_map.Map, 2514, 5, 1 * (number + 1)).ToList());
-                //_map.DropItems(GenerateDrop(_map.Map, 2515, 5, 1 * (number + 1)).ToList());
-                //_map.DropItems(GenerateDrop(_map.Map, 2516, 5, 1 * (number + 1)).ToList());
-                //_map.DropItems(GenerateDrop(_map.Map, 2517, 5, 1 * (number + 1)).ToList());
-                //_map.DropItems(GenerateDrop(_map.Map, 2518, 5, 1 * (number + 1)).ToList());
-                //_map.DropItems(GenerateDrop(_map.Map, 2519, 5, 1 * (number + 1)).ToList());
-                //_map.DropItems(GenerateDrop(_map.Map, 2520, 5, 1 * (number + 1)).ToList());
-                //_map.DropItems(GenerateDrop(_map.Map, 2521, 5, 1 * (number + 1)).ToList());
+                _map.DropItems(generateDrop(_map.Map, 1046, 20, 200 * ((number + 1) > 10 ? 10 : (number + 1))).ToList());
+                _map.DropItems(generateDrop(_map.Map, 1030, 10, 3 * ((number + 1) > 10 ? 10 : (number + 1))).ToList());
+                _map.DropItems(generateDrop(_map.Map, 2282, 10, 3 * ((number + 1) > 10 ? 10 : (number + 1))).ToList());
+                _map.DropItems(generateDrop(_map.Map, 2514, 5, 1 * ((number + 1) > 10 ? 10 : (number + 1))).ToList());
+                _map.DropItems(generateDrop(_map.Map, 2515, 5, 1 * ((number + 1) > 10 ? 10 : (number + 1))).ToList());
+                _map.DropItems(generateDrop(_map.Map, 2516, 5, 1 * ((number + 1) > 10 ? 10 : (number + 1))).ToList());
+                _map.DropItems(generateDrop(_map.Map, 2517, 5, 1 * ((number + 1) > 10 ? 10 : (number + 1))).ToList());
+                _map.DropItems(generateDrop(_map.Map, 2518, 5, 1 * ((number + 1) > 10 ? 10 : (number + 1))).ToList());
+                _map.DropItems(generateDrop(_map.Map, 2519, 5, 1 * ((number + 1) > 10 ? 10 : (number + 1))).ToList());
+                _map.DropItems(generateDrop(_map.Map, 2520, 5, 1 * ((number + 1) > 10 ? 10 : (number + 1))).ToList());
+                _map.DropItems(generateDrop(_map.Map, 2521, 5, 1 * ((number + 1) > 10 ? 10 : (number + 1))).ToList());
                 foreach (ClientSession session in _map.Sessions)
                 {
                     // Your reward that every player should get
