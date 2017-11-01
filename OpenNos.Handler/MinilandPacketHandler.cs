@@ -69,7 +69,7 @@ namespace OpenNos.Handler
             if (mlobj != null)
             {
                 const bool full = false;
-                byte game = (byte)(mlobj.ItemInstance.Item.EquipmentSlot == 0 ? 4 + (mlobj.ItemInstance.ItemVNum % 10) : (int)mlobj.ItemInstance.Item.EquipmentSlot / 3);
+                byte game = (byte)(mlobj.ItemInstance.Item.EquipmentSlot);
                 switch (packet.Type)
                 {
                     //play
