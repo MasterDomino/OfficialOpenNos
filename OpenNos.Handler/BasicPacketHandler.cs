@@ -1257,7 +1257,7 @@ namespace OpenNos.Handler
                         }
                         return;
                     }
-                    EventHelper.Instance.RunEvent(portal.OnTraversalEvent);
+                    portal.OnTraversalEvents.ForEach(e => EventHelper.Instance.RunEvent(e));
                     if (portal.DestinationMapInstanceId == default)
                     {
                         return;

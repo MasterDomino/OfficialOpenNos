@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using OpenNos.Master.Library.Client;
 using System.Configuration;
 using System.Security.Cryptography;
-using OpenNos.Data;
-using OpenNos.Domain;
 using OpenNos.Master.Library.Data;
 
 namespace OpenNos.MallServiceExample

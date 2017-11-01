@@ -14,6 +14,7 @@
 
 using OpenNos.Data;
 using System;
+using System.Collections.Generic;
 
 namespace OpenNos.GameObject
 {
@@ -29,7 +30,7 @@ namespace OpenNos.GameObject
 
         #region Instantiation
 
-        public Portal() => OnTraversalEvent = null;
+        public Portal() => OnTraversalEvents = new List<EventContainer>();
 
         #endregion
 
@@ -48,7 +49,7 @@ namespace OpenNos.GameObject
             set => _destinationMapInstanceId = value;
         }
 
-        public EventContainer OnTraversalEvent { get; set; }
+        public List<EventContainer> OnTraversalEvents { get; set; }
 
         public Guid SourceMapInstanceId
         {

@@ -12,13 +12,11 @@
  * GNU General Public License for more details.
  */
 
-using OpenNos.Core;
 using OpenNos.DAL;
 using OpenNos.Data;
 using OpenNos.Domain;
 using OpenNos.Master.Library.Data;
 using OpenNos.Master.Library.Interface;
-using OpenNos.SCS.Communication.Scs.Communication.EndPoints.Tcp;
 using OpenNos.SCS.Communication.ScsServices.Service;
 using System;
 using System.Collections.Generic;
@@ -76,11 +74,10 @@ namespace OpenNos.Master.Server
                 Message = string.Empty,
                 ReceiverId = characterId,
                 SenderId=characterId,
-                Title = "NOSMALL"                
+                Title = "NOSMALL"              
             };
 
             DAOFactory.MailDAO.InsertOrUpdate(ref mailDTO);
-
 
             Mail mail = new Mail
             {
@@ -111,10 +108,7 @@ namespace OpenNos.Master.Server
             }
         }
 
-        public void SendStaticBonus(long characterId, MallStaticBonus item)
-        {
-            throw new NotImplementedException();
-        }
+        public void SendStaticBonus(long characterId, MallStaticBonus item) => throw new NotImplementedException();
 
         public AccountDTO ValidateAccount(string userName, string passHash)
         {
@@ -133,7 +127,7 @@ namespace OpenNos.Master.Server
 
             AccountDTO account = DAOFactory.AccountDAO.LoadByName(userName);
 
-            if(account?.Password == passHash)
+            if (account?.Password == passHash)
             {
                 return account;
             }
