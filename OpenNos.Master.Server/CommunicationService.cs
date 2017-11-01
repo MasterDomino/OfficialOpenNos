@@ -293,7 +293,7 @@ namespace OpenNos.Master.Server
                 CommunicationServiceClient = CurrentClient,
                 ChannelId = Enumerable.Range(1, 30).Except(MSManager.Instance.WorldServers.Where(w => w.WorldGroup.Equals(worldServer.WorldGroup)).OrderBy(w => w.ChannelId).Select(w => w.ChannelId)).First()
             };
-            if (worldServer.EndPointPort == 4003)
+            if (worldServer.EndPointPort == MSManager.Instance.ConfigurationObject.Act4Port)
             {
                 ws.ChannelId = 51;
             }

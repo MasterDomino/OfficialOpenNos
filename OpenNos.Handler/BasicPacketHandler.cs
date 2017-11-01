@@ -1841,7 +1841,7 @@ namespace OpenNos.Handler
             if (Session.Character.MapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.Act4) && ServerManager.Instance.ChannelId != 51)
             {
                 // Change IP to yours
-                Session.Character.ChangeChannel("127.0.0.1", 4003, 2);
+                Session.Character.ChangeChannel(ServerManager.Instance.Configuration.Act4IP, ServerManager.Instance.Configuration.Act4Port, 2);
             }
             Session.CurrentMapInstance = Session.Character.MapInstance;
             if (ServerManager.Instance.Configuration.SceneOnCreate && Session.Character.GeneralLogs.CountLinq(s => s.LogType == "Connection") < 2)
