@@ -54,7 +54,7 @@ namespace OpenNos.Handler
         {
             if (Session.Character.Group?.Raid != null && Session.Character.Group.IsLeader(Session))
             {
-                if (/*Session.Character.Group.CharacterCount > 4 &&*/ Session.Character.Group.Characters.All(s => s.CurrentMapInstance.Portals.Any(p => p.Type == (short)PortalType.Raid)))
+                if (Session.Character.Group.CharacterCount > 4 && Session.Character.Group.Characters.All(s => s.CurrentMapInstance.Portals.Any(p => p.Type == (short)PortalType.Raid)))
                 {
                     if (Session.Character.Group.Raid.FirstMap == null)
                     {
