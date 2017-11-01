@@ -89,7 +89,8 @@ namespace OpenNos.Handler
                             Slot = characterCreatePacket.Slot,
                             AccountId = accountId,
                             MinilandMessage = "Welcome",
-                            State = CharacterState.Active
+                            State = CharacterState.Active,
+                            MinilandPoint=2000
                         };
 
                         SaveResult insertResult = DAOFactory.CharacterDAO.InsertOrUpdate(ref newCharacter);
