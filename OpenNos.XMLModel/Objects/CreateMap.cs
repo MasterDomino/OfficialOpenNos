@@ -51,6 +51,9 @@ namespace OpenNos.XMLModel.Objects
         [XmlElement]
         public SummonMonster[] SummonMonster { get; set; }
 
+        [XmlElement]
+        public SummonNpc[] SummonNpc { get; set; }
+
         [XmlAttribute]
         public short VNum { get; set; }
 

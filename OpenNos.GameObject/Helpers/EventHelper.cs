@@ -423,9 +423,9 @@ namespace OpenNos.GameObject.Helpers
                             break;
 
                         case EventActionType.STARTCLOCK:
-                            Tuple<List<EventContainer>, List<EventContainer>> eve = (Tuple<List<EventContainer>, List<EventContainer>>)evt.Parameter;
-                            evt.MapInstance.InstanceBag.Clock.StopEvents = eve.Item2;
-                            evt.MapInstance.InstanceBag.Clock.TimeoutEvents = eve.Item1;
+                            Tuple<EventContainer, EventContainer> eve = (Tuple<EventContainer, EventContainer>)evt.Parameter;
+                            evt.MapInstance.InstanceBag.Clock.StopEvents.Add(eve.Item2);
+                            evt.MapInstance.InstanceBag.Clock.TimeoutEvents.Add(eve.Item1);
                             evt.MapInstance.InstanceBag.Clock.StartClock();
                             evt.MapInstance.Broadcast(evt.MapInstance.InstanceBag.Clock.GetClock());
                             break;
@@ -447,9 +447,9 @@ namespace OpenNos.GameObject.Helpers
                             break;
 
                         case EventActionType.STARTMAPCLOCK:
-                            eve = (Tuple<List<EventContainer>, List<EventContainer>>)evt.Parameter;
-                            evt.MapInstance.Clock.StopEvents = eve.Item2;
-                            evt.MapInstance.Clock.TimeoutEvents = eve.Item1;
+                            eve = (Tuple<EventContainer, EventContainer>)evt.Parameter;
+                            evt.MapInstance.Clock.StopEvents.Add(eve.Item2);
+                            evt.MapInstance.Clock.TimeoutEvents.Add(eve.Item1);
                             evt.MapInstance.Clock.StartClock();
                             evt.MapInstance.Broadcast(evt.MapInstance.Clock.GetClock());
                             break;

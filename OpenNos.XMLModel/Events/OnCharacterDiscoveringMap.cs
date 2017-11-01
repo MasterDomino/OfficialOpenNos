@@ -18,6 +18,12 @@ namespace OpenNos.XMLModel.Events
         public SendPacket SendPacket { get; set; }
 
         [XmlElement]
+        public SpawnPortal[] SpawnPortal { get; set; }
+
+        [XmlElement]
+        public SummonMonster[] SummonMonster { get; set; }
+
+        [XmlElement]
         public SummonNpc[] SummonNpc { get; set; }
 
         #endregion
