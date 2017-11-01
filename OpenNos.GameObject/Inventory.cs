@@ -159,7 +159,7 @@ namespace OpenNos.GameObject
             {
                 ItemInstance newItem = InstantiateItemInstance(vnum, Owner.CharacterId, amount);
                 newItem.Rare = Rare;
-                newItem.Upgrade = Upgrade;
+                newItem.Upgrade = Upgrade == 0 ? newItem.Item.ItemType == ItemType.Shell ? (byte)ServerManager.Instance.RandomNumber(50, 80) : Upgrade : Upgrade;
                 newItem.Design = Design;
                 return AddToInventory(newItem, type);
             }
