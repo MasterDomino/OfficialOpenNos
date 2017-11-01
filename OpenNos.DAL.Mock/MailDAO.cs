@@ -45,15 +45,9 @@ namespace OpenNos.DAL.Mock
 
         public MailDTO LoadById(long mailId) => Container.SingleOrDefault(m => m.MailId == mailId);
 
-        public IEnumerable<MailDTO> LoadSentByCharacter(long characterId)
-        {
-            throw new System.NotImplementedException();
-        }
+        public IEnumerable<MailDTO> LoadSentByCharacter(long characterId) => throw new System.NotImplementedException();
 
-        public IEnumerable<MailDTO> LoadSentToCharacter(long characterId)
-        {
-            throw new System.NotImplementedException();
-        }
+        public IEnumerable<MailDTO> LoadSentToCharacter(long characterId) => throw new System.NotImplementedException();
 
         #endregion
     }

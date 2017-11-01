@@ -12,7 +12,6 @@
  * GNU General Public License for more details.
  */
 
-using OpenNos.Core;
 using OpenNos.Data;
 using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
@@ -240,6 +239,168 @@ namespace OpenNos.GameObject
             }
         }
 
+        private List<EventContainer> summonMonster(MapInstance mapInstance, XMLModel.Events.SummonMonster[] summonMonster)
+        {
+            List<EventContainer> evts = new List<EventContainer>();
+
+            // SummonMonster
+            foreach (XMLModel.Events.SummonMonster summon in summonMonster)
+            {
+                short positionX = summon.PositionX;
+                short positionY = summon.PositionY;
+                if (positionX == -1 || positionY == -1)
+                {
+                    MapCell cell = mapInstance?.Map?.GetRandomPosition();
+                    if (cell != null)
+                    {
+                        positionX = cell.X;
+                        positionY = cell.Y;
+                    }
+                }
+                MonsterAmount++;
+                MonsterToSummon monster = new MonsterToSummon(summon.VNum, new MapCell() { X = positionX, Y = positionY }, -1, summon.Move, summon.IsTarget, summon.IsBonus, summon.IsHostile, summon.IsBoss);
+
+                // OnDeath
+                if (summon.OnDeath != null)
+                {
+                    // RefreshRaidGoals
+                    if (summon.OnDeath.RefreshRaidGoals != null)
+                    {
+                        monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.REFRESHRAIDGOAL, null));
+                    }
+
+                    // RemoveButtonLocker
+                    if (summon.OnDeath.RemoveButtonLocker != null)
+                    {
+                        monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.REMOVEBUTTONLOCKER, null));
+                    }
+
+                    // RemoveMonsterLocker
+                    if (summon.OnDeath.RemoveMonsterLocker != null)
+                    {
+                        monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.REMOVEMONSTERLOCKER, null));
+                    }
+
+                    // ThrowItem
+                    foreach (XMLModel.Events.ThrowItem throwItem in summon.OnDeath.ThrowItem)
+                    {
+                        monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.THROWITEMS, new Tuple<int, short, byte, int, int>(-1, throwItem.VNum, throwItem.PackAmount == 0 ? (byte)1 : throwItem.PackAmount, throwItem.MinAmount == 0 ? 1 : throwItem.MinAmount, throwItem.MaxAmount == 0 ? 1 : throwItem.MaxAmount)));
+                    }
+
+                    // End
+                    if (summon.OnDeath.End != null)
+                    {
+                        monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.SCRIPTEND, summon.OnDeath.End.Type));
+                    }
+                }
+
+                // OnNoticing
+                if (summon.OnNoticing != null)
+                {
+                    // Effect
+                    if (summon.OnNoticing.Effect != null)
+                    {
+                        monster.NoticingEvents.Add(new EventContainer(mapInstance, EventActionType.EFFECT, summon.OnNoticing.Effect.Value));
+                    }
+
+                    // Move
+                    if (summon.OnNoticing.Move != null)
+                    {
+                        List<EventContainer> events = new List<EventContainer>();
+
+                        // Effect
+                        if (summon.OnNoticing.Move.Effect != null)
+                        {
+                            events.Add(new EventContainer(mapInstance, EventActionType.EFFECT, summon.OnNoticing.Move.Effect.Value));
+                        }
+
+                        // review OnTarget
+                        //if (summon.OnNoticing.Move.OnTarget != null)
+                        //{
+                        //    summon.OnNoticing.Move.OnTarget.Move
+                        //    foreach ()
+                        //    //events.Add(new EventContainer(mapInstance, EventActionType.ONTARGET, summon.OnNoticing.Move.OnTarget.));
+                        //}
+
+                        monster.NoticingEvents.Add(new EventContainer(mapInstance, EventActionType.MOVE, new ZoneEvent() { X = summon.OnNoticing.Move.PositionX, Y = summon.OnNoticing.Move.PositionY, Events = events }));
+                    }
+                }
+
+                evts.Add(new EventContainer(mapInstance, EventActionType.SPAWNMONSTER, monster));
+            }
+
+            return evts;
+        }
+
+        private List<EventContainer> onMapOnMove(MapInstance mapInstance, XMLModel.Events.OnMoveOnMap onMoveOnMap)
+        {
+            List<EventContainer> evts = new List<EventContainer>();
+
+            // OnMoveOnMap
+            if (onMoveOnMap != null)
+            {
+                List<EventContainer> onMoveOnMapEvents = new List<EventContainer>();
+                List<EventContainer> waveEvent = new List<EventContainer>();
+
+                // OnMapClean
+                if (onMoveOnMap.OnMapClean != null)
+                {
+                    List<EventContainer> onMapCleanEvents = new List<EventContainer>();
+
+                    // ChangePortalType
+                    foreach (XMLModel.Events.ChangePortalType changePortalType in onMoveOnMap.OnMapClean.ChangePortalType)
+                    {
+                        onMapCleanEvents.Add(new EventContainer(mapInstance, EventActionType.CHANGEPORTALTYPE, new Tuple<int, PortalType>(changePortalType.IdOnMap, (PortalType)changePortalType.Type)));
+                    }
+
+                    // SendMessage
+                    if (onMoveOnMap.OnMapClean.SendMessage != null)
+                    {
+                        onMapCleanEvents.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(onMoveOnMap.OnMapClean.SendMessage.Value, onMoveOnMap.OnMapClean.SendMessage.Type)));
+                    }
+
+                    // SendPacket
+                    if (onMoveOnMap.OnMapClean.SendPacket != null)
+                    {
+                        onMapCleanEvents.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, onMoveOnMap.OnMapClean.SendPacket.Value));
+                    }
+
+                    // RefreshMapItems
+                    if (onMoveOnMap.OnMapClean.RefreshMapItems != null)
+                    {
+                        onMapCleanEvents.Add(new EventContainer(mapInstance, EventActionType.REFRESHMAPITEMS, null));
+                    }
+
+                    // NpcDialog
+                    if (onMoveOnMap.OnMapClean.NpcDialog != null)
+                    {
+                        onMapCleanEvents.Add(new EventContainer(mapInstance, EventActionType.NPCDIALOG, onMoveOnMap.OnMapClean.NpcDialog.Value));
+                    }
+
+                    evts.Add(new EventContainer(mapInstance, EventActionType.REGISTEREVENT, new Tuple<string, List<EventContainer>>(nameof(XMLModel.Events.OnMapClean), onMapCleanEvents)));
+                }
+
+                // Wave
+                foreach (XMLModel.Objects.Wave wave in onMoveOnMap.Wave)
+                {
+                    // SummonMonster
+                    waveEvent.AddRange(summonMonster(mapInstance, wave.SummonMonster));
+
+                    // SendMessage
+                    if (wave.SendMessage != null)
+                    {
+                        waveEvent.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(wave.SendMessage.Value, wave.SendMessage.Type)));
+                    }
+
+                    onMoveOnMapEvents.Add(new EventContainer(mapInstance, EventActionType.REGISTERWAVE, new EventWave(wave.Delay, waveEvent, wave.Offset)));
+                }
+
+                evts.Add(new EventContainer(mapInstance, EventActionType.REGISTEREVENT, new Tuple<string, List<EventContainer>>(nameof(XMLModel.Events.OnMoveOnMap), onMoveOnMapEvents)));
+            }
+
+            return evts;
+        }
+
         private List<EventContainer> generateEventWIP(MapInstance parentMapInstance)
         {
             // Rewrite this shit soo it uses proper separate private methods for example onTraversalEvents way of doing things, we want to avoid loop calls
@@ -247,7 +408,15 @@ namespace OpenNos.GameObject
             foreach (XMLModel.Objects.CreateMap createMap in Model.InstanceEvents.CreateMap)
             {
                 MapInstance mapInstance = _mapInstanceDictionary.FirstOrDefault(s => s.Key == createMap.Map).Value ?? parentMapInstance;
-                //generateEventWIP(mapInstance).ForEach(e => EventHelper.Instance.RunEvent(e));
+
+                // OnMoveOnMap
+                foreach (XMLModel.Events.OnMoveOnMap onMoveOnMap in createMap.OnMoveOnMap)
+                {
+                    evts.AddRange(onMapOnMove(mapInstance, onMoveOnMap));
+                }
+
+                // SummonMonster
+                evts.AddRange(summonMonster(mapInstance, createMap.SummonMonster));
 
                 // SpawnPortal
                 foreach (XMLModel.Events.SpawnPortal portalEvent in createMap.SpawnPortal)
@@ -275,41 +444,36 @@ namespace OpenNos.GameObject
                 // OnCharacterDiscoveringMap
                 if (createMap.OnCharacterDiscoveringMap != null)
                 {
-                    evts.Add(new EventContainer(mapInstance, EventActionType.REGISTEREVENT, new Tuple<string, List<EventContainer>>(nameof(XMLModel.Events.OnCharacterDiscoveringMap), generateEventWIP(mapInstance))));
+                    List<EventContainer> onDiscoverEvents = new List<EventContainer>();
+
+                    // NpcDialog
+                    if (createMap.OnCharacterDiscoveringMap.NpcDialog != null)
+                    {
+                        onDiscoverEvents.Add(new EventContainer(mapInstance, EventActionType.NPCDIALOG, createMap.OnCharacterDiscoveringMap.NpcDialog.Value));
+                    }
+
+                    // OnMoveOnMap
+                    if (createMap.OnCharacterDiscoveringMap.OnMoveOnMap != null)
+                    {
+                        onDiscoverEvents.AddRange(onMapOnMove(mapInstance, createMap.OnCharacterDiscoveringMap.OnMoveOnMap));
+                    }
+
+                    // SendPacket
+                    if (createMap.OnCharacterDiscoveringMap.SendPacket != null)
+                    {
+                        onDiscoverEvents.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, createMap.OnCharacterDiscoveringMap.SendPacket.Value));
+                    }
+
+                    // SummonNpc
+                    onDiscoverEvents.AddRange(summonNpc(mapInstance, createMap.OnCharacterDiscoveringMap.SummonNpc));
+
+                    evts.Add(new EventContainer(mapInstance, EventActionType.REGISTEREVENT, new Tuple<string, List<EventContainer>>(nameof(XMLModel.Events.OnCharacterDiscoveringMap), onDiscoverEvents)));
                 }
 
                 // OnLockerOpen
                 if (createMap.OnLockerOpen != null)
                 {
                     evts.Add(new EventContainer(mapInstance, EventActionType.REGISTEREVENT, new Tuple<string, List<EventContainer>>(nameof(XMLModel.Events.OnLockerOpen), generateEventWIP(mapInstance))));
-                }
-
-                // OnMoveOnMap
-                foreach (XMLModel.Events.OnMoveOnMap onMove in createMap.OnMoveOnMap)
-                {
-                    // OnMapClean
-                    if (onMove.OnMapClean != null)
-                    {
-                        evts.Add(new EventContainer(mapInstance, EventActionType.REGISTEREVENT, new Tuple<string, List<EventContainer>>(nameof(XMLModel.Events.OnMapClean), generateEventWIP(mapInstance))));
-                    }
-
-                    // Wave
-                    foreach (XMLModel.Objects.Wave wave in onMove.Wave)
-                    {
-                        // SummonMonster
-                        foreach (XMLModel.Events.SummonMonster summon in wave.SummonMonster)
-                        {
-
-                        }
-
-                        // SendMessage
-                        if (wave.SendMessage != null)
-                        {
-
-                        }
-                        evts.Add(new EventContainer(mapInstance, EventActionType.REGISTERWAVE, new EventWave(wave.Delay, generateEventWIP(mapInstance), wave.Offset)));
-                    }
-                    evts.Add(new EventContainer(mapInstance, EventActionType.REGISTEREVENT, new Tuple<string, List<EventContainer>>(nameof(XMLModel.Events.OnMoveOnMap), generateEventWIP(mapInstance))));
                 }
 
                 // OnAreaEntry
@@ -329,32 +493,67 @@ namespace OpenNos.GameObject
                 {
                     evts.Add(new EventContainer(mapInstance, EventActionType.SETMONSTERLOCKERS, createMap.SetMonsterLockers.Value));
                 }
+            }
+            return evts;
+        }
 
-                // SummonMonster
-                foreach (XMLModel.Events.SummonMonster summon in createMap.SummonMonster)
+        private List<EventContainer> summonNpc(MapInstance mapInstance, XMLModel.Events.SummonNpc[] summonNpc)
+        {
+            List<EventContainer> evts = new List<EventContainer>();
+
+            foreach (XMLModel.Events.SummonNpc summon in summonNpc)
+            {
+                short positionX = summon.PositionX;
+                short positionY = summon.PositionY;
+
+                if (positionX == -1 || positionY == -1)
                 {
-                    short positionX = summon.PositionX;
-                    short positionY = summon.PositionY;
-                    if (positionX == -1 || positionY == -1)
+                    MapCell cell = mapInstance?.Map?.GetRandomPosition();
+                    if (cell != null)
                     {
-                        MapCell cell = mapInstance?.Map?.GetRandomPosition();
-                        if (cell != null)
-                        {
-                            positionX = cell.X;
-                            positionY = cell.Y;
-                        }
+                        positionX = cell.X;
+                        positionY = cell.Y;
                     }
-                    MonsterAmount++;
-                    if (summon.OnDeath != null)
-                    {
-
-                    }
-                    if (summon.OnNoticing != null)
-                    {
-                    }
-                    MonsterToSummon monster = new MonsterToSummon(summon.VNum, new MapCell() { X = positionX, Y = positionY }, -1, summon.Move, summon.IsTarget, summon.IsBonus, summon.IsHostile, summon.IsBoss);
-                    evts.Add(new EventContainer(mapInstance, EventActionType.SPAWNMONSTER, null));
                 }
+
+                NpcAmount++;
+                NpcToSummon npcToSummon = new NpcToSummon(summon.VNum, new MapCell() { X = positionX, Y = positionY }, -1, summon.IsMate, summon.IsProtected);
+
+                // OnDeath
+                if (summon.OnDeath != null)
+                {
+                    // RefreshRaidGoals
+                    if (summon.OnDeath.RefreshRaidGoals != null)
+                    {
+                        npcToSummon.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.REFRESHRAIDGOAL, null));
+                    }
+
+                    // RemoveButtonLocker
+                    if (summon.OnDeath.RemoveButtonLocker != null)
+                    {
+                        npcToSummon.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.REMOVEBUTTONLOCKER, null));
+                    }
+
+                    // RemoveMonsterLocker
+                    if (summon.OnDeath.RemoveMonsterLocker != null)
+                    {
+                        npcToSummon.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.REMOVEMONSTERLOCKER, null));
+                    }
+
+                    // ThrowItem
+                    foreach (XMLModel.Events.ThrowItem throwItem in summon.OnDeath.ThrowItem)
+                    {
+                        npcToSummon.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.THROWITEMS, new Tuple<int, short, byte, int, int>(-1, throwItem.VNum, throwItem.PackAmount == 0 ? (byte)1 : throwItem.PackAmount, throwItem.MinAmount == 0 ? 1 : throwItem.MinAmount, throwItem.MaxAmount == 0 ? 1 : throwItem.MaxAmount)));
+                    }
+
+                    // End
+                    if (summon.OnDeath.End != null)
+                    {
+                        npcToSummon.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.SCRIPTEND, summon.OnDeath.End.Type));
+                    }
+                }
+
+                evts.Add(new EventContainer(mapInstance, EventActionType.SPAWNNPC, npcToSummon));
             }
             return evts;
         }
@@ -549,11 +748,18 @@ namespace OpenNos.GameObject
                             }
                         }
                         NpcAmount++;
-                        List<NpcToSummon> lstn = new List<NpcToSummon>
+
+                        List<EventContainer> onDeath = new List<EventContainer>();
+
+                        foreach (XmlNode eventNode in mapEvent.ChildNodes)
                         {
-                            new NpcToSummon(short.Parse(mapEvent?.Attributes["VNum"].Value), new MapCell() { X = positionX, Y = positionY }, -1, generateEvent(mapEvent, mapInstance), isMate, isProtected)
-                        };
-                        evts.Add(new EventContainer(mapInstance, EventActionType.SPAWNNPCS, lstn.AsEnumerable()));
+                            if (eventNode.Name == "OnDeath")
+                            {
+                                onDeath.AddRange(generateEvent(eventNode, mapInstance));
+                            }
+                        }
+
+                        evts.Add(new EventContainer(mapInstance, EventActionType.SPAWNNPC, new NpcToSummon(short.Parse(mapEvent?.Attributes["VNum"].Value), new MapCell() { X = positionX, Y = positionY }, -1, isMate, isProtected) { DeathEvents = onDeath }));
                         break;
 
                     case "SpawnButton":

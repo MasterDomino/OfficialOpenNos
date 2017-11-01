@@ -12,16 +12,11 @@
  * GNU General Public License for more details.
  */
 
-using OpenNos.Core;
 using OpenNos.DAL;
 using OpenNos.Data;
-using OpenNos.Domain;
 using OpenNos.Master.Library.Data;
 using OpenNos.Master.Library.Interface;
-using OpenNos.SCS.Communication.Scs.Communication.EndPoints.Tcp;
 using OpenNos.SCS.Communication.ScsServices.Service;
-using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Reactive.Linq;
@@ -80,7 +75,6 @@ namespace OpenNos.Master.Server
 
             if (mail.IsSenderCopy)
             {
-
                 AccountConnection account = MSManager.Instance.ConnectedAccounts.Find(a => a.CharacterId.Equals(mail.SenderId));
                 if (account?.ConnectedWorld != null)
                 {

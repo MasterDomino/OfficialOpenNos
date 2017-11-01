@@ -1505,10 +1505,7 @@ namespace OpenNos.GameObject
             //    Session.SendPacket(Session.Character.GeneratePost(mailcopy, 2));
         }
 
-        private void onConfiguratinEvent(object sender, EventArgs e)
-        {
-            Configuration = (ConfigurationObject)sender;
-        }
+        private void onConfiguratinEvent(object sender, EventArgs e) => Configuration = (ConfigurationObject)sender;
 
         private void loadFamilies()
         {

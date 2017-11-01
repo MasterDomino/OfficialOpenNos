@@ -30,10 +30,7 @@ namespace OpenNos.DAL.Mock
 
         public CellonOptionDTO InsertOrUpdate(CellonOptionDTO cellonOption) => throw new NotImplementedException();
 
-        public void InsertOrUpdateFromList(List<CellonOptionDTO> cellonOption, Guid equipmentSerialId)
-        {
-            throw new NotImplementedException();
-        }
+        public void InsertOrUpdateFromList(List<CellonOptionDTO> cellonOption, Guid equipmentSerialId) => throw new NotImplementedException();
 
         #endregion
     }

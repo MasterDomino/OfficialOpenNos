@@ -13,14 +13,12 @@
  */
 
 using OpenNos.Core;
-using OpenNos.DAL;
 using OpenNos.Master.Library.Data;
 using OpenNos.Master.Library.Interface;
 using OpenNos.SCS.Communication.Scs.Communication;
 using OpenNos.SCS.Communication.Scs.Communication.EndPoints.Tcp;
 using OpenNos.SCS.Communication.ScsServices.Client;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 
 namespace OpenNos.Master.Library.Client
@@ -84,10 +82,7 @@ namespace OpenNos.Master.Library.Client
 
         public ConfigurationObject GetConfigurationObject() => _client.ServiceProxy.GetConfigurationObject();
 
-        internal void OnConfigurationUpdated(ConfigurationObject configurationObject)
-        {
-            ConfigurationUpdate?.Invoke(configurationObject, null);
-        }
+        internal void OnConfigurationUpdated(ConfigurationObject configurationObject) => ConfigurationUpdate?.Invoke(configurationObject, null);
 
         #endregion
     }

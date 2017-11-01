@@ -21,10 +21,8 @@ using OpenNos.GameObject.Helpers;
 using OpenNos.GameObject.Packets.ClientPackets;
 using OpenNos.Master.Library.Client;
 using OpenNos.Master.Library.Data;
-using OpenNos.XMLModel.Models.Quest;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
@@ -383,7 +381,6 @@ namespace OpenNos.Handler
                             Logger.LogUserEvent("PARCEL_GET", Session.GenerateIdentity(), $"IIId: {newInv.Id} ItemVNum: {newInv.ItemVNum} Amount: {mail.AttachmentAmount} Sender: {mail.SenderId}");
 
                             Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_GIFTED")}: {newInv.Item.Name} x {mail.AttachmentAmount}", 12));
-
 
                             DAOFactory.MailDAO.DeleteById(mail.MailId);
 
