@@ -25,6 +25,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
@@ -42,6 +43,8 @@ namespace OpenNos.GameObject
         public ThreadSafeSortedList<long, Group> GroupsThreadSafe;
 
         public bool InShutdown;
+
+        public bool IsReboot { get; set; }
 
         public bool ShutdownStop;
 
@@ -667,11 +670,26 @@ namespace OpenNos.GameObject
                                 Broadcast(session, UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("NEW_LEADER")), ReceiverType.OnlySomeone, string.Empty, grp.Characters.ElementAt(1).Character.CharacterId);
                             }
                             grp.LeaveGroup(session);
-                            foreach (ClientSession groupSession in grp.Characters.GetAllItems())
+                            if (grp.CharacterCount == 1)
                             {
-                                groupSession.SendPacket(groupSession.Character.GeneratePinit());
-                                groupSession.SendPackets(session.Character.GeneratePst());
-                                groupSession.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("LEAVE_GROUP"), session.Character.Name), 0));
+                                ClientSession targetSession = grp.Characters.ElementAt(0);
+                                if (targetSession != null)
+                                {
+                                    targetSession.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("GROUP_CLOSED"), 0));
+                                    Broadcast(targetSession.Character.GeneratePidx(true));
+                                    grp.LeaveGroup(targetSession);
+                                    targetSession.SendPacket(targetSession.Character.GeneratePinit());
+                                    targetSession.SendPackets(targetSession.Character.GeneratePst());
+                                }
+                            }
+                            else
+                            {
+                                foreach (ClientSession groupSession in grp.Characters.GetAllItems())
+                                {
+                                    groupSession.SendPacket(groupSession.Character.GeneratePinit());
+                                    groupSession.SendPackets(session.Character.GeneratePst());
+                                    groupSession.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("LEAVE_GROUP"), session.Character.Name), 0));
+                                }
                             }
                             session.SendPacket(session.Character.GeneratePinit());
                             session.SendPackets(session.Character.GeneratePst());
@@ -693,12 +711,7 @@ namespace OpenNos.GameObject
             Act4AngelStat = new Act4Stat();
             Act4DemonStat = new Act4Stat();
 
-            // Load Configuration 
-
-            MailServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["MasterAuthKey"]);
-            ConfigurationServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["MasterAuthKey"]);
-            Configuration = ConfigurationServiceClient.Instance.GetConfigurationObject();
-        
+            // Load Configuration         
 
             Schedules = ConfigurationManager.GetSection("eventScheduler") as List<Schedule>;
 
@@ -946,8 +959,6 @@ namespace OpenNos.GameObject
             {
                 Logger.Error("General Error", ex);
             }
-
-            //Register the new created TCPIP server to the api
             WorldId = Guid.NewGuid();
         }
 
@@ -1080,7 +1091,10 @@ namespace OpenNos.GameObject
 
         public void SaveAll()
         {
-            Parallel.ForEach(Sessions, sess => sess.Character?.Save());
+            foreach(ClientSession sess in Sessions)
+            {
+                sess.Character?.Save();
+            }
             DAOFactory.BazaarItemDAO.RemoveOutDated();
         }
 
@@ -1146,6 +1160,18 @@ namespace OpenNos.GameObject
             InShutdown = true;
             Instance.SaveAll();
             CommunicationServiceClient.Instance.UnregisterWorldServer(WorldId);
+            if (IsReboot)
+            {
+                if (ChannelId == 51)
+                {
+                    Thread.Sleep(16000);
+                }
+                else
+                {
+                    Thread.Sleep(ChannelId - 1 * 2000);
+                }
+                Process.Start("OpenNos.World.exe", "--nomsg");
+            }
             Environment.Exit(0);
         }
 
@@ -1417,6 +1443,7 @@ namespace OpenNos.GameObject
             CommunicationServiceClient.Instance.PenaltyLogRefresh += onPenaltyLogRefresh;
             CommunicationServiceClient.Instance.GlobalEvent += onGlobalEvent;
             CommunicationServiceClient.Instance.ShutdownEvent += onShutdown;
+            CommunicationServiceClient.Instance.RestartEvent += onShutdown;
             ConfigurationServiceClient.Instance.ConfigurationUpdate += onConfiguratinEvent; ;
             MailServiceClient.Instance.MailSent += onMailSent;
             _lastGroupId = 1;
@@ -1453,28 +1480,19 @@ namespace OpenNos.GameObject
 
                 if (mail.AttachmentVNum != null)
                 {
+                    session.Character.MailList.Add((session.Character.MailList.Count > 0 ? session.Character.MailList.OrderBy(s => s.Key).Last().Key : 0) + 1, mailDTO);
                     session.SendPacket(session.Character.GenerateParcel(mailDTO));
+                    session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("ITEM_GIFTED"), GetItem(mailDTO.AttachmentVNum.Value)?.Name, mailDTO.AttachmentAmount), 12));
                 }
                 else
                 {
-                    session.SendPacket(session.Character.GeneratePost(mailDTO, 1));
+                    session.Character.MailList.Add((session.Character.MailList.Count > 0 ? session.Character.MailList.OrderBy(s => s.Key).Last().Key : 0) + 1, mailDTO);
+                    session.SendPacket(session.Character.GeneratePost(mailDTO, mailDTO.IsSenderCopy ? (byte)2 : (byte)1));
                 }
             }
-
-            // Parcel
-            //    MailList.Add((MailList.Count > 0 ? MailList.OrderBy(s => s.Key).Last().Key : 0) + 1, mail);
-            //    Session.SendPacket(GenerateParcel(mail));
-            //    Session.SendPacket(GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_GIFTED")} {mail.AttachmentAmount}", 12));
-
-            // Letter
-            //    Session.Character.MailList.Add((Session.Character.MailList.Count > 0 ? Session.Character.MailList.OrderBy(s => s.Key).Last().Key : 0) + 1, mailcopy);
-            //    Session.SendPacket(Session.Character.GeneratePost(mailcopy, 2));
         }
 
-        private void onConfiguratinEvent(object sender, EventArgs e)
-        {
-            Configuration = (ConfigurationObject)sender;
-        }
+        private void onConfiguratinEvent(object sender, EventArgs e) => Configuration = (ConfigurationObject)sender;
 
         private void loadFamilies()
         {
@@ -1820,6 +1838,22 @@ namespace OpenNos.GameObject
             }
             else
             {
+                Instance.TaskShutdown = new Task(Instance.ShutdownTask);
+                Instance.TaskShutdown.Start();
+            }
+        }
+
+        private void onRestart(object sender, EventArgs e)
+        {
+            if (Instance.TaskShutdown != null)
+            {
+                Instance.IsReboot = false;
+                Instance.ShutdownStop = true;
+                Instance.TaskShutdown = null;
+            }
+            else
+            {
+                Instance.IsReboot = true;
                 Instance.TaskShutdown = new Task(Instance.ShutdownTask);
                 Instance.TaskShutdown.Start();
             }

@@ -17,6 +17,7 @@ using System;
 
 namespace OpenNos.GameObject
 {
+    [Serializable]
     public class MinilandObjectDTO : MappingBaseDTO
     {
         #region Properties

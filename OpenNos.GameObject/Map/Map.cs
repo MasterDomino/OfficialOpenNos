@@ -111,7 +111,7 @@ namespace OpenNos.GameObject
             for (int i = 0; i < amount; i++)
             {
                 MapCell cell = GetRandomPosition();
-                SummonParameters.Add(new NpcToSummon(vnum, cell, -1, deathEvents, isProtected: isProtected, isMate: isMate));
+                SummonParameters.Add(new NpcToSummon(vnum, cell, -1, isProtected, isMate) { DeathEvents = deathEvents });
             }
             return SummonParameters;
         }

@@ -515,6 +515,20 @@ namespace OpenNos.GameObject
             return ids;
         }
 
+        internal int SummonNpc(NpcToSummon summonParameters)
+        {
+            NpcMonster npcMonster = ServerManager.Instance.GetNpc(summonParameters.VNum);
+            if (npcMonster != null)
+            {
+                MapNpc mapNpc = new MapNpc { NpcVNum = npcMonster.NpcMonsterVNum, MapY = summonParameters.SpawnCell.X, MapX = summonParameters.SpawnCell.Y, MapId = Map.MapId, IsHostile = true, IsMoving = true, MapNpcId = GetNextNpcId(), Target = summonParameters.Target, OnDeathEvents = summonParameters.DeathEvents, IsMate = summonParameters.IsMate, IsProtected = summonParameters.IsProtected };
+                mapNpc.Initialize(this);
+                AddNPC(mapNpc);
+                Broadcast(mapNpc.GenerateIn());
+                return mapNpc.MapNpcId;
+            }
+            return default;
+        }
+
         internal ConcurrentBag<int> SummonNpcs(List<NpcToSummon> summonParameters)
         {
             ConcurrentBag<int> ids = new ConcurrentBag<int>();

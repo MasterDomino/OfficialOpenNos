@@ -28,6 +28,8 @@ namespace OpenNos.Master.Library.Client
 
         public void KickSession(long? accountId, int? sessionId) => Task.Run(() => CommunicationServiceClient.Instance.OnKickSession(accountId, sessionId));
 
+        public void Restart() => Task.Run(() => CommunicationServiceClient.Instance.OnRestart());
+
         public void RunGlobalEvent(Domain.EventType eventType) => Task.Run(() => CommunicationServiceClient.Instance.OnRunGlobalEvent(eventType));
 
         public void SendMessageToCharacter(SCSCharacterMessage message) => Task.Run(() => CommunicationServiceClient.Instance.OnSendMessageToCharacter(message));

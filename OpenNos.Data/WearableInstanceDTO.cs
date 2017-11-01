@@ -17,6 +17,7 @@ using System;
 
 namespace OpenNos.Data
 {
+    [Serializable]
     public class WearableInstanceDTO : ItemInstanceDTO, IWearableInstanceDTO
     {
         #region Properties

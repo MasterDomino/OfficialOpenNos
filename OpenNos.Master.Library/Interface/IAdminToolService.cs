@@ -101,7 +101,7 @@ namespace OpenNos.Master.Library.Interface
         /// <summary>
         /// Sends a Admin Message to the given Channel
         /// </summary>
-        /// <param name="destChannel">Id of the Channel, null for all</param>
+        /// <param name="destChannelId">Id of the Channel, null for all</param>
         /// <param name="message">Message to send</param>
         void Shout(Guid destChannelId, string message);
 

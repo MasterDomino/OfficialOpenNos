@@ -3,6 +3,7 @@ using System;
 
 namespace OpenNos.Data
 {
+    [Serializable]
     public class ShellEffectDTO : MappingBaseDTO
     {
         #region Properties

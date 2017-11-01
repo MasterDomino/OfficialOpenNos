@@ -9,7 +9,7 @@ namespace OpenNos.XMLModel.Events
     {
         #region Properties
 
-        [XmlElement(Order = 5)]
+        [XmlElement(Order = 7)]
         public OnMapClean OnMapClean { get; set; }
 
         [XmlElement(Order = 4)]
@@ -27,7 +27,13 @@ namespace OpenNos.XMLModel.Events
         [XmlElement(Order = 3)]
         public SetMonsterLockers SetMonsterLockers { get; set; }
 
+        [XmlElement(Order = 5)]
+        public StartClock StartClock { get; set; }
+
         [XmlElement(Order = 6)]
+        public StartClock StartMapClock { get; set; }
+
+        [XmlElement(Order = 8)]
         public Wave[] Wave { get; set; }
 
         #endregion

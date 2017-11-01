@@ -16,6 +16,7 @@ using System;
 
 namespace OpenNos.Data
 {
+    [Serializable]
     public class GeneralLogDTO : MappingBaseDTO
     {
         #region Properties

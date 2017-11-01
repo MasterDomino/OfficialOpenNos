@@ -16,6 +16,7 @@ using System;
 
 namespace OpenNos.Data
 {
+    [Serializable]
     public class BazaarItemDTO : MappingBaseDTO
     {
         #region Properties

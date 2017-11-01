@@ -43,6 +43,7 @@ namespace OpenNos.Master.Library.Client
             int port = Convert.ToInt32(ConfigurationManager.AppSettings["MasterPort"]);
             _mailClient = new MailClient();
             _client = ScsServiceClientBuilder.CreateClient<IMailService>(new ScsTcpEndPoint(ip, port), _mailClient);
+
             System.Threading.Thread.Sleep(5000);
             while (_client.CommunicationState != CommunicationStates.Connected)
             {
@@ -76,14 +77,11 @@ namespace OpenNos.Master.Library.Client
 
         #region Methods
 
-        public bool Authenticate(string authKey) => _client.ServiceProxy.Authenticate(authKey);
+        public bool Authenticate(string authKey, Guid serverId) => _client.ServiceProxy.Authenticate(authKey, serverId);
 
         public void SendMail(Mail mail) => _client.ServiceProxy.SendMail(mail);
 
-        internal void OnMailSent(Mail mail)
-        {
-            MailSent?.Invoke(mail, null);
-        }
+        internal void OnMailSent(Mail mail) => MailSent?.Invoke(mail, null);
 
         #endregion
     }

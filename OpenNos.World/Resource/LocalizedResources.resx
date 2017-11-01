@@ -953,7 +953,7 @@
     <value>You received {0} gift/s!</value>
   </data>
   <data name="ITEM_GIFTED" xml:space="preserve">
-    <value>You get an item &gt;&gt;</value>
+    <value>You got an item: {0} x{1}</value>
   </data>
   <data name="GIFT_SENDED" xml:space="preserve">
     <value>The gift has been sent!</value>

@@ -144,6 +144,7 @@
     <Compile Include="Packets\ClientPackets\ShoppingPacket.cs" />
     <Compile Include="Packets\ClientPackets\SortOpenPacket.cs" />
     <Compile Include="Packets\ClientPackets\UseItemPacket.cs" />
+    <Compile Include="Packets\CommandPackets\BenchmarkPacket.cs" />
     <Compile Include="Packets\CommandPackets\AddPartnerPacket.cs" />
     <Compile Include="Packets\CommandPackets\BankPacket.cs" />
     <Compile Include="Packets\CommandPackets\DirectConnectPacket.cs" />
@@ -160,9 +161,11 @@
     <Compile Include="Packets\CommandPackets\ItemRainPacket.cs" />
     <Compile Include="Packets\CommandPackets\MaintenancePacket.cs" />
     <Compile Include="Packets\CommandPackets\RemoveNpcMonsterPacket.cs" />
+    <Compile Include="Packets\CommandPackets\RestartAllPacket.cs" />
     <Compile Include="Packets\CommandPackets\ShutdownAllPacket.cs" />
     <Compile Include="Packets\CommandPackets\CharacterEditPacket.cs" />
     <Compile Include="Packets\ClientPackets\FDelPacket.cs" />
+    <Compile Include="Packets\CommandPackets\RestartPacket.cs" />
     <Compile Include="Packets\CommandPackets\SortPacket.cs" />
     <Compile Include="Packets\CommandPackets\StealthyNiggerPacket.cs" />
     <Compile Include="Packets\CommandPackets\SudoPacket.cs" />

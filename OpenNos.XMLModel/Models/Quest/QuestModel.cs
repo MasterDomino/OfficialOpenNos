@@ -1,5 +1,4 @@
-﻿using OpenNos.XMLModel.Events;
-using OpenNos.XMLModel.Events.Quest;
+﻿using OpenNos.XMLModel.Events.Quest;
 using OpenNos.XMLModel.Objects.Quest;
 using System;
 using System.Xml.Serialization;

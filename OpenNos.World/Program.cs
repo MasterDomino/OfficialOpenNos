@@ -160,12 +160,16 @@ namespace OpenNos.World
             }
 
             ServerManager.Instance.ServerGroup = ConfigurationManager.AppSettings["ServerGroup"];
-            int sessionLimit = ServerManager.Instance.Configuration.SessionLimit;
+            int sessionLimit = 100; // Needs workaround
             int? newChannelId = CommunicationServiceClient.Instance.RegisterWorldServer(new SerializableWorldServer(ServerManager.Instance.WorldId, ConfigurationManager.AppSettings["IPAddress"], port, sessionLimit, ServerManager.Instance.ServerGroup));
 
             if (newChannelId.HasValue)
             {
                 ServerManager.Instance.ChannelId = newChannelId.Value;
+
+                MailServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["MasterAuthKey"], ServerManager.Instance.WorldId);
+                ConfigurationServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["MasterAuthKey"], ServerManager.Instance.WorldId);
+                ServerManager.Instance.Configuration = ConfigurationServiceClient.Instance.GetConfigurationObject();
             }
             else
             {
@@ -248,6 +252,8 @@ namespace OpenNos.World
             DAOFactory.ScriptedInstanceDAO.RegisterMapping(typeof(ScriptedInstanceDTO)).InitializeMapper();
             DAOFactory.ScriptedInstanceDAO.RegisterMapping(typeof(ScriptedInstance)).InitializeMapper();
             DAOFactory.MaintenanceLogDAO.RegisterMapping(typeof(MaintenanceLogDTO)).InitializeMapper();
+            DAOFactory.QuestDAO.RegisterMapping(typeof(QuestDTO)).InitializeMapper();
+            DAOFactory.QuestProgressDAO.RegisterMapping(typeof(QuestProgressDTO)).InitializeMapper();
         }
 
         private static void unhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)

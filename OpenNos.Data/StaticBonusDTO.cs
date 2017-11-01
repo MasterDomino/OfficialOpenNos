@@ -17,6 +17,7 @@ using System;
 
 namespace OpenNos.Data
 {
+    [Serializable]
     public class StaticBonusDTO : MappingBaseDTO
     {
         #region Properties

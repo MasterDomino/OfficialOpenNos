@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OpenNos.Data
 {
+    [Serializable]
     public class QuestProgressDTO : MappingBaseDTO
     {
         public long QuestProgressId { get; set; }
@@ -17,6 +14,5 @@ namespace OpenNos.Data
         public long CharacterId { get; set; }
 
         public bool IsFinished { get; set; }
-
     }
 }

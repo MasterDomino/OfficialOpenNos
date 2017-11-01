@@ -209,6 +209,12 @@ namespace OpenNos.Master.Library.Interface
         void Shutdown(string worldGroup);
 
         /// <summary>
+        /// Shutdown given WorldGroup or WorldServer
+        /// </summary>
+        /// <param name="worldGroup">WorldGroup that should be shut down</param>
+        void Restart(string worldGroup);
+
+        /// <summary>
         /// Unregisters a previously registered World Server
         /// </summary>
         /// <param name="worldId">Id of the World to be unregistered</param>

@@ -38,6 +38,7 @@ namespace OpenNos.Domain
         STOPCLOCK,
         MAPCLOCK,
         REGISTEREVENT,
+        SPAWNNPC,
         SPAWNNPCS,
         SCRIPTEND,
         REMOVEBUTTONLOCKER,
@@ -52,6 +53,8 @@ namespace OpenNos.Domain
         EFFECT,
         MOVE,
         ONTARGET,
-        CONTROLEMONSTERINRANGE
+        CONTROLEMONSTERINRANGE,
+        ONSTOP,
+        ONTIMEOUT
     }
 }

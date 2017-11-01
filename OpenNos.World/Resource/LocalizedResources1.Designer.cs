@@ -1996,7 +1996,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You get an item &gt;&gt;.
+        ///   Looks up a localized string similar to You got an item: {0} x{1}.
         /// </summary>
         internal static string ITEM_GIFTED {
             get {

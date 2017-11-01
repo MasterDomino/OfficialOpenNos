@@ -32,6 +32,8 @@ namespace OpenNos.Master.Library.Interface
 
         void Shutdown();
 
+        void Restart();
+
         void UpdateBazaar(long bazaarItemId);
 
         void UpdateFamily(long familyId);

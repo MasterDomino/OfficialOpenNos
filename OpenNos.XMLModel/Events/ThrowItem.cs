@@ -15,10 +15,10 @@ namespace OpenNos.XMLModel.Events
         public int MinAmount { get; set; }
 
         [XmlAttribute]
-        public int PackAmount { get; set; }
+        public byte PackAmount { get; set; }
 
         [XmlAttribute]
-        public int VNum { get; set; }
+        public short VNum { get; set; }
 
         #endregion
     }

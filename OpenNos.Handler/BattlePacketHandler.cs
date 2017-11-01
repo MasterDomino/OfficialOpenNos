@@ -316,8 +316,8 @@ namespace OpenNos.Handler
                                 Session.Character.ChangeChannel(connection.Split(':')[0], port, 3);
                                 return;
                             }
-                            target.CurrentMapInstance.Broadcast(target, target.Character.GenerateTp());
-                            target.CurrentMapInstance.Broadcast(target.Character.GenerateRevive());
+                            target.CurrentMapInstance?.Broadcast(target, target.Character.GenerateTp());
+                            target.CurrentMapInstance?.Broadcast(target.Character.GenerateRevive());
                             target.SendPacket(target.Character.GenerateStat());
                         });
                     }

@@ -119,7 +119,7 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
-                return context.Quest.ToList().Select(c => _mapper.Map<QuestDTO>(c)).ToList();
+                return context.Quest.ToList().Select(c => _mapper.Map<QuestDTO>(c));
             }
         }
 

@@ -58,7 +58,9 @@
     <Compile Include="Events\OnMapClean.cs" />
     <Compile Include="Events\OnMoveOnMap.cs" />
     <Compile Include="Events\OnNoticing.cs" />
+    <Compile Include="Events\OnStop.cs" />
     <Compile Include="Events\OnTarget.cs" />
+    <Compile Include="Events\OnTimeout.cs" />
     <Compile Include="Events\OnTraversal.cs" />
     <Compile Include="Events\Quest\Script.cs" />
     <Compile Include="Events\Quest\TeleportTo.cs" />
@@ -69,6 +71,7 @@
     <Compile Include="Events\SetMonsterLockers.cs" />
     <Compile Include="Events\SpawnButton.cs" />
     <Compile Include="Events\SpawnPortal.cs" />
+    <Compile Include="Events\StartClock.cs" />
     <Compile Include="Events\SummonMonster.cs" />
     <Compile Include="Events\SummonMonsters.cs" />
     <Compile Include="Events\SummonNpc.cs" />
