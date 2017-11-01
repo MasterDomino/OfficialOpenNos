@@ -18,9 +18,9 @@ namespace OpenNos.Master.Library.Interface
         bool Authenticate(string authKey);
 
         /// <summary>
-        /// Update the Configuration Object to the Service
+        /// Send Mail
         /// </summary>
-        /// <param name="configurationObject"></param>
+        /// <param name="mail"></param>
         void SendMail(Mail mail);
     }
 }
