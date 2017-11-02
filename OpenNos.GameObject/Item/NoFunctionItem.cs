@@ -38,11 +38,12 @@ namespace OpenNos.GameObject
                         switch (EffectValue)
                         {
                             case 1:
-                                if (session.Character.Inventory.CountItem(1036) < 1)
+                                if (session.Character.Inventory.CountItem(1036) < 1 || session.Character.Inventory.CountItem(1013) < 1)
                                 {
                                     return;
                                 }
                                 session.Character.Inventory.RemoveItemAmount(1036);
+                                session.Character.Inventory.RemoveItemAmount(1013);
                                 if (ServerManager.Instance.RandomNumber() < 25)
                                 {
                                     switch (ServerManager.Instance.RandomNumber(0, 2))
@@ -57,11 +58,12 @@ namespace OpenNos.GameObject
                                 }
                                 break;
                             case 2:
-                                if (session.Character.Inventory.CountItem(1038) < 1)
+                                if (session.Character.Inventory.CountItem(1038) < 1 || session.Character.Inventory.CountItem(1013) < 1)
                                 {
                                     return;
                                 }
                                 session.Character.Inventory.RemoveItemAmount(1038);
+                                session.Character.Inventory.RemoveItemAmount(1013);
                                 if (ServerManager.Instance.RandomNumber() < 25)
                                 {
                                     switch (ServerManager.Instance.RandomNumber(0, 4))
@@ -82,11 +84,12 @@ namespace OpenNos.GameObject
                                 }
                                 break;
                             case 3:
-                                if (session.Character.Inventory.CountItem(1037) < 1)
+                                if (session.Character.Inventory.CountItem(1037) < 1 || session.Character.Inventory.CountItem(1013) < 1)
                                 {
                                     return;
                                 }
                                 session.Character.Inventory.RemoveItemAmount(1037);
+                                session.Character.Inventory.RemoveItemAmount(1013);
                                 if (ServerManager.Instance.RandomNumber() < 25)
                                 {
                                     switch (ServerManager.Instance.RandomNumber(0, 17))
