@@ -162,7 +162,7 @@ namespace OpenNos.GameObject
                                 {
                                     if (sentPacket.Sender != null)
                                     {
-                                        if (sentPacket.Sender.Character.IsBlockedByCharacter(session.Character.CharacterId))
+                                        if (!sentPacket.Sender.Character.IsBlockedByCharacter(session.Character.CharacterId))
                                         {
                                             session.SendPacket(sentPacket.Packet);
                                         }
@@ -182,7 +182,7 @@ namespace OpenNos.GameObject
                                 {
                                     if (sentPacket.Sender != null)
                                     {
-                                        if (sentPacket.Sender.Character.IsBlockedByCharacter(session.Character.CharacterId))
+                                        if (!sentPacket.Sender.Character.IsBlockedByCharacter(session.Character.CharacterId))
                                         {
                                             session.SendPacket(sentPacket.Packet);
                                         }
