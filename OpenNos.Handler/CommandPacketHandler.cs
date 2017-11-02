@@ -3220,6 +3220,7 @@ namespace OpenNos.Handler
                     DestinationMapId = destinationMapId,
                     DestinationX = destinationX,
                     DestinationY = destinationY,
+                    DestinationMapInstanceId = insertToDatabase ? Guid.Empty : destinationMapId == 20000 ? Session.Character.Miniland.MapInstanceId : Guid.Empty,
                     Type = type
                 };
                 if (insertToDatabase)

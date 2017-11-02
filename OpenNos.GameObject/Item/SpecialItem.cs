@@ -199,6 +199,12 @@ namespace OpenNos.GameObject
                 case 34: // this is imaginary number I = √(-1)
                     break;
 
+                case 100:
+                    {
+
+                    }
+                    break;
+
                 // Faction Egg
                 case 570:
                     if (session.Character.Faction == (FactionType)EffectValue)
