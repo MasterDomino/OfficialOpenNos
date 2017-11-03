@@ -1638,8 +1638,8 @@ namespace OpenNos.GameObject
                     {
                         #region item drop
 
-                        int levelDifference = 0;//Session.Character.Level - monsterToAttack.Monster.Level;
-                        if ((levelDifference <= 15 && levelDifference >= -15) || ServerManager.Instance.ChannelId == 51)
+                        int levelDifference = Session.Character.Level - monsterToAttack.Monster.Level;
+                        if (ServerManager.Instance.ChannelId == 51)
                         {
                             int dropRate = ServerManager.Instance.Configuration.RateDrop * MapInstance.DropRate;
                             int x = 0;
