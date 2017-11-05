@@ -583,7 +583,7 @@ namespace OpenNos.Handler
                             Session.CurrentMapInstance.Broadcast(StaticPacketHelper.CastOnTarget(UserType.Player, Session.Character.CharacterId, 1, Session.Character.CharacterId, ski.Skill.CastAnimation, ski.Skill.CastEffect, ski.Skill.SkillVNum));
                             Session.CurrentMapInstance.Broadcast(StaticPacketHelper.SkillUsed(UserType.Player, Session.Character.CharacterId, 1, targetId, ski.Skill.SkillVNum, ski.Skill.Cooldown, ski.Skill.AttackAnimation, ski.Skill.Effect, Session.Character.PositionX, Session.Character.PositionY, true, (int)((double)Session.Character.Hp / Session.Character.HPLoad() * 100), 0, -1, (byte)(ski.Skill.SkillType - 1)));
                             ClientSession target = ServerManager.Instance.GetSessionByCharacterId(targetId) ?? Session;
-                            ski.Skill.BCards.Where(s => !s.Type.Equals((byte)BCardType.CardType.MeditationSkill)).ToList().ForEach(s => s.ApplyBCards(target.Character, Session.Character));
+                            ski.Skill.BCards.Where(s => !s.Type.Equals((byte)BCardType.CardType.MeditationSkill)).ToList().ForEach(s => s.ApplyBCards(target?.Character, Session.Character));
                         }
                         else if (ski.Skill.TargetType == 1 && ski.Skill.HitType != 1)
                         {
@@ -649,7 +649,7 @@ namespace OpenNos.Handler
                                         if (ski.Skill.HitType == 3)
                                         {
                                             int count = 0;
-                                            if (playerToAttack != null && playerToAttack.CurrentMapInstance == Session.CurrentMapInstance && playerToAttack.Character.CharacterId != Session.Character.CharacterId)
+                                            if (playerToAttack.CurrentMapInstance == Session.CurrentMapInstance && playerToAttack.Character.CharacterId != Session.Character.CharacterId)
                                             {
                                                 if (Session.CurrentMapInstance.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4))
                                                 {
