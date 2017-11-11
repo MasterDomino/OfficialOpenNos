@@ -114,7 +114,7 @@ namespace OpenNos.GameObject
                                         break;
 
                                     default:
-                                        if (mapMonster.OnDeathEvents.Any(s => s.EventActionType == EventActionType.SPAWNMONSTERS))
+                                        if (!mapMonster.OnDeathEvents.Any(s => s.EventActionType == EventActionType.SPAWNMONSTERS))
                                         {
                                             mapMonster.OnDeathEvents.Add(new EventContainer(mapMonster.MapInstance, EventActionType.SPAWNMONSTERS, summonParameters));
                                         }

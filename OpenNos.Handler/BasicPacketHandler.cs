@@ -1287,6 +1287,14 @@ namespace OpenNos.Handler
                     {
                         ServerManager.Instance.JoinMiniland(Session, Session);
                     }
+                    else if (portal.DestinationMapId == 20000)
+                    {
+                        ClientSession sess = ServerManager.Instance.Sessions.FirstOrDefault(s => s.Character.Miniland.MapInstanceId == portal.DestinationMapInstanceId);
+                        if (sess != null)
+                        {
+                            ServerManager.Instance.JoinMiniland(Session, sess);
+                        }
+                    }
                     else
                     {
                         ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, portal.DestinationMapInstanceId, portal.DestinationX, portal.DestinationY);
