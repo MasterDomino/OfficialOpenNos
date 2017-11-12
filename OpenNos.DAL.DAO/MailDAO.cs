@@ -133,6 +133,23 @@ namespace OpenNos.DAL.DAO
                 context.SaveChanges();
                 return _mapper.Map<MailDTO>(entity);
             }
+            catch (System.Data.Entity.Validation.DbEntityValidationException dbEx)
+            {
+                Exception raise = dbEx;
+                foreach (var validationErrors in dbEx.EntityValidationErrors)
+                {
+                    foreach (var validationError in validationErrors.ValidationErrors)
+                    {
+                        string message = string.Format("{0}:{1}",
+                            validationErrors.Entry.Entity.ToString(),
+                            validationError.ErrorMessage);
+                        // raise a new exception nesting
+                        // the current instance as InnerException
+                        Logger.Error(new InvalidOperationException(message, raise));
+                    }
+                }
+                return null;
+            }
             catch (Exception e)
             {
                 Logger.Error(e);
