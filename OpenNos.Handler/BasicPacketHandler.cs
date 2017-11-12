@@ -1673,6 +1673,21 @@ namespace OpenNos.Handler
                     {
                         return;
                     }
+                    if (datasplit[1].Length > 250)
+                    {
+                        //PenaltyLogDTO log = new PenaltyLogDTO
+                        //{
+                        //    AccountId = Session.Character.AccountId,
+                        //    Reason = "You are an idiot!",
+                        //    Penalty = PenaltyType.Banned,
+                        //    DateStart = DateTime.Now,
+                        //    DateEnd = DateTime.Now.AddYears(69),
+                        //    AdminName = "Your mom's ass"
+                        //};
+                        //Session.Character.InsertOrUpdatePenalty(log);
+                        //ServerManager.Instance.Kick(Session.Character.Name);
+                        return;
+                    }
                     WearableInstance headWearable = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.Hat, InventoryType.Wear);
                     byte color = headWearable?.Item.IsColored == true ? (byte)headWearable.Design : (byte)Session.Character.HairColor;
                     Mail mailcopy = new Mail
