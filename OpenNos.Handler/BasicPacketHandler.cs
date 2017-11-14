@@ -808,7 +808,7 @@ namespace OpenNos.Handler
                         {
                             if (Session.Character.IsFriendOfCharacter(guriPacket.User))
                             {
-                                if (session.CurrentMapInstance.MapInstanceType == MapInstanceType.BaseMapInstance)
+                                if (session.CurrentMapInstance?.MapInstanceType == MapInstanceType.BaseMapInstance)
                                 {
                                     if (Session.Character.MapInstance.MapInstanceType != MapInstanceType.BaseMapInstance || (ServerManager.Instance.ChannelId == 51 && Session.Character.Faction != session.Character.Faction))
                                     {
