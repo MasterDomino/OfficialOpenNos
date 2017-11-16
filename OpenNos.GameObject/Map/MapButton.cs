@@ -14,6 +14,7 @@
 
 using OpenNos.GameObject.Helpers;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenNos.GameObject
 {
@@ -66,13 +67,13 @@ namespace OpenNos.GameObject
             State = !State;
             if (State)
             {
-                EnableEvents.ForEach(e => EventHelper.Instance.RunEvent(e));
-                FirstEnableEvents.ForEach(e => EventHelper.Instance.RunEvent(e));
+                EnableEvents.ToList().ForEach(e => EventHelper.Instance.RunEvent(e));
+                FirstEnableEvents.ToList().ForEach(e => EventHelper.Instance.RunEvent(e));
                 FirstEnableEvents.RemoveAll(s => s != null);
             }
             else
             {
-                DisableEvents.ForEach(e => EventHelper.Instance.RunEvent(e));
+                DisableEvents.ToList().ForEach(e => EventHelper.Instance.RunEvent(e));
             }
         }
 
