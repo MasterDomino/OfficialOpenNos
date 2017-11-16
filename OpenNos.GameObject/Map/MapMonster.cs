@@ -849,7 +849,7 @@ namespace OpenNos.GameObject
         /// <param name="npcMonsterSkill"></param>
         private void targetHit(ClientSession targetSession, NpcMonsterSkill npcMonsterSkill)
         {
-            if (Monster != null && ((DateTime.Now - LastSkill).TotalMilliseconds >= 1000 + (Monster.BasicCooldown * 200) || npcMonsterSkill != null) && !_noAttack)
+            if (Monster != null && targetSession?.Character != null && ((DateTime.Now - LastSkill).TotalMilliseconds >= 1000 + (Monster.BasicCooldown * 200) || npcMonsterSkill != null) && !_noAttack)
             {
                 int hitmode = 0;
                 bool onyxWings = false;
@@ -886,7 +886,7 @@ namespace OpenNos.GameObject
                 }
                 Observable.Timer(TimeSpan.FromMilliseconds(castTime)).Subscribe(o =>
                 {
-                    if (targetSession.Character.Hp > 0)
+                    if (targetSession?.Character != null && targetSession.Character.Hp > 0)
                     {
                         targetHit2(targetSession, npcMonsterSkill, damage, hitmode);
                     }
@@ -908,7 +908,7 @@ namespace OpenNos.GameObject
                 if (targetSession.Character.Hp <= 0)
                 {
                     RemoveTarget();
-                    Observable.Timer(TimeSpan.FromMilliseconds(1000)).Subscribe(o => ServerManager.Instance.AskRevive(targetSession.Character.CharacterId));
+                    Observable.Timer(TimeSpan.FromMilliseconds(1000)).Subscribe(o => ServerManager.Instance.AskRevive(targetSession?.Character?.CharacterId ?? 0));
                 }
             }
             if (npcMonsterSkill != null && (npcMonsterSkill.Skill.Range > 0 || npcMonsterSkill.Skill.TargetRange > 0))
@@ -933,7 +933,7 @@ namespace OpenNos.GameObject
                         if (characterInRange.Hp <= 0)
                         {
                             RemoveTarget();
-                            Observable.Timer(TimeSpan.FromMilliseconds(1000)).Subscribe(o => ServerManager.Instance.AskRevive(characterInRange.CharacterId));
+                            Observable.Timer(TimeSpan.FromMilliseconds(1000)).Subscribe(o => ServerManager.Instance.AskRevive(characterInRange?.CharacterId ?? 0));
                         }
                     }
                 }
