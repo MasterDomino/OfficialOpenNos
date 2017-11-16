@@ -445,7 +445,7 @@ namespace OpenNos.GameObject
 
         internal void StartLife()
         {
-            Observable.Interval(TimeSpan.FromSeconds(1)).Subscribe(x =>
+            Observable.Interval(TimeSpan.FromSeconds(5)).Subscribe(x =>
             {
                 if (InstanceBag?.EndState != 1)
                 {
