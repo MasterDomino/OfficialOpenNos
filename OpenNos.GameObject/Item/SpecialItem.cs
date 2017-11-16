@@ -92,7 +92,7 @@ namespace OpenNos.GameObject
                     {
                         Group group = new Group()
                         {
-                            GroupType = GroupType.Team,
+                            GroupType = GroupType.BigTeam,
                             Raid = raid
                         };
                         group.JoinGroup(session.Character.CharacterId);
