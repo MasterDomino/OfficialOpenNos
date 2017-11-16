@@ -468,7 +468,7 @@ namespace OpenNos.GameObject.Helpers
             string str = $"rl {type}";
             ServerManager.Instance.GroupList.ToList().ForEach(s =>
             {
-                if (s.CharacterCount > 1)
+                if (s.CharacterCount > 0)
                 {
                     ClientSession leader = s.Characters.ElementAt(0);
                     str += $" {s.Raid.Id}.{s.Raid?.LevelMinimum}.{s.Raid?.LevelMaximum}.{leader.Character.Name}.{leader.Character.Level}.{(leader.Character.UseSp ? leader.Character.Morph : -1)}.{(byte)leader.Character.Class}.{(byte)leader.Character.Gender}.{s.CharacterCount}.{leader.Character.HeroLevel}";
