@@ -1007,6 +1007,34 @@ namespace OpenNos.Handler
         }
 
         /// <summary>
+        /// $ClearMap packet
+        /// </summary>
+        /// <param name="clearMapPacket"></param>
+        public void ClearMap(ClearMapPacket clearMapPacket)
+        {
+            if (clearMapPacket != null && Session.HasCurrentMapInstance)
+            {
+                Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[ClearMap]MapId: {Session.CurrentMapInstance.MapInstanceId}");
+
+                Parallel.ForEach(Session.CurrentMapInstance.Monsters.Where(s => s.ShouldRespawn != true), monster =>
+                {
+                    Session.CurrentMapInstance.Broadcast(StaticPacketHelper.Out(UserType.Monster, monster.MapMonsterId));
+                    Session.CurrentMapInstance.RemoveMonster(monster);
+                });
+                Parallel.ForEach(Session.CurrentMapInstance.DroppedList.GetAllItems(), drop =>
+                {
+                        Session.CurrentMapInstance.Broadcast(StaticPacketHelper.Out(UserType.Object, drop.TransportId));
+                        Session.CurrentMapInstance.DroppedList.Remove(drop.TransportId);
+                });
+                Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay(ClearMapPacket.ReturnHelp(), 10));
+            }
+        }
+
+        /// <summary>
         /// $Clone Command
         /// </summary>
         /// <param name="cloneItemPacket"></param>
