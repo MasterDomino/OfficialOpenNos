@@ -13,7 +13,7 @@
  */
 
 using OpenNos.Data.Enums;
-using OpenNos.GameObject;
+using OpenNos.Data;
 using System.Collections.Generic;
 
 namespace OpenNos.DAL.Interface

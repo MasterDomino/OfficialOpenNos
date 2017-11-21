@@ -15,7 +15,7 @@
 using OpenNos.Data;
 using System;
 
-namespace OpenNos.GameObject
+namespace OpenNos.Data
 {
     [Serializable]
     public class MinilandObjectDTO : MappingBaseDTO

@@ -17,7 +17,7 @@ using OpenNos.DAL.EF;
 using OpenNos.DAL.EF.Helpers;
 using OpenNos.DAL.Interface;
 using OpenNos.Data.Enums;
-using OpenNos.GameObject;
+using OpenNos.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;

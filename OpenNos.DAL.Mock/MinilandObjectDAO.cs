@@ -14,7 +14,7 @@
 
 using OpenNos.DAL.Interface;
 using OpenNos.Data.Enums;
-using OpenNos.GameObject;
+using OpenNos.Data;
 using System;
 using System.Collections.Generic;
 
