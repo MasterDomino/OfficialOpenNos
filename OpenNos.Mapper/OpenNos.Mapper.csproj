@@ -41,22 +41,44 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Mapper.cs" />
+    <Compile Include="Mappers\BazaarItemMapper.cs" />
+    <Compile Include="Mappers\BCardMapper.cs" />
+    <Compile Include="Mappers\BoxItemMapper.cs" />
+    <Compile Include="Mappers\CardMapper.cs" />
+    <Compile Include="Mappers\CellonOptionMapper.cs" />
+    <Compile Include="Mappers\CharacterRelationMapper.cs" />
+    <Compile Include="Mappers\CharacterSkillMapper.cs" />
+    <Compile Include="Mappers\ComboMapper.cs" />
+    <Compile Include="Mappers\DropMapper.cs" />
+    <Compile Include="Mappers\FamilyCharacterMapper.cs" />
+    <Compile Include="Mappers\FamilyLogMapper.cs" />
+    <Compile Include="Mappers\FamilyMapper.cs" />
+    <Compile Include="Mappers\GeneralLogMapper.cs" />
+    <Compile Include="Mappers\ItemInstanceMapper.cs" />
+    <Compile Include="Mappers\ItemMapper.cs" />
+    <Compile Include="Mappers\MailMapper.cs" />
+    <Compile Include="Mappers\MaintenanceLogMapper.cs" />
+    <Compile Include="Mappers\MapMapper.cs" />
+    <Compile Include="Mappers\MapMonsterMapper.cs" />
+    <Compile Include="Mappers\MapNPCMapper.cs" />
+    <Compile Include="Mappers\MapTypeMapMapper.cs" />
+    <Compile Include="Mappers\MapTypeMapper.cs" />
+    <Compile Include="Mappers\MateMapper.cs" />
+    <Compile Include="Mappers\MinilandObjectMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Mappers\AccountMapper.cs" />
     <Compile Include="Mappers\CharacterMapper.cs" />
     <Compile Include="Mappers\PenaltyLogMapper.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Mappers\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\OpenNos.Data\OpenNos.Data.csproj">
-      <Project>{F1071DED-3D92-4416-9B9C-8664441ADE64}</Project>
-      <Name>OpenNos.Data</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OpenNos.DAL.EF\OpenNos.DAL.EF.csproj">
       <Project>{4AECC47D-098A-4493-8E1E-D10EDBB7A189}</Project>
       <Name>OpenNos.DAL.EF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenNos.Data\OpenNos.Data.csproj">
+      <Project>{F1071DED-3D92-4416-9B9C-8664441ADE64}</Project>
+      <Name>OpenNos.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpenNos.Domain\OpenNos.Domain.csproj">
       <Project>{20ADDDDD-DAD9-44F3-9BEB-026C73090660}</Project>
