@@ -12,10 +12,10 @@
  * GNU General Public License for more details.
  */
 
+using OpenNos.Domain;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static OpenNos.Domain.BCardType;
 
 namespace OpenNos.DAL.EF
 {
@@ -31,7 +31,7 @@ namespace OpenNos.DAL.EF
 
         public virtual ICollection<BCard> BCards { get; set; }
 
-        public CardType BuffType { get; set; }
+        public BuffType BuffType { get; set; }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
