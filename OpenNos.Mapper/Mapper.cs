@@ -1,4 +1,5 @@
-﻿using OpenNos.Mapper.Mappers;
+﻿using OpenNos.Data;
+using OpenNos.Mapper.Mappers;
 namespace OpenNos.Mapper
 {
     public class Mapper
@@ -162,6 +163,14 @@ namespace OpenNos.Mapper
             _wearableInstanceMapper = new WearableInstanceMapper();
         }
 
+        public void Map<TDTO, TEntity>(object input, object output)
+        {
+            if(typeof(TDTO) == typeof(ItemInstanceDTO))
+            {
+
+            }
+        }
+
         public static Mapper Instance => _instance ?? (_instance = new Mapper());
 
         public AccountMapper AccountMapper { get { return _accountMapper; } }
@@ -217,29 +226,53 @@ namespace OpenNos.Mapper
         public MinilandObjectMapper MinilandObjectMapper { get { return _minilandObjectMapper; } }
 
         public NpcMonsterMapper NpcMonsterMapper { get { return _npcMonsterMapper; } }
+
         public NpcMonsterSkillMapper NpcMonsterSkillMapper { get { return _npcMonsterSkillMapper; } }
+
         public PenaltyLogMapper PenaltyLogMapper { get { return _penaltyLogMapper; } }
+
         public PortalMapper PortalMapper { get { return _portalMapper; } }
+
         public QuestMapper QuestMapper { get { return _questMapper; } }
+
         public QuestProgressMapper QuestProgressMapper { get { return _questProgressMapper; } }
+
         public QuicklistEntryMapper QuicklistEntryMapper { get { return _quicklistEntryMapper; } }
+
         public RecipeItemMapper RecipeItemMapper { get { return _recipeItemMapper; } }
+
         public RecipeListMapper RecipeListMapper { get { return _recipeListMapper; } }
+
         public RecipeMapper RecipeMapper { get { return _recipeMapper; } }
+
         public RespawnMapper RespawnMapper { get { return _respawnMapper; } }
+
         public RespawnMapTypeMapper RespawnMapTypeMapper { get { return _respawnMapTypeMapper; } }
+
         public RollGeneratedItemMapper RollGeneratedItemMapper { get { return _rollGeneratedItemMapper; } }
+
         public ScriptedInstanceMapper ScriptedInstanceMapper { get { return _scriptedInstanceMapper; } }
+
         public ShellEffectMapper ShellEffectMapper { get { return _shellEffectMapper; } }
+
         public ShopItemMapper ShopItemMapper { get { return _shopItemMapper; } }
+
         public ShopMapper ShopMapper { get { return _shopMapper; } }
+
         public ShopSkillMapper ShopSkillMapper { get { return _shopSkillMapper; } }
+
         public SkillMapper SkillMapper { get { return _skillMapper; } }
+
         public SpecialistInstanceMapper SpecialistInstanceMapper { get { return _specialistInstanceMapper; } }
+
         public StaticBonusMapper StaticBonusMapper { get { return _staticBonusMapper; } }
+
         public StaticBuffMapper StaticBuffMapper { get { return _staticBuffMapper; } }
+
         public TeleporterMapper TeleporterMapper { get { return _teleporterMapper; } }
+
         public UsableInstanceMapper UsableInstanceMapper { get { return _usableInstanceMapper; } }
+
         public WearableInstanceMapper WearableInstanceMapper { get { return _wearableInstanceMapper; } }
     }
 }

@@ -198,10 +198,6 @@ namespace OpenNos.GameObject
             return new List<ItemInstance>();
         }
 
-        public override void Initialize()
-        {
-        }
-
         /// <summary>
         /// Checks if the current character is in range of the given position
         /// </summary>

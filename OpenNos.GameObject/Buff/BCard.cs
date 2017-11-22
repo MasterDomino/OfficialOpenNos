@@ -543,10 +543,6 @@ namespace OpenNos.GameObject
             }
         }
 
-        public override void Initialize()
-        {
-        }
-
         #endregion
     }
 }

@@ -87,7 +87,9 @@ namespace OpenNos.DAL.DAO
                     Account account = context.Account.FirstOrDefault(a => a.AccountId.Equals(accountId));
                     if (account != null)
                     {
-                        return _mapper.Map<AccountDTO>(account);
+                        AccountDTO accountDTO = new AccountDTO();
+                        Mapper.Mapper.Instance.AccountMapper.ToAccountDTO(account, accountDTO);
+                        return accountDTO;
                     }
                 }
             }
@@ -107,7 +109,9 @@ namespace OpenNos.DAL.DAO
                     Account account = context.Account.FirstOrDefault(a => a.Name.Equals(name));
                     if (account != null)
                     {
-                        return _mapper.Map<AccountDTO>(account);
+                        AccountDTO accountDTO = new AccountDTO();
+                        Mapper.Mapper.Instance.AccountMapper.ToAccountDTO(account, accountDTO);
+                        return accountDTO;
                     }
                 }
             }
@@ -146,25 +150,24 @@ namespace OpenNos.DAL.DAO
 
         private AccountDTO insert(AccountDTO account, OpenNosContext context)
         {
-            Account entity = _mapper.Map<Account>(account);
+            Account entity = new Account();
+            Mapper.Mapper.Instance.AccountMapper.ToAccount(account, entity);
             context.Account.Add(entity);
             context.SaveChanges();
-            return _mapper.Map<AccountDTO>(entity);
+            Mapper.Mapper.Instance.AccountMapper.ToAccountDTO(entity, account);
+            return account;
         }
 
         private AccountDTO update(Account entity, AccountDTO account, OpenNosContext context)
         {
             if (entity != null)
             {
-                // The Mapper breaks context.SaveChanges(), so we need to "map" the data by hand...
-                // entity = _mapper.Map<Account>(account);
-                entity.Authority = account.Authority;
-                entity.Name = account.Name;
-                entity.Password = account.Password;
+                Mapper.Mapper.Instance.AccountMapper.ToAccount(account, entity);
                 context.Entry(entity).State = EntityState.Modified;
                 context.SaveChanges();
             }
-            return _mapper.Map<AccountDTO>(entity);
+            Mapper.Mapper.Instance.AccountMapper.ToAccountDTO(entity, account);
+            return account;
         }
 
         #endregion

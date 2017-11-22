@@ -30,7 +30,6 @@ namespace OpenNos.GameObject
 
         private List<CellonOptionDTO> _cellonOptions;
 
-        private Random _random;
 
         private List<ShellEffectDTO> _shellEffects;
 
@@ -40,7 +39,6 @@ namespace OpenNos.GameObject
 
         public WearableInstance()
         {
-            _random = new Random();
             if (EquipmentSerialId == Guid.Empty)
             {
                 EquipmentSerialId = Guid.NewGuid();
@@ -50,7 +48,6 @@ namespace OpenNos.GameObject
         public WearableInstance(Guid id)
         {
             Id = id;
-            _random = new Random();
             if (EquipmentSerialId == Guid.Empty)
             {
                 EquipmentSerialId = Guid.NewGuid();
@@ -59,7 +56,6 @@ namespace OpenNos.GameObject
 
         public WearableInstance(short vNum, byte amount) : base(vNum, amount)
         {
-            _random = new Random();
             if (EquipmentSerialId == Guid.Empty)
             {
                 EquipmentSerialId = Guid.NewGuid();
@@ -243,7 +239,6 @@ namespace OpenNos.GameObject
 
         public override void Initialize()
         {
-            _random = new Random();
             if (EquipmentSerialId == Guid.Empty)
             {
                 EquipmentSerialId = Guid.NewGuid();

@@ -30,14 +30,5 @@ namespace OpenNos.GameObject
         public CharacterDTO Character => _character ?? (_character = DAOFactory.CharacterDAO.LoadById(CharacterId));
 
         #endregion
-
-        #region Methods
-
-        public override void Initialize()
-        {
-            // do nothing
-        }
-
-        #endregion
     }
 }

@@ -33,13 +33,5 @@ namespace OpenNos.GameObject
         }
 
         #endregion
-
-        #region Methods
-
-        public override void Initialize()
-        {
-        }
-
-        #endregion
     }
 }

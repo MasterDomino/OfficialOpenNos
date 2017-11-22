@@ -24,13 +24,5 @@ namespace OpenNos.GameObject
         public List<BCard> BCards { get; set; }
 
         #endregion
-
-        #region Methods
-
-        public override void Initialize()
-        {
-        }
-
-        #endregion
     }
 }
