@@ -69,6 +69,17 @@
     <Compile Include="Mappers\AccountMapper.cs" />
     <Compile Include="Mappers\CharacterMapper.cs" />
     <Compile Include="Mappers\PenaltyLogMapper.cs" />
+    <Compile Include="Mappers\NpcMonsterMapper.cs" />
+    <Compile Include="Mappers\NpcMonsterSkillMapper.cs" />
+    <Compile Include="Mappers\PortalMapper.cs" />
+    <Compile Include="Mappers\QuestMapper.cs" />
+    <Compile Include="Mappers\QuestProgressMapper.cs" />
+    <Compile Include="Mappers\QuicklistEntryMapper.cs" />
+    <Compile Include="Mappers\RecipeMapper.cs" />
+    <Compile Include="Mappers\RecipeItemMapper.cs" />
+    <Compile Include="Mappers\RecipeListMapper.cs" />
+    <Compile Include="Mappers\RespawnMapper.cs" />
+    <Compile Include="Mappers\RespawnMapTypeMapper.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
