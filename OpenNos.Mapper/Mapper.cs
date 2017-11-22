@@ -57,7 +57,53 @@ namespace OpenNos.Mapper
 
         private NpcMonsterMapper _npcMonsterMapper;
 
+        private NpcMonsterSkillMapper _npcMonsterSkillMapper;
+
         private PenaltyLogMapper _penaltyLogMapper;
+
+        private PortalMapper _portalMapper;
+
+        private QuestMapper _questMapper;
+
+        private QuestProgressMapper _questProgressMapper;
+
+        private QuicklistEntryMapper _quicklistEntryMapper;
+
+        private RecipeItemMapper _recipeItemMapper;
+
+        private RecipeListMapper _recipeListMapper;
+
+        private RecipeMapper _recipeMapper;
+
+        private RespawnMapper _respawnMapper;
+
+        private RespawnMapTypeMapper _respawnMapTypeMapper;
+
+        private RollGeneratedItemMapper _rollGeneratedItemMapper;
+
+        private ScriptedInstanceMapper _scriptedInstanceMapper;
+
+        private ShellEffectMapper _shellEffectMapper;
+
+        private ShopItemMapper _shopItemMapper;
+
+        private ShopMapper _shopMapper;
+
+        private ShopSkillMapper _shopSkillMapper;
+
+        private SkillMapper _skillMapper;
+
+        private SpecialistInstanceMapper _specialistInstanceMapper;
+
+        private StaticBonusMapper _staticBonusMapper;
+
+        private StaticBuffMapper _staticBuffMapper;
+
+        private TeleporterMapper _teleporterMapper;
+
+        private UsableInstanceMapper _usableInstanceMapper;
+
+        private WearableInstanceMapper _wearableInstanceMapper;
 
         private static Mapper _instance;
 
@@ -89,7 +135,31 @@ namespace OpenNos.Mapper
             _mapTypeMapper = new MapTypeMapper();
             _mateMapper = new MateMapper();
             _minilandObjectMapper = new MinilandObjectMapper();
+            _npcMonsterMapper = new NpcMonsterMapper();
+            _npcMonsterSkillMapper = new NpcMonsterSkillMapper();
             _penaltyLogMapper = new PenaltyLogMapper();
+            _portalMapper = new PortalMapper();
+            _questMapper = new QuestMapper();
+            _questProgressMapper = new QuestProgressMapper();
+            _quicklistEntryMapper = new QuicklistEntryMapper();
+            _recipeItemMapper = new RecipeItemMapper();
+            _recipeListMapper = new RecipeListMapper();
+            _recipeMapper = new RecipeMapper();
+            _respawnMapper = new RespawnMapper();
+            _respawnMapTypeMapper = new RespawnMapTypeMapper();
+            _rollGeneratedItemMapper = new RollGeneratedItemMapper();
+            _scriptedInstanceMapper = new ScriptedInstanceMapper();
+            _shellEffectMapper = new ShellEffectMapper();
+            _shopItemMapper = new ShopItemMapper();
+            _shopMapper = new ShopMapper();
+            _shopSkillMapper = new ShopSkillMapper();
+            _skillMapper = new SkillMapper();
+            _specialistInstanceMapper = new SpecialistInstanceMapper();
+            _staticBonusMapper = new StaticBonusMapper();
+            _staticBuffMapper = new StaticBuffMapper();
+            _teleporterMapper = new TeleporterMapper();
+            _usableInstanceMapper = new UsableInstanceMapper();
+            _wearableInstanceMapper = new WearableInstanceMapper();
         }
 
         public static Mapper Instance => _instance ?? (_instance = new Mapper());
@@ -146,6 +216,30 @@ namespace OpenNos.Mapper
 
         public MinilandObjectMapper MinilandObjectMapper { get { return _minilandObjectMapper; } }
 
+        public NpcMonsterMapper NpcMonsterMapper { get { return _npcMonsterMapper; } }
+        public NpcMonsterSkillMapper NpcMonsterSkillMapper { get { return _npcMonsterSkillMapper; } }
         public PenaltyLogMapper PenaltyLogMapper { get { return _penaltyLogMapper; } }
+        public PortalMapper PortalMapper { get { return _portalMapper; } }
+        public QuestMapper QuestMapper { get { return _questMapper; } }
+        public QuestProgressMapper QuestProgressMapper { get { return _questProgressMapper; } }
+        public QuicklistEntryMapper QuicklistEntryMapper { get { return _quicklistEntryMapper; } }
+        public RecipeItemMapper RecipeItemMapper { get { return _recipeItemMapper; } }
+        public RecipeListMapper RecipeListMapper { get { return _recipeListMapper; } }
+        public RecipeMapper RecipeMapper { get { return _recipeMapper; } }
+        public RespawnMapper RespawnMapper { get { return _respawnMapper; } }
+        public RespawnMapTypeMapper RespawnMapTypeMapper { get { return _respawnMapTypeMapper; } }
+        public RollGeneratedItemMapper RollGeneratedItemMapper { get { return _rollGeneratedItemMapper; } }
+        public ScriptedInstanceMapper ScriptedInstanceMapper { get { return _scriptedInstanceMapper; } }
+        public ShellEffectMapper ShellEffectMapper { get { return _shellEffectMapper; } }
+        public ShopItemMapper ShopItemMapper { get { return _shopItemMapper; } }
+        public ShopMapper ShopMapper { get { return _shopMapper; } }
+        public ShopSkillMapper ShopSkillMapper { get { return _shopSkillMapper; } }
+        public SkillMapper SkillMapper { get { return _skillMapper; } }
+        public SpecialistInstanceMapper SpecialistInstanceMapper { get { return _specialistInstanceMapper; } }
+        public StaticBonusMapper StaticBonusMapper { get { return _staticBonusMapper; } }
+        public StaticBuffMapper StaticBuffMapper { get { return _staticBuffMapper; } }
+        public TeleporterMapper TeleporterMapper { get { return _teleporterMapper; } }
+        public UsableInstanceMapper UsableInstanceMapper { get { return _usableInstanceMapper; } }
+        public WearableInstanceMapper WearableInstanceMapper { get { return _wearableInstanceMapper; } }
     }
 }
