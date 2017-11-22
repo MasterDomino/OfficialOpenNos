@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenNos.DAL.EF;
 using OpenNos.Data;
 using OpenNos.Domain;
