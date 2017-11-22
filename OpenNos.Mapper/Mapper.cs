@@ -55,6 +55,8 @@ namespace OpenNos.Mapper
 
         private MinilandObjectMapper _minilandObjectMapper;
 
+        private NpcMonsterMapper _npcMonsterMapper;
+
         private PenaltyLogMapper _penaltyLogMapper;
 
         private static Mapper _instance;
