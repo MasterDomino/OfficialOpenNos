@@ -80,6 +80,13 @@
     <Compile Include="Mappers\RecipeListMapper.cs" />
     <Compile Include="Mappers\RespawnMapper.cs" />
     <Compile Include="Mappers\RespawnMapTypeMapper.cs" />
+    <Compile Include="Mappers\RollGeneratedItemMapper.cs" />
+    <Compile Include="Mappers\ShellEffectMapper.cs" />
+    <Compile Include="Mappers\ScriptedInstanceMapper.cs" />
+    <Compile Include="Mappers\ShopMapper.cs" />
+    <Compile Include="Mappers\ShopItemMapper.cs" />
+    <Compile Include="Mappers\ShopSkillMapper.cs" />
+    <Compile Include="Mappers\SkillMapper.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
