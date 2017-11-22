@@ -12,6 +12,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToFamilyCharacterDTO(FamilyCharacter input, FamilyCharacterDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Authority = input.Authority;
             output.CharacterId = input.CharacterId;
             output.DailyMessage = input.DailyMessage;
@@ -23,6 +28,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToFamilyCharacter(FamilyCharacterDTO input, FamilyCharacter output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Authority = input.Authority;
             output.CharacterId = input.CharacterId;
             output.DailyMessage = input.DailyMessage;

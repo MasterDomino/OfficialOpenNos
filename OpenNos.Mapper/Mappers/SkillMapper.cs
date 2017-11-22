@@ -11,6 +11,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToSkillDTO(Skill input, SkillDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.AttackAnimation = input.AttackAnimation;
             output.CastAnimation = input.CastAnimation;
             output.CastEffect = input.CastEffect;
@@ -45,6 +50,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToSkill(SkillDTO input, Skill output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.AttackAnimation = input.AttackAnimation;
             output.CastAnimation = input.CastAnimation;
             output.CastEffect = input.CastEffect;

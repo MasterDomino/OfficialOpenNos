@@ -11,6 +11,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToShellEffectDTO(ShellEffect input, ShellEffectDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Effect = input.Effect;
             output.EffectLevel = input.EffectLevel;
             output.EquipmentSerialId = input.EquipmentSerialId;
@@ -20,6 +25,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToShellEffect(ShellEffectDTO input, ShellEffect output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Effect = input.Effect;
             output.EffectLevel = input.EffectLevel;
             output.EquipmentSerialId = input.EquipmentSerialId;

@@ -11,6 +11,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToNpcMonsterSkillDTO(NpcMonsterSkill input, NpcMonsterSkillDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.NpcMonsterSkillId = input.NpcMonsterSkillId;
             output.NpcMonsterVNum = input.NpcMonsterVNum;
             output.Rate = input.Rate;
@@ -19,6 +24,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToNpcMonsterSkill(NpcMonsterSkillDTO input, NpcMonsterSkill output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.NpcMonsterSkillId = input.NpcMonsterSkillId;
             output.NpcMonsterVNum = input.NpcMonsterVNum;
             output.Rate = input.Rate;

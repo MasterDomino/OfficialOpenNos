@@ -13,6 +13,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToSpecialistInstanceDTO(SpecialistInstance input, SpecialistInstanceDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Ammo = input.Ammo ?? 0;
             output.Amount = (byte)input.Amount;
             output.BoundCharacterId = input.BoundCharacterId;
@@ -73,6 +78,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToSpecialistInstance(SpecialistInstanceDTO input, SpecialistInstance output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Ammo = input.Ammo;
             output.Amount = input.Amount;
             output.BoundCharacterId = input.BoundCharacterId;

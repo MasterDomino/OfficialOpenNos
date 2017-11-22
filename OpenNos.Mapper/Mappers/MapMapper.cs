@@ -13,6 +13,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToMapDTO(Map input, MapDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Data = input.Data;
             output.MapId = input.MapId;
             output.Music = input.Music;
@@ -22,6 +27,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToMap(MapDTO input, Map output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Data = input.Data;
             output.MapId = input.MapId;
             output.Music = input.Music;

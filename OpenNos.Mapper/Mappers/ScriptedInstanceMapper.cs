@@ -11,6 +11,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToScriptedInstanceDTO(ScriptedInstance input, ScriptedInstanceDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.MapId = input.MapId;
             output.PositionX = input.PositionX;
             output.PositionY = input.PositionY;
@@ -21,6 +26,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToScriptedInstance(ScriptedInstanceDTO input, ScriptedInstance output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.MapId = input.MapId;
             output.PositionX = input.PositionX;
             output.PositionY = input.PositionY;

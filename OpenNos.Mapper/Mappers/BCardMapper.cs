@@ -12,6 +12,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToBCardDTO(BCard input, BCardDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.BCardId = input.BCardId;
             output.CardId = input.CardId;
             output.CastType = input.CastType;
@@ -29,6 +34,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToBCard(BCardDTO input, BCard output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.BCardId = input.BCardId;
             output.CardId = input.CardId;
             output.CastType = input.CastType;

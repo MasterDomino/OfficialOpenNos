@@ -13,6 +13,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToItemInstanceDTO(ItemInstance input, ItemInstanceDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Amount = (byte)input.Amount;
             output.BoundCharacterId = input.BoundCharacterId;
             output.CharacterId = input.CharacterId;
@@ -29,6 +34,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToItemInstance(ItemInstanceDTO input, ItemInstance output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Amount = input.Amount;
             output.BoundCharacterId = input.BoundCharacterId;
             output.CharacterId = input.CharacterId;

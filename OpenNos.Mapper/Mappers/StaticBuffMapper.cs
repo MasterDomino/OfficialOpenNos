@@ -13,6 +13,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToStaticBuffDTO(StaticBuff input, StaticBuffDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.CardId = input.CardId;
             output.CharacterId = input.CharacterId;
             output.RemainingTime = input.RemainingTime;
@@ -21,6 +26,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToStaticBuff(StaticBuffDTO input, StaticBuff output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.CardId = input.CardId;
             output.CharacterId = input.CharacterId;
             output.RemainingTime = input.RemainingTime;

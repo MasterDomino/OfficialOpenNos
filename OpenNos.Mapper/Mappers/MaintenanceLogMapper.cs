@@ -13,6 +13,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToMaintenanceLogDTO(MaintenanceLog input, MaintenanceLogDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.DateEnd = input.DateEnd;
             output.DateStart = input.DateStart;
             output.LogId = input.LogId;
@@ -21,6 +26,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToMaintenanceLog(MaintenanceLogDTO input, MaintenanceLog output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.DateEnd = input.DateEnd;
             output.DateStart = input.DateStart;
             output.LogId = input.LogId;

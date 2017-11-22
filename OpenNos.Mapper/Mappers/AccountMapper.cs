@@ -11,6 +11,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToAccountDTO(Account input, AccountDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.AccountId = input.AccountId;
             output.Authority = input.Authority;
             output.Email = input.Email;
@@ -23,6 +28,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToAccount(AccountDTO input, Account output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.AccountId = input.AccountId;
             output.Authority = input.Authority;
             output.Email = input.Email;

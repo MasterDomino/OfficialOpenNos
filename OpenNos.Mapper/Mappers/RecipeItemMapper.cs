@@ -11,6 +11,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToRecipeItemDTO(RecipeItem input, RecipeItemDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Amount = input.Amount;
             output.ItemVNum = input.ItemVNum;
             output.RecipeId = input.RecipeId;
@@ -19,6 +24,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToRecipeItem(RecipeItemDTO input, RecipeItem output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Amount = input.Amount;
             output.ItemVNum = input.ItemVNum;
             output.RecipeId = input.RecipeId;

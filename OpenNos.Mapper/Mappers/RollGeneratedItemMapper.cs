@@ -11,6 +11,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToRollGeneratedItemDTO(RollGeneratedItem input, RollGeneratedItemDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.IsRareRandom = input.IsRareRandom;
             output.ItemGeneratedAmount = input.ItemGeneratedAmount;
             output.ItemGeneratedVNum = input.ItemGeneratedVNum;
@@ -24,6 +29,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToRollGeneratedItem(RollGeneratedItemDTO input, RollGeneratedItem output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.IsRareRandom = input.IsRareRandom;
             output.ItemGeneratedAmount = input.ItemGeneratedAmount;
             output.ItemGeneratedVNum = input.ItemGeneratedVNum;

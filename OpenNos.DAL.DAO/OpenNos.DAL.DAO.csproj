@@ -52,7 +52,6 @@
   <ItemGroup>
     <Compile Include="AccountDAO.cs" />
     <Compile Include="Base\MappingBaseDAO.cs" />
-    <Compile Include="Base\SynchronizableBaseDAO.cs" />
     <Compile Include="BazaarItemDAO.cs" />
     <Compile Include="BCardDAO.cs" />
     <Compile Include="CardDAO.cs" />

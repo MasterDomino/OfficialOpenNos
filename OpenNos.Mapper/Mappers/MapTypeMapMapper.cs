@@ -13,12 +13,22 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToMapTypeMapDTO(MapTypeMap input, MapTypeMapDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.MapId = input.MapId;
             output.MapTypeId = input.MapTypeId;
         }
 
         public void ToMapTypeMap(MapTypeMapDTO input, MapTypeMap output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.MapId = input.MapId;
             output.MapTypeId = input.MapTypeId;
         }

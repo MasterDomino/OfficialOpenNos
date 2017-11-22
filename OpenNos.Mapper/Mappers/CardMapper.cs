@@ -13,6 +13,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToCardDTO(Card input, CardDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.BuffType = input.BuffType;
             output.CardId = input.CardId;
             output.Delay = input.Delay;
@@ -27,6 +32,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToCard(CardDTO input, Card output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.BuffType = input.BuffType;
             output.CardId = input.CardId;
             output.Delay = input.Delay;

@@ -20,7 +20,7 @@ using System.Collections.Generic;
 
 namespace OpenNos.DAL.Interface
 {
-    public interface IItemInstanceDAO : ISynchronizableBaseDAO<ItemInstanceDTO>
+    public interface IItemInstanceDAO
     {
         #region Methods
 
@@ -30,8 +30,6 @@ namespace OpenNos.DAL.Interface
 
         DeleteResult DeleteFromSlotAndType(long characterId, short slot, InventoryType type);
 
-        void InitializeMapper(Type baseType);
-
         IEnumerable<ItemInstanceDTO> LoadByCharacterId(long characterId);
 
         ItemInstanceDTO LoadBySlotAndType(long characterId, short slot, InventoryType type);
@@ -39,6 +37,14 @@ namespace OpenNos.DAL.Interface
         IEnumerable<ItemInstanceDTO> LoadByType(long characterId, InventoryType type);
 
         IList<Guid> LoadSlotAndTypeByCharacterId(long characterId);
+
+        DeleteResult Delete(Guid id);
+
+        ItemInstanceDTO InsertOrUpdate(ItemInstanceDTO dto);
+
+        IEnumerable<ItemInstanceDTO> InsertOrUpdate(IEnumerable<ItemInstanceDTO> dtos);
+
+        ItemInstanceDTO LoadById(Guid id);
 
         #endregion
     }

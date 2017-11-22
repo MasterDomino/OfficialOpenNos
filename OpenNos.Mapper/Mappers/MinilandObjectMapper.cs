@@ -13,6 +13,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToMinilandObjectDTO(MinilandObject input, MinilandObjectDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.CharacterId = input.CharacterId;
             output.ItemInstanceId = input.ItemInstanceId;
             output.Level1BoxAmount = input.Level1BoxAmount;
@@ -27,6 +32,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToMinilandObject(MinilandObjectDTO input, MinilandObject output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.CharacterId = input.CharacterId;
             output.ItemInstanceId = input.ItemInstanceId;
             output.Level1BoxAmount = input.Level1BoxAmount;

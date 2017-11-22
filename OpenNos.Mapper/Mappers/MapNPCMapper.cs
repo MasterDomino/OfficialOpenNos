@@ -13,6 +13,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToMapNPCDTO(MapNpc input, MapNpcDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Dialog = input.Dialog;
             output.Effect = input.Effect;
             output.EffectDelay = input.EffectDelay;
@@ -29,6 +34,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToMapNPC(MapNpcDTO input, MapNpc output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Dialog = input.Dialog;
             output.Effect = input.Effect;
             output.EffectDelay = input.EffectDelay;

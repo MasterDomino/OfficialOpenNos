@@ -13,6 +13,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToUsableInstanceDTO(UsableInstance input, UsableInstanceDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Amount = (byte)input.Amount;
             output.BoundCharacterId = input.BoundCharacterId;
             output.CharacterId = input.CharacterId;
@@ -31,6 +36,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToUsableInstance(UsableInstanceDTO input, UsableInstance output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Amount = input.Amount;
             output.BoundCharacterId = input.BoundCharacterId;
             output.CharacterId = input.CharacterId;

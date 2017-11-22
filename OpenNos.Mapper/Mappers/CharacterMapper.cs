@@ -13,6 +13,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToCharacterDTO(Character input, CharacterDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.AccountId = input.AccountId;
             output.Act4Dead = input.Act4Dead;
             output.Act4Kill = input.Act4Kill;
@@ -71,6 +76,11 @@ namespace OpenNos.Mapper.Mappers
         }
         public void ToCharacter(CharacterDTO input, Character output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.AccountId = input.AccountId;
             output.Act4Dead = input.Act4Dead;
             output.Act4Kill = input.Act4Kill;

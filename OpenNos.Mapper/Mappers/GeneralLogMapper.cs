@@ -12,6 +12,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToGeneralLogDTO(GeneralLog input, GeneralLogDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.AccountId = input.AccountId;
             output.CharacterId = input.CharacterId;
             output.IpAddress = input.IpAddress;
@@ -23,6 +28,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToGeneralLog(GeneralLogDTO input, GeneralLog output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.AccountId = input.AccountId;
             output.CharacterId = input.CharacterId;
             output.IpAddress = input.IpAddress;

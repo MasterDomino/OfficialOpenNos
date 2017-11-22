@@ -11,6 +11,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToQuicklistEntryDTO(QuicklistEntry input, QuicklistEntryDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.CharacterId = input.CharacterId;
             output.Id = input.Id;
             output.Morph = input.Morph;
@@ -23,6 +28,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToQuicklistEntry(QuicklistEntryDTO input, QuicklistEntry output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.CharacterId = input.CharacterId;
             output.Id = input.Id;
             output.Morph = input.Morph;

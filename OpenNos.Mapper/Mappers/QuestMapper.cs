@@ -11,12 +11,22 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToQuestDTO(Quest input, QuestDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.QuestData = input.QuestData;
             output.QuestId = input.QuestId;
         }
 
         public void ToQuest(QuestDTO input, Quest output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.QuestData = input.QuestData;
             output.QuestId = input.QuestId;
         }

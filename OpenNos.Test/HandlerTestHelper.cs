@@ -284,16 +284,10 @@ namespace OpenNos.Test
 
         private static void registerMappings()
         {
-            // register mappings for items
-            DAOFactory.IteminstanceDAO.RegisterMapping(typeof(SpecialistInstance));
-            DAOFactory.IteminstanceDAO.RegisterMapping(typeof(WearableInstance));
-            DAOFactory.IteminstanceDAO.InitializeMapper(typeof(ItemInstance));
-
             // entities
             DAOFactory.AccountDAO.RegisterMapping(typeof(Account)).InitializeMapper();
             DAOFactory.CellonOptionDAO.RegisterMapping(typeof(CellonOptionDTO)).InitializeMapper();
             DAOFactory.CharacterDAO.RegisterMapping(typeof(Character)).InitializeMapper();
-            DAOFactory.CharacterSkillDAO.RegisterMapping(typeof(CharacterSkill)).InitializeMapper();
             DAOFactory.ComboDAO.RegisterMapping(typeof(ComboDTO)).InitializeMapper();
             DAOFactory.DropDAO.RegisterMapping(typeof(DropDTO)).InitializeMapper();
             DAOFactory.GeneralLogDAO.RegisterMapping(typeof(GeneralLogDTO)).InitializeMapper();
@@ -308,7 +302,6 @@ namespace OpenNos.Test
             DAOFactory.NpcMonsterSkillDAO.RegisterMapping(typeof(NpcMonsterSkill)).InitializeMapper();
             DAOFactory.PenaltyLogDAO.RegisterMapping(typeof(PenaltyLogDTO)).InitializeMapper();
             DAOFactory.PortalDAO.RegisterMapping(typeof(PortalDTO)).InitializeMapper();
-            DAOFactory.QuicklistEntryDAO.RegisterMapping(typeof(QuicklistEntryDTO)).InitializeMapper();
             DAOFactory.RecipeDAO.RegisterMapping(typeof(Recipe)).InitializeMapper();
             DAOFactory.RecipeItemDAO.RegisterMapping(typeof(RecipeItemDTO)).InitializeMapper();
             DAOFactory.RespawnDAO.RegisterMapping(typeof(RespawnDTO)).InitializeMapper();

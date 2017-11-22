@@ -12,6 +12,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToCharacterSkillDTO(CharacterSkill input, CharacterSkillDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.CharacterId = input.CharacterId;
             output.Id = input.Id;
             output.SkillVNum = input.SkillVNum;
@@ -19,6 +24,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToCharacterSkill(CharacterSkillDTO input, CharacterSkill output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.CharacterId = input.CharacterId;
             output.Id = input.Id;
             output.SkillVNum = input.SkillVNum;

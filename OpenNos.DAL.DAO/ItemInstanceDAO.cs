@@ -26,7 +26,7 @@ using System.Linq;
 
 namespace OpenNos.DAL.DAO
 {
-    public class ItemInstanceDAO : SynchronizableBaseDAO<ItemInstance, ItemInstanceDTO>, IItemInstanceDAO
+    public class ItemInstanceDAO : IItemInstanceDAO
     {
         #region Members
 
@@ -93,37 +93,6 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        public override void InitializeMapper()
-        {
-            // avoid override of mapping
-        }
-
-        public void InitializeMapper(Type baseType)
-        {
-            _baseType = baseType;
-            MapperConfiguration config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap(baseType, typeof(ItemInstance)).ForMember("Item", opts => opts.Ignore());
-
-                cfg.CreateMap(typeof(ItemInstance), typeof(ItemInstanceDTO)).As(baseType);
-
-                Type itemInstanceType = typeof(ItemInstance);
-                foreach (KeyValuePair<Type, Type> entry in _mappings)
-                {
-                    // GameObject -> Entity
-                    cfg.CreateMap(entry.Key, entry.Value).ForMember("Item", opts => opts.Ignore()).IncludeBase(baseType, typeof(ItemInstance));
-
-                    // Entity -> GameObject
-                    cfg.CreateMap(entry.Value, entry.Key).IncludeBase(typeof(ItemInstance), baseType);
-
-                    // Entity -> GameObject
-                    cfg.CreateMap(entry.Value, typeof(ItemInstanceDTO)).As(entry.Key);
-                }
-            });
-
-            _mapper = config.CreateMapper();
-        }
-
         public SaveResult InsertOrUpdateFromList(IEnumerable<ItemInstanceDTO> items)
         {
             try
@@ -132,7 +101,8 @@ namespace OpenNos.DAL.DAO
                 {
                     void insert(ItemInstanceDTO iteminstance)
                     {
-                        ItemInstance _entity = _mapper.Map<ItemInstance>(iteminstance);
+                        ItemInstance _entity = new ItemInstance();
+                        Map(iteminstance, _entity);
                         context.ItemInstance.Add(_entity);
                         context.SaveChanges();
                         iteminstance.Id = _entity.Id;
@@ -142,7 +112,7 @@ namespace OpenNos.DAL.DAO
                     {
                         if (_entity != null)
                         {
-                            _mapper.Map(iteminstance, _entity);
+                            Map(iteminstance, _entity);
                         }
                     }
 
@@ -172,10 +142,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<ItemInstanceDTO> result = new List<ItemInstanceDTO>();
                 foreach (ItemInstance itemInstance in context.ItemInstance.Where(i => i.CharacterId.Equals(characterId)))
                 {
-                    yield return _mapper.Map<ItemInstanceDTO>(itemInstance);
+                    ItemInstanceDTO output = new ItemInstanceDTO();
+                    Map(itemInstance, output);
+                    result.Add(output);
                 }
+                return result;
             }
         }
 
@@ -186,7 +160,9 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     ItemInstance entity = context.ItemInstance.FirstOrDefault(i => i.CharacterId == characterId && i.Slot == slot && i.Type == type);
-                    return _mapper.Map<ItemInstanceDTO>(entity);
+                    ItemInstanceDTO output = new ItemInstanceDTO();
+                    Map(entity, output);
+                    return output;
                 }
             }
             catch (Exception e)
@@ -200,10 +176,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<ItemInstanceDTO> result = new List<ItemInstanceDTO>();
                 foreach (ItemInstance itemInstance in context.ItemInstance.Where(i => i.CharacterId == characterId && i.Type == type))
                 {
-                    yield return _mapper.Map<ItemInstanceDTO>(itemInstance);
+                    ItemInstanceDTO output = new ItemInstanceDTO();
+                    Map(itemInstance, output);
+                    result.Add(output);
                 }
+                return result;
             }
         }
 
@@ -223,22 +203,7 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        public override IMappingBaseDAO RegisterMapping(Type gameObjectType)
-        {
-            try
-            {
-                Type targetType = typeof(ItemInstance).Assembly.GetTypes().SingleOrDefault(t => t.Name.Equals(gameObjectType.Name));
-                _mappings.Add(gameObjectType, targetType);
-                return this;
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e);
-                return null;
-            }
-        }
-
-        protected override ItemInstanceDTO InsertOrUpdate(OpenNosContext context, ItemInstanceDTO dto)
+        protected ItemInstanceDTO InsertOrUpdate(OpenNosContext context, ItemInstanceDTO dto)
         {
             try
             {
@@ -253,23 +218,165 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        protected override ItemInstance MapEntity(ItemInstanceDTO dto)
+        public virtual DeleteResult Delete(Guid id)
+        {
+            using (OpenNosContext context = DataAccessHelper.CreateContext())
+            {
+                ItemInstance entity = context.Set<ItemInstance>().FirstOrDefault(i => i.Id == id);
+                if (entity != null)
+                {
+                    context.Set<ItemInstance>().Remove(entity);
+                    context.SaveChanges();
+                }
+                return DeleteResult.Deleted;
+            }
+        }
+
+        public IEnumerable<ItemInstanceDTO> InsertOrUpdate(IEnumerable<ItemInstanceDTO> dtos)
         {
             try
             {
-                ItemInstance entity = _mapper.Map<ItemInstance>(dto);
-                KeyValuePair<Type, Type> targetMapping = _mappings.FirstOrDefault(k => k.Key.Equals(dto.GetType()));
-                if (targetMapping.Key != null)
+                IList<ItemInstanceDTO> results = new List<ItemInstanceDTO>();
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    entity = _mapper.Map(dto, targetMapping.Key, targetMapping.Value) as ItemInstance;
+                    foreach (ItemInstanceDTO dto in dtos)
+                    {
+                        results.Add(InsertOrUpdate(context, dto));
+                    }
                 }
-
-                return entity;
+                return results;
             }
             catch (Exception e)
             {
-                Logger.Error(e);
+                Logger.Error($"Message: {e.Message}", e);
+                return Enumerable.Empty<ItemInstanceDTO>();
+            }
+        }
+
+        public ItemInstanceDTO InsertOrUpdate(ItemInstanceDTO dto)
+        {
+            try
+            {
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
+                {
+                    return InsertOrUpdate(context, dto);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error($"Message: {e.Message}", e);
                 return null;
+            }
+        }
+
+        public ItemInstanceDTO LoadById(Guid id)
+        {
+            using (OpenNosContext context = DataAccessHelper.CreateContext())
+            {
+                ItemInstanceDTO ItemInstanceDTO = new ItemInstanceDTO();
+                Map(context.ItemInstance.FirstOrDefault(i => i.Id.Equals(id)), ItemInstanceDTO);
+                return ItemInstanceDTO;
+            }
+        }
+
+        protected ItemInstanceDTO Insert(ItemInstanceDTO dto, OpenNosContext context)
+        {
+            ItemInstance entity = new ItemInstance();
+            Map(dto, entity);
+            context.Set<ItemInstance>().Add(entity);
+            context.SaveChanges();
+            Map(entity, dto);
+            return dto;
+        }
+
+        protected ItemInstanceDTO Update(ItemInstance entity, ItemInstanceDTO inventory, OpenNosContext context)
+        {
+            if (entity != null)
+            {
+                Map(inventory, entity, true);
+                context.SaveChanges();
+            }
+            Map(entity, inventory);
+            return inventory;
+        }
+
+        private void Map(ItemInstance input, ItemInstanceDTO output)
+        {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
+            Type t = input.GetType();
+            if (t == typeof(BoxInstance))
+            {
+                output = new BoxItemDTO();
+                Mapper.Mapper.Instance.BoxItemMapper.ToBoxItemDTO((BoxInstance)input, (BoxItemDTO)output);
+            }
+            else if (t == typeof(SpecialistInstance))
+            {
+                output = new SpecialistInstanceDTO();
+                Mapper.Mapper.Instance.SpecialistInstanceMapper.ToSpecialistInstanceDTO((SpecialistInstance)input, (SpecialistInstanceDTO)output);
+            }
+            else if (t == typeof(WearableInstance))
+            {
+                output = new WearableInstanceDTO();
+                Mapper.Mapper.Instance.WearableInstanceMapper.ToWearableInstanceDTO((WearableInstance)input, (WearableInstanceDTO)output);
+            }
+            else if (t == typeof(UsableInstance))
+            {
+                output = new UsableInstanceDTO();
+                Mapper.Mapper.Instance.UsableInstanceMapper.ToUsableInstanceDTO((UsableInstance)input, (UsableInstanceDTO)output);
+            }
+            else
+            {
+                Mapper.Mapper.Instance.ItemInstanceMapper.ToItemInstanceDTO(input, output);
+            }
+        }
+
+        private void Map(ItemInstanceDTO input, ItemInstance output, bool exists = false)
+        {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
+            Type t = input.GetType();
+            if (t == typeof(BoxItemDTO))
+            {
+                if (!exists)
+                {
+                    output = new BoxInstance();
+                }
+                Mapper.Mapper.Instance.BoxItemMapper.ToBoxInstance((BoxItemDTO)input, (BoxInstance)output);
+            }
+            else if (t == typeof(SpecialistInstanceDTO))
+            {
+                if (!exists)
+                {
+                    output = new SpecialistInstance();
+                }
+                Mapper.Mapper.Instance.SpecialistInstanceMapper.ToSpecialistInstance((SpecialistInstanceDTO)input, (SpecialistInstance)output);
+            }
+            else if (t == typeof(WearableInstanceDTO))
+            {
+                if (!exists)
+                {
+                    output = new WearableInstance();
+                }
+                Mapper.Mapper.Instance.WearableInstanceMapper.ToWearableInstance((WearableInstanceDTO)input, (WearableInstance)output);
+            }
+            else if (t == typeof(UsableInstanceDTO))
+            {
+                if (!exists)
+                {
+                    output = new UsableInstance();
+                }
+                Mapper.Mapper.Instance.UsableInstanceMapper.ToUsableInstance((UsableInstanceDTO)input, (UsableInstance)output);
+            }
+            else
+            {
+                Mapper.Mapper.Instance.ItemInstanceMapper.ToItemInstance(input, output);
             }
         }
 

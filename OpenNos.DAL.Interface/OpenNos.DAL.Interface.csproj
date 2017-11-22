@@ -117,7 +117,6 @@
     <Compile Include="ICharacterSkillDAO.cs" />
     <Compile Include="IStaticBonusDAO.cs" />
     <Compile Include="IStaticBuffDAO.cs" />
-    <Compile Include="ISynchronizableBaseDAO.cs" />
     <Compile Include="ITeleporterDAO.cs" />
     <Compile Include="IScriptedInstanceDAO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

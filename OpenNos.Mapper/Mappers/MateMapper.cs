@@ -14,6 +14,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToMateDTO(Mate input, MateDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Attack = input.Attack;
             output.CanPickUp = input.CanPickUp;
             output.CharacterId = input.CharacterId;
@@ -37,6 +42,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToMate(MateDTO input, Mate output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Attack = input.Attack;
             output.CanPickUp = input.CanPickUp;
             output.CharacterId = input.CharacterId;

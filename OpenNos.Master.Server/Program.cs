@@ -166,20 +166,13 @@ namespace OpenNos.Master.Server
 
         private static void registerMappings()
         {
-            // Prepare mappings for future use
-
-            // register mappings for items
-            DAOFactory.IteminstanceDAO.RegisterMapping(typeof(BoxInstance));
-            DAOFactory.IteminstanceDAO.RegisterMapping(typeof(SpecialistInstance));
-            DAOFactory.IteminstanceDAO.RegisterMapping(typeof(WearableInstance));
-            DAOFactory.IteminstanceDAO.InitializeMapper(typeof(ItemInstance));
+            // Prepare mappings for future use     
 
             // entities
             DAOFactory.AccountDAO.RegisterMapping(typeof(Account)).InitializeMapper();
             DAOFactory.CellonOptionDAO.RegisterMapping(typeof(CellonOptionDTO)).InitializeMapper();
             DAOFactory.CharacterDAO.RegisterMapping(typeof(Character)).InitializeMapper();
             DAOFactory.CharacterRelationDAO.RegisterMapping(typeof(CharacterRelationDTO)).InitializeMapper();
-            DAOFactory.CharacterSkillDAO.RegisterMapping(typeof(CharacterSkill)).InitializeMapper();
             DAOFactory.ComboDAO.RegisterMapping(typeof(ComboDTO)).InitializeMapper();
             DAOFactory.DropDAO.RegisterMapping(typeof(DropDTO)).InitializeMapper();
             DAOFactory.GeneralLogDAO.RegisterMapping(typeof(GeneralLogDTO)).InitializeMapper();
@@ -199,7 +192,6 @@ namespace OpenNos.Master.Server
             DAOFactory.PenaltyLogDAO.RegisterMapping(typeof(PenaltyLogDTO)).InitializeMapper();
             DAOFactory.PortalDAO.RegisterMapping(typeof(PortalDTO)).InitializeMapper();
             DAOFactory.PortalDAO.RegisterMapping(typeof(Portal)).InitializeMapper();
-            DAOFactory.QuicklistEntryDAO.RegisterMapping(typeof(QuicklistEntryDTO)).InitializeMapper();
             DAOFactory.RecipeDAO.RegisterMapping(typeof(Recipe)).InitializeMapper();
             DAOFactory.RecipeItemDAO.RegisterMapping(typeof(RecipeItemDTO)).InitializeMapper();
             DAOFactory.MinilandObjectDAO.RegisterMapping(typeof(MinilandObjectDTO)).InitializeMapper();

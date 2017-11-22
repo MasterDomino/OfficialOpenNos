@@ -11,6 +11,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToNpcMonsterDTO(NpcMonster input, NpcMonsterDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.AmountRequired = input.AmountRequired;
             output.AttackClass = input.AttackClass;
             output.AttackUpgrade = input.AttackUpgrade;
@@ -58,6 +63,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToNpcMonster(NpcMonsterDTO input, NpcMonster output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.AmountRequired = input.AmountRequired;
             output.AttackClass = input.AttackClass;
             output.AttackUpgrade = input.AttackUpgrade;

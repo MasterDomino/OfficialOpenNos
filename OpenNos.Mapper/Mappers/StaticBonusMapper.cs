@@ -13,6 +13,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToStaticBonusDTO(StaticBonus input, StaticBonusDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.CharacterId = input.CharacterId;
             output.DateEnd = input.DateEnd;
             output.StaticBonusId = input.StaticBonusId;
@@ -21,6 +26,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToStaticBonus(StaticBonusDTO input, StaticBonus output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.CharacterId = input.CharacterId;
             output.DateEnd = input.DateEnd;
             output.StaticBonusId = input.StaticBonusId;

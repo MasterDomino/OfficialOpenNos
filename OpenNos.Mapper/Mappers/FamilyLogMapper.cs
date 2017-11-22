@@ -12,6 +12,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToFamilyLogDTO(FamilyLog input, FamilyLogDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.FamilyId = input.FamilyId;
             output.FamilyLogData = input.FamilyLogData;
             output.FamilyLogId = input.FamilyLogId;
@@ -21,6 +26,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToFamilyLog(FamilyLogDTO input, FamilyLog output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.FamilyId = input.FamilyId;
             output.FamilyLogData = input.FamilyLogData;
             output.FamilyLogId = input.FamilyLogId;

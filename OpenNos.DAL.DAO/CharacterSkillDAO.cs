@@ -24,7 +24,7 @@ using System.Linq;
 
 namespace OpenNos.DAL.DAO
 {
-    public class CharacterSkillDAO : SynchronizableBaseDAO<CharacterSkill, CharacterSkillDTO>, ICharacterSkillDAO
+    public class CharacterSkillDAO : ICharacterSkillDAO
     {
         #region Methods
 
@@ -54,10 +54,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<CharacterSkillDTO> result = new List<CharacterSkillDTO>();
                 foreach (CharacterSkill entity in context.CharacterSkill.Where(i => i.CharacterId == characterId))
                 {
-                    yield return _mapper.Map<CharacterSkillDTO>(entity);
+                    CharacterSkillDTO output = new CharacterSkillDTO();
+                    Mapper.Mapper.Instance.CharacterSkillMapper.ToCharacterSkillDTO(entity, output);
+                    result.Add(output);
                 }
+                return result;
             }
         }
 
@@ -77,11 +81,102 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        protected override CharacterSkill MapEntity(CharacterSkillDTO dto)
+        public DeleteResult Delete(Guid id)
         {
-            CharacterSkill entity = _mapper.Map<CharacterSkill>(dto);
-            return entity;
+            using (OpenNosContext context = DataAccessHelper.CreateContext())
+            {
+                CharacterSkill entity = context.Set<CharacterSkill>().FirstOrDefault(i => i.Id == id);
+                if (entity != null)
+                {
+                    context.Set<CharacterSkill>().Remove(entity);
+                    context.SaveChanges();
+                }
+                return DeleteResult.Deleted;
+            }
         }
+
+        public IEnumerable<CharacterSkillDTO> InsertOrUpdate(IEnumerable<CharacterSkillDTO> dtos)
+        {
+            try
+            {
+                IList<CharacterSkillDTO> results = new List<CharacterSkillDTO>();
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
+                {
+                    foreach (CharacterSkillDTO dto in dtos)
+                    {
+                        results.Add(InsertOrUpdate(context, dto));
+                    }
+                }
+                return results;
+            }
+            catch (Exception e)
+            {
+                Logger.Error($"Message: {e.Message}", e);
+                return Enumerable.Empty<CharacterSkillDTO>();
+            }
+        }
+
+        public CharacterSkillDTO InsertOrUpdate(CharacterSkillDTO dto)
+        {
+            try
+            {
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
+                {
+                    return InsertOrUpdate(context, dto);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error($"Message: {e.Message}", e);
+                return null;
+            }
+        }
+
+        public CharacterSkillDTO LoadById(Guid id)
+        {
+            using (OpenNosContext context = DataAccessHelper.CreateContext())
+            {
+                CharacterSkillDTO characterSkillDTO = new CharacterSkillDTO();
+                Mapper.Mapper.Instance.CharacterSkillMapper.ToCharacterSkillDTO(context.CharacterSkill.FirstOrDefault(i => i.Id.Equals(id)), characterSkillDTO);
+                return characterSkillDTO;
+            }
+        }
+
+        protected CharacterSkillDTO Insert(CharacterSkillDTO dto, OpenNosContext context)
+        {
+            CharacterSkill entity = new CharacterSkill();
+            Mapper.Mapper.Instance.CharacterSkillMapper.ToCharacterSkill(dto, entity);
+            context.Set<CharacterSkill>().Add(entity);
+            context.SaveChanges();
+            Mapper.Mapper.Instance.CharacterSkillMapper.ToCharacterSkillDTO(entity, dto);
+            return dto;
+        }
+
+        protected CharacterSkillDTO InsertOrUpdate(OpenNosContext context, CharacterSkillDTO dto)
+        {
+            Guid primaryKey = dto.Id;
+            CharacterSkill entity = context.Set<CharacterSkill>().FirstOrDefault(c => c.Id == primaryKey);
+            if (entity == null)
+            {
+                return Insert(dto, context);
+            }
+            else
+            {
+                return Update(entity, dto, context);
+            }
+        }
+
+        protected CharacterSkillDTO Update(CharacterSkill entity, CharacterSkillDTO inventory, OpenNosContext context)
+        {
+            if (entity != null)
+            {
+                Mapper.Mapper.Instance.CharacterSkillMapper.ToCharacterSkill(inventory, entity);
+                context.SaveChanges();
+            }
+            Mapper.Mapper.Instance.CharacterSkillMapper.ToCharacterSkillDTO(entity, inventory);
+            return inventory;
+        }
+
 
         #endregion
     }

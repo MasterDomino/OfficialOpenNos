@@ -13,6 +13,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToMapTypeDTO(MapType input, MapTypeDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.MapTypeId = input.MapTypeId;
             output.MapTypeName = input.MapTypeName;
             output.PotionDelay = input.PotionDelay;
@@ -22,6 +27,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToMapType(MapTypeDTO input, MapType output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.MapTypeId = input.MapTypeId;
             output.MapTypeName = input.MapTypeName;
             output.PotionDelay = input.PotionDelay;

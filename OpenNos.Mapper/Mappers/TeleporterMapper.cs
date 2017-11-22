@@ -13,6 +13,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToTeleporterDTO(Teleporter input, TeleporterDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Index = input.Index;
             output.MapId = input.MapId;
             output.MapNpcId = input.MapNpcId;
@@ -23,6 +28,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToTeleporter(TeleporterDTO input, Teleporter output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Index = input.Index;
             output.MapId = input.MapId;
             output.MapNpcId = input.MapNpcId;

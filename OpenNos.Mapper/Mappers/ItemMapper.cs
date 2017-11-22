@@ -13,6 +13,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToItemDTO(Item input, ItemDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.BasicUpgrade = input.BasicUpgrade;
             output.CellonLvl = input.CellonLvl;
             output.Class = input.Class;
@@ -87,6 +92,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToItem(ItemDTO input, Item output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.BasicUpgrade = input.BasicUpgrade;
             output.CellonLvl = input.CellonLvl;
             output.Class = input.Class;

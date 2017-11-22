@@ -12,6 +12,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToDropDTO(Drop input, DropDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Amount = input.Amount;
             output.DropChance = input.DropChance;
             output.DropId = input.DropId;
@@ -22,6 +27,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToDrop(DropDTO input, Drop output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Amount = input.Amount;
             output.DropChance = input.DropChance;
             output.DropId = input.DropId;

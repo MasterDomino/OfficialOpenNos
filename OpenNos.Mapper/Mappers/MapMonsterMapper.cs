@@ -13,6 +13,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToMapMonsterDTO(MapMonster input, MapMonsterDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.IsDisabled = input.IsDisabled;
             output.IsMoving = input.IsMoving;
             output.MapId = input.MapId;
@@ -25,6 +30,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToMapMonster(MapMonsterDTO input, MapMonster output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.IsDisabled = input.IsDisabled;
             output.IsMoving = input.IsMoving;
             output.MapId = input.MapId;

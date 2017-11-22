@@ -12,6 +12,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToBazaarItemDTO(BazaarItem input, BazaarItemDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Amount = input.Amount;
             output.BazaarItemId = input.BazaarItemId;
             output.DateStart = input.DateStart;
@@ -25,6 +30,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToBazaarItem(BazaarItemDTO input, BazaarItem output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Amount = input.Amount;
             output.BazaarItemId = input.BazaarItemId;
             output.DateStart = input.DateStart;

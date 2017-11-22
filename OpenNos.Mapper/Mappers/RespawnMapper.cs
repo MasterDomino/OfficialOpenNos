@@ -11,6 +11,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToRespawnDTO(Respawn input, RespawnDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.CharacterId = input.CharacterId;
             output.MapId = input.MapId;
             output.RespawnId = input.RespawnId;
@@ -21,6 +26,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToRespawn(RespawnDTO input, Respawn output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.CharacterId = input.CharacterId;
             output.MapId = input.MapId;
             output.RespawnId = input.RespawnId;

@@ -269,7 +269,6 @@ namespace OpenNos.Import.Console
             DAOFactory.AccountDAO.RegisterMapping(typeof(AccountDTO)).InitializeMapper();
             DAOFactory.CellonOptionDAO.RegisterMapping(typeof(CellonOptionDTO)).InitializeMapper();
             DAOFactory.CharacterDAO.RegisterMapping(typeof(CharacterDTO)).InitializeMapper();
-            DAOFactory.CharacterSkillDAO.RegisterMapping(typeof(CharacterSkillDTO)).InitializeMapper();
             DAOFactory.ComboDAO.RegisterMapping(typeof(ComboDTO)).InitializeMapper();
             DAOFactory.DropDAO.RegisterMapping(typeof(DropDTO)).InitializeMapper();
             DAOFactory.GeneralLogDAO.RegisterMapping(typeof(GeneralLogDTO)).InitializeMapper();
@@ -284,7 +283,6 @@ namespace OpenNos.Import.Console
             DAOFactory.NpcMonsterSkillDAO.RegisterMapping(typeof(NpcMonsterSkillDTO)).InitializeMapper();
             DAOFactory.PenaltyLogDAO.RegisterMapping(typeof(PenaltyLogDTO)).InitializeMapper();
             DAOFactory.PortalDAO.RegisterMapping(typeof(PortalDTO)).InitializeMapper();
-            DAOFactory.QuicklistEntryDAO.RegisterMapping(typeof(QuicklistEntryDTO)).InitializeMapper();
             DAOFactory.RecipeDAO.RegisterMapping(typeof(RecipeDTO)).InitializeMapper();
             DAOFactory.RecipeListDAO.RegisterMapping(typeof(RecipeListDTO)).InitializeMapper();
             DAOFactory.RecipeItemDAO.RegisterMapping(typeof(RecipeItemDTO)).InitializeMapper();

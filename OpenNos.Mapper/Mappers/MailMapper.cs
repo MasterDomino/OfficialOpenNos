@@ -13,6 +13,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToMailDTO(Mail input, MailDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.AttachmentAmount = input.AttachmentAmount;
             output.AttachmentLevel = input.AttachmentLevel;
             output.AttachmentRarity = input.AttachmentRarity;
@@ -36,6 +41,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToMail(MailDTO input, Mail output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.AttachmentAmount = input.AttachmentAmount;
             output.AttachmentLevel = input.AttachmentLevel;
             output.AttachmentRarity = input.AttachmentRarity;

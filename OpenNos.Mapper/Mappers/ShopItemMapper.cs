@@ -11,6 +11,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToShopItemDTO(ShopItem input, ShopItemDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Color = input.Color;
             output.ItemVNum = input.ItemVNum;
             output.Rare = (sbyte)input.Rare;
@@ -23,6 +28,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToShopItem(ShopItemDTO input, ShopItem output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Color = input.Color;
             output.ItemVNum = input.ItemVNum;
             output.Rare = (sbyte)input.Rare;

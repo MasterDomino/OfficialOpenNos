@@ -11,6 +11,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToPenaltyLogDTO(PenaltyLog input, PenaltyLogDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.AccountId = input.AccountId;
             output.AdminName = input.AdminName;
             output.DateEnd = input.DateEnd;
@@ -22,6 +27,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToPenaltyLog(PenaltyLogDTO input, PenaltyLog output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.AccountId = input.AccountId;
             output.AdminName = input.AdminName;
             output.DateEnd = input.DateEnd;

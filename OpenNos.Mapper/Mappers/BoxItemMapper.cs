@@ -13,6 +13,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToBoxItemDTO(BoxInstance input, BoxItemDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Ammo = input.Ammo ?? 0;
             output.Amount = (byte)input.Amount;
             output.BoundCharacterId = input.BoundCharacterId;
@@ -74,6 +79,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToBoxInstance(BoxItemDTO input, BoxInstance output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Ammo = input.Ammo;
             output.Amount = input.Amount;
             output.BoundCharacterId = input.BoundCharacterId;

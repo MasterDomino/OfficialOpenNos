@@ -11,6 +11,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToPortalDTO(Portal input, PortalDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.DestinationMapId = input.DestinationMapId;
             output.DestinationX = input.DestinationX;
             output.DestinationY = input.DestinationY;
@@ -24,6 +29,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToPortal(PortalDTO input, Portal output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.DestinationMapId = input.DestinationMapId;
             output.DestinationX = input.DestinationX;
             output.DestinationY = input.DestinationY;

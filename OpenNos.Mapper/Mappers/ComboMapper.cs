@@ -12,6 +12,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToComboDTO(Combo input, ComboDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Animation = input.Animation;
             output.ComboId = input.ComboId;
             output.Effect = input.Effect;
@@ -21,6 +26,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToCombo(ComboDTO input, Combo output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.Animation = input.Animation;
             output.ComboId = input.ComboId;
             output.Effect = input.Effect;

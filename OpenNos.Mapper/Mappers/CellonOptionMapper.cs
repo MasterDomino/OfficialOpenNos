@@ -13,6 +13,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToCellonOptionDTO(CellonOption input, CellonOptionDTO output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.CellonOptionId = input.CellonOptionId;
             output.EquipmentSerialId = input.EquipmentSerialId;
             output.Level = input.Level;
@@ -22,6 +27,11 @@ namespace OpenNos.Mapper.Mappers
 
         public void ToCellonOption(CellonOptionDTO input, CellonOption output)
         {
+            if (input == null)
+            {
+                output = null;
+                return;
+            }
             output.CellonOptionId = input.CellonOptionId;
             output.EquipmentSerialId = input.EquipmentSerialId;
             output.Level = input.Level;
