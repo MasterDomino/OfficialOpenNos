@@ -103,7 +103,10 @@ namespace OpenNos.DAL.DAO
                         {
                             insert(item);
                         }
-                        update(entity, item);
+                        else
+                        {
+                            update(entity, item);
+                        }
                     }
 
                     context.SaveChanges();
