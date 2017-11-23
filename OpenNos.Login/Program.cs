@@ -90,9 +90,6 @@ namespace OpenNos.Login
 
                     try
                     {
-                        // register EF -> GO and GO -> EF mappings
-                        registerMappings();
-
                         // initialize PacketSerialization
                         PacketFactory.Initialize<WalkPacket>();
 
@@ -109,14 +106,6 @@ namespace OpenNos.Login
                     Console.ReadKey();
                 }
             }
-        }
-
-        private static void registerMappings()
-        {
-            // entities
-            DAOFactory.AccountDAO.RegisterMapping(typeof(Account)).InitializeMapper();
-            DAOFactory.PenaltyLogDAO.RegisterMapping(typeof(PenaltyLogDTO)).InitializeMapper();
-            DAOFactory.MaintenanceLogDAO.RegisterMapping(typeof(MaintenanceLogDTO)).InitializeMapper();
         }
 
         #endregion

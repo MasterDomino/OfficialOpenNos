@@ -81,10 +81,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<StaticBonusDTO> result = new List<StaticBonusDTO>();
                 foreach (StaticBonus entity in context.StaticBonus.Where(i => i.CharacterId == characterId && i.DateEnd > DateTime.Now))
                 {
-                    yield return _mapper.Map<StaticBonusDTO>(entity);
+                    StaticBonusDTO dto = new StaticBonusDTO();
+                    Mapper.Mapper.Instance.StaticBonusMapper.ToStaticBonusDTO(entity, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -94,7 +98,9 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<StaticBonusDTO>(context.RespawnMapType.FirstOrDefault(s => s.RespawnMapTypeId.Equals(sbId)));
+                    StaticBonusDTO dto = new StaticBonusDTO();
+                    Mapper.Mapper.Instance.StaticBonusMapper.ToStaticBonusDTO(context.StaticBonus.FirstOrDefault(s => s.StaticBonusId.Equals(sbId)),dto);
+                    return dto;
                 }
             }
             catch (Exception e)
@@ -124,10 +130,12 @@ namespace OpenNos.DAL.DAO
         {
             try
             {
-                StaticBonus entity = _mapper.Map<StaticBonus>(sb);
+                StaticBonus entity = new StaticBonus();
+                Mapper.Mapper.Instance.StaticBonusMapper.ToStaticBonus(sb, entity);
                 context.StaticBonus.Add(entity);
                 context.SaveChanges();
-                return _mapper.Map<StaticBonusDTO>(entity);
+                Mapper.Mapper.Instance.StaticBonusMapper.ToStaticBonusDTO(entity, sb);
+                return sb;
             }
             catch (Exception e)
             {
@@ -140,10 +148,11 @@ namespace OpenNos.DAL.DAO
         {
             if (entity != null)
             {
-                _mapper.Map(sb, entity);
+                Mapper.Mapper.Instance.StaticBonusMapper.ToStaticBonus(sb, entity);
                 context.SaveChanges();
             }
-            return _mapper.Map<StaticBonusDTO>(entity);
+            Mapper.Mapper.Instance.StaticBonusMapper.ToStaticBonusDTO(entity, sb);
+            return sb;
         }
 
         #endregion

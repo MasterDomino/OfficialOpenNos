@@ -41,7 +41,9 @@ namespace OpenNos.DAL.DAO
                     if (character != null)
                     {
                         character.State = (byte)CharacterState.Inactive;
-                        update(character, _mapper.Map<CharacterDTO>(character), context);
+                        CharacterDTO dto = new CharacterDTO();
+                        Mapper.Mapper.Instance.CharacterMapper.ToCharacterDTO(character, dto);
+                        update(character, dto, context);
                     }
 
                     return DeleteResult.Deleted;
@@ -62,7 +64,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
-                return context.Character.Where(c => c.Account.Authority == AuthorityType.User && !c.Account.PenaltyLog.Any(l => l.Penalty == PenaltyType.Banned && l.DateEnd > DateTime.Now)).OrderByDescending(c => c.Compliment).Take(30).ToList().Select(c => _mapper.Map<CharacterDTO>(c)).ToList();
+                List<CharacterDTO> result = new List<CharacterDTO>();
+                foreach(Character entity in context.Character.Where(c => c.Account.Authority == AuthorityType.User && !c.Account.PenaltyLog.Any(l => l.Penalty == PenaltyType.Banned && l.DateEnd > DateTime.Now)).OrderByDescending(c => c.Compliment).Take(30))
+                {
+                    CharacterDTO dto = new CharacterDTO();
+                    Mapper.Mapper.Instance.CharacterMapper.ToCharacterDTO(entity, dto);
+                    result.Add(dto);
+                }
+                return result;
             }
         }
 
@@ -74,7 +83,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
-                return context.Character.Where(c => c.Account.Authority == AuthorityType.User && !c.Account.PenaltyLog.Any(l => l.Penalty == PenaltyType.Banned && l.DateEnd > DateTime.Now)).OrderByDescending(c => c.Act4Points).Take(30).ToList().Select(c => _mapper.Map<CharacterDTO>(c)).ToList();
+                List<CharacterDTO> result = new List<CharacterDTO>();
+                foreach (Character entity in context.Character.Where(c => c.Account.Authority == AuthorityType.User && !c.Account.PenaltyLog.Any(l => l.Penalty == PenaltyType.Banned && l.DateEnd > DateTime.Now)).OrderByDescending(c => c.Act4Points).Take(30))
+                {
+                    CharacterDTO dto = new CharacterDTO();
+                    Mapper.Mapper.Instance.CharacterMapper.ToCharacterDTO(entity, dto);
+                    result.Add(dto);
+                }
+                return result;
             }
         }
 
@@ -86,7 +102,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
-                return context.Character.Where(c => c.Account.Authority == AuthorityType.User && !c.Account.PenaltyLog.Any(l => l.Penalty == PenaltyType.Banned && l.DateEnd > DateTime.Now)).OrderByDescending(c => c.Reputation).Take(43).ToList().Select(c => _mapper.Map<CharacterDTO>(c)).ToList();
+                List<CharacterDTO> result = new List<CharacterDTO>();
+                foreach(Character entity in context.Character.Where(c => c.Account.Authority == AuthorityType.User && !c.Account.PenaltyLog.Any(l => l.Penalty == PenaltyType.Banned && l.DateEnd > DateTime.Now)).OrderByDescending(c => c.Reputation).Take(43))
+                {
+                    CharacterDTO dto = new CharacterDTO();
+                    Mapper.Mapper.Instance.CharacterMapper.ToCharacterDTO(entity, dto);
+                    result.Add(dto);
+                }
+                return result;
             }
         }
 
@@ -119,10 +142,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<CharacterDTO> result = new List<CharacterDTO>();
                 foreach (Character chara in context.Character)
                 {
-                    yield return _mapper.Map<CharacterDTO>(chara);
+                    CharacterDTO dto = new CharacterDTO();
+                    Mapper.Mapper.Instance.CharacterMapper.ToCharacterDTO(chara, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -130,7 +157,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
-                return context.Character.Where(c => c.AccountId.Equals(accountId)).OrderByDescending(c => c.Slot).ToList().Select(c => _mapper.Map<CharacterDTO>(c)).ToList();
+                List<CharacterDTO> result = new List<CharacterDTO>();
+                foreach(Character entity in context.Character.Where(c => c.AccountId.Equals(accountId)).OrderByDescending(c => c.Slot))
+                {
+                    CharacterDTO dto = new CharacterDTO();
+                    Mapper.Mapper.Instance.CharacterMapper.ToCharacterDTO(entity, dto);
+                    result.Add(dto);
+                }
+                return result;
             }
         }
 
@@ -138,7 +172,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
-                return context.Character.Where(c => c.AccountId.Equals(accountId) && c.State.Equals((byte)CharacterState.Active)).OrderByDescending(c => c.Slot).ToList().Select(c => _mapper.Map<CharacterDTO>(c)).ToList();
+                List<CharacterDTO> result = new List<CharacterDTO>();
+                foreach (Character entity in context.Character.Where(c => c.AccountId.Equals(accountId) && c.State.Equals((byte)CharacterState.Active)).OrderByDescending(c => c.Slot))
+                {
+                    CharacterDTO dto = new CharacterDTO();
+                    Mapper.Mapper.Instance.CharacterMapper.ToCharacterDTO(entity, dto);
+                    result.Add(dto);
+                }
+                return result;
             }
         }
 
@@ -148,7 +189,9 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<CharacterDTO>(context.Character.FirstOrDefault(c => c.CharacterId.Equals(characterId)));
+                    CharacterDTO dto = new CharacterDTO();
+                    Mapper.Mapper.Instance.CharacterMapper.ToCharacterDTO(context.Character.FirstOrDefault(c => c.CharacterId.Equals(characterId)), dto);
+                    return dto;
                 }
             }
             catch (Exception e)
@@ -164,7 +207,9 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<CharacterDTO>(context.Character.SingleOrDefault(c => c.Name.Equals(name) && c.State.Equals((byte)CharacterState.Active)));
+                    CharacterDTO dto = new CharacterDTO();
+                    Mapper.Mapper.Instance.CharacterMapper.ToCharacterDTO(context.Character.SingleOrDefault(c => c.Name.Equals(name) && c.State.Equals((byte)CharacterState.Active)), dto);
+                    return dto;
                 }
             }
             catch (Exception e)
@@ -180,7 +225,9 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<CharacterDTO>(context.Character.SingleOrDefault(c => c.AccountId.Equals(accountId) && c.Slot.Equals(slot) && c.State.Equals((byte)CharacterState.Active)));
+                    CharacterDTO dto = new CharacterDTO();
+                    Mapper.Mapper.Instance.CharacterMapper.ToCharacterDTO(context.Character.SingleOrDefault(c => c.AccountId.Equals(accountId) && c.Slot.Equals(slot) && c.State.Equals((byte)CharacterState.Active)), dto);
+                    return dto;
                 }
             }
             catch (Exception e)
@@ -192,21 +239,24 @@ namespace OpenNos.DAL.DAO
 
         private CharacterDTO insert(CharacterDTO character, OpenNosContext context)
         {
-            Character entity = _mapper.Map<Character>(character);
+            Character entity = new Character();
+            Mapper.Mapper.Instance.CharacterMapper.ToCharacter(character, entity);
             context.Character.Add(entity);
             context.SaveChanges();
-            return _mapper.Map<CharacterDTO>(entity);
+            Mapper.Mapper.Instance.CharacterMapper.ToCharacterDTO(entity, character);
+            return character;
         }
 
         private CharacterDTO update(Character entity, CharacterDTO character, OpenNosContext context)
         {
             if (entity != null)
             {
-                _mapper.Map(character, entity);
+                Mapper.Mapper.Instance.CharacterMapper.ToCharacter(character, entity);
                 context.SaveChanges();
             }
 
-            return _mapper.Map<CharacterDTO>(entity);
+            Mapper.Mapper.Instance.CharacterMapper.ToCharacterDTO(entity, character);
+            return character;
         }
 
         #endregion

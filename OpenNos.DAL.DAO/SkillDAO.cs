@@ -36,7 +36,8 @@ namespace OpenNos.DAL.DAO
                     context.Configuration.AutoDetectChangesEnabled = false;
                     foreach (SkillDTO skill in skills)
                     {
-                        Skill entity = _mapper.Map<Skill>(skill);
+                        Skill entity = new Skill();
+                        Mapper.Mapper.Instance.SkillMapper.ToSkill(skill, entity);
                         context.Skill.Add(entity);
                     }
                     context.Configuration.AutoDetectChangesEnabled = true;
@@ -55,10 +56,11 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    Skill entity = _mapper.Map<Skill>(skill);
-                    context.Skill.Add(entity);
+                    Skill entity = new Skill();
+                    Mapper.Mapper.Instance.SkillMapper.ToSkill(skill, entity); context.Skill.Add(entity);
                     context.SaveChanges();
-                    return _mapper.Map<SkillDTO>(entity);
+                    Mapper.Mapper.Instance.SkillMapper.ToSkillDTO(entity, skill);
+                    return skill;
                 }
             }
             catch (Exception e)
@@ -72,10 +74,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<SkillDTO> result = new List<SkillDTO>();
                 foreach (Skill Skill in context.Skill)
                 {
-                    yield return _mapper.Map<SkillDTO>(Skill);
+                    SkillDTO dto = new SkillDTO();
+                    Mapper.Mapper.Instance.SkillMapper.ToSkillDTO(Skill, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -85,7 +91,9 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<SkillDTO>(context.Skill.FirstOrDefault(s => s.SkillVNum.Equals(skillId)));
+                    SkillDTO dto = new SkillDTO();
+                    Mapper.Mapper.Instance.SkillMapper.ToSkillDTO(context.Skill.FirstOrDefault(s => s.SkillVNum.Equals(skillId)),dto);
+                    return dto;
                 }
             }
             catch (Exception e)

@@ -82,30 +82,37 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<FamilyLogDTO> result = new List<FamilyLogDTO>();
                 foreach (FamilyLog familylog in context.FamilyLog.Where(fc => fc.FamilyId.Equals(familyId)))
                 {
-                    yield return _mapper.Map<FamilyLogDTO>(familylog);
+                    FamilyLogDTO dto = new FamilyLogDTO();
+                    Mapper.Mapper.Instance.FamilyLogMapper.ToFamilyLogDTO(familylog, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
         private FamilyLogDTO insert(FamilyLogDTO famlog, OpenNosContext context)
         {
-            FamilyLog entity = _mapper.Map<FamilyLog>(famlog);
+            FamilyLog entity = new FamilyLog();
+            Mapper.Mapper.Instance.FamilyLogMapper.ToFamilyLog(famlog, entity);
             context.FamilyLog.Add(entity);
             context.SaveChanges();
-            return _mapper.Map<FamilyLogDTO>(entity);
+            Mapper.Mapper.Instance.FamilyLogMapper.ToFamilyLogDTO(entity, famlog);
+            return famlog;
         }
 
         private FamilyLogDTO update(FamilyLog entity, FamilyLogDTO famlog, OpenNosContext context)
         {
             if (entity != null)
             {
-                _mapper.Map(famlog, entity);
+                Mapper.Mapper.Instance.FamilyLogMapper.ToFamilyLog(famlog, entity);
                 context.SaveChanges();
             }
 
-            return _mapper.Map<FamilyLogDTO>(entity);
+            Mapper.Mapper.Instance.FamilyLogMapper.ToFamilyLogDTO(entity, famlog);
+            return famlog;
         }
 
         #endregion

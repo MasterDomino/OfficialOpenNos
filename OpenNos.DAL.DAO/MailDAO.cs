@@ -83,10 +83,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<MailDTO> result = new List<MailDTO>();
                 foreach (Mail mail in context.Mail)
                 {
-                    yield return _mapper.Map<MailDTO>(mail);
+                    MailDTO dto = new MailDTO();
+                    Mapper.Mapper.Instance.MailMapper.ToMailDTO(mail, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -96,7 +100,9 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<MailDTO>(context.Mail.FirstOrDefault(i => i.MailId.Equals(mailId)));
+                    MailDTO dto = new MailDTO();
+                    Mapper.Mapper.Instance.MailMapper.ToMailDTO(context.Mail.FirstOrDefault(i => i.MailId.Equals(mailId)), dto);
+                    return dto;
                 }
             }
             catch (Exception e)
@@ -111,7 +117,14 @@ namespace OpenNos.DAL.DAO
             //Where(s => s.SenderId == CharacterId && s.IsSenderCopy && MailList.All(m => m.Value.MailId != s.MailId))
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
-                return context.Mail.Where(s => s.SenderId == characterId && s.IsSenderCopy).Take(40).ToList().ToList().Select(c => _mapper.Map<MailDTO>(c));
+                List<MailDTO> result = new List<MailDTO>();
+                foreach (Mail mail in context.Mail.Where(s => s.SenderId == characterId && s.IsSenderCopy).Take(40))
+                {
+                    MailDTO dto = new MailDTO();
+                    Mapper.Mapper.Instance.MailMapper.ToMailDTO(mail, dto);
+                    result.Add(dto);
+                }
+                return result;
             }
         }
 
@@ -120,7 +133,14 @@ namespace OpenNos.DAL.DAO
             //s => s.ReceiverId == CharacterId && !s.IsSenderCopy && MailList.All(m => m.Value.MailId != s.MailId)).Take(50)
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
-                return context.Mail.Where(s => s.ReceiverId == characterId && !s.IsSenderCopy).Take(40).ToList().Select(c => _mapper.Map<MailDTO>(c));
+                List<MailDTO> result = new List<MailDTO>();
+                foreach (Mail mail in context.Mail.Where(s => s.ReceiverId == characterId && !s.IsSenderCopy).Take(40))
+                {
+                    MailDTO dto = new MailDTO();
+                    Mapper.Mapper.Instance.MailMapper.ToMailDTO(mail, dto);
+                    result.Add(dto);
+                }
+                return result;
             }
         }
 
@@ -128,10 +148,12 @@ namespace OpenNos.DAL.DAO
         {
             try
             {
-                Mail entity = _mapper.Map<Mail>(mail);
+                Mail entity = new Mail();
+                Mapper.Mapper.Instance.MailMapper.ToMail(mail, entity);
                 context.Mail.Add(entity);
                 context.SaveChanges();
-                return _mapper.Map<MailDTO>(entity);
+                Mapper.Mapper.Instance.MailMapper.ToMailDTO(entity, mail);
+                return mail;
             }
             catch (System.Data.Entity.Validation.DbEntityValidationException dbEx)
             {
@@ -161,10 +183,11 @@ namespace OpenNos.DAL.DAO
         {
             if (entity != null)
             {
-                _mapper.Map(respawn, entity);
+                Mapper.Mapper.Instance.MailMapper.ToMail(respawn, entity);
                 context.SaveChanges();
             }
-            return _mapper.Map<MailDTO>(entity);
+            Mapper.Mapper.Instance.MailMapper.ToMailDTO(entity, respawn);
+            return respawn;
         }
 
         #endregion

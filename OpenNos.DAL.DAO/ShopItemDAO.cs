@@ -58,10 +58,12 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    ShopItem entity = _mapper.Map<ShopItem>(item);
+                    ShopItem entity = new ShopItem();
+                    Mapper.Mapper.Instance.ShopItemMapper.ToShopItem(item, entity);
                     context.ShopItem.Add(entity);
                     context.SaveChanges();
-                    return _mapper.Map<ShopItemDTO>(entity);
+                    Mapper.Mapper.Instance.ShopItemMapper.ToShopItemDTO(entity, item);
+                    return item;
                 }
             }
             catch (Exception e)
@@ -80,7 +82,8 @@ namespace OpenNos.DAL.DAO
                     context.Configuration.AutoDetectChangesEnabled = false;
                     foreach (ShopItemDTO Item in items)
                     {
-                        ShopItem entity = _mapper.Map<ShopItem>(Item);
+                        ShopItem entity = new ShopItem();
+                        Mapper.Mapper.Instance.ShopItemMapper.ToShopItem(Item, entity);
                         context.ShopItem.Add(entity);
                     }
                     context.Configuration.AutoDetectChangesEnabled = true;
@@ -97,10 +100,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<ShopItemDTO> result = new List<ShopItemDTO>();
                 foreach (ShopItem entity in context.ShopItem)
                 {
-                    yield return _mapper.Map<ShopItemDTO>(entity);
+                    ShopItemDTO dto = new ShopItemDTO();
+                    Mapper.Mapper.Instance.ShopItemMapper.ToShopItemDTO(entity, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -110,7 +117,9 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<ShopItemDTO>(context.ShopItem.FirstOrDefault(i => i.ShopItemId.Equals(itemId)));
+                    ShopItemDTO dto = new ShopItemDTO();
+                    Mapper.Mapper.Instance.ShopItemMapper.ToShopItemDTO(context.ShopItem.FirstOrDefault(i => i.ShopItemId.Equals(itemId)), dto);
+                    return dto;
                 }
             }
             catch (Exception e)
@@ -124,10 +133,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<ShopItemDTO> result = new List<ShopItemDTO>();
                 foreach (ShopItem ShopItem in context.ShopItem.Where(i => i.ShopId.Equals(shopId)))
                 {
-                    yield return _mapper.Map<ShopItemDTO>(ShopItem);
+                    ShopItemDTO dto = new ShopItemDTO();
+                    Mapper.Mapper.Instance.ShopItemMapper.ToShopItemDTO(ShopItem, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 

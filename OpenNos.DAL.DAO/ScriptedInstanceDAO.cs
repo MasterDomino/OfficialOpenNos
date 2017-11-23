@@ -36,7 +36,8 @@ namespace OpenNos.DAL.DAO
                     context.Configuration.AutoDetectChangesEnabled = false;
                     foreach (ScriptedInstanceDTO scriptedInstance in scriptedInstances)
                     {
-                        ScriptedInstance entity = _mapper.Map<ScriptedInstance>(scriptedInstance);
+                        ScriptedInstance entity = new ScriptedInstance();
+                        Mapper.Mapper.Instance.ScriptedInstanceMapper.ToScriptedInstance(scriptedInstance, entity);
                         context.ScriptedInstance.Add(entity);
                     }
                     context.Configuration.AutoDetectChangesEnabled = true;
@@ -55,10 +56,12 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    ScriptedInstance entity = _mapper.Map<ScriptedInstance>(scriptedInstance);
+                    ScriptedInstance entity = new ScriptedInstance();
+                    Mapper.Mapper.Instance.ScriptedInstanceMapper.ToScriptedInstance(scriptedInstance, entity);
                     context.ScriptedInstance.Add(entity);
                     context.SaveChanges();
-                    return _mapper.Map<ScriptedInstanceDTO>(entity);
+                    Mapper.Mapper.Instance.ScriptedInstanceMapper.ToScriptedInstanceDTO(entity, scriptedInstance);
+                    return scriptedInstance;
                 }
             }
             catch (Exception e)
@@ -72,10 +75,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<ScriptedInstanceDTO> result = new List<ScriptedInstanceDTO>();
                 foreach (ScriptedInstance timespaceObject in context.ScriptedInstance.Where(c => c.MapId.Equals(mapId)))
                 {
-                    yield return _mapper.Map<ScriptedInstanceDTO>(timespaceObject);
+                    ScriptedInstanceDTO dto = new ScriptedInstanceDTO();
+                    Mapper.Mapper.Instance.ScriptedInstanceMapper.ToScriptedInstanceDTO(timespaceObject, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 

@@ -98,9 +98,6 @@ namespace OpenNos.Master.Server
 
                 try
                 {
-                    // register EF -> GO and GO -> EF mappings
-                    registerMappings();
-
                     // configure Services and Service Host
                     string ipAddress = ConfigurationManager.AppSettings["MasterIP"];
                     IScsServiceApplication _server = ScsServiceBuilder.CreateService(new ScsTcpEndPoint(ipAddress, port));
@@ -163,56 +160,6 @@ namespace OpenNos.Master.Server
         private static void onClientConnected(object sender, ServiceClientEventArgs e) => Logger.Info(Language.Instance.GetMessageFromKey("NEW_CONNECT") + e.Client.ClientId);
 
         private static void onClientDisconnected(object sender, ServiceClientEventArgs e) => Logger.Info(Language.Instance.GetMessageFromKey("DISCONNECT") + e.Client.ClientId);
-
-        private static void registerMappings()
-        {
-            // Prepare mappings for future use     
-
-            // entities
-            DAOFactory.AccountDAO.RegisterMapping(typeof(Account)).InitializeMapper();
-            DAOFactory.CellonOptionDAO.RegisterMapping(typeof(CellonOptionDTO)).InitializeMapper();
-            DAOFactory.CharacterDAO.RegisterMapping(typeof(Character)).InitializeMapper();
-            DAOFactory.CharacterRelationDAO.RegisterMapping(typeof(CharacterRelationDTO)).InitializeMapper();
-            DAOFactory.ComboDAO.RegisterMapping(typeof(ComboDTO)).InitializeMapper();
-            DAOFactory.DropDAO.RegisterMapping(typeof(DropDTO)).InitializeMapper();
-            DAOFactory.GeneralLogDAO.RegisterMapping(typeof(GeneralLogDTO)).InitializeMapper();
-            DAOFactory.ItemDAO.RegisterMapping(typeof(ItemDTO)).InitializeMapper();
-            DAOFactory.BazaarItemDAO.RegisterMapping(typeof(BazaarItemDTO)).InitializeMapper();
-            DAOFactory.MailDAO.RegisterMapping(typeof(MailDTO)).InitializeMapper();
-            DAOFactory.MapDAO.RegisterMapping(typeof(MapDTO)).InitializeMapper();
-            DAOFactory.MapMonsterDAO.RegisterMapping(typeof(MapMonster)).InitializeMapper();
-            DAOFactory.MapNpcDAO.RegisterMapping(typeof(MapNpc)).InitializeMapper();
-            DAOFactory.FamilyDAO.RegisterMapping(typeof(FamilyDTO)).InitializeMapper();
-            DAOFactory.FamilyCharacterDAO.RegisterMapping(typeof(FamilyCharacterDTO)).InitializeMapper();
-            DAOFactory.FamilyLogDAO.RegisterMapping(typeof(FamilyLogDTO)).InitializeMapper();
-            DAOFactory.MapTypeDAO.RegisterMapping(typeof(MapTypeDTO)).InitializeMapper();
-            DAOFactory.MapTypeMapDAO.RegisterMapping(typeof(MapTypeMapDTO)).InitializeMapper();
-            DAOFactory.NpcMonsterDAO.RegisterMapping(typeof(NpcMonster)).InitializeMapper();
-            DAOFactory.NpcMonsterSkillDAO.RegisterMapping(typeof(NpcMonsterSkill)).InitializeMapper();
-            DAOFactory.PenaltyLogDAO.RegisterMapping(typeof(PenaltyLogDTO)).InitializeMapper();
-            DAOFactory.PortalDAO.RegisterMapping(typeof(PortalDTO)).InitializeMapper();
-            DAOFactory.PortalDAO.RegisterMapping(typeof(Portal)).InitializeMapper();
-            DAOFactory.RecipeDAO.RegisterMapping(typeof(Recipe)).InitializeMapper();
-            DAOFactory.RecipeItemDAO.RegisterMapping(typeof(RecipeItemDTO)).InitializeMapper();
-            DAOFactory.MinilandObjectDAO.RegisterMapping(typeof(MinilandObjectDTO)).InitializeMapper();
-            DAOFactory.MinilandObjectDAO.RegisterMapping(typeof(MinilandObject)).InitializeMapper();
-            DAOFactory.RespawnDAO.RegisterMapping(typeof(RespawnDTO)).InitializeMapper();
-            DAOFactory.RespawnMapTypeDAO.RegisterMapping(typeof(RespawnMapTypeDTO)).InitializeMapper();
-            DAOFactory.ShopDAO.RegisterMapping(typeof(Shop)).InitializeMapper();
-            DAOFactory.ShopItemDAO.RegisterMapping(typeof(ShopItemDTO)).InitializeMapper();
-            DAOFactory.ShopSkillDAO.RegisterMapping(typeof(ShopSkillDTO)).InitializeMapper();
-            DAOFactory.CardDAO.RegisterMapping(typeof(CardDTO)).InitializeMapper();
-            DAOFactory.BCardDAO.RegisterMapping(typeof(BCardDTO)).InitializeMapper();
-            DAOFactory.SkillDAO.RegisterMapping(typeof(Skill)).InitializeMapper();
-            DAOFactory.MateDAO.RegisterMapping(typeof(MateDTO)).InitializeMapper();
-            DAOFactory.MateDAO.RegisterMapping(typeof(Mate)).InitializeMapper();
-            DAOFactory.TeleporterDAO.RegisterMapping(typeof(TeleporterDTO)).InitializeMapper();
-            DAOFactory.StaticBonusDAO.RegisterMapping(typeof(StaticBonusDTO)).InitializeMapper();
-            DAOFactory.FamilyDAO.RegisterMapping(typeof(Family)).InitializeMapper();
-            DAOFactory.FamilyCharacterDAO.RegisterMapping(typeof(FamilyCharacter)).InitializeMapper();
-            DAOFactory.ScriptedInstanceDAO.RegisterMapping(typeof(ScriptedInstanceDTO)).InitializeMapper();
-            DAOFactory.ScriptedInstanceDAO.RegisterMapping(typeof(ScriptedInstance)).InitializeMapper();
-        }
 
         #endregion
     }

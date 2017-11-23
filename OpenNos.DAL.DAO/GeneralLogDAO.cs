@@ -49,10 +49,12 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    GeneralLog entity = _mapper.Map<GeneralLog>(generalLog);
+                    GeneralLog entity = new GeneralLog();
+                    Mapper.Mapper.Instance.GeneralLogMapper.ToGeneralLog(generalLog, entity);
                     context.GeneralLog.Add(entity);
                     context.SaveChanges();
-                    return _mapper.Map<GeneralLogDTO>(generalLog);
+                    Mapper.Mapper.Instance.GeneralLogMapper.ToGeneralLogDTO(entity, generalLog);
+                    return generalLog;
                 }
             }
             catch (Exception e)
@@ -66,10 +68,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<GeneralLogDTO> result = new List<GeneralLogDTO>();
                 foreach (GeneralLog generalLog in context.GeneralLog)
                 {
-                    yield return _mapper.Map<GeneralLogDTO>(generalLog);
+                    GeneralLogDTO dto = new GeneralLogDTO();
+                    Mapper.Mapper.Instance.GeneralLogMapper.ToGeneralLogDTO(generalLog, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -77,10 +83,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<GeneralLogDTO> result = new List<GeneralLogDTO>();
                 foreach (GeneralLog GeneralLog in context.GeneralLog.Where(s => s.AccountId == accountId))
                 {
-                    yield return _mapper.Map<GeneralLogDTO>(GeneralLog);
+                    GeneralLogDTO dto = new GeneralLogDTO();
+                    Mapper.Mapper.Instance.GeneralLogMapper.ToGeneralLogDTO(GeneralLog, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -88,10 +98,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<GeneralLogDTO> result = new List<GeneralLogDTO>();
                 foreach (GeneralLog log in context.GeneralLog.Where(c => c.LogType.Equals(logType) && c.CharacterId == characterId))
                 {
-                    yield return _mapper.Map<GeneralLogDTO>(log);
+                    GeneralLogDTO dto = new GeneralLogDTO();
+                    Mapper.Mapper.Instance.GeneralLogMapper.ToGeneralLogDTO(log, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 

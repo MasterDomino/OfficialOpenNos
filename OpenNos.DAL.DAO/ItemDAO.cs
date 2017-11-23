@@ -32,10 +32,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<ItemDTO> result = new List<ItemDTO>();
                 foreach (Item item in context.Item.Where(s => string.IsNullOrEmpty(name) ? s.Name.Equals(string.Empty) : s.Name.Contains(name)))
                 {
-                    yield return _mapper.Map<ItemDTO>(item);
+                    ItemDTO dto = new ItemDTO();
+                    Mapper.Mapper.Instance.ItemMapper.ToItemDTO(item, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -48,7 +52,8 @@ namespace OpenNos.DAL.DAO
                     context.Configuration.AutoDetectChangesEnabled = false;
                     foreach (ItemDTO Item in items)
                     {
-                        Item entity = _mapper.Map<Item>(Item);
+                        Item entity = new Item();
+                        Mapper.Mapper.Instance.ItemMapper.ToItem(Item, entity);
                         context.Item.Add(entity);
                     }
                     context.Configuration.AutoDetectChangesEnabled = true;
@@ -67,10 +72,12 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    Item entity = _mapper.Map<Item>(item);
+                    Item entity = new Item();
+                    Mapper.Mapper.Instance.ItemMapper.ToItem(item, entity);
                     context.Item.Add(entity);
                     context.SaveChanges();
-                    return _mapper.Map<ItemDTO>(entity);
+                    Mapper.Mapper.Instance.ItemMapper.ToItemDTO(entity, item);
+                    return item;
                 }
             }
             catch (Exception e)
@@ -84,10 +91,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<ItemDTO> result = new List<ItemDTO>();
                 foreach (Item item in context.Item)
                 {
-                    yield return _mapper.Map<ItemDTO>(item);
+                    ItemDTO dto = new ItemDTO();
+                    Mapper.Mapper.Instance.ItemMapper.ToItemDTO(item, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -97,7 +108,9 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<ItemDTO>(context.Item.FirstOrDefault(i => i.VNum.Equals(vNum)));
+                    ItemDTO dto = new ItemDTO();
+                    Mapper.Mapper.Instance.ItemMapper.ToItemDTO(context.Item.FirstOrDefault(i => i.VNum.Equals(vNum)), dto);
+                    return dto;
                 }
             }
             catch (Exception e)

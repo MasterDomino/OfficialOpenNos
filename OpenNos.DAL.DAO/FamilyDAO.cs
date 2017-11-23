@@ -82,10 +82,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<FamilyDTO> result = new List<FamilyDTO>();
                 foreach (Family entity in context.Family)
                 {
-                    yield return _mapper.Map<FamilyDTO>(entity);
+                    FamilyDTO dto = new FamilyDTO();
+                    Mapper.Mapper.Instance.FamilyMapper.ToFamilyDTO(entity, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -101,7 +105,9 @@ namespace OpenNos.DAL.DAO
                         Family family = context.Family.FirstOrDefault(a => a.FamilyId.Equals(familyCharacter.FamilyId));
                         if (family != null)
                         {
-                            return _mapper.Map<FamilyDTO>(family);
+                            FamilyDTO dto = new FamilyDTO();
+                            Mapper.Mapper.Instance.FamilyMapper.ToFamilyDTO(family, dto);
+                            return dto;
                         }
                     }
                 }
@@ -122,7 +128,9 @@ namespace OpenNos.DAL.DAO
                     Family family = context.Family.FirstOrDefault(a => a.FamilyId.Equals(familyId));
                     if (family != null)
                     {
-                        return _mapper.Map<FamilyDTO>(family);
+                        FamilyDTO dto = new FamilyDTO();
+                        Mapper.Mapper.Instance.FamilyMapper.ToFamilyDTO(family, dto);
+                        return dto;
                     }
                 }
             }
@@ -142,7 +150,9 @@ namespace OpenNos.DAL.DAO
                     Family family = context.Family.FirstOrDefault(a => a.Name.Equals(name));
                     if (family != null)
                     {
-                        return _mapper.Map<FamilyDTO>(family);
+                        FamilyDTO dto = new FamilyDTO();
+                        Mapper.Mapper.Instance.FamilyMapper.ToFamilyDTO(family, dto);
+                        return dto;
                     }
                 }
             }
@@ -155,20 +165,23 @@ namespace OpenNos.DAL.DAO
 
         private FamilyDTO insert(FamilyDTO family, OpenNosContext context)
         {
-            Family entity = _mapper.Map<Family>(family);
+            Family entity = new Family();
+            Mapper.Mapper.Instance.FamilyMapper.ToFamily(family, entity);
             context.Family.Add(entity);
             context.SaveChanges();
-            return _mapper.Map<FamilyDTO>(entity);
+            Mapper.Mapper.Instance.FamilyMapper.ToFamilyDTO(entity, family);
+            return family;
         }
 
         private FamilyDTO update(Family entity, FamilyDTO family, OpenNosContext context)
         {
             if (entity != null)
             {
-                _mapper.Map(family, entity);
+                Mapper.Mapper.Instance.FamilyMapper.ToFamily(family, entity);
                 context.SaveChanges();
             }
-            return _mapper.Map<FamilyDTO>(entity);
+            Mapper.Mapper.Instance.FamilyMapper.ToFamilyDTO(entity, family);
+            return family;
         }
 
         #endregion

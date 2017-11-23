@@ -33,10 +33,12 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    RollGeneratedItem entity = _mapper.Map<RollGeneratedItem>(item);
+                    RollGeneratedItem entity = new RollGeneratedItem();
+                    Mapper.Mapper.Instance.RollGeneratedItemMapper.ToRollGeneratedItem(item, entity);
                     context.RollGeneratedItem.Add(entity);
                     context.SaveChanges();
-                    return _mapper.Map<RollGeneratedItemDTO>(entity);
+                    Mapper.Mapper.Instance.RollGeneratedItemMapper.ToRollGeneratedItemDTO(entity, item);
+                    return item;
                 }
             }
             catch (Exception e)
@@ -50,10 +52,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<RollGeneratedItemDTO> result = new List<RollGeneratedItemDTO>();
                 foreach (RollGeneratedItem item in context.RollGeneratedItem)
                 {
-                    yield return _mapper.Map<RollGeneratedItemDTO>(item);
+                    RollGeneratedItemDTO dto = new RollGeneratedItemDTO();
+                    Mapper.Mapper.Instance.RollGeneratedItemMapper.ToRollGeneratedItemDTO(item, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -63,7 +69,9 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<RollGeneratedItemDTO>(context.RollGeneratedItem.FirstOrDefault(i => i.RollGeneratedItemId.Equals(id)));
+                    RollGeneratedItemDTO dto = new RollGeneratedItemDTO();
+                    Mapper.Mapper.Instance.RollGeneratedItemMapper.ToRollGeneratedItemDTO(context.RollGeneratedItem.FirstOrDefault(i => i.RollGeneratedItemId.Equals(id)), dto);
+                    return dto;
                 }
             }
             catch (Exception e)
@@ -77,10 +85,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<RollGeneratedItemDTO> result = new List<RollGeneratedItemDTO>();
                 foreach (RollGeneratedItem item in context.RollGeneratedItem.Where(s => s.OriginalItemVNum == vnum))
                 {
-                    yield return _mapper.Map<RollGeneratedItemDTO>(item);
+                    RollGeneratedItemDTO dto = new RollGeneratedItemDTO();
+                    Mapper.Mapper.Instance.RollGeneratedItemMapper.ToRollGeneratedItemDTO(item, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 

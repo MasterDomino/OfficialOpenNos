@@ -36,7 +36,8 @@ namespace OpenNos.DAL.DAO
                     context.Configuration.AutoDetectChangesEnabled = false;
                     foreach (DropDTO Drop in drops)
                     {
-                        Drop entity = _mapper.Map<Drop>(Drop);
+                        Drop entity = new Drop();
+                        Mapper.Mapper.Instance.DropMapper.ToDrop(Drop, entity);
                         context.Drop.Add(entity);
                     }
                     context.Configuration.AutoDetectChangesEnabled = true;
@@ -55,10 +56,11 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    Drop entity = _mapper.Map<Drop>(drop);
+                    Drop entity = new Drop();
                     context.Drop.Add(entity);
                     context.SaveChanges();
-                    return _mapper.Map<DropDTO>(drop);
+                    Mapper.Mapper.Instance.DropMapper.ToDropDTO(entity, drop);
+                    return drop;
                 }
             }
             catch (Exception e)
@@ -72,7 +74,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
-                return context.Drop.ToList().Select(d => _mapper.Map<DropDTO>(d)).ToList();
+                List<DropDTO> result = new List<DropDTO>();
+                foreach(Drop entity in context.Drop)
+                {
+                    DropDTO dto = new DropDTO();
+                    Mapper.Mapper.Instance.DropMapper.ToDropDTO(entity, dto);
+                    result.Add(dto);
+                }
+                return result;
             }
         }
 
@@ -80,10 +89,15 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<DropDTO> result = new List<DropDTO>();
+
                 foreach (Drop Drop in context.Drop.Where(s => s.MonsterVNum == monsterVNum || s.MonsterVNum == null))
                 {
-                    yield return _mapper.Map<DropDTO>(Drop);
+                    DropDTO dto = new DropDTO();
+                    Mapper.Mapper.Instance.DropMapper.ToDropDTO(Drop, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 

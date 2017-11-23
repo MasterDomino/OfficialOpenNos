@@ -36,7 +36,8 @@ namespace OpenNos.DAL.DAO
                     context.Configuration.AutoDetectChangesEnabled = false;
                     foreach (ComboDTO combo in combos)
                     {
-                        Combo entity = _mapper.Map<Combo>(combo);
+                        Combo entity = new Combo();
+                        Mapper.Mapper.Instance.ComboMapper.ToCombo(combo, entity);
                         context.Combo.Add(entity);
                     }
                     context.Configuration.AutoDetectChangesEnabled = true;
@@ -55,10 +56,12 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    Combo entity = _mapper.Map<Combo>(combo);
+                    Combo entity = new Combo();
+                    Mapper.Mapper.Instance.ComboMapper.ToCombo(combo, entity);
                     context.Combo.Add(entity);
                     context.SaveChanges();
-                    return _mapper.Map<ComboDTO>(entity);
+                    Mapper.Mapper.Instance.ComboMapper.ToComboDTO(entity, combo);
+                    return combo;
                 }
             }
             catch (Exception e)
@@ -72,10 +75,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<ComboDTO> result = new List<ComboDTO>();
                 foreach (Combo combo in context.Combo)
                 {
-                    yield return _mapper.Map<ComboDTO>(combo);
+                    ComboDTO dto = new ComboDTO();
+                    Mapper.Mapper.Instance.ComboMapper.ToComboDTO(combo, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -85,7 +92,9 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<ComboDTO>(context.Combo.FirstOrDefault(s => s.SkillVNum.Equals(comboId)));
+                    ComboDTO dto = new ComboDTO();
+                    Mapper.Mapper.Instance.ComboMapper.ToComboDTO(context.Combo.FirstOrDefault(s => s.SkillVNum.Equals(comboId)), dto);
+                    return dto;
                 }
             }
             catch (Exception e)
@@ -99,10 +108,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<ComboDTO> result = new List<ComboDTO>();
                 foreach (Combo combo in context.Combo.Where(c => c.SkillVNum == skillVNum))
                 {
-                    yield return _mapper.Map<ComboDTO>(combo);
+                    ComboDTO dto = new ComboDTO();
+                    Mapper.Mapper.Instance.ComboMapper.ToComboDTO(combo, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -110,10 +123,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<ComboDTO> result = new List<ComboDTO>();
                 foreach (Combo combo in context.Combo.Where(s => s.SkillVNum == skillVNum && s.Hit == hit && s.Effect == effect))
                 {
-                    yield return _mapper.Map<ComboDTO>(combo);
+                    ComboDTO dto = new ComboDTO();
+                    Mapper.Mapper.Instance.ComboMapper.ToComboDTO(combo, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 

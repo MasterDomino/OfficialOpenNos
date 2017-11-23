@@ -33,10 +33,12 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    ShopSkill entity = _mapper.Map<ShopSkill>(shopSkill);
+                    ShopSkill entity = new ShopSkill();
+                    Mapper.Mapper.Instance.ShopSkillMapper.ToShopSkill(shopSkill, entity);
                     context.ShopSkill.Add(entity);
                     context.SaveChanges();
-                    return _mapper.Map<ShopSkillDTO>(entity);
+                    Mapper.Mapper.Instance.ShopSkillMapper.ToShopSkillDTO(entity, shopSkill);
+                    return shopSkill;
                 }
             }
             catch (Exception e)
@@ -55,7 +57,8 @@ namespace OpenNos.DAL.DAO
                     context.Configuration.AutoDetectChangesEnabled = false;
                     foreach (ShopSkillDTO Skill in skills)
                     {
-                        ShopSkill entity = _mapper.Map<ShopSkill>(Skill);
+                        ShopSkill entity = new ShopSkill();
+                        Mapper.Mapper.Instance.ShopSkillMapper.ToShopSkill(Skill, entity);
                         context.ShopSkill.Add(entity);
                     }
                     context.Configuration.AutoDetectChangesEnabled = true;
@@ -72,10 +75,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<ShopSkillDTO> result = new List<ShopSkillDTO>();
                 foreach (ShopSkill entity in context.ShopSkill)
                 {
-                    yield return _mapper.Map<ShopSkillDTO>(entity);
+                    ShopSkillDTO dto = new ShopSkillDTO();
+                    Mapper.Mapper.Instance.ShopSkillMapper.ToShopSkillDTO(entity, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -83,10 +90,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<ShopSkillDTO> result = new List<ShopSkillDTO>();
                 foreach (ShopSkill ShopSkill in context.ShopSkill.Where(s => s.ShopId.Equals(shopId)))
                 {
-                    yield return _mapper.Map<ShopSkillDTO>(ShopSkill);
+                    ShopSkillDTO dto = new ShopSkillDTO();
+                    Mapper.Mapper.Instance.ShopSkillMapper.ToShopSkillDTO(ShopSkill, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
