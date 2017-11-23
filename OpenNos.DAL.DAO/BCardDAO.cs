@@ -37,8 +37,9 @@ namespace OpenNos.DAL.DAO
                     Mapper.Mapper.Instance.BCardMapper.ToBCard(cardObject, entity);
                     context.BCard.Add(entity);
                     context.SaveChanges();
-                    Mapper.Mapper.Instance.BCardMapper.ToBCardDTO(entity, cardObject);
+                    if(Mapper.Mapper.Instance.BCardMapper.ToBCardDTO(entity, cardObject))
                     return cardObject;
+                    return null;
                 }
             }
             catch (Exception e)
@@ -108,8 +109,9 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     BCardDTO dto = new BCardDTO();
-                    Mapper.Mapper.Instance.BCardMapper.ToBCardDTO(context.BCard.FirstOrDefault(s => s.BCardId.Equals(cardId)), dto);
+                    if(Mapper.Mapper.Instance.BCardMapper.ToBCardDTO(context.BCard.FirstOrDefault(s => s.BCardId.Equals(cardId)), dto))
                     return dto;
+                    return null;
                 }
             }
             catch (Exception e)

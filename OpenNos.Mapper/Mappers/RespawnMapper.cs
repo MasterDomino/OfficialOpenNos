@@ -9,12 +9,12 @@ namespace OpenNos.Mapper.Mappers
         {
         }
 
-        public void ToRespawnDTO(Respawn input, RespawnDTO output)
+        public bool ToRespawnDTO(Respawn input, RespawnDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.CharacterId = input.CharacterId;
             output.MapId = input.MapId;
@@ -22,14 +22,15 @@ namespace OpenNos.Mapper.Mappers
             output.RespawnMapTypeId = input.RespawnMapTypeId;
             output.X = input.X;
             output.Y = input.Y;
+            return true;
         }
 
-        public void ToRespawn(RespawnDTO input, Respawn output)
+        public bool ToRespawn(RespawnDTO input, Respawn output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.CharacterId = input.CharacterId;
             output.MapId = input.MapId;
@@ -37,6 +38,7 @@ namespace OpenNos.Mapper.Mappers
             output.RespawnMapTypeId = input.RespawnMapTypeId;
             output.X = input.X;
             output.Y = input.Y;
+            return true;
         }
     }
 }

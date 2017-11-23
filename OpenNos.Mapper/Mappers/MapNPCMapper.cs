@@ -11,12 +11,12 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToMapNPCDTO(MapNpc input, MapNpcDTO output)
+        public bool ToMapNPCDTO(MapNpc input, MapNpcDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.Dialog = input.Dialog;
             output.Effect = input.Effect;
@@ -30,14 +30,15 @@ namespace OpenNos.Mapper.Mappers
             output.MapY = input.MapY;
             output.NpcVNum = input.NpcVNum;
             output.Position = input.Position;
+            return true;
         }
 
-        public void ToMapNPC(MapNpcDTO input, MapNpc output)
+        public bool ToMapNPC(MapNpcDTO input, MapNpc output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.Dialog = input.Dialog;
             output.Effect = input.Effect;
@@ -51,6 +52,7 @@ namespace OpenNos.Mapper.Mappers
             output.MapY = input.MapY;
             output.NpcVNum = input.NpcVNum;
             output.Position = input.Position;
+            return true;
         }
     }
 }

@@ -155,8 +155,9 @@ namespace OpenNos.DAL.DAO
                 {
                     ItemInstance entity = context.ItemInstance.FirstOrDefault(i => i.CharacterId == characterId && i.Slot == slot && i.Type == type);
                     ItemInstanceDTO output = new ItemInstanceDTO();
-                    Map(entity, output);
+                    if(Map(entity, output))
                     return output;
+                    return null;
                 }
             }
             catch (Exception e)
@@ -268,8 +269,9 @@ namespace OpenNos.DAL.DAO
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 ItemInstanceDTO ItemInstanceDTO = new ItemInstanceDTO();
-                Map(context.ItemInstance.FirstOrDefault(i => i.Id.Equals(id)), ItemInstanceDTO);
+                if(Map(context.ItemInstance.FirstOrDefault(i => i.Id.Equals(id)), ItemInstanceDTO))
                 return ItemInstanceDTO;
+                return null;
             }
         }
 
@@ -279,8 +281,9 @@ namespace OpenNos.DAL.DAO
             Map(dto, entity);
             context.Set<ItemInstance>().Add(entity);
             context.SaveChanges();
-            Map(entity, dto);
+            if(Map(entity, dto))
             return dto;
+            return null;
         }
 
         protected ItemInstanceDTO Update(ItemInstance entity, ItemInstanceDTO inventory, OpenNosContext context)
@@ -290,16 +293,17 @@ namespace OpenNos.DAL.DAO
                 Map(inventory, entity, true);
                 context.SaveChanges();
             }
-            Map(entity, inventory);
+            if(Map(entity, inventory))
             return inventory;
+            return null;
         }
 
-        private void Map(ItemInstance input, ItemInstanceDTO output)
+        private bool Map(ItemInstance input, ItemInstanceDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             Type t = input.GetType();
             if (t == typeof(BoxInstance))
@@ -338,14 +342,15 @@ namespace OpenNos.DAL.DAO
             {
                 Mapper.Mapper.Instance.ItemInstanceMapper.ToItemInstanceDTO(input, output);
             }
+            return true;
         }
 
-        private void Map(ItemInstanceDTO input, ItemInstance output, bool exists = false)
+        private bool Map(ItemInstanceDTO input, ItemInstance output, bool exists = false)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             Type t = input.GetType();
             if (t == typeof(BoxItemDTO))
@@ -396,6 +401,7 @@ namespace OpenNos.DAL.DAO
             {
                 Mapper.Mapper.Instance.ItemInstanceMapper.ToItemInstance(input, output);
             }
+            return true;
         }
 
         #endregion

@@ -37,8 +37,9 @@ namespace OpenNos.DAL.DAO
                     Mapper.Mapper.Instance.TeleporterMapper.ToTeleporter(teleporter, entity);
                     context.Teleporter.Add(entity);
                     context.SaveChanges();
-                    Mapper.Mapper.Instance.TeleporterMapper.ToTeleporterDTO(entity, teleporter);
+                    if(Mapper.Mapper.Instance.TeleporterMapper.ToTeleporterDTO(entity, teleporter))
                     return teleporter;
+                    return null;
                 }
             }
             catch (Exception e)
@@ -70,8 +71,9 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     TeleporterDTO dto = new TeleporterDTO();
-                    Mapper.Mapper.Instance.TeleporterMapper.ToTeleporterDTO(context.Teleporter.FirstOrDefault(i => i.TeleporterId.Equals(teleporterId)), dto);
+                    if(Mapper.Mapper.Instance.TeleporterMapper.ToTeleporterDTO(context.Teleporter.FirstOrDefault(i => i.TeleporterId.Equals(teleporterId)), dto))
                     return dto;
+                    return null;
                 }
             }
             catch (Exception e)

@@ -99,8 +99,9 @@ namespace OpenNos.DAL.DAO
             Mapper.Mapper.Instance.FamilyLogMapper.ToFamilyLog(famlog, entity);
             context.FamilyLog.Add(entity);
             context.SaveChanges();
-            Mapper.Mapper.Instance.FamilyLogMapper.ToFamilyLogDTO(entity, famlog);
+            if(Mapper.Mapper.Instance.FamilyLogMapper.ToFamilyLogDTO(entity, famlog))
             return famlog;
+            return null;
         }
 
         private FamilyLogDTO update(FamilyLog entity, FamilyLogDTO famlog, OpenNosContext context)
@@ -111,8 +112,9 @@ namespace OpenNos.DAL.DAO
                 context.SaveChanges();
             }
 
-            Mapper.Mapper.Instance.FamilyLogMapper.ToFamilyLogDTO(entity, famlog);
+            if(Mapper.Mapper.Instance.FamilyLogMapper.ToFamilyLogDTO(entity, famlog))
             return famlog;
+            return null;
         }
 
         #endregion

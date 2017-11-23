@@ -11,12 +11,12 @@ namespace OpenNos.Mapper.Mappers
         {
         }
 
-        public void ToCharacterDTO(Character input, CharacterDTO output)
+        public bool ToCharacterDTO(Character input, CharacterDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.AccountId = input.AccountId;
             output.Act4Dead = input.Act4Dead;
@@ -73,13 +73,14 @@ namespace OpenNos.Mapper.Mappers
             output.TalentSurrender = input.TalentSurrender;
             output.TalentWin = input.TalentWin;
             output.WhisperBlocked = input.WhisperBlocked;
+            return true;
         }
-        public void ToCharacter(CharacterDTO input, Character output)
+        public bool ToCharacter(CharacterDTO input, Character output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.AccountId = input.AccountId;
             output.Act4Dead = input.Act4Dead;
@@ -136,6 +137,7 @@ namespace OpenNos.Mapper.Mappers
             output.TalentSurrender = input.TalentSurrender;
             output.TalentWin = input.TalentWin;
             output.WhisperBlocked = input.WhisperBlocked;
+            return true;
         }
     }
 }

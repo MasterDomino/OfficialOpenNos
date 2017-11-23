@@ -86,8 +86,9 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     FamilyCharacterDTO dto = new FamilyCharacterDTO();
-                    Mapper.Mapper.Instance.FamilyCharacterMapper.ToFamilyCharacterDTO(context.FamilyCharacter.FirstOrDefault(c => c.CharacterId == characterId), dto);
+                    if(Mapper.Mapper.Instance.FamilyCharacterMapper.ToFamilyCharacterDTO(context.FamilyCharacter.FirstOrDefault(c => c.CharacterId == characterId), dto))
                     return dto;
+                    return null;
                 }
             }
             catch (Exception e)
@@ -119,8 +120,9 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     FamilyCharacterDTO dto = new FamilyCharacterDTO();
-                    Mapper.Mapper.Instance.FamilyCharacterMapper.ToFamilyCharacterDTO(context.FamilyCharacter.FirstOrDefault(c => c.FamilyCharacterId.Equals(familyCharacterId)), dto);
+                    if(Mapper.Mapper.Instance.FamilyCharacterMapper.ToFamilyCharacterDTO(context.FamilyCharacter.FirstOrDefault(c => c.FamilyCharacterId.Equals(familyCharacterId)), dto))
                     return dto;
+                    return null;
                 }
             }
             catch (Exception e)
@@ -136,8 +138,9 @@ namespace OpenNos.DAL.DAO
             Mapper.Mapper.Instance.FamilyCharacterMapper.ToFamilyCharacter(character, entity);
             context.FamilyCharacter.Add(entity);
             context.SaveChanges();
-            Mapper.Mapper.Instance.FamilyCharacterMapper.ToFamilyCharacterDTO(entity, character);
+            if(Mapper.Mapper.Instance.FamilyCharacterMapper.ToFamilyCharacterDTO(entity, character))
             return character;
+            return null;
         }
 
         private FamilyCharacterDTO update(FamilyCharacter entity, FamilyCharacterDTO character, OpenNosContext context)
@@ -147,8 +150,9 @@ namespace OpenNos.DAL.DAO
                 Mapper.Mapper.Instance.FamilyCharacterMapper.ToFamilyCharacter(character, entity);
                 context.SaveChanges();
             }
-            Mapper.Mapper.Instance.FamilyCharacterMapper.ToFamilyCharacterDTO(entity, character);
+            if(Mapper.Mapper.Instance.FamilyCharacterMapper.ToFamilyCharacterDTO(entity, character))
             return character;
+            return null;
         }
 
         #endregion

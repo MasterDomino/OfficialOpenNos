@@ -9,12 +9,12 @@ namespace OpenNos.Mapper.Mappers
         {
         }
 
-        public void ToPenaltyLogDTO(PenaltyLog input, PenaltyLogDTO output)
+        public bool ToPenaltyLogDTO(PenaltyLog input, PenaltyLogDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.AccountId = input.AccountId;
             output.AdminName = input.AdminName;
@@ -23,14 +23,15 @@ namespace OpenNos.Mapper.Mappers
             output.Penalty = input.Penalty;
             output.PenaltyLogId = input.PenaltyLogId;
             output.Reason = input.Reason;
+            return true;
         }
 
-        public void ToPenaltyLog(PenaltyLogDTO input, PenaltyLog output)
+        public bool ToPenaltyLog(PenaltyLogDTO input, PenaltyLog output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.AccountId = input.AccountId;
             output.AdminName = input.AdminName;
@@ -39,6 +40,7 @@ namespace OpenNos.Mapper.Mappers
             output.Penalty = input.Penalty;
             output.PenaltyLogId = input.PenaltyLogId;
             output.Reason = input.Reason;
+            return true;
         }
     }
 }

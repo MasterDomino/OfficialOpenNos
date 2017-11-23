@@ -10,12 +10,12 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToBazaarItemDTO(BazaarItem input, BazaarItemDTO output)
+        public bool ToBazaarItemDTO(BazaarItem input, BazaarItemDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.Amount = input.Amount;
             output.BazaarItemId = input.BazaarItemId;
@@ -26,14 +26,15 @@ namespace OpenNos.Mapper.Mappers
             output.MedalUsed = input.MedalUsed;
             output.Price = input.Price;
             output.SellerId = input.SellerId;
+            return true;
         }
 
-        public void ToBazaarItem(BazaarItemDTO input, BazaarItem output)
+        public bool ToBazaarItem(BazaarItemDTO input, BazaarItem output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.Amount = input.Amount;
             output.BazaarItemId = input.BazaarItemId;
@@ -44,6 +45,7 @@ namespace OpenNos.Mapper.Mappers
             output.MedalUsed = input.MedalUsed;
             output.Price = input.Price;
             output.SellerId = input.SellerId;
+            return true;
         }
     }
 }

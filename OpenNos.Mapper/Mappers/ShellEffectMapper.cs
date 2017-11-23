@@ -9,32 +9,34 @@ namespace OpenNos.Mapper.Mappers
         {
         }
 
-        public void ToShellEffectDTO(ShellEffect input, ShellEffectDTO output)
+        public bool ToShellEffectDTO(ShellEffect input, ShellEffectDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.Effect = input.Effect;
             output.EffectLevel = input.EffectLevel;
             output.EquipmentSerialId = input.EquipmentSerialId;
             output.ShellEffectId = input.ShellEffectId;
             output.Value = input.Value;
+            return true;
         }
 
-        public void ToShellEffect(ShellEffectDTO input, ShellEffect output)
+        public bool ToShellEffect(ShellEffectDTO input, ShellEffect output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.Effect = input.Effect;
             output.EffectLevel = input.EffectLevel;
             output.EquipmentSerialId = input.EquipmentSerialId;
             output.ShellEffectId = input.ShellEffectId;
             output.Value = input.Value;
+            return true;
         }
     }
 }

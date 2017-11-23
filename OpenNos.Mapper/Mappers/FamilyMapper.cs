@@ -10,12 +10,12 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToFamilyDTO(Family input, FamilyDTO output)
+        public bool ToFamilyDTO(Family input, FamilyDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.FamilyExperience = input.FamilyExperience;
             output.FamilyHeadGender = input.FamilyHeadGender;
@@ -32,14 +32,15 @@ namespace OpenNos.Mapper.Mappers
             output.MemberCanGetHistory = input.MemberCanGetHistory;
             output.Name = input.Name;
             output.WarehouseSize = input.WarehouseSize;
+            return true;
         }
 
-        public void ToFamily(FamilyDTO input, Family output)
+        public bool ToFamily(FamilyDTO input, Family output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.FamilyExperience = input.FamilyExperience;
             output.FamilyHeadGender = input.FamilyHeadGender;
@@ -56,6 +57,7 @@ namespace OpenNos.Mapper.Mappers
             output.MemberCanGetHistory = input.MemberCanGetHistory;
             output.Name = input.Name;
             output.WarehouseSize = input.WarehouseSize;
+            return true;
         }
     }
 }

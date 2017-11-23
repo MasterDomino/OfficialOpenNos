@@ -82,7 +82,8 @@ namespace OpenNos.DAL.DAO
                 {
                     void insert(QuestDTO quest)
                     {
-                        Quest _entity = _mapper.Map<Quest>(quest);
+                        Quest _entity = new Quest();
+                        Mapper.Mapper.Instance.QuestMapper.ToQuest(quest, _entity);
                         context.Quest.Add(_entity);
                     }
 
@@ -90,7 +91,7 @@ namespace OpenNos.DAL.DAO
                     {
                         if (_entity != null)
                         {
-                            _mapper.Map(quest, _entity);
+                            Mapper.Mapper.Instance.QuestMapper.ToQuest(quest, _entity);
                             context.SaveChanges();
                         }
                     }
@@ -119,7 +120,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
-                return context.Quest.ToList().Select(c => _mapper.Map<QuestDTO>(c));
+                List<QuestDTO> result = new List<QuestDTO>();
+                foreach(Quest entity in context.Quest)
+                {
+                    QuestDTO dto = new QuestDTO();
+                    Mapper.Mapper.Instance.QuestMapper.ToQuestDTO(entity, dto);
+                    result.Add(dto);
+                }
+                return result;
             }
         }
 
@@ -127,27 +135,35 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
-                return _mapper.Map<QuestDTO>(context.Quest.Find(id));
+                QuestDTO dto = new QuestDTO();
+                if(Mapper.Mapper.Instance.QuestMapper.ToQuestDTO(context.Quest.Find(id), dto))
+                return dto;
+                return null;
             }
         }
 
         private QuestDTO insert(QuestDTO quest, OpenNosContext context)
         {
-            Quest entity = _mapper.Map<Quest>(quest);
+            Quest entity = new Quest();
+            Mapper.Mapper.Instance.QuestMapper.ToQuest(quest, entity);
             context.Quest.Add(entity);
             context.SaveChanges();
-            return _mapper.Map<QuestDTO>(entity);
+            if(Mapper.Mapper.Instance.QuestMapper.ToQuestDTO(entity, quest))
+            return quest;
+            return null;
         }
 
         private QuestDTO update(Quest entity, QuestDTO quest, OpenNosContext context)
         {
             if (entity != null)
             {
-                _mapper.Map(quest, entity);
+                Mapper.Mapper.Instance.QuestMapper.ToQuest(quest, entity);
                 context.SaveChanges();
             }
 
-            return _mapper.Map<QuestDTO>(entity);
+            if(Mapper.Mapper.Instance.QuestMapper.ToQuestDTO(entity, quest))
+            return quest;
+            return null;
         }
 
         #endregion

@@ -37,8 +37,9 @@ namespace OpenNos.DAL.DAO
                     Mapper.Mapper.Instance.ShopSkillMapper.ToShopSkill(shopSkill, entity);
                     context.ShopSkill.Add(entity);
                     context.SaveChanges();
-                    Mapper.Mapper.Instance.ShopSkillMapper.ToShopSkillDTO(entity, shopSkill);
+                    if(Mapper.Mapper.Instance.ShopSkillMapper.ToShopSkillDTO(entity, shopSkill))
                     return shopSkill;
+                    return null;
                 }
             }
             catch (Exception e)

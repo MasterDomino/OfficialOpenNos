@@ -34,10 +34,13 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    NpcMonsterSkill entity = _mapper.Map<NpcMonsterSkill>(npcMonsterSkill);
+                    NpcMonsterSkill entity = new NpcMonsterSkill();
+                    Mapper.Mapper.Instance.NpcMonsterSkillMapper.ToNpcMonsterSkill(npcMonsterSkill, entity);
                     context.NpcMonsterSkill.Add(entity);
                     context.SaveChanges();
-                    return _mapper.Map<NpcMonsterSkillDTO>(entity);
+                    if(Mapper.Mapper.Instance.NpcMonsterSkillMapper.ToNpcMonsterSkillDTO(entity, npcMonsterSkill))
+                    return npcMonsterSkill;
+                    return null;
                 }
             }
             catch (Exception e)
@@ -56,7 +59,8 @@ namespace OpenNos.DAL.DAO
                     context.Configuration.AutoDetectChangesEnabled = false;
                     foreach (NpcMonsterSkillDTO Skill in skills)
                     {
-                        NpcMonsterSkill entity = _mapper.Map<NpcMonsterSkill>(Skill);
+                        NpcMonsterSkill entity = new NpcMonsterSkill();
+                        Mapper.Mapper.Instance.NpcMonsterSkillMapper.ToNpcMonsterSkill(Skill, entity);
                         context.NpcMonsterSkill.Add(entity);
                     }
                     context.Configuration.AutoDetectChangesEnabled = true;
@@ -73,7 +77,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
-                return context.NpcMonsterSkill.ToList().Select(n => _mapper.Map<NpcMonsterSkillDTO>(n)).ToList();
+                List<NpcMonsterSkillDTO> result = new List<NpcMonsterSkillDTO>();
+                foreach (NpcMonsterSkill NpcMonsterSkillobject in context.NpcMonsterSkill)
+                {
+                    NpcMonsterSkillDTO dto = new NpcMonsterSkillDTO();
+                    Mapper.Mapper.Instance.NpcMonsterSkillMapper.ToNpcMonsterSkillDTO(NpcMonsterSkillobject, dto);
+                    result.Add(dto);
+                }
+                return result;
             }
         }
 
@@ -81,10 +92,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<NpcMonsterSkillDTO> result = new List<NpcMonsterSkillDTO>();
                 foreach (NpcMonsterSkill NpcMonsterSkillobject in context.NpcMonsterSkill.Where(i => i.NpcMonsterVNum == npcId))
                 {
-                    yield return _mapper.Map<NpcMonsterSkillDTO>(NpcMonsterSkillobject);
+                    NpcMonsterSkillDTO dto = new NpcMonsterSkillDTO();
+                    Mapper.Mapper.Instance.NpcMonsterSkillMapper.ToNpcMonsterSkillDTO(NpcMonsterSkillobject, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 

@@ -83,10 +83,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<MinilandObjectDTO> result = new List<MinilandObjectDTO>();
                 foreach (MinilandObject obj in context.MinilandObject.Where(s => s.CharacterId == characterId))
                 {
-                    yield return _mapper.Map<MinilandObjectDTO>(obj);
+                    MinilandObjectDTO dto = new MinilandObjectDTO();
+                    Mapper.Mapper.Instance.MinilandObjectMapper.ToMinilandObjectDTO(obj, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -94,10 +98,13 @@ namespace OpenNos.DAL.DAO
         {
             try
             {
-                MinilandObject entity = _mapper.Map<MinilandObject>(obj);
+                MinilandObject entity = new MinilandObject();
+                Mapper.Mapper.Instance.MinilandObjectMapper.ToMinilandObject(obj, entity);
                 context.MinilandObject.Add(entity);
                 context.SaveChanges();
-                return _mapper.Map<MinilandObjectDTO>(entity);
+                if(Mapper.Mapper.Instance.MinilandObjectMapper.ToMinilandObjectDTO(entity, obj))
+                return obj;
+                return null;
             }
             catch (Exception e)
             {
@@ -110,10 +117,12 @@ namespace OpenNos.DAL.DAO
         {
             if (entity != null)
             {
-                _mapper.Map(respawn, entity);
+                Mapper.Mapper.Instance.MinilandObjectMapper.ToMinilandObject(respawn, entity);
                 context.SaveChanges();
             }
-            return _mapper.Map<MinilandObjectDTO>(entity);
+            if(Mapper.Mapper.Instance.MinilandObjectMapper.ToMinilandObjectDTO(entity, respawn))
+            return respawn;
+            return null;
         }
 
         #endregion

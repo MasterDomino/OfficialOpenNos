@@ -34,10 +34,13 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    RecipeItem entity = _mapper.Map<RecipeItem>(recipeItem);
+                    RecipeItem entity = new RecipeItem();
+                    Mapper.Mapper.Instance.RecipeItemMapper.ToRecipeItem(recipeItem, entity);
                     context.RecipeItem.Add(entity);
                     context.SaveChanges();
-                    return _mapper.Map<RecipeItemDTO>(entity);
+                    if(Mapper.Mapper.Instance.RecipeItemMapper.ToRecipeItemDTO(entity, recipeItem))
+                    return recipeItem;
+                    return null;
                 }
             }
             catch (Exception e)
@@ -51,10 +54,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<RecipeItemDTO> result = new List<RecipeItemDTO>();
                 foreach (RecipeItem recipeItem in context.RecipeItem)
                 {
-                    yield return _mapper.Map<RecipeItemDTO>(recipeItem);
+                    RecipeItemDTO dto = new RecipeItemDTO();
+                    Mapper.Mapper.Instance.RecipeItemMapper.ToRecipeItemDTO(recipeItem, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -64,7 +71,10 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<RecipeItemDTO>(context.RecipeItem.FirstOrDefault(s => s.RecipeItemId.Equals(recipeItemId)));
+                    RecipeItemDTO dto = new RecipeItemDTO();
+                    if(Mapper.Mapper.Instance.RecipeItemMapper.ToRecipeItemDTO(context.RecipeItem.FirstOrDefault(s => s.RecipeItemId.Equals(recipeItemId)), dto))
+                    return dto;
+                    return null;
                 }
             }
             catch (Exception e)
@@ -78,10 +88,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<RecipeItemDTO> result = new List<RecipeItemDTO>();
                 foreach (RecipeItem recipeItem in context.RecipeItem.Where(s => s.RecipeId.Equals(recipeId)))
                 {
-                    yield return _mapper.Map<RecipeItemDTO>(recipeItem);
+                    RecipeItemDTO dto = new RecipeItemDTO();
+                    Mapper.Mapper.Instance.RecipeItemMapper.ToRecipeItemDTO(recipeItem, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -89,10 +103,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<RecipeItemDTO> result = new List<RecipeItemDTO>();
                 foreach (RecipeItem recipeItem in context.RecipeItem.Where(s => s.ItemVNum.Equals(itemVNum) && s.RecipeId.Equals(recipeId)))
                 {
-                    yield return _mapper.Map<RecipeItemDTO>(recipeItem);
+                    RecipeItemDTO dto = new RecipeItemDTO();
+                    Mapper.Mapper.Instance.RecipeItemMapper.ToRecipeItemDTO(recipeItem, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 

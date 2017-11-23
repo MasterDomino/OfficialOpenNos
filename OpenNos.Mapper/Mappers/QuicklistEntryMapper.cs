@@ -9,12 +9,12 @@ namespace OpenNos.Mapper.Mappers
         {
         }
 
-        public void ToQuicklistEntryDTO(QuicklistEntry input, QuicklistEntryDTO output)
+        public bool ToQuicklistEntryDTO(QuicklistEntry input, QuicklistEntryDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.CharacterId = input.CharacterId;
             output.Id = input.Id;
@@ -24,14 +24,15 @@ namespace OpenNos.Mapper.Mappers
             output.Q2 = input.Q2;
             output.Slot = input.Slot;
             output.Type = input.Type;
+            return true;
         }
 
-        public void ToQuicklistEntry(QuicklistEntryDTO input, QuicklistEntry output)
+        public bool ToQuicklistEntry(QuicklistEntryDTO input, QuicklistEntry output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.CharacterId = input.CharacterId;
             output.Id = input.Id;
@@ -41,6 +42,7 @@ namespace OpenNos.Mapper.Mappers
             output.Q2 = input.Q2;
             output.Slot = input.Slot;
             output.Type = input.Type;
+            return true;
         }
     }
 }

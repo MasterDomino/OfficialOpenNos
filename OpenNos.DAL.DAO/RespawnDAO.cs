@@ -60,10 +60,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<RespawnDTO> result = new List<RespawnDTO>();
                 foreach (Respawn Respawnobject in context.Respawn.Where(i => i.CharacterId.Equals(characterId)))
                 {
-                    yield return _mapper.Map<RespawnDTO>(Respawnobject);
+                    RespawnDTO dto = new RespawnDTO();
+                    Mapper.Mapper.Instance.RespawnMapper.ToRespawnDTO(Respawnobject, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -73,7 +77,10 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<RespawnDTO>(context.Respawn.FirstOrDefault(s => s.RespawnId.Equals(respawnId)));
+                    RespawnDTO dto = new RespawnDTO();
+                    if(Mapper.Mapper.Instance.RespawnMapper.ToRespawnDTO(context.Respawn.FirstOrDefault(s => s.RespawnId.Equals(respawnId)), dto))
+                    return dto;
+                    return null;
                 }
             }
             catch (Exception e)
@@ -87,10 +94,13 @@ namespace OpenNos.DAL.DAO
         {
             try
             {
-                Respawn entity = _mapper.Map<Respawn>(respawn);
+                Respawn entity = new Respawn();
+                Mapper.Mapper.Instance.RespawnMapper.ToRespawn(respawn, entity);
                 context.Respawn.Add(entity);
                 context.SaveChanges();
-                return _mapper.Map<RespawnDTO>(entity);
+                if(Mapper.Mapper.Instance.RespawnMapper.ToRespawnDTO(entity, respawn))
+                return respawn;
+                return null;
             }
             catch (Exception e)
             {
@@ -103,10 +113,12 @@ namespace OpenNos.DAL.DAO
         {
             if (entity != null)
             {
-                _mapper.Map(respawn, entity);
+                Mapper.Mapper.Instance.RespawnMapper.ToRespawn(respawn, entity);
                 context.SaveChanges();
             }
-            return _mapper.Map<RespawnDTO>(entity);
+            if(Mapper.Mapper.Instance.RespawnMapper.ToRespawnDTO(entity, respawn))
+            return respawn;
+            return null;
         }
 
         #endregion

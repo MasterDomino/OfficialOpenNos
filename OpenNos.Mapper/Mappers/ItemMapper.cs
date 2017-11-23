@@ -11,12 +11,12 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToItemDTO(Item input, ItemDTO output)
+        public bool ToItemDTO(Item input, ItemDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.BasicUpgrade = input.BasicUpgrade;
             output.CellonLvl = input.CellonLvl;
@@ -88,14 +88,15 @@ namespace OpenNos.Mapper.Mappers
             output.WaterElement = input.WaterElement;
             output.WaterResistance = input.WaterResistance;
             output.Width = input.Width;
+            return true;
         }
 
-        public void ToItem(ItemDTO input, Item output)
+        public bool ToItem(ItemDTO input, Item output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.BasicUpgrade = input.BasicUpgrade;
             output.CellonLvl = input.CellonLvl;
@@ -167,6 +168,7 @@ namespace OpenNos.Mapper.Mappers
             output.WaterElement = input.WaterElement;
             output.WaterResistance = input.WaterResistance;
             output.Width = input.Width;
+            return true;
         }
     }
 }

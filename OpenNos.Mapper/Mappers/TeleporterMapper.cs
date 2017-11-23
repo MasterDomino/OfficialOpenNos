@@ -11,12 +11,12 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToTeleporterDTO(Teleporter input, TeleporterDTO output)
+        public bool ToTeleporterDTO(Teleporter input, TeleporterDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.Index = input.Index;
             output.MapId = input.MapId;
@@ -24,14 +24,15 @@ namespace OpenNos.Mapper.Mappers
             output.MapX = input.MapX;
             output.MapY = input.MapY;
             output.TeleporterId = input.TeleporterId;
+            return true;
         }
 
-        public void ToTeleporter(TeleporterDTO input, Teleporter output)
+        public bool ToTeleporter(TeleporterDTO input, Teleporter output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.Index = input.Index;
             output.MapId = input.MapId;
@@ -39,6 +40,7 @@ namespace OpenNos.Mapper.Mappers
             output.MapX = input.MapX;
             output.MapY = input.MapY;
             output.TeleporterId = input.TeleporterId;
+            return true;
         }
     }
 }

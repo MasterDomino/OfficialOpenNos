@@ -106,8 +106,9 @@ namespace OpenNos.DAL.DAO
                         if (family != null)
                         {
                             FamilyDTO dto = new FamilyDTO();
-                            Mapper.Mapper.Instance.FamilyMapper.ToFamilyDTO(family, dto);
+                            if(Mapper.Mapper.Instance.FamilyMapper.ToFamilyDTO(family, dto))
                             return dto;
+                            return null;
                         }
                     }
                 }
@@ -129,8 +130,9 @@ namespace OpenNos.DAL.DAO
                     if (family != null)
                     {
                         FamilyDTO dto = new FamilyDTO();
-                        Mapper.Mapper.Instance.FamilyMapper.ToFamilyDTO(family, dto);
+                        if(Mapper.Mapper.Instance.FamilyMapper.ToFamilyDTO(family, dto))
                         return dto;
+                        return null;
                     }
                 }
             }
@@ -151,8 +153,9 @@ namespace OpenNos.DAL.DAO
                     if (family != null)
                     {
                         FamilyDTO dto = new FamilyDTO();
-                        Mapper.Mapper.Instance.FamilyMapper.ToFamilyDTO(family, dto);
+                        if(Mapper.Mapper.Instance.FamilyMapper.ToFamilyDTO(family, dto))
                         return dto;
+                        return null;
                     }
                 }
             }
@@ -169,8 +172,9 @@ namespace OpenNos.DAL.DAO
             Mapper.Mapper.Instance.FamilyMapper.ToFamily(family, entity);
             context.Family.Add(entity);
             context.SaveChanges();
-            Mapper.Mapper.Instance.FamilyMapper.ToFamilyDTO(entity, family);
+            if(Mapper.Mapper.Instance.FamilyMapper.ToFamilyDTO(entity, family))
             return family;
+            return null;
         }
 
         private FamilyDTO update(Family entity, FamilyDTO family, OpenNosContext context)
@@ -180,8 +184,9 @@ namespace OpenNos.DAL.DAO
                 Mapper.Mapper.Instance.FamilyMapper.ToFamily(family, entity);
                 context.SaveChanges();
             }
-            Mapper.Mapper.Instance.FamilyMapper.ToFamilyDTO(entity, family);
+            if(Mapper.Mapper.Instance.FamilyMapper.ToFamilyDTO(entity, family))
             return family;
+            return null;
         }
 
         #endregion

@@ -82,30 +82,39 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<MateDTO> result = new List<MateDTO>();
                 foreach (Mate mate in context.Mate.Where(s => s.CharacterId == characterId))
                 {
-                    yield return _mapper.Map<MateDTO>(mate);
+                    MateDTO dto = new MateDTO();
+                    Mapper.Mapper.Instance.MateMapper.ToMateDTO(mate, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
         private MateDTO insert(MateDTO mate, OpenNosContext context)
         {
-            Mate entity = _mapper.Map<Mate>(mate);
+            Mate entity = new Mate();
+            Mapper.Mapper.Instance.MateMapper.ToMate(mate, entity);
             context.Mate.Add(entity);
             context.SaveChanges();
-            return _mapper.Map<MateDTO>(entity);
+            if(Mapper.Mapper.Instance.MateMapper.ToMateDTO(entity, mate))
+            return mate;
+            return null;
         }
 
         private MateDTO update(Mate entity, MateDTO character, OpenNosContext context)
         {
             if (entity != null)
             {
-                _mapper.Map(character, entity);
+                Mapper.Mapper.Instance.MateMapper.ToMate(character, entity);
                 context.SaveChanges();
             }
 
-            return _mapper.Map<MateDTO>(entity);
+            if(Mapper.Mapper.Instance.MateMapper.ToMateDTO(entity, character))
+            return character;
+            return null;
         }
 
         #endregion

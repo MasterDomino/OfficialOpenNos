@@ -9,30 +9,32 @@ namespace OpenNos.Mapper.Mappers
         {
         }
 
-        public void ToRecipeItemDTO(RecipeItem input, RecipeItemDTO output)
+        public bool ToRecipeItemDTO(RecipeItem input, RecipeItemDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.Amount = input.Amount;
             output.ItemVNum = input.ItemVNum;
             output.RecipeId = input.RecipeId;
             output.RecipeItemId = input.RecipeItemId;
+            return true;
         }
 
-        public void ToRecipeItem(RecipeItemDTO input, RecipeItem output)
+        public bool ToRecipeItem(RecipeItemDTO input, RecipeItem output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.Amount = input.Amount;
             output.ItemVNum = input.ItemVNum;
             output.RecipeId = input.RecipeId;
             output.RecipeItemId = input.RecipeItemId;
+            return true;
         }
     }
 }

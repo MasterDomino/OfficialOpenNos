@@ -37,7 +37,8 @@ namespace OpenNos.DAL.DAO
                     context.Configuration.AutoDetectChangesEnabled = false;
                     foreach (MapDTO Item in maps)
                     {
-                        Map entity = _mapper.Map<Map>(Item);
+                        Map entity = new Map();
+                        Mapper.Mapper.Instance.MapMapper.ToMap(Item, entity);
                         context.Map.Add(entity);
                     }
                     context.Configuration.AutoDetectChangesEnabled = true;
@@ -58,10 +59,13 @@ namespace OpenNos.DAL.DAO
                 {
                     if (context.Map.FirstOrDefault(c => c.MapId.Equals(map.MapId)) == null)
                     {
-                        Map entity = _mapper.Map<Map>(map);
+                        Map entity = new Map();
+                        Mapper.Mapper.Instance.MapMapper.ToMap(map, entity);
                         context.Map.Add(entity);
                         context.SaveChanges();
-                        return _mapper.Map<MapDTO>(entity);
+                        if(Mapper.Mapper.Instance.MapMapper.ToMapDTO(entity, map))
+                        return map;
+                        return null;
                     }
                     return new MapDTO();
                 }
@@ -77,10 +81,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<MapDTO> result = new List<MapDTO>();
                 foreach (Map Map in context.Map)
                 {
-                    yield return _mapper.Map<MapDTO>(Map);
+                    MapDTO dto = new MapDTO();
+                    Mapper.Mapper.Instance.MapMapper.ToMapDTO(Map, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -90,7 +98,10 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<MapDTO>(context.Map.FirstOrDefault(c => c.MapId.Equals(mapId)));
+                    MapDTO dto = new MapDTO();
+                    if(Mapper.Mapper.Instance.MapMapper.ToMapDTO(context.Map.FirstOrDefault(c => c.MapId.Equals(mapId)), dto))
+                    return dto;
+                    return null;
                 }
             }
             catch (Exception e)

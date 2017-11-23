@@ -10,12 +10,12 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToFamilyCharacterDTO(FamilyCharacter input, FamilyCharacterDTO output)
+        public bool ToFamilyCharacterDTO(FamilyCharacter input, FamilyCharacterDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.Authority = input.Authority;
             output.CharacterId = input.CharacterId;
@@ -24,14 +24,15 @@ namespace OpenNos.Mapper.Mappers
             output.FamilyCharacterId = input.FamilyCharacterId;
             output.FamilyId = input.FamilyId;
             output.Rank = input.Rank;
+            return true;
         }
 
-        public void ToFamilyCharacter(FamilyCharacterDTO input, FamilyCharacter output)
+        public bool ToFamilyCharacter(FamilyCharacterDTO input, FamilyCharacter output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.Authority = input.Authority;
             output.CharacterId = input.CharacterId;
@@ -40,6 +41,7 @@ namespace OpenNos.Mapper.Mappers
             output.FamilyCharacterId = input.FamilyCharacterId;
             output.FamilyId = input.FamilyId;
             output.Rank = input.Rank;
+            return true;
         }
     }
 }

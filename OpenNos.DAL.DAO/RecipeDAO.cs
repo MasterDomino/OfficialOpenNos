@@ -34,10 +34,13 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    Recipe entity = _mapper.Map<Recipe>(recipe);
+                    Recipe entity = new Recipe();
+                    Mapper.Mapper.Instance.RecipeMapper.ToRecipe(recipe, entity);
                     context.Recipe.Add(entity);
                     context.SaveChanges();
-                    return _mapper.Map<RecipeDTO>(entity);
+                    if(Mapper.Mapper.Instance.RecipeMapper.ToRecipeDTO(entity, recipe))
+                    return recipe;
+                    return null;
                 }
             }
             catch (Exception e)
@@ -51,10 +54,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<RecipeDTO> result = new List<RecipeDTO>();
                 foreach (Recipe Recipe in context.Recipe)
                 {
-                    yield return _mapper.Map<RecipeDTO>(Recipe);
+                    RecipeDTO dto = new RecipeDTO();
+                    Mapper.Mapper.Instance.RecipeMapper.ToRecipeDTO(Recipe, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -64,7 +71,10 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<RecipeDTO>(context.Recipe.SingleOrDefault(s => s.RecipeId.Equals(recipeId)));
+                    RecipeDTO dto = new RecipeDTO();
+                    if(Mapper.Mapper.Instance.RecipeMapper.ToRecipeDTO(context.Recipe.SingleOrDefault(s => s.RecipeId.Equals(recipeId)), dto))
+                    return dto;
+                    return null;
                 }
             }
             catch (Exception e)
@@ -80,7 +90,10 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<RecipeDTO>(context.Recipe.SingleOrDefault(s => s.ItemVNum.Equals(itemVNum)));
+                    RecipeDTO dto = new RecipeDTO();
+                    if(Mapper.Mapper.Instance.RecipeMapper.ToRecipeDTO(context.Recipe.SingleOrDefault(s => s.ItemVNum.Equals(itemVNum)), dto))
+                    return dto;
+                    return null;
                 }
             }
             catch (Exception e)
@@ -100,7 +113,7 @@ namespace OpenNos.DAL.DAO
                     if (result != null)
                     {
                         recipe.RecipeId = result.RecipeId;
-                        _mapper.Map(recipe, result);
+                        Mapper.Mapper.Instance.RecipeMapper.ToRecipe(recipe, result);
                         context.SaveChanges();
                     }
                 }

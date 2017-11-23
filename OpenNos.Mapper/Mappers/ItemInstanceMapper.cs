@@ -11,12 +11,12 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToItemInstanceDTO(ItemInstance input, ItemInstanceDTO output)
+        public bool ToItemInstanceDTO(ItemInstance input, ItemInstanceDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.Amount = (byte)input.Amount;
             output.BoundCharacterId = input.BoundCharacterId;
@@ -30,14 +30,15 @@ namespace OpenNos.Mapper.Mappers
             output.Slot = input.Slot;
             output.Type = input.Type;
             output.Upgrade = input.Upgrade;
+            return true;
         }
 
-        public void ToItemInstance(ItemInstanceDTO input, ItemInstance output)
+        public bool ToItemInstance(ItemInstanceDTO input, ItemInstance output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.Amount = input.Amount;
             output.BoundCharacterId = input.BoundCharacterId;
@@ -51,6 +52,7 @@ namespace OpenNos.Mapper.Mappers
             output.Slot = input.Slot;
             output.Type = input.Type;
             output.Upgrade = input.Upgrade;
+            return true;
         }
     }
 }

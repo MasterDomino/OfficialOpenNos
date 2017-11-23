@@ -70,7 +70,8 @@ namespace OpenNos.DAL.DAO
                     context.Configuration.AutoDetectChangesEnabled = false;
                     foreach (MapMonsterDTO monster in mapMonsters)
                     {
-                        MapMonster entity = _mapper.Map<MapMonster>(monster);
+                        MapMonster entity = new MapMonster();
+                        Mapper.Mapper.Instance.MapMonsterMapper.ToMapMonster(monster, entity);
                         context.MapMonster.Add(entity);
                     }
                     context.Configuration.AutoDetectChangesEnabled = true;
@@ -89,10 +90,13 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    MapMonster entity = _mapper.Map<MapMonster>(mapMonster);
+                    MapMonster entity = new MapMonster();
+                    Mapper.Mapper.Instance.MapMonsterMapper.ToMapMonster(mapMonster, entity);
                     context.MapMonster.Add(entity);
                     context.SaveChanges();
-                    return _mapper.Map<MapMonsterDTO>(entity);
+                    if(Mapper.Mapper.Instance.MapMonsterMapper.ToMapMonsterDTO(entity, mapMonster))
+                    return mapMonster;
+                    return null;
                 }
             }
             catch (Exception e)
@@ -108,7 +112,10 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<MapMonsterDTO>(context.MapMonster.FirstOrDefault(i => i.MapMonsterId.Equals(mapMonsterId)));
+                    MapMonsterDTO dto = new MapMonsterDTO();
+                    if(Mapper.Mapper.Instance.MapMonsterMapper.ToMapMonsterDTO(context.MapMonster.FirstOrDefault(i => i.MapMonsterId.Equals(mapMonsterId)), dto))
+                    return dto;
+                    return null;
                 }
             }
             catch (Exception e)
@@ -122,10 +129,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<MapMonsterDTO> result = new List<MapMonsterDTO>();
                 foreach (MapMonster MapMonsterobject in context.MapMonster.Where(c => c.MapId.Equals(mapId)))
                 {
-                    yield return _mapper.Map<MapMonsterDTO>(MapMonsterobject);
+                    MapMonsterDTO dto = new MapMonsterDTO();
+                    Mapper.Mapper.Instance.MapMonsterMapper.ToMapMonsterDTO(MapMonsterobject, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 

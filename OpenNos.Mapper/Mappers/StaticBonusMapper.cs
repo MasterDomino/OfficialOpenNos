@@ -11,30 +11,32 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToStaticBonusDTO(StaticBonus input, StaticBonusDTO output)
+        public bool ToStaticBonusDTO(StaticBonus input, StaticBonusDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.CharacterId = input.CharacterId;
             output.DateEnd = input.DateEnd;
             output.StaticBonusId = input.StaticBonusId;
             output.StaticBonusType = input.StaticBonusType;
+            return true;
         }
 
-        public void ToStaticBonus(StaticBonusDTO input, StaticBonus output)
+        public bool ToStaticBonus(StaticBonusDTO input, StaticBonus output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.CharacterId = input.CharacterId;
             output.DateEnd = input.DateEnd;
             output.StaticBonusId = input.StaticBonusId;
             output.StaticBonusType = input.StaticBonusType;
+            return true;
         }
     }
 }

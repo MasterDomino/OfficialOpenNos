@@ -9,12 +9,12 @@ namespace OpenNos.Mapper.Mappers
         {
         }
 
-        public void ToAccountDTO(Account input, AccountDTO output)
+        public bool ToAccountDTO(Account input, AccountDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.AccountId = input.AccountId;
             output.Authority = input.Authority;
@@ -24,14 +24,15 @@ namespace OpenNos.Mapper.Mappers
             output.ReferrerId = input.ReferrerId;
             output.RegistrationIP = input.RegistrationIP;
             output.VerificationToken = input.VerificationToken;
+            return true;
         }
 
-        public void ToAccount(AccountDTO input, Account output)
+        public bool ToAccount(AccountDTO input, Account output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.AccountId = input.AccountId;
             output.Authority = input.Authority;
@@ -41,6 +42,7 @@ namespace OpenNos.Mapper.Mappers
             output.ReferrerId = input.ReferrerId;
             output.RegistrationIP = input.RegistrationIP;
             output.VerificationToken = input.VerificationToken;
+            return true;
         }
     }
 }

@@ -9,30 +9,32 @@ namespace OpenNos.Mapper.Mappers
         {
         }
 
-        public void ToNpcMonsterSkillDTO(NpcMonsterSkill input, NpcMonsterSkillDTO output)
+        public bool ToNpcMonsterSkillDTO(NpcMonsterSkill input, NpcMonsterSkillDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.NpcMonsterSkillId = input.NpcMonsterSkillId;
             output.NpcMonsterVNum = input.NpcMonsterVNum;
             output.Rate = input.Rate;
             output.SkillVNum = input.SkillVNum;
+            return true;
         }
 
-        public void ToNpcMonsterSkill(NpcMonsterSkillDTO input, NpcMonsterSkill output)
+        public bool ToNpcMonsterSkill(NpcMonsterSkillDTO input, NpcMonsterSkill output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.NpcMonsterSkillId = input.NpcMonsterSkillId;
             output.NpcMonsterVNum = input.NpcMonsterVNum;
             output.Rate = input.Rate;
             output.SkillVNum = input.SkillVNum;
+            return true;
         }
     }
 }

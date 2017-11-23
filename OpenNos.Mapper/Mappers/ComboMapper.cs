@@ -10,32 +10,34 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToComboDTO(Combo input, ComboDTO output)
+        public bool ToComboDTO(Combo input, ComboDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.Animation = input.Animation;
             output.ComboId = input.ComboId;
             output.Effect = input.Effect;
             output.Hit = input.Hit;
             output.SkillVNum = input.SkillVNum;
+            return true;
         }
 
-        public void ToCombo(ComboDTO input, Combo output)
+        public bool ToCombo(ComboDTO input, Combo output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.Animation = input.Animation;
             output.ComboId = input.ComboId;
             output.Effect = input.Effect;
             output.Hit = input.Hit;
             output.SkillVNum = input.SkillVNum;
+            return true;
         }
     }
 }

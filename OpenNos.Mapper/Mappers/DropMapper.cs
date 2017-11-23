@@ -10,12 +10,12 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToDropDTO(Drop input, DropDTO output)
+        public bool ToDropDTO(Drop input, DropDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.Amount = input.Amount;
             output.DropChance = input.DropChance;
@@ -23,14 +23,15 @@ namespace OpenNos.Mapper.Mappers
             output.ItemVNum = input.ItemVNum;
             output.MapTypeId = input.MapTypeId;
             output.MonsterVNum = input.MonsterVNum;
+            return true;
         }
 
-        public void ToDrop(DropDTO input, Drop output)
+        public bool ToDrop(DropDTO input, Drop output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.Amount = input.Amount;
             output.DropChance = input.DropChance;
@@ -38,6 +39,7 @@ namespace OpenNos.Mapper.Mappers
             output.ItemVNum = input.ItemVNum;
             output.MapTypeId = input.MapTypeId;
             output.MonsterVNum = input.MonsterVNum;
+            return true;
         }
     }
 }

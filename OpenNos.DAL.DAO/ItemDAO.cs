@@ -49,14 +49,12 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    context.Configuration.AutoDetectChangesEnabled = false;
                     foreach (ItemDTO Item in items)
                     {
                         Item entity = new Item();
                         Mapper.Mapper.Instance.ItemMapper.ToItem(Item, entity);
                         context.Item.Add(entity);
                     }
-                    context.Configuration.AutoDetectChangesEnabled = true;
                     context.SaveChanges();
                 }
             }
@@ -76,8 +74,9 @@ namespace OpenNos.DAL.DAO
                     Mapper.Mapper.Instance.ItemMapper.ToItem(item, entity);
                     context.Item.Add(entity);
                     context.SaveChanges();
-                    Mapper.Mapper.Instance.ItemMapper.ToItemDTO(entity, item);
+                    if(Mapper.Mapper.Instance.ItemMapper.ToItemDTO(entity, item))
                     return item;
+                    return null;
                 }
             }
             catch (Exception e)
@@ -109,8 +108,9 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     ItemDTO dto = new ItemDTO();
-                    Mapper.Mapper.Instance.ItemMapper.ToItemDTO(context.Item.FirstOrDefault(i => i.VNum.Equals(vNum)), dto);
+                    if(Mapper.Mapper.Instance.ItemMapper.ToItemDTO(context.Item.FirstOrDefault(i => i.VNum.Equals(vNum)), dto))
                     return dto;
+                    return null;
                 }
             }
             catch (Exception e)

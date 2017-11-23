@@ -59,8 +59,9 @@ namespace OpenNos.DAL.DAO
                     Drop entity = new Drop();
                     context.Drop.Add(entity);
                     context.SaveChanges();
-                    Mapper.Mapper.Instance.DropMapper.ToDropDTO(entity, drop);
+                    if(Mapper.Mapper.Instance.DropMapper.ToDropDTO(entity, drop))
                     return drop;
+                    return null;
                 }
             }
             catch (Exception e)

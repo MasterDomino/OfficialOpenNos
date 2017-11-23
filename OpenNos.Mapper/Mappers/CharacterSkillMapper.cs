@@ -10,28 +10,30 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToCharacterSkillDTO(CharacterSkill input, CharacterSkillDTO output)
+        public bool ToCharacterSkillDTO(CharacterSkill input, CharacterSkillDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.CharacterId = input.CharacterId;
             output.Id = input.Id;
             output.SkillVNum = input.SkillVNum;
+            return true;
         }
 
-        public void ToCharacterSkill(CharacterSkillDTO input, CharacterSkill output)
+        public bool ToCharacterSkill(CharacterSkillDTO input, CharacterSkill output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.CharacterId = input.CharacterId;
             output.Id = input.Id;
             output.SkillVNum = input.SkillVNum;
+            return true;
         }
     }
 }

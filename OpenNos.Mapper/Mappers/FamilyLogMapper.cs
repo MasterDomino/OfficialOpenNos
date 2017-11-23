@@ -10,32 +10,34 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToFamilyLogDTO(FamilyLog input, FamilyLogDTO output)
+        public bool ToFamilyLogDTO(FamilyLog input, FamilyLogDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.FamilyId = input.FamilyId;
             output.FamilyLogData = input.FamilyLogData;
             output.FamilyLogId = input.FamilyLogId;
             output.FamilyLogType = input.FamilyLogType;
             output.Timestamp = input.Timestamp;
+            return true;
         }
 
-        public void ToFamilyLog(FamilyLogDTO input, FamilyLog output)
+        public bool ToFamilyLog(FamilyLogDTO input, FamilyLog output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.FamilyId = input.FamilyId;
             output.FamilyLogData = input.FamilyLogData;
             output.FamilyLogId = input.FamilyLogId;
             output.FamilyLogType = input.FamilyLogType;
             output.Timestamp = input.Timestamp;
+            return true;
         }
     }
 }

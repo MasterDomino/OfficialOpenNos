@@ -11,12 +11,12 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToSpecialistInstanceDTO(SpecialistInstance input, SpecialistInstanceDTO output)
+        public bool ToSpecialistInstanceDTO(SpecialistInstance input, SpecialistInstanceDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.Ammo = input.Ammo ?? 0;
             output.Amount = (byte)input.Amount;
@@ -74,14 +74,15 @@ namespace OpenNos.Mapper.Mappers
             output.WaterElement = input.WaterElement ?? 0;
             output.WaterResistance = input.WaterResistance ?? 0;
             output.XP = input.XP ?? 0;
+            return true;
         }
 
-        public void ToSpecialistInstance(SpecialistInstanceDTO input, SpecialistInstance output)
+        public bool ToSpecialistInstance(SpecialistInstanceDTO input, SpecialistInstance output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.Ammo = input.Ammo;
             output.Amount = input.Amount;
@@ -139,6 +140,7 @@ namespace OpenNos.Mapper.Mappers
             output.WaterElement = input.WaterElement;
             output.WaterResistance = input.WaterResistance;
             output.XP = input.XP;
+            return true;
         }
     }
 }

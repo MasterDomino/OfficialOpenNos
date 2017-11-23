@@ -11,32 +11,34 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToMapDTO(Map input, MapDTO output)
+        public bool ToMapDTO(Map input, MapDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.Data = input.Data;
             output.MapId = input.MapId;
             output.Music = input.Music;
             output.Name = input.Name;
             output.ShopAllowed = input.ShopAllowed;
+            return true;
         }
 
-        public void ToMap(MapDTO input, Map output)
+        public bool ToMap(MapDTO input, Map output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.Data = input.Data;
             output.MapId = input.MapId;
             output.Music = input.Music;
             output.Name = input.Name;
             output.ShopAllowed = input.ShopAllowed;
+            return true;
         }
     }
 }

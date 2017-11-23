@@ -9,26 +9,28 @@ namespace OpenNos.Mapper.Mappers
         {
         }
 
-        public void ToQuestDTO(Quest input, QuestDTO output)
+        public bool ToQuestDTO(Quest input, QuestDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.QuestData = input.QuestData;
             output.QuestId = input.QuestId;
+            return true;
         }
 
-        public void ToQuest(QuestDTO input, Quest output)
+        public bool ToQuest(QuestDTO input, Quest output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.QuestData = input.QuestData;
             output.QuestId = input.QuestId;
+            return true;
         }
     }
 }

@@ -139,8 +139,9 @@ namespace OpenNos.DAL.DAO
             Mapper.Mapper.Instance.CellonOptionMapper.ToCellonOption(cellonOption, entity);
             context.CellonOption.Add(entity);
             context.SaveChanges();
-            Mapper.Mapper.Instance.CellonOptionMapper.ToCellonOptionDTO(entity, cellonOption);
+            if(Mapper.Mapper.Instance.CellonOptionMapper.ToCellonOptionDTO(entity, cellonOption))
             return cellonOption;
+            return null;
         }
 
         private CellonOptionDTO update(CellonOption entity, CellonOptionDTO cellonOption, OpenNosContext context)
@@ -151,8 +152,9 @@ namespace OpenNos.DAL.DAO
                 context.SaveChanges();
             }
 
-            Mapper.Mapper.Instance.CellonOptionMapper.ToCellonOptionDTO(entity, cellonOption);
+            if(Mapper.Mapper.Instance.CellonOptionMapper.ToCellonOptionDTO(entity, cellonOption))
             return cellonOption;
+            return null;
         }
 
         #endregion

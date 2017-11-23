@@ -12,12 +12,12 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToMateDTO(Mate input, MateDTO output)
+        public bool ToMateDTO(Mate input, MateDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.Attack = input.Attack;
             output.CanPickUp = input.CanPickUp;
@@ -38,14 +38,15 @@ namespace OpenNos.Mapper.Mappers
             output.Name = input.Name;
             output.NpcMonsterVNum = input.NpcMonsterVNum;
             output.Skin = input.Skin;
+            return true;
         }
 
-        public void ToMate(MateDTO input, Mate output)
+        public bool ToMate(MateDTO input, Mate output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.Attack = input.Attack;
             output.CanPickUp = input.CanPickUp;
@@ -66,6 +67,7 @@ namespace OpenNos.Mapper.Mappers
             output.Name = input.Name;
             output.NpcMonsterVNum = input.NpcMonsterVNum;
             output.Skin = input.Skin;
+            return true;
         }
     }
 }

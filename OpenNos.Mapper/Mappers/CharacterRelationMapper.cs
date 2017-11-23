@@ -10,30 +10,32 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToCharacterRelationDTO(CharacterRelation input, CharacterRelationDTO output)
+        public bool ToCharacterRelationDTO(CharacterRelation input, CharacterRelationDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.CharacterId = input.CharacterId;
             output.CharacterRelationId = input.CharacterRelationId;
             output.RelatedCharacterId = input.RelatedCharacterId;
             output.RelationType = input.RelationType;
+            return true;
         }
 
-        public void ToCharacterRelation(CharacterRelationDTO input, CharacterRelation output)
+        public bool ToCharacterRelation(CharacterRelationDTO input, CharacterRelation output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.CharacterId = input.CharacterId;
             output.CharacterRelationId = input.CharacterRelationId;
             output.RelatedCharacterId = input.RelatedCharacterId;
             output.RelationType = input.RelationType;
+            return true;
         }
     }
 }

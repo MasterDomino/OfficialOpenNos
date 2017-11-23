@@ -11,30 +11,32 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToMaintenanceLogDTO(MaintenanceLog input, MaintenanceLogDTO output)
+        public bool ToMaintenanceLogDTO(MaintenanceLog input, MaintenanceLogDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.DateEnd = input.DateEnd;
             output.DateStart = input.DateStart;
             output.LogId = input.LogId;
             output.Reason = input.Reason;
+            return true;
         }
 
-        public void ToMaintenanceLog(MaintenanceLogDTO input, MaintenanceLog output)
+        public bool ToMaintenanceLog(MaintenanceLogDTO input, MaintenanceLog output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.DateEnd = input.DateEnd;
             output.DateStart = input.DateStart;
             output.LogId = input.LogId;
             output.Reason = input.Reason;
+            return true;
         }
     }
 }

@@ -9,12 +9,12 @@ namespace OpenNos.Mapper.Mappers
         {
         }
 
-        public void ToPortalDTO(Portal input, PortalDTO output)
+        public bool ToPortalDTO(Portal input, PortalDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.DestinationMapId = input.DestinationMapId;
             output.DestinationX = input.DestinationX;
@@ -25,14 +25,15 @@ namespace OpenNos.Mapper.Mappers
             output.SourceX = input.SourceX;
             output.SourceY = input.SourceY;
             output.Type = input.Type;
+            return true;
         }
 
-        public void ToPortal(PortalDTO input, Portal output)
+        public bool ToPortal(PortalDTO input, Portal output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.DestinationMapId = input.DestinationMapId;
             output.DestinationX = input.DestinationX;
@@ -43,6 +44,7 @@ namespace OpenNos.Mapper.Mappers
             output.SourceX = input.SourceX;
             output.SourceY = input.SourceY;
             output.Type = input.Type;
+            return true;
         }
     }
 }

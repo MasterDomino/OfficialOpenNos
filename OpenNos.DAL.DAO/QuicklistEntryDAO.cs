@@ -116,8 +116,9 @@ namespace OpenNos.DAL.DAO
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 QuicklistEntryDTO quicklistEntryDTO = new QuicklistEntryDTO();
-                Mapper.Mapper.Instance.QuicklistEntryMapper.ToQuicklistEntryDTO(context.QuicklistEntry.FirstOrDefault(i=>i.Id.Equals(id)), quicklistEntryDTO);
+                if(Mapper.Mapper.Instance.QuicklistEntryMapper.ToQuicklistEntryDTO(context.QuicklistEntry.FirstOrDefault(i=>i.Id.Equals(id)), quicklistEntryDTO))
                 return quicklistEntryDTO;
+                return null;
             }
         }
 
@@ -127,8 +128,9 @@ namespace OpenNos.DAL.DAO
             Mapper.Mapper.Instance.QuicklistEntryMapper.ToQuicklistEntry(dto, entity);
             context.Set<QuicklistEntry>().Add(entity);
             context.SaveChanges();
-            Mapper.Mapper.Instance.QuicklistEntryMapper.ToQuicklistEntryDTO(entity, dto);
+            if(Mapper.Mapper.Instance.QuicklistEntryMapper.ToQuicklistEntryDTO(entity, dto))
             return dto;
+            return null;
         }
 
         protected QuicklistEntryDTO InsertOrUpdate(OpenNosContext context, QuicklistEntryDTO dto)
@@ -152,8 +154,9 @@ namespace OpenNos.DAL.DAO
                 Mapper.Mapper.Instance.QuicklistEntryMapper.ToQuicklistEntry(inventory, entity);
                 context.SaveChanges();
             }
-            Mapper.Mapper.Instance.QuicklistEntryMapper.ToQuicklistEntryDTO(entity, inventory);
+            if(Mapper.Mapper.Instance.QuicklistEntryMapper.ToQuicklistEntryDTO(entity, inventory))
             return inventory;
+            return null;
         }
 
         #endregion

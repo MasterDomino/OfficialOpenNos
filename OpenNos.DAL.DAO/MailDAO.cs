@@ -101,8 +101,9 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     MailDTO dto = new MailDTO();
-                    Mapper.Mapper.Instance.MailMapper.ToMailDTO(context.Mail.FirstOrDefault(i => i.MailId.Equals(mailId)), dto);
+                    if(Mapper.Mapper.Instance.MailMapper.ToMailDTO(context.Mail.FirstOrDefault(i => i.MailId.Equals(mailId)), dto))
                     return dto;
+                    return null;
                 }
             }
             catch (Exception e)
@@ -152,8 +153,9 @@ namespace OpenNos.DAL.DAO
                 Mapper.Mapper.Instance.MailMapper.ToMail(mail, entity);
                 context.Mail.Add(entity);
                 context.SaveChanges();
-                Mapper.Mapper.Instance.MailMapper.ToMailDTO(entity, mail);
+                if(Mapper.Mapper.Instance.MailMapper.ToMailDTO(entity, mail))
                 return mail;
+                return null;
             }
             catch (System.Data.Entity.Validation.DbEntityValidationException dbEx)
             {
@@ -186,8 +188,9 @@ namespace OpenNos.DAL.DAO
                 Mapper.Mapper.Instance.MailMapper.ToMail(respawn, entity);
                 context.SaveChanges();
             }
-            Mapper.Mapper.Instance.MailMapper.ToMailDTO(entity, respawn);
+            if(Mapper.Mapper.Instance.MailMapper.ToMailDTO(entity, respawn))
             return respawn;
+            return null;
         }
 
         #endregion

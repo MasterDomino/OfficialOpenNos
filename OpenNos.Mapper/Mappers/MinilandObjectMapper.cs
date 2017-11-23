@@ -11,12 +11,12 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToMinilandObjectDTO(MinilandObject input, MinilandObjectDTO output)
+        public bool ToMinilandObjectDTO(MinilandObject input, MinilandObjectDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.CharacterId = input.CharacterId;
             output.ItemInstanceId = input.ItemInstanceId;
@@ -28,14 +28,15 @@ namespace OpenNos.Mapper.Mappers
             output.MapX = input.MapX;
             output.MapY = input.MapY;
             output.MinilandObjectId = input.MinilandObjectId;
+            return true;
         }
 
-        public void ToMinilandObject(MinilandObjectDTO input, MinilandObject output)
+        public bool ToMinilandObject(MinilandObjectDTO input, MinilandObject output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.CharacterId = input.CharacterId;
             output.ItemInstanceId = input.ItemInstanceId;
@@ -47,6 +48,7 @@ namespace OpenNos.Mapper.Mappers
             output.MapX = input.MapX;
             output.MapY = input.MapY;
             output.MinilandObjectId = input.MinilandObjectId;
+            return true;
         }
     }
 }

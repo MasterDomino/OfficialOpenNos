@@ -9,32 +9,34 @@ namespace OpenNos.Mapper.Mappers
         {
         }
 
-        public void ToShopDTO(Shop input, ShopDTO output)
+        public bool ToShopDTO(Shop input, ShopDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.MapNpcId = input.MapNpcId;
             output.MenuType = input.MenuType;
             output.Name = input.Name;
             output.ShopId = input.ShopId;
             output.ShopType = input.ShopType;
+            return true;
         }
 
-        public void ToShop(ShopDTO input, Shop output)
+        public bool ToShop(ShopDTO input, Shop output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.MapNpcId = input.MapNpcId;
             output.MenuType = input.MenuType;
             output.Name = input.Name;
             output.ShopId = input.ShopId;
             output.ShopType = input.ShopType;
+            return true;
         }
     }
 }

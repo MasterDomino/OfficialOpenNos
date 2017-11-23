@@ -9,12 +9,12 @@ namespace OpenNos.Mapper.Mappers
         {
         }
 
-        public void ToScriptedInstanceDTO(ScriptedInstance input, ScriptedInstanceDTO output)
+        public bool ToScriptedInstanceDTO(ScriptedInstance input, ScriptedInstanceDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.MapId = input.MapId;
             output.PositionX = input.PositionX;
@@ -22,14 +22,15 @@ namespace OpenNos.Mapper.Mappers
             output.Script = input.Script;
             output.ScriptedInstanceId = input.ScriptedInstanceId;
             output.Type = input.Type;
+            return true;
         }
 
-        public void ToScriptedInstance(ScriptedInstanceDTO input, ScriptedInstance output)
+        public bool ToScriptedInstance(ScriptedInstanceDTO input, ScriptedInstance output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.MapId = input.MapId;
             output.PositionX = input.PositionX;
@@ -37,6 +38,7 @@ namespace OpenNos.Mapper.Mappers
             output.Script = input.Script;
             output.ScriptedInstanceId = input.ScriptedInstanceId;
             output.Type = input.Type;
+            return true;
         }
     }
 }

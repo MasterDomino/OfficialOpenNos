@@ -82,10 +82,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<PenaltyLogDTO> result = new List<PenaltyLogDTO>();
                 foreach (PenaltyLog entity in context.PenaltyLog)
                 {
-                    yield return _mapper.Map<PenaltyLogDTO>(entity);
+                    PenaltyLogDTO dto = new PenaltyLogDTO();
+                    Mapper.Mapper.Instance.PenaltyLogMapper.ToPenaltyLogDTO(entity, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -93,10 +97,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<PenaltyLogDTO> result = new List<PenaltyLogDTO>();
                 foreach (PenaltyLog PenaltyLog in context.PenaltyLog.Where(s => s.AccountId.Equals(accountId)))
                 {
-                    yield return _mapper.Map<PenaltyLogDTO>(PenaltyLog);
+                    PenaltyLogDTO dto = new PenaltyLogDTO();
+                    Mapper.Mapper.Instance.PenaltyLogMapper.ToPenaltyLogDTO(PenaltyLog, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -104,9 +112,13 @@ namespace OpenNos.DAL.DAO
         {
             try
             {
+
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<PenaltyLogDTO>(context.PenaltyLog.FirstOrDefault(s => s.PenaltyLogId.Equals(penaltyLogId)));
+                    PenaltyLogDTO dto = new PenaltyLogDTO();
+                    if(Mapper.Mapper.Instance.PenaltyLogMapper.ToPenaltyLogDTO(context.PenaltyLog.FirstOrDefault(s => s.PenaltyLogId.Equals(penaltyLogId)), dto))
+                    return dto;
+                    return null;
                 }
             }
             catch (Exception e)
@@ -118,20 +130,25 @@ namespace OpenNos.DAL.DAO
 
         private PenaltyLogDTO insert(PenaltyLogDTO penaltylog, OpenNosContext context)
         {
-            PenaltyLog entity = _mapper.Map<PenaltyLog>(penaltylog);
+            PenaltyLog entity = new PenaltyLog();
+            Mapper.Mapper.Instance.PenaltyLogMapper.ToPenaltyLog(penaltylog, entity);
             context.PenaltyLog.Add(entity);
             context.SaveChanges();
-            return _mapper.Map<PenaltyLogDTO>(entity);
+            if(Mapper.Mapper.Instance.PenaltyLogMapper.ToPenaltyLogDTO(entity,penaltylog))
+            return penaltylog;
+            return null;
         }
 
         private PenaltyLogDTO update(PenaltyLog entity, PenaltyLogDTO penaltylog, OpenNosContext context)
         {
             if (entity != null)
             {
-                _mapper.Map(penaltylog, entity);
+                Mapper.Mapper.Instance.PenaltyLogMapper.ToPenaltyLog(penaltylog, entity);
                 context.SaveChanges();
             }
-            return _mapper.Map<PenaltyLogDTO>(entity);
+            if(Mapper.Mapper.Instance.PenaltyLogMapper.ToPenaltyLogDTO(entity, penaltylog))
+            return penaltylog;
+            return null;
         }
 
         #endregion

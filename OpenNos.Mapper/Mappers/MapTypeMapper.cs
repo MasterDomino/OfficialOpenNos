@@ -11,32 +11,34 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToMapTypeDTO(MapType input, MapTypeDTO output)
+        public bool ToMapTypeDTO(MapType input, MapTypeDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.MapTypeId = input.MapTypeId;
             output.MapTypeName = input.MapTypeName;
             output.PotionDelay = input.PotionDelay;
             output.RespawnMapTypeId = input.RespawnMapTypeId;
             output.ReturnMapTypeId = input.ReturnMapTypeId;
+            return true;
         }
 
-        public void ToMapType(MapTypeDTO input, MapType output)
+        public bool ToMapType(MapTypeDTO input, MapType output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.MapTypeId = input.MapTypeId;
             output.MapTypeName = input.MapTypeName;
             output.PotionDelay = input.PotionDelay;
             output.RespawnMapTypeId = input.RespawnMapTypeId;
             output.ReturnMapTypeId = input.ReturnMapTypeId;
+            return true;
         }
     }
 }

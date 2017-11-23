@@ -88,7 +88,7 @@ namespace OpenNos.DAL.DAO
                     if (account != null)
                     {
                         AccountDTO accountDTO = new AccountDTO();
-                        Mapper.Mapper.Instance.AccountMapper.ToAccountDTO(account, accountDTO);
+                        if(Mapper.Mapper.Instance.AccountMapper.ToAccountDTO(account, accountDTO))
                         return accountDTO;
                     }
                 }
@@ -110,7 +110,7 @@ namespace OpenNos.DAL.DAO
                     if (account != null)
                     {
                         AccountDTO accountDTO = new AccountDTO();
-                        Mapper.Mapper.Instance.AccountMapper.ToAccountDTO(account, accountDTO);
+                        if(Mapper.Mapper.Instance.AccountMapper.ToAccountDTO(account, accountDTO))
                         return accountDTO;
                     }
                 }
@@ -166,8 +166,9 @@ namespace OpenNos.DAL.DAO
                 context.Entry(entity).State = EntityState.Modified;
                 context.SaveChanges();
             }
-            Mapper.Mapper.Instance.AccountMapper.ToAccountDTO(entity, account);
+            if(Mapper.Mapper.Instance.AccountMapper.ToAccountDTO(entity, account))
             return account;
+            return null;
         }
 
         #endregion

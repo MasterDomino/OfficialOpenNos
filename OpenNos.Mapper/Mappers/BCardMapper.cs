@@ -10,12 +10,12 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToBCardDTO(BCard input, BCardDTO output)
+        public bool ToBCardDTO(BCard input, BCardDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.BCardId = input.BCardId;
             output.CardId = input.CardId;
@@ -30,14 +30,15 @@ namespace OpenNos.Mapper.Mappers
             output.SubType = input.SubType;
             output.ThirdData = input.ThirdData;
             output.Type = input.Type;
+            return true;
         }
 
-        public void ToBCard(BCardDTO input, BCard output)
+        public bool ToBCard(BCardDTO input, BCard output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.BCardId = input.BCardId;
             output.CardId = input.CardId;
@@ -52,6 +53,7 @@ namespace OpenNos.Mapper.Mappers
             output.SubType = input.SubType;
             output.ThirdData = input.ThirdData;
             output.Type = input.Type;
+            return true;
         }
     }
 }

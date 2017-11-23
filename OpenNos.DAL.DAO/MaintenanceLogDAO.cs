@@ -34,10 +34,13 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    MaintenanceLog entity = _mapper.Map<MaintenanceLog>(maintenanceLog);
+                    MaintenanceLog entity = new MaintenanceLog();
+                    Mapper.Mapper.Instance.MaintenanceLogMapper.ToMaintenanceLog(maintenanceLog, entity);
                     context.MaintenanceLog.Add(entity);
                     context.SaveChanges();
-                    return _mapper.Map<MaintenanceLogDTO>(maintenanceLog);
+                    if(Mapper.Mapper.Instance.MaintenanceLogMapper.ToMaintenanceLogDTO(entity, maintenanceLog))
+                    return maintenanceLog;
+                    return null;
                 }
             }
             catch (Exception e)
@@ -51,10 +54,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<MaintenanceLogDTO> result = new List<MaintenanceLogDTO>();
                 foreach (MaintenanceLog maintenanceLog in context.MaintenanceLog)
                 {
-                    yield return _mapper.Map<MaintenanceLogDTO>(maintenanceLog);
+                    MaintenanceLogDTO dto = new MaintenanceLogDTO();
+                    Mapper.Mapper.Instance.MaintenanceLogMapper.ToMaintenanceLogDTO(maintenanceLog, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -64,7 +71,10 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<MaintenanceLogDTO>(context.MaintenanceLog.FirstOrDefault(m => m.DateEnd > DateTime.Now));
+                    MaintenanceLogDTO dto = new MaintenanceLogDTO();
+                    if(Mapper.Mapper.Instance.MaintenanceLogMapper.ToMaintenanceLogDTO(context.MaintenanceLog.FirstOrDefault(m => m.DateEnd > DateTime.Now), dto))
+                    return dto;
+                    return null;
                 }
             }
             catch (Exception e)

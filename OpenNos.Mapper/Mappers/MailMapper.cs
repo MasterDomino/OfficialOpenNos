@@ -11,12 +11,12 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToMailDTO(Mail input, MailDTO output)
+        public bool ToMailDTO(Mail input, MailDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.AttachmentAmount = input.AttachmentAmount;
             output.AttachmentLevel = input.AttachmentLevel;
@@ -37,14 +37,15 @@ namespace OpenNos.Mapper.Mappers
             output.SenderId = input.SenderId;
             output.SenderMorphId = input.SenderMorphId;
             output.Title = input.Title;
+            return true;
         }
 
-        public void ToMail(MailDTO input, Mail output)
+        public bool ToMail(MailDTO input, Mail output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.AttachmentAmount = input.AttachmentAmount;
             output.AttachmentLevel = input.AttachmentLevel;
@@ -65,6 +66,7 @@ namespace OpenNos.Mapper.Mappers
             output.SenderId = input.SenderId;
             output.SenderMorphId = input.SenderMorphId;
             output.Title = input.Title;
+            return true;
         }
     }
 }

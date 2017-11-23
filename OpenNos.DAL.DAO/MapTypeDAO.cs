@@ -34,10 +34,13 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    MapType entity = _mapper.Map<MapType>(mapType);
+                    MapType entity = new MapType();
+                    Mapper.Mapper.Instance.MapTypeMapper.ToMapType(mapType, entity);
                     context.MapType.Add(entity);
                     context.SaveChanges();
-                    return _mapper.Map<MapTypeDTO>(entity);
+                    if(Mapper.Mapper.Instance.MapTypeMapper.ToMapTypeDTO(entity, mapType))
+                    return mapType;
+                    return null;
                 }
             }
             catch (Exception e)
@@ -51,10 +54,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<MapTypeDTO> result = new List<MapTypeDTO>();
                 foreach (MapType MapType in context.MapType)
                 {
-                    yield return _mapper.Map<MapTypeDTO>(MapType);
+                    MapTypeDTO dto = new MapTypeDTO();
+                    Mapper.Mapper.Instance.MapTypeMapper.ToMapTypeDTO(MapType, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -64,7 +71,10 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<MapTypeDTO>(context.MapType.FirstOrDefault(s => s.MapTypeId.Equals(maptypeId)));
+                    MapTypeDTO dto = new MapTypeDTO();
+                    if(Mapper.Mapper.Instance.MapTypeMapper.ToMapTypeDTO(context.MapType.FirstOrDefault(s => s.MapTypeId.Equals(maptypeId)), dto))
+                    return dto;
+                    return null;
                 }
             }
             catch (Exception e)

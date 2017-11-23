@@ -101,8 +101,9 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     BazaarItemDTO dto = new BazaarItemDTO();
-                    Mapper.Mapper.Instance.BazaarItemMapper.ToBazaarItemDTO(context.BazaarItem.FirstOrDefault(i => i.BazaarItemId.Equals(bazaarItemId)), dto);
+                    if(Mapper.Mapper.Instance.BazaarItemMapper.ToBazaarItemDTO(context.BazaarItem.FirstOrDefault(i => i.BazaarItemId.Equals(bazaarItemId)), dto))
                     return dto;
+                    return null;
                 }
             }
             catch (Exception e)
@@ -137,8 +138,9 @@ namespace OpenNos.DAL.DAO
             Mapper.Mapper.Instance.BazaarItemMapper.ToBazaarItem(bazaarItem, entity);
             context.BazaarItem.Add(entity);
             context.SaveChanges();
-            Mapper.Mapper.Instance.BazaarItemMapper.ToBazaarItemDTO(entity, bazaarItem);
+            if(Mapper.Mapper.Instance.BazaarItemMapper.ToBazaarItemDTO(entity, bazaarItem))
             return bazaarItem;
+            return null;
         }
 
         private BazaarItemDTO update(BazaarItem entity, BazaarItemDTO bazaarItem, OpenNosContext context)
@@ -148,8 +150,9 @@ namespace OpenNos.DAL.DAO
                 Mapper.Mapper.Instance.BazaarItemMapper.ToBazaarItem(bazaarItem, entity);
                 context.SaveChanges();
             }
-            Mapper.Mapper.Instance.BazaarItemMapper.ToBazaarItemDTO(entity, bazaarItem);
+            if(Mapper.Mapper.Instance.BazaarItemMapper.ToBazaarItemDTO(entity, bazaarItem))
             return bazaarItem;
+            return null;
         }
 
         #endregion

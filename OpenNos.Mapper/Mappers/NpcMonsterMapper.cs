@@ -9,12 +9,12 @@ namespace OpenNos.Mapper.Mappers
         {
         }
 
-        public void ToNpcMonsterDTO(NpcMonster input, NpcMonsterDTO output)
+        public bool ToNpcMonsterDTO(NpcMonster input, NpcMonsterDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.AmountRequired = input.AmountRequired;
             output.AttackClass = input.AttackClass;
@@ -59,14 +59,15 @@ namespace OpenNos.Mapper.Mappers
             output.VNumRequired = input.VNumRequired;
             output.WaterResistance = (sbyte)input.WaterResistance;
             output.XP = input.XP;
+            return true;
         }
 
-        public void ToNpcMonster(NpcMonsterDTO input, NpcMonster output)
+        public bool ToNpcMonster(NpcMonsterDTO input, NpcMonster output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.AmountRequired = input.AmountRequired;
             output.AttackClass = input.AttackClass;
@@ -111,6 +112,7 @@ namespace OpenNos.Mapper.Mappers
             output.VNumRequired = input.VNumRequired;
             output.WaterResistance = input.WaterResistance;
             output.XP = input.XP;
+            return true;
         }
     }
 }

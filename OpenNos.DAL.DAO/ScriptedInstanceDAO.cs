@@ -60,8 +60,9 @@ namespace OpenNos.DAL.DAO
                     Mapper.Mapper.Instance.ScriptedInstanceMapper.ToScriptedInstance(scriptedInstance, entity);
                     context.ScriptedInstance.Add(entity);
                     context.SaveChanges();
-                    Mapper.Mapper.Instance.ScriptedInstanceMapper.ToScriptedInstanceDTO(entity, scriptedInstance);
+                    if(Mapper.Mapper.Instance.ScriptedInstanceMapper.ToScriptedInstanceDTO(entity, scriptedInstance))
                     return scriptedInstance;
+                    return null;
                 }
             }
             catch (Exception e)

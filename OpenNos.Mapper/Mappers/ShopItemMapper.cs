@@ -9,12 +9,12 @@ namespace OpenNos.Mapper.Mappers
         {
         }
 
-        public void ToShopItemDTO(ShopItem input, ShopItemDTO output)
+        public bool ToShopItemDTO(ShopItem input, ShopItemDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.Color = input.Color;
             output.ItemVNum = input.ItemVNum;
@@ -24,14 +24,15 @@ namespace OpenNos.Mapper.Mappers
             output.Slot = input.Slot;
             output.Type = input.Type;
             output.Upgrade = input.Upgrade;
+            return true;
         }
 
-        public void ToShopItem(ShopItemDTO input, ShopItem output)
+        public bool ToShopItem(ShopItemDTO input, ShopItem output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.Color = input.Color;
             output.ItemVNum = input.ItemVNum;
@@ -41,6 +42,7 @@ namespace OpenNos.Mapper.Mappers
             output.Slot = input.Slot;
             output.Type = input.Type;
             output.Upgrade = input.Upgrade;
+            return true;
         }
     }
 }

@@ -9,12 +9,12 @@ namespace OpenNos.Mapper.Mappers
         {
         }
 
-        public void ToSkillDTO(Skill input, SkillDTO output)
+        public bool ToSkillDTO(Skill input, SkillDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.AttackAnimation = input.AttackAnimation;
             output.CastAnimation = input.CastAnimation;
@@ -46,14 +46,15 @@ namespace OpenNos.Mapper.Mappers
             output.Type = input.Type;
             output.UpgradeSkill = input.UpgradeSkill;
             output.UpgradeType = input.UpgradeType;
+            return true;
         }
 
-        public void ToSkill(SkillDTO input, Skill output)
+        public bool ToSkill(SkillDTO input, Skill output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.AttackAnimation = input.AttackAnimation;
             output.CastAnimation = input.CastAnimation;
@@ -85,6 +86,7 @@ namespace OpenNos.Mapper.Mappers
             output.Type = input.Type;
             output.UpgradeSkill = input.UpgradeSkill;
             output.UpgradeType = input.UpgradeType;
+            return true;
         }
     }
 }

@@ -11,30 +11,32 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToStaticBuffDTO(StaticBuff input, StaticBuffDTO output)
+        public bool ToStaticBuffDTO(StaticBuff input, StaticBuffDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.CardId = input.CardId;
             output.CharacterId = input.CharacterId;
             output.RemainingTime = input.RemainingTime;
             output.StaticBuffId = input.StaticBuffId;
+            return true;
         }
 
-        public void ToStaticBuff(StaticBuffDTO input, StaticBuff output)
+        public bool ToStaticBuff(StaticBuffDTO input, StaticBuff output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.CardId = input.CardId;
             output.CharacterId = input.CharacterId;
             output.RemainingTime = input.RemainingTime;
             output.StaticBuffId = input.StaticBuffId;
+            return true;
         }
     }
 }

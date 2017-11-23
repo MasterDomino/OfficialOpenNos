@@ -11,32 +11,34 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToCellonOptionDTO(CellonOption input, CellonOptionDTO output)
+        public bool ToCellonOptionDTO(CellonOption input, CellonOptionDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.CellonOptionId = input.CellonOptionId;
             output.EquipmentSerialId = input.EquipmentSerialId;
             output.Level = input.Level;
             output.Type = input.Type;
             output.Value = input.Value;
+            return true;
         }
 
-        public void ToCellonOption(CellonOptionDTO input, CellonOption output)
+        public bool ToCellonOption(CellonOptionDTO input, CellonOption output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.CellonOptionId = input.CellonOptionId;
             output.EquipmentSerialId = input.EquipmentSerialId;
             output.Level = input.Level;
             output.Type = input.Type;
             output.Value = input.Value;
+            return true;
         }
     }
 }

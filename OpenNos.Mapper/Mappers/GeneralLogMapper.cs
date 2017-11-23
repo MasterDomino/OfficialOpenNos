@@ -10,12 +10,12 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToGeneralLogDTO(GeneralLog input, GeneralLogDTO output)
+        public bool ToGeneralLogDTO(GeneralLog input, GeneralLogDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.AccountId = input.AccountId;
             output.CharacterId = input.CharacterId;
@@ -24,14 +24,15 @@ namespace OpenNos.Mapper.Mappers
             output.LogId = input.LogId;
             output.LogType = input.LogType;
             output.Timestamp = input.Timestamp;
+            return true;
         }
 
-        public void ToGeneralLog(GeneralLogDTO input, GeneralLog output)
+        public bool ToGeneralLog(GeneralLogDTO input, GeneralLog output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.AccountId = input.AccountId;
             output.CharacterId = input.CharacterId;
@@ -40,6 +41,7 @@ namespace OpenNos.Mapper.Mappers
             output.LogId = input.LogId;
             output.LogType = input.LogType;
             output.Timestamp = input.Timestamp;
+            return true;
         }
     }
 }

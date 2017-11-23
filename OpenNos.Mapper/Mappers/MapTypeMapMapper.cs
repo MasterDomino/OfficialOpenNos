@@ -11,26 +11,28 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToMapTypeMapDTO(MapTypeMap input, MapTypeMapDTO output)
+        public bool ToMapTypeMapDTO(MapTypeMap input, MapTypeMapDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.MapId = input.MapId;
             output.MapTypeId = input.MapTypeId;
+            return true;
         }
 
-        public void ToMapTypeMap(MapTypeMapDTO input, MapTypeMap output)
+        public bool ToMapTypeMap(MapTypeMapDTO input, MapTypeMap output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.MapId = input.MapId;
             output.MapTypeId = input.MapTypeId;
+            return true;
         }
     }
 }

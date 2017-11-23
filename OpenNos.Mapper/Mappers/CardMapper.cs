@@ -11,12 +11,12 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToCardDTO(Card input, CardDTO output)
+        public bool ToCardDTO(Card input, CardDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.BuffType = input.BuffType;
             output.CardId = input.CardId;
@@ -28,14 +28,15 @@ namespace OpenNos.Mapper.Mappers
             output.Propability = input.Propability;
             output.TimeoutBuff = input.TimeoutBuff;
             output.TimeoutBuffChance = input.TimeoutBuffChance;
+            return true;
         }
 
-        public void ToCard(CardDTO input, Card output)
+        public bool ToCard(CardDTO input, Card output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.BuffType = input.BuffType;
             output.CardId = input.CardId;
@@ -47,6 +48,7 @@ namespace OpenNos.Mapper.Mappers
             output.Propability = input.Propability;
             output.TimeoutBuff = input.TimeoutBuff;
             output.TimeoutBuffChance = input.TimeoutBuffChance;
+            return true;
         }
     }
 }

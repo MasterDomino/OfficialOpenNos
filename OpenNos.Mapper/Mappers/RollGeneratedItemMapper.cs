@@ -9,12 +9,12 @@ namespace OpenNos.Mapper.Mappers
         {
         }
 
-        public void ToRollGeneratedItemDTO(RollGeneratedItem input, RollGeneratedItemDTO output)
+        public bool ToRollGeneratedItemDTO(RollGeneratedItem input, RollGeneratedItemDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.IsRareRandom = input.IsRareRandom;
             output.ItemGeneratedAmount = input.ItemGeneratedAmount;
@@ -25,14 +25,15 @@ namespace OpenNos.Mapper.Mappers
             output.OriginalItemVNum = input.OriginalItemVNum;
             output.Probability = input.Probability;
             output.RollGeneratedItemId = input.RollGeneratedItemId;
+            return true;
         }
 
-        public void ToRollGeneratedItem(RollGeneratedItemDTO input, RollGeneratedItem output)
+        public bool ToRollGeneratedItem(RollGeneratedItemDTO input, RollGeneratedItem output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.IsRareRandom = input.IsRareRandom;
             output.ItemGeneratedAmount = input.ItemGeneratedAmount;
@@ -43,6 +44,7 @@ namespace OpenNos.Mapper.Mappers
             output.OriginalItemVNum = input.OriginalItemVNum;
             output.Probability = input.Probability;
             output.RollGeneratedItemId = input.RollGeneratedItemId;
+            return true;
         }
     }
 }

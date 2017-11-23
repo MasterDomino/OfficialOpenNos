@@ -11,12 +11,12 @@ namespace OpenNos.Mapper.Mappers
 
         }
 
-        public void ToMapMonsterDTO(MapMonster input, MapMonsterDTO output)
+        public bool ToMapMonsterDTO(MapMonster input, MapMonsterDTO output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.IsDisabled = input.IsDisabled;
             output.IsMoving = input.IsMoving;
@@ -26,14 +26,15 @@ namespace OpenNos.Mapper.Mappers
             output.MapY = input.MapY;
             output.MonsterVNum = input.MonsterVNum;
             output.Position = input.Position;
+            return true;
         }
 
-        public void ToMapMonster(MapMonsterDTO input, MapMonster output)
+        public bool ToMapMonster(MapMonsterDTO input, MapMonster output)
         {
             if (input == null)
             {
                 output = null;
-                return;
+                return false;
             }
             output.IsDisabled = input.IsDisabled;
             output.IsMoving = input.IsMoving;
@@ -43,6 +44,7 @@ namespace OpenNos.Mapper.Mappers
             output.MapY = input.MapY;
             output.MonsterVNum = input.MonsterVNum;
             output.Position = input.Position;
+            return true;
         }
     }
 }
