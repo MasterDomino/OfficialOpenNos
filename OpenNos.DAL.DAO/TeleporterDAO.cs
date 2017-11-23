@@ -33,10 +33,12 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    Teleporter entity = _mapper.Map<Teleporter>(teleporter);
+                    Teleporter entity = new Teleporter();
+                    Mapper.Mapper.Instance.TeleporterMapper.ToTeleporter(teleporter, entity);
                     context.Teleporter.Add(entity);
                     context.SaveChanges();
-                    return _mapper.Map<TeleporterDTO>(entity);
+                    Mapper.Mapper.Instance.TeleporterMapper.ToTeleporterDTO(entity, teleporter);
+                    return teleporter;
                 }
             }
             catch (Exception e)
@@ -50,10 +52,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<TeleporterDTO> result = new List<TeleporterDTO>();
                 foreach (Teleporter entity in context.Teleporter)
                 {
-                    yield return _mapper.Map<TeleporterDTO>(entity);
+                    TeleporterDTO dto = new TeleporterDTO();
+                    Mapper.Mapper.Instance.TeleporterMapper.ToTeleporterDTO(entity, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -63,7 +69,9 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<TeleporterDTO>(context.Teleporter.FirstOrDefault(i => i.TeleporterId.Equals(teleporterId)));
+                    TeleporterDTO dto = new TeleporterDTO();
+                    Mapper.Mapper.Instance.TeleporterMapper.ToTeleporterDTO(context.Teleporter.FirstOrDefault(i => i.TeleporterId.Equals(teleporterId)), dto);
+                    return dto;
                 }
             }
             catch (Exception e)
@@ -77,10 +85,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<TeleporterDTO> result = new List<TeleporterDTO>();
                 foreach (Teleporter entity in context.Teleporter.Where(c => c.MapNpcId.Equals(npcId)))
                 {
-                    yield return _mapper.Map<TeleporterDTO>(entity);
+                    TeleporterDTO dto = new TeleporterDTO();
+                    Mapper.Mapper.Instance.TeleporterMapper.ToTeleporterDTO(entity, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 

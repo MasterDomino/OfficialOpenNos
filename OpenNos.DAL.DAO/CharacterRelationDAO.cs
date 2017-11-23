@@ -82,10 +82,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<CharacterRelationDTO> result = new List<CharacterRelationDTO>();
                 foreach (CharacterRelation entity in context.CharacterRelation)
                 {
-                    yield return _mapper.Map<CharacterRelationDTO>(entity);
+                    CharacterRelationDTO dto = new CharacterRelationDTO();
+                    Mapper.Mapper.Instance.CharacterRelationMapper.ToCharacterRelationDTO(entity, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -95,7 +99,9 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<CharacterRelationDTO>(context.CharacterRelation.FirstOrDefault(s => s.CharacterRelationId.Equals(characterId)));
+                    CharacterRelationDTO dto = new CharacterRelationDTO();
+                    Mapper.Mapper.Instance.CharacterRelationMapper.ToCharacterRelationDTO(context.CharacterRelation.FirstOrDefault(s => s.CharacterRelationId.Equals(characterId)), dto);
+                    return dto;
                 }
             }
             catch (Exception e)
@@ -107,21 +113,24 @@ namespace OpenNos.DAL.DAO
 
         private CharacterRelationDTO insert(CharacterRelationDTO relation, OpenNosContext context)
         {
-            CharacterRelation entity = _mapper.Map<CharacterRelation>(relation);
+            CharacterRelation entity = new CharacterRelation();
+            Mapper.Mapper.Instance.CharacterRelationMapper.ToCharacterRelation(relation, entity);
             context.CharacterRelation.Add(entity);
             context.SaveChanges();
-            return _mapper.Map<CharacterRelationDTO>(entity);
+            Mapper.Mapper.Instance.CharacterRelationMapper.ToCharacterRelationDTO(entity, relation);
+            return relation;
         }
 
         private CharacterRelationDTO update(CharacterRelation entity, CharacterRelationDTO relation, OpenNosContext context)
         {
             if (entity != null)
             {
-                _mapper.Map(relation, entity);
+                Mapper.Mapper.Instance.CharacterRelationMapper.ToCharacterRelation(relation, entity);
                 context.SaveChanges();
             }
 
-            return _mapper.Map<CharacterRelationDTO>(entity);
+            Mapper.Mapper.Instance.CharacterRelationMapper.ToCharacterRelationDTO(entity, relation);
+            return relation;
         }
 
         #endregion

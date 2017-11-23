@@ -33,10 +33,12 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    Card entity = _mapper.Map<Card>(card);
+                    Card entity = new Card();
+                    Mapper.Mapper.Instance.CardMapper.ToCard(card, entity);
                     context.Card.Add(entity);
                     context.SaveChanges();
-                    return _mapper.Map<CardDTO>(entity);
+                    Mapper.Mapper.Instance.CardMapper.ToCardDTO(entity, card);
+                    return card;
                 }
             }
             catch (Exception e)
@@ -55,7 +57,8 @@ namespace OpenNos.DAL.DAO
                     context.Configuration.AutoDetectChangesEnabled = false;
                     foreach (CardDTO card in cards)
                     {
-                        Card entity = _mapper.Map<Card>(card);
+                        Card entity = new Card();
+                        Mapper.Mapper.Instance.CardMapper.ToCard(card, entity);
                         context.Card.Add(entity);
                     }
                     context.Configuration.AutoDetectChangesEnabled = true;
@@ -72,10 +75,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<CardDTO> result = new List<CardDTO>();
                 foreach (Card card in context.Card)
                 {
-                    yield return _mapper.Map<CardDTO>(card);
+                    CardDTO dto = new CardDTO();
+                    Mapper.Mapper.Instance.CardMapper.ToCardDTO(card, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -85,7 +92,9 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<CardDTO>(context.Card.FirstOrDefault(s => s.CardId.Equals(cardId)));
+                    CardDTO dto = new CardDTO();
+                    Mapper.Mapper.Instance.CardMapper.ToCardDTO(context.Card.FirstOrDefault(s => s.CardId.Equals(cardId)), dto);
+                    return dto;
                 }
             }
             catch (Exception e)

@@ -83,10 +83,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<BazaarItemDTO> result = new List<BazaarItemDTO>();
                 foreach (BazaarItem bazaarItem in context.BazaarItem)
                 {
-                    yield return _mapper.Map<BazaarItemDTO>(bazaarItem);
+                    BazaarItemDTO dto = new BazaarItemDTO();
+                    Mapper.Mapper.Instance.BazaarItemMapper.ToBazaarItemDTO(bazaarItem, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -96,7 +100,9 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<BazaarItemDTO>(context.BazaarItem.FirstOrDefault(i => i.BazaarItemId.Equals(bazaarItemId)));
+                    BazaarItemDTO dto = new BazaarItemDTO();
+                    Mapper.Mapper.Instance.BazaarItemMapper.ToBazaarItemDTO(context.BazaarItem.FirstOrDefault(i => i.BazaarItemId.Equals(bazaarItemId)), dto);
+                    return dto;
                 }
             }
             catch (Exception e)
@@ -127,21 +133,23 @@ namespace OpenNos.DAL.DAO
 
         private BazaarItemDTO insert(BazaarItemDTO bazaarItem, OpenNosContext context)
         {
-            BazaarItem entity = _mapper.Map<BazaarItem>(bazaarItem);
+            BazaarItem entity = new BazaarItem();
+            Mapper.Mapper.Instance.BazaarItemMapper.ToBazaarItem(bazaarItem, entity);
             context.BazaarItem.Add(entity);
             context.SaveChanges();
-            return _mapper.Map<BazaarItemDTO>(entity);
+            Mapper.Mapper.Instance.BazaarItemMapper.ToBazaarItemDTO(entity, bazaarItem);
+            return bazaarItem;
         }
 
         private BazaarItemDTO update(BazaarItem entity, BazaarItemDTO bazaarItem, OpenNosContext context)
         {
             if (entity != null)
             {
-                _mapper.Map(bazaarItem, entity);
+                Mapper.Mapper.Instance.BazaarItemMapper.ToBazaarItem(bazaarItem, entity);
                 context.SaveChanges();
             }
-
-            return _mapper.Map<BazaarItemDTO>(entity);
+            Mapper.Mapper.Instance.BazaarItemMapper.ToBazaarItemDTO(entity, bazaarItem);
+            return bazaarItem;
         }
 
         #endregion

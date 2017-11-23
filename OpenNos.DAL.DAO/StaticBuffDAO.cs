@@ -80,10 +80,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<StaticBuffDTO> result = new List<StaticBuffDTO>();
                 foreach (StaticBuff entity in context.StaticBuff.Where(i => i.CharacterId == characterId))
                 {
-                    yield return _mapper.Map<StaticBuffDTO>(entity);
+                    StaticBuffDTO dto = new StaticBuffDTO();
+                    Mapper.Mapper.Instance.StaticBuffMapper.ToStaticBuffDTO(entity, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -93,7 +97,9 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<StaticBuffDTO>(context.RespawnMapType.FirstOrDefault(s => s.RespawnMapTypeId.Equals(sbId)));
+                    StaticBuffDTO dto = new StaticBuffDTO();
+                    Mapper.Mapper.Instance.StaticBuffMapper.ToStaticBuffDTO(context.StaticBuff.FirstOrDefault(s => s.StaticBuffId.Equals(sbId)),dto); //who the fuck was so retarded and set it to respawn ?!?
+                    return dto;
                 }
             }
             catch (Exception e)
@@ -123,10 +129,12 @@ namespace OpenNos.DAL.DAO
         {
             try
             {
-                StaticBuff entity = _mapper.Map<StaticBuff>(sb);
+                StaticBuff entity = new StaticBuff();
+                Mapper.Mapper.Instance.StaticBuffMapper.ToStaticBuff(sb, entity);
                 context.StaticBuff.Add(entity);
                 context.SaveChanges();
-                return _mapper.Map<StaticBuffDTO>(entity);
+                Mapper.Mapper.Instance.StaticBuffMapper.ToStaticBuffDTO(entity, sb);
+                return sb;
             }
             catch (Exception e)
             {
@@ -139,10 +147,11 @@ namespace OpenNos.DAL.DAO
         {
             if (entity != null)
             {
-                _mapper.Map(sb, entity);
+                Mapper.Mapper.Instance.StaticBuffMapper.ToStaticBuff(sb, entity);
                 context.SaveChanges();
             }
-            return _mapper.Map<StaticBuffDTO>(entity);
+            Mapper.Mapper.Instance.StaticBuffMapper.ToStaticBuffDTO(entity, sb);
+            return sb;
         }
 
         #endregion

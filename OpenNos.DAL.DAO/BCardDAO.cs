@@ -33,10 +33,12 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    BCard entity = _mapper.Map<BCard>(cardObject);
+                    BCard entity = new BCard();
+                    Mapper.Mapper.Instance.BCardMapper.ToBCard(cardObject, entity);
                     context.BCard.Add(entity);
                     context.SaveChanges();
-                    return _mapper.Map<BCardDTO>(entity);
+                    Mapper.Mapper.Instance.BCardMapper.ToBCardDTO(entity, cardObject);
+                    return cardObject;
                 }
             }
             catch (Exception e)
@@ -55,7 +57,8 @@ namespace OpenNos.DAL.DAO
                     context.Configuration.AutoDetectChangesEnabled = false;
                     foreach (BCardDTO card in cards)
                     {
-                        BCard entity = _mapper.Map<BCard>(card);
+                        BCard entity = new BCard();
+                        Mapper.Mapper.Instance.BCardMapper.ToBCard(card, entity);
                         context.BCard.Add(entity);
                     }
                     context.Configuration.AutoDetectChangesEnabled = true;
@@ -72,10 +75,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<BCardDTO> result = new List<BCardDTO>();
                 foreach (BCard card in context.BCard)
                 {
-                    yield return _mapper.Map<BCardDTO>(card);
+                    BCardDTO dto = new BCardDTO();
+                    Mapper.Mapper.Instance.BCardMapper.ToBCardDTO(card, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -83,10 +90,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<BCardDTO> result = new List<BCardDTO>();
                 foreach (BCard card in context.BCard.Where(s => s.CardId == cardId))
                 {
-                    yield return _mapper.Map<BCardDTO>(card);
+                    BCardDTO dto = new BCardDTO();
+                    Mapper.Mapper.Instance.BCardMapper.ToBCardDTO(card, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -96,7 +107,9 @@ namespace OpenNos.DAL.DAO
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
-                    return _mapper.Map<BCardDTO>(context.BCard.FirstOrDefault(s => s.BCardId.Equals(cardId)));
+                    BCardDTO dto = new BCardDTO();
+                    Mapper.Mapper.Instance.BCardMapper.ToBCardDTO(context.BCard.FirstOrDefault(s => s.BCardId.Equals(cardId)), dto);
+                    return dto;
                 }
             }
             catch (Exception e)
@@ -110,10 +123,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<BCardDTO> result = new List<BCardDTO>();
                 foreach (BCard card in context.BCard.Where(s => s.ItemVNum == vNum))
                 {
-                    yield return _mapper.Map<BCardDTO>(card);
+                    BCardDTO dto = new BCardDTO();
+                    Mapper.Mapper.Instance.BCardMapper.ToBCardDTO(card, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -121,10 +138,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<BCardDTO> result = new List<BCardDTO>();
                 foreach (BCard card in context.BCard.Where(s => s.NpcMonsterVNum == vNum))
                 {
-                    yield return _mapper.Map<BCardDTO>(card);
+                    BCardDTO dto = new BCardDTO();
+                    Mapper.Mapper.Instance.BCardMapper.ToBCardDTO(card, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
@@ -132,10 +153,14 @@ namespace OpenNos.DAL.DAO
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
+                List<BCardDTO> result = new List<BCardDTO>();
                 foreach (BCard card in context.BCard.Where(s => s.SkillVNum == vNum))
                 {
-                    yield return _mapper.Map<BCardDTO>(card);
+                    BCardDTO dto = new BCardDTO();
+                    Mapper.Mapper.Instance.BCardMapper.ToBCardDTO(card, dto);
+                    result.Add(dto);
                 }
+                return result;
             }
         }
 
