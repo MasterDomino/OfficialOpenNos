@@ -18,7 +18,7 @@ using System.Collections.Generic;
 
 namespace OpenNos.DAL.Interface
 {
-    public interface IStaticBuffDAO : IMappingBaseDAO
+    public interface IStaticBuffDAO
     {
         #region Methods
 

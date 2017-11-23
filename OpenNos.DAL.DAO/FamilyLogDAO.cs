@@ -24,7 +24,7 @@ using System.Linq;
 
 namespace OpenNos.DAL.DAO
 {
-    public class FamilyLogDAO : MappingBaseDAO<FamilyLog, FamilyLogDTO>, IFamilyLogDAO
+    public class FamilyLogDAO : IFamilyLogDAO
     {
         #region Methods
 

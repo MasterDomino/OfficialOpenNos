@@ -24,7 +24,7 @@ using System.Linq;
 
 namespace OpenNos.DAL.DAO
 {
-    public class RespawnDAO : MappingBaseDAO<Respawn, RespawnDTO>, IRespawnDAO
+    public class RespawnDAO : IRespawnDAO
     {
         #region Methods
 

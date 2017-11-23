@@ -24,7 +24,7 @@ using System.Linq;
 
 namespace OpenNos.DAL.DAO
 {
-    public class RecipeDAO : MappingBaseDAO<Recipe, RecipeDTO>, IRecipeDAO
+    public class RecipeDAO : IRecipeDAO
     {
         #region Methods
 

@@ -24,7 +24,7 @@ using System.Linq;
 
 namespace OpenNos.DAL.DAO
 {
-    public class ShopItemDAO : MappingBaseDAO<ShopItem, ShopItemDTO>, IShopItemDAO
+    public class ShopItemDAO : IShopItemDAO
     {
         #region Methods
 

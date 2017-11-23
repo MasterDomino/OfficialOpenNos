@@ -23,7 +23,7 @@ using System.Linq;
 
 namespace OpenNos.DAL.DAO
 {
-    public class ScriptedInstanceDAO : MappingBaseDAO<ScriptedInstance, ScriptedInstanceDTO>, IScriptedInstanceDAO
+    public class ScriptedInstanceDAO : IScriptedInstanceDAO
     {
         #region Methods
 

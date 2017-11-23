@@ -25,7 +25,7 @@ using System.Linq;
 
 namespace OpenNos.DAL.DAO
 {
-    public class FamilyCharacterDAO : MappingBaseDAO<FamilyCharacter, FamilyCharacterDTO>, IFamilyCharacterDAO
+    public class FamilyCharacterDAO : IFamilyCharacterDAO
     {
         #region Methods
 

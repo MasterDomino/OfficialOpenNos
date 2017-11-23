@@ -23,7 +23,7 @@ using System.Linq;
 
 namespace OpenNos.DAL.DAO
 {
-    public class GeneralLogDAO : MappingBaseDAO<GeneralLog, GeneralLogDTO>, IGeneralLogDAO
+    public class GeneralLogDAO : IGeneralLogDAO
     {
         #region Methods
 

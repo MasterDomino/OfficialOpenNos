@@ -93,7 +93,7 @@ namespace OpenNos.GameObject
             Initialize();
         }
 
-        public override void Initialize()
+        public void Initialize()
         {
             _random = new Random(MapNpcId);
             Npc = ServerManager.Instance.GetNpc(NpcVNum);

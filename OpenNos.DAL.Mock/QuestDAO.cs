@@ -19,7 +19,5 @@ namespace OpenNos.DAL.Mock
         public IEnumerable<QuestDTO> LoadAll() => throw new NotImplementedException();
 
         public QuestDTO LoadById(long id) => throw new NotImplementedException();
-
-        public IMappingBaseDAO RegisterMapping(Type gameObjectType) => throw new NotImplementedException();
     }
 }

@@ -3,7 +3,7 @@
 namespace OpenNos.Data
 {
     [Serializable]
-    public class QuestProgressDTO : MappingBaseDTO
+    public class QuestProgressDTO
     {
         public long QuestProgressId { get; set; }
 

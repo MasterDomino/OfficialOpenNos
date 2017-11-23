@@ -24,7 +24,7 @@ using System.Linq;
 
 namespace OpenNos.DAL.DAO
 {
-    public class CellonOptionDAO : MappingBaseDAO<CellonOption, CellonOptionDTO>, ICellonOptionDAO
+    public class CellonOptionDAO : ICellonOptionDAO
     {
         #region Methods
 

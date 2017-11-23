@@ -23,7 +23,7 @@ using System.Linq;
 
 namespace OpenNos.DAL.DAO
 {
-    public class DropDAO : MappingBaseDAO<Drop, DropDTO>, IDropDAO
+    public class DropDAO : IDropDAO
     {
         #region Methods
 

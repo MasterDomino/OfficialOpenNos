@@ -4,7 +4,7 @@ using System;
 namespace OpenNos.Data
 {
     [Serializable]
-    public class ShellEffectDTO : MappingBaseDTO
+    public class ShellEffectDTO
     {
         #region Properties
 

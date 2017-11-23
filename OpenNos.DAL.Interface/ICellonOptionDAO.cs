@@ -19,7 +19,7 @@ using System.Collections.Generic;
 
 namespace OpenNos.DAL.Interface
 {
-    public interface ICellonOptionDAO : IMappingBaseDAO
+    public interface ICellonOptionDAO
     {
         #region Methods
 

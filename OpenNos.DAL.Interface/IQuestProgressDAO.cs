@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace OpenNos.DAL.Interface
 {
-    public interface IQuestProgressDAO : IMappingBaseDAO
+    public interface IQuestProgressDAO
     {
         #region Methods
 

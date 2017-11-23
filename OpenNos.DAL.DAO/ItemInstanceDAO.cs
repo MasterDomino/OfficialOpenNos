@@ -28,12 +28,6 @@ namespace OpenNos.DAL.DAO
 {
     public class ItemInstanceDAO : IItemInstanceDAO
     {
-        #region Members
-
-        private Type _baseType;
-
-        #endregion
-
         #region Methods
 
         public DeleteResult DeleteFromSlotAndType(long characterId, short slot, InventoryType type)
@@ -312,16 +306,28 @@ namespace OpenNos.DAL.DAO
             {
                 output = new BoxItemDTO();
                 Mapper.Mapper.Instance.BoxItemMapper.ToBoxItemDTO((BoxInstance)input, (BoxItemDTO)output);
+                if(((BoxItemDTO)output).EquipmentSerialId==Guid.Empty)
+                {
+                    ((BoxItemDTO)output).EquipmentSerialId = Guid.NewGuid(); 
+                }
             }
             else if (t == typeof(SpecialistInstance))
             {
                 output = new SpecialistInstanceDTO();
                 Mapper.Mapper.Instance.SpecialistInstanceMapper.ToSpecialistInstanceDTO((SpecialistInstance)input, (SpecialistInstanceDTO)output);
+                if (((SpecialistInstanceDTO)output).EquipmentSerialId == Guid.Empty)
+                {
+                    ((SpecialistInstanceDTO)output).EquipmentSerialId = Guid.NewGuid();
+                }
             }
             else if (t == typeof(WearableInstance))
             {
                 output = new WearableInstanceDTO();
                 Mapper.Mapper.Instance.WearableInstanceMapper.ToWearableInstanceDTO((WearableInstance)input, (WearableInstanceDTO)output);
+                if (((WearableInstanceDTO)output).EquipmentSerialId == Guid.Empty)
+                {
+                    ((WearableInstanceDTO)output).EquipmentSerialId = Guid.NewGuid();
+                }
             }
             else if (t == typeof(UsableInstance))
             {
@@ -349,6 +355,10 @@ namespace OpenNos.DAL.DAO
                     output = new BoxInstance();
                 }
                 Mapper.Mapper.Instance.BoxItemMapper.ToBoxInstance((BoxItemDTO)input, (BoxInstance)output);
+                if (((BoxInstance)output).EquipmentSerialId == Guid.Empty)
+                {
+                    ((BoxInstance)output).EquipmentSerialId = Guid.NewGuid();
+                }
             }
             else if (t == typeof(SpecialistInstanceDTO))
             {
@@ -357,6 +367,10 @@ namespace OpenNos.DAL.DAO
                     output = new SpecialistInstance();
                 }
                 Mapper.Mapper.Instance.SpecialistInstanceMapper.ToSpecialistInstance((SpecialistInstanceDTO)input, (SpecialistInstance)output);
+                if (((SpecialistInstance)output).EquipmentSerialId == Guid.Empty)
+                {
+                    ((SpecialistInstance)output).EquipmentSerialId = Guid.NewGuid();
+                }
             }
             else if (t == typeof(WearableInstanceDTO))
             {
@@ -365,6 +379,10 @@ namespace OpenNos.DAL.DAO
                     output = new WearableInstance();
                 }
                 Mapper.Mapper.Instance.WearableInstanceMapper.ToWearableInstance((WearableInstanceDTO)input, (WearableInstance)output);
+                if (((WearableInstance)output).EquipmentSerialId == Guid.Empty)
+                {
+                    ((WearableInstance)output).EquipmentSerialId = Guid.NewGuid();
+                }
             }
             else if (t == typeof(UsableInstanceDTO))
             {

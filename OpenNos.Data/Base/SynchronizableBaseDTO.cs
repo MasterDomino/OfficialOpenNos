@@ -17,7 +17,7 @@ using System;
 namespace OpenNos.Data
 {
     [Serializable]
-    public abstract class SynchronizableBaseDTO : MappingBaseDTO
+    public abstract class SynchronizableBaseDTO
     {
         #region Instantiation
 

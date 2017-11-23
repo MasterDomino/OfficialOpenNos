@@ -24,7 +24,7 @@ using System.Linq;
 
 namespace OpenNos.DAL.DAO
 {
-    public class NpcMonsterSkillDAO : MappingBaseDAO<NpcMonsterSkill, NpcMonsterSkillDTO>, INpcMonsterSkillDAO
+    public class NpcMonsterSkillDAO : INpcMonsterSkillDAO
     {
         #region Methods
 

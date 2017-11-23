@@ -18,7 +18,7 @@ using System.Collections.Generic;
 
 namespace OpenNos.DAL.Interface
 {
-    public interface IStaticBonusDAO : IMappingBaseDAO
+    public interface IStaticBonusDAO
     {
         #region Methods
 

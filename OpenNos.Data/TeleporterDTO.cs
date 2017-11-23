@@ -17,7 +17,7 @@ using System;
 namespace OpenNos.Data
 {
     [Serializable]
-    public class TeleporterDTO : MappingBaseDTO
+    public class TeleporterDTO
     {
         #region Properties
 

@@ -24,7 +24,7 @@ using System.Linq;
 
 namespace OpenNos.DAL.DAO
 {
-    public class StaticBuffDAO : MappingBaseDAO<StaticBuff, StaticBuffDTO>, IStaticBuffDAO
+    public class StaticBuffDAO : IStaticBuffDAO
     {
         #region Methods
 

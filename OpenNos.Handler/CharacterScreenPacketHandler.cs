@@ -325,6 +325,7 @@ namespace OpenNos.Handler
             {
                 if (Session?.Account != null && !Session.HasSelectedCharacter && (DAOFactory.CharacterDAO.LoadBySlot(Session.Account.AccountId, selectPacket.Slot) is Character character))
                 {
+                    character.Initialize();
                     if (Session.Account.Authority > AuthorityType.User)
                     {
                         character.Invisible = true;

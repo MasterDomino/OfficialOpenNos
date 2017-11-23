@@ -163,14 +163,6 @@ namespace OpenNos.Mapper
             _wearableInstanceMapper = new WearableInstanceMapper();
         }
 
-        public void Map<TDTO, TEntity>(object input, object output)
-        {
-            if(typeof(TDTO) == typeof(ItemInstanceDTO))
-            {
-
-            }
-        }
-
         public static Mapper Instance => _instance ?? (_instance = new Mapper());
 
         public AccountMapper AccountMapper { get { return _accountMapper; } }

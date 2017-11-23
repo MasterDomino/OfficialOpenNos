@@ -17,7 +17,7 @@ using System;
 namespace OpenNos.Data
 {
     [Serializable]
-    public class RespawnDTO : MappingBaseDTO
+    public class RespawnDTO
     {
         #region Properties
 

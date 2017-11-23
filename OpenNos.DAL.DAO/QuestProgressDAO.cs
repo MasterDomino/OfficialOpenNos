@@ -24,7 +24,7 @@ using System.Linq;
 
 namespace OpenNos.DAL.DAO
 {
-    public class QuestProgressDAO : MappingBaseDAO<QuestProgress, QuestProgressDTO>, IQuestProgressDAO
+    public class QuestProgressDAO : IQuestProgressDAO
     {
         #region Methods
 

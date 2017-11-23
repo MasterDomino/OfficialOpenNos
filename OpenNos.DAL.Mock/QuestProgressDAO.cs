@@ -19,7 +19,5 @@ namespace OpenNos.DAL.Mock
         public IEnumerable<QuestProgressDTO> LoadByCharacterId(long characterId) => throw new NotImplementedException();
 
         public QuestProgressDTO LoadById(long id) => throw new NotImplementedException();
-
-        public IMappingBaseDAO RegisterMapping(Type gameObjectType) => throw new NotImplementedException();
     }
 }

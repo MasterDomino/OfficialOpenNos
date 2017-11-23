@@ -164,7 +164,7 @@ namespace OpenNos.GameObject
             Initialize();
         }
 
-        public override void Initialize()
+        public void Initialize()
         {
             FirstX = MapX;
             FirstY = MapY;

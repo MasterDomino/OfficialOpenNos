@@ -24,7 +24,7 @@ using System.Linq;
 
 namespace OpenNos.DAL.DAO
 {
-    public class PenaltyLogDAO : MappingBaseDAO<PenaltyLog, PenaltyLogDTO>, IPenaltyLogDAO
+    public class PenaltyLogDAO : IPenaltyLogDAO
     {
         #region Methods
 

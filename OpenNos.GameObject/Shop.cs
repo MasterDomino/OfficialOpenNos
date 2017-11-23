@@ -29,7 +29,7 @@ namespace OpenNos.GameObject
 
         #region Methods
 
-        public override void Initialize()
+        public void Initialize()
         {
             ShopItems = ServerManager.Instance.GetShopItemsByShopId(ShopId);
             ShopSkills = ServerManager.Instance.GetShopSkillsByShopId(ShopId);

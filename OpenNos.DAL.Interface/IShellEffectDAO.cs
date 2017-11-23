@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace OpenNos.DAL.Interface
 {
-    public interface IShellEffectDAO : IMappingBaseDAO
+    public interface IShellEffectDAO
     {
         #region Methods
 

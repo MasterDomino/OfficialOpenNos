@@ -17,7 +17,7 @@ using System;
 namespace OpenNos.Data
 {
     [Serializable]
-    public class ComboDTO : MappingBaseDTO
+    public class ComboDTO
     {
         #region Properties
 

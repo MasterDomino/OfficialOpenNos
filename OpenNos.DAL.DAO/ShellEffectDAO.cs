@@ -24,7 +24,7 @@ using System.Linq;
 
 namespace OpenNos.DAL.DAO
 {
-    public class ShellEffectDAO : MappingBaseDAO<ShellEffect, ShellEffectDTO>, IShellEffectDAO
+    public class ShellEffectDAO : IShellEffectDAO
     {
         #region Methods
 

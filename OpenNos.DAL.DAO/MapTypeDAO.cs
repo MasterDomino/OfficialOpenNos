@@ -24,7 +24,7 @@ using System.Linq;
 
 namespace OpenNos.DAL.DAO
 {
-    public class MapTypeDAO : MappingBaseDAO<MapType, MapTypeDTO>, IMapTypeDAO
+    public class MapTypeDAO : IMapTypeDAO
     {
         #region Methods
 

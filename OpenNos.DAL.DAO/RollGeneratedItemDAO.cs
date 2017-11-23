@@ -23,7 +23,7 @@ using System.Linq;
 
 namespace OpenNos.DAL.DAO
 {
-    public class RollGeneratedItemDAO : MappingBaseDAO<RollGeneratedItem, RollGeneratedItemDTO>, IRollGeneratedItemDAO
+    public class RollGeneratedItemDAO : IRollGeneratedItemDAO
     {
         #region Methods
 

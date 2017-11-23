@@ -28,31 +28,12 @@ namespace OpenNos.DAL.Mock
         #region Members
 
         private readonly IDictionary<Type, Type> itemInstanceMappings = new Dictionary<Type, Type>();
-        private Type _baseType;
 
         #endregion
 
         #region Methods
 
         public DeleteResult DeleteFromSlotAndType(long characterId, short slot, InventoryType type) => throw new NotImplementedException();
-
-        public void InitializeMapper(Type baseType)
-        {
-            _baseType = baseType;
-            MapperConfiguration config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap(baseType, typeof(ItemInstanceDTO));
-                cfg.CreateMap(typeof(ItemInstanceDTO), typeof(ItemInstanceDTO)).As(baseType);
-                Type itemInstanceType = typeof(ItemInstanceDTO);
-                foreach (KeyValuePair<Type, Type> entry in itemInstanceMappings)
-                {
-                    cfg.CreateMap(entry.Key, entry.Value).IncludeBase(baseType, typeof(ItemInstanceDTO));
-                    cfg.CreateMap(entry.Value, entry.Key).IncludeBase(typeof(ItemInstanceDTO), baseType);
-                    cfg.CreateMap(entry.Value, typeof(ItemInstanceDTO)).As(entry.Key);
-                }
-            });
-            _mapper = config.CreateMapper();
-        }
 
         public IEnumerable<ItemInstanceDTO> LoadByCharacterId(long characterId) => Container.Where(i => i.CharacterId == characterId);
 
@@ -63,17 +44,6 @@ namespace OpenNos.DAL.Mock
         IList<Guid> IItemInstanceDAO.LoadSlotAndTypeByCharacterId(long characterId) => throw new NotImplementedException();
 
         public IEnumerable<Guid> LoadSlotAndTypeByCharacterId(long characterId) => Container.Where(i => i.CharacterId == characterId).Select(c => c.Id);
-
-        public override IMappingBaseDAO RegisterMapping(Type gameObjectType)
-        {
-            Type itemInstanceType = typeof(ItemInstanceDTO);
-            if (!itemInstanceMappings.ContainsKey(gameObjectType))
-            {
-                itemInstanceMappings.Add(gameObjectType, itemInstanceType);
-            }
-
-            return this;
-        }
 
         public DeleteResult DeleteGuidList(IEnumerable<Guid> guids) => throw new NotImplementedException();
 

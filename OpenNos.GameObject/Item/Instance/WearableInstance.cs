@@ -39,27 +39,15 @@ namespace OpenNos.GameObject
 
         public WearableInstance()
         {
-            if (EquipmentSerialId == Guid.Empty)
-            {
-                EquipmentSerialId = Guid.NewGuid();
-            }
         }
 
         public WearableInstance(Guid id)
         {
             Id = id;
-            if (EquipmentSerialId == Guid.Empty)
-            {
-                EquipmentSerialId = Guid.NewGuid();
-            }
         }
 
         public WearableInstance(short vNum, byte amount) : base(vNum, amount)
         {
-            if (EquipmentSerialId == Guid.Empty)
-            {
-                EquipmentSerialId = Guid.NewGuid();
-            }
         }
 
         #endregion
@@ -235,14 +223,6 @@ namespace OpenNos.GameObject
                     return $"e_info 9 {ItemVNum} {Upgrade} {Rare} {Item.Price} {ShellEffects.Count} {ShellEffects.Aggregate(string.Empty, (result, effect) => result += $"{(byte)effect.EffectLevel}.{effect.Effect}.{(byte)effect.Value} ")}"; // 0 = Number of effects
             }
             return string.Empty;
-        }
-
-        public override void Initialize()
-        {
-            if (EquipmentSerialId == Guid.Empty)
-            {
-                EquipmentSerialId = Guid.NewGuid();
-            }
         }
 
         public void OptionItem(ClientSession session, short cellonVNum)

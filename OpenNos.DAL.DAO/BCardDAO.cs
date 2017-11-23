@@ -23,7 +23,7 @@ using System.Linq;
 
 namespace OpenNos.DAL.DAO
 {
-    public class BCardDAO : MappingBaseDAO<BCard, BCardDTO>, IBCardDAO
+    public class BCardDAO : IBCardDAO
     {
         #region Methods
 

@@ -18,7 +18,7 @@ using OpenNos.Domain;
 
 namespace OpenNos.DAL.Interface
 {
-    public interface IAccountDAO : IMappingBaseDAO
+    public interface IAccountDAO
     {
         #region Methods
 

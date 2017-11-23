@@ -3028,7 +3028,7 @@ namespace OpenNos.GameObject
             return HPMax;
         }
 
-        public override void Initialize()
+        public void Initialize()
         {
             _random = new Random();
             ExchangeInfo = null;

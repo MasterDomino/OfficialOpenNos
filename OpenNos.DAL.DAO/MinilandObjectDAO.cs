@@ -24,7 +24,7 @@ using System.Linq;
 
 namespace OpenNos.DAL.DAO
 {
-    public class MinilandObjectDAO : MappingBaseDAO<MinilandObject, MinilandObjectDTO>, IMinilandObjectDAO
+    public class MinilandObjectDAO : IMinilandObjectDAO
     {
         #region Methods
 

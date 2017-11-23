@@ -18,7 +18,7 @@ using System;
 namespace OpenNos.Data
 {
     [Serializable]
-    public class CellonOptionDTO : MappingBaseDTO
+    public class CellonOptionDTO
     {
         #region Properties
 

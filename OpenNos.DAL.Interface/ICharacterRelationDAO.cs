@@ -18,7 +18,7 @@ using System.Collections.Generic;
 
 namespace OpenNos.DAL.Interface
 {
-    public interface ICharacterRelationDAO : IMappingBaseDAO
+    public interface ICharacterRelationDAO
     {
         #region Methods
 

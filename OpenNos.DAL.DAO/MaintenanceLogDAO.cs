@@ -24,7 +24,7 @@ using System.Linq;
 
 namespace OpenNos.DAL.DAO
 {
-    public class MaintenanceLogDAO : MappingBaseDAO<MaintenanceLog, MaintenanceLogDTO>, IMaintenanceLogDAO
+    public class MaintenanceLogDAO : IMaintenanceLogDAO
     {
         #region Methods
 

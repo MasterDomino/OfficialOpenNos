@@ -17,7 +17,7 @@ using System;
 namespace OpenNos.Data
 {
     [Serializable]
-    public class MapMonsterDTO : MappingBaseDTO
+    public class MapMonsterDTO
     {
         #region Properties
 

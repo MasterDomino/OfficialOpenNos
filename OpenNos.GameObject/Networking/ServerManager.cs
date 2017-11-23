@@ -816,6 +816,7 @@ namespace OpenNos.GameObject
             Parallel.ForEach(DAOFactory.NpcMonsterDAO.LoadAll(), npcMonster =>
             {
                 NpcMonster npcMonsterObj = npcMonster as NpcMonster;
+                npcMonsterObj.Initialize();
                 npcMonsterObj.BCards = new List<BCard>();
                 DAOFactory.BCardDAO.LoadByNpcMonsterVNum(npcMonster.NpcMonsterVNum).ToList().ForEach(s => npcMonsterObj.BCards.Add((BCard)s));
                 _npcs.Add(npcMonsterObj);
@@ -824,7 +825,11 @@ namespace OpenNos.GameObject
 
             // intialize recipes
             _recipes = new ThreadSafeSortedList<short, Recipe>();
-            Parallel.ForEach(DAOFactory.RecipeDAO.LoadAll(), recipeGrouping => _recipes[recipeGrouping.RecipeId] = recipeGrouping as Recipe);
+            Parallel.ForEach(DAOFactory.RecipeDAO.LoadAll(), recipeGrouping =>
+            {
+                _recipes[recipeGrouping.RecipeId] = recipeGrouping as Recipe;
+                (recipeGrouping as Recipe).Initialize();
+            });
             Logger.Info(string.Format(Language.Instance.GetMessageFromKey("RECIPES_LOADED"), _recipes.Count));
 
             // initialize recipelist
@@ -844,7 +849,11 @@ namespace OpenNos.GameObject
 
             // initialize shops
             _shops = new ThreadSafeSortedList<int, Shop>();
-            Parallel.ForEach(DAOFactory.ShopDAO.LoadAll(), shopGrouping => _shops[shopGrouping.MapNpcId] = shopGrouping as Shop);
+            Parallel.ForEach(DAOFactory.ShopDAO.LoadAll(), shopGrouping =>
+            {
+                _shops[shopGrouping.MapNpcId] = shopGrouping as Shop;
+                (shopGrouping as Shop).Initialize();
+            });
             Logger.Info(string.Format(Language.Instance.GetMessageFromKey("SHOPS_LOADED"), _shops.Count));
 
             // initialize teleporters
@@ -900,6 +909,7 @@ namespace OpenNos.GameObject
 
                     Parallel.ForEach(newMap.Npcs, mapNpc =>
                     {
+                        
                         mapNpc.MapInstance = newMap;
                         newMap.AddNPC(mapNpc);
                     });

@@ -24,7 +24,7 @@ using System.Linq;
 
 namespace OpenNos.DAL.DAO
 {
-    public class PortalDAO : MappingBaseDAO<Portal, PortalDTO>, IPortalDAO
+    public class PortalDAO : IPortalDAO
     {
         #region Methods
 

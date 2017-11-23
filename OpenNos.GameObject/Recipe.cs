@@ -29,7 +29,7 @@ namespace OpenNos.GameObject
 
         #region Methods
 
-        public override void Initialize()
+        public void Initialize()
         {
             Items = new List<RecipeItemDTO>();
             foreach (RecipeItemDTO recipe in DAOFactory.RecipeItemDAO.LoadByRecipe(RecipeId).ToList())

@@ -25,7 +25,7 @@ using System.Linq;
 
 namespace OpenNos.DAL.DAO
 {
-    public class StaticBonusDAO : MappingBaseDAO<StaticBonus, StaticBonusDTO>, IStaticBonusDAO
+    public class StaticBonusDAO : IStaticBonusDAO
     {
         #region Methods
 

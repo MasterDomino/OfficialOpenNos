@@ -17,7 +17,7 @@ using System;
 namespace OpenNos.Data
 {
     [Serializable]
-    public class PortalDTO : MappingBaseDTO
+    public class PortalDTO
     {
         #region Properties
 

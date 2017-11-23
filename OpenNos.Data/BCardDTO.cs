@@ -17,7 +17,7 @@ using System;
 namespace OpenNos.Data
 {
     [Serializable]
-    public class BCardDTO : MappingBaseDTO
+    public class BCardDTO
     {
         #region Properties
 

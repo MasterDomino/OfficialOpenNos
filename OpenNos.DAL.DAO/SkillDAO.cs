@@ -23,7 +23,7 @@ using System.Linq;
 
 namespace OpenNos.DAL.DAO
 {
-    public class SkillDAO : MappingBaseDAO<Skill, SkillDTO>, ISkillDAO
+    public class SkillDAO : ISkillDAO
     {
         #region Methods
 

@@ -20,7 +20,7 @@ using System.Collections.Generic;
 
 namespace OpenNos.DAL.Mock
 {
-    public abstract class BaseDAO<TDTO> : IMappingBaseDAO
+    public abstract class BaseDAO<TDTO>
     {
         #region Members
 
@@ -43,23 +43,6 @@ namespace OpenNos.DAL.Mock
 
         #region Methods
 
-        public virtual void InitializeMapper()
-        {
-            MapperConfiguration config = new MapperConfiguration(cfg =>
-            {
-                foreach (KeyValuePair<Type, Type> entry in _mappings)
-                {
-                    // GameObject -> Entity
-                    cfg.CreateMap(typeof(TDTO), entry.Value);
-
-                    // Entity -> GameObject
-                    cfg.CreateMap(entry.Value, typeof(TDTO)).AfterMap((src, dest) => ((MappingBaseDTO)dest).Initialize()).As(entry.Key);
-                }
-            });
-
-            _mapper = config.CreateMapper();
-        }
-
         public void Insert(IEnumerable<TDTO> dtos)
         {
             foreach (TDTO dto in dtos)
@@ -79,20 +62,6 @@ namespace OpenNos.DAL.Mock
             foreach (TDTO dto in Container)
             {
                 yield return MapEntity(dto);
-            }
-        }
-
-        public virtual IMappingBaseDAO RegisterMapping(Type gameObjectType)
-        {
-            try
-            {
-                Type targetType = typeof(TDTO);
-                _mappings.Add(gameObjectType, targetType);
-                return this;
-            }
-            catch (Exception)
-            {
-                return null;
             }
         }
 
