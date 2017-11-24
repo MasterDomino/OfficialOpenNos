@@ -296,8 +296,11 @@ namespace OpenNos.Handler
                     foreach (ItemInstanceDTO equipmentEntry in inventory)
                     {
                         // explicit load of iteminstance
-                        WearableInstance currentInstance = (WearableInstance)ItemInstance.CastItemInstanceFromDTO(equipmentEntry);
-                        equipment[(short)currentInstance.Item.EquipmentSlot] = currentInstance;
+                        WearableInstance currentInstance = WearableInstance.InstanceFromDTO(equipmentEntry);
+                        if (currentInstance != null)
+                        {
+                            equipment[(short)currentInstance.Item.EquipmentSlot] = currentInstance;
+                        }
                     }
                     string petlist = string.Empty;
                     List<MateDTO> mates = DAOFactory.MateDAO.LoadByCharacterId(character.CharacterId).ToList();
@@ -322,7 +325,8 @@ namespace OpenNos.Handler
         {
             try
             {
-                if (Session?.Account != null && !Session.HasSelectedCharacter && (DAOFactory.CharacterDAO.LoadBySlot(Session.Account.AccountId, selectPacket.Slot) is Character character))
+                Character character = new Character(DAOFactory.CharacterDAO.LoadBySlot(Session.Account.AccountId, selectPacket.Slot));
+                if (Session?.Account != null && !Session.HasSelectedCharacter && character != null)
                 {
                     character.Initialize();
                     if (Session.Account.Authority > AuthorityType.User)
@@ -357,8 +361,10 @@ namespace OpenNos.Handler
                     Session.Character.GenerateMiniland();
                     DAOFactory.MateDAO.LoadByCharacterId(Session.Character.CharacterId).ToList().ForEach(s =>
                     {
-                        Mate mate = (Mate)s;
-                        mate.Owner = Session.Character;
+                        Mate mate = new Mate(s)
+                        {
+                            Owner = Session.Character
+                        };
                         mate.GeneateMateTransportId();
                         mate.Monster = ServerManager.Instance.GetNpc(s.NpcMonsterVNum);
                         Session.Character.Mates.Add(mate);

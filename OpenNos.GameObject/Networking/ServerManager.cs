@@ -49,6 +49,7 @@ namespace OpenNos.GameObject
         public bool ShutdownStop;
 
         private static readonly ConcurrentBag<Card> _cards = new ConcurrentBag<Card>();
+
         private static readonly ConcurrentBag<Item> _items = new ConcurrentBag<Item>();
 
         private static readonly ConcurrentDictionary<Guid, MapInstance> _mapinstances = new ConcurrentDictionary<Guid, MapInstance>();
@@ -58,12 +59,17 @@ namespace OpenNos.GameObject
         private static readonly ConcurrentBag<NpcMonster> _npcs = new ConcurrentBag<NpcMonster>();
 
         private static readonly CryptoRandom _random = new CryptoRandom();
+
         private static readonly int _seed = Environment.TickCount;
+
         private static readonly ConcurrentBag<Skill> _skills = new ConcurrentBag<Skill>();
+
         private static ServerManager _instance;
+
         private List<DropDTO> _generalDrops;
 
         private bool _inRelationRefreshMode;
+
         private long _lastGroupId;
 
         private ThreadSafeSortedList<short, List<MapNpc>> _mapNpcs;
@@ -73,7 +79,9 @@ namespace OpenNos.GameObject
         private ThreadSafeSortedList<short, List<NpcMonsterSkill>> _monsterSkills;
 
         private ThreadSafeSortedList<int, RecipeListDTO> _recipeLists;
+
         private ThreadSafeSortedList<short, Recipe> _recipes;
+
         private ThreadSafeSortedList<int, List<ShopItemDTO>> _shopItems;
 
         private ThreadSafeSortedList<int, Shop> _shops;

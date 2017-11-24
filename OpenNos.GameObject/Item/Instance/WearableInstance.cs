@@ -47,6 +47,17 @@ namespace OpenNos.GameObject
         {
         }
 
+        public static WearableInstance InstanceFromDTO(ItemInstanceDTO input)
+        {
+            WearableInstance inv = null;
+            Type t = input.GetType();
+            if (t == typeof(WearableInstance))
+            {
+                inv = new WearableInstance((WearableInstanceDTO)input);
+            }
+            return inv;
+        }
+
         public WearableInstance(WearableInstanceDTO input)
         {
             Ammo = input.Ammo;
@@ -270,7 +281,7 @@ namespace OpenNos.GameObject
 
         public void OptionItem(ClientSession session, short cellonVNum)
         {
-            if(EquipmentSerialId == Guid.Empty)
+            if (EquipmentSerialId == Guid.Empty)
             {
                 EquipmentSerialId = Guid.NewGuid();
             }

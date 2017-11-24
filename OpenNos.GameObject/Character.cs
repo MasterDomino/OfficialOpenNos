@@ -70,6 +70,80 @@ namespace OpenNos.GameObject
             CellonOptions = new ThreadSafeGenericList<CellonOptionDTO>();
         }
 
+        public Character(CharacterDTO input)
+        {
+            AccountId = input.AccountId;
+            Act4Dead = input.Act4Dead;
+            Act4Kill = input.Act4Kill;
+            Act4Points = input.Act4Points;
+            ArenaWinner = input.ArenaWinner;
+            Biography = input.Biography;
+            BuffBlocked = input.BuffBlocked;
+            CharacterId = input.CharacterId;
+            Class = input.Class;
+            Compliment = input.Compliment;
+            Dignity = input.Dignity;
+            EmoticonsBlocked = input.EmoticonsBlocked;
+            ExchangeBlocked = input.ExchangeBlocked;
+            Faction = input.Faction;
+            FamilyRequestBlocked = input.FamilyRequestBlocked;
+            FriendRequestBlocked = input.FriendRequestBlocked;
+            Gender = input.Gender;
+            Gold = input.Gold;
+            GoldBank = input.GoldBank;
+            GroupRequestBlocked = input.GroupRequestBlocked;
+            HairColor = input.HairColor;
+            HairStyle = input.HairStyle;
+            HeroChatBlocked = input.HeroChatBlocked;
+            HeroLevel = input.HeroLevel;
+            HeroXp = input.HeroXp;
+            Hp = input.Hp;
+            HpBlocked = input.HpBlocked;
+            JobLevel = input.JobLevel;
+            JobLevelXp = input.JobLevelXp;
+            Level = input.Level;
+            LevelXp = input.LevelXp;
+            MapId = input.MapId;
+            MapX = input.MapX;
+            MapY = input.MapY;
+            MasterPoints = input.MasterPoints;
+            MasterTicket = input.MasterTicket;
+            MaxMateCount = input.MaxMateCount;
+            MinilandInviteBlocked = input.MinilandInviteBlocked;
+            MinilandMessage = input.MinilandMessage;
+            MinilandPoint = input.MinilandPoint;
+            MinilandState = input.MinilandState;
+            MouseAimLock = input.MouseAimLock;
+            Mp = input.Mp;
+            Name = input.Name;
+            QuickGetUp = input.QuickGetUp;
+            RagePoint = input.RagePoint;
+            Reputation = input.Reputation;
+            Slot = input.Slot;
+            SpAdditionPoint = input.SpAdditionPoint;
+            SpPoint = input.SpPoint;
+            State = input.State;
+            TalentLose = input.TalentLose;
+            TalentSurrender = input.TalentSurrender;
+            TalentWin = input.TalentWin;
+            WhisperBlocked = input.WhisperBlocked;
+            GroupSentRequestCharacterIds = new List<long>();
+            FamilyInviteCharacters = new List<long>();
+            TradeRequests = new List<long>();
+            FriendRequestCharacters = new List<long>();
+            StaticBonusList = new List<StaticBonusDTO>();
+            MinilandObjects = new List<MinilandObject>();
+            Mates = new List<Mate>();
+            LastMonsterAggro = DateTime.Now;
+            LastPulse = DateTime.Now;
+            MTListTargetQueue = new ConcurrentStack<MTListHitTarget>();
+            EquipmentBCards = new ThreadSafeGenericList<BCard>();
+            MeditationDictionary = new Dictionary<short, DateTime>();
+            Buff = new ThreadSafeSortedList<short, Buff>();
+            BuffObservables = new ThreadSafeSortedList<short, IDisposable>();
+            CellonOptions = new ThreadSafeGenericList<CellonOptionDTO>();
+        }
+
         #endregion
 
         #region Properties
@@ -3165,8 +3239,8 @@ namespace OpenNos.GameObject
             foreach (ItemInstanceDTO inventory in inventories)
             {
                 inventory.CharacterId = CharacterId;
-                Inventory[inventory.Id] = ItemInstance.CastItemInstanceFromDTO(inventory);
-                if (Inventory[inventory.Id] is WearableInstance wearable && wearable.EquipmentSerialId == Guid.Empty)
+                WearableInstance wearable = new WearableInstance(inventory.Id);
+                if (wearable !=null && wearable.EquipmentSerialId == Guid.Empty)
                 {
                     wearable.EquipmentSerialId = Guid.NewGuid();
                 }
@@ -3201,7 +3275,7 @@ namespace OpenNos.GameObject
             {
                 if (!Skills.ContainsKey(characterskill.SkillVNum))
                 {
-                    Skills[characterskill.SkillVNum] = characterskill as CharacterSkill;
+                    Skills[characterskill.SkillVNum] = new CharacterSkill(characterskill);
                 }
             }
         }

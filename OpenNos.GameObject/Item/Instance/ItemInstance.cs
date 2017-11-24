@@ -73,23 +73,27 @@ namespace OpenNos.GameObject
         public static ItemInstance CastItemInstanceFromDTO(ItemInstanceDTO inventory)
         {
             ItemInstance inv = null;
-            Type t = inventory.GetType();
-            if (t == typeof(BoxItemDTO))
+            Item item = ServerManager.Instance.GetItem(inventory.ItemVNum);
+            switch (item.ItemType)
             {
-                inv = new BoxInstance((BoxItemDTO)inventory);
-            }
-            else if (t == typeof(SpecialistInstanceDTO))
-            {
-                inv = new SpecialistInstance((SpecialistInstanceDTO)inventory);
+                case ItemType.Armor:
+                case ItemType.Jewelery:
+                case ItemType.Fashion:
+                case ItemType.Weapon:
+                    inv = new WearableInstance((WearableInstanceDTO)inventory);
+                    break;
 
-            }
-            else if (t == typeof(WearableInstanceDTO))
-            {
-                inv = new WearableInstance((WearableInstanceDTO)inventory);
-            }
-            else
-            {
-                inv = new ItemInstance(inventory);
+                case ItemType.Box:
+                    inv = new BoxInstance((BoxItemDTO)inventory);
+                    break;
+
+                case ItemType.Specialist:
+                    inv = new SpecialistInstance((SpecialistInstanceDTO)inventory);
+                    break;
+
+                default:
+                    inv = new ItemInstance(inventory);
+                    break;
             }
             return inv;
         }

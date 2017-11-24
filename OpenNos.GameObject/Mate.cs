@@ -36,6 +36,29 @@ namespace OpenNos.GameObject
         {
         }
 
+        public Mate(MateDTO input)
+        {
+            Attack = input.Attack;
+            CanPickUp = input.CanPickUp;
+            CharacterId = input.CharacterId;
+            Defence = input.Defence;
+            Direction = input.Direction;
+            Experience = input.Experience;
+            Hp = input.Hp;
+            IsSummonable = input.IsSummonable;
+            IsTeamMember = input.IsTeamMember;
+            Level = input.Level;
+            Loyalty = input.Loyalty;
+            MapX = input.MapX;
+            MapY = input.MapY;
+            MateId = input.MateId;
+            MateType = input.MateType;
+            Mp = input.Mp;
+            Name = input.Name;
+            NpcMonsterVNum = input.NpcMonsterVNum;
+            Skin = input.Skin;
+        }
+
         public Mate(Character owner, NpcMonster npcMonster, byte level, MateType mateType)
         {
             NpcMonsterVNum = npcMonster.NpcMonsterVNum;
@@ -121,9 +144,6 @@ namespace OpenNos.GameObject
         #endregion
 
         //TODO: get proper Defense
-
-        //TODO: get proper Defense
-
         #region Methods
 
         public void GeneateMateTransportId()
