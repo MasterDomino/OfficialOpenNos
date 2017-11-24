@@ -207,7 +207,7 @@ namespace OpenNos.Handler
                 Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[AddShellEffect]Slot: {addShellEffectPacket.Slot} EffectLevel: {addShellEffectPacket.EffectLevel} Effect: {addShellEffectPacket.Effect} Value: {addShellEffectPacket.Value}");
                 try
                 {
-                    WearableInstance instance = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>(addShellEffectPacket.Slot, InventoryType.Equipment);
+                    ItemInstance instance = Session.Character.Inventory.LoadBySlotAndType(addShellEffectPacket.Slot, InventoryType.Equipment);
                     if (instance != null)
                     {
                         instance.ShellEffects.Add(new ShellEffectDTO() { EffectLevel = (ShellEffectLevelType)addShellEffectPacket.EffectLevel, Effect = addShellEffectPacket.Effect, Value = addShellEffectPacket.Value, EquipmentSerialId = instance.EquipmentSerialId });
@@ -646,7 +646,7 @@ namespace OpenNos.Handler
         /// <param name="changeFairyLevelPacket"></param>
         public void ChangeFairyLevel(ChangeFairyLevelPacket changeFairyLevelPacket)
         {
-            WearableInstance fairy = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.Fairy, InventoryType.Wear);
+            ItemInstance fairy = Session.Character.Inventory.LoadBySlotAndType((byte)EquipmentType.Fairy, InventoryType.Wear);
             if (changeFairyLevelPacket != null)
             {
                 Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[FLvl]FairyLevel: {changeFairyLevelPacket.FairyLevel}");
@@ -854,7 +854,7 @@ namespace OpenNos.Handler
             {
                 Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[SPLvl]SpecialistLevel: {changeSpecialistLevelPacket.SpecialistLevel}");
 
-                SpecialistInstance sp = Session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear);
+                ItemInstance sp = Session.Character.Inventory.LoadBySlotAndType((byte)EquipmentType.Sp, InventoryType.Wear);
                 if (sp != null && Session.Character.UseSp)
                 {
                     if (changeSpecialistLevelPacket.SpecialistLevel <= 255 && changeSpecialistLevelPacket.SpecialistLevel > 0)
@@ -1166,7 +1166,7 @@ namespace OpenNos.Handler
                     ItemInstance inv = Session.Character.Inventory.AddNewToInventory(vnum, amount, Rare: rare, Upgrade: upgrade, Design: design).FirstOrDefault();
                     if (inv != null)
                     {
-                        WearableInstance wearable = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>(inv.Slot, inv.Type);
+                        ItemInstance wearable = Session.Character.Inventory.LoadBySlotAndType(inv.Slot, inv.Type);
                         if (wearable != null)
                         {
                             switch (wearable.Item.EquipmentSlot)
@@ -2120,7 +2120,7 @@ namespace OpenNos.Handler
 
                 if (rarifyPacket.Slot >= 0)
                 {
-                    WearableInstance wearableInstance = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>(rarifyPacket.Slot, 0);
+                    ItemInstance wearableInstance = Session.Character.Inventory.LoadBySlotAndType(rarifyPacket.Slot, 0);
                     wearableInstance?.RarifyItem(Session, rarifyPacket.Mode, rarifyPacket.Protection);
                 }
             }
@@ -2320,7 +2320,7 @@ namespace OpenNos.Handler
 
                 if (setPerfectionPacket.Slot >= 0)
                 {
-                    SpecialistInstance specialistInstance = Session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>(setPerfectionPacket.Slot, 0);
+                    ItemInstance specialistInstance = Session.Character.Inventory.LoadBySlotAndType(setPerfectionPacket.Slot, 0);
 
                     if (specialistInstance != null)
                     {
@@ -3059,7 +3059,7 @@ namespace OpenNos.Handler
 
                 if (upgradePacket.Slot >= 0)
                 {
-                    WearableInstance wearableInstance = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>(upgradePacket.Slot, 0);
+                    ItemInstance wearableInstance = Session.Character.Inventory.LoadBySlotAndType(upgradePacket.Slot, 0);
                     wearableInstance?.UpgradeItem(Session, upgradePacket.Mode, upgradePacket.Protection, true);
                 }
             }
@@ -3145,7 +3145,7 @@ namespace OpenNos.Handler
             {
                 Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[WigColor]Color: {wigColorPacket.Color}");
 
-                WearableInstance wig = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.Hat, InventoryType.Wear);
+                ItemInstance wig = Session.Character.Inventory.LoadBySlotAndType((byte)EquipmentType.Hat, InventoryType.Wear);
                 if (wig != null)
                 {
                     wig.Design = wigColorPacket.Color;

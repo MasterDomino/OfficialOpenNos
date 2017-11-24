@@ -94,7 +94,7 @@ namespace OpenNos.GameObject.Event.GAMES
                     if (sess.Character.UseSp)
                     {
                         sess.Character.LastSp = (DateTime.Now - Process.GetCurrentProcess().StartTime.AddSeconds(-50)).TotalSeconds;
-                        SpecialistInstance specialist = sess.Character.Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear);
+                        ItemInstance specialist = sess.Character.Inventory.LoadBySlotAndType((byte)EquipmentType.Sp, InventoryType.Wear);
                         if (specialist != null)
                         {
                             removeSP(sess, specialist.ItemVNum);

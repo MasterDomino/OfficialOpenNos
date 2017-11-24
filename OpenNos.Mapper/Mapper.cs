@@ -10,7 +10,7 @@ namespace OpenNos.Mapper
 
         private BCardMapper _bCardMapper;
 
-        private BoxItemMapper _boxItemMapper;
+        private ItemInstanceMapper _boxItemMapper;
 
         private CardMapper _cardMapper;
 
@@ -94,17 +94,11 @@ namespace OpenNos.Mapper
 
         private SkillMapper _skillMapper;
 
-        private SpecialistInstanceMapper _specialistInstanceMapper;
-
         private StaticBonusMapper _staticBonusMapper;
 
         private StaticBuffMapper _staticBuffMapper;
 
         private TeleporterMapper _teleporterMapper;
-
-        private UsableInstanceMapper _usableInstanceMapper;
-
-        private WearableInstanceMapper _wearableInstanceMapper;
 
         private static Mapper _instance;
 
@@ -113,7 +107,7 @@ namespace OpenNos.Mapper
             _accountMapper = new AccountMapper();
             _bazaarItemMapper = new BazaarItemMapper();
             _bCardMapper = new BCardMapper();
-            _boxItemMapper = new BoxItemMapper();
+            _boxItemMapper = new ItemInstanceMapper();
             _cardMapper = new CardMapper();
             _cellonOptionMapper = new CellonOptionMapper();
             _characterMapper = new CharacterMapper();
@@ -155,12 +149,9 @@ namespace OpenNos.Mapper
             _shopMapper = new ShopMapper();
             _shopSkillMapper = new ShopSkillMapper();
             _skillMapper = new SkillMapper();
-            _specialistInstanceMapper = new SpecialistInstanceMapper();
             _staticBonusMapper = new StaticBonusMapper();
             _staticBuffMapper = new StaticBuffMapper();
             _teleporterMapper = new TeleporterMapper();
-            _usableInstanceMapper = new UsableInstanceMapper();
-            _wearableInstanceMapper = new WearableInstanceMapper();
         }
 
         public static Mapper Instance => _instance ?? (_instance = new Mapper());
@@ -171,7 +162,7 @@ namespace OpenNos.Mapper
 
         public BCardMapper BCardMapper => _bCardMapper;
 
-        public BoxItemMapper BoxItemMapper => _boxItemMapper;
+        public ItemInstanceMapper BoxItemMapper => _boxItemMapper;
 
         public CardMapper CardMapper => _cardMapper;
 
@@ -255,16 +246,10 @@ namespace OpenNos.Mapper
 
         public SkillMapper SkillMapper => _skillMapper;
 
-        public SpecialistInstanceMapper SpecialistInstanceMapper => _specialistInstanceMapper;
-
         public StaticBonusMapper StaticBonusMapper => _staticBonusMapper;
 
         public StaticBuffMapper StaticBuffMapper => _staticBuffMapper;
 
         public TeleporterMapper TeleporterMapper => _teleporterMapper;
-
-        public UsableInstanceMapper UsableInstanceMapper => _usableInstanceMapper;
-
-        public WearableInstanceMapper WearableInstanceMapper => _wearableInstanceMapper;
     }
 }

@@ -41,11 +41,11 @@ namespace OpenNos.GameObject
             {
                 // airwaves - eventitems
                 case 0:
-                    if (inv.Item.ItemType == ItemType.Shell && inv is WearableInstance wearInstance)
+                    if (inv.Item.ItemType == ItemType.Shell)
                     {
-                        if (wearInstance.ShellEffects.Count != 0 && packetsplit?.Length > 9 && byte.TryParse(packetsplit[9], out byte islot))
+                        if (inv.ShellEffects.Count != 0 && packetsplit?.Length > 9 && byte.TryParse(packetsplit[9], out byte islot))
                         {
-                            WearableInstance wearable = session.Character.Inventory.LoadBySlotAndType<WearableInstance>(islot, InventoryType.Equipment);
+                            ItemInstance wearable = session.Character.Inventory.LoadBySlotAndType<ItemInstance>(islot, InventoryType.Equipment);
                             if (wearable != null && (wearable.Item.ItemType == ItemType.Weapon || wearable.Item.ItemType == ItemType.Armor) && wearable.Item.LevelMinimum >= inv.Upgrade && wearable.Rare >= inv.Rare && !wearable.Item.IsHeroic)
                             {
                                 bool weapon = false;
@@ -63,7 +63,7 @@ namespace OpenNos.GameObject
                                 }
                                 if ((wearable.Item.ItemType == ItemType.Weapon && weapon) || (wearable.Item.ItemType == ItemType.Armor && !weapon))
                                 {
-                                    if (wearInstance.ShellEffects.Count > 0 && ServerManager.Instance.RandomNumber() < 50)
+                                    if (inv.ShellEffects.Count > 0 && ServerManager.Instance.RandomNumber() < 50)
                                     {
                                         session.Character.DeleteItemByItemInstanceId(inv.Id);
                                         session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_APPLY_FAIL"), 0));
@@ -71,7 +71,7 @@ namespace OpenNos.GameObject
                                     }
                                     wearable.ShellEffects.Clear();
                                     DAOFactory.ShellEffectDAO.DeleteByEquipmentSerialId(wearable.EquipmentSerialId);
-                                    wearable.ShellEffects.AddRange(wearInstance.ShellEffects);
+                                    wearable.ShellEffects.AddRange(inv.ShellEffects);
                                     if(wearable.EquipmentSerialId == Guid.Empty)
                                     {
                                         wearable.EquipmentSerialId = Guid.NewGuid();
@@ -271,7 +271,7 @@ namespace OpenNos.GameObject
                 case 30:
                     if (!session.Character.IsVehicled)
                     {
-                        WearableInstance wig = session.Character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.Hat, InventoryType.Wear);
+                        ItemInstance wig = session.Character.Inventory.LoadBySlotAndType((byte)EquipmentType.Hat, InventoryType.Wear);
                         if (wig != null)
                         {
                             wig.Design = (byte)ServerManager.Instance.RandomNumber(0, 15);

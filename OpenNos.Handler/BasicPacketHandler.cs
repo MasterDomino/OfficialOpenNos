@@ -374,8 +374,7 @@ namespace OpenNos.Handler
                         {
                             if (newInv.Rare != 0)
                             {
-                                WearableInstance wearable = newInv as WearableInstance;
-                                wearable?.SetRarityPoint();
+                                newInv?.SetRarityPoint();
                             }
 
                             Logger.LogUserEvent("PARCEL_GET", Session.GenerateIdentity(), $"IIId: {newInv.Id} ItemVNum: {newInv.ItemVNum} Amount: {mail.AttachmentAmount} Sender: {mail.SenderId}");
@@ -762,7 +761,7 @@ namespace OpenNos.Handler
                 {
                     if (guriPacket.Argument == 0 && short.TryParse(guriPacket.User.ToString(), out short slot))
                     {
-                        WearableInstance shell = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>(slot, InventoryType.Equipment);
+                        ItemInstance shell = Session.Character.Inventory.LoadBySlotAndType(slot, InventoryType.Equipment);
                         if (shell?.ShellEffects.Count == 0 && shell.Upgrade > 0 && shell.Rare > 0 && Session.Character.Inventory.CountItem(1429) >= ((shell.Upgrade / 10) + shell.Rare))
                         {
                             shell.SetShellEffects();
@@ -776,7 +775,7 @@ namespace OpenNos.Handler
                 {
                     if (guriPacket.Argument == 8023 && short.TryParse(guriPacket.User.ToString(), out short slot))
                     {
-                        ItemInstance box = Session.Character.Inventory.LoadBySlotAndType<BoxInstance>(slot, InventoryType.Equipment);
+                        ItemInstance box = Session.Character.Inventory.LoadBySlotAndType(slot, InventoryType.Equipment);
                         if (box != null)
                         {
                             box.Item.Use(Session, ref box, 1, new string[] { guriPacket.Data.ToString() });
@@ -1057,7 +1056,7 @@ namespace OpenNos.Handler
                     if (short.TryParse(guriPacket.Value, out short mountSlot) && short.TryParse(guriPacket.User.ToString(), out short pearlSlot))
                     {
                         ItemInstance mount = Session.Character.Inventory.LoadBySlotAndType<ItemInstance>(mountSlot, InventoryType.Main);
-                        BoxInstance pearl = Session.Character.Inventory.LoadBySlotAndType<BoxInstance>(pearlSlot, InventoryType.Equipment);
+                        ItemInstance pearl = Session.Character.Inventory.LoadBySlotAndType(pearlSlot, InventoryType.Equipment);
                         if (mount != null && pearl != null)
                         {
                             pearl.HoldingVNum = mount.ItemVNum;
@@ -1069,8 +1068,8 @@ namespace OpenNos.Handler
                 {
                     if (short.TryParse(guriPacket.Value, out short mountSlot) && short.TryParse(guriPacket.User.ToString(), out short pearlSlot))
                     {
-                        WearableInstance fairy = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>(mountSlot, InventoryType.Equipment);
-                        BoxInstance pearl = Session.Character.Inventory.LoadBySlotAndType<BoxInstance>(pearlSlot, InventoryType.Equipment);
+                        ItemInstance fairy = Session.Character.Inventory.LoadBySlotAndType(mountSlot, InventoryType.Equipment);
+                        ItemInstance pearl = Session.Character.Inventory.LoadBySlotAndType(pearlSlot, InventoryType.Equipment);
                         if (fairy != null && pearl != null)
                         {
                             pearl.HoldingVNum = fairy.ItemVNum;
@@ -1095,7 +1094,7 @@ namespace OpenNos.Handler
                     {
                         if (Session.Character.UseSp)
                         {
-                            SpecialistInstance specialistInstance = Session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear);
+                            ItemInstance specialistInstance = Session.Character.Inventory.LoadBySlotAndType((byte)EquipmentType.Sp, InventoryType.Wear);
                             if (specialistInstance != null)
                             {
                                 specialistInstance.SlDamage = 0;
@@ -1688,7 +1687,7 @@ namespace OpenNos.Handler
                         //ServerManager.Instance.Kick(Session.Character.Name);
                         return;
                     }
-                    WearableInstance headWearable = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.Hat, InventoryType.Wear);
+                    ItemInstance headWearable = Session.Character.Inventory.LoadBySlotAndType((byte)EquipmentType.Hat, InventoryType.Wear);
                     byte color = headWearable?.Item.IsColored == true ? (byte)headWearable.Design : (byte)Session.Character.HairColor;
                     Mail mailcopy = new Mail
                     {
@@ -1897,7 +1896,7 @@ namespace OpenNos.Handler
             Session.SendPacket(Session.Character.GenerateFd());
             Session.SendPacket("rage 0 250000");
             Session.SendPacket("rank_cool 0 0 18000");
-            SpecialistInstance specialistInstance = Session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>(8, InventoryType.Wear);
+            ItemInstance specialistInstance = Session.Character.Inventory.LoadBySlotAndType(8, InventoryType.Wear);
             StaticBonusDTO medal = Session.Character.StaticBonusList.Find(s => s.StaticBonusType == StaticBonusType.BazaarMedalGold || s.StaticBonusType == StaticBonusType.BazaarMedalSilver);
             if (medal != null)
             {

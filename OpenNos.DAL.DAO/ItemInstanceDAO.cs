@@ -319,42 +319,10 @@ namespace OpenNos.DAL.DAO
                 output = null;
                 return false;
             }
-            Type t = input.GetType();
-            if (t == typeof(BoxInstance))
+            Mapper.Mapper.Instance.ItemInstanceMapper.ToItemInstanceDTO(input, output);
+            if (output.EquipmentSerialId == Guid.Empty)
             {
-                output = new BoxItemDTO();
-                Mapper.Mapper.Instance.BoxItemMapper.ToBoxItemDTO((BoxInstance)input, (BoxItemDTO)output);
-                if (((BoxItemDTO)output).EquipmentSerialId == Guid.Empty)
-                {
-                    ((BoxItemDTO)output).EquipmentSerialId = Guid.NewGuid();
-                }
-            }
-            else if (t == typeof(SpecialistInstance))
-            {
-                output = new SpecialistInstanceDTO();
-                Mapper.Mapper.Instance.SpecialistInstanceMapper.ToSpecialistInstanceDTO((SpecialistInstance)input, (SpecialistInstanceDTO)output);
-                if (((SpecialistInstanceDTO)output).EquipmentSerialId == Guid.Empty)
-                {
-                    ((SpecialistInstanceDTO)output).EquipmentSerialId = Guid.NewGuid();
-                }
-            }
-            else if (t == typeof(WearableInstance))
-            {
-                output = new WearableInstanceDTO();
-                Mapper.Mapper.Instance.WearableInstanceMapper.ToWearableInstanceDTO((WearableInstance)input, (WearableInstanceDTO)output);
-                if (((WearableInstanceDTO)output).EquipmentSerialId == Guid.Empty)
-                {
-                    ((WearableInstanceDTO)output).EquipmentSerialId = Guid.NewGuid();
-                }
-            }
-            else if (t == typeof(UsableInstance))
-            {
-                output = new UsableInstanceDTO();
-                Mapper.Mapper.Instance.UsableInstanceMapper.ToUsableInstanceDTO((UsableInstance)input, (UsableInstanceDTO)output);
-            }
-            else
-            {
-                Mapper.Mapper.Instance.ItemInstanceMapper.ToItemInstanceDTO(input, output);
+                output.EquipmentSerialId = Guid.NewGuid();
             }
             return true;
         }
@@ -366,54 +334,10 @@ namespace OpenNos.DAL.DAO
                 output = null;
                 return false;
             }
-            Type t = input.GetType();
-            if (t == typeof(BoxItemDTO))
+            Mapper.Mapper.Instance.ItemInstanceMapper.ToItemInstance(input, output);
+            if (output.EquipmentSerialId == Guid.Empty)
             {
-                if (!exists)
-                {
-                    output = new BoxInstance();
-                }
-                Mapper.Mapper.Instance.BoxItemMapper.ToBoxInstance((BoxItemDTO)input, (BoxInstance)output);
-                if (((BoxInstance)output).EquipmentSerialId == Guid.Empty)
-                {
-                    ((BoxInstance)output).EquipmentSerialId = Guid.NewGuid();
-                }
-            }
-            else if (t == typeof(SpecialistInstanceDTO))
-            {
-                if (!exists)
-                {
-                    output = new SpecialistInstance();
-                }
-                Mapper.Mapper.Instance.SpecialistInstanceMapper.ToSpecialistInstance((SpecialistInstanceDTO)input, (SpecialistInstance)output);
-                if (((SpecialistInstance)output).EquipmentSerialId == Guid.Empty)
-                {
-                    ((SpecialistInstance)output).EquipmentSerialId = Guid.NewGuid();
-                }
-            }
-            else if (t == typeof(WearableInstanceDTO))
-            {
-                if (!exists)
-                {
-                    output = new WearableInstance();
-                }
-                Mapper.Mapper.Instance.WearableInstanceMapper.ToWearableInstance((WearableInstanceDTO)input, (WearableInstance)output);
-                if (((WearableInstance)output).EquipmentSerialId == Guid.Empty)
-                {
-                    ((WearableInstance)output).EquipmentSerialId = Guid.NewGuid();
-                }
-            }
-            else if (t == typeof(UsableInstanceDTO))
-            {
-                if (!exists)
-                {
-                    output = new UsableInstance();
-                }
-                Mapper.Mapper.Instance.UsableInstanceMapper.ToUsableInstance((UsableInstanceDTO)input, (UsableInstance)output);
-            }
-            else
-            {
-                Mapper.Mapper.Instance.ItemInstanceMapper.ToItemInstance(input, output);
+                output.EquipmentSerialId = Guid.NewGuid();
             }
             return true;
         }

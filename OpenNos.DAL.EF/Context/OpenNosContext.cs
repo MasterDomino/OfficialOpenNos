@@ -138,12 +138,6 @@ namespace OpenNos.DAL.EF
             // remove automatic pluralization
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
-            // build TPH tables for inheritance
-            modelBuilder.Entity<ItemInstance>()
-                 .Map<WearableInstance>(m => m.Requires("WearableInstance"))
-                 .Map<SpecialistInstance>(m => m.Requires("SpecialistInstance"))
-                 .Map<UsableInstance>(m => m.Requires("UsableInstance"));
-
             modelBuilder.Entity<Account>()
                 .Property(e => e.Password)
                 .IsUnicode(false);

@@ -814,7 +814,7 @@ namespace OpenNos.GameObject
                 if (chara != null)
                 {
                     item.Owner = chara.Name;
-                    item.Item = ItemInstance.CastItemInstanceFromDTO(DAOFactory.IteminstanceDAO.LoadById(bazaarItem.ItemInstanceId));
+                    item.Item = new ItemInstance(DAOFactory.IteminstanceDAO.LoadById(bazaarItem.ItemInstanceId));
                 }
                 BazaarList.Add(item);
             });
@@ -1536,7 +1536,7 @@ namespace OpenNos.GameObject
                     foreach (ItemInstanceDTO inventory in DAOFactory.IteminstanceDAO.LoadByCharacterId(familyCharacter.CharacterId).Where(s => s.Type == InventoryType.FamilyWareHouse).ToList())
                     {
                         inventory.CharacterId = familyCharacter.CharacterId;
-                        family.Warehouse[inventory.Id] = ItemInstance.CastItemInstanceFromDTO(inventory);
+                        family.Warehouse[inventory.Id] = new ItemInstance(inventory);
                     }
                 }
                 family.FamilyLogs = DAOFactory.FamilyLogDAO.LoadByFamilyId(family.FamilyId).ToList();
@@ -1614,7 +1614,7 @@ namespace OpenNos.GameObject
                         BazaarList.Remove(bzlink);
                         bzlink.BazaarItem = bzdto;
                         bzlink.Owner = chara.Name;
-                        bzlink.Item = ItemInstance.CastItemInstanceFromDTO(DAOFactory.IteminstanceDAO.LoadById(bzdto.ItemInstanceId));
+                        bzlink.Item = new ItemInstance(DAOFactory.IteminstanceDAO.LoadById(bzdto.ItemInstanceId));
                         BazaarList.Add(bzlink);
                     }
                     else
@@ -1626,7 +1626,7 @@ namespace OpenNos.GameObject
                         if (chara != null)
                         {
                             item.Owner = chara.Name;
-                            item.Item = ItemInstance.CastItemInstanceFromDTO(DAOFactory.IteminstanceDAO.LoadById(bzdto.ItemInstanceId));
+                            item.Item = new ItemInstance(DAOFactory.IteminstanceDAO.LoadById(bzdto.ItemInstanceId));
                         }
                         BazaarList.Add(item);
                     }
@@ -1668,7 +1668,7 @@ namespace OpenNos.GameObject
                         foreach (ItemInstanceDTO inventory in DAOFactory.IteminstanceDAO.LoadByCharacterId(familyCharacter.CharacterId).Where(s => s.Type == InventoryType.FamilyWareHouse).ToList())
                         {
                             inventory.CharacterId = familyCharacter.CharacterId;
-                            newFam.Warehouse[inventory.Id] = ItemInstance.CastItemInstanceFromDTO(inventory);
+                            newFam.Warehouse[inventory.Id] = new ItemInstance(inventory);
                         }
                     }
                     newFam.FamilyLogs = DAOFactory.FamilyLogDAO.LoadByFamilyId(famdto.FamilyId).ToList();

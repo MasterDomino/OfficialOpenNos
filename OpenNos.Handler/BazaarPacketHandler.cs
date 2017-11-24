@@ -58,7 +58,7 @@ namespace OpenNos.Handler
                     if (DAOFactory.CharacterDAO.LoadById(bz.SellerId) != null)
                     {
                         bzcree.Owner = DAOFactory.CharacterDAO.LoadById(bz.SellerId)?.Name;
-                        bzcree.Item = ItemInstance.CastItemInstanceFromDTO(DAOFactory.IteminstanceDAO.LoadById(bz.ItemInstanceId));
+                        bzcree.Item = new ItemInstance(DAOFactory.IteminstanceDAO.LoadById(bz.ItemInstanceId));
                     }
                     else
                     {
@@ -131,7 +131,7 @@ namespace OpenNos.Handler
             BazaarItemDTO bz = DAOFactory.BazaarItemDAO.LoadAll().FirstOrDefault(s => s.BazaarItemId == cScalcPacket.BazaarId);
             if (bz != null)
             {
-                ItemInstance itemInstance = ItemInstance.CastItemInstanceFromDTO(DAOFactory.IteminstanceDAO.LoadById(bz.ItemInstanceId));
+                ItemInstance itemInstance = new ItemInstance(DAOFactory.IteminstanceDAO.LoadById(bz.ItemInstanceId));
                 if (itemInstance == null || bz.SellerId != Session.Character.CharacterId)
                 {
                     return;

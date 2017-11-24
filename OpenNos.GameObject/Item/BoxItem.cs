@@ -42,7 +42,7 @@ namespace OpenNos.GameObject
                     {
                         if (packetsplit.Length == 9)
                         {
-                            BoxInstance box = session.Character.Inventory.LoadBySlotAndType<BoxInstance>(inv.Slot, InventoryType.Equipment);
+                            ItemInstance box = session.Character.Inventory.LoadBySlotAndType<ItemInstance>(inv.Slot, InventoryType.Equipment);
                             if (box != null)
                             {
                                 if (box.Item.ItemSubType == 3)
@@ -63,7 +63,7 @@ namespace OpenNos.GameObject
                     else
                     {
                         //u_i 2 2000000 0 21 0 0
-                        BoxInstance box = session.Character.Inventory.LoadBySlotAndType<BoxInstance>(inv.Slot, InventoryType.Equipment);
+                        ItemInstance box = session.Character.Inventory.LoadBySlotAndType<ItemInstance>(inv.Slot, InventoryType.Equipment);
                         if (box != null)
                         {
                             if (box.Item.ItemSubType == 3)
@@ -179,7 +179,7 @@ namespace OpenNos.GameObject
                 case 69:
                     if (EffectValue == 1 || EffectValue == 2)
                     {
-                        BoxInstance box = session.Character.Inventory.LoadBySlotAndType<BoxInstance>(inv.Slot, InventoryType.Equipment);
+                        ItemInstance box = session.Character.Inventory.LoadBySlotAndType<ItemInstance>(inv.Slot, InventoryType.Equipment);
                         if (box != null)
                         {
                             if (box.HoldingVNum == 0)
@@ -192,7 +192,7 @@ namespace OpenNos.GameObject
                                 if (newInv.Count > 0)
                                 {
                                     ItemInstance itemInstance = newInv[0];
-                                    SpecialistInstance specialist = session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>(itemInstance.Slot, itemInstance.Type);
+                                    ItemInstance specialist = session.Character.Inventory.LoadBySlotAndType<ItemInstance>(itemInstance.Slot, itemInstance.Type);
                                     if (specialist != null)
                                     {
                                         specialist.SlDamage = box.SlDamage;
@@ -233,7 +233,7 @@ namespace OpenNos.GameObject
                     }
                     if (EffectValue == 3)
                     {
-                        BoxInstance box = session.Character.Inventory.LoadBySlotAndType<BoxInstance>(inv.Slot, InventoryType.Equipment);
+                        ItemInstance box = session.Character.Inventory.LoadBySlotAndType<ItemInstance>(inv.Slot, InventoryType.Equipment);
                         if (box != null)
                         {
                             if (box.HoldingVNum == 0)
@@ -246,7 +246,7 @@ namespace OpenNos.GameObject
                                 if (newInv.Count > 0)
                                 {
                                     ItemInstance itemInstance = newInv[0];
-                                    WearableInstance fairy = session.Character.Inventory.LoadBySlotAndType<WearableInstance>(itemInstance.Slot, itemInstance.Type);
+                                    ItemInstance fairy = session.Character.Inventory.LoadBySlotAndType<ItemInstance>(itemInstance.Slot, itemInstance.Type);
                                     if (fairy != null)
                                     {
                                         fairy.ElementRate = box.ElementRate;
@@ -271,7 +271,7 @@ namespace OpenNos.GameObject
                     }
                     if (EffectValue == 4)
                     {
-                        BoxInstance box = session.Character.Inventory.LoadBySlotAndType<BoxInstance>(inv.Slot, InventoryType.Equipment);
+                        ItemInstance box = session.Character.Inventory.LoadBySlotAndType<ItemInstance>(inv.Slot, InventoryType.Equipment);
                         if (box != null)
                         {
                             if (box.HoldingVNum == 0)

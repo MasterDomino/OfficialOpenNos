@@ -31,7 +31,7 @@ namespace OpenNos.GameObject
             PositionX = character.PositionX;
             PositionY = character.PositionY;
 
-            WearableInstance weapon = null;
+            ItemInstance weapon = null;
 
             if (skill != null)
             {
@@ -46,11 +46,11 @@ namespace OpenNos.GameObject
                             Hitrate = character.DistanceRate;
                             CritChance = character.DistanceCriticalRate;
                             CritRate = character.DistanceCritical;
-                            weapon = character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.SecondaryWeapon, InventoryType.Wear);
+                            weapon = character.Inventory.LoadBySlotAndType((byte)EquipmentType.SecondaryWeapon, InventoryType.Wear);
                         }
                         else
                         {
-                            weapon = character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.MainWeapon, InventoryType.Wear);
+                            weapon = character.Inventory.LoadBySlotAndType((byte)EquipmentType.MainWeapon, InventoryType.Wear);
                         }
                         break;
 
@@ -63,21 +63,21 @@ namespace OpenNos.GameObject
                             Hitrate = character.DistanceRate;
                             CritChance = character.DistanceCriticalRate;
                             CritRate = character.DistanceCritical;
-                            weapon = character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.SecondaryWeapon, InventoryType.Wear);
+                            weapon = character.Inventory.LoadBySlotAndType((byte)EquipmentType.SecondaryWeapon, InventoryType.Wear);
                         }
                         else
                         {
-                            weapon = character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.MainWeapon, InventoryType.Wear);
+                            weapon = character.Inventory.LoadBySlotAndType((byte)EquipmentType.MainWeapon, InventoryType.Wear);
                         }
                         break;
 
                     case 2:
                         AttackType = AttackType.Magical;
-                        weapon = character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.MainWeapon, InventoryType.Wear);
+                        weapon = character.Inventory.LoadBySlotAndType((byte)EquipmentType.MainWeapon, InventoryType.Wear);
                         break;
 
                     case 3:
-                        weapon = character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.MainWeapon, InventoryType.Wear);
+                        weapon = character.Inventory.LoadBySlotAndType((byte)EquipmentType.MainWeapon, InventoryType.Wear);
                         switch (character.Class)
                         {
                             case ClassType.Adventurer:
@@ -102,11 +102,11 @@ namespace OpenNos.GameObject
                             case ClassType.Adventurer:
                             case ClassType.Swordman:
                             case ClassType.Magician:
-                                weapon = character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.MainWeapon, InventoryType.Wear);
+                                weapon = character.Inventory.LoadBySlotAndType((byte)EquipmentType.MainWeapon, InventoryType.Wear);
                                 break;
 
                             case ClassType.Archer:
-                                weapon = character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.SecondaryWeapon, InventoryType.Wear);
+                                weapon = character.Inventory.LoadBySlotAndType((byte)EquipmentType.SecondaryWeapon, InventoryType.Wear);
                                 break;
                         }
                         break;
@@ -114,7 +114,7 @@ namespace OpenNos.GameObject
             }
             else
             {
-                weapon = character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.SecondaryWeapon, InventoryType.Wear);
+                weapon = character.Inventory.LoadBySlotAndType((byte)EquipmentType.SecondaryWeapon, InventoryType.Wear);
                 switch (character.Class)
                 {
                     case ClassType.Adventurer:
@@ -141,7 +141,7 @@ namespace OpenNos.GameObject
                 ShellWeaponEffects = new List<ShellEffectDTO>(weapon.ShellEffects);
             }
 
-            WearableInstance armor = character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.Armor, InventoryType.Wear);
+            ItemInstance armor = character.Inventory.LoadBySlotAndType((byte)EquipmentType.Armor, InventoryType.Wear);
             if (armor != null)
             {
                 DefenseUpgrade = armor.Upgrade;

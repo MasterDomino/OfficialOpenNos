@@ -59,7 +59,7 @@ namespace OpenNos.GameObject
                             switch (inv.ItemVNum)
                             {
                                 case 1219:
-                                    WearableInstance equip = session.Character.Inventory.LoadBySlotAndType<WearableInstance>(SlotEquip, (InventoryType)TypeEquip);
+                                    ItemInstance equip = session.Character.Inventory.LoadBySlotAndType(SlotEquip, (InventoryType)TypeEquip);
                                     if (equip?.IsFixed == true)
                                     {
                                         equip.IsFixed = false;
@@ -72,7 +72,7 @@ namespace OpenNos.GameObject
 
                                 case 1365:
                                 case 9039:
-                                    SpecialistInstance specialist = session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>(SlotEquip, (InventoryType)TypeEquip);
+                                    ItemInstance specialist = session.Character.Inventory.LoadBySlotAndType(SlotEquip, (InventoryType)TypeEquip);
                                     if (specialist?.Rare == -2)
                                     {
                                         specialist.Rare = 0;

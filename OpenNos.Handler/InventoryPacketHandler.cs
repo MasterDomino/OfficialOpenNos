@@ -114,25 +114,25 @@ namespace OpenNos.Handler
         public void EquipmentInfo(EquipmentInfoPacket equipmentInfoPacket)
         {
             bool isNPCShopItem = false;
-            WearableInstance inventory = null;
+            ItemInstance inventory = null;
             switch (equipmentInfoPacket.Type)
             {
                 case 0:
-                    inventory = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>(equipmentInfoPacket.Slot, InventoryType.Wear) ??
-                                Session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>(equipmentInfoPacket.Slot, InventoryType.Wear);
+                    inventory = Session.Character.Inventory.LoadBySlotAndType(equipmentInfoPacket.Slot, InventoryType.Wear) ??
+                                Session.Character.Inventory.LoadBySlotAndType(equipmentInfoPacket.Slot, InventoryType.Wear);
                     break;
 
                 case 1:
-                    inventory = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>(equipmentInfoPacket.Slot, InventoryType.Equipment) ??
-                                Session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>(equipmentInfoPacket.Slot, InventoryType.Equipment) ??
-                                Session.Character.Inventory.LoadBySlotAndType<BoxInstance>(equipmentInfoPacket.Slot, InventoryType.Equipment);
+                    inventory = Session.Character.Inventory.LoadBySlotAndType(equipmentInfoPacket.Slot, InventoryType.Equipment) ??
+                                Session.Character.Inventory.LoadBySlotAndType(equipmentInfoPacket.Slot, InventoryType.Equipment) ??
+                                Session.Character.Inventory.LoadBySlotAndType(equipmentInfoPacket.Slot, InventoryType.Equipment);
                     break;
 
                 case 2:
                     isNPCShopItem = true;
                     if (ServerManager.Instance.GetItem(equipmentInfoPacket.Slot) != null)
                     {
-                        inventory = new WearableInstance(equipmentInfoPacket.Slot, 1);
+                        inventory = new ItemInstance(equipmentInfoPacket.Slot, 1);
                         break;
                     }
                     return;
@@ -140,14 +140,15 @@ namespace OpenNos.Handler
                 case 5:
                     if (Session.Character.ExchangeInfo != null)
                     {
-                        ExchangeInfo exch = ServerManager.Instance.GetProperty<ExchangeInfo>(Session.Character.ExchangeInfo.TargetCharacterId, nameof(Character.ExchangeInfo));
-                        if (exch?.ExchangeList?.ElementAtOrDefault(equipmentInfoPacket.Slot) != null)
+                        ClientSession sess = ServerManager.Instance.GetSessionByCharacterId(Session.Character.ExchangeInfo.TargetCharacterId);
+                        if (sess != null)
                         {
-                            Guid id = exch.ExchangeList[equipmentInfoPacket.Slot].Id;
-                            Inventory inv = ServerManager.Instance.GetProperty<Inventory>(Session.Character.ExchangeInfo.TargetCharacterId, nameof(Character.Inventory));
-                            inventory = inv.LoadByItemInstance<WearableInstance>(id) ??
-                                        inv.LoadByItemInstance<SpecialistInstance>(id) ??
-                                        inv.LoadByItemInstance<BoxInstance>(id);
+                            if (sess.Character.ExchangeInfo?.ExchangeList?.ElementAtOrDefault(equipmentInfoPacket.Slot) != null)
+                            {
+                                Guid id = sess.Character.ExchangeInfo.ExchangeList[equipmentInfoPacket.Slot].Id;
+                                Inventory inv = ServerManager.Instance.GetProperty<Inventory>(Session.Character.ExchangeInfo.TargetCharacterId, nameof(Character.Inventory));
+                                inventory = ServerManager.Instance.GetSessionByCharacterId(Session.Character.ExchangeInfo.TargetCharacterId)?.Character.Inventory.GetItemInstanceById(id);
+                            }
                         }
                     }
                     break;
@@ -159,32 +160,18 @@ namespace OpenNos.Handler
                         PersonalShopItem item = shop.Value?.Items.Find(i => i.ShopSlot.Equals(equipmentInfoPacket.Slot));
                         if (item != null)
                         {
-                            if (item.ItemInstance.GetType() == typeof(BoxInstance))
-                            {
-                                inventory = (BoxInstance)item.ItemInstance;
-                            }
-                            else
-                            {
-                                try
-                                {
-                                    inventory = (WearableInstance)item.ItemInstance;
-                                }
-                                catch
-                                {
-                                    return;
-                                }
-                            }
+                            inventory = item.ItemInstance;
                         }
                     }
                     break;
 
                 case 7:
                 case 10:
-                    inventory = Session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>(equipmentInfoPacket.Slot, InventoryType.Specialist);
+                    inventory = Session.Character.Inventory.LoadBySlotAndType(equipmentInfoPacket.Slot, InventoryType.Specialist);
                     break;
 
                 case 11:
-                    inventory = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>(equipmentInfoPacket.Slot, InventoryType.Costume);
+                    inventory = Session.Character.Inventory.LoadBySlotAndType(equipmentInfoPacket.Slot, InventoryType.Costume);
                     break;
             }
             if (inventory?.Item != null)
@@ -194,7 +181,7 @@ namespace OpenNos.Handler
                     Session.SendPacket(inventory.GenerateEInfo());
                     return;
                 }
-                Session.SendPacket(inventory.Item.EquipmentSlot != EquipmentType.Sp ? inventory.GenerateEInfo() : inventory.Item.SpType == 0 && inventory.Item.ItemSubType == 4 ? (inventory as SpecialistInstance)?.GeneratePslInfo() : (inventory as SpecialistInstance)?.GenerateSlInfo());
+                Session.SendPacket(inventory.Item.EquipmentSlot != EquipmentType.Sp ? inventory.GenerateEInfo() : inventory.Item.SpType == 0 && inventory.Item.ItemSubType == 4 ? inventory?.GeneratePslInfo() : inventory?.GenerateSlInfo());
             }
         }
 
@@ -841,7 +828,7 @@ namespace OpenNos.Handler
 
             if (Session.HasCurrentMapInstance && Session.CurrentMapInstance.UserShops.FirstOrDefault(mapshop => mapshop.Value.OwnerId.Equals(Session.Character.CharacterId)).Value == null && (Session.Character.ExchangeInfo == null || (Session.Character.ExchangeInfo?.ExchangeList).Count == 0))
             {
-                ItemInstance inventory = removePacket.InventorySlot != (byte)EquipmentType.Sp ? Session.Character.Inventory.LoadBySlotAndType<WearableInstance>(removePacket.InventorySlot, equipment) : Session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>(removePacket.InventorySlot, equipment);
+                ItemInstance inventory = removePacket.InventorySlot != (byte)EquipmentType.Sp ? Session.Character.Inventory.LoadBySlotAndType(removePacket.InventorySlot, equipment) : Session.Character.Inventory.LoadBySlotAndType(removePacket.InventorySlot, equipment);
                 if (inventory != null)
                 {
                     double currentRunningSeconds = (DateTime.Now - Process.GetCurrentProcess().StartTime.AddSeconds(-50)).TotalSeconds;
@@ -960,10 +947,7 @@ namespace OpenNos.Handler
                         if (Session.Character.Inventory.LoadBySlotAndType<ItemInstance>(x, type) == null && Session.Character.Inventory.LoadBySlotAndType<ItemInstance>((short)(x + 1), type) != null)
                         {
                             Session.Character.Inventory.MoveItem(type, type, (short)(x + 1), 1, x, out ItemInstance inv, out ItemInstance invdest);
-                            if (invdest is WearableInstance wearableInstance)
-                            {
-                                Session.SendPacket(invdest.GenerateInventoryAdd());
-                            }
+                            Session.SendPacket(invdest.GenerateInventoryAdd());
                             Session.Character.DeleteItem(type, (short)(x + 1));
                             gravity = true;
                         }
@@ -979,8 +963,8 @@ namespace OpenNos.Handler
         /// <param name="specialistHolderPacket"></param>
         public void SpecialistHolder(SpecialistHolderPacket specialistHolderPacket)
         {
-            SpecialistInstance specialist = Session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>(specialistHolderPacket.Slot, InventoryType.Equipment);
-            BoxInstance holder = Session.Character.Inventory.LoadBySlotAndType<BoxInstance>(specialistHolderPacket.HolderSlot, InventoryType.Equipment);
+            ItemInstance specialist = Session.Character.Inventory.LoadBySlotAndType(specialistHolderPacket.Slot, InventoryType.Equipment);
+            ItemInstance holder = Session.Character.Inventory.LoadBySlotAndType(specialistHolderPacket.HolderSlot, InventoryType.Equipment);
             if (specialist != null && holder != null)
             {
                 holder.HoldingVNum = specialist.ItemVNum;
@@ -1012,7 +996,7 @@ namespace OpenNos.Handler
         /// <param name="spTransformPacket"></param>
         public void SpTransform(SpTransformPacket spTransformPacket)
         {
-            SpecialistInstance specialistInstance = Session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear);
+            ItemInstance specialistInstance = Session.Character.Inventory.LoadBySlotAndType((byte)EquipmentType.Sp, InventoryType.Wear);
 
             if (spTransformPacket.Type == 10)
             {
@@ -1037,8 +1021,8 @@ namespace OpenNos.Handler
                 specialistInstance.SlElement += specialistElement;
                 specialistInstance.SlHP += specialistHealpoints;
 
-                WearableInstance mainWeapon = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.MainWeapon, InventoryType.Wear);
-                WearableInstance secondaryWeapon = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.MainWeapon, InventoryType.Wear);
+                ItemInstance mainWeapon = Session.Character.Inventory.LoadBySlotAndType((byte)EquipmentType.MainWeapon, InventoryType.Wear);
+                ItemInstance secondaryWeapon = Session.Character.Inventory.LoadBySlotAndType((byte)EquipmentType.MainWeapon, InventoryType.Wear);
                 List<ShellEffectDTO> effects = new List<ShellEffectDTO>();
                 if (mainWeapon?.ShellEffects != null)
                 {
@@ -1544,11 +1528,11 @@ namespace OpenNos.Handler
             InventoryType inventoryType = upgradePacket.InventoryType;
             byte uptype = upgradePacket.UpgradeType, slot = upgradePacket.Slot;
             Session.Character.LastDelay = DateTime.Now;
-            WearableInstance inventory;
+            ItemInstance inventory;
             switch (uptype)
             {
                 case 1:
-                    inventory = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>(slot, inventoryType);
+                    inventory = Session.Character.Inventory.LoadBySlotAndType(slot, inventoryType);
                     if (inventory != null)
                     {
                         if ((inventory.Item.EquipmentSlot == EquipmentType.Armor || inventory.Item.EquipmentSlot == EquipmentType.MainWeapon || inventory.Item.EquipmentSlot == EquipmentType.SecondaryWeapon) && inventory.Item.ItemType != ItemType.Shell && inventory.Item.Type == InventoryType.Equipment)
@@ -1566,7 +1550,7 @@ namespace OpenNos.Handler
                         && byte.TryParse(originalSplit[5], out byte firstSlot)
                         && byte.TryParse(originalSplit[8], out byte secondSlot))
                     {
-                        inventory = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>(firstSlot, InventoryType.Equipment);
+                        inventory = Session.Character.Inventory.LoadBySlotAndType(firstSlot, InventoryType.Equipment);
                         if (inventory != null && (inventory.Item.EquipmentSlot == EquipmentType.Necklace || inventory.Item.EquipmentSlot == EquipmentType.Bracelet || inventory.Item.EquipmentSlot == EquipmentType.Ring) && inventory.Item.ItemType != ItemType.Shell && inventory.Item.Type == InventoryType.Equipment)
                         {
                             ItemInstance cellon = Session.Character.Inventory.LoadBySlotAndType<ItemInstance>(secondSlot, InventoryType.Main);
@@ -1579,7 +1563,7 @@ namespace OpenNos.Handler
                     break;
 
                 case 7:
-                    inventory = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>(slot, inventoryType);
+                    inventory = Session.Character.Inventory.LoadBySlotAndType(slot, inventoryType);
                     if (inventory != null)
                     {
                         if ((inventory.Item.EquipmentSlot == EquipmentType.Armor || inventory.Item.EquipmentSlot == EquipmentType.MainWeapon || inventory.Item.EquipmentSlot == EquipmentType.SecondaryWeapon) && inventory.Item.ItemType != ItemType.Shell && inventory.Item.Type == InventoryType.Equipment)
@@ -1591,10 +1575,10 @@ namespace OpenNos.Handler
                     break;
 
                 case 8:
-                    inventory = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>(slot, inventoryType);
+                    inventory = Session.Character.Inventory.LoadBySlotAndType(slot, inventoryType);
                     if (upgradePacket.InventoryType2 != null && upgradePacket.Slot2 != null)
                     {
-                        WearableInstance inventory2 = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>((byte)upgradePacket.Slot2, (InventoryType)upgradePacket.InventoryType2);
+                        ItemInstance inventory2 = Session.Character.Inventory.LoadBySlotAndType((byte)upgradePacket.Slot2, (InventoryType)upgradePacket.InventoryType2);
 
                         if (inventory != null && inventory2 != null && !Equals(inventory, inventory2))
                         {
@@ -1604,7 +1588,7 @@ namespace OpenNos.Handler
                     break;
 
                 case 9:
-                    SpecialistInstance specialist = Session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>(slot, inventoryType);
+                    ItemInstance specialist = Session.Character.Inventory.LoadBySlotAndType(slot, inventoryType);
                     if (specialist != null)
                     {
                         if (specialist.Rare != -2)
@@ -1622,7 +1606,7 @@ namespace OpenNos.Handler
                     break;
 
                 case 20:
-                    inventory = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>(slot, inventoryType);
+                    inventory = Session.Character.Inventory.LoadBySlotAndType(slot, inventoryType);
                     if (inventory != null)
                     {
                         if ((inventory.Item.EquipmentSlot == EquipmentType.Armor || inventory.Item.EquipmentSlot == EquipmentType.MainWeapon || inventory.Item.EquipmentSlot == EquipmentType.SecondaryWeapon) && inventory.Item.ItemType != ItemType.Shell && inventory.Item.Type == InventoryType.Equipment)
@@ -1633,7 +1617,7 @@ namespace OpenNos.Handler
                     break;
 
                 case 21:
-                    inventory = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>(slot, inventoryType);
+                    inventory = Session.Character.Inventory.LoadBySlotAndType(slot, inventoryType);
                     if (inventory != null)
                     {
                         if ((inventory.Item.EquipmentSlot == EquipmentType.Armor || inventory.Item.EquipmentSlot == EquipmentType.MainWeapon || inventory.Item.EquipmentSlot == EquipmentType.SecondaryWeapon) && inventory.Item.ItemType != ItemType.Shell && inventory.Item.Type == InventoryType.Equipment)
@@ -1644,7 +1628,7 @@ namespace OpenNos.Handler
                     break;
 
                 case 25:
-                    specialist = Session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>(slot, inventoryType);
+                    specialist = Session.Character.Inventory.LoadBySlotAndType(slot, inventoryType);
                     if (specialist != null)
                     {
                         if (specialist.Rare != -2)
@@ -1662,7 +1646,7 @@ namespace OpenNos.Handler
                     break;
 
                 case 26:
-                    specialist = Session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>(slot, inventoryType);
+                    specialist = Session.Character.Inventory.LoadBySlotAndType(slot, inventoryType);
                     if (specialist != null)
                     {
                         if (specialist.Rare != -2)
@@ -1680,7 +1664,7 @@ namespace OpenNos.Handler
                     break;
 
                 case 41:
-                    specialist = Session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>(slot, inventoryType);
+                    specialist = Session.Character.Inventory.LoadBySlotAndType(slot, inventoryType);
                     if (specialist != null)
                     {
                         if (specialist.Rare != -2)
@@ -1698,7 +1682,7 @@ namespace OpenNos.Handler
                     break;
 
                 case 43:
-                    inventory = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>(slot, inventoryType);
+                    inventory = Session.Character.Inventory.LoadBySlotAndType(slot, inventoryType);
                     if (inventory != null)
                     {
                         if ((inventory.Item.EquipmentSlot == EquipmentType.Armor || inventory.Item.EquipmentSlot == EquipmentType.MainWeapon || inventory.Item.EquipmentSlot == EquipmentType.SecondaryWeapon) && inventory.Item.ItemType != ItemType.Shell && inventory.Item.Type == InventoryType.Equipment)
@@ -1773,8 +1757,8 @@ namespace OpenNos.Handler
         /// </summary>
         private void changeSP()
         {
-            SpecialistInstance sp = Session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear);
-            WearableInstance fairy = Session.Character.Inventory.LoadBySlotAndType<WearableInstance>((byte)EquipmentType.Fairy, InventoryType.Wear);
+            ItemInstance sp = Session.Character.Inventory.LoadBySlotAndType((byte)EquipmentType.Sp, InventoryType.Wear);
+            ItemInstance fairy = Session.Character.Inventory.LoadBySlotAndType((byte)EquipmentType.Fairy, InventoryType.Wear);
             if (sp != null)
             {
                 if (Session.Character.GetReputationIco() < sp.Item.ReputationMinimum)

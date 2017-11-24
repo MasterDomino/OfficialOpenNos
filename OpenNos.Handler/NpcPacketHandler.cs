@@ -309,24 +309,22 @@ namespace OpenNos.Handler
                             {
                                 foreach (ItemInstance itemInst in newItems)
                                 {
-                                    if (itemInst is WearableInstance)
-                                    {
-                                        switch (itemInst.Item.EquipmentSlot)
-                                        {
-                                            case EquipmentType.Armor:
-                                            case EquipmentType.MainWeapon:
-                                            case EquipmentType.SecondaryWeapon:
-                                                ((WearableInstance)itemInst).SetRarityPoint();
-                                                break;
 
-                                            case EquipmentType.Boots:
-                                            case EquipmentType.Gloves:
-                                                ((WearableInstance)itemInst).FireResistance = (short)(itemInst.Item.FireResistance * shopItem.Upgrade);
-                                                ((WearableInstance)itemInst).DarkResistance = (short)(itemInst.Item.DarkResistance * shopItem.Upgrade);
-                                                ((WearableInstance)itemInst).LightResistance = (short)(itemInst.Item.LightResistance * shopItem.Upgrade);
-                                                ((WearableInstance)itemInst).WaterResistance = (short)(itemInst.Item.WaterResistance * shopItem.Upgrade);
-                                                break;
-                                        }
+                                    switch (itemInst.Item.EquipmentSlot)
+                                    {
+                                        case EquipmentType.Armor:
+                                        case EquipmentType.MainWeapon:
+                                        case EquipmentType.SecondaryWeapon:
+                                            itemInst.SetRarityPoint();
+                                            break;
+
+                                        case EquipmentType.Boots:
+                                        case EquipmentType.Gloves:
+                                            itemInst.FireResistance = (short)(itemInst.Item.FireResistance * shopItem.Upgrade);
+                                            itemInst.DarkResistance = (short)(itemInst.Item.DarkResistance * shopItem.Upgrade);
+                                            itemInst.LightResistance = (short)(itemInst.Item.LightResistance * shopItem.Upgrade);
+                                            itemInst.WaterResistance = (short)(itemInst.Item.WaterResistance * shopItem.Upgrade);
+                                            break;
                                     }
                                 }
                                 if (iteminfo.ReputPrice == 0)
@@ -567,9 +565,9 @@ namespace OpenNos.Handler
                 ItemInstance inv = Session.Character.Inventory.AddNewToInventory(recipe.ItemVNum, recipe.Amount).FirstOrDefault();
                 if (inv != null)
                 {
-                    if (inv.GetType() == typeof(WearableInstance) && inv is WearableInstance item && (item.Item.EquipmentSlot == EquipmentType.Armor || item.Item.EquipmentSlot == EquipmentType.MainWeapon || item.Item.EquipmentSlot == EquipmentType.SecondaryWeapon))
+                    if (inv.Item.EquipmentSlot == EquipmentType.Armor || inv.Item.EquipmentSlot == EquipmentType.MainWeapon || inv.Item.EquipmentSlot == EquipmentType.SecondaryWeapon)
                     {
-                        item.SetRarityPoint();
+                        inv.SetRarityPoint();
                     }
                     foreach (RecipeItemDTO ite in recipe.Items)
                     {

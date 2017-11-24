@@ -61,17 +61,12 @@ namespace OpenNos.GameObject
                         break;
 
                     case InventoryType.Equipment:
-                        newItem = newItem.Item.ItemType == ItemType.Specialist ? new SpecialistInstance
+                        newItem = newItem.Item.ItemType == ItemType.Specialist ? new ItemInstance
                         {
                             ItemVNum = vnum,
                             SpLevel = 1,
                             Amount = amount
-                        } : newItem.Item.ItemType == ItemType.Box ? new BoxInstance
-                        {
-                            ItemVNum = vnum,
-                            Amount = amount
-                        } :
-                        new WearableInstance
+                        } : new ItemInstance
                         {
                             ItemVNum = vnum,
                             Amount = amount
@@ -255,7 +250,6 @@ namespace OpenNos.GameObject
                 {
                     return null;
                 }
-                checkItemInstanceType(itemInstance);
                 this[itemInstance.Id] = itemInstance;
                 return itemInstance;
             }
@@ -383,8 +377,6 @@ namespace OpenNos.GameObject
         }
 
         public ItemInstance GetItemInstanceById(Guid id) => this[id];
-
-        public T LoadByItemInstance<T>(Guid id) where T : ItemInstance => (T)this[id];
 
         public T LoadBySlotAndType<T>(short slot, InventoryType type) where T : ItemInstance
         {
@@ -708,22 +700,6 @@ namespace OpenNos.GameObject
                 item.Slot = i;
                 this[item.Id].Slot = i;
                 session.SendPacket(item.GenerateInventoryAdd());
-            }
-        }
-
-        private static void checkItemInstanceType(ItemInstanceDTO itemInstance)
-        {
-            if (itemInstance != null)
-            {
-                if (itemInstance.Type == InventoryType.Specialist && !(itemInstance is SpecialistInstance))
-                {
-                    Logger.Error(new Exception("Cannot add an item of type Specialist without being a SpecialistInstance."));
-                    return;
-                }
-                if ((itemInstance.Type == InventoryType.Equipment || itemInstance.Type == InventoryType.Wear) && !(itemInstance is WearableInstance))
-                {
-                    Logger.Error(new Exception("Cannot add an item of type Equipment or Wear without being a WearableInstance."));
-                }
             }
         }
 

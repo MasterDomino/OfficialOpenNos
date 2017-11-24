@@ -134,7 +134,7 @@ namespace OpenNos.Handler
                         DAOFactory.CharacterSkillDAO.InsertOrUpdate(sk2);
                         DAOFactory.CharacterSkillDAO.InsertOrUpdate(sk3);
 
-                        Inventory startupInventory = new Inventory((Character)newCharacter);
+                        Inventory startupInventory = new Inventory(new Character(newCharacter));
                         startupInventory.AddNewToInventory(1, 1, InventoryType.Wear);
                         startupInventory.AddNewToInventory(8, 1, InventoryType.Wear);
                         startupInventory.AddNewToInventory(12, 1, InventoryType.Wear);
@@ -292,11 +292,11 @@ namespace OpenNos.Handler
                 {
                     IEnumerable<ItemInstanceDTO> inventory = DAOFactory.IteminstanceDAO.LoadByType(character.CharacterId, InventoryType.Wear);
 
-                    WearableInstance[] equipment = new WearableInstance[16];
+                    ItemInstance[] equipment = new ItemInstance[16];
                     foreach (ItemInstanceDTO equipmentEntry in inventory)
                     {
                         // explicit load of iteminstance
-                        WearableInstance currentInstance = WearableInstance.InstanceFromDTO(equipmentEntry);
+                        ItemInstance currentInstance = new ItemInstance(equipmentEntry);
                         if (currentInstance != null)
                         {
                             equipment[(short)currentInstance.Item.EquipmentSlot] = currentInstance;

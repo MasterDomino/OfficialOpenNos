@@ -95,6 +95,10 @@
     <Compile Include="Migrations\201710301324187_Aphrodite73.Designer.cs">
       <DependentUpon>201710301324187_Aphrodite73.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711241710350_Aphrodite74.cs" />
+    <Compile Include="Migrations\201711241710350_Aphrodite74.Designer.cs">
+      <DependentUpon>201711241710350_Aphrodite74.cs</DependentUpon>
+    </Compile>
     <Compile Include="Quest.cs" />
     <Compile Include="QuestProgress.cs" />
     <Compile Include="RecipeList.cs" />
@@ -306,7 +310,6 @@
     <Compile Include="Account.cs" />
     <Compile Include="Base\SynchronizableBaseEntity.cs" />
     <Compile Include="BazaarItem.cs" />
-    <Compile Include="BoxInstance.cs" />
     <Compile Include="Card.cs" />
     <Compile Include="Character.cs" />
     <Compile Include="CharacterRelation.cs" />
@@ -327,11 +330,8 @@
     <Compile Include="MinilandObject.cs" />
     <Compile Include="PenaltyLog.cs" />
     <Compile Include="RespawnMapType.cs" />
-    <Compile Include="SpecialistInstance.cs" />
     <Compile Include="StaticBonus.cs" />
     <Compile Include="StaticBuff.cs" />
-    <Compile Include="UsableInstance.cs" />
-    <Compile Include="WearableInstance.cs" />
     <Compile Include="MapNpc.cs" />
     <Compile Include="NpcMonster.cs" />
     <Compile Include="NpcMonsterSkill.cs" />
@@ -691,6 +691,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201710301324187_Aphrodite73.resx">
       <DependentUpon>201710301324187_Aphrodite73.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711241710350_Aphrodite74.resx">
+      <DependentUpon>201711241710350_Aphrodite74.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

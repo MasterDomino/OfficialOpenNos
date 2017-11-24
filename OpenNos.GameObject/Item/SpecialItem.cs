@@ -141,7 +141,7 @@ namespace OpenNos.GameObject
                 case 666:
                     if (EffectValue == 1 && byte.TryParse(packetsplit[9], out byte islot))
                     {
-                        WearableInstance wearInstance = session.Character.Inventory.LoadBySlotAndType<WearableInstance>(islot, InventoryType.Equipment);
+                        ItemInstance wearInstance = session.Character.Inventory.LoadBySlotAndType(islot, InventoryType.Equipment);
 
                         if (wearInstance != null && (wearInstance.Item.ItemType == ItemType.Weapon || wearInstance.Item.ItemType == ItemType.Armor) && wearInstance.ShellEffects.Count != 0 && !wearInstance.Item.IsHeroic)
                         {
@@ -230,7 +230,7 @@ namespace OpenNos.GameObject
 
                 // SP Wings
                 case 650:
-                    SpecialistInstance specialistInstance = session.Character.Inventory.LoadBySlotAndType<SpecialistInstance>((byte)EquipmentType.Sp, InventoryType.Wear);
+                    ItemInstance specialistInstance = session.Character.Inventory.LoadBySlotAndType((byte)EquipmentType.Sp, InventoryType.Wear);
                     if (session.Character.UseSp && specialistInstance != null)
                     {
                         if (Option == 0)

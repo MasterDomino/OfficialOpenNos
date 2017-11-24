@@ -245,7 +245,6 @@
     <Compile Include="FamilyCharacter.cs" />
     <Compile Include="Helpers\MappingHelper.cs" />
     <Compile Include="Item\FoodItem.cs" />
-    <Compile Include="Item\Instance\BoxInstance.cs" />
     <Compile Include="Item\MagicalItem.cs" />
     <Compile Include="Item\ProduceItem.cs" />
     <Compile Include="Item\SnackItem.cs" />
@@ -394,8 +393,6 @@
     <Compile Include="Family.cs" />
     <Compile Include="Skill.cs" />
     <Compile Include="CharacterSkill.cs" />
-    <Compile Include="Item\Instance\SpecialistInstance.cs" />
-    <Compile Include="Item\Instance\WearableInstance.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenNos.Core\OpenNos.Core.csproj">

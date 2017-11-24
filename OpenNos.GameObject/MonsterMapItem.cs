@@ -61,8 +61,7 @@ namespace OpenNos.GameObject
             ItemInstance instance = GetItemInstance();
             if (instance.Item.Type == InventoryType.Equipment && (instance.Item.ItemType == ItemType.Weapon || instance.Item.ItemType == ItemType.Armor))
             {
-                WearableInstance wearableInstance = instance as WearableInstance;
-                wearableInstance?.RarifyItem(session, RarifyMode.Drop, RarifyProtection.None);
+                instance.RarifyItem(session, RarifyMode.Drop, RarifyProtection.None);
             }
         }
 
