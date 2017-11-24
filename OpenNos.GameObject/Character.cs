@@ -1006,6 +1006,133 @@ namespace OpenNos.GameObject
                                 AddBuff(new Buff(444, Level), true);
                                 break;
                         }
+                        Mate m = Mates.Where(s => s.IsTeamMember && s.MateType == MateType.Pet).FirstOrDefault();
+                        if (m != null)
+                        {
+                            switch (m.NpcMonsterVNum)
+                            {
+                                case 2105:
+                                    // Inferno
+                                    AddBuff(new Buff(383, m.Level), true);
+                                    RemoveBuff(374);
+                                    RemoveBuff(381);
+                                    RemoveBuff(377);
+                                    RemoveBuff(162);
+                                    RemoveBuff(385);
+                                    RemoveBuff(391);
+                                    RemoveBuff(399);
+                                    RemoveBuff(442);
+                                    break;
+                                case 670:
+                                    // Fibi Frosty
+                                    AddBuff(new Buff(374, m.Level), true);
+                                    RemoveBuff(383);
+                                    RemoveBuff(381);
+                                    RemoveBuff(377);
+                                    RemoveBuff(162);
+                                    RemoveBuff(385);
+                                    RemoveBuff(391);
+                                    RemoveBuff(399);
+                                    RemoveBuff(442);
+                                    break;
+                                case 836:
+                                    // Fluffy Bally
+                                    AddBuff(new Buff(381, m.Level), true);
+                                    RemoveBuff(383);
+                                    RemoveBuff(374);
+                                    RemoveBuff(377);
+                                    RemoveBuff(162);
+                                    RemoveBuff(385);
+                                    RemoveBuff(391);
+                                    RemoveBuff(399);
+                                    RemoveBuff(442);
+                                    break;
+                                case 829:
+                                    // Rudi Rowdy
+                                    AddBuff(new Buff(377, m.Level), true);
+                                    RemoveBuff(383);
+                                    RemoveBuff(374);
+                                    RemoveBuff(381);
+                                    RemoveBuff(162);
+                                    RemoveBuff(385);
+                                    RemoveBuff(391);
+                                    RemoveBuff(399);
+                                    RemoveBuff(442);
+                                    break;
+                                case 178:
+                                    // New Year Lucky Pig
+                                    AddBuff(new Buff(162, m.Level), true);
+                                    RemoveBuff(383);
+                                    RemoveBuff(374);
+                                    RemoveBuff(381);
+                                    RemoveBuff(377);
+                                    RemoveBuff(385);
+                                    RemoveBuff(391);
+                                    RemoveBuff(399);
+                                    RemoveBuff(442);
+                                    break;
+                                case 838:
+                                    // Navy Bushtail
+                                    AddBuff(new Buff(385, m.Level), true);
+                                    RemoveBuff(383);
+                                    RemoveBuff(374);
+                                    RemoveBuff(381);
+                                    RemoveBuff(377);
+                                    RemoveBuff(162);
+                                    RemoveBuff(391);
+                                    RemoveBuff(399);
+                                    RemoveBuff(442);
+                                    break;
+                                case 844:
+                                    // Cowboy Bushtail
+                                    AddBuff(new Buff(391, m.Level), true);
+                                    RemoveBuff(383);
+                                    RemoveBuff(374);
+                                    RemoveBuff(381);
+                                    RemoveBuff(377);
+                                    RemoveBuff(162);
+                                    RemoveBuff(385);
+                                    RemoveBuff(399);
+                                    RemoveBuff(442);
+                                    break;
+                                case 842:
+                                    // Indian Bushtail
+                                    AddBuff(new Buff(399, m.Level), true);
+                                    RemoveBuff(383);
+                                    RemoveBuff(374);
+                                    RemoveBuff(381);
+                                    RemoveBuff(377);
+                                    RemoveBuff(162);
+                                    RemoveBuff(385);
+                                    RemoveBuff(391);
+                                    RemoveBuff(442);
+                                    break;
+                                case 840:
+                                    // Leo the Coward
+                                    AddBuff(new Buff(442, m.Level), true);
+                                    RemoveBuff(383);
+                                    RemoveBuff(374);
+                                    RemoveBuff(381);
+                                    RemoveBuff(377);
+                                    RemoveBuff(162);
+                                    RemoveBuff(385);
+                                    RemoveBuff(391);
+                                    RemoveBuff(399);
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            RemoveBuff(383);
+                            RemoveBuff(374);
+                            RemoveBuff(381);
+                            RemoveBuff(377);
+                            RemoveBuff(162);
+                            RemoveBuff(385);
+                            RemoveBuff(391);
+                            RemoveBuff(399);
+                            RemoveBuff(442);
+                        }
                     }
                     if (LastSpGaugeRemove <= new DateTime(0001, 01, 01, 00, 00, 00))
                     {
