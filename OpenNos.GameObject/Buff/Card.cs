@@ -19,6 +19,25 @@ namespace OpenNos.GameObject
 {
     public class Card : CardDTO
     {
+        public Card()
+        {
+            
+        }
+
+        public Card(CardDTO input)
+        {
+            this.BuffType = input.BuffType;
+            this.CardId = input.CardId;
+            this.Delay = input.Delay;
+            this.Duration = input.Duration;
+            this.EffectId = input.EffectId;
+            this.Level = input.Level;
+            this.Name = input.Name;
+            this.Propability = input.Propability;
+            this.TimeoutBuff = input.TimeoutBuff;
+            this.TimeoutBuffChance = input.TimeoutBuffChance;
+        }
+                    
         #region Properties
 
         public List<BCard> BCards { get; set; }

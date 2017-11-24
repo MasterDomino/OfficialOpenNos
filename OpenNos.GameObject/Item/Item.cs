@@ -115,7 +115,7 @@ namespace OpenNos.GameObject
             WaterElement = item.WaterElement;
             WaterResistance = item.WaterResistance;
             BCards = new List<BCard>();
-            DAOFactory.BCardDAO.LoadByItemVNum(item.VNum).ToList().ForEach(o => BCards.Add((BCard)o));
+            DAOFactory.BCardDAO.LoadByItemVNum(item.VNum).ToList().ForEach(o => BCards.Add(new BCard(o)));
             RollGeneratedItems = DAOFactory.RollGeneratedItemDAO.LoadByItemVNum(item.VNum).ToList();
         }
 

@@ -296,7 +296,7 @@ namespace OpenNos.Handler
                     foreach (ItemInstanceDTO equipmentEntry in inventory)
                     {
                         // explicit load of iteminstance
-                        WearableInstance currentInstance = equipmentEntry as WearableInstance;
+                        WearableInstance currentInstance = (WearableInstance)ItemInstance.CastItemInstanceFromDTO(equipmentEntry);
                         equipment[(short)currentInstance.Item.EquipmentSlot] = currentInstance;
                     }
                     string petlist = string.Empty;

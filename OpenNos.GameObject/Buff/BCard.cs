@@ -25,6 +25,28 @@ namespace OpenNos.GameObject
 {
     public class BCard : BCardDTO
     {
+        public BCard()
+        {
+            
+        }
+
+        public BCard(BCardDTO input)
+        {
+            this.BCardId = input.BCardId;
+            this.CardId = input.CardId;
+            this.CastType = input.CastType;
+            this.FirstData = input.FirstData;
+            this.IsLevelDivided = input.IsLevelDivided;
+            this.IsLevelScaled = input.IsLevelScaled;
+            this.ItemVNum = input.ItemVNum;
+            this.NpcMonsterVNum = input.NpcMonsterVNum;
+            this.SecondData = input.SecondData;
+            this.SkillVNum = input.SkillVNum;
+            this.SubType = input.SubType;
+            this.ThirdData = input.ThirdData;
+            this.Type = input.Type;
+        }
+
         #region Methods
 
         public void ApplyBCards(object session, object sender = null)

@@ -22,22 +22,38 @@ namespace OpenNos.GameObject
     {
         #region Members
 
-        private readonly Random _random;
-
         private Item _item;
 
         #endregion
 
         #region Instantiation
 
-        public ItemInstance() => _random = new Random();
+        public ItemInstance()
+        {
+            
+        }
 
         public ItemInstance(short vNum, byte amount)
         {
             ItemVNum = vNum;
             Amount = amount;
             Type = Item.Type;
-            _random = new Random();
+        }
+
+        public ItemInstance(ItemInstanceDTO input)
+        {
+            Amount = input.Amount;
+            BoundCharacterId = input.BoundCharacterId;
+            CharacterId = input.CharacterId;
+            Design = input.Design;
+            DurabilityPoint = input.DurabilityPoint;
+            Id = input.Id;
+            ItemDeleteTime = input.ItemDeleteTime;
+            ItemVNum = input.ItemVNum;
+            Rare = input.Rare;
+            Slot = input.Slot;
+            Type = input.Type;
+            Upgrade = input.Upgrade;
         }
 
         #endregion
@@ -53,6 +69,30 @@ namespace OpenNos.GameObject
         //// TODO: create Interface
 
         #region Methods
+
+        public static ItemInstance CastItemInstanceFromDTO(ItemInstanceDTO inventory)
+        {
+            ItemInstance inv = null;
+            Type t = inventory.GetType();
+            if (t == typeof(BoxItemDTO))
+            {
+                inv = new BoxInstance((BoxItemDTO)inventory);
+            }
+            else if (t == typeof(SpecialistInstanceDTO))
+            {
+                inv = new SpecialistInstance((SpecialistInstanceDTO)inventory);
+
+            }
+            else if (t == typeof(WearableInstanceDTO))
+            {
+                inv = new WearableInstance((WearableInstanceDTO)inventory);
+            }
+            else
+            {
+                inv = new ItemInstance(inventory);
+            }
+            return inv;
+        }
 
         public ItemInstance DeepCopy() => (ItemInstance)MemberwiseClone();
 

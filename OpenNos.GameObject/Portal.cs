@@ -32,6 +32,20 @@ namespace OpenNos.GameObject
 
         public Portal() => OnTraversalEvents = new List<EventContainer>();
 
+        public Portal(PortalDTO input)
+        {
+            OnTraversalEvents = new List<EventContainer>();
+            DestinationMapId = input.DestinationMapId;
+            DestinationX = input.DestinationX;
+            DestinationY = input.DestinationY;
+            IsDisabled = input.IsDisabled;
+            PortalId = input.PortalId;
+            SourceMapId = input.SourceMapId;
+            SourceX = input.SourceX;
+            SourceY = input.SourceY;
+            Type = input.Type;
+        }
+
         #endregion
 
         #region Properties

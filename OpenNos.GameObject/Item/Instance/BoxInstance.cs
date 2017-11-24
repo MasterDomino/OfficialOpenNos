@@ -14,6 +14,7 @@
 
 using OpenNos.Data.Interfaces;
 using System;
+using OpenNos.Data;
 
 namespace OpenNos.GameObject
 {
@@ -21,18 +22,79 @@ namespace OpenNos.GameObject
     {
         #region Members
 
-        private readonly Random _random;
 
         #endregion
 
         #region Instantiation
 
-        public BoxInstance() => _random = new Random();
+        public BoxInstance(){
+            
+        }
 
         public BoxInstance(Guid id)
         {
             Id = id;
-            _random = new Random();
+        }
+
+        public BoxInstance(BoxItemDTO input)
+        {
+            Ammo = input.Ammo;
+            Amount = input.Amount;
+            BoundCharacterId = input.BoundCharacterId;
+            Cellon = input.Cellon;
+            CharacterId = input.CharacterId;
+            CloseDefence = input.CloseDefence;
+            Concentrate = input.Concentrate;
+            CriticalDodge = input.CriticalDodge;
+            CriticalLuckRate = input.CriticalLuckRate;
+            CriticalRate = input.CriticalRate;
+            DamageMaximum = input.DamageMaximum;
+            DamageMinimum = input.DamageMinimum;
+            DarkElement = input.DarkElement;
+            DarkResistance = input.DarkResistance;
+            DefenceDodge = input.DefenceDodge;
+            Design = input.Design;
+            DistanceDefence = input.DistanceDefence;
+            DistanceDefenceDodge = input.DistanceDefenceDodge;
+            DurabilityPoint = input.DurabilityPoint;
+            ElementRate = input.ElementRate;
+            EquipmentSerialId = input.EquipmentSerialId;
+            FireElement = input.FireElement;
+            FireResistance = input.FireResistance;
+            HitRate = input.HitRate;
+            HoldingVNum = input.HoldingVNum;
+            HP = input.HP;
+            Id = input.Id;
+            IsEmpty = input.IsEmpty;
+            IsFixed = input.IsFixed;
+            ItemDeleteTime = input.ItemDeleteTime;
+            ItemVNum = input.ItemVNum;
+            LightElement = input.LightElement;
+            LightResistance = input.LightResistance;
+            MagicDefence = input.MagicDefence;
+            MaxElementRate = input.MaxElementRate;
+            MP = input.MP;
+            Rare = input.Rare;
+            SlDamage = input.SlDamage;
+            SlDefence = input.SlDefence;
+            SlElement = input.SlElement;
+            SlHP = input.SlHP;
+            Slot = input.Slot;
+            SpDamage = input.SpDamage;
+            SpDark = input.SpDark;
+            SpDefence = input.SpDefence;
+            SpElement = input.SpElement;
+            SpFire = input.SpFire;
+            SpHP = input.SpHP;
+            SpLevel = input.SpLevel;
+            SpLight = input.SpLight;
+            SpStoneUpgrade = input.SpStoneUpgrade;
+            SpWater = input.SpWater;
+            Type = input.Type;
+            Upgrade = input.Upgrade;
+            WaterElement = input.WaterElement;
+            WaterResistance = input.WaterResistance;
+            XP = input.XP;
         }
 
         #endregion

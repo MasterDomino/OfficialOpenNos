@@ -49,6 +49,22 @@ namespace OpenNos.GameObject
             OnNoticeEvents = new List<EventContainer>();
         }
 
+        public MapMonster(MapMonsterDTO input)
+        {
+            Buff = new ThreadSafeSortedList<short, Buff>();
+            HitQueue = new ConcurrentQueue<HitRequest>();
+            OnDeathEvents = new List<EventContainer>();
+            OnNoticeEvents = new List<EventContainer>();
+            IsDisabled = input.IsDisabled;
+            IsMoving = input.IsMoving;
+            MapId = input.MapId;
+            MapMonsterId = input.MapMonsterId;
+            MapX = input.MapX;
+            MapY = input.MapY;
+            MonsterVNum = input.MonsterVNum;
+            Position = input.Position;
+        }
+
         #endregion
 
         #region Properties

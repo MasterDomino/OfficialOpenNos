@@ -3166,7 +3166,7 @@ namespace OpenNos.GameObject
             foreach (ItemInstanceDTO inventory in inventories)
             {
                 inventory.CharacterId = CharacterId;
-                Inventory[inventory.Id] = (ItemInstance)inventory;
+                Inventory[inventory.Id] = ItemInstance.CastItemInstanceFromDTO(inventory);
                 if (Inventory[inventory.Id] is WearableInstance wearable && wearable.EquipmentSerialId == Guid.Empty)
                 {
                     wearable.EquipmentSerialId = Guid.NewGuid();

@@ -806,7 +806,7 @@ namespace OpenNos.GameObject
                 if (chara != null)
                 {
                     item.Owner = chara.Name;
-                    item.Item = (ItemInstance)DAOFactory.IteminstanceDAO.LoadById(bazaarItem.ItemInstanceId);
+                    item.Item = ItemInstance.CastItemInstanceFromDTO(DAOFactory.IteminstanceDAO.LoadById(bazaarItem.ItemInstanceId));
                 }
                 BazaarList.Add(item);
             });
@@ -818,7 +818,7 @@ namespace OpenNos.GameObject
                 NpcMonster npcMonsterObj = npcMonster as NpcMonster;
                 npcMonsterObj.Initialize();
                 npcMonsterObj.BCards = new List<BCard>();
-                DAOFactory.BCardDAO.LoadByNpcMonsterVNum(npcMonster.NpcMonsterVNum).ToList().ForEach(s => npcMonsterObj.BCards.Add((BCard)s));
+                DAOFactory.BCardDAO.LoadByNpcMonsterVNum(npcMonster.NpcMonsterVNum).ToList().ForEach(s => npcMonsterObj.BCards.Add(new BCard((s))));
                 _npcs.Add(npcMonsterObj);
             });
             Logger.Info(string.Format(Language.Instance.GetMessageFromKey("NPCMONSTERS_LOADED"), _npcs.Count));
@@ -867,7 +867,7 @@ namespace OpenNos.GameObject
                 Skill skillObj = skill as Skill;
                 skillObj.Combos.AddRange(DAOFactory.ComboDAO.LoadBySkillVnum(skillObj.SkillVNum).ToList());
                 skillObj.BCards = new List<BCard>();
-                DAOFactory.BCardDAO.LoadBySkillVNum(skillObj.SkillVNum).ToList().ForEach(o => skillObj.BCards.Add((BCard)o));
+                DAOFactory.BCardDAO.LoadBySkillVNum(skillObj.SkillVNum).ToList().ForEach(o => skillObj.BCards.Add(new BCard(o)));
                 _skills.Add(skillObj);
             });
             Logger.Info(string.Format(Language.Instance.GetMessageFromKey("SKILLS_LOADED"), _skills.Count));
@@ -875,9 +875,9 @@ namespace OpenNos.GameObject
             // initialize cards
             Parallel.ForEach(DAOFactory.CardDAO.LoadAll(), card =>
             {
-                Card cardObj = card as Card;
+                Card cardObj = new Card(card);
                 cardObj.BCards = new List<BCard>();
-                DAOFactory.BCardDAO.LoadByCardId(cardObj.CardId).ToList().ForEach(o => cardObj.BCards.Add((BCard)o));
+                DAOFactory.BCardDAO.LoadByCardId(cardObj.CardId).ToList().ForEach(o => cardObj.BCards.Add(new BCard(o)));
                 _cards.Add(cardObj);
             });
             Logger.Info(string.Format(Language.Instance.GetMessageFromKey("CARDS_LOADED"), _cards.Count));
@@ -897,7 +897,9 @@ namespace OpenNos.GameObject
                     Guid guid = Guid.NewGuid();
                     Map mapinfo = new Map(map.MapId, map.Data)
                     {
-                        Music = map.Music
+                        Music = map.Music,
+                        Name = map.Name,
+                        ShopAllowed = map.ShopAllowed
                     };
                     _maps.Add(mapinfo);
                     MapInstance newMap = new MapInstance(mapinfo, guid, map.ShopAllowed, MapInstanceType.BaseMapInstance, new InstanceBag());
@@ -1522,7 +1524,7 @@ namespace OpenNos.GameObject
                     foreach (ItemInstanceDTO inventory in DAOFactory.IteminstanceDAO.LoadByCharacterId(familyCharacter.CharacterId).Where(s => s.Type == InventoryType.FamilyWareHouse).ToList())
                     {
                         inventory.CharacterId = familyCharacter.CharacterId;
-                        family.Warehouse[inventory.Id] = (ItemInstance)inventory;
+                        family.Warehouse[inventory.Id] = ItemInstance.CastItemInstanceFromDTO(inventory);
                     }
                 }
                 family.FamilyLogs = DAOFactory.FamilyLogDAO.LoadByFamilyId(family.FamilyId).ToList();
@@ -1596,7 +1598,7 @@ namespace OpenNos.GameObject
                         BazaarList.Remove(bzlink);
                         bzlink.BazaarItem = bzdto;
                         bzlink.Owner = chara.Name;
-                        bzlink.Item = (ItemInstance)DAOFactory.IteminstanceDAO.LoadById(bzdto.ItemInstanceId);
+                        bzlink.Item = ItemInstance.CastItemInstanceFromDTO(DAOFactory.IteminstanceDAO.LoadById(bzdto.ItemInstanceId));
                         BazaarList.Add(bzlink);
                     }
                     else
@@ -1608,7 +1610,7 @@ namespace OpenNos.GameObject
                         if (chara != null)
                         {
                             item.Owner = chara.Name;
-                            item.Item = (ItemInstance)DAOFactory.IteminstanceDAO.LoadById(bzdto.ItemInstanceId);
+                            item.Item = ItemInstance.CastItemInstanceFromDTO(DAOFactory.IteminstanceDAO.LoadById(bzdto.ItemInstanceId));
                         }
                         BazaarList.Add(item);
                     }
@@ -1650,7 +1652,7 @@ namespace OpenNos.GameObject
                         foreach (ItemInstanceDTO inventory in DAOFactory.IteminstanceDAO.LoadByCharacterId(familyCharacter.CharacterId).Where(s => s.Type == InventoryType.FamilyWareHouse).ToList())
                         {
                             inventory.CharacterId = familyCharacter.CharacterId;
-                            newFam.Warehouse[inventory.Id] = (ItemInstance)inventory;
+                            newFam.Warehouse[inventory.Id] = ItemInstance.CastItemInstanceFromDTO(inventory);
                         }
                     }
                     newFam.FamilyLogs = DAOFactory.FamilyLogDAO.LoadByFamilyId(famdto.FamilyId).ToList();

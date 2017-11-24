@@ -26,6 +26,27 @@ namespace OpenNos.GameObject
 {
     public class MapNpc : MapNpcDTO
     {
+        public MapNpc()
+        {
+            
+        }
+
+        public MapNpc(MapNpcDTO input)
+        {
+            Dialog = input.Dialog;
+            Effect = input.Effect;
+            EffectDelay = input.EffectDelay;
+            IsDisabled = input.IsDisabled;
+            IsMoving = input.IsMoving;
+            IsSitting = input.IsSitting;
+            MapId = input.MapId;
+            MapNpcId = input.MapNpcId;
+            MapX = input.MapX;
+            MapY = input.MapY;
+            NpcVNum = input.NpcVNum;
+            Position = input.Position; 
+        }
+
         #region Members
 
         public NpcMonster Npc;

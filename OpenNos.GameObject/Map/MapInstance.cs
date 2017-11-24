@@ -292,7 +292,7 @@ namespace OpenNos.GameObject
         {
             Parallel.ForEach(DAOFactory.MapMonsterDAO.LoadFromMap(Map.MapId).ToList(), monster =>
             {
-                MapMonster mapMonster = monster as MapMonster;
+                MapMonster mapMonster = new MapMonster(monster);
                 mapMonster.Initialize(this);
                 int mapMonsterId = mapMonster.MapMonsterId;
                 _monsters[mapMonsterId] = mapMonster;
@@ -304,7 +304,7 @@ namespace OpenNos.GameObject
         {
             Parallel.ForEach(DAOFactory.MapNpcDAO.LoadFromMap(Map.MapId).ToList(), npc =>
             {
-                MapNpc mapNpc = npc as MapNpc;
+                MapNpc mapNpc = new MapNpc(npc);
                 mapNpc.Initialize(this);
                 int mapNpcId = mapNpc.MapNpcId;
                 _npcs[mapNpcId] = mapNpc;
@@ -314,10 +314,11 @@ namespace OpenNos.GameObject
 
         public void LoadPortals()
         {
-            foreach (Portal portal in DAOFactory.PortalDAO.LoadByMap(Map.MapId))
+            foreach (PortalDTO portal in DAOFactory.PortalDAO.LoadByMap(Map.MapId))
             {
-                portal.SourceMapInstanceId = MapInstanceId;
-                Portals.Add(portal);
+                Portal p = new Portal(portal);
+                p.SourceMapInstanceId = MapInstanceId;
+                Portals.Add(p);
             }
         }
 
