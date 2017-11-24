@@ -36,6 +36,9 @@ namespace OpenNos.Master.Library.Interface
         /// </summary>
         void Cleanup();
 
+        void CleanupOutdatedSession();
+
+
         /// <summary>
         /// Registers the Login of the given Account and removes the permission to login
         /// </summary>

@@ -1115,7 +1115,8 @@ namespace OpenNos.GameObject
 
         public void SaveAll()
         {
-            foreach(ClientSession sess in Sessions)
+            CommunicationServiceClient.Instance.CleanupOutdatedSession();
+            foreach (ClientSession sess in Sessions)
             {
                 sess.Character?.Save();
             }
