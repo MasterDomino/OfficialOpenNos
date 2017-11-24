@@ -143,7 +143,10 @@ namespace OpenNos.DAL.DAO
             context.CellonOption.Add(entity);
             context.SaveChanges();
             if(Mapper.Mapper.Instance.CellonOptionMapper.ToCellonOptionDTO(entity, cellonOption))
-            return cellonOption;
+            {
+                return cellonOption;
+            }
+
             return null;
         }
 
@@ -156,7 +159,10 @@ namespace OpenNos.DAL.DAO
             }
 
             if(Mapper.Mapper.Instance.CellonOptionMapper.ToCellonOptionDTO(entity, cellonOption))
-            return cellonOption;
+            {
+                return cellonOption;
+            }
+
             return null;
         }
 

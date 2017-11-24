@@ -54,7 +54,10 @@ namespace OpenNos.DAL.DAO
                     context.GeneralLog.Add(entity);
                     context.SaveChanges();
                     if(Mapper.Mapper.Instance.GeneralLogMapper.ToGeneralLogDTO(entity, generalLog))
-                    return generalLog;
+                    {
+                        return generalLog;
+                    }
+
                     return null;
                 }
             }

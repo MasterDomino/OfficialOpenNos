@@ -17,7 +17,7 @@ using System;
 namespace OpenNos.Core.Handling
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class PacketAttribute : Attribute
+    public sealed class PacketAttribute : Attribute
     {
         #region Instantiation
 

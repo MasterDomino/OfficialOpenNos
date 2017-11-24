@@ -39,7 +39,10 @@ namespace OpenNos.DAL.DAO
                     context.RecipeItem.Add(entity);
                     context.SaveChanges();
                     if(Mapper.Mapper.Instance.RecipeItemMapper.ToRecipeItemDTO(entity, recipeItem))
-                    return recipeItem;
+                    {
+                        return recipeItem;
+                    }
+
                     return null;
                 }
             }
@@ -73,7 +76,10 @@ namespace OpenNos.DAL.DAO
                 {
                     RecipeItemDTO dto = new RecipeItemDTO();
                     if(Mapper.Mapper.Instance.RecipeItemMapper.ToRecipeItemDTO(context.RecipeItem.FirstOrDefault(s => s.RecipeItemId.Equals(recipeItemId)), dto))
-                    return dto;
+                    {
+                        return dto;
+                    }
+
                     return null;
                 }
             }

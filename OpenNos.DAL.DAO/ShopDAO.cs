@@ -98,7 +98,10 @@ namespace OpenNos.DAL.DAO
                         context.Shop.Add(entity);
                         context.SaveChanges();
                         if(Mapper.Mapper.Instance.ShopMapper.ToShopDTO(entity, shop))
-                        return shop;
+                        {
+                            return shop;
+                        }
+
                         return null;
                     }
                     return new ShopDTO();
@@ -134,7 +137,10 @@ namespace OpenNos.DAL.DAO
                 {
                     ShopDTO dto = new ShopDTO();
                     if(Mapper.Mapper.Instance.ShopMapper.ToShopDTO(context.Shop.FirstOrDefault(s => s.ShopId.Equals(shopId)), dto))
-                    return dto;
+                    {
+                        return dto;
+                    }
+
                     return null;
                 }
             }
@@ -153,7 +159,10 @@ namespace OpenNos.DAL.DAO
                 {
                     ShopDTO dto = new ShopDTO();
                     if(Mapper.Mapper.Instance.ShopMapper.ToShopDTO(context.Shop.FirstOrDefault(s => s.MapNpcId.Equals(mapNpcId)), dto))
-                    return dto;
+                    {
+                        return dto;
+                    }
+
                     return null;
                 }
             }

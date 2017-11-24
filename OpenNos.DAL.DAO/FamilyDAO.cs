@@ -107,7 +107,10 @@ namespace OpenNos.DAL.DAO
                         {
                             FamilyDTO dto = new FamilyDTO();
                             if(Mapper.Mapper.Instance.FamilyMapper.ToFamilyDTO(family, dto))
-                            return dto;
+                            {
+                                return dto;
+                            }
+
                             return null;
                         }
                     }
@@ -131,7 +134,10 @@ namespace OpenNos.DAL.DAO
                     {
                         FamilyDTO dto = new FamilyDTO();
                         if(Mapper.Mapper.Instance.FamilyMapper.ToFamilyDTO(family, dto))
-                        return dto;
+                        {
+                            return dto;
+                        }
+
                         return null;
                     }
                 }
@@ -154,7 +160,10 @@ namespace OpenNos.DAL.DAO
                     {
                         FamilyDTO dto = new FamilyDTO();
                         if(Mapper.Mapper.Instance.FamilyMapper.ToFamilyDTO(family, dto))
-                        return dto;
+                        {
+                            return dto;
+                        }
+
                         return null;
                     }
                 }
@@ -173,7 +182,10 @@ namespace OpenNos.DAL.DAO
             context.Family.Add(entity);
             context.SaveChanges();
             if(Mapper.Mapper.Instance.FamilyMapper.ToFamilyDTO(entity, family))
-            return family;
+            {
+                return family;
+            }
+
             return null;
         }
 
@@ -185,7 +197,10 @@ namespace OpenNos.DAL.DAO
                 context.SaveChanges();
             }
             if(Mapper.Mapper.Instance.FamilyMapper.ToFamilyDTO(entity, family))
-            return family;
+            {
+                return family;
+            }
+
             return null;
         }
 

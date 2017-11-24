@@ -241,4 +241,7 @@
     <Content Include="on-logo-icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>copy /Y "C:\OpenNos\license.lic" "$(TargetDir)license.lic"</PreBuildEvent>
+  </PropertyGroup>
 </Project>

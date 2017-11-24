@@ -26,9 +26,9 @@ namespace OpenNos.DAL.Mock
 
         public bool IdAlreadySet(long id) => Container.Any(gl => gl.LogId == id);
 
-        public IEnumerable<GeneralLogDTO> LoadByAccount(long? accountId) => Container.Where(c => c.AccountId == accountId).Select(e => MapEntity(e));
+        public IEnumerable<GeneralLogDTO> LoadByAccount(long? accountId) => Container.Where(c => c.AccountId == accountId);
 
-        public IEnumerable<GeneralLogDTO> LoadByLogType(string logType, long? characterId) => Enumerable.Empty<GeneralLogDTO>().Select(e => MapEntity(e));
+        public IEnumerable<GeneralLogDTO> LoadByLogType(string logType, long? characterId) => Enumerable.Empty<GeneralLogDTO>();
 
         public void SetCharIdNull(long? characterId) => throw new NotImplementedException();
 

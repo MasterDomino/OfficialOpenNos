@@ -191,7 +191,10 @@ namespace OpenNos.DAL.DAO
                 {
                     CharacterDTO dto = new CharacterDTO();
                     if(Mapper.Mapper.Instance.CharacterMapper.ToCharacterDTO(context.Character.FirstOrDefault(c => c.CharacterId.Equals(characterId)), dto))
-                    return dto;
+                    {
+                        return dto;
+                    }
+
                     return null;
                 }
             }
@@ -210,7 +213,10 @@ namespace OpenNos.DAL.DAO
                 {
                     CharacterDTO dto = new CharacterDTO();
                     if(Mapper.Mapper.Instance.CharacterMapper.ToCharacterDTO(context.Character.SingleOrDefault(c => c.Name.Equals(name) && c.State.Equals((byte)CharacterState.Active)), dto))
-                    return dto;
+                    {
+                        return dto;
+                    }
+
                     return null;
                 }
             }
@@ -229,7 +235,10 @@ namespace OpenNos.DAL.DAO
                 {
                     CharacterDTO dto = new CharacterDTO();
                     if(Mapper.Mapper.Instance.CharacterMapper.ToCharacterDTO(context.Character.SingleOrDefault(c => c.AccountId.Equals(accountId) && c.Slot.Equals(slot) && c.State.Equals((byte)CharacterState.Active)), dto))
-                    return dto;
+                    {
+                        return dto;
+                    }
+
                     return null;
                 }
             }
@@ -247,7 +256,10 @@ namespace OpenNos.DAL.DAO
             context.Character.Add(entity);
             context.SaveChanges();
             if(Mapper.Mapper.Instance.CharacterMapper.ToCharacterDTO(entity, character))
-            return character;
+            {
+                return character;
+            }
+
             return null;
         }
 
@@ -260,7 +272,10 @@ namespace OpenNos.DAL.DAO
             }
 
             if(Mapper.Mapper.Instance.CharacterMapper.ToCharacterDTO(entity, character))
-            return character;
+            {
+                return character;
+            }
+
             return null;
         }
 

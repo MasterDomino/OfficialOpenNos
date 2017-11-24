@@ -87,7 +87,10 @@ namespace OpenNos.DAL.DAO
                 {
                     FamilyCharacterDTO dto = new FamilyCharacterDTO();
                     if(Mapper.Mapper.Instance.FamilyCharacterMapper.ToFamilyCharacterDTO(context.FamilyCharacter.FirstOrDefault(c => c.CharacterId == characterId), dto))
-                    return dto;
+                    {
+                        return dto;
+                    }
+
                     return null;
                 }
             }
@@ -121,7 +124,10 @@ namespace OpenNos.DAL.DAO
                 {
                     FamilyCharacterDTO dto = new FamilyCharacterDTO();
                     if(Mapper.Mapper.Instance.FamilyCharacterMapper.ToFamilyCharacterDTO(context.FamilyCharacter.FirstOrDefault(c => c.FamilyCharacterId.Equals(familyCharacterId)), dto))
-                    return dto;
+                    {
+                        return dto;
+                    }
+
                     return null;
                 }
             }
@@ -139,7 +145,10 @@ namespace OpenNos.DAL.DAO
             context.FamilyCharacter.Add(entity);
             context.SaveChanges();
             if(Mapper.Mapper.Instance.FamilyCharacterMapper.ToFamilyCharacterDTO(entity, character))
-            return character;
+            {
+                return character;
+            }
+
             return null;
         }
 
@@ -151,7 +160,10 @@ namespace OpenNos.DAL.DAO
                 context.SaveChanges();
             }
             if(Mapper.Mapper.Instance.FamilyCharacterMapper.ToFamilyCharacterDTO(entity, character))
-            return character;
+            {
+                return character;
+            }
+
             return null;
         }
 

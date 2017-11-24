@@ -61,7 +61,10 @@ namespace OpenNos.DAL.DAO
                     context.ScriptedInstance.Add(entity);
                     context.SaveChanges();
                     if(Mapper.Mapper.Instance.ScriptedInstanceMapper.ToScriptedInstanceDTO(entity, scriptedInstance))
-                    return scriptedInstance;
+                    {
+                        return scriptedInstance;
+                    }
+
                     return null;
                 }
             }

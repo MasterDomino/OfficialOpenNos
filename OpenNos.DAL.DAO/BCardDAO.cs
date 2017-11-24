@@ -38,7 +38,10 @@ namespace OpenNos.DAL.DAO
                     context.BCard.Add(entity);
                     context.SaveChanges();
                     if(Mapper.Mapper.Instance.BCardMapper.ToBCardDTO(entity, cardObject))
-                    return cardObject;
+                    {
+                        return cardObject;
+                    }
+
                     return null;
                 }
             }
@@ -110,7 +113,10 @@ namespace OpenNos.DAL.DAO
                 {
                     BCardDTO dto = new BCardDTO();
                     if(Mapper.Mapper.Instance.BCardMapper.ToBCardDTO(context.BCard.FirstOrDefault(s => s.BCardId.Equals(cardId)), dto))
-                    return dto;
+                    {
+                        return dto;
+                    }
+
                     return null;
                 }
             }

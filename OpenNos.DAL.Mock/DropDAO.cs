@@ -32,7 +32,7 @@ namespace OpenNos.DAL.Mock
 
         public void Insert(List<DropDTO> drops) => throw new NotImplementedException();
 
-        public new List<DropDTO> LoadAll() => _mockContainer.ToList().Select(e => MapEntity(e)).ToList();
+        public new List<DropDTO> LoadAll() => _mockContainer.ToList();
 
         public IEnumerable<DropDTO> LoadByMonster(short monsterVNum) => throw new NotImplementedException();
 

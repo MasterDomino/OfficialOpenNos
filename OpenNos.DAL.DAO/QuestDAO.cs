@@ -140,7 +140,10 @@ namespace OpenNos.DAL.DAO
             {
                 QuestDTO dto = new QuestDTO();
                 if(Mapper.Mapper.Instance.QuestMapper.ToQuestDTO(context.Quest.Find(id), dto))
-                return dto;
+                {
+                    return dto;
+                }
+
                 return null;
             }
         }
@@ -152,7 +155,10 @@ namespace OpenNos.DAL.DAO
             context.Quest.Add(entity);
             context.SaveChanges();
             if(Mapper.Mapper.Instance.QuestMapper.ToQuestDTO(entity, quest))
-            return quest;
+            {
+                return quest;
+            }
+
             return null;
         }
 
@@ -165,7 +171,10 @@ namespace OpenNos.DAL.DAO
             }
 
             if(Mapper.Mapper.Instance.QuestMapper.ToQuestDTO(entity, quest))
-            return quest;
+            {
+                return quest;
+            }
+
             return null;
         }
 

@@ -99,7 +99,10 @@ namespace OpenNos.DAL.DAO
                 {
                     StaticBuffDTO dto = new StaticBuffDTO();
                     if(Mapper.Mapper.Instance.StaticBuffMapper.ToStaticBuffDTO(context.StaticBuff.FirstOrDefault(s => s.StaticBuffId.Equals(sbId)),dto)) //who the fuck was so retarded and set it to respawn ?!?
-                    return dto;
+                    {
+                        return dto;
+                    }
+
                     return null;
                 }
             }
@@ -135,7 +138,10 @@ namespace OpenNos.DAL.DAO
                 context.StaticBuff.Add(entity);
                 context.SaveChanges();
                 if(Mapper.Mapper.Instance.StaticBuffMapper.ToStaticBuffDTO(entity, sb))
-                return sb;
+                {
+                    return sb;
+                }
+
                 return null;
             }
             catch (Exception e)
@@ -153,7 +159,10 @@ namespace OpenNos.DAL.DAO
                 context.SaveChanges();
             }
             if(Mapper.Mapper.Instance.StaticBuffMapper.ToStaticBuffDTO(entity, sb))
-            return sb;
+            {
+                return sb;
+            }
+
             return null;
         }
 

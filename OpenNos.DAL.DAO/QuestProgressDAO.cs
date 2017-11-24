@@ -149,7 +149,10 @@ namespace OpenNos.DAL.DAO
                 {
                     QuestProgressDTO dto = new QuestProgressDTO();
                     if(Mapper.Mapper.Instance.QuestProgressMapper.ToQuestProgressDTO(context.QuestProgress.FirstOrDefault(s => s.QuestProgressId == id), dto))
-                    return dto;
+                    {
+                        return dto;
+                    }
+
                     return null;
                 }
             }
@@ -167,7 +170,10 @@ namespace OpenNos.DAL.DAO
             context.QuestProgress.Add(entity);
             context.SaveChanges();
             if(Mapper.Mapper.Instance.QuestProgressMapper.ToQuestProgressDTO(entity, quest))
-            return quest;
+            {
+                return quest;
+            }
+
             return null;
         }
 
@@ -180,7 +186,10 @@ namespace OpenNos.DAL.DAO
             }
 
             if(Mapper.Mapper.Instance.QuestProgressMapper.ToQuestProgressDTO(entity, quest))
-            return quest;
+            {
+                return quest;
+            }
+
             return null;
         }
 

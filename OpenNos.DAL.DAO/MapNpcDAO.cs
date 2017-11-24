@@ -87,7 +87,10 @@ namespace OpenNos.DAL.DAO
                     context.MapNpc.Add(entity);
                     context.SaveChanges();
                     if(Mapper.Mapper.Instance.MapNPCMapper.ToMapNPCDTO(entity, npc))
-                    return npc;
+                    {
+                        return npc;
+                    }
+
                     return null;
                 }
             }
@@ -121,7 +124,10 @@ namespace OpenNos.DAL.DAO
                 {
                     MapNpcDTO dto = new MapNpcDTO();
                     if(Mapper.Mapper.Instance.MapNPCMapper.ToMapNPCDTO(context.MapNpc.FirstOrDefault(i => i.MapNpcId.Equals(mapNpcId)), dto))
-                    return dto;
+                    {
+                        return dto;
+                    }
+
                     return null;
                 }
             }

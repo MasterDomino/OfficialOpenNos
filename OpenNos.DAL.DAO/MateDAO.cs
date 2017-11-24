@@ -100,7 +100,10 @@ namespace OpenNos.DAL.DAO
             context.Mate.Add(entity);
             context.SaveChanges();
             if(Mapper.Mapper.Instance.MateMapper.ToMateDTO(entity, mate))
-            return mate;
+            {
+                return mate;
+            }
+
             return null;
         }
 
@@ -113,7 +116,10 @@ namespace OpenNos.DAL.DAO
             }
 
             if(Mapper.Mapper.Instance.MateMapper.ToMateDTO(entity, character))
-            return character;
+            {
+                return character;
+            }
+
             return null;
         }
 

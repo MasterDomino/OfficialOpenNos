@@ -39,7 +39,10 @@ namespace OpenNos.DAL.DAO
                     context.MaintenanceLog.Add(entity);
                     context.SaveChanges();
                     if(Mapper.Mapper.Instance.MaintenanceLogMapper.ToMaintenanceLogDTO(entity, maintenanceLog))
-                    return maintenanceLog;
+                    {
+                        return maintenanceLog;
+                    }
+
                     return null;
                 }
             }
@@ -73,7 +76,10 @@ namespace OpenNos.DAL.DAO
                 {
                     MaintenanceLogDTO dto = new MaintenanceLogDTO();
                     if(Mapper.Mapper.Instance.MaintenanceLogMapper.ToMaintenanceLogDTO(context.MaintenanceLog.FirstOrDefault(m => m.DateEnd > DateTime.Now), dto))
-                    return dto;
+                    {
+                        return dto;
+                    }
+
                     return null;
                 }
             }

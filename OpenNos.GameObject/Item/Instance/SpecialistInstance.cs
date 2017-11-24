@@ -38,10 +38,7 @@ namespace OpenNos.GameObject
             
         }
 
-        public SpecialistInstance(Guid id)
-        {
-            Id = id;
-        }
+        public SpecialistInstance(Guid id) => Id = id;
 
         public SpecialistInstance(SpecialistInstanceDTO input)
         {

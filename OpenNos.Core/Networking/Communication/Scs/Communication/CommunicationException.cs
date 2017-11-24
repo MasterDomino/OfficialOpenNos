@@ -37,7 +37,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication
         /// </summary>
         /// <param name="serializationInfo"></param>
         /// <param name="context"></param>
-        public CommunicationException(SerializationInfo serializationInfo, StreamingContext context) : base(serializationInfo, context)
+        protected CommunicationException(SerializationInfo serializationInfo, StreamingContext context) : base(serializationInfo, context)
         {
         }
 

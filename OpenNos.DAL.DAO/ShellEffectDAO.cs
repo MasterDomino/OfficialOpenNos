@@ -143,7 +143,10 @@ namespace OpenNos.DAL.DAO
             context.ShellEffect.Add(entity);
             context.SaveChanges();
             if(Mapper.Mapper.Instance.ShellEffectMapper.ToShellEffectDTO(entity, shelleffect))
-            return shelleffect;
+            {
+                return shelleffect;
+            }
+
             return null;
         }
 
@@ -156,7 +159,10 @@ namespace OpenNos.DAL.DAO
             }
 
             if(Mapper.Mapper.Instance.ShellEffectMapper.ToShellEffectDTO(entity, shelleffect))
-            return shelleffect;
+            {
+                return shelleffect;
+            }
+
             return null;
         }
 

@@ -33,7 +33,7 @@ namespace OpenNos.Mapper.Mappers
             output.LevelMinimum = input.LevelMinimum;
             output.MinimumAdventurerLevel = input.MinimumAdventurerLevel;
             output.MinimumArcherLevel = input.MinimumArcherLevel;
-            output.MinimumMagicianLevel = output.MinimumMagicianLevel;
+            output.MinimumMagicianLevel = input.MinimumMagicianLevel;
             output.MinimumSwordmanLevel = input.MinimumSwordmanLevel;
             output.MpCost = input.MpCost;
             output.Name = input.Name;

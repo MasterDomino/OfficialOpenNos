@@ -74,7 +74,10 @@ namespace OpenNos.DAL.DAO
                 {
                     MapTypeMapDTO dto = new MapTypeMapDTO();
                     if(Mapper.Mapper.Instance.MapTypeMapMapper.ToMapTypeMapDTO(context.MapTypeMap.FirstOrDefault(i => i.MapId.Equals(mapId) && i.MapTypeId.Equals(maptypeId)), dto))
-                    return dto;
+                    {
+                        return dto;
+                    }
+
                     return null;
                 }
             }

@@ -60,7 +60,10 @@ namespace OpenNos.DAL.DAO
                     context.Drop.Add(entity);
                     context.SaveChanges();
                     if(Mapper.Mapper.Instance.DropMapper.ToDropDTO(entity, drop))
-                    return drop;
+                    {
+                        return drop;
+                    }
+
                     return null;
                 }
             }

@@ -40,6 +40,24 @@ namespace OpenNos.GameObject
 
         #endregion
 
+        #region Instantiation
+
+        public ScriptedInstance()
+        {
+        }
+
+        public ScriptedInstance(ScriptedInstanceDTO input)
+        {
+            MapId = input.MapId;
+            PositionX = input.PositionX;
+            PositionY = input.PositionY;
+            Script = input.Script;
+            ScriptedInstanceId = input.ScriptedInstanceId;
+            Type = input.Type;
+        }
+
+        #endregion
+
         #region Properties
 
         public List<Gift> DrawItems { get; set; }
@@ -47,8 +65,6 @@ namespace OpenNos.GameObject
         public MapInstance FirstMap { get; set; }
 
         public List<Gift> GiftItems { get; set; }
-
-        public ScriptedInstanceModel Model { get; set; }
 
         public long Gold { get; set; }
 
@@ -58,15 +74,17 @@ namespace OpenNos.GameObject
 
         public string Label { get; set; }
 
-        public string Name { get; set; }
-
         public byte LevelMaximum { get; set; }
 
         public byte LevelMinimum { get; set; }
 
         public byte Lives { get; set; }
 
+        public ScriptedInstanceModel Model { get; set; }
+
         public int MonsterAmount { get; internal set; }
+
+        public string Name { get; set; }
 
         public int NpcAmount { get; internal set; }
 
@@ -242,139 +260,152 @@ namespace OpenNos.GameObject
             }
         }
 
-        private List<EventContainer> summonMonster(MapInstance mapInstance, XMLModel.Events.SummonMonster[] summonMonster, bool isChildMonster = false)
+        private ThreadSafeGenericList<EventContainer> generateEvent(MapInstance parentMapInstance)
         {
-            List<EventContainer> evts = new List<EventContainer>();
+            // Needs Optimization, look into it.
+            ThreadSafeGenericList<EventContainer> evts = new ThreadSafeGenericList<EventContainer>();
 
-            // SummonMonster
-            if (summonMonster != null)
+            if (Model.InstanceEvents.CreateMap != null)
             {
-                foreach (XMLModel.Events.SummonMonster summon in summonMonster)
+                Parallel.ForEach(Model.InstanceEvents.CreateMap, createMap =>
                 {
-                    short positionX = summon.PositionX;
-                    short positionY = summon.PositionY;
-                    if (positionX == 0 || positionY == 0)
+                    MapInstance mapInstance = _mapInstanceDictionary.FirstOrDefault(s => s.Key == createMap.Map).Value ?? parentMapInstance;
+
+                    if (mapInstance == null)
                     {
-                        MapCell cell = mapInstance?.Map?.GetRandomPosition();
-                        if (cell != null)
-                        {
-                            positionX = cell.X;
-                            positionY = cell.Y;
-                        }
+                        return;
                     }
-                    MonsterAmount++;
-                    MonsterToSummon monster = new MonsterToSummon(summon.VNum, new MapCell() { X = positionX, Y = positionY }, -1, summon.Move, summon.IsTarget, summon.IsBonus, summon.IsHostile, summon.IsBoss);
 
-                    // OnDeath
-                    if (summon.OnDeath != null)
+                    // SummonMonster
+                    evts.AddRange(summonMonster(mapInstance, createMap.SummonMonster));
+
+                    // SummonNpc
+                    evts.AddRange(summonNpc(mapInstance, createMap.SummonNpc));
+
+                    // SpawnPortal
+                    evts.AddRange(spawnPortal(mapInstance, createMap.SpawnPortal));
+
+                    // SpawnButton
+                    evts.AddRange(spawnButton(mapInstance, createMap.SpawnButton));
+
+                    // OnCharacterDiscoveringMap
+                    evts.AddRange(onCharacterDiscoveringMap(mapInstance, createMap));
+
+                    // GenerateMapClock
+                    if (createMap.GenerateClock != null)
                     {
-                        // RemoveButtonLocker
-                        if (summon.OnDeath.RemoveButtonLocker != null)
-                        {
-                            monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.REMOVEBUTTONLOCKER, null));
-                        }
+                        evts.Add(new EventContainer(mapInstance, EventActionType.CLOCK, createMap.GenerateClock.Value));
+                    }
 
-                        // RemoveMonsterLocker
-                        if (summon.OnDeath.RemoveMonsterLocker != null)
+                    // OnMoveOnMap
+                    if (createMap.OnMoveOnMap != null)
+                    {
+                        Parallel.ForEach(createMap.OnMoveOnMap, onMoveOnMap => evts.AddRange(this.onMoveOnMap(mapInstance, onMoveOnMap)));
+                    }
+
+                    // OnLockerOpen
+                    if (createMap.OnLockerOpen != null)
+                    {
+                        List<EventContainer> onLockerOpen = new List<EventContainer>();
+
+                        // SendMessage
+                        if (createMap.OnLockerOpen.SendMessage != null)
                         {
-                            monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.REMOVEMONSTERLOCKER, null));
+                            onLockerOpen.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(createMap.OnLockerOpen.SendMessage.Value, createMap.OnLockerOpen.SendMessage.Type)));
                         }
 
                         // ChangePortalType
-                        if (summon.OnDeath.ChangePortalType != null)
+                        if (createMap.OnLockerOpen.ChangePortalType != null)
                         {
-                            foreach (XMLModel.Events.ChangePortalType changePortalType in summon.OnDeath.ChangePortalType)
-                            {
-                                monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.CHANGEPORTALTYPE, new Tuple<int, PortalType>(changePortalType.IdOnMap, (PortalType)changePortalType.Type)));
-                            }
-                        }
-
-                        // SendMessage
-                        if (summon.OnDeath.SendMessage != null)
-                        {
-                            evts.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(summon.OnDeath.SendMessage.Value, summon.OnDeath.SendMessage.Type)));
-                        }
-
-                        // SendPacket
-                        if (summon.OnDeath.SendPacket != null)
-                        {
-                            evts.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, summon.OnDeath.SendPacket.Value));
-                        }
-
-                        // RefreshRaidGoals
-                        if (summon.OnDeath.RefreshRaidGoals != null)
-                        {
-                            monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.REFRESHRAIDGOAL, null));
+                            onLockerOpen.Add(new EventContainer(mapInstance, EventActionType.CHANGEPORTALTYPE, new Tuple<int, PortalType>(createMap.OnLockerOpen.ChangePortalType.IdOnMap, (PortalType)createMap.OnLockerOpen.ChangePortalType.Type)));
                         }
 
                         // RefreshMapItems
-                        if (summon.OnDeath.RefreshMapItems != null)
+                        if (createMap.OnLockerOpen.RefreshMapItems != null)
                         {
-                            monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.REFRESHMAPITEMS, null));
+                            onLockerOpen.Add(new EventContainer(mapInstance, EventActionType.REFRESHMAPITEMS, null));
                         }
 
-                        // ThrowItem
-                        if (summon.OnDeath.ThrowItem != null)
-                        {
-                            foreach (XMLModel.Events.ThrowItem throwItem in summon.OnDeath.ThrowItem)
-                            {
-                                monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.THROWITEMS, new Tuple<int, short, byte, int, int>(-1, throwItem.VNum, throwItem.PackAmount == 0 ? (byte)1 : throwItem.PackAmount, throwItem.MinAmount == 0 ? 1 : throwItem.MinAmount, throwItem.MaxAmount == 0 ? 1 : throwItem.MaxAmount)));
-                            }
-                        }
-
-                        // End
-                        if (summon.OnDeath.End != null)
-                        {
-                            monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.SCRIPTEND, summon.OnDeath.End.Type));
-                        }
-
-                        // SummonMonster Child
-                        if (!isChildMonster)
-                        {
-                            monster.DeathEvents.AddRange(this.summonMonster(mapInstance, summon.OnDeath.SummonMonster, true));
-                        }
+                        evts.Add(new EventContainer(mapInstance, EventActionType.REGISTEREVENT, new Tuple<string, List<EventContainer>>(nameof(XMLModel.Events.OnLockerOpen), onLockerOpen)));
                     }
 
-                    // OnNoticing
-                    if (summon.OnNoticing != null)
+                    // OnAreaEntry
+                    if (createMap.OnAreaEntry != null)
                     {
-                        // Effect
-                        if (summon.OnNoticing.Effect != null)
+                        foreach (XMLModel.Events.OnAreaEntry onAreaEntry in createMap.OnAreaEntry)
                         {
-                            monster.NoticingEvents.Add(new EventContainer(mapInstance, EventActionType.EFFECT, summon.OnNoticing.Effect.Value));
-                        }
-
-                        // Move
-                        if (summon.OnNoticing.Move != null)
-                        {
-                            List<EventContainer> events = new List<EventContainer>();
-
-                            // Effect
-                            if (summon.OnNoticing.Move.Effect != null)
-                            {
-                                events.Add(new EventContainer(mapInstance, EventActionType.EFFECT, summon.OnNoticing.Move.Effect.Value));
-                            }
-
-                            // review OnTarget
-                            //if (summon.OnNoticing.Move.OnTarget != null)
-                            //{
-                            //    summon.OnNoticing.Move.OnTarget.Move
-                            //    foreach ()
-                            //    //events.Add(new EventContainer(mapInstance, EventActionType.ONTARGET, summon.OnNoticing.Move.OnTarget.));
-                            //}
-
-                            monster.NoticingEvents.Add(new EventContainer(mapInstance, EventActionType.MOVE, new ZoneEvent() { X = summon.OnNoticing.Move.PositionX, Y = summon.OnNoticing.Move.PositionY, Events = events }));
-                        }
-
-                        // SummonMonster Child
-                        if (!isChildMonster)
-                        {
-                            monster.NoticingEvents.AddRange(this.summonMonster(mapInstance, summon.OnDeath.SummonMonster, true));
+                            List<EventContainer> onAreaEntryEvents = new List<EventContainer>();
+                            onAreaEntryEvents.AddRange(summonMonster(mapInstance, onAreaEntry.SummonMonster));
+                            evts.Add(new EventContainer(mapInstance, EventActionType.SETAREAENTRY, new ZoneEvent() { X = onAreaEntry.PositionX, Y = onAreaEntry.PositionY, Range = onAreaEntry.Range, Events = onAreaEntryEvents }));
                         }
                     }
 
-                    evts.Add(new EventContainer(mapInstance, EventActionType.SPAWNMONSTER, monster));
+                    // SetButtonLockers
+                    if (createMap.SetButtonLockers != null)
+                    {
+                        evts.Add(new EventContainer(mapInstance, EventActionType.SETBUTTONLOCKERS, createMap.SetButtonLockers.Value));
+                    }
+
+                    // SetMonsterLockers
+                    if (createMap.SetMonsterLockers != null)
+                    {
+                        evts.Add(new EventContainer(mapInstance, EventActionType.SETMONSTERLOCKERS, createMap.SetMonsterLockers.Value));
+                    }
+                });
+            }
+
+            return evts;
+        }
+
+        private List<EventContainer> onCharacterDiscoveringMap(MapInstance mapInstance, XMLModel.Objects.CreateMap createMap)
+        {
+            List<EventContainer> evts = new List<EventContainer>();
+
+            // OnCharacterDiscoveringMap
+            if (createMap.OnCharacterDiscoveringMap != null)
+            {
+                List<EventContainer> onDiscoverEvents = new List<EventContainer>();
+
+                // GenerateMapClock
+                if (createMap.OnCharacterDiscoveringMap.GenerateMapClock != null)
+                {
+                    onDiscoverEvents.Add(new EventContainer(mapInstance, EventActionType.MAPCLOCK, createMap.OnCharacterDiscoveringMap.GenerateMapClock.Value));
                 }
+
+                // NpcDialog
+                if (createMap.OnCharacterDiscoveringMap.NpcDialog != null)
+                {
+                    onDiscoverEvents.Add(new EventContainer(mapInstance, EventActionType.NPCDIALOG, createMap.OnCharacterDiscoveringMap.NpcDialog.Value));
+                }
+
+                // SendMessage
+                if (createMap.OnCharacterDiscoveringMap.SendMessage != null)
+                {
+                    onDiscoverEvents.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(createMap.OnCharacterDiscoveringMap.SendMessage.Value, createMap.OnCharacterDiscoveringMap.SendMessage.Type)));
+                }
+
+                // SendPacket
+                if (createMap.OnCharacterDiscoveringMap.SendPacket != null)
+                {
+                    onDiscoverEvents.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, createMap.OnCharacterDiscoveringMap.SendPacket.Value));
+                }
+
+                // SummonMonster
+                onDiscoverEvents.AddRange(summonMonster(mapInstance, createMap.OnCharacterDiscoveringMap.SummonMonster));
+
+                // SummonNpc
+                onDiscoverEvents.AddRange(summonNpc(mapInstance, createMap.OnCharacterDiscoveringMap.SummonNpc));
+
+                // SpawnPortal
+                onDiscoverEvents.AddRange(spawnPortal(mapInstance, createMap.OnCharacterDiscoveringMap.SpawnPortal));
+
+                // OnMoveOnMap
+                if (createMap.OnCharacterDiscoveringMap.OnMoveOnMap != null)
+                {
+                    onDiscoverEvents.AddRange(onMoveOnMap(mapInstance, createMap.OnCharacterDiscoveringMap.OnMoveOnMap));
+                }
+
+                evts.Add(new EventContainer(mapInstance, EventActionType.REGISTEREVENT, new Tuple<string, List<EventContainer>>(nameof(XMLModel.Events.OnCharacterDiscoveringMap), onDiscoverEvents)));
             }
 
             return evts;
@@ -557,42 +588,6 @@ namespace OpenNos.GameObject
             return evts;
         }
 
-        private List<EventContainer> spawnPortal(MapInstance mapInstance, XMLModel.Events.SpawnPortal[] spawnPortal)
-        {
-            List<EventContainer> evts = new List<EventContainer>();
-
-            // SpawnPortal
-            if (spawnPortal != null)
-            {
-                foreach (XMLModel.Events.SpawnPortal portalEvent in spawnPortal)
-                {
-                    MapInstance destinationMap = _mapInstanceDictionary.First(s => s.Key == portalEvent.ToMap).Value;
-                    Portal portal = new Portal()
-                    {
-                        PortalId = portalEvent.IdOnMap,
-                        SourceX = portalEvent.PositionX,
-                        SourceY = portalEvent.PositionY,
-                        Type = portalEvent.Type,
-                        DestinationX = portalEvent.ToX,
-                        DestinationY = portalEvent.ToY,
-                        DestinationMapId = (short)(destinationMap.MapInstanceId == default ? -1 : 0),
-                        SourceMapInstanceId = mapInstance.MapInstanceId,
-                        DestinationMapInstanceId = destinationMap.MapInstanceId
-                    };
-
-                    // OnTraversal
-                    if (portalEvent.OnTraversal?.End != null)
-                    {
-                        portal.OnTraversalEvents.Add(new EventContainer(mapInstance, EventActionType.SCRIPTEND, portalEvent.OnTraversal.End.Type));
-                    }
-
-                    evts.Add(new EventContainer(mapInstance, EventActionType.SPAWNPORTAL, portal));
-                }
-            }
-
-            return evts;
-        }
-
         private List<EventContainer> spawnButton(MapInstance mapInstance, XMLModel.Events.SpawnButton[] spawnButton)
         {
             List<EventContainer> evts = new List<EventContainer>();
@@ -677,152 +672,175 @@ namespace OpenNos.GameObject
             return evts;
         }
 
-        private List<EventContainer> onCharacterDiscoveringMap(MapInstance mapInstance, XMLModel.Objects.CreateMap createMap)
+        private List<EventContainer> spawnPortal(MapInstance mapInstance, XMLModel.Events.SpawnPortal[] spawnPortal)
         {
             List<EventContainer> evts = new List<EventContainer>();
 
-            // OnCharacterDiscoveringMap
-            if (createMap.OnCharacterDiscoveringMap != null)
+            // SpawnPortal
+            if (spawnPortal != null)
             {
-                List<EventContainer> onDiscoverEvents = new List<EventContainer>();
-
-                // GenerateMapClock
-                if (createMap.OnCharacterDiscoveringMap.GenerateMapClock != null)
+                foreach (XMLModel.Events.SpawnPortal portalEvent in spawnPortal)
                 {
-                    onDiscoverEvents.Add(new EventContainer(mapInstance, EventActionType.MAPCLOCK, createMap.OnCharacterDiscoveringMap.GenerateMapClock.Value));
+                    MapInstance destinationMap = _mapInstanceDictionary.First(s => s.Key == portalEvent.ToMap).Value;
+                    Portal portal = new Portal()
+                    {
+                        PortalId = portalEvent.IdOnMap,
+                        SourceX = portalEvent.PositionX,
+                        SourceY = portalEvent.PositionY,
+                        Type = portalEvent.Type,
+                        DestinationX = portalEvent.ToX,
+                        DestinationY = portalEvent.ToY,
+                        DestinationMapId = (short)(destinationMap.MapInstanceId == default ? -1 : 0),
+                        SourceMapInstanceId = mapInstance.MapInstanceId,
+                        DestinationMapInstanceId = destinationMap.MapInstanceId
+                    };
+
+                    // OnTraversal
+                    if (portalEvent.OnTraversal?.End != null)
+                    {
+                        portal.OnTraversalEvents.Add(new EventContainer(mapInstance, EventActionType.SCRIPTEND, portalEvent.OnTraversal.End.Type));
+                    }
+
+                    evts.Add(new EventContainer(mapInstance, EventActionType.SPAWNPORTAL, portal));
                 }
-
-                // NpcDialog
-                if (createMap.OnCharacterDiscoveringMap.NpcDialog != null)
-                {
-                    onDiscoverEvents.Add(new EventContainer(mapInstance, EventActionType.NPCDIALOG, createMap.OnCharacterDiscoveringMap.NpcDialog.Value));
-                }
-
-                // SendMessage
-                if (createMap.OnCharacterDiscoveringMap.SendMessage != null)
-                {
-                    onDiscoverEvents.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(createMap.OnCharacterDiscoveringMap.SendMessage.Value, createMap.OnCharacterDiscoveringMap.SendMessage.Type)));
-                }
-
-                // SendPacket
-                if (createMap.OnCharacterDiscoveringMap.SendPacket != null)
-                {
-                    onDiscoverEvents.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, createMap.OnCharacterDiscoveringMap.SendPacket.Value));
-                }
-
-                // SummonMonster
-                onDiscoverEvents.AddRange(summonMonster(mapInstance, createMap.OnCharacterDiscoveringMap.SummonMonster));
-
-                // SummonNpc
-                onDiscoverEvents.AddRange(summonNpc(mapInstance, createMap.OnCharacterDiscoveringMap.SummonNpc));
-
-                // SpawnPortal
-                onDiscoverEvents.AddRange(spawnPortal(mapInstance, createMap.OnCharacterDiscoveringMap.SpawnPortal));
-
-                // OnMoveOnMap
-                if (createMap.OnCharacterDiscoveringMap.OnMoveOnMap != null)
-                {
-                    onDiscoverEvents.AddRange(onMoveOnMap(mapInstance, createMap.OnCharacterDiscoveringMap.OnMoveOnMap));
-                }
-
-                evts.Add(new EventContainer(mapInstance, EventActionType.REGISTEREVENT, new Tuple<string, List<EventContainer>>(nameof(XMLModel.Events.OnCharacterDiscoveringMap), onDiscoverEvents)));
             }
 
             return evts;
         }
 
-        private ThreadSafeGenericList<EventContainer> generateEvent(MapInstance parentMapInstance)
+        private List<EventContainer> summonMonster(MapInstance mapInstance, XMLModel.Events.SummonMonster[] summonMonster, bool isChildMonster = false)
         {
-            // Needs Optimization, look into it.
-            ThreadSafeGenericList<EventContainer> evts = new ThreadSafeGenericList<EventContainer>();
+            List<EventContainer> evts = new List<EventContainer>();
 
-            if (Model.InstanceEvents.CreateMap != null)
+            // SummonMonster
+            if (summonMonster != null)
             {
-                Parallel.ForEach(Model.InstanceEvents.CreateMap, createMap =>
+                foreach (XMLModel.Events.SummonMonster summon in summonMonster)
                 {
-                    MapInstance mapInstance = _mapInstanceDictionary.FirstOrDefault(s => s.Key == createMap.Map).Value ?? parentMapInstance;
-
-                    if (mapInstance == null)
+                    short positionX = summon.PositionX;
+                    short positionY = summon.PositionY;
+                    if (positionX == 0 || positionY == 0)
                     {
-                        return;
-                    }
-
-                    // SummonMonster
-                    evts.AddRange(summonMonster(mapInstance, createMap.SummonMonster));
-
-                    // SummonNpc
-                    evts.AddRange(summonNpc(mapInstance, createMap.SummonNpc));
-
-                    // SpawnPortal
-                    evts.AddRange(spawnPortal(mapInstance, createMap.SpawnPortal));
-
-                    // SpawnButton
-                    evts.AddRange(spawnButton(mapInstance, createMap.SpawnButton));
-
-                    // OnCharacterDiscoveringMap
-                    evts.AddRange(onCharacterDiscoveringMap(mapInstance, createMap));
-
-                    // GenerateMapClock
-                    if (createMap.GenerateClock != null)
-                    {
-                        evts.Add(new EventContainer(mapInstance, EventActionType.CLOCK, createMap.GenerateClock.Value));
-                    }
-
-                    // OnMoveOnMap
-                    if (createMap.OnMoveOnMap != null)
-                    {
-                        Parallel.ForEach(createMap.OnMoveOnMap, onMoveOnMap => evts.AddRange(this.onMoveOnMap(mapInstance, onMoveOnMap)));
-                    }
-
-                    // OnLockerOpen
-                    if (createMap.OnLockerOpen != null)
-                    {
-                        List<EventContainer> onLockerOpen = new List<EventContainer>();
-
-                        // SendMessage
-                        if (createMap.OnLockerOpen.SendMessage != null)
+                        MapCell cell = mapInstance?.Map?.GetRandomPosition();
+                        if (cell != null)
                         {
-                            onLockerOpen.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(createMap.OnLockerOpen.SendMessage.Value, createMap.OnLockerOpen.SendMessage.Type)));
+                            positionX = cell.X;
+                            positionY = cell.Y;
+                        }
+                    }
+                    MonsterAmount++;
+                    MonsterToSummon monster = new MonsterToSummon(summon.VNum, new MapCell() { X = positionX, Y = positionY }, -1, summon.Move, summon.IsTarget, summon.IsBonus, summon.IsHostile, summon.IsBoss);
+
+                    // OnDeath
+                    if (summon.OnDeath != null)
+                    {
+                        // RemoveButtonLocker
+                        if (summon.OnDeath.RemoveButtonLocker != null)
+                        {
+                            monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.REMOVEBUTTONLOCKER, null));
+                        }
+
+                        // RemoveMonsterLocker
+                        if (summon.OnDeath.RemoveMonsterLocker != null)
+                        {
+                            monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.REMOVEMONSTERLOCKER, null));
                         }
 
                         // ChangePortalType
-                        if (createMap.OnLockerOpen.ChangePortalType != null)
+                        if (summon.OnDeath.ChangePortalType != null)
                         {
-                            onLockerOpen.Add(new EventContainer(mapInstance, EventActionType.CHANGEPORTALTYPE, new Tuple<int, PortalType>(createMap.OnLockerOpen.ChangePortalType.IdOnMap, (PortalType)createMap.OnLockerOpen.ChangePortalType.Type)));
+                            foreach (XMLModel.Events.ChangePortalType changePortalType in summon.OnDeath.ChangePortalType)
+                            {
+                                monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.CHANGEPORTALTYPE, new Tuple<int, PortalType>(changePortalType.IdOnMap, (PortalType)changePortalType.Type)));
+                            }
+                        }
+
+                        // SendMessage
+                        if (summon.OnDeath.SendMessage != null)
+                        {
+                            evts.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(summon.OnDeath.SendMessage.Value, summon.OnDeath.SendMessage.Type)));
+                        }
+
+                        // SendPacket
+                        if (summon.OnDeath.SendPacket != null)
+                        {
+                            evts.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, summon.OnDeath.SendPacket.Value));
+                        }
+
+                        // RefreshRaidGoals
+                        if (summon.OnDeath.RefreshRaidGoals != null)
+                        {
+                            monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.REFRESHRAIDGOAL, null));
                         }
 
                         // RefreshMapItems
-                        if (createMap.OnLockerOpen.RefreshMapItems != null)
+                        if (summon.OnDeath.RefreshMapItems != null)
                         {
-                            onLockerOpen.Add(new EventContainer(mapInstance, EventActionType.REFRESHMAPITEMS, null));
+                            monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.REFRESHMAPITEMS, null));
                         }
 
-                        evts.Add(new EventContainer(mapInstance, EventActionType.REGISTEREVENT, new Tuple<string, List<EventContainer>>(nameof(XMLModel.Events.OnLockerOpen), onLockerOpen)));
-                    }
-
-                    // OnAreaEntry
-                    if (createMap.OnAreaEntry != null)
-                    {
-                        foreach (XMLModel.Events.OnAreaEntry onAreaEntry in createMap.OnAreaEntry)
+                        // ThrowItem
+                        if (summon.OnDeath.ThrowItem != null)
                         {
-                            List<EventContainer> onAreaEntryEvents = new List<EventContainer>();
-                            onAreaEntryEvents.AddRange(summonMonster(mapInstance, onAreaEntry.SummonMonster));
-                            evts.Add(new EventContainer(mapInstance, EventActionType.SETAREAENTRY, new ZoneEvent() { X = onAreaEntry.PositionX, Y = onAreaEntry.PositionY, Range = onAreaEntry.Range, Events = onAreaEntryEvents }));
+                            foreach (XMLModel.Events.ThrowItem throwItem in summon.OnDeath.ThrowItem)
+                            {
+                                monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.THROWITEMS, new Tuple<int, short, byte, int, int>(-1, throwItem.VNum, throwItem.PackAmount == 0 ? (byte)1 : throwItem.PackAmount, throwItem.MinAmount == 0 ? 1 : throwItem.MinAmount, throwItem.MaxAmount == 0 ? 1 : throwItem.MaxAmount)));
+                            }
+                        }
+
+                        // End
+                        if (summon.OnDeath.End != null)
+                        {
+                            monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.SCRIPTEND, summon.OnDeath.End.Type));
+                        }
+
+                        // SummonMonster Child
+                        if (!isChildMonster)
+                        {
+                            monster.DeathEvents.AddRange(this.summonMonster(mapInstance, summon.OnDeath.SummonMonster, true));
                         }
                     }
 
-                    // SetButtonLockers
-                    if (createMap.SetButtonLockers != null)
+                    // OnNoticing
+                    if (summon.OnNoticing != null)
                     {
-                        evts.Add(new EventContainer(mapInstance, EventActionType.SETBUTTONLOCKERS, createMap.SetButtonLockers.Value));
+                        // Effect
+                        if (summon.OnNoticing.Effect != null)
+                        {
+                            monster.NoticingEvents.Add(new EventContainer(mapInstance, EventActionType.EFFECT, summon.OnNoticing.Effect.Value));
+                        }
+
+                        // Move
+                        if (summon.OnNoticing.Move != null)
+                        {
+                            List<EventContainer> events = new List<EventContainer>();
+
+                            // Effect
+                            if (summon.OnNoticing.Move.Effect != null)
+                            {
+                                events.Add(new EventContainer(mapInstance, EventActionType.EFFECT, summon.OnNoticing.Move.Effect.Value));
+                            }
+
+                            // review OnTarget
+                            //if (summon.OnNoticing.Move.OnTarget != null)
+                            //{
+                            //    summon.OnNoticing.Move.OnTarget.Move
+                            //    foreach ()
+                            //    //events.Add(new EventContainer(mapInstance, EventActionType.ONTARGET, summon.OnNoticing.Move.OnTarget.));
+                            //}
+
+                            monster.NoticingEvents.Add(new EventContainer(mapInstance, EventActionType.MOVE, new ZoneEvent() { X = summon.OnNoticing.Move.PositionX, Y = summon.OnNoticing.Move.PositionY, Events = events }));
+                        }
+
+                        // SummonMonster Child
+                        if (!isChildMonster)
+                        {
+                            monster.NoticingEvents.AddRange(this.summonMonster(mapInstance, summon.OnDeath.SummonMonster, true));
+                        }
                     }
 
-                    // SetMonsterLockers
-                    if (createMap.SetMonsterLockers != null)
-                    {
-                        evts.Add(new EventContainer(mapInstance, EventActionType.SETMONSTERLOCKERS, createMap.SetMonsterLockers.Value));
-                    }
-                });
+                    evts.Add(new EventContainer(mapInstance, EventActionType.SPAWNMONSTER, monster));
+                }
             }
 
             return evts;
@@ -911,6 +929,8 @@ namespace OpenNos.GameObject
             return evts;
         }
 
+        #endregion
+
         // Use as a idea of what is left to do
         //private void remnants()
         //{
@@ -930,7 +950,5 @@ namespace OpenNos.GameObject
         //            break;
         //    }
         //}
-
-        #endregion
     }
 }

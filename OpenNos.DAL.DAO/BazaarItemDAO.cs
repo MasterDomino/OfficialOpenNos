@@ -102,7 +102,10 @@ namespace OpenNos.DAL.DAO
                 {
                     BazaarItemDTO dto = new BazaarItemDTO();
                     if(Mapper.Mapper.Instance.BazaarItemMapper.ToBazaarItemDTO(context.BazaarItem.FirstOrDefault(i => i.BazaarItemId.Equals(bazaarItemId)), dto))
-                    return dto;
+                    {
+                        return dto;
+                    }
+
                     return null;
                 }
             }
@@ -139,7 +142,10 @@ namespace OpenNos.DAL.DAO
             context.BazaarItem.Add(entity);
             context.SaveChanges();
             if(Mapper.Mapper.Instance.BazaarItemMapper.ToBazaarItemDTO(entity, bazaarItem))
-            return bazaarItem;
+            {
+                return bazaarItem;
+            }
+
             return null;
         }
 
@@ -151,7 +157,10 @@ namespace OpenNos.DAL.DAO
                 context.SaveChanges();
             }
             if(Mapper.Mapper.Instance.BazaarItemMapper.ToBazaarItemDTO(entity, bazaarItem))
-            return bazaarItem;
+            {
+                return bazaarItem;
+            }
+
             return null;
         }
 

@@ -117,7 +117,10 @@ namespace OpenNos.DAL.DAO
                 {
                     PenaltyLogDTO dto = new PenaltyLogDTO();
                     if(Mapper.Mapper.Instance.PenaltyLogMapper.ToPenaltyLogDTO(context.PenaltyLog.FirstOrDefault(s => s.PenaltyLogId.Equals(penaltyLogId)), dto))
-                    return dto;
+                    {
+                        return dto;
+                    }
+
                     return null;
                 }
             }
@@ -135,7 +138,10 @@ namespace OpenNos.DAL.DAO
             context.PenaltyLog.Add(entity);
             context.SaveChanges();
             if(Mapper.Mapper.Instance.PenaltyLogMapper.ToPenaltyLogDTO(entity,penaltylog))
-            return penaltylog;
+            {
+                return penaltylog;
+            }
+
             return null;
         }
 
@@ -147,7 +153,10 @@ namespace OpenNos.DAL.DAO
                 context.SaveChanges();
             }
             if(Mapper.Mapper.Instance.PenaltyLogMapper.ToPenaltyLogDTO(entity, penaltylog))
-            return penaltylog;
+            {
+                return penaltylog;
+            }
+
             return null;
         }
 

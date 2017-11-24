@@ -39,7 +39,7 @@ namespace OpenNos.DAL.Mock
             return SaveResult.Inserted;
         }
 
-        public AccountDTO LoadById(long accountId) => MapEntity(Container.SingleOrDefault(a => a.AccountId == accountId));
+        public AccountDTO LoadById(long accountId) => Container.SingleOrDefault(a => a.AccountId == accountId);
 
         public AccountDTO LoadByName(string name) => Container.SingleOrDefault(a => a.Name == name);
 

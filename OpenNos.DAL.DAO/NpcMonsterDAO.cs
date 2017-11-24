@@ -77,7 +77,10 @@ namespace OpenNos.DAL.DAO
                     context.NpcMonster.Add(entity);
                     context.SaveChanges();
                     if(Mapper.Mapper.Instance.NpcMonsterMapper.ToNpcMonsterDTO(entity, npc))
-                    return npc;
+                    {
+                        return npc;
+                    }
+
                     return null;
                 }
             }
@@ -137,7 +140,10 @@ namespace OpenNos.DAL.DAO
                 {
                     NpcMonsterDTO dto = new NpcMonsterDTO();
                     if(Mapper.Mapper.Instance.NpcMonsterMapper.ToNpcMonsterDTO(context.NpcMonster.FirstOrDefault(i => i.NpcMonsterVNum.Equals(npcMonsterVNum)), dto))
-                    return dto;
+                    {
+                        return dto;
+                    }
+
                     return null;
                 }
             }
@@ -155,7 +161,10 @@ namespace OpenNos.DAL.DAO
             context.NpcMonster.Add(entity);
             context.SaveChanges();
             if(Mapper.Mapper.Instance.NpcMonsterMapper.ToNpcMonsterDTO(entity, npcMonster))
-            return npcMonster;
+            {
+                return npcMonster;
+            }
+
             return null;
         }
 
@@ -167,7 +176,10 @@ namespace OpenNos.DAL.DAO
                 context.SaveChanges();
             }
             if(Mapper.Mapper.Instance.NpcMonsterMapper.ToNpcMonsterDTO(entity, npcMonster))
-            return npcMonster;
+            {
+                return npcMonster;
+            }
+
             return null;
         }
 

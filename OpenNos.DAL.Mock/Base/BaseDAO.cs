@@ -12,9 +12,6 @@
  * GNU General Public License for more details.
  */
 
-using AutoMapper;
-using OpenNos.DAL.Interface;
-using OpenNos.Data;
 using System;
 using System.Collections.Generic;
 
@@ -22,13 +19,6 @@ namespace OpenNos.DAL.Mock
 {
     public abstract class BaseDAO<TDTO>
     {
-        #region Members
-
-        protected IMapper _mapper;
-        protected Dictionary<Type, Type> _mappings = new Dictionary<Type, Type>();
-
-        #endregion
-
         #region Instantiation
 
         protected BaseDAO() => Container = new List<TDTO>();
@@ -57,20 +47,7 @@ namespace OpenNos.DAL.Mock
             return dto;
         }
 
-        public IEnumerable<TDTO> LoadAll()
-        {
-            foreach (TDTO dto in Container)
-            {
-                yield return MapEntity(dto);
-            }
-        }
-
-        /// <summary>
-        /// Map a DTO to a GO
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
-        protected virtual TDTO MapEntity(TDTO dto) => _mapper.Map<TDTO>(dto);
+        public IEnumerable<TDTO> LoadAll() => Container;
 
         #endregion
     }

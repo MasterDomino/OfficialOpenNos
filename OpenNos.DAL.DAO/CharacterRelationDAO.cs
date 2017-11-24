@@ -101,7 +101,10 @@ namespace OpenNos.DAL.DAO
                 {
                     CharacterRelationDTO dto = new CharacterRelationDTO();
                     if(Mapper.Mapper.Instance.CharacterRelationMapper.ToCharacterRelationDTO(context.CharacterRelation.FirstOrDefault(s => s.CharacterRelationId.Equals(characterId)), dto))
-                    return dto;
+                    {
+                        return dto;
+                    }
+
                     return null;
                 }
             }
@@ -119,7 +122,10 @@ namespace OpenNos.DAL.DAO
             context.CharacterRelation.Add(entity);
             context.SaveChanges();
             if(Mapper.Mapper.Instance.CharacterRelationMapper.ToCharacterRelationDTO(entity, relation))
-            return relation;
+            {
+                return relation;
+            }
+
             return null;
         }
 
@@ -132,7 +138,10 @@ namespace OpenNos.DAL.DAO
             }
 
             if(Mapper.Mapper.Instance.CharacterRelationMapper.ToCharacterRelationDTO(entity, relation))
-            return relation;
+            {
+                return relation;
+            }
+
             return null;
         }
 

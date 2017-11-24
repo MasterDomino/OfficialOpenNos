@@ -12,7 +12,6 @@
  * GNU General Public License for more details.
  */
 
-using AutoMapper;
 using OpenNos.DAL.Interface;
 using OpenNos.Data;
 using OpenNos.Data.Enums;
@@ -25,19 +24,13 @@ namespace OpenNos.DAL.Mock
 {
     public class ItemInstanceDAO : SynchronizableBaseDAO<ItemInstanceDTO>, IItemInstanceDAO
     {
-        #region Members
-
-        private readonly IDictionary<Type, Type> itemInstanceMappings = new Dictionary<Type, Type>();
-
-        #endregion
-
         #region Methods
 
         public DeleteResult DeleteFromSlotAndType(long characterId, short slot, InventoryType type) => throw new NotImplementedException();
 
         public IEnumerable<ItemInstanceDTO> LoadByCharacterId(long characterId) => Container.Where(i => i.CharacterId == characterId);
 
-        public ItemInstanceDTO LoadBySlotAndType(long characterId, short slot, InventoryType type) => MapEntity(Container.SingleOrDefault(i => i.CharacterId == characterId && i.Slot == slot && i.Type == type));
+        public ItemInstanceDTO LoadBySlotAndType(long characterId, short slot, InventoryType type) => Container.SingleOrDefault(i => i.CharacterId == characterId && i.Slot == slot && i.Type == type);
 
         public IEnumerable<ItemInstanceDTO> LoadByType(long characterId, InventoryType type) => Container.Where(i => i.CharacterId == characterId && i.Type == type);
 

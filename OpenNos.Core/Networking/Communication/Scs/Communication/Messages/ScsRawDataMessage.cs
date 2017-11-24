@@ -75,6 +75,43 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messages
                        : $"ScsRawDataMessage [{MessageId}] Replied To [{RepliedMessageId}]: {messageLength} bytes";
         }
 
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (ReferenceEquals(obj, null))
+            {
+                return false;
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode() => throw new NotImplementedException();
+
+        public static bool operator ==(ScsRawDataMessage left, ScsRawDataMessage right)
+        {
+            if (ReferenceEquals(left, null))
+            {
+                return ReferenceEquals(right, null);
+            }
+
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(ScsRawDataMessage left, ScsRawDataMessage right) => !(left == right);
+
+        public static bool operator <(ScsRawDataMessage left, ScsRawDataMessage right) => ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0;
+
+        public static bool operator <=(ScsRawDataMessage left, ScsRawDataMessage right) => ReferenceEquals(left, null) || left.CompareTo(right) <= 0;
+
+        public static bool operator >(ScsRawDataMessage left, ScsRawDataMessage right) => !ReferenceEquals(left, null) && left.CompareTo(right) > 0;
+
+        public static bool operator >=(ScsRawDataMessage left, ScsRawDataMessage right) => ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0;
+
         #endregion
     }
 }

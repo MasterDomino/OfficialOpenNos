@@ -117,7 +117,10 @@ namespace OpenNos.DAL.DAO
             {
                 QuicklistEntryDTO quicklistEntryDTO = new QuicklistEntryDTO();
                 if(Mapper.Mapper.Instance.QuicklistEntryMapper.ToQuicklistEntryDTO(context.QuicklistEntry.FirstOrDefault(i=>i.Id.Equals(id)), quicklistEntryDTO))
-                return quicklistEntryDTO;
+                {
+                    return quicklistEntryDTO;
+                }
+
                 return null;
             }
         }
@@ -129,7 +132,10 @@ namespace OpenNos.DAL.DAO
             context.Set<QuicklistEntry>().Add(entity);
             context.SaveChanges();
             if(Mapper.Mapper.Instance.QuicklistEntryMapper.ToQuicklistEntryDTO(entity, dto))
-            return dto;
+            {
+                return dto;
+            }
+
             return null;
         }
 
@@ -155,7 +161,10 @@ namespace OpenNos.DAL.DAO
                 context.SaveChanges();
             }
             if(Mapper.Mapper.Instance.QuicklistEntryMapper.ToQuicklistEntryDTO(entity, inventory))
-            return inventory;
+            {
+                return inventory;
+            }
+
             return null;
         }
 

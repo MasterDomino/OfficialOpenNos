@@ -12,29 +12,21 @@
  * GNU General Public License for more details.
  */
 
+using OpenNos.Data;
 using OpenNos.Data.Interfaces;
 using System;
-using OpenNos.Data;
 
 namespace OpenNos.GameObject
 {
     public class BoxInstance : SpecialistInstance, IBoxInstanceDTO
     {
-        #region Members
-
-
-        #endregion
-
         #region Instantiation
 
-        public BoxInstance(){
-            
+        public BoxInstance()
+        {
         }
 
-        public BoxInstance(Guid id)
-        {
-            Id = id;
-        }
+        public BoxInstance(Guid id) => Id = id;
 
         public BoxInstance(BoxItemDTO input)
         {

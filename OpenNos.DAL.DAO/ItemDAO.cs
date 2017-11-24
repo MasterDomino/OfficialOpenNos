@@ -75,7 +75,10 @@ namespace OpenNos.DAL.DAO
                     context.Item.Add(entity);
                     context.SaveChanges();
                     if(Mapper.Mapper.Instance.ItemMapper.ToItemDTO(entity, item))
-                    return item;
+                    {
+                        return item;
+                    }
+
                     return null;
                 }
             }
@@ -109,7 +112,10 @@ namespace OpenNos.DAL.DAO
                 {
                     ItemDTO dto = new ItemDTO();
                     if(Mapper.Mapper.Instance.ItemMapper.ToItemDTO(context.Item.FirstOrDefault(i => i.VNum.Equals(vNum)), dto))
-                    return dto;
+                    {
+                        return dto;
+                    }
+
                     return null;
                 }
             }

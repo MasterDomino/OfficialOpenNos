@@ -1,5 +1,5 @@
-﻿using OpenNos.Data;
-using OpenNos.Mapper.Mappers;
+﻿using OpenNos.Mapper.Mappers;
+
 namespace OpenNos.Mapper
 {
     public class Mapper
@@ -165,106 +165,106 @@ namespace OpenNos.Mapper
 
         public static Mapper Instance => _instance ?? (_instance = new Mapper());
 
-        public AccountMapper AccountMapper { get { return _accountMapper; } }
+        public AccountMapper AccountMapper => _accountMapper;
 
-        public BazaarItemMapper BazaarItemMapper { get { return _bazaarItemMapper; } }
+        public BazaarItemMapper BazaarItemMapper => _bazaarItemMapper;
 
-        public BCardMapper BCardMapper { get { return _bCardMapper; } }
+        public BCardMapper BCardMapper => _bCardMapper;
 
-        public BoxItemMapper BoxItemMapper { get { return _boxItemMapper; } }
+        public BoxItemMapper BoxItemMapper => _boxItemMapper;
 
-        public CardMapper CardMapper { get { return _cardMapper; } }
+        public CardMapper CardMapper => _cardMapper;
 
-        public CellonOptionMapper CellonOptionMapper { get { return _cellonOptionMapper; } }
+        public CellonOptionMapper CellonOptionMapper => _cellonOptionMapper;
 
-        public CharacterMapper CharacterMapper { get { return _characterMapper; } }
+        public CharacterMapper CharacterMapper => _characterMapper;
 
-        public CharacterRelationMapper CharacterRelationMapper { get { return _characterRelationMapper; } }
+        public CharacterRelationMapper CharacterRelationMapper => _characterRelationMapper;
 
-        public CharacterSkillMapper CharacterSkillMapper { get { return _characterSkillMapper; } }
+        public CharacterSkillMapper CharacterSkillMapper => _characterSkillMapper;
 
-        public ComboMapper ComboMapper { get { return _comboMapper; } }
+        public ComboMapper ComboMapper => _comboMapper;
 
-        public DropMapper DropMapper { get { return _dropMapper; } }
+        public DropMapper DropMapper => _dropMapper;
 
-        public FamilyCharacterMapper FamilyCharacterMapper { get { return _familyCharacterMapper; } }
+        public FamilyCharacterMapper FamilyCharacterMapper => _familyCharacterMapper;
 
-        public FamilyLogMapper FamilyLogMapper { get { return _familyLogMapper; } }
+        public FamilyLogMapper FamilyLogMapper => _familyLogMapper;
 
-        public FamilyMapper FamilyMapper { get { return _familyMapper; } }
+        public FamilyMapper FamilyMapper => _familyMapper;
 
-        public GeneralLogMapper GeneralLogMapper { get { return _generalLogMapper; } }
+        public GeneralLogMapper GeneralLogMapper => _generalLogMapper;
 
-        public ItemInstanceMapper ItemInstanceMapper { get { return _itemInstanceMapper; } }
+        public ItemInstanceMapper ItemInstanceMapper => _itemInstanceMapper;
 
-        public ItemMapper ItemMapper { get { return _itemMapper; } }
+        public ItemMapper ItemMapper => _itemMapper;
 
-        public MailMapper MailMapper { get { return _mailMapper; } }
+        public MailMapper MailMapper => _mailMapper;
 
-        public MaintenanceLogMapper MaintenanceLogMapper { get { return _maintenanceLogMapper; } }
+        public MaintenanceLogMapper MaintenanceLogMapper => _maintenanceLogMapper;
 
-        public MapMapper MapMapper { get { return _mapMapper; } }
+        public MapMapper MapMapper => _mapMapper;
 
-        public MapMonsterMapper MapMonsterMapper { get { return _mapMonsterMapper; } }
+        public MapMonsterMapper MapMonsterMapper => _mapMonsterMapper;
 
-        public MapNPCMapper MapNPCMapper { get { return _mapNPCMapper; } }
+        public MapNPCMapper MapNPCMapper => _mapNPCMapper;
 
-        public MapTypeMapMapper MapTypeMapMapper { get { return _mapTypeMapMapper; } }
+        public MapTypeMapMapper MapTypeMapMapper => _mapTypeMapMapper;
 
-        public MapTypeMapper MapTypeMapper { get { return _mapTypeMapper; } }
+        public MapTypeMapper MapTypeMapper => _mapTypeMapper;
 
-        public MateMapper MateMapper { get { return _mateMapper; } }
+        public MateMapper MateMapper => _mateMapper;
 
-        public MinilandObjectMapper MinilandObjectMapper { get { return _minilandObjectMapper; } }
+        public MinilandObjectMapper MinilandObjectMapper => _minilandObjectMapper;
 
-        public NpcMonsterMapper NpcMonsterMapper { get { return _npcMonsterMapper; } }
+        public NpcMonsterMapper NpcMonsterMapper => _npcMonsterMapper;
 
-        public NpcMonsterSkillMapper NpcMonsterSkillMapper { get { return _npcMonsterSkillMapper; } }
+        public NpcMonsterSkillMapper NpcMonsterSkillMapper => _npcMonsterSkillMapper;
 
-        public PenaltyLogMapper PenaltyLogMapper { get { return _penaltyLogMapper; } }
+        public PenaltyLogMapper PenaltyLogMapper => _penaltyLogMapper;
 
-        public PortalMapper PortalMapper { get { return _portalMapper; } }
+        public PortalMapper PortalMapper => _portalMapper;
 
-        public QuestMapper QuestMapper { get { return _questMapper; } }
+        public QuestMapper QuestMapper => _questMapper;
 
-        public QuestProgressMapper QuestProgressMapper { get { return _questProgressMapper; } }
+        public QuestProgressMapper QuestProgressMapper => _questProgressMapper;
 
-        public QuicklistEntryMapper QuicklistEntryMapper { get { return _quicklistEntryMapper; } }
+        public QuicklistEntryMapper QuicklistEntryMapper => _quicklistEntryMapper;
 
-        public RecipeItemMapper RecipeItemMapper { get { return _recipeItemMapper; } }
+        public RecipeItemMapper RecipeItemMapper => _recipeItemMapper;
 
-        public RecipeListMapper RecipeListMapper { get { return _recipeListMapper; } }
+        public RecipeListMapper RecipeListMapper => _recipeListMapper;
 
-        public RecipeMapper RecipeMapper { get { return _recipeMapper; } }
+        public RecipeMapper RecipeMapper => _recipeMapper;
 
-        public RespawnMapper RespawnMapper { get { return _respawnMapper; } }
+        public RespawnMapper RespawnMapper => _respawnMapper;
 
-        public RespawnMapTypeMapper RespawnMapTypeMapper { get { return _respawnMapTypeMapper; } }
+        public RespawnMapTypeMapper RespawnMapTypeMapper => _respawnMapTypeMapper;
 
-        public RollGeneratedItemMapper RollGeneratedItemMapper { get { return _rollGeneratedItemMapper; } }
+        public RollGeneratedItemMapper RollGeneratedItemMapper => _rollGeneratedItemMapper;
 
-        public ScriptedInstanceMapper ScriptedInstanceMapper { get { return _scriptedInstanceMapper; } }
+        public ScriptedInstanceMapper ScriptedInstanceMapper => _scriptedInstanceMapper;
 
-        public ShellEffectMapper ShellEffectMapper { get { return _shellEffectMapper; } }
+        public ShellEffectMapper ShellEffectMapper => _shellEffectMapper;
 
-        public ShopItemMapper ShopItemMapper { get { return _shopItemMapper; } }
+        public ShopItemMapper ShopItemMapper => _shopItemMapper;
 
-        public ShopMapper ShopMapper { get { return _shopMapper; } }
+        public ShopMapper ShopMapper => _shopMapper;
 
-        public ShopSkillMapper ShopSkillMapper { get { return _shopSkillMapper; } }
+        public ShopSkillMapper ShopSkillMapper => _shopSkillMapper;
 
-        public SkillMapper SkillMapper { get { return _skillMapper; } }
+        public SkillMapper SkillMapper => _skillMapper;
 
-        public SpecialistInstanceMapper SpecialistInstanceMapper { get { return _specialistInstanceMapper; } }
+        public SpecialistInstanceMapper SpecialistInstanceMapper => _specialistInstanceMapper;
 
-        public StaticBonusMapper StaticBonusMapper { get { return _staticBonusMapper; } }
+        public StaticBonusMapper StaticBonusMapper => _staticBonusMapper;
 
-        public StaticBuffMapper StaticBuffMapper { get { return _staticBuffMapper; } }
+        public StaticBuffMapper StaticBuffMapper => _staticBuffMapper;
 
-        public TeleporterMapper TeleporterMapper { get { return _teleporterMapper; } }
+        public TeleporterMapper TeleporterMapper => _teleporterMapper;
 
-        public UsableInstanceMapper UsableInstanceMapper { get { return _usableInstanceMapper; } }
+        public UsableInstanceMapper UsableInstanceMapper => _usableInstanceMapper;
 
-        public WearableInstanceMapper WearableInstanceMapper { get { return _wearableInstanceMapper; } }
+        public WearableInstanceMapper WearableInstanceMapper => _wearableInstanceMapper;
     }
 }

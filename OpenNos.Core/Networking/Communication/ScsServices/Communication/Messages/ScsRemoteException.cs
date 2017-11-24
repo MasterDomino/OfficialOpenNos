@@ -38,7 +38,7 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Communication.Messag
         /// </summary>
         /// <param name="serializationInfo"></param>
         /// <param name="context"></param>
-        public ScsRemoteException(SerializationInfo serializationInfo, StreamingContext context) : base(serializationInfo, context)
+        protected ScsRemoteException(SerializationInfo serializationInfo, StreamingContext context) : base(serializationInfo, context)
         {
         }
 

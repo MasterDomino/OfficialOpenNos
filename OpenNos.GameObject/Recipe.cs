@@ -27,6 +27,17 @@ namespace OpenNos.GameObject
 
         #endregion
 
+        public Recipe()
+        {
+        }
+
+        public Recipe(RecipeDTO input)
+        {
+            Amount = input.Amount;
+            ItemVNum = input.ItemVNum;
+            RecipeId = input.RecipeId;
+        }
+
         #region Methods
 
         public void Initialize()

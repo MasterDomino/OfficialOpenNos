@@ -102,7 +102,10 @@ namespace OpenNos.DAL.DAO
                 {
                     MailDTO dto = new MailDTO();
                     if(Mapper.Mapper.Instance.MailMapper.ToMailDTO(context.Mail.FirstOrDefault(i => i.MailId.Equals(mailId)), dto))
-                    return dto;
+                    {
+                        return dto;
+                    }
+
                     return null;
                 }
             }
@@ -154,7 +157,10 @@ namespace OpenNos.DAL.DAO
                 context.Mail.Add(entity);
                 context.SaveChanges();
                 if(Mapper.Mapper.Instance.MailMapper.ToMailDTO(entity, mail))
-                return mail;
+                {
+                    return mail;
+                }
+
                 return null;
             }
             catch (System.Data.Entity.Validation.DbEntityValidationException dbEx)
@@ -189,7 +195,10 @@ namespace OpenNos.DAL.DAO
                 context.SaveChanges();
             }
             if(Mapper.Mapper.Instance.MailMapper.ToMailDTO(entity, respawn))
-            return respawn;
+            {
+                return respawn;
+            }
+
             return null;
         }
 

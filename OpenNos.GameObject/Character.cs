@@ -2274,7 +2274,6 @@ namespace OpenNos.GameObject
             int weaponUpgrade = 0;
             int secondaryUpgrade = 0;
             int armorUpgrade = 0;
-
             MinHit = CharacterHelper.MinHit(Class, Level);
             MaxHit = CharacterHelper.MaxHit(Class, Level);
             HitRate = CharacterHelper.HitRate(Class, Level);

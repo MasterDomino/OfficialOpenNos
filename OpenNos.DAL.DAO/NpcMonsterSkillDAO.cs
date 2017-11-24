@@ -39,7 +39,10 @@ namespace OpenNos.DAL.DAO
                     context.NpcMonsterSkill.Add(entity);
                     context.SaveChanges();
                     if(Mapper.Mapper.Instance.NpcMonsterSkillMapper.ToNpcMonsterSkillDTO(entity, npcMonsterSkill))
-                    return npcMonsterSkill;
+                    {
+                        return npcMonsterSkill;
+                    }
+
                     return null;
                 }
             }

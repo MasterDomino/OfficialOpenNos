@@ -18,7 +18,7 @@ using System;
 namespace OpenNos.Core
 {
     [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
-    public class PacketHeaderAttribute : Attribute
+    public sealed class PacketHeaderAttribute : Attribute
     {
         #region Instantiation
 

@@ -103,7 +103,10 @@ namespace OpenNos.DAL.DAO
                 context.MinilandObject.Add(entity);
                 context.SaveChanges();
                 if(Mapper.Mapper.Instance.MinilandObjectMapper.ToMinilandObjectDTO(entity, obj))
-                return obj;
+                {
+                    return obj;
+                }
+
                 return null;
             }
             catch (Exception e)
@@ -121,7 +124,10 @@ namespace OpenNos.DAL.DAO
                 context.SaveChanges();
             }
             if(Mapper.Mapper.Instance.MinilandObjectMapper.ToMinilandObjectDTO(entity, respawn))
-            return respawn;
+            {
+                return respawn;
+            }
+
             return null;
         }
 

@@ -28,9 +28,9 @@ namespace OpenNos.DAL.Mock
 
         public ComboDTO LoadById(short comboId) => Container.SingleOrDefault(c => c.ComboId == comboId);
 
-        public IEnumerable<ComboDTO> LoadBySkillVnum(short skillVNum) => Container.Where(c => c.SkillVNum == skillVNum).Select(e => MapEntity(e));
+        public IEnumerable<ComboDTO> LoadBySkillVnum(short skillVNum) => Container.Where(c => c.SkillVNum == skillVNum);
 
-        public IEnumerable<ComboDTO> LoadByVNumHitAndEffect(short skillVNum, short hit, short effect) => Container.Where(c => c.SkillVNum == skillVNum && c.Hit == hit && c.Effect == effect).Select(e => MapEntity(e));
+        public IEnumerable<ComboDTO> LoadByVNumHitAndEffect(short skillVNum, short hit, short effect) => Container.Where(c => c.SkillVNum == skillVNum && c.Hit == hit && c.Effect == effect);
 
         #endregion
     }

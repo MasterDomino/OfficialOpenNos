@@ -41,10 +41,7 @@ namespace OpenNos.GameObject
         {
         }
 
-        public WearableInstance(Guid id)
-        {
-            Id = id;
-        }
+        public WearableInstance(Guid id) => Id = id;
 
         public WearableInstance(short vNum, byte amount) : base(vNum, amount)
         {
@@ -85,7 +82,7 @@ namespace OpenNos.GameObject
             LightElement = input.LightElement;
             LightResistance = input.LightResistance;
             MagicDefence = input.MagicDefence;
-            MaxElementRate = (byte)input.MaxElementRate;
+            MaxElementRate = input.MaxElementRate;
             MP = input.MP;
             Rare = input.Rare;
             Slot = input.Slot;
@@ -152,7 +149,7 @@ namespace OpenNos.GameObject
 
         public short MagicDefence { get; set; }
 
-        public byte MaxElementRate { get; set; }
+        public short MaxElementRate { get; set; }
 
         public short MP { get; set; }
 

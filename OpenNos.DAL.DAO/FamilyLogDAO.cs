@@ -100,7 +100,10 @@ namespace OpenNos.DAL.DAO
             context.FamilyLog.Add(entity);
             context.SaveChanges();
             if(Mapper.Mapper.Instance.FamilyLogMapper.ToFamilyLogDTO(entity, famlog))
-            return famlog;
+            {
+                return famlog;
+            }
+
             return null;
         }
 
@@ -113,7 +116,10 @@ namespace OpenNos.DAL.DAO
             }
 
             if(Mapper.Mapper.Instance.FamilyLogMapper.ToFamilyLogDTO(entity, famlog))
-            return famlog;
+            {
+                return famlog;
+            }
+
             return null;
         }
 

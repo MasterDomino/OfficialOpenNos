@@ -86,7 +86,10 @@ namespace OpenNos.DAL.DAO
                 {
                     RespawnMapTypeDTO dto = new RespawnMapTypeDTO();
                     if(Mapper.Mapper.Instance.RespawnMapTypeMapper.ToRespawnMapTypeDTO(context.RespawnMapType.FirstOrDefault(s => s.RespawnMapTypeId.Equals(respawnMapTypeId)), dto))
-                    return dto;
+                    {
+                        return dto;
+                    }
+
                     return null;
                 }
             }
@@ -105,7 +108,10 @@ namespace OpenNos.DAL.DAO
                 {
                     RespawnMapTypeDTO dto = new RespawnMapTypeDTO();
                     if(Mapper.Mapper.Instance.RespawnMapTypeMapper.ToRespawnMapTypeDTO(context.RespawnMapType.FirstOrDefault(s => s.DefaultMapId.Equals(mapId)), dto))
-                    return dto;
+                    {
+                        return dto;
+                    }
+
                     return null;
                 }
             }
@@ -125,7 +131,10 @@ namespace OpenNos.DAL.DAO
                 context.RespawnMapType.Add(entity);
                 context.SaveChanges();
                 if(Mapper.Mapper.Instance.RespawnMapTypeMapper.ToRespawnMapTypeDTO(entity, respawnMapType))
-                return respawnMapType;
+                {
+                    return respawnMapType;
+                }
+
                 return null;
             }
             catch (Exception e)
@@ -143,7 +152,10 @@ namespace OpenNos.DAL.DAO
                 context.SaveChanges();
             }
             if(Mapper.Mapper.Instance.RespawnMapTypeMapper.ToRespawnMapTypeDTO(entity, respawnMapType))
-            return respawnMapType;
+            {
+                return respawnMapType;
+            }
+
             return null;
         }
 

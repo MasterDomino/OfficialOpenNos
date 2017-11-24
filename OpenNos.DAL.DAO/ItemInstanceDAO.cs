@@ -12,7 +12,6 @@
  * GNU General Public License for more details.
  */
 
-using AutoMapper;
 using OpenNos.Core;
 using OpenNos.DAL.EF;
 using OpenNos.DAL.EF.Helpers;
@@ -29,6 +28,20 @@ namespace OpenNos.DAL.DAO
     public class ItemInstanceDAO : IItemInstanceDAO
     {
         #region Methods
+
+        public virtual DeleteResult Delete(Guid id)
+        {
+            using (OpenNosContext context = DataAccessHelper.CreateContext())
+            {
+                ItemInstance entity = context.Set<ItemInstance>().FirstOrDefault(i => i.Id == id);
+                if (entity != null)
+                {
+                    context.Set<ItemInstance>().Remove(entity);
+                    context.SaveChanges();
+                }
+                return DeleteResult.Deleted;
+            }
+        }
 
         public DeleteResult DeleteFromSlotAndType(long characterId, short slot, InventoryType type)
         {
@@ -77,154 +90,11 @@ namespace OpenNos.DAL.DAO
                         {
                             // TODO: Work on: statement conflicted with the REFERENCE constraint
                             //       "FK_dbo.BazaarItem_dbo.ItemInstance_ItemInstanceId". The
-                            //       conflict occurred in database "opennos", table
-                            //       "dbo.BazaarItem", column 'ItemInstanceId'.
+                            //       conflict occurred in database "opennos", table "dbo.BazaarItem",
+                            //       column 'ItemInstanceId'.
                             Logger.LogUserEventError("ONSAVEDELETION_EXCEPTION", "Saving Process", $"Detailed Item Information: Item ID = {id}", ex);
                         }
                     }
-                }
-                return DeleteResult.Deleted;
-            }
-        }
-
-        public SaveResult InsertOrUpdateFromList(IEnumerable<ItemInstanceDTO> items)
-        {
-            try
-            {
-                using (OpenNosContext context = DataAccessHelper.CreateContext())
-                {
-                    void insert(ItemInstanceDTO iteminstance)
-                    {
-                        ItemInstance _entity = new ItemInstance();
-                        Map(iteminstance, _entity);
-                        context.ItemInstance.Add(_entity);
-                        context.SaveChanges();
-                        iteminstance.Id = _entity.Id;
-                    }
-
-                    void update(ItemInstance _entity, ItemInstanceDTO iteminstance)
-                    {
-                        if (_entity != null)
-                        {
-                            Map(iteminstance, _entity);
-                        }
-                    }
-
-                    foreach (ItemInstanceDTO item in items)
-                    {
-                        ItemInstance entity = context.ItemInstance.FirstOrDefault(c => c.Id == item.Id);
-
-                        if (entity == null)
-                        {
-                            insert(item);
-                        }
-                        else
-                        {
-                            update(entity, item);
-                        }
-                    }
-
-                    context.SaveChanges();
-                    return SaveResult.Updated;
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e);
-                return SaveResult.Error;
-            }
-        }
-
-        public IEnumerable<ItemInstanceDTO> LoadByCharacterId(long characterId)
-        {
-            using (OpenNosContext context = DataAccessHelper.CreateContext())
-            {
-                List<ItemInstanceDTO> result = new List<ItemInstanceDTO>();
-                foreach (ItemInstance itemInstance in context.ItemInstance.Where(i => i.CharacterId.Equals(characterId)))
-                {
-                    ItemInstanceDTO output = new ItemInstanceDTO();
-                    Map(itemInstance, output);
-                    result.Add(output);
-                }
-                return result;
-            }
-        }
-
-        public ItemInstanceDTO LoadBySlotAndType(long characterId, short slot, InventoryType type)
-        {
-            try
-            {
-                using (OpenNosContext context = DataAccessHelper.CreateContext())
-                {
-                    ItemInstance entity = context.ItemInstance.FirstOrDefault(i => i.CharacterId == characterId && i.Slot == slot && i.Type == type);
-                    ItemInstanceDTO output = new ItemInstanceDTO();
-                    if(Map(entity, output))
-                    return output;
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e);
-                return null;
-            }
-        }
-
-        public IEnumerable<ItemInstanceDTO> LoadByType(long characterId, InventoryType type)
-        {
-            using (OpenNosContext context = DataAccessHelper.CreateContext())
-            {
-                List<ItemInstanceDTO> result = new List<ItemInstanceDTO>();
-                foreach (ItemInstance itemInstance in context.ItemInstance.Where(i => i.CharacterId == characterId && i.Type == type))
-                {
-                    ItemInstanceDTO output = new ItemInstanceDTO();
-                    Map(itemInstance, output);
-                    result.Add(output);
-                }
-                return result;
-            }
-        }
-
-        public IList<Guid> LoadSlotAndTypeByCharacterId(long characterId)
-        {
-            try
-            {
-                using (OpenNosContext context = DataAccessHelper.CreateContext())
-                {
-                    return context.ItemInstance.Where(i => i.CharacterId.Equals(characterId)).Select(i => i.Id).ToList();
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e);
-                return null;
-            }
-        }
-
-        protected ItemInstanceDTO InsertOrUpdate(OpenNosContext context, ItemInstanceDTO dto)
-        {
-            try
-            {
-                ItemInstance entity = context.ItemInstance.FirstOrDefault(c => c.Id == dto.Id);
-                dto = entity == null ? Insert(dto, context) : Update(entity, dto, context);
-                return dto;
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e);
-                return null;
-            }
-        }
-
-        public virtual DeleteResult Delete(Guid id)
-        {
-            using (OpenNosContext context = DataAccessHelper.CreateContext())
-            {
-                ItemInstance entity = context.Set<ItemInstance>().FirstOrDefault(i => i.Id == id);
-                if (entity != null)
-                {
-                    context.Set<ItemInstance>().Remove(entity);
-                    context.SaveChanges();
                 }
                 return DeleteResult.Deleted;
             }
@@ -267,13 +137,133 @@ namespace OpenNos.DAL.DAO
             }
         }
 
+        public SaveResult InsertOrUpdateFromList(IEnumerable<ItemInstanceDTO> items)
+        {
+            try
+            {
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
+                {
+                    void insert(ItemInstanceDTO iteminstance)
+                    {
+                        ItemInstance _entity = new ItemInstance();
+                        map(iteminstance, _entity);
+                        context.ItemInstance.Add(_entity);
+                        context.SaveChanges();
+                        iteminstance.Id = _entity.Id;
+                    }
+
+                    void update(ItemInstance _entity, ItemInstanceDTO iteminstance)
+                    {
+                        if (_entity != null)
+                        {
+                            map(iteminstance, _entity);
+                        }
+                    }
+
+                    foreach (ItemInstanceDTO item in items)
+                    {
+                        ItemInstance entity = context.ItemInstance.FirstOrDefault(c => c.Id == item.Id);
+
+                        if (entity == null)
+                        {
+                            insert(item);
+                        }
+                        else
+                        {
+                            update(entity, item);
+                        }
+                    }
+
+                    context.SaveChanges();
+                    return SaveResult.Updated;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                return SaveResult.Error;
+            }
+        }
+
+        public IEnumerable<ItemInstanceDTO> LoadByCharacterId(long characterId)
+        {
+            using (OpenNosContext context = DataAccessHelper.CreateContext())
+            {
+                List<ItemInstanceDTO> result = new List<ItemInstanceDTO>();
+                foreach (ItemInstance itemInstance in context.ItemInstance.Where(i => i.CharacterId.Equals(characterId)))
+                {
+                    ItemInstanceDTO output = new ItemInstanceDTO();
+                    map(itemInstance, output);
+                    result.Add(output);
+                }
+                return result;
+            }
+        }
+
         public ItemInstanceDTO LoadById(Guid id)
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 ItemInstanceDTO ItemInstanceDTO = new ItemInstanceDTO();
-                if(Map(context.ItemInstance.FirstOrDefault(i => i.Id.Equals(id)), ItemInstanceDTO))
-                return ItemInstanceDTO;
+                if (map(context.ItemInstance.FirstOrDefault(i => i.Id.Equals(id)), ItemInstanceDTO))
+                {
+                    return ItemInstanceDTO;
+                }
+
+                return null;
+            }
+        }
+
+        public ItemInstanceDTO LoadBySlotAndType(long characterId, short slot, InventoryType type)
+        {
+            try
+            {
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
+                {
+                    ItemInstance entity = context.ItemInstance.FirstOrDefault(i => i.CharacterId == characterId && i.Slot == slot && i.Type == type);
+                    ItemInstanceDTO output = new ItemInstanceDTO();
+                    if (map(entity, output))
+                    {
+                        return output;
+                    }
+
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                return null;
+            }
+        }
+
+        public IEnumerable<ItemInstanceDTO> LoadByType(long characterId, InventoryType type)
+        {
+            using (OpenNosContext context = DataAccessHelper.CreateContext())
+            {
+                List<ItemInstanceDTO> result = new List<ItemInstanceDTO>();
+                foreach (ItemInstance itemInstance in context.ItemInstance.Where(i => i.CharacterId == characterId && i.Type == type))
+                {
+                    ItemInstanceDTO output = new ItemInstanceDTO();
+                    map(itemInstance, output);
+                    result.Add(output);
+                }
+                return result;
+            }
+        }
+
+        public IList<Guid> LoadSlotAndTypeByCharacterId(long characterId)
+        {
+            try
+            {
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
+                {
+                    return context.ItemInstance.Where(i => i.CharacterId.Equals(characterId)).Select(i => i.Id).ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
                 return null;
             }
         }
@@ -281,27 +271,48 @@ namespace OpenNos.DAL.DAO
         protected ItemInstanceDTO Insert(ItemInstanceDTO dto, OpenNosContext context)
         {
             ItemInstance entity = new ItemInstance();
-            Map(dto, entity);
+            map(dto, entity);
             context.Set<ItemInstance>().Add(entity);
             context.SaveChanges();
-            if(Map(entity, dto))
-            return dto;
+            if (map(entity, dto))
+            {
+                return dto;
+            }
+
             return null;
+        }
+
+        protected ItemInstanceDTO InsertOrUpdate(OpenNosContext context, ItemInstanceDTO dto)
+        {
+            try
+            {
+                ItemInstance entity = context.ItemInstance.FirstOrDefault(c => c.Id == dto.Id);
+                dto = entity == null ? Insert(dto, context) : Update(entity, dto, context);
+                return dto;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                return null;
+            }
         }
 
         protected ItemInstanceDTO Update(ItemInstance entity, ItemInstanceDTO inventory, OpenNosContext context)
         {
             if (entity != null)
             {
-                Map(inventory, entity, true);
+                map(inventory, entity, true);
                 context.SaveChanges();
             }
-            if(Map(entity, inventory))
-            return inventory;
+            if (map(entity, inventory))
+            {
+                return inventory;
+            }
+
             return null;
         }
 
-        private bool Map(ItemInstance input, ItemInstanceDTO output)
+        private bool map(ItemInstance input, ItemInstanceDTO output)
         {
             if (input == null)
             {
@@ -313,9 +324,9 @@ namespace OpenNos.DAL.DAO
             {
                 output = new BoxItemDTO();
                 Mapper.Mapper.Instance.BoxItemMapper.ToBoxItemDTO((BoxInstance)input, (BoxItemDTO)output);
-                if(((BoxItemDTO)output).EquipmentSerialId==Guid.Empty)
+                if (((BoxItemDTO)output).EquipmentSerialId == Guid.Empty)
                 {
-                    ((BoxItemDTO)output).EquipmentSerialId = Guid.NewGuid(); 
+                    ((BoxItemDTO)output).EquipmentSerialId = Guid.NewGuid();
                 }
             }
             else if (t == typeof(SpecialistInstance))
@@ -348,7 +359,7 @@ namespace OpenNos.DAL.DAO
             return true;
         }
 
-        private bool Map(ItemInstanceDTO input, ItemInstance output, bool exists = false)
+        private bool map(ItemInstanceDTO input, ItemInstance output, bool exists = false)
         {
             if (input == null)
             {

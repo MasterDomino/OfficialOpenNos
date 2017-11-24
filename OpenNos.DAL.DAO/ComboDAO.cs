@@ -61,7 +61,10 @@ namespace OpenNos.DAL.DAO
                     context.Combo.Add(entity);
                     context.SaveChanges();
                     if(Mapper.Mapper.Instance.ComboMapper.ToComboDTO(entity, combo))
-                    return combo;
+                    {
+                        return combo;
+                    }
+
                     return null;
                 }
             }
@@ -95,7 +98,10 @@ namespace OpenNos.DAL.DAO
                 {
                     ComboDTO dto = new ComboDTO();
                     if(Mapper.Mapper.Instance.ComboMapper.ToComboDTO(context.Combo.FirstOrDefault(s => s.SkillVNum.Equals(comboId)), dto))
-                    return dto;
+                    {
+                        return dto;
+                    }
+
                     return null;
                 }
             }

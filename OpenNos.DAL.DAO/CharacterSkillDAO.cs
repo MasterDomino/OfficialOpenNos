@@ -138,7 +138,10 @@ namespace OpenNos.DAL.DAO
             {
                 CharacterSkillDTO characterSkillDTO = new CharacterSkillDTO();
                 if(Mapper.Mapper.Instance.CharacterSkillMapper.ToCharacterSkillDTO(context.CharacterSkill.FirstOrDefault(i => i.Id.Equals(id)), characterSkillDTO))
-                return characterSkillDTO;
+                {
+                    return characterSkillDTO;
+                }
+
                 return null;
             }
         }
@@ -150,7 +153,10 @@ namespace OpenNos.DAL.DAO
             context.Set<CharacterSkill>().Add(entity);
             context.SaveChanges();
             if(Mapper.Mapper.Instance.CharacterSkillMapper.ToCharacterSkillDTO(entity, dto))
-            return dto;
+            {
+                return dto;
+            }
+
             return null;
         }
 
@@ -176,7 +182,10 @@ namespace OpenNos.DAL.DAO
                 context.SaveChanges();
             }
             if(Mapper.Mapper.Instance.CharacterSkillMapper.ToCharacterSkillDTO(entity, inventory))
-            return inventory;
+            {
+                return inventory;
+            }
+
             return null;
         }
 

@@ -316,8 +316,10 @@ namespace OpenNos.GameObject
         {
             foreach (PortalDTO portal in DAOFactory.PortalDAO.LoadByMap(Map.MapId))
             {
-                Portal p = new Portal(portal);
-                p.SourceMapInstanceId = MapInstanceId;
+                Portal p = new Portal(portal)
+                {
+                    SourceMapInstanceId = MapInstanceId
+                };
                 Portals.Add(p);
             }
         }

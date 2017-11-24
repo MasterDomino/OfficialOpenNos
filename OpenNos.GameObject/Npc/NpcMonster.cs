@@ -20,6 +20,61 @@ namespace OpenNos.GameObject
 {
     public class NpcMonster : NpcMonsterDTO
     {
+        #region Instantiation
+
+        public NpcMonster()
+        {
+        }
+
+        public NpcMonster(NpcMonsterDTO input)
+        {
+            AmountRequired = input.AmountRequired;
+            AttackClass = input.AttackClass;
+            AttackUpgrade = input.AttackUpgrade;
+            BasicArea = input.BasicArea;
+            BasicCooldown = input.BasicCooldown;
+            BasicRange = input.BasicRange;
+            BasicSkill = input.BasicSkill;
+            Catch = input.Catch;
+            CloseDefence = input.CloseDefence;
+            Concentrate = input.Concentrate;
+            CriticalChance = input.CriticalChance;
+            CriticalRate = input.CriticalRate;
+            DamageMaximum = input.DamageMaximum;
+            DamageMinimum = input.DamageMinimum;
+            DarkResistance = input.DarkResistance;
+            DefenceDodge = input.DefenceDodge;
+            DefenceUpgrade = input.DefenceUpgrade;
+            DistanceDefence = input.DistanceDefence;
+            DistanceDefenceDodge = input.DistanceDefenceDodge;
+            Element = input.Element;
+            ElementRate = input.ElementRate;
+            FireResistance = input.FireResistance;
+            HeroLevel = input.HeroLevel;
+            HeroXp = input.HeroXp;
+            IsHostile = input.IsHostile;
+            JobXP = input.JobXP;
+            Level = input.Level;
+            LightResistance = input.LightResistance;
+            MagicDefence = input.MagicDefence;
+            MaxHP = input.MaxHP;
+            MaxMP = input.MaxMP;
+            MonsterType = input.MonsterType;
+            Name = input.Name;
+            NoAggresiveIcon = input.NoAggresiveIcon;
+            NoticeRange = input.NoticeRange;
+            NpcMonsterVNum = input.NpcMonsterVNum;
+            Race = input.Race;
+            RaceType = input.RaceType;
+            RespawnTime = input.RespawnTime;
+            Speed = input.Speed;
+            VNumRequired = input.VNumRequired;
+            WaterResistance = input.WaterResistance;
+            XP = input.XP;
+        }
+
+        #endregion
+
         #region Properties
 
         public List<BCard> BCards { get; set; }

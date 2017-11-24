@@ -27,6 +27,42 @@ namespace OpenNos.GameObject
             BCards = new List<BCard>();
         }
 
+        public Skill(SkillDTO input)
+        {
+            AttackAnimation = input.AttackAnimation;
+            CastAnimation = input.CastAnimation;
+            CastEffect = input.CastEffect;
+            CastId = input.CastId;
+            CastTime = input.CastTime;
+            Class = input.Class;
+            Cooldown = input.Cooldown;
+            CPCost = input.CPCost;
+            Duration = input.Duration;
+            Effect = input.Effect;
+            Element = input.Element;
+            HitType = input.HitType;
+            ItemVNum = input.ItemVNum;
+            Level = input.Level;
+            LevelMinimum = input.LevelMinimum;
+            MinimumAdventurerLevel = input.MinimumAdventurerLevel;
+            MinimumArcherLevel = input.MinimumArcherLevel;
+            MinimumMagicianLevel = input.MinimumMagicianLevel;
+            MinimumSwordmanLevel = input.MinimumSwordmanLevel;
+            MpCost = input.MpCost;
+            Name = input.Name;
+            Price = input.Price;
+            Range = input.Range;
+            SkillType = input.SkillType;
+            SkillVNum = input.SkillVNum;
+            TargetRange = input.TargetRange;
+            TargetType = input.TargetType;
+            Type = input.Type;
+            UpgradeSkill = input.UpgradeSkill;
+            UpgradeType = input.UpgradeType;
+            Combos = new List<ComboDTO>();
+            BCards = new List<BCard>();
+        }
+
         #endregion
 
         #region Properties

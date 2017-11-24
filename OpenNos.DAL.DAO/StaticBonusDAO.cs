@@ -100,7 +100,10 @@ namespace OpenNos.DAL.DAO
                 {
                     StaticBonusDTO dto = new StaticBonusDTO();
                     if(Mapper.Mapper.Instance.StaticBonusMapper.ToStaticBonusDTO(context.StaticBonus.FirstOrDefault(s => s.StaticBonusId.Equals(sbId)),dto))
-                    return dto;
+                    {
+                        return dto;
+                    }
+
                     return null;
                 }
             }
@@ -136,7 +139,10 @@ namespace OpenNos.DAL.DAO
                 context.StaticBonus.Add(entity);
                 context.SaveChanges();
                 if(Mapper.Mapper.Instance.StaticBonusMapper.ToStaticBonusDTO(entity, sb))
-                return sb;
+                {
+                    return sb;
+                }
+
                 return null;
             }
             catch (Exception e)
@@ -154,7 +160,10 @@ namespace OpenNos.DAL.DAO
                 context.SaveChanges();
             }
             if(Mapper.Mapper.Instance.StaticBonusMapper.ToStaticBonusDTO(entity, sb))
-            return sb;
+            {
+                return sb;
+            }
+
             return null;
         }
 

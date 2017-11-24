@@ -89,7 +89,9 @@ namespace OpenNos.DAL.DAO
                     {
                         AccountDTO accountDTO = new AccountDTO();
                         if(Mapper.Mapper.Instance.AccountMapper.ToAccountDTO(account, accountDTO))
-                        return accountDTO;
+                        {
+                            return accountDTO;
+                        }
                     }
                 }
             }
@@ -111,7 +113,9 @@ namespace OpenNos.DAL.DAO
                     {
                         AccountDTO accountDTO = new AccountDTO();
                         if(Mapper.Mapper.Instance.AccountMapper.ToAccountDTO(account, accountDTO))
-                        return accountDTO;
+                        {
+                            return accountDTO;
+                        }
                     }
                 }
             }
@@ -167,7 +171,10 @@ namespace OpenNos.DAL.DAO
                 context.SaveChanges();
             }
             if(Mapper.Mapper.Instance.AccountMapper.ToAccountDTO(entity, account))
-            return account;
+            {
+                return account;
+            }
+
             return null;
         }
 

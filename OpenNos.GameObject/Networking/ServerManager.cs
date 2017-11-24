@@ -815,7 +815,7 @@ namespace OpenNos.GameObject
             // initialize npcmonsters
             Parallel.ForEach(DAOFactory.NpcMonsterDAO.LoadAll(), npcMonster =>
             {
-                NpcMonster npcMonsterObj = npcMonster as NpcMonster;
+                NpcMonster npcMonsterObj = new NpcMonster(npcMonster);
                 npcMonsterObj.Initialize();
                 npcMonsterObj.BCards = new List<BCard>();
                 DAOFactory.BCardDAO.LoadByNpcMonsterVNum(npcMonster.NpcMonsterVNum).ToList().ForEach(s => npcMonsterObj.BCards.Add(new BCard((s))));
@@ -827,8 +827,9 @@ namespace OpenNos.GameObject
             _recipes = new ThreadSafeSortedList<short, Recipe>();
             Parallel.ForEach(DAOFactory.RecipeDAO.LoadAll(), recipeGrouping =>
             {
-                _recipes[recipeGrouping.RecipeId] = recipeGrouping as Recipe;
-                (recipeGrouping as Recipe).Initialize();
+                Recipe recipe = new Recipe(recipeGrouping);
+                _recipes[recipeGrouping.RecipeId] = recipe;
+                recipe.Initialize();
             });
             Logger.Info(string.Format(Language.Instance.GetMessageFromKey("RECIPES_LOADED"), _recipes.Count));
 
@@ -851,8 +852,9 @@ namespace OpenNos.GameObject
             _shops = new ThreadSafeSortedList<int, Shop>();
             Parallel.ForEach(DAOFactory.ShopDAO.LoadAll(), shopGrouping =>
             {
-                _shops[shopGrouping.MapNpcId] = shopGrouping as Shop;
-                (shopGrouping as Shop).Initialize();
+                Shop shop = new Shop(shopGrouping);
+                _shops[shopGrouping.MapNpcId] = shop;
+                shop.Initialize();
             });
             Logger.Info(string.Format(Language.Instance.GetMessageFromKey("SHOPS_LOADED"), _shops.Count));
 
@@ -864,7 +866,7 @@ namespace OpenNos.GameObject
             // initialize skills
             Parallel.ForEach(DAOFactory.SkillDAO.LoadAll(), skill =>
             {
-                Skill skillObj = skill as Skill;
+                Skill skillObj = new Skill(skill);
                 skillObj.Combos.AddRange(DAOFactory.ComboDAO.LoadBySkillVnum(skillObj.SkillVNum).ToList());
                 skillObj.BCards = new List<BCard>();
                 DAOFactory.BCardDAO.LoadBySkillVNum(skillObj.SkillVNum).ToList().ForEach(o => skillObj.BCards.Add(new BCard(o)));
@@ -875,8 +877,10 @@ namespace OpenNos.GameObject
             // initialize cards
             Parallel.ForEach(DAOFactory.CardDAO.LoadAll(), card =>
             {
-                Card cardObj = new Card(card);
-                cardObj.BCards = new List<BCard>();
+                Card cardObj = new Card(card)
+                {
+                    BCards = new List<BCard>()
+                };
                 DAOFactory.BCardDAO.LoadByCardId(cardObj.CardId).ToList().ForEach(o => cardObj.BCards.Add(new BCard(o)));
                 _cards.Add(cardObj);
             });
@@ -1537,25 +1541,29 @@ namespace OpenNos.GameObject
             Raids = new ConcurrentBag<ScriptedInstance>();
             Parallel.ForEach(_mapinstances, map =>
             {
-                foreach (ScriptedInstance si in DAOFactory.ScriptedInstanceDAO.LoadByMap(map.Value.Map.MapId).ToList())
+                foreach (ScriptedInstanceDTO si in DAOFactory.ScriptedInstanceDAO.LoadByMap(map.Value.Map.MapId).ToList())
                 {
-                    if (si.Type == ScriptedInstanceType.TimeSpace)
+                    ScriptedInstance siObj = new ScriptedInstance(si);
+                    if (siObj != null)
                     {
-                        si.LoadGlobals();
-                        map.Value.ScriptedInstances.Add(si);
-                    }
-                    else if (si.Type == ScriptedInstanceType.Raid)
-                    {
-                        si.LoadGlobals();
-                        Raids.Add(si);
-                        Portal port = new Portal()
+                        if (siObj.Type == ScriptedInstanceType.TimeSpace)
                         {
-                            Type = (byte)PortalType.Raid,
-                            SourceMapId = si.MapId,
-                            SourceX = si.PositionX,
-                            SourceY = si.PositionY
-                        };
-                        map.Value.Portals.Add(port);
+                            siObj.LoadGlobals();
+                            map.Value.ScriptedInstances.Add(siObj);
+                        }
+                        else if (siObj.Type == ScriptedInstanceType.Raid)
+                        {
+                            siObj.LoadGlobals();
+                            Raids.Add(siObj);
+                            Portal port = new Portal()
+                            {
+                                Type = (byte)PortalType.Raid,
+                                SourceMapId = siObj.MapId,
+                                SourceX = siObj.PositionX,
+                                SourceY = siObj.PositionY
+                            };
+                            map.Value.Portals.Add(port);
+                        }
                     }
                 }
             });

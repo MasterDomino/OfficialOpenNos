@@ -79,7 +79,10 @@ namespace OpenNos.DAL.DAO
                 {
                     RespawnDTO dto = new RespawnDTO();
                     if(Mapper.Mapper.Instance.RespawnMapper.ToRespawnDTO(context.Respawn.FirstOrDefault(s => s.RespawnId.Equals(respawnId)), dto))
-                    return dto;
+                    {
+                        return dto;
+                    }
+
                     return null;
                 }
             }
@@ -99,7 +102,10 @@ namespace OpenNos.DAL.DAO
                 context.Respawn.Add(entity);
                 context.SaveChanges();
                 if(Mapper.Mapper.Instance.RespawnMapper.ToRespawnDTO(entity, respawn))
-                return respawn;
+                {
+                    return respawn;
+                }
+
                 return null;
             }
             catch (Exception e)
@@ -117,7 +123,10 @@ namespace OpenNos.DAL.DAO
                 context.SaveChanges();
             }
             if(Mapper.Mapper.Instance.RespawnMapper.ToRespawnDTO(entity, respawn))
-            return respawn;
+            {
+                return respawn;
+            }
+
             return null;
         }
 
