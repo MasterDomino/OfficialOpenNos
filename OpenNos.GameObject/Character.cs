@@ -2038,7 +2038,7 @@ namespace OpenNos.GameObject
                 Miniland = ServerManager.Instance.GenerateMapInstance(20001, MapInstanceType.NormalInstance, new InstanceBag());
                 foreach (MinilandObjectDTO obj in DAOFactory.MinilandObjectDAO.LoadByCharacterId(CharacterId))
                 {
-                    MinilandObject mapobj = (MinilandObject)obj;
+                    MinilandObject mapobj = new MinilandObject(obj);
                     if (mapobj.ItemInstanceId != null)
                     {
                         ItemInstance item = Inventory.GetItemInstanceById((Guid)mapobj.ItemInstanceId);
@@ -3257,9 +3257,8 @@ namespace OpenNos.GameObject
         public int IsReputationHero()
         {
             int i = 0;
-            foreach (CharacterDTO characterDto in ServerManager.Instance.TopReputation)
+            foreach (CharacterDTO character in ServerManager.Instance.TopReputation)
             {
-                Character character = (Character)characterDto;
                 i++;
                 if (character.CharacterId == CharacterId)
                 {

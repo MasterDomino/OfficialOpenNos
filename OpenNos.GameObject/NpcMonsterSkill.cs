@@ -25,6 +25,23 @@ namespace OpenNos.GameObject
 
         #endregion
 
+        #region Instantiation
+
+        public NpcMonsterSkill()
+        {
+
+        }
+
+        public NpcMonsterSkill(NpcMonsterSkillDTO input)
+        {
+            NpcMonsterSkillId = input.NpcMonsterSkillId;
+            NpcMonsterVNum = input.NpcMonsterVNum;
+            Rate = input.Rate;
+            SkillVNum = input.SkillVNum;
+        }
+
+        #endregion
+
         #region Properties
 
         public short Hit { get; set; }

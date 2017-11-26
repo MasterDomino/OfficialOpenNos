@@ -798,7 +798,7 @@ namespace OpenNos.GameObject
 
             // initialize monsterskills
             _monsterSkills = new ThreadSafeSortedList<short, List<NpcMonsterSkill>>();
-            Parallel.ForEach(DAOFactory.NpcMonsterSkillDAO.LoadAll().GroupBy(n => n.NpcMonsterVNum), monsterSkillGrouping => _monsterSkills[monsterSkillGrouping.Key] = monsterSkillGrouping.Select(n => n as NpcMonsterSkill).ToList());
+            Parallel.ForEach(DAOFactory.NpcMonsterSkillDAO.LoadAll().GroupBy(n => n.NpcMonsterVNum), monsterSkillGrouping => _monsterSkills[monsterSkillGrouping.Key] = monsterSkillGrouping.Select(n => new NpcMonsterSkill(n)).ToList());
             Logger.Info(string.Format(Language.Instance.GetMessageFromKey("MONSTERSKILLS_LOADED"), _monsterSkills.Sum(i => i.Count)));
 
             // initialize bazaar
@@ -1524,16 +1524,16 @@ namespace OpenNos.GameObject
             FamilyList = new ThreadSafeSortedList<long, Family>();
             Parallel.ForEach(DAOFactory.FamilyDAO.LoadAll(), familyDTO =>
             {
-                Family family = (Family)familyDTO;
+                Family family = new Family(familyDTO);
                 family.FamilyCharacters = new List<FamilyCharacter>();
                 foreach (FamilyCharacterDTO famchar in DAOFactory.FamilyCharacterDAO.LoadByFamilyId(family.FamilyId).ToList())
                 {
-                    family.FamilyCharacters.Add((FamilyCharacter)famchar);
+                    family.FamilyCharacters.Add(new FamilyCharacter(famchar));
                 }
                 FamilyCharacter familyCharacter = family.FamilyCharacters.Find(s => s.Authority == FamilyAuthority.Head);
                 if (familyCharacter != null)
                 {
-                    family.Warehouse = new Inventory((Character)familyCharacter.Character);
+                    family.Warehouse = new Inventory(new Character(familyCharacter.Character));
                     foreach (ItemInstanceDTO inventory in DAOFactory.IteminstanceDAO.LoadByCharacterId(familyCharacter.CharacterId).Where(s => s.Type == InventoryType.FamilyWareHouse).ToList())
                     {
                         inventory.CharacterId = familyCharacter.CharacterId;
@@ -1649,7 +1649,7 @@ namespace OpenNos.GameObject
             {
                 if (famdto != null)
                 {
-                    Family newFam = (Family)famdto;
+                    Family newFam = new Family(famdto);
                     if (fam != null)
                     {
                         newFam.LandOfDeath = fam.LandOfDeath;
@@ -1660,12 +1660,12 @@ namespace OpenNos.GameObject
                     newFam.FamilyCharacters = new List<FamilyCharacter>();
                     foreach (FamilyCharacterDTO famchar in DAOFactory.FamilyCharacterDAO.LoadByFamilyId(famdto.FamilyId).ToList())
                     {
-                        newFam.FamilyCharacters.Add((FamilyCharacter)famchar);
+                        newFam.FamilyCharacters.Add(new FamilyCharacter(famchar));
                     }
                     FamilyCharacter familyCharacter = newFam.FamilyCharacters.Find(s => s.Authority == FamilyAuthority.Head);
                     if (familyCharacter != null)
                     {
-                        newFam.Warehouse = new Inventory((Character)familyCharacter.Character);
+                        newFam.Warehouse = new Inventory(new Character(familyCharacter.Character));
                         foreach (ItemInstanceDTO inventory in DAOFactory.IteminstanceDAO.LoadByCharacterId(familyCharacter.CharacterId).Where(s => s.Type == InventoryType.FamilyWareHouse).ToList())
                         {
                             inventory.CharacterId = familyCharacter.CharacterId;
