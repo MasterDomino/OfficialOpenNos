@@ -308,7 +308,6 @@ namespace OpenNos.DAL.DAO
             {
                 return inventory;
             }
-
             return null;
         }
 

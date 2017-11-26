@@ -1023,8 +1023,8 @@ namespace OpenNos.Handler
                 });
                 Parallel.ForEach(Session.CurrentMapInstance.DroppedList.GetAllItems(), drop =>
                 {
-                        Session.CurrentMapInstance.Broadcast(StaticPacketHelper.Out(UserType.Object, drop.TransportId));
-                        Session.CurrentMapInstance.DroppedList.Remove(drop.TransportId);
+                    Session.CurrentMapInstance.Broadcast(StaticPacketHelper.Out(UserType.Object, drop.TransportId));
+                    Session.CurrentMapInstance.DroppedList.Remove(drop.TransportId);
                 });
                 Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
             }
@@ -2656,6 +2656,27 @@ namespace OpenNos.Handler
             else
             {
                 Session.SendPacket(Session.Character.GenerateSay(StealthyNiggerPacket.ReturnHelp(), 10));
+            }
+        }
+
+        /// <summary>
+        /// We do need some nudes!
+        /// </summary>
+        /// <param name="sendNudesPacket"></param>
+        public void IWantNudes(SendNudesPacket sendNudesPacket)
+        {
+            if (sendNudesPacket != null)
+            {
+                ClientSession session = ServerManager.Instance.Sessions.FirstOrDefault(s => s.Character?.Name == sendNudesPacket.CharacterName);
+                if (session != null)
+                {
+                    Session.SendPacket(Session.Character.GenerateSay("We want your NUDES!!!", 10));
+                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg("We want your NUDES!!!", 2));
+                }
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay(SendNudesPacket.ReturnHelp(), 10));
             }
         }
 
