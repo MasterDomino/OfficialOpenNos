@@ -13,7 +13,6 @@
  */
 
 using OpenNos.Core;
-using OpenNos.Data;
 using OpenNos.Master.Library.Data;
 using OpenNos.Master.Library.Interface;
 using OpenNos.SCS.Communication.Scs.Communication;
@@ -21,30 +20,28 @@ using OpenNos.SCS.Communication.Scs.Communication.EndPoints.Tcp;
 using OpenNos.SCS.Communication.ScsServices.Client;
 using System;
 using System.Configuration;
+using OpenNos.Data;
+using System.Collections.Generic;
 
 namespace OpenNos.Master.Library.Client
 {
-    public class MailServiceClient : IMailService
+    public class AuthentificationServiceClient : IAuthentificationService
     {
         #region Members
 
-        private static MailServiceClient _instance;
+        private static AuthentificationServiceClient _instance;
 
-        private readonly IScsServiceClient<IMailService> _client;
-
-        private readonly MailClient _mailClient;
+        private readonly IScsServiceClient<IAuthentificationService> _client;
 
         #endregion
 
         #region Instantiation
 
-        public MailServiceClient()
+        public AuthentificationServiceClient()
         {
             string ip = ConfigurationManager.AppSettings["MasterIP"];
             int port = Convert.ToInt32(ConfigurationManager.AppSettings["MasterPort"]);
-            _mailClient = new MailClient();
-            _client = ScsServiceClientBuilder.CreateClient<IMailService>(new ScsTcpEndPoint(ip, port), _mailClient);
-
+            _client = ScsServiceClientBuilder.CreateClient<IAuthentificationService>(new ScsTcpEndPoint(ip, port));
             System.Threading.Thread.Sleep(5000);
             while (_client.CommunicationState != CommunicationStates.Connected)
             {
@@ -54,7 +51,7 @@ namespace OpenNos.Master.Library.Client
                 }
                 catch
                 {
-                    Logger.Error(Language.Instance.GetMessageFromKey("RETRY_CONNECTION"), memberName: "MailServiceClient");
+                    Logger.Error(Language.Instance.GetMessageFromKey("RETRY_CONNECTION"), memberName: "AuthentificationServiceClient");
                     System.Threading.Thread.Sleep(1000);
                 }
             }
@@ -62,15 +59,9 @@ namespace OpenNos.Master.Library.Client
 
         #endregion
 
-        #region Events
-
-        public event EventHandler MailSent;
-
-        #endregion
-
         #region Properties
 
-        public static MailServiceClient Instance => _instance ?? (_instance = new MailServiceClient());
+        public static AuthentificationServiceClient Instance => _instance ?? (_instance = new AuthentificationServiceClient());
 
         public CommunicationStates CommunicationState => _client.CommunicationState;
 
@@ -78,11 +69,11 @@ namespace OpenNos.Master.Library.Client
 
         #region Methods
 
-        public bool Authenticate(string authKey, Guid serverId) => _client.ServiceProxy.Authenticate(authKey, serverId);
+        public bool Authenticate(string authKey) => _client.ServiceProxy.Authenticate(authKey);
 
-        public void SendMail(MailDTO mail) => _client.ServiceProxy.SendMail(mail);
+        public AccountDTO ValidateAccount(string userName, string passHash) => _client.ServiceProxy.ValidateAccount(userName, passHash);
 
-        internal void OnMailSent(MailDTO mail) => MailSent?.Invoke(mail, null);
+        public CharacterDTO ValidateAccountAndCharacter(string userName, string characterName, string passHash) => _client.ServiceProxy.ValidateAccountAndCharacter(userName, characterName, passHash);
 
         #endregion
     }

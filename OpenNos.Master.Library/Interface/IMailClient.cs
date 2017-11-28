@@ -1,4 +1,5 @@
-﻿using OpenNos.Master.Library.Data;
+﻿using OpenNos.Data;
+using OpenNos.Master.Library.Data;
 
 namespace OpenNos.Master.Library.Interface
 {
@@ -6,7 +7,7 @@ namespace OpenNos.Master.Library.Interface
     {
         #region Methods
 
-        void MailSent(Mail mail);
+        void MailSent(MailDTO mail);
 
         #endregion
     }

@@ -1,6 +1,7 @@
 ﻿using OpenNos.SCS.Communication.ScsServices.Service;
 using OpenNos.Master.Library.Data;
 using System;
+using OpenNos.Data;
 
 namespace OpenNos.Master.Library.Interface
 {
@@ -18,6 +19,6 @@ namespace OpenNos.Master.Library.Interface
         /// Send Mail
         /// </summary>
         /// <param name="mail"></param>
-        void SendMail(Mail mail);
+        void SendMail(MailDTO mail);
     }
 }

@@ -1689,7 +1689,7 @@ namespace OpenNos.Handler
                     }
                     ItemInstance headWearable = Session.Character.Inventory.LoadBySlotAndType((byte)EquipmentType.Hat, InventoryType.Wear);
                     byte color = headWearable?.Item.IsColored == true ? (byte)headWearable.Design : (byte)Session.Character.HairColor;
-                    Mail mailcopy = new Mail
+                    MailDTO mailcopy = new MailDTO
                     {
                         AttachmentAmount = 0,
                         IsOpened = false,
@@ -1706,7 +1706,7 @@ namespace OpenNos.Handler
                         EqPacket = Session.Character.GenerateEqListForPacket(),
                         SenderMorphId = Session.Character.Morph == 0 ? (short)-1 : (short)(Session.Character.Morph > short.MaxValue ? 0 : Session.Character.Morph)
                     };
-                    Mail mail = new Mail
+                    MailDTO mail = new MailDTO
                     {
                         AttachmentAmount = 0,
                         IsOpened = false,

@@ -3798,7 +3798,7 @@ namespace OpenNos.GameObject
                     amount = 99;
                 }
 
-                Mail mail = new Mail
+                MailDTO mail = new MailDTO
                 {
                     AttachmentAmount = it.Type == InventoryType.Etc || it.Type == InventoryType.Main ? amount : (byte)1,
                     IsOpened = false,

@@ -14,19 +14,21 @@
 
 using OpenNos.DAL;
 using OpenNos.Data;
+using OpenNos.Domain;
 using OpenNos.Master.Library.Data;
 using OpenNos.Master.Library.Interface;
 using OpenNos.SCS.Communication.ScsServices.Service;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Reactive.Linq;
 
 namespace OpenNos.Master.Server
 {
-    internal class MailService : ScsService, IMailService
+    internal class AuthentificationService : ScsService, IAuthentificationService
     {
-        public bool Authenticate(string authKey, Guid serverId)
+        public bool Authenticate(string authKey)
         {
             if (string.IsNullOrWhiteSpace(authKey))
             {
@@ -36,43 +38,47 @@ namespace OpenNos.Master.Server
             if (authKey == ConfigurationManager.AppSettings["MasterAuthKey"])
             {
                 MSManager.Instance.AuthentificatedClients.Add(CurrentClient.ClientId);
-
-                WorldServer ws = MSManager.Instance.WorldServers.Find(s => s.Id == serverId);
-                if (ws != null)
-                {
-                    ws.MailServiceClient = CurrentClient;
-                }
                 return true;
             }
 
             return false;
         }
 
-        public void SendMail(MailDTO mail)
+        public AccountDTO ValidateAccount(string userName, string passHash)
         {
-            if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
+            if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)) || string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(passHash))
             {
-                return;
+                return null;
             }
 
-            DAOFactory.MailDAO.InsertOrUpdate(ref mail);
+            AccountDTO account = DAOFactory.AccountDAO.LoadByName(userName);
 
-            if (mail.IsSenderCopy)
+            if (account?.Password == passHash)
             {
-                AccountConnection account = MSManager.Instance.ConnectedAccounts.Find(a => a.CharacterId.Equals(mail.SenderId));
-                if (account?.ConnectedWorld != null)
-                {
-                    account.ConnectedWorld.MailServiceClient.GetClientProxy<IMailClient>().MailSent(mail);
-                }
+                return account;
             }
-            else
+            return null;
+        }
+
+        public CharacterDTO ValidateAccountAndCharacter(string userName, string characterName, string passHash)
+        {
+            if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)) || string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(characterName) || string.IsNullOrEmpty(passHash))
             {
-                AccountConnection account = MSManager.Instance.ConnectedAccounts.Find(a => a.CharacterId.Equals(mail.ReceiverId));
-                if (account?.ConnectedWorld != null)
-                {
-                    account.ConnectedWorld.MailServiceClient.GetClientProxy<IMailClient>().MailSent(mail);
-                }
+                return null;
             }
+
+            AccountDTO account = DAOFactory.AccountDAO.LoadByName(userName);
+
+            if (account?.Password == passHash)
+            {
+                CharacterDTO character = DAOFactory.CharacterDAO.LoadByName(characterName);
+                if (character?.AccountId == account.AccountId)
+                {
+                    return character;
+                }
+                return null;
+            }
+            return null;
         }
     }
 }

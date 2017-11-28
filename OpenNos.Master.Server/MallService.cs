@@ -79,32 +79,10 @@ namespace OpenNos.Master.Server
 
             DAOFactory.MailDAO.InsertOrUpdate(ref mailDTO);
 
-            Mail mail = new Mail
-            {
-                AttachmentAmount = mailDTO.AttachmentAmount,
-                AttachmentRarity = mailDTO.AttachmentRarity,
-                AttachmentUpgrade = mailDTO.AttachmentUpgrade,
-                AttachmentVNum = mailDTO.AttachmentVNum,
-                Date = mailDTO.Date,
-                EqPacket = mailDTO.EqPacket,
-                IsOpened = mailDTO.IsOpened,
-                IsSenderCopy = mailDTO.IsSenderCopy,
-                MailId = mailDTO.MailId,
-                Message = mailDTO.Message,
-                ReceiverId = mailDTO.ReceiverId,
-                SenderClass = mailDTO.SenderClass,
-                SenderGender = mailDTO.SenderGender,
-                SenderHairColor = mailDTO.SenderHairColor,
-                SenderHairStyle = mailDTO.SenderHairStyle,
-                SenderId = mailDTO.SenderId,
-                SenderMorphId = mailDTO.SenderMorphId,
-                Title = mailDTO.Title
-            };
-
-            AccountConnection account = MSManager.Instance.ConnectedAccounts.Find(a => a.CharacterId.Equals(mail.ReceiverId));
+            AccountConnection account = MSManager.Instance.ConnectedAccounts.Find(a => a.CharacterId.Equals(mailDTO.ReceiverId));
             if (account?.ConnectedWorld != null)
             {
-                account.ConnectedWorld.MailServiceClient.GetClientProxy<IMailClient>().MailSent(mail);
+                account.ConnectedWorld.MailServiceClient.GetClientProxy<IMailClient>().MailSent(mailDTO);
             }
         }
 
@@ -116,14 +94,6 @@ namespace OpenNos.Master.Server
             {
                 return null;
             }
-
-            return new AccountDTO()
-            {
-                AccountId = 1,
-                Authority = AuthorityType.User,
-                Name = "admin",
-                Password = "test"
-            };
 
             AccountDTO account = DAOFactory.AccountDAO.LoadByName(userName);
 

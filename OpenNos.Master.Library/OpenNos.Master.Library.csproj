@@ -78,6 +78,7 @@
     <Compile Include="Client\MailClient.cs" />
     <Compile Include="Client\ConfigurationClient.cs" />
     <Compile Include="Client\MailServiceClient.cs" />
+    <Compile Include="Client\AuthentificationServiceClient.cs" />
     <Compile Include="Client\MallServiceClient.cs" />
     <Compile Include="Data\AccountConnection.cs" />
     <Compile Include="Data\ConfigurationObject.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Interface\IMailClient.cs" />
     <Compile Include="Interface\IMailService.cs" />
     <Compile Include="Interface\IConfigurationService.cs" />
+    <Compile Include="Interface\IAuthentificationService.cs" />
     <Compile Include="Interface\IMallService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Data\WorldServer.cs" />
