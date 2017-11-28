@@ -1476,43 +1476,21 @@ namespace OpenNos.GameObject
 
         private void onMailSent(object sender, EventArgs e)
         {
-            Mail mail = (Mail)sender;
+            MailDTO mail = (MailDTO)sender;
 
             ClientSession session = GetSessionByCharacterId(mail.IsSenderCopy ? mail.SenderId : mail.ReceiverId);
             if(session != null)
             {
-                MailDTO mailDTO = new MailDTO
-                {
-                    AttachmentAmount = mail.AttachmentAmount,
-                    AttachmentRarity = mail.AttachmentRarity,
-                    AttachmentUpgrade = mail.AttachmentUpgrade,
-                    AttachmentVNum = mail.AttachmentVNum,
-                    Date = mail.Date,
-                    EqPacket = mail.EqPacket,
-                    IsOpened = mail.IsOpened,
-                    IsSenderCopy = mail.IsSenderCopy,
-                    MailId = mail.MailId,
-                    Message = mail.Message,
-                    ReceiverId = mail.ReceiverId,
-                    SenderClass = mail.SenderClass,
-                    SenderGender = mail.SenderGender,
-                    SenderHairColor = mail.SenderHairColor,
-                    SenderHairStyle = mail.SenderHairStyle,
-                    SenderId = mail.SenderId,
-                    SenderMorphId = mail.SenderMorphId,
-                    Title = mail.Title
-                };
-
                 if (mail.AttachmentVNum != null)
                 {
-                    session.Character.MailList.Add((session.Character.MailList.Count > 0 ? session.Character.MailList.OrderBy(s => s.Key).Last().Key : 0) + 1, mailDTO);
-                    session.SendPacket(session.Character.GenerateParcel(mailDTO));
-                    session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("ITEM_GIFTED"), GetItem(mailDTO.AttachmentVNum.Value)?.Name, mailDTO.AttachmentAmount), 12));
+                    session.Character.MailList.Add((session.Character.MailList.Count > 0 ? session.Character.MailList.OrderBy(s => s.Key).Last().Key : 0) + 1, mail);
+                    session.SendPacket(session.Character.GenerateParcel(mail));
+                    session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("ITEM_GIFTED"), GetItem(mail.AttachmentVNum.Value)?.Name, mail.AttachmentAmount), 12));
                 }
                 else
                 {
-                    session.Character.MailList.Add((session.Character.MailList.Count > 0 ? session.Character.MailList.OrderBy(s => s.Key).Last().Key : 0) + 1, mailDTO);
-                    session.SendPacket(session.Character.GeneratePost(mailDTO, mailDTO.IsSenderCopy ? (byte)2 : (byte)1));
+                    session.Character.MailList.Add((session.Character.MailList.Count > 0 ? session.Character.MailList.OrderBy(s => s.Key).Last().Key : 0) + 1, mail);
+                    session.SendPacket(session.Character.GeneratePost(mail, mail.IsSenderCopy ? (byte)2 : (byte)1));
                 }
             }
         }
