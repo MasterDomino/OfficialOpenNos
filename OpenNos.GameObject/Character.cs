@@ -1708,7 +1708,7 @@ namespace OpenNos.GameObject
             foreach (CharacterRelationDTO relation in CharacterRelations.Where(c => c.RelationType == CharacterRelationType.Friend))
             {
                 long id = relation.RelatedCharacterId == CharacterId ? relation.CharacterId : relation.RelatedCharacterId;
-                if (DAOFactory.CharacterDAO.LoadById(id) is Character character)
+                if (DAOFactory.CharacterDAO.LoadById(id) is CharacterDTO character)
                 {
                     bool isOnline = CommunicationServiceClient.Instance.IsCharacterConnected(ServerManager.Instance.ServerGroup, id);
                     result += $" {id}|{(short)relation.RelationType}|{(isOnline ? 1 : 0)}|{character.Name}";
