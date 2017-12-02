@@ -44,6 +44,16 @@ namespace OpenNos.Master.Server
             return false;
         }
 
+        public AuthorityType GetAuthority(long accountId)
+        {
+            if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
+            {
+                return AuthorityType.Closed;
+            }
+
+            return DAOFactory.AccountDAO.LoadById(accountId)?.Authority ?? AuthorityType.Closed;
+        }
+
         public IEnumerable<CharacterDTO> GetCharacters(long accountId)
         {
             if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))

@@ -2,6 +2,7 @@
 using OpenNos.Data;
 using OpenNos.Master.Library.Data;
 using System.Collections.Generic;
+using OpenNos.Domain;
 
 namespace OpenNos.Master.Library.Interface
 {
@@ -22,6 +23,13 @@ namespace OpenNos.Master.Library.Interface
         /// <param name="passHash"></param>
         /// <returns></returns>
         AccountDTO ValidateAccount(string userName, string passHash);
+
+        /// <summary>
+        /// Returns the Authority Type of the given AccountId
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <returns></returns>
+        AuthorityType GetAuthority(long accountId);
 
         /// <summary>
         /// Get a List of all Characters associated with the given Account

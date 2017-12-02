@@ -22,6 +22,7 @@ using System;
 using System.Configuration;
 using OpenNos.Data;
 using System.Collections.Generic;
+using OpenNos.Domain;
 
 namespace OpenNos.Master.Library.Client
 {
@@ -78,6 +79,8 @@ namespace OpenNos.Master.Library.Client
         public void SendItem(long characterId, MallItem item) => _client.ServiceProxy.SendItem(characterId, item);
 
         public void SendStaticBonus(long characterId, MallStaticBonus item) => _client.ServiceProxy.SendStaticBonus(characterId, item);
+
+        public AuthorityType GetAuthority(long accountId) => _client.ServiceProxy.GetAuthority(accountId);
 
         #endregion
     }
