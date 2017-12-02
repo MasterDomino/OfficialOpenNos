@@ -379,7 +379,7 @@ namespace OpenNos.Handler
 
                             Logger.LogUserEvent("PARCEL_GET", Session.GenerateIdentity(), $"IIId: {newInv.Id} ItemVNum: {newInv.ItemVNum} Amount: {mail.AttachmentAmount} Sender: {mail.SenderId}");
 
-                            Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_GIFTED")}: {newInv.Item.Name} x {mail.AttachmentAmount}", 12));
+                            Session.SendPacket(Session.Character.GenerateSay(String.Format(Language.Instance.GetMessageFromKey("ITEM_GIFTED"), newInv.Item.Name, mail.AttachmentAmount), 12));
 
                             DAOFactory.MailDAO.DeleteById(mail.MailId);
 
