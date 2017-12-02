@@ -20,6 +20,18 @@ namespace OpenNos.GameObject
 {
     public class Account : AccountDTO
     {
+        public Account(AccountDTO input)
+        {
+            AccountId = input.AccountId;
+            Authority = input.Authority;
+            Email = input.Email;
+            Name = input.Name;
+            Password = input.Password;
+            ReferrerId = input.ReferrerId;
+            RegistrationIP = input.RegistrationIP;
+            VerificationToken = input.VerificationToken;
+        }
+
         #region Properties
 
         public List<PenaltyLogDTO> PenaltyLogs

@@ -116,6 +116,10 @@
       <Project>{eadd17be-20a4-4589-830e-e41be9314928}</Project>
       <Name>OpenNos.GameObject</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OpenNos.Mapper\OpenNos.Mapper.csproj">
+      <Project>{057B5A6F-378A-4BD9-B17B-074C7F5C9FEC}</Project>
+      <Name>OpenNos.Mapper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OpenNos.Master.Library\OpenNos.Master.Library.csproj">
       <Project>{8FABDA5B-C873-4E32-A78F-08A9A4768595}</Project>
       <Name>OpenNos.Master.Library</Name>
