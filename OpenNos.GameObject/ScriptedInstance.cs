@@ -468,17 +468,19 @@ namespace OpenNos.GameObject
             if (onMoveOnMap != null)
             {
                 List<EventContainer> waveEvent = new List<EventContainer>();
+                List<EventContainer> onMoveOnMapEvents = new List<EventContainer>();
+
 
                 // SendMessage
                 if (onMoveOnMap.SendMessage != null)
                 {
-                    evts.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(onMoveOnMap.SendMessage.Value, onMoveOnMap.SendMessage.Type)));
+                    onMoveOnMapEvents.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(onMoveOnMap.SendMessage.Value, onMoveOnMap.SendMessage.Type)));
                 }
 
                 // SendPacket
                 if (onMoveOnMap.SendPacket != null)
                 {
-                    evts.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, onMoveOnMap.SendPacket.Value));
+                    onMoveOnMapEvents.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, onMoveOnMap.SendPacket.Value));
                 }
 
                 // StartClock
@@ -514,7 +516,7 @@ namespace OpenNos.GameObject
                         onTimeout.Add(new EventContainer(mapInstance, EventActionType.SCRIPTEND, onMoveOnMap.StartClock.OnTimeout.End.Type));
                     }
 
-                    evts.Add(new EventContainer(mapInstance, EventActionType.STARTCLOCK, new Tuple<List<EventContainer>, List<EventContainer>>(onStop, onTimeout)));
+                    onMoveOnMapEvents.Add(new EventContainer(mapInstance, EventActionType.STARTCLOCK, new Tuple<List<EventContainer>, List<EventContainer>>(onStop, onTimeout)));
                 }
 
                 // StartMapClock
@@ -550,7 +552,7 @@ namespace OpenNos.GameObject
                         onTimeout.Add(new EventContainer(mapInstance, EventActionType.SCRIPTEND, onMoveOnMap.StartMapClock.OnTimeout.End.Type));
                     }
 
-                    evts.Add(new EventContainer(mapInstance, EventActionType.STARTMAPCLOCK, new Tuple<List<EventContainer>, List<EventContainer>>(onStop, onTimeout)));
+                    onMoveOnMapEvents.Add(new EventContainer(mapInstance, EventActionType.STARTMAPCLOCK, new Tuple<List<EventContainer>, List<EventContainer>>(onStop, onTimeout)));
                 }
 
                 // Wave
@@ -567,23 +569,23 @@ namespace OpenNos.GameObject
                             waveEvent.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(wave.SendMessage.Value, wave.SendMessage.Type)));
                         }
 
-                        evts.Add(new EventContainer(mapInstance, EventActionType.REGISTERWAVE, new EventWave(wave.Delay, waveEvent, wave.Offset)));
+                        onMoveOnMapEvents.Add(new EventContainer(mapInstance, EventActionType.REGISTERWAVE, new EventWave(wave.Delay, waveEvent, wave.Offset)));
                     }
                 }
 
                 // SummonMonster
-                evts.AddRange(summonMonster(mapInstance, onMoveOnMap.SummonMonster));
+                onMoveOnMapEvents.AddRange(summonMonster(mapInstance, onMoveOnMap.SummonMonster));
 
                 // GenerateClock
                 if (onMoveOnMap.GenerateClock != null)
                 {
-                    evts.Add(new EventContainer(mapInstance, EventActionType.CLOCK, onMoveOnMap.GenerateClock.Value));
+                    onMoveOnMapEvents.Add(new EventContainer(mapInstance, EventActionType.CLOCK, onMoveOnMap.GenerateClock.Value));
                 }
 
                 // OnMapClean
-                evts.AddRange(onMapClean(mapInstance, onMoveOnMap.OnMapClean));
+                onMoveOnMapEvents.AddRange(onMapClean(mapInstance, onMoveOnMap.OnMapClean));
 
-                evts.Add(new EventContainer(mapInstance, EventActionType.REGISTEREVENT, new Tuple<string, List<EventContainer>>(nameof(XMLModel.Events.OnMoveOnMap), evts)));
+                evts.Add(new EventContainer(mapInstance, EventActionType.REGISTEREVENT, new Tuple<string, List<EventContainer>>(nameof(XMLModel.Events.OnMoveOnMap), onMoveOnMapEvents)));
             }
 
             return evts;
@@ -794,6 +796,12 @@ namespace OpenNos.GameObject
                         if (summon.OnDeath.End != null)
                         {
                             monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.SCRIPTEND, summon.OnDeath.End.Type));
+                        }
+
+                        // StopMapClock
+                        if (summon.OnDeath.StopMapClock != null)
+                        {
+                            monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.STOPMAPCLOCK, null));
                         }
 
                         // SummonMonster Child

@@ -428,7 +428,7 @@ namespace OpenNos.GameObject
                     }
                     if (session.CurrentMapInstance.Clock.Enabled)
                     {
-                        session.SendPacket(session.CurrentMapInstance.InstanceBag.Clock.GetClock());
+                        session.SendPacket(session.CurrentMapInstance.Clock.GetClock());
                     }
 
                     // TODO: fix this

@@ -157,7 +157,7 @@ namespace OpenNos.GameObject.Helpers
                                     break;
 
                                 case "OnMoveOnMap":
-                                    evt.MapInstance.OnMoveOnMapEvents.GetAllItems().AddRange(even.Item2);
+                                    evt.MapInstance.OnMoveOnMapEvents.AddRange(even.Item2);
                                     break;
 
                                 case "OnMapClean":
@@ -424,8 +424,8 @@ namespace OpenNos.GameObject.Helpers
 
                         case EventActionType.STARTCLOCK:
                             Tuple<List<EventContainer>, List<EventContainer>> eve = (Tuple<List<EventContainer>, List<EventContainer>>)evt.Parameter;
-                            evt.MapInstance.InstanceBag.Clock.StopEvents = eve.Item2;
-                            evt.MapInstance.InstanceBag.Clock.TimeoutEvents = eve.Item1;
+                            evt.MapInstance.InstanceBag.Clock.StopEvents = eve.Item1;
+                            evt.MapInstance.InstanceBag.Clock.TimeoutEvents = eve.Item2;
                             evt.MapInstance.InstanceBag.Clock.StartClock();
                             evt.MapInstance.Broadcast(evt.MapInstance.InstanceBag.Clock.GetClock());
                             break;
@@ -448,8 +448,8 @@ namespace OpenNos.GameObject.Helpers
 
                         case EventActionType.STARTMAPCLOCK:
                             eve = (Tuple<List<EventContainer>, List<EventContainer>>)evt.Parameter;
-                            evt.MapInstance.Clock.StopEvents = eve.Item2;
-                            evt.MapInstance.Clock.TimeoutEvents = eve.Item1;
+                            evt.MapInstance.Clock.StopEvents = eve.Item1;
+                            evt.MapInstance.Clock.TimeoutEvents = eve.Item2;
                             evt.MapInstance.Clock.StartClock();
                             evt.MapInstance.Broadcast(evt.MapInstance.Clock.GetClock());
                             break;
