@@ -324,11 +324,15 @@ namespace OpenNos.Handler
                 if (Session?.Account != null && !Session.HasSelectedCharacter && character != null)
                 {
                     character.Initialize();
+
+                    #if !DEBUG
                     if (Session.Account.Authority > AuthorityType.User)
                     {
                         character.Invisible = true;
                         character.InvisibleGm = true;
                     }
+                    #endif
+
                     character.GeneralLogs = new ThreadSafeGenericList<GeneralLogDTO>();
                     character.GeneralLogs.AddRange(DAOFactory.GeneralLogDAO.LoadByAccount(Session.Account.AccountId).Where(s => s.CharacterId == character.CharacterId).ToList());
                     character.MapInstanceId = ServerManager.Instance.GetBaseMapInstanceIdByMapId(character.MapId);
@@ -378,6 +382,6 @@ namespace OpenNos.Handler
             }
         }
 
-        #endregion
+#endregion
     }
 }
