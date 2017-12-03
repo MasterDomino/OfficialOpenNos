@@ -45,7 +45,7 @@ namespace OpenNos.Master.Library.Client
             _mailClient = new MailClient();
             _client = ScsServiceClientBuilder.CreateClient<IMailService>(new ScsTcpEndPoint(ip, port), _mailClient);
 
-            System.Threading.Thread.Sleep(5000);
+            System.Threading.Thread.Sleep(1000);
             while (_client.CommunicationState != CommunicationStates.Connected)
             {
                 try

@@ -43,7 +43,7 @@ namespace OpenNos.Master.Library.Client
             int port = Convert.ToInt32(ConfigurationManager.AppSettings["MasterPort"]);
             _confClient = new ConfigurationClient();
             _client = ScsServiceClientBuilder.CreateClient<IConfigurationService>(new ScsTcpEndPoint(ip, port), _confClient);
-            System.Threading.Thread.Sleep(5000);
+            System.Threading.Thread.Sleep(1000);
             while (_client.CommunicationState != CommunicationStates.Connected)
             {
                 try

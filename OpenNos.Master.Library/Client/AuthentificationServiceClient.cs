@@ -42,7 +42,7 @@ namespace OpenNos.Master.Library.Client
             string ip = ConfigurationManager.AppSettings["MasterIP"];
             int port = Convert.ToInt32(ConfigurationManager.AppSettings["MasterPort"]);
             _client = ScsServiceClientBuilder.CreateClient<IAuthentificationService>(new ScsTcpEndPoint(ip, port));
-            System.Threading.Thread.Sleep(5000);
+            System.Threading.Thread.Sleep(1000);
             while (_client.CommunicationState != CommunicationStates.Connected)
             {
                 try

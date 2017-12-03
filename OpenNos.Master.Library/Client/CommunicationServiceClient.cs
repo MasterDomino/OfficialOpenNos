@@ -45,7 +45,7 @@ namespace OpenNos.Master.Library.Client
             int port = Convert.ToInt32(ConfigurationManager.AppSettings["MasterPort"]);
             _commClient = new CommunicationClient();
             _client = ScsServiceClientBuilder.CreateClient<ICommunicationService>(new ScsTcpEndPoint(ip, port), _commClient);
-            System.Threading.Thread.Sleep(5000);
+            System.Threading.Thread.Sleep(1000);
             while (_client.CommunicationState != CommunicationStates.Connected)
             {
                 try
