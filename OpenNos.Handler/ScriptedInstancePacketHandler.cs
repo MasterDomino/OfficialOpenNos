@@ -172,8 +172,9 @@ namespace OpenNos.Handler
             }
         }
 
-        private void enterInstance(ScriptedInstance instance)
+        private void enterInstance(ScriptedInstance input)
         {
+            ScriptedInstance instance = input.Copy();
             instance.LoadScript(MapInstanceType.TimeSpaceInstance);
             if (instance.FirstMap == null)
             {

@@ -218,9 +218,10 @@ namespace OpenNos.GameObject
                 InstanceBag.Lives = Lives;
                 if (Model.InstanceEvents?.CreateMap != null)
                 {
+
                     foreach (XMLModel.Objects.CreateMap createMap in Model.InstanceEvents.CreateMap)
                     {
-                        MapInstance mapInstance = ServerManager.Instance.GenerateMapInstance(createMap.VNum, mapinstancetype, new InstanceBag());
+                        MapInstance mapInstance = ServerManager.Instance.GenerateMapInstance(createMap.VNum, mapinstancetype, InstanceBag);
                         mapInstance.Portals?.Clear();
                         mapInstance.MapIndexX = createMap.IndexX;
                         mapInstance.MapIndexY = createMap.IndexY;
@@ -681,7 +682,8 @@ namespace OpenNos.GameObject
             {
                 foreach (XMLModel.Events.SpawnPortal portalEvent in spawnPortal)
                 {
-                    MapInstance destinationMap = _mapInstanceDictionary.First(s => s.Key == portalEvent.ToMap).Value;
+                    //MapInstance destinationMap = _mapInstanceDictionary.FirstOrDefault(s => s.Key == portalEvent.ToMap).Value;
+                    _mapInstanceDictionary.TryGetValue(portalEvent.ToMap, out MapInstance destinationMap);
                     Portal portal = new Portal()
                     {
                         PortalId = portalEvent.IdOnMap,
@@ -690,9 +692,9 @@ namespace OpenNos.GameObject
                         Type = portalEvent.Type,
                         DestinationX = portalEvent.ToX,
                         DestinationY = portalEvent.ToY,
-                        DestinationMapId = (short)(destinationMap.MapInstanceId == default ? -1 : 0),
+                        DestinationMapId = (short)(destinationMap?.MapInstanceId == default ? -1 : 0),
                         SourceMapInstanceId = mapInstance.MapInstanceId,
-                        DestinationMapInstanceId = destinationMap.MapInstanceId
+                        DestinationMapInstanceId = destinationMap?.MapInstanceId ?? Guid.Empty
                     };
 
                     // OnTraversal
