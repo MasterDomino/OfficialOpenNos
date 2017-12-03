@@ -218,7 +218,6 @@ namespace OpenNos.GameObject
                 InstanceBag.Lives = Lives;
                 if (Model.InstanceEvents?.CreateMap != null)
                 {
-
                     foreach (XMLModel.Objects.CreateMap createMap in Model.InstanceEvents.CreateMap)
                     {
                         MapInstance mapInstance = ServerManager.Instance.GenerateMapInstance(createMap.VNum, mapinstancetype, InstanceBag);
@@ -292,7 +291,7 @@ namespace OpenNos.GameObject
                     // OnCharacterDiscoveringMap
                     evts.AddRange(onCharacterDiscoveringMap(mapInstance, createMap));
 
-                    // GenerateMapClock
+                    // GenerateClock
                     if (createMap.GenerateClock != null)
                     {
                         evts.Add(new EventContainer(mapInstance, EventActionType.CLOCK, createMap.GenerateClock.Value));
@@ -309,16 +308,16 @@ namespace OpenNos.GameObject
                     {
                         List<EventContainer> onLockerOpen = new List<EventContainer>();
 
-                        // SendMessage
-                        if (createMap.OnLockerOpen.SendMessage != null)
-                        {
-                            onLockerOpen.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(createMap.OnLockerOpen.SendMessage.Value, createMap.OnLockerOpen.SendMessage.Type)));
-                        }
-
                         // ChangePortalType
                         if (createMap.OnLockerOpen.ChangePortalType != null)
                         {
                             onLockerOpen.Add(new EventContainer(mapInstance, EventActionType.CHANGEPORTALTYPE, new Tuple<int, PortalType>(createMap.OnLockerOpen.ChangePortalType.IdOnMap, (PortalType)createMap.OnLockerOpen.ChangePortalType.Type)));
+                        }
+
+                        // SendMessage
+                        if (createMap.OnLockerOpen.SendMessage != null)
+                        {
+                            onLockerOpen.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(createMap.OnLockerOpen.SendMessage.Value, createMap.OnLockerOpen.SendMessage.Type)));
                         }
 
                         // RefreshMapItems
@@ -470,7 +469,6 @@ namespace OpenNos.GameObject
                 List<EventContainer> waveEvent = new List<EventContainer>();
                 List<EventContainer> onMoveOnMapEvents = new List<EventContainer>();
 
-
                 // SendMessage
                 if (onMoveOnMap.SendMessage != null)
                 {
@@ -483,6 +481,12 @@ namespace OpenNos.GameObject
                     onMoveOnMapEvents.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, onMoveOnMap.SendPacket.Value));
                 }
 
+                // GenerateClock
+                if (onMoveOnMap.GenerateClock != null)
+                {
+                    onMoveOnMapEvents.Add(new EventContainer(mapInstance, EventActionType.CLOCK, onMoveOnMap.GenerateClock.Value));
+                }
+
                 // StartClock
                 if (onMoveOnMap.StartClock != null)
                 {
@@ -492,6 +496,10 @@ namespace OpenNos.GameObject
                     // OnStop
                     if (onMoveOnMap.StartClock.OnStop != null)
                     {
+                        foreach (XMLModel.Events.ChangePortalType changePortalType in onMoveOnMap.StartClock.OnStop.ChangePortalType)
+                        {
+                            onStop.Add(new EventContainer(mapInstance, EventActionType.CHANGEPORTALTYPE, new Tuple<int, PortalType>(changePortalType.IdOnMap, (PortalType)changePortalType.Type)));
+                        }
                         if (onMoveOnMap.StartClock.OnStop.SendMessage != null)
                         {
                             onStop.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(onMoveOnMap.StartClock.OnStop.SendMessage.Value, onMoveOnMap.StartClock.OnStop.SendMessage.Type)));
@@ -503,10 +511,6 @@ namespace OpenNos.GameObject
                         if (onMoveOnMap.StartClock.OnStop.RefreshMapItems != null)
                         {
                             onStop.Add(new EventContainer(mapInstance, EventActionType.REFRESHMAPITEMS, null));
-                        }
-                        foreach (XMLModel.Events.ChangePortalType changePortalType in onMoveOnMap.StartClock.OnStop.ChangePortalType)
-                        {
-                            onStop.Add(new EventContainer(mapInstance, EventActionType.CHANGEPORTALTYPE, new Tuple<int, PortalType>(changePortalType.IdOnMap, (PortalType)changePortalType.Type)));
                         }
                     }
 
@@ -528,6 +532,10 @@ namespace OpenNos.GameObject
                     // OnStop
                     if (onMoveOnMap.StartMapClock.OnStop != null)
                     {
+                        foreach (XMLModel.Events.ChangePortalType changePortalType in onMoveOnMap.StartMapClock.OnStop.ChangePortalType)
+                        {
+                            onStop.Add(new EventContainer(mapInstance, EventActionType.CHANGEPORTALTYPE, new Tuple<int, PortalType>(changePortalType.IdOnMap, (PortalType)changePortalType.Type)));
+                        }
                         if (onMoveOnMap.StartMapClock.OnStop.SendMessage != null)
                         {
                             onStop.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(onMoveOnMap.StartMapClock.OnStop.SendMessage.Value, onMoveOnMap.StartMapClock.OnStop.SendMessage.Type)));
@@ -539,10 +547,6 @@ namespace OpenNos.GameObject
                         if (onMoveOnMap.StartMapClock.OnStop.RefreshMapItems != null)
                         {
                             onStop.Add(new EventContainer(mapInstance, EventActionType.REFRESHMAPITEMS, null));
-                        }
-                        foreach (XMLModel.Events.ChangePortalType changePortalType in onMoveOnMap.StartMapClock.OnStop.ChangePortalType)
-                        {
-                            onStop.Add(new EventContainer(mapInstance, EventActionType.CHANGEPORTALTYPE, new Tuple<int, PortalType>(changePortalType.IdOnMap, (PortalType)changePortalType.Type)));
                         }
                     }
 
@@ -575,12 +579,6 @@ namespace OpenNos.GameObject
 
                 // SummonMonster
                 onMoveOnMapEvents.AddRange(summonMonster(mapInstance, onMoveOnMap.SummonMonster));
-
-                // GenerateClock
-                if (onMoveOnMap.GenerateClock != null)
-                {
-                    onMoveOnMapEvents.Add(new EventContainer(mapInstance, EventActionType.CLOCK, onMoveOnMap.GenerateClock.Value));
-                }
 
                 // OnMapClean
                 onMoveOnMapEvents.AddRange(onMapClean(mapInstance, onMoveOnMap.OnMapClean));
@@ -684,7 +682,6 @@ namespace OpenNos.GameObject
             {
                 foreach (XMLModel.Events.SpawnPortal portalEvent in spawnPortal)
                 {
-                    //MapInstance destinationMap = _mapInstanceDictionary.FirstOrDefault(s => s.Key == portalEvent.ToMap).Value;
                     _mapInstanceDictionary.TryGetValue(portalEvent.ToMap, out MapInstance destinationMap);
                     Portal portal = new Portal()
                     {
@@ -762,25 +759,19 @@ namespace OpenNos.GameObject
                         // SendMessage
                         if (summon.OnDeath.SendMessage != null)
                         {
-                            evts.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(summon.OnDeath.SendMessage.Value, summon.OnDeath.SendMessage.Type)));
+                            monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(summon.OnDeath.SendMessage.Value, summon.OnDeath.SendMessage.Type)));
                         }
 
                         // SendPacket
                         if (summon.OnDeath.SendPacket != null)
                         {
-                            evts.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, summon.OnDeath.SendPacket.Value));
+                            monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, summon.OnDeath.SendPacket.Value));
                         }
 
                         // RefreshRaidGoals
                         if (summon.OnDeath.RefreshRaidGoals != null)
                         {
                             monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.REFRESHRAIDGOAL, null));
-                        }
-
-                        // RefreshMapItems
-                        if (summon.OnDeath.RefreshMapItems != null)
-                        {
-                            monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.REFRESHMAPITEMS, null));
                         }
 
                         // ThrowItem
@@ -802,6 +793,12 @@ namespace OpenNos.GameObject
                         if (summon.OnDeath.StopMapClock != null)
                         {
                             monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.STOPMAPCLOCK, null));
+                        }
+
+                        // RefreshMapItems
+                        if (summon.OnDeath.RefreshMapItems != null)
+                        {
+                            monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.REFRESHMAPITEMS, null));
                         }
 
                         // SummonMonster Child
@@ -878,7 +875,7 @@ namespace OpenNos.GameObject
                     }
 
                     NpcAmount++;
-                    NpcToSummon npcToSummon = new NpcToSummon(summon.VNum, new MapCell() { X = positionX, Y = positionY }, -1, summon.IsMate, summon.IsProtected);
+                    NpcToSummon npcToSummon = new NpcToSummon(summon.VNum, new MapCell() { X = positionX, Y = positionY }, -1, summon.IsMate, summon.IsProtected, summon.Move);
 
                     // OnDeath
                     if (summon.OnDeath != null)

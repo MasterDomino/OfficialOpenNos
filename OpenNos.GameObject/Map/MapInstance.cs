@@ -523,7 +523,20 @@ namespace OpenNos.GameObject
             NpcMonster npcMonster = ServerManager.Instance.GetNpc(summonParameters.VNum);
             if (npcMonster != null)
             {
-                MapNpc mapNpc = new MapNpc { NpcVNum = npcMonster.NpcMonsterVNum, MapY = summonParameters.SpawnCell.X, MapX = summonParameters.SpawnCell.Y, MapId = Map.MapId, IsHostile = true, IsMoving = true, MapNpcId = GetNextNpcId(), Target = summonParameters.Target, OnDeathEvents = summonParameters.DeathEvents, IsMate = summonParameters.IsMate, IsProtected = summonParameters.IsProtected };
+                MapNpc mapNpc = new MapNpc
+                {
+                    NpcVNum = npcMonster.NpcMonsterVNum,
+                    MapY = summonParameters.SpawnCell.X,
+                    MapX = summonParameters.SpawnCell.Y,
+                    MapId = Map.MapId,
+                    IsHostile = false,
+                    IsMoving = summonParameters.Move,
+                    MapNpcId = GetNextNpcId(),
+                    Target = summonParameters.Target,
+                    OnDeathEvents = summonParameters.DeathEvents,
+                    IsMate = summonParameters.IsMate,
+                    IsProtected = summonParameters.IsProtected
+                };
                 mapNpc.Initialize(this);
                 AddNPC(mapNpc);
                 Broadcast(mapNpc.GenerateIn());
@@ -540,7 +553,20 @@ namespace OpenNos.GameObject
                 NpcMonster npcmonster = ServerManager.Instance.GetNpc(npcMonster.VNum);
                 if (npcmonster != null)
                 {
-                    MapNpc mapNpc = new MapNpc { NpcVNum = npcmonster.NpcMonsterVNum, MapY = npcMonster.SpawnCell.X, MapX = npcMonster.SpawnCell.Y, MapId = Map.MapId, IsHostile = true, IsMoving = true, MapNpcId = GetNextNpcId(), Target = npcMonster.Target, OnDeathEvents = npcMonster.DeathEvents, IsMate = npcMonster.IsMate, IsProtected = npcMonster.IsProtected };
+                    MapNpc mapNpc = new MapNpc
+                    {
+                        NpcVNum = npcmonster.NpcMonsterVNum,
+                        MapY = npcMonster.SpawnCell.X,
+                        MapX = npcMonster.SpawnCell.Y,
+                        MapId = Map.MapId,
+                        IsHostile = true,
+                        IsMoving = npcMonster.Move,
+                        MapNpcId = GetNextNpcId(),
+                        Target = npcMonster.Target,
+                        OnDeathEvents = npcMonster.DeathEvents,
+                        IsMate = npcMonster.IsMate,
+                        IsProtected = npcMonster.IsProtected
+                    };
                     mapNpc.Initialize(this);
                     AddNPC(mapNpc);
                     Broadcast(mapNpc.GenerateIn());

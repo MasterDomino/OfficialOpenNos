@@ -105,13 +105,13 @@ namespace OpenNos.GameObject
             return SummonParameters;
         }
 
-        public List<NpcToSummon> GenerateNpcs(short vnum, short amount, List<EventContainer> deathEvents, bool isMate, bool isProtected)
+        public List<NpcToSummon> GenerateNpcs(short vnum, short amount, List<EventContainer> deathEvents, bool isMate, bool isProtected, bool move)
         {
             List<NpcToSummon> SummonParameters = new List<NpcToSummon>();
             for (int i = 0; i < amount; i++)
             {
                 MapCell cell = GetRandomPosition();
-                SummonParameters.Add(new NpcToSummon(vnum, cell, -1, isProtected, isMate) { DeathEvents = deathEvents });
+                SummonParameters.Add(new NpcToSummon(vnum, cell, -1, isProtected, isMate, move) { DeathEvents = deathEvents });
             }
             return SummonParameters;
         }

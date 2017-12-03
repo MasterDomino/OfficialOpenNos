@@ -56,7 +56,7 @@ namespace OpenNos.Handler
                 {
                     case 1:
                         {
-                            Session.SendPacket(Session.Character.GenerateSay($"=== TEST: Receive Object from MS ===", 12));
+                            Session.SendPacket(Session.Character.GenerateSay("=== TEST: Receive Object from MS ===", 12));
                             Stopwatch sw = Stopwatch.StartNew();
                             for (int i = 0; i < benchmarkPacket.Iterations; i++)
                             {
@@ -70,7 +70,7 @@ namespace OpenNos.Handler
                     case 2:
                         {
                             ConfigurationObject conf = ConfigurationServiceClient.Instance.GetConfigurationObject();
-                            Session.SendPacket(Session.Character.GenerateSay($"=== TEST: Send Object to MS ===", 12));
+                            Session.SendPacket(Session.Character.GenerateSay("=== TEST: Send Object to MS ===", 12));
                             Stopwatch sw = Stopwatch.StartNew();
                             for (int i = 0; i < benchmarkPacket.Iterations; i++)
                             {

@@ -28,7 +28,6 @@ namespace OpenNos.GameObject
     {
         public MapNpc()
         {
-            
         }
 
         public MapNpc(MapNpcDTO input)
@@ -44,7 +43,7 @@ namespace OpenNos.GameObject
             MapX = input.MapX;
             MapY = input.MapY;
             NpcVNum = input.NpcVNum;
-            Position = input.Position; 
+            Position = input.Position;
         }
 
         #region Members
