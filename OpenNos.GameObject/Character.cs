@@ -336,6 +336,8 @@ namespace OpenNos.GameObject
 
         public int MinHit { get; set; }
 
+        public MinigameLogDTO MinigameLog { get; set; }
+
         public MapInstance Miniland { get; private set; }
 
         public List<MinilandObject> MinilandObjects { get; set; }

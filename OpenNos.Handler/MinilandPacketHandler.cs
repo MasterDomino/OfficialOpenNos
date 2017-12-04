@@ -13,6 +13,8 @@
  */
 
 using OpenNos.Core;
+using OpenNos.DAL;
+using OpenNos.Data;
 using OpenNos.Domain;
 using OpenNos.GameObject;
 using OpenNos.GameObject.Helpers;
@@ -85,6 +87,12 @@ namespace OpenNos.Handler
                         }
                         Session.Character.MapInstance.Broadcast(UserInterfaceHelper.Instance.GenerateGuri(2, 1, Session.Character.CharacterId));
                         Session.Character.CurrentMinigame = (short)(game == 0 ? 5102 : game == 1 ? 5103 : game == 2 ? 5105 : game == 3 ? 5104 : game == 4 ? 5113 : 5112);
+                        Session.Character.MinigameLog = new Data.MinigameLogDTO()
+                        {
+                            CharacterId = Session.Character.CharacterId,
+                            StartTime = DateTime.Now.Ticks,
+                            Minigame = game
+                        };
                         Session.SendPacket($"mlo_st {game}");
                         break;
 
@@ -97,62 +105,74 @@ namespace OpenNos.Handler
                     case 3:
                         Session.Character.CurrentMinigame = 0;
                         Session.Character.MapInstance.Broadcast(UserInterfaceHelper.Instance.GenerateGuri(6, 1, Session.Character.CharacterId));
-                        int Level = -1;
-                        for (short i = 0; i < getMinilandMaxPoint(game).Length; i++)
+                        if (packet.Point.HasValue && Session.Character.MinigameLog != null)
                         {
-                            if (packet.Point > getMinilandMaxPoint(game)[i])
+                            Session.Character.MinigameLog.EndTime = DateTime.Now.Ticks;
+                            Session.Character.MinigameLog.Score = packet.Point.Value;
+
+                            int Level = -1;
+                            for (short i = 0; i < getMinilandMaxPoint(game).Length; i++)
                             {
-                                Level = i;
+                                if (packet.Point > getMinilandMaxPoint(game)[i])
+                                {
+                                    Level = i;
+                                }
+                                else
+                                {
+                                    break;
+                                }
                             }
-                            else
-                            {
-                                break;
-                            }
+                            Session.SendPacket(Level != -1
+                                ? $"mlo_lv {Level}"
+                                : $"mg 3 {game} {packet.MinigameVNum} 0 0");
                         }
-                        Session.SendPacket(Level != -1
-                            ? $"mlo_lv {Level}"
-                            : $"mg 3 {game} {packet.MinigameVNum} 0 0");
                         break;
 
                     // select gift
                     case 4:
-                        if (Session.Character.MinilandPoint >= 100)
+                        if (Session.Character.MinilandPoint >= 100 && Session.Character.MinigameLog != null && packet.Point.HasValue)
                         {
-                            Gift obj = getMinilandGift(packet.MinigameVNum, (int)packet.Point);
-                            if (obj != null)
+                            if (getMinilandMaxPoint(game)[packet.Point.Value - 1] < Session.Character.MinigameLog.Score)
                             {
-                                Session.SendPacket($"mlo_rw {obj.VNum} {obj.Amount}");
-                                Session.SendPacket(Session.Character.GenerateMinilandPoint());
-                                List<ItemInstance> inv = Session.Character.Inventory.AddNewToInventory(obj.VNum, obj.Amount);
-                                Session.Character.MinilandPoint -= 100;
-                                if (inv.Count == 0)
+                                MinigameLogDTO dto = Session.Character.MinigameLog;
+                                DAOFactory.MinigameLogDAO.InsertOrUpdate(ref dto);
+                                Session.Character.MinigameLog = null;
+                                Gift obj = getMinilandGift(packet.MinigameVNum, (int)packet.Point);
+                                if (obj != null)
                                 {
-                                    Session.Character.SendGift(Session.Character.CharacterId, obj.VNum, obj.Amount, 0, 0, false);
-                                }
-
-                                if (client != Session)
-                                {
-                                    switch (packet.Point)
+                                    Session.SendPacket($"mlo_rw {obj.VNum} {obj.Amount}");
+                                    Session.SendPacket(Session.Character.GenerateMinilandPoint());
+                                    List<ItemInstance> inv = Session.Character.Inventory.AddNewToInventory(obj.VNum, obj.Amount);
+                                    Session.Character.MinilandPoint -= 100;
+                                    if (inv.Count == 0)
                                     {
-                                        case 0:
-                                            mlobj.Level1BoxAmount++;
-                                            break;
+                                        Session.Character.SendGift(Session.Character.CharacterId, obj.VNum, obj.Amount, 0, 0, false);
+                                    }
 
-                                        case 1:
-                                            mlobj.Level2BoxAmount++;
-                                            break;
+                                    if (client != Session)
+                                    {
+                                        switch (packet.Point)
+                                        {
+                                            case 0:
+                                                mlobj.Level1BoxAmount++;
+                                                break;
 
-                                        case 2:
-                                            mlobj.Level3BoxAmount++;
-                                            break;
+                                            case 1:
+                                                mlobj.Level2BoxAmount++;
+                                                break;
 
-                                        case 3:
-                                            mlobj.Level4BoxAmount++;
-                                            break;
+                                            case 2:
+                                                mlobj.Level3BoxAmount++;
+                                                break;
 
-                                        case 4:
-                                            mlobj.Level5BoxAmount++;
-                                            break;
+                                            case 3:
+                                                mlobj.Level4BoxAmount++;
+                                                break;
+
+                                            case 4:
+                                                mlobj.Level5BoxAmount++;
+                                                break;
+                                        }
                                     }
                                 }
                             }

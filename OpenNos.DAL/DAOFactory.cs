@@ -49,6 +49,7 @@ namespace OpenNos.DAL
         private static IMapTypeDAO _maptypeDAO;
         private static IMapTypeMapDAO _maptypemapDAO;
         private static IMateDAO _mateDAO;
+        private static IMinigameLogDAO _minigameLogDAO;
         private static IMinilandObjectDAO _minilandobjectDAO;
         private static INpcMonsterDAO _npcmonsterDAO;
         private static INpcMonsterSkillDAO _npcmonsterskillDAO;
@@ -570,6 +571,26 @@ namespace OpenNos.DAL
                 }
 
                 return _mateDAO;
+            }
+        }
+
+        public static IMinigameLogDAO MinigameLogDAO
+        {
+            get
+            {
+                if (_minigameLogDAO == null)
+                {
+                    if (_useMock)
+                    {
+                        //_minigameLogDAO = new Mock.MinigameLogDAO();
+                    }
+                    else
+                    {
+                        _minigameLogDAO = new DAO.MinigameLogDAO();
+                    }
+                }
+
+                return _minigameLogDAO;
             }
         }
 
