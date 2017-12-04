@@ -95,6 +95,7 @@
     <Compile Include="StaticBonusDAO.cs" />
     <Compile Include="StaticBuffDAO.cs" />
     <Compile Include="TeleporterDAO.cs" />
+    <Compile Include="MinigameLogDAO.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenNos.Core\OpenNos.Core.csproj">

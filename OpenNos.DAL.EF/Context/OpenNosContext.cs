@@ -83,6 +83,8 @@ namespace OpenNos.DAL.EF
 
         public virtual DbSet<Mate> Mate { get; set; }
 
+        public virtual DbSet<MinigameLog> MinigameLog { get; set; }
+
         public virtual DbSet<MinilandObject> MinilandObject { get; set; }
 
         public virtual DbSet<NpcMonster> NpcMonster { get; set; }
@@ -195,6 +197,12 @@ namespace OpenNos.DAL.EF
 
             modelBuilder.Entity<Character>()
                 .HasMany(e => e.StaticBuff)
+                .WithRequired(e => e.Character)
+                .HasForeignKey(e => e.CharacterId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Character>()
+                .HasMany(e => e.MinigameLog)
                 .WithRequired(e => e.Character)
                 .HasForeignKey(e => e.CharacterId)
                 .WillCascadeOnDelete(false);

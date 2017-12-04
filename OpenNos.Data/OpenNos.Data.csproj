@@ -122,6 +122,7 @@
     <Compile Include="TeleporterDTO.cs" />
     <Compile Include="ScriptedInstanceDTO.cs" />
     <Compile Include="UserDTO.cs" />
+    <Compile Include="MinigameLogDTO.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenNos.Core\OpenNos.Core.csproj">

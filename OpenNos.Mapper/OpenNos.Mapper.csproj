@@ -89,6 +89,7 @@
     <Compile Include="Mappers\ShopMapper.cs" />
     <Compile Include="Mappers\ShopItemMapper.cs" />
     <Compile Include="Mappers\SkillMapper.cs" />
+    <Compile Include="Mappers\MinigameLogMapper.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
