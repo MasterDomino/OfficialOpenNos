@@ -123,8 +123,11 @@ namespace OpenNos.GameObject
             defender.DefenseUpgrade += (short)GetDefenderBenefitingBuffs(CardType.Defence, (byte)AdditionalTypes.Defence.DefenceLevelIncreased)[0];
             defender.DefenseUpgrade += (short)GetAttackerBenefitingBuffs(CardType.Defence, (byte)AdditionalTypes.Defence.DefenceLevelDecreased)[0];
 
-            int[] attackerpercentdamage = GetDefenderBenefitingBuffs(CardType.RecoveryAndDamagePercent, 11);
+            int[] attackerpercentdamage = GetAttackerBenefitingBuffs(CardType.RecoveryAndDamagePercent, 11);
             int[] defenderpercentdefense = GetDefenderBenefitingBuffs(CardType.RecoveryAndDamagePercent, 2);
+
+            //int[] attackerpercentdamage2 = GetDefenderBenefitingBuffs(CardType.RecoveryAndDamagePercent, 11);
+            //int[] defenderpercentdefense2 = GetAttackerBenefitingBuffs(CardType.RecoveryAndDamagePercent, 2);
 
             if (attackerpercentdamage[3] != 0)
             {
@@ -936,7 +939,7 @@ namespace OpenNos.GameObject
                 }
                 else
                 {
-                    cards = bcards.Where(s => s.Type.Equals((byte)type) && s.SubType.Equals((byte)(subtype / 10)) && s.FirstData <= 0);
+                    cards = bcards.Where(s => s.Type.Equals((byte)type) && s.SubType.Equals((byte)(subtype / 10)) && (s.FirstData <= 0 || s.ThirdData < 0));
                 }
 
                 foreach (BCard entry in cards)
