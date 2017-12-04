@@ -2022,7 +2022,7 @@ namespace OpenNos.GameObject
             {
                 specialist = Inventory.LoadBySlotAndType((byte)EquipmentType.Sp, InventoryType.Wear);
             }
-            return $"lev {Level} {(Level < 100 ? LevelXp : LevelXp / 100)} {(!UseSp || specialist == null ? JobLevel : specialist.SpLevel)} {(!UseSp || specialist == null ? JobLevelXp : specialist.XP)} {(Level < 100 ? xpLoad() : xpLoad() / 100)} {(!UseSp || specialist == null ? jobXPLoad() : spXpLoad())} {Reputation} {GetCP()} {(HeroLevel < 100 ? HeroXp : HeroXp / 100)} {HeroLevel} {(HeroLevel < 100 ? heroXPLoad() : heroXPLoad() / 100)} 0";
+            return $"lev {Level} {(int)(Level < 100 ? LevelXp : LevelXp / 100)} {(!UseSp || specialist == null ? JobLevel : specialist.SpLevel)} {(!UseSp || specialist == null ? JobLevelXp : specialist.XP)} {(int)(Level < 100 ? xpLoad() : xpLoad() / 100)} {(!UseSp || specialist == null ? jobXPLoad() : spXpLoad())} {Reputation} {GetCP()} {(int)(HeroLevel < 100 ? HeroXp : HeroXp / 100)} {HeroLevel} {(int)(HeroLevel < 100 ? heroXPLoad() : heroXPLoad() / 100)} 0";
         }
 
         public string GenerateLevelUp()
