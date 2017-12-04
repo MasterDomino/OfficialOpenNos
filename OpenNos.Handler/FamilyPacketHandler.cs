@@ -25,6 +25,7 @@ using OpenNos.Master.Library.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 
 namespace OpenNos.Handler
@@ -120,7 +121,7 @@ namespace OpenNos.Handler
             {
                 foreach (ClientSession session in Session.Character.Group.Characters.GetAllItems())
                 {
-                    if (session.Character.Family != null || session.Character.FamilyCharacter != null)
+                    if (session.Character.Family != null || session.Character.FamilyCharacter != null || session.Character.LastFamilyLeave > DateTime.Now.AddDays(-1).Ticks)
                     {
                         return;
                     }
@@ -329,6 +330,8 @@ namespace OpenNos.Handler
 
             Logger.LogUserEvent("GUILDDISMISS", Session.GenerateIdentity(), $"[FamilyDismiss][{fam.FamilyId}]");
 
+            List<ClientSession> sessions = ServerManager.Instance.Sessions.Where(s => s.Character?.Family != null && s.Character.Family.FamilyId == fam.FamilyId).ToList();
+
             CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
             {
                 DestinationCharacterId = fam.FamilyId,
@@ -337,8 +340,10 @@ namespace OpenNos.Handler
                 Message = "fhis_stc",
                 Type = MessageType.Family
             });
-            List<ClientSession> sessions = ServerManager.Instance.Sessions.Where(s => s.Character?.Family != null && s.Character.Family.FamilyId == fam.FamilyId).ToList();
-            sessions.ForEach(s => s.CurrentMapInstance.Broadcast(s.Character.GenerateGidx()));
+            Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe(observer =>
+            {
+                sessions?.ForEach(s => s?.CurrentMapInstance.Broadcast(s.Character.GenerateGidx()));
+            });
         }
 
         [Packet("%Familydismiss")]
@@ -376,13 +381,22 @@ namespace OpenNos.Handler
                     DAOFactory.FamilyCharacterDAO.Delete(packetsplit[2]);
                     Session.Character.Family.InsertFamilyLog(FamilyLogType.FamilyManaged, kickSession.Character.Name);
                     kickSession.Character.Family = null;
-                    kickSession.CurrentMapInstance?.Broadcast(kickSession.Character.GenerateGidx());
+                    kickSession.Character.LastFamilyLeave = DateTime.Now.Ticks;
+                    Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe(observer =>
+                    {
+                        kickSession?.CurrentMapInstance?.Broadcast(Session.Character.GenerateGidx());
+                    });
                 }
                 else
                 {
                     CharacterDTO dbCharacter = DAOFactory.CharacterDAO.LoadByName(packetsplit[2]);
                     if (dbCharacter != null)
                     {
+                        if (CommunicationServiceClient.Instance.IsCharacterConnected(ServerManager.Instance.ServerGroup, dbCharacter.CharacterId))
+                        {
+                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("CANT_KICK_PLAYER_ONLINE_OTHER_CHANNEL")));
+                            return;
+                        }
                         FamilyCharacterDTO dbFamilyCharacter = DAOFactory.FamilyCharacterDAO.LoadByCharacterId(dbCharacter.CharacterId);
                         if (dbFamilyCharacter != null && dbFamilyCharacter.FamilyId == Session.Character.Family.FamilyId)
                         {
@@ -393,6 +407,8 @@ namespace OpenNos.Handler
                             }
                             DAOFactory.FamilyCharacterDAO.Delete(packetsplit[2]);
                             Session.Character.Family.InsertFamilyLog(FamilyLogType.FamilyManaged, dbCharacter.Name);
+                            dbCharacter.LastFamilyLeave = DateTime.Now.Ticks;
+                            DAOFactory.CharacterDAO.InsertOrUpdate(ref dbCharacter);
                         }
                     }
                 }
@@ -424,7 +440,11 @@ namespace OpenNos.Handler
 
                 Session.Character.Family.InsertFamilyLog(FamilyLogType.FamilyManaged, Session.Character.Name);
                 Session.Character.Family = null;
-                Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateGidx());
+                Session.Character.LastFamilyLeave = DateTime.Now.Ticks;
+                Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe(observer =>
+                {
+                    Session?.CurrentMapInstance?.Broadcast(Session.Character.GenerateGidx());
+                });
             }
         }
 
@@ -813,6 +833,11 @@ namespace OpenNos.Handler
             if (otherSession.Character.Family != null || otherSession.Character.FamilyCharacter != null)
             {
                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("ALREADY_IN_FAMILY")));
+                return;
+            }
+            if (otherSession.Character.LastFamilyLeave > DateTime.Now.AddDays(-1).Ticks)
+            {
+                Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("CANT_ENTER_FAMILY")));
                 return;
             }
 

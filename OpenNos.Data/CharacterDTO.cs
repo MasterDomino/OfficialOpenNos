@@ -80,6 +80,8 @@ namespace OpenNos.Data
 
         public long JobLevelXp { get; set; }
 
+        public long LastFamilyLeave { get; set; }
+
         public byte Level { get; set; }
 
         public long LevelXp { get; set; }

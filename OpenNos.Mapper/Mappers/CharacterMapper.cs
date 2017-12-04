@@ -47,6 +47,7 @@ namespace OpenNos.Mapper.Mappers
             output.HpBlocked = input.HpBlocked;
             output.JobLevel = input.JobLevel;
             output.JobLevelXp = input.JobLevelXp;
+            output.LastFamilyLeave = input.LastFamilyLeave;
             output.Level = input.Level;
             output.LevelXp = input.LevelXp;
             output.MapId = input.MapId;
@@ -111,6 +112,7 @@ namespace OpenNos.Mapper.Mappers
             output.HpBlocked = input.HpBlocked;
             output.JobLevel = input.JobLevel;
             output.JobLevelXp = input.JobLevelXp;
+            output.LastFamilyLeave = input.LastFamilyLeave;
             output.Level = input.Level;
             output.LevelXp = input.LevelXp;
             output.MapId = input.MapId;
