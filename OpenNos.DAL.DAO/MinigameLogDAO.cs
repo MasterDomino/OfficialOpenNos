@@ -22,6 +22,7 @@ using OpenNos.Domain;
 using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace OpenNos.DAL.DAO
 {
@@ -68,6 +69,36 @@ namespace OpenNos.DAL.DAO
                         {
                             return minigameLogDTO;
                         }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+            }
+            return null;
+        }
+
+        public IEnumerable<MinigameLogDTO> LoadByCharacterId(long characterId)
+        {
+            try
+            {
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
+                {
+                    IEnumerable<MinigameLog> minigameLog = context.MinigameLog.Where(a => a.CharacterId.Equals(characterId)).ToList();
+                    if (minigameLog != null)
+                    {
+                        List<MinigameLogDTO> result = new List<MinigameLogDTO>();
+                        foreach(MinigameLog input in minigameLog)
+                        {
+                            MinigameLogDTO dto = new MinigameLogDTO();
+                            if (Mapper.Mapper.Instance.MinigameLogMapper.ToMinigameLogDTO(input, dto))
+                            {
+                                result.Add(dto);
+                            }
+                        }
+                        return result;
+
                     }
                 }
             }
