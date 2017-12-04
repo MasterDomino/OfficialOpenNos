@@ -101,6 +101,7 @@ namespace OpenNos.GameObject
             HpBlocked = input.HpBlocked;
             JobLevel = input.JobLevel;
             JobLevelXp = input.JobLevelXp;
+            LastFamilyLeave = input.LastFamilyLeave;
             Level = input.Level;
             LevelXp = input.LevelXp;
             MapId = input.MapId;

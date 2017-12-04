@@ -35,6 +35,7 @@ namespace OpenNos.GameObject
             FamilyId = input.FamilyId;
             FamilyLevel = input.FamilyLevel;
             FamilyMessage = input.FamilyMessage;
+            LastFactionChange = input.LastFactionChange;
             ManagerAuthorityType = input.ManagerAuthorityType;
             ManagerCanGetHistory = input.ManagerCanGetHistory;
             ManagerCanInvite = input.ManagerCanInvite;
