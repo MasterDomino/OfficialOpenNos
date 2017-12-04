@@ -226,6 +226,24 @@ namespace OpenNos.Handler
                     damage = 0;
                     hitmode = 1;
                 }
+                if (onyxWings && hitmode != 1)
+                {
+                    short onyxX = (short)(hitRequest.Session.Character.PositionX + 2);
+                    short onyxY = (short)(hitRequest.Session.Character.PositionY + 2);
+                    int onyxId = target.CurrentMapInstance.GetNextMonsterId();
+                    MapMonster onyx = new MapMonster() { MonsterVNum = 2371, MapX = onyxX, MapY = onyxY, MapMonsterId = onyxId, IsHostile = false, IsMoving = false, ShouldRespawn = false };
+                    target.CurrentMapInstance.Broadcast(UserInterfaceHelper.Instance.GenerateGuri(31, 1, hitRequest.Session.Character.CharacterId, onyxX, onyxY));
+                    onyx.Initialize(target.CurrentMapInstance);
+                    target.CurrentMapInstance.AddMonster(onyx);
+                    target.CurrentMapInstance.Broadcast(onyx.GenerateIn());
+                    target.Character.Hp -= damage / 2;
+                    Observable.Timer(TimeSpan.FromMilliseconds(350)).Subscribe(o =>
+                    {
+                        target.CurrentMapInstance.Broadcast(StaticPacketHelper.SkillUsed(UserType.Monster, onyxId, 1, target.Character.CharacterId, -1, 0, -1, hitRequest.Skill.Effect, -1, -1, true, 92, damage / 2, 0, 0));
+                        target.CurrentMapInstance.RemoveMonster(onyx);
+                        target.CurrentMapInstance.Broadcast(StaticPacketHelper.Out(UserType.Monster, onyx.MapMonsterId));
+                    });
+                }
                 target.Character.GetDamage(damage / 2);
                 target.Character.LastDefence = DateTime.Now;
                 target.SendPacket(target.Character.GenerateStat());
