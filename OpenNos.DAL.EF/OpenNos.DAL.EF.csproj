@@ -99,6 +99,10 @@
     <Compile Include="Migrations\201711241710350_Aphrodite74.Designer.cs">
       <DependentUpon>201711241710350_Aphrodite74.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712041730282_Aphrodite75.cs" />
+    <Compile Include="Migrations\201712041730282_Aphrodite75.Designer.cs">
+      <DependentUpon>201712041730282_Aphrodite75.cs</DependentUpon>
+    </Compile>
     <Compile Include="Quest.cs" />
     <Compile Include="QuestProgress.cs" />
     <Compile Include="RecipeList.cs" />
@@ -695,6 +699,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711241710350_Aphrodite74.resx">
       <DependentUpon>201711241710350_Aphrodite74.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712041730282_Aphrodite75.resx">
+      <DependentUpon>201712041730282_Aphrodite75.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
