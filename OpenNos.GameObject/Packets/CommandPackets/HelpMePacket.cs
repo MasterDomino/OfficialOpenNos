@@ -8,11 +8,15 @@ namespace OpenNos.GameObject.CommandPackets
     [PacketHeader("$HelpMe", PassNonParseablePacket = true, Authority = AuthorityType.User)]
     public class HelpMePacket : PacketDefinition
     {
+
+        [PacketIndex(0, SerializeToEnd = true)]
+        public string Message { get; set; }
+
         #region Methods
 
         public static string ReturnHelp()
         {
-            return "$HelpMe";
+            return "$HelpMe MESSAGE";
         }
 
         #endregion
