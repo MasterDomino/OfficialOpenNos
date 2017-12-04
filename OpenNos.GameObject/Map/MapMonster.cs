@@ -875,11 +875,6 @@ namespace OpenNos.GameObject
                 bool onyxWings = false;
                 int damage = DamageHelper.Instance.CalculateDamage(new BattleEntity(this), new BattleEntity(targetSession.Character, null), npcMonsterSkill?.Skill, ref hitmode, ref onyxWings);
 
-                if (damage >= targetSession.Character.Hp && Monster.BCards.Any(s => s.Type == 39 && s.SubType == 0 && s.ThirdData == 1))
-                {
-                    damage = targetSession.Character.Hp - 1;
-                }
-
                 if (npcMonsterSkill != null)
                 {
                     if (CurrentMp < npcMonsterSkill.Skill.MpCost)
@@ -925,6 +920,11 @@ namespace OpenNos.GameObject
             {
                 if (targetSession.Character.Hp > 0)
                 {
+                    if (damage >= targetSession.Character.Hp && Monster.BCards.Any(s => s.Type == 39 && s.SubType == 0 && s.ThirdData == 1))
+                    {
+                        damage = targetSession.Character.Hp - 1;
+                    }
+
                     targetSession.Character.GetDamage(damage);
                     MapInstance.Broadcast(null, ServerManager.Instance.GetUserMethod<string>(Target, "GenerateStat"), ReceiverType.OnlySomeone, string.Empty, Target);
                     MapInstance.Broadcast(npcMonsterSkill != null
