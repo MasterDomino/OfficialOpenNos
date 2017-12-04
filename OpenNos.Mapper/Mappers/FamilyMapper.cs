@@ -22,6 +22,7 @@ namespace OpenNos.Mapper.Mappers
             output.FamilyId = input.FamilyId;
             output.FamilyLevel = input.FamilyLevel;
             output.FamilyMessage = input.FamilyMessage;
+            output.LastFactionChange = input.LastFactionChange;
             output.ManagerAuthorityType = input.ManagerAuthorityType;
             output.ManagerCanGetHistory = input.ManagerCanGetHistory;
             output.ManagerCanInvite = input.ManagerCanInvite;
@@ -47,6 +48,7 @@ namespace OpenNos.Mapper.Mappers
             output.FamilyId = input.FamilyId;
             output.FamilyLevel = input.FamilyLevel;
             output.FamilyMessage = input.FamilyMessage;
+            output.LastFactionChange = input.LastFactionChange;
             output.ManagerAuthorityType = input.ManagerAuthorityType;
             output.ManagerCanGetHistory = input.ManagerCanGetHistory;
             output.ManagerCanInvite = input.ManagerCanInvite;

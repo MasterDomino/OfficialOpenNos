@@ -47,6 +47,8 @@ namespace OpenNos.DAL.EF
         [MaxLength(255)]
         public string FamilyMessage { get; set; }
 
+        public long LastFactionChange { get; set; }
+
         public FamilyAuthorityType ManagerAuthorityType { get; set; }
 
         public bool ManagerCanGetHistory { get; set; }

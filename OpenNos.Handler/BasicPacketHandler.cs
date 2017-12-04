@@ -913,6 +913,7 @@ namespace OpenNos.Handler
                             if (Session.Character.Family != null)
                             {
                                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("IN_FAMILY"), 0));
+                                return;
                             }
                             Session.Character.Faction = faction;
                             Session.Character.Inventory.RemoveItemAmount(baseVnum + (byte)faction);
@@ -926,6 +927,12 @@ namespace OpenNos.Handler
                             if (Session.Character.Family == null || Session.Character.Family.FamilyCharacters.Find(s => s.Authority.Equals(FamilyAuthority.Head))?.CharacterId.Equals(Session.Character.CharacterId) != true)
                             {
                                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_FAMILY"), 0));
+                                return;
+                            }
+                            if (Session.Character.Family.LastFactionChange > DateTime.Now.AddDays(-1).Ticks)
+                            {
+                                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("CHANGE_NOT PERMITTED"), 0));
+                                return;
                             }
 
                             Session.Character.Faction = (FactionType)((byte)faction / 2);
@@ -934,6 +941,7 @@ namespace OpenNos.Handler
                             Session.SendPacket(Session.Character.GenerateFaction());
                             Session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId, 4799 + ((byte)faction / 2)));
                             Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey($"GET_PROTECTION_POWER_{(byte)faction / 2}"), 0));
+                            Session.Character.Family.LastFactionChange = DateTime.Now.Ticks;
                             Session.Character.Save();
                             ServerManager.Instance.FamilyRefresh(Session.Character.Family.FamilyId);
                             CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
