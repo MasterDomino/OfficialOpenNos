@@ -40,6 +40,7 @@ namespace OpenNos.DAL.EF
             Mail1 = new HashSet<Mail>();
             MinilandObject = new HashSet<MinilandObject>();
             Mate = new HashSet<Mate>();
+            MinigameLog = new HashSet<MinigameLog>();
         }
 
         #endregion
@@ -144,6 +145,8 @@ namespace OpenNos.DAL.EF
         public virtual ICollection<Mate> Mate { get; set; }
 
         public byte MaxMateCount { get; set; }
+
+        public virtual ICollection<MinigameLog> MinigameLog { get; set; }
 
         public bool MinilandInviteBlocked { get; set; }
 
