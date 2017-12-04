@@ -307,7 +307,7 @@ namespace OpenNos.GameObject
                 List<ClientSession> sess = new List<ClientSession>();
                 DamageList.Keys.ToList().ForEach(s => sess.Add(MapInstance.GetSessionByCharacterId(s)));
                 //ClientSession session = sess.OrderBy(s => distance = Map.GetDistance(new MapCell { X = MapX, Y = MapY }, new MapCell { X = s.Character.PositionX, Y = s.Character.PositionY })).FirstOrDefault();
-                Character character = sess.Where(s => s?.Character != null && (ServerManager.Instance.ChannelId != 51 || MonsterVNum - (byte)s.Character.Faction != 678) && s.Character.Hp > 0 && !s.Character.InvisibleGm && !s.Character.Invisible && s.Character.MapInstance == MapInstance && Map.GetDistance(new MapCell { X = MapX, Y = MapY }, new MapCell { X = s.Character.PositionX, Y = s.Character.PositionY }) < Monster.NoticeRange).OrderBy(s => distance = Map.GetDistance(new MapCell { X = MapX, Y = MapY }, new MapCell { X = s.Character.PositionX, Y = s.Character.PositionY })).FirstOrDefault()?.Character;
+                Character character = sess.Where(s => s?.Character != null && (ServerManager.Instance.ChannelId != 51 || (MonsterVNum - (byte)s.Character.Faction != 678 && MonsterVNum - (byte)s.Character.Faction != 971)) && s.Character.Hp > 0 && !s.Character.InvisibleGm && !s.Character.Invisible && s.Character.MapInstance == MapInstance && Map.GetDistance(new MapCell { X = MapX, Y = MapY }, new MapCell { X = s.Character.PositionX, Y = s.Character.PositionY }) < Monster.NoticeRange).OrderBy(s => distance = Map.GetDistance(new MapCell { X = MapX, Y = MapY }, new MapCell { X = s.Character.PositionX, Y = s.Character.PositionY })).FirstOrDefault()?.Character;
                 if (distance < maxDistance && character != null)
                 {
                     Target = character.CharacterId;
@@ -319,7 +319,7 @@ namespace OpenNos.GameObject
         {
             if (IsHostile && Target == -1)
             {
-                Character character = ServerManager.Instance.Sessions.Where(s => s?.Character != null && (ServerManager.Instance.ChannelId != 51 || MonsterVNum - (byte)s.Character.Faction != 678) && s.Character.Hp > 0 && !s.Character.InvisibleGm && !s.Character.Invisible && s.Character.MapInstance == MapInstance && Map.GetDistance(new MapCell { X = MapX, Y = MapY }, new MapCell { X = s.Character.PositionX, Y = s.Character.PositionY }) < Monster.NoticeRange).OrderBy(s => ServerManager.Instance.RandomNumber(0, int.MaxValue)).FirstOrDefault()?.Character;
+                Character character = ServerManager.Instance.Sessions.Where(s => s?.Character != null && (ServerManager.Instance.ChannelId != 51 || (MonsterVNum - (byte)s.Character.Faction != 678 && MonsterVNum - (byte)s.Character.Faction != 971)) && s.Character.Hp > 0 && !s.Character.InvisibleGm && !s.Character.Invisible && s.Character.MapInstance == MapInstance && Map.GetDistance(new MapCell { X = MapX, Y = MapY }, new MapCell { X = s.Character.PositionX, Y = s.Character.PositionY }) < Monster.NoticeRange).OrderBy(s => ServerManager.Instance.RandomNumber(0, int.MaxValue)).FirstOrDefault()?.Character;
                 if (character != null)
                 {
                     if (OnNoticeEvents.Count == 0 && MoveEvent == null)
@@ -438,7 +438,7 @@ namespace OpenNos.GameObject
             // handle hit queue
             while (HitQueue.TryDequeue(out HitRequest hitRequest))
             {
-                if (IsAlive && hitRequest.Session.Character.Hp > 0 && (ServerManager.Instance.ChannelId != 51 || MonsterVNum - (byte)hitRequest.Session.Character.Faction != 678))
+                if (IsAlive && hitRequest.Session.Character.Hp > 0 && (ServerManager.Instance.ChannelId != 51 || (MonsterVNum - (byte)hitRequest.Session.Character.Faction != 678 && MonsterVNum - (byte)hitRequest.Session.Character.Faction != 971)))
                 {
                     int hitmode = 0;
                     bool isCaptureSkill = hitRequest.Skill.BCards.Any(s => s.Type.Equals((byte)CardType.Capture));
@@ -447,7 +447,11 @@ namespace OpenNos.GameObject
                     bool onyxWings = false;
                     BattleEntity battleEntity = new BattleEntity(hitRequest.Session.Character, hitRequest.Skill);
                     int damage = DamageHelper.Instance.CalculateDamage(battleEntity, new BattleEntity(this), hitRequest.Skill, ref hitmode, ref onyxWings);
-                    if (onyxWings)
+                    if (damage >= CurrentHp && Monster.BCards.Any(s => s.Type == 39 && s.SubType == 0 && s.ThirdData == -1))
+                    {
+                        damage = CurrentHp - 1;
+                    }
+                    else if (onyxWings)
                     {
                         short onyxX = (short)(hitRequest.Session.Character.PositionX + 2);
                         short onyxY = (short)(hitRequest.Session.Character.PositionY + 2);
@@ -871,6 +875,11 @@ namespace OpenNos.GameObject
                 bool onyxWings = false;
                 int damage = DamageHelper.Instance.CalculateDamage(new BattleEntity(this), new BattleEntity(targetSession.Character, null), npcMonsterSkill?.Skill, ref hitmode, ref onyxWings);
 
+                if (damage >= targetSession.Character.Hp && Monster.BCards.Any(s => s.Type == 39 && s.SubType == 0 && s.ThirdData == 1))
+                {
+                    damage = targetSession.Character.Hp - 1;
+                }
+
                 if (npcMonsterSkill != null)
                 {
                     if (CurrentMp < npcMonsterSkill.Skill.MpCost)
@@ -912,44 +921,47 @@ namespace OpenNos.GameObject
 
         private void targetHit2(ClientSession targetSession, NpcMonsterSkill npcMonsterSkill, int damage, int hitmode)
         {
-            if (targetSession.Character.Hp > 0)
+            lock (targetSession.Character.PVELockObject)
             {
-                targetSession.Character.GetDamage(damage);
-                MapInstance.Broadcast(null, ServerManager.Instance.GetUserMethod<string>(Target, "GenerateStat"), ReceiverType.OnlySomeone, string.Empty, Target);
-                MapInstance.Broadcast(npcMonsterSkill != null
-                    ? StaticPacketHelper.SkillUsed(UserType.Monster, MapMonsterId, 1, Target, npcMonsterSkill.SkillVNum, npcMonsterSkill.Skill.Cooldown, npcMonsterSkill.Skill.AttackAnimation, npcMonsterSkill.Skill.Effect, MapX, MapY, targetSession.Character.Hp > 0, (int)(targetSession.Character.Hp / targetSession.Character.HPLoad() * 100), damage, hitmode, 0)
-                    : StaticPacketHelper.SkillUsed(UserType.Monster, MapMonsterId, 1, Target, 0, Monster.BasicCooldown, 11, Monster.BasicSkill, 0, 0, targetSession.Character.Hp > 0, (int)(targetSession.Character.Hp / targetSession.Character.HPLoad() * 100), damage, hitmode, 0));
-                npcMonsterSkill?.Skill.BCards.ForEach(s => s.ApplyBCards(this));
-                LastSkill = DateTime.Now;
-                if (targetSession.Character.Hp <= 0)
+                if (targetSession.Character.Hp > 0)
                 {
-                    RemoveTarget();
-                    Observable.Timer(TimeSpan.FromMilliseconds(1000)).Subscribe(o => ServerManager.Instance.AskRevive(targetSession?.Character?.CharacterId ?? 0));
+                    targetSession.Character.GetDamage(damage);
+                    MapInstance.Broadcast(null, ServerManager.Instance.GetUserMethod<string>(Target, "GenerateStat"), ReceiverType.OnlySomeone, string.Empty, Target);
+                    MapInstance.Broadcast(npcMonsterSkill != null
+                        ? StaticPacketHelper.SkillUsed(UserType.Monster, MapMonsterId, 1, Target, npcMonsterSkill.SkillVNum, npcMonsterSkill.Skill.Cooldown, npcMonsterSkill.Skill.AttackAnimation, npcMonsterSkill.Skill.Effect, MapX, MapY, targetSession.Character.Hp > 0, (int)(targetSession.Character.Hp / targetSession.Character.HPLoad() * 100), damage, hitmode, 0)
+                        : StaticPacketHelper.SkillUsed(UserType.Monster, MapMonsterId, 1, Target, 0, Monster.BasicCooldown, 11, Monster.BasicSkill, 0, 0, targetSession.Character.Hp > 0, (int)(targetSession.Character.Hp / targetSession.Character.HPLoad() * 100), damage, hitmode, 0));
+                    npcMonsterSkill?.Skill.BCards.ForEach(s => s.ApplyBCards(this));
+                    LastSkill = DateTime.Now;
+                    if (targetSession.Character.Hp <= 0)
+                    {
+                        RemoveTarget();
+                        Observable.Timer(TimeSpan.FromMilliseconds(1000)).Subscribe(o => ServerManager.Instance.AskRevive(targetSession?.Character?.CharacterId ?? 0));
+                    }
                 }
-            }
-            if (npcMonsterSkill != null && (npcMonsterSkill.Skill.Range > 0 || npcMonsterSkill.Skill.TargetRange > 0))
-            {
-                foreach (Character characterInRange in MapInstance.GetCharactersInRange(npcMonsterSkill.Skill.TargetRange == 0 ? MapX : targetSession.Character.PositionX, npcMonsterSkill.Skill.TargetRange == 0 ? MapY : targetSession.Character.PositionY, npcMonsterSkill.Skill.TargetRange).Where(s => s.CharacterId != Target && (ServerManager.Instance.ChannelId != 51 || MonsterVNum - (byte)s.Faction != 678) && s.Hp > 0 && !s.InvisibleGm))
+                if (npcMonsterSkill != null && (npcMonsterSkill.Skill.Range > 0 || npcMonsterSkill.Skill.TargetRange > 0))
                 {
-                    if (characterInRange.IsSitting)
+                    foreach (Character characterInRange in MapInstance.GetCharactersInRange(npcMonsterSkill.Skill.TargetRange == 0 ? MapX : targetSession.Character.PositionX, npcMonsterSkill.Skill.TargetRange == 0 ? MapY : targetSession.Character.PositionY, npcMonsterSkill.Skill.TargetRange).Where(s => s.CharacterId != Target && (ServerManager.Instance.ChannelId != 51 || (MonsterVNum - (byte)s.Faction != 678 && MonsterVNum - (byte)s.Faction != 971)) && s.Hp > 0 && !s.InvisibleGm))
                     {
-                        characterInRange.IsSitting = false;
-                        MapInstance.Broadcast(characterInRange.GenerateRest());
-                    }
-                    if (characterInRange.HasGodMode)
-                    {
-                        damage = 0;
-                        hitmode = 1;
-                    }
-                    if (characterInRange.Hp > 0)
-                    {
-                        characterInRange.GetDamage(damage);
-                        MapInstance.Broadcast(null, characterInRange.GenerateStat(), ReceiverType.OnlySomeone, string.Empty, characterInRange.CharacterId);
-                        MapInstance.Broadcast(StaticPacketHelper.SkillUsed(UserType.Monster, MapMonsterId, 1, characterInRange.CharacterId, 0, Monster.BasicCooldown, 11, Monster.BasicSkill, 0, 0, characterInRange.Hp > 0, (int)(characterInRange.Hp / characterInRange.HPLoad() * 100), damage, hitmode, 0));
-                        if (characterInRange.Hp <= 0)
+                        if (characterInRange.IsSitting)
                         {
-                            RemoveTarget();
-                            Observable.Timer(TimeSpan.FromMilliseconds(1000)).Subscribe(o => ServerManager.Instance.AskRevive(characterInRange?.CharacterId ?? 0));
+                            characterInRange.IsSitting = false;
+                            MapInstance.Broadcast(characterInRange.GenerateRest());
+                        }
+                        if (characterInRange.HasGodMode)
+                        {
+                            damage = 0;
+                            hitmode = 1;
+                        }
+                        if (characterInRange.Hp > 0)
+                        {
+                            characterInRange.GetDamage(damage);
+                            MapInstance.Broadcast(null, characterInRange.GenerateStat(), ReceiverType.OnlySomeone, string.Empty, characterInRange.CharacterId);
+                            MapInstance.Broadcast(StaticPacketHelper.SkillUsed(UserType.Monster, MapMonsterId, 1, characterInRange.CharacterId, 0, Monster.BasicCooldown, 11, Monster.BasicSkill, 0, 0, characterInRange.Hp > 0, (int)(characterInRange.Hp / characterInRange.HPLoad() * 100), damage, hitmode, 0));
+                            if (characterInRange.Hp <= 0)
+                            {
+                                RemoveTarget();
+                                Observable.Timer(TimeSpan.FromMilliseconds(1000)).Subscribe(o => ServerManager.Instance.AskRevive(characterInRange?.CharacterId ?? 0));
+                            }
                         }
                     }
                 }

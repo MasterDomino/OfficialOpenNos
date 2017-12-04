@@ -68,6 +68,7 @@ namespace OpenNos.GameObject
             Buff = new ThreadSafeSortedList<short, Buff>();
             BuffObservables = new ThreadSafeSortedList<short, IDisposable>();
             CellonOptions = new ThreadSafeGenericList<CellonOptionDTO>();
+            PVELockObject = new object();
         }
 
         public Character(CharacterDTO input)
@@ -143,6 +144,7 @@ namespace OpenNos.GameObject
             Buff = new ThreadSafeSortedList<short, Buff>();
             BuffObservables = new ThreadSafeSortedList<short, IDisposable>();
             CellonOptions = new ThreadSafeGenericList<CellonOptionDTO>();
+            PVELockObject = new object();
         }
 
         #endregion
@@ -360,6 +362,8 @@ namespace OpenNos.GameObject
         public short PositionX { get; set; }
 
         public short PositionY { get; set; }
+
+        public object PVELockObject { get; set; }
 
         public ThreadSafeSortedList<long, QuestModel> Quests { get; internal set; }
 
