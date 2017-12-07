@@ -186,106 +186,102 @@ namespace OpenNos.GameObject
         // PacketHandler -> with Callback?
         public void AskRevive(long characterId)
         {
-            ClientSession Session = GetSessionByCharacterId(characterId);
-            if (Session?.HasSelectedCharacter == true && Session.HasCurrentMapInstance)
+            ClientSession session = GetSessionByCharacterId(characterId);
+            if (session?.HasSelectedCharacter == true && session.HasCurrentMapInstance)
             {
-                if (Session.Character.IsVehicled)
+                if (session.Character.IsVehicled)
                 {
-                    Session.Character.RemoveVehicle();
+                    session.Character.RemoveVehicle();
                 }
-                Session.Character.DisableBuffs(BuffType.All);
-                Session.SendPacket(Session.Character.GenerateStat());
-                Session.SendPacket(Session.Character.GenerateCond());
-                Session.SendPackets(UserInterfaceHelper.Instance.GenerateVb());
+                session.Character.DisableBuffs(BuffType.All);
+                session.SendPacket(session.Character.GenerateStat());
+                session.SendPacket(session.Character.GenerateCond());
+                session.SendPackets(UserInterfaceHelper.Instance.GenerateVb());
 
-                switch (Session.CurrentMapInstance.MapInstanceType)
+                switch (session.CurrentMapInstance.MapInstanceType)
                 {
                     case MapInstanceType.BaseMapInstance:
-                        if (Session.Character.Level > 20)
+                        if (session.Character.Level > 20)
                         {
-                            Session.Character.Dignity -= (short)(Session.Character.Level < 50 ? Session.Character.Level : 50);
-                            if (Session.Character.Dignity < -1000)
+                            session.Character.Dignity -= (short)(session.Character.Level < 50 ? session.Character.Level : 50);
+                            if (session.Character.Dignity < -1000)
                             {
-                                Session.Character.Dignity = -1000;
+                                session.Character.Dignity = -1000;
                             }
-                            Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("LOSE_DIGNITY"), (short)(Session.Character.Level < 50 ? Session.Character.Level : 50)), 11));
-                            Session.SendPacket(Session.Character.GenerateFd());
-                            Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(), ReceiverType.AllExceptMe);
-                            Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(), ReceiverType.AllExceptMe);
+                            session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("LOSE_DIGNITY"), (short)(session.Character.Level < 50 ? session.Character.Level : 50)), 11));
+                            session.SendPacket(session.Character.GenerateFd());
+                            session.CurrentMapInstance.Broadcast(session, session.Character.GenerateIn(), ReceiverType.AllExceptMe);
+                            session.CurrentMapInstance.Broadcast(session, session.Character.GenerateGidx(), ReceiverType.AllExceptMe);
                         }
-                        Session.SendPacket("eff_ob -1 -1 0 4269");
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#revival^0 #revival^1 {(Session.Character.Level > 20 ? Language.Instance.GetMessageFromKey("ASK_REVIVE") : Language.Instance.GetMessageFromKey("ASK_REVIVE_FREE"))}"));
-                        reviveTask(Session);
+                        session.SendPacket("eff_ob -1 -1 0 4269");
+                        session.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#revival^0 #revival^1 {(session.Character.Level > 20 ? Language.Instance.GetMessageFromKey("ASK_REVIVE") : Language.Instance.GetMessageFromKey("ASK_REVIVE_FREE"))}"));
+                        reviveTask(session);
                         break;
 
                     case MapInstanceType.TimeSpaceInstance:
-                        if (!(Session.CurrentMapInstance.InstanceBag.Lives - Session.CurrentMapInstance.InstanceBag.DeadList.Count <= 1))
+                        if (!(session.CurrentMapInstance.InstanceBag.Lives - session.CurrentMapInstance.InstanceBag.DeadList.Count <= 1))
                         {
-                            Session.Character.Hp = 1;
-                            Session.Character.Mp = 1;
+                            session.Character.Hp = 1;
+                            session.Character.Mp = 1;
                             return;
                         }
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("YOU_HAVE_LIFE"), Session.CurrentMapInstance.InstanceBag.Lives - Session.CurrentMapInstance.InstanceBag.DeadList.Count + 1), 0));
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#revival^1 #revival^1 {(Session.Character.Level > 10 ? Language.Instance.GetMessageFromKey("ASK_REVIVE_TS_LOW_LEVEL") : Language.Instance.GetMessageFromKey("ASK_REVIVE_TS"))}"));
-                        Session.CurrentMapInstance.InstanceBag.DeadList.Add(Session.Character.CharacterId);
-                        reviveTask(Session);
+                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("YOU_HAVE_LIFE"), session.CurrentMapInstance.InstanceBag.Lives - session.CurrentMapInstance.InstanceBag.DeadList.Count + 1), 0));
+                        session.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#revival^1 #revival^1 {(session.Character.Level > 10 ? Language.Instance.GetMessageFromKey("ASK_REVIVE_TS_LOW_LEVEL") : Language.Instance.GetMessageFromKey("ASK_REVIVE_TS"))}"));
+                        session.CurrentMapInstance.InstanceBag.DeadList.Add(session.Character.CharacterId);
+                        reviveTask(session);
                         break;
 
                     case MapInstanceType.RaidInstance:
-                        List<long> save = Session.CurrentMapInstance.InstanceBag.DeadList.ConvertAll(s => s);
-                        if (Session.CurrentMapInstance.InstanceBag.Lives - Session.CurrentMapInstance.InstanceBag.DeadList.Count < 0)
+                        List<long> save = session.CurrentMapInstance.InstanceBag.DeadList.ConvertAll(s => s);
+                        if (session.CurrentMapInstance.InstanceBag.Lives - session.CurrentMapInstance.InstanceBag.DeadList.Count < 0)
                         {
-                            Session.Character.Hp = 1;
-                            Session.Character.Mp = 1;
+                            session.Character.Hp = 1;
+                            session.Character.Mp = 1;
                         }
-                        else if (2 - save.Count(s => s == Session.Character.CharacterId) > 0)
+                        else if (2 - save.Count(s => s == session.Character.CharacterId) > 0)
                         {
-                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("YOU_HAVE_LIFE_RAID"), 2 - Session.CurrentMapInstance.InstanceBag.DeadList.Count(s => s == Session.Character.CharacterId))));
-                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("RAID_MEMBER_DEAD"), Session.Character.Name)));
+                            session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("YOU_HAVE_LIFE_RAID"), 2 - session.CurrentMapInstance.InstanceBag.DeadList.Count(s => s == session.Character.CharacterId))));
+                            session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("RAID_MEMBER_DEAD"), session.Character.Name)));
                             try
                             {
-                                Session.Character.Group?.Raid?.InstanceBag.DeadList.Add(Session.Character.CharacterId);
+                                session.Character.Group?.Raid?.InstanceBag.DeadList.Add(session.Character.CharacterId);
                             }
                             catch (IndexOutOfRangeException ex)
                             {
                                 Logger.Error(ex);
                             }
-                            Session.Character.Group?.Characters.ForEach(session =>
+                            session.Character.Group?.Characters.ForEach(grpSession =>
                             {
-                                session.SendPacket(session.Character.Group.GeneraterRaidmbf(session));
-                                session.SendPacket(session.Character.Group.GenerateRdlst());
+                                grpSession.SendPacket(grpSession.Character.Group.GeneraterRaidmbf(grpSession));
+                                grpSession.SendPacket(grpSession.Character.Group.GenerateRdlst());
                             });
                             Task.Factory.StartNew(async () =>
                             {
                                 await Task.Delay(20000).ConfigureAwait(false);
-                                Instance.ReviveFirstPosition(Session.Character.CharacterId);
+                                Instance.ReviveFirstPosition(session.Character.CharacterId);
                             });
                         }
                         else
                         {
-                            Group grp = Session.Character.Group;
-                            if (grp != null)
+                            session.Character.Group?.Characters.ForEach(grpSession =>
                             {
-                                grp.Characters.ForEach(s =>
-                                {
-                                    s.SendPacket(s.Character.Group.GeneraterRaidmbf(s));
-                                    s.SendPacket(s.Character.Group.GenerateRdlst());
-                                });
-                                grp.LeaveGroup(Session);
-                                Session.SendPacket(Session.Character.GenerateRaid(1, true));
-                                Session.SendPacket(Session.Character.GenerateRaid(2, true));
-                                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("KICKED_FROM_RAID"), 0));
-                            }
+                                grpSession.SendPacket(grpSession.Character.Group.GeneraterRaidmbf(grpSession));
+                                grpSession.SendPacket(grpSession.Character.Group.GenerateRdlst());
+                            });
+                            session.Character.Group?.LeaveGroup(session);
+                            session.SendPacket(session.Character.GenerateRaid(1, true));
+                            session.SendPacket(session.Character.GenerateRaid(2, true));
+                            session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("KICKED_FROM_RAID"), 0));
                         }
                         break;
 
                     case MapInstanceType.LodInstance:
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#revival^0 #revival^1 {Language.Instance.GetMessageFromKey("ASK_REVIVE_LOD")}"));
-                        reviveTask(Session);
+                        session.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#revival^0 #revival^1 {Language.Instance.GetMessageFromKey("ASK_REVIVE_LOD")}"));
+                        reviveTask(session);
                         break;
 
                     default:
-                        Instance.ReviveFirstPosition(Session.Character.CharacterId);
+                        Instance.ReviveFirstPosition(session.Character.CharacterId);
                         break;
                 }
             }
@@ -1466,7 +1462,7 @@ namespace OpenNos.GameObject
             MailDTO mail = (MailDTO)sender;
 
             ClientSession session = GetSessionByCharacterId(mail.IsSenderCopy ? mail.SenderId : mail.ReceiverId);
-            if(session != null)
+            if (session != null)
             {
                 if (mail.AttachmentVNum != null)
                 {
