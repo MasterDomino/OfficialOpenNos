@@ -255,7 +255,7 @@ namespace OpenNos.Handler
             }
             Session.Character.ExchangeInfo.Gold = gold;
             Session.CurrentMapInstance?.Broadcast(Session, $"exc_list 1 {Session.Character.CharacterId} {gold} {packetList}", ReceiverType.OnlySomeone, string.Empty, Session.Character.ExchangeInfo.TargetCharacterId);
-            Session.Character.ExchangeInfo.Validate = true;
+            Session.Character.ExchangeInfo.Validated = true;
         }
 
         /// <summary>
@@ -392,13 +392,13 @@ namespace OpenNos.Handler
                                     {
                                         return;
                                     }
-                                    if (Session.Character.ExchangeInfo.Validate && targetExchange.Validate)
+                                    if (Session.Character.ExchangeInfo.Validated && targetExchange.Validated)
                                     {
                                         Logger.LogUserEvent("TRADE_ACCEPT", Session.GenerateIdentity(), $"[ExchangeAccept][{targetSession.GenerateIdentity()}]");
                                         try
                                         {
-                                            Session.Character.ExchangeInfo.Confirm = true;
-                                            if (targetExchange.Confirm && Session.Character.ExchangeInfo.Confirm)
+                                            Session.Character.ExchangeInfo.Confirmed = true;
+                                            if (targetExchange.Confirmed && Session.Character.ExchangeInfo.Confirmed)
                                             {
                                                 Session.SendPacket("exc_close 1");
                                                 targetSession.SendPacket("exc_close 1");
@@ -503,9 +503,9 @@ namespace OpenNos.Handler
                             Session.Character.ExchangeInfo = new ExchangeInfo
                             {
                                 TargetCharacterId = exchangeRequestPacket.CharacterId,
-                                Confirm = false
+                                Confirmed = false
                             };
-                            ServerManager.Instance.SetProperty(exchangeRequestPacket.CharacterId, nameof(Character.ExchangeInfo), new ExchangeInfo { TargetCharacterId = Session.Character.CharacterId, Confirm = false });
+                            ServerManager.Instance.SetProperty(exchangeRequestPacket.CharacterId, nameof(Character.ExchangeInfo), new ExchangeInfo { TargetCharacterId = Session.Character.CharacterId, Confirmed = false });
                             Session.CurrentMapInstance?.Broadcast(Session, $"exc_list 1 {Session.Character.CharacterId} -1", ReceiverType.OnlySomeone, string.Empty, exchangeRequestPacket.CharacterId);
                         }
                         else

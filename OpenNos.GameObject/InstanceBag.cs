@@ -39,7 +39,7 @@ namespace OpenNos.GameObject
 
         public int Combo { get; set; }
 
-        public long Creator { get; set; }
+        public long CreatorId { get; set; }
 
         public List<long> DeadList { get; set; }
 

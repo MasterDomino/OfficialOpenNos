@@ -19,6 +19,7 @@ using OpenNos.GameObject.Helpers;
 using OpenNos.XMLModel.Models.ScriptedInstance;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
@@ -151,15 +152,13 @@ namespace OpenNos.GameObject
 
         public void LoadGlobals()
         {
-            // initialize script as byte stream
             if (Script != null)
             {
-                byte[] xml = Encoding.UTF8.GetBytes(Script);
-                MemoryStream memoryStream = new MemoryStream(xml);
-                XmlReader reader = XmlReader.Create(memoryStream);
                 XmlSerializer serializer = new XmlSerializer(typeof(ScriptedInstanceModel));
-                Model = (ScriptedInstanceModel)serializer.Deserialize(reader);
-                memoryStream.Close();
+                using (StringReader textReader = new StringReader(Script))
+                {
+                    Model = (ScriptedInstanceModel)serializer.Deserialize(textReader);
+                }
 
                 if (Model?.Globals != null)
                 {
@@ -248,7 +247,7 @@ namespace OpenNos.GameObject
                         Dispose();
                         _disposable.Dispose();
                     }
-                    if (InstanceBag.Clock.DeciSecondRemaining <= 0)
+                    if (InstanceBag.Clock.SecondsRemaining <= 0)
                     {
                         _mapInstanceDictionary.Values.ToList().ForEach(m => EventHelper.Instance.RunEvent(new EventContainer(m, EventActionType.SCRIPTEND, (byte)1)));
                         Dispose();
@@ -937,25 +936,5 @@ namespace OpenNos.GameObject
         }
 
         #endregion
-
-        // Use as a idea of what is left to do
-        //private void remnants()
-        //{
-        //    switch (mapEvent.Name)
-        //    {
-        //        case "SummonMonsters":
-        //            evts.Add(new EventContainer(mapInstance, EventActionType.SPAWNMONSTERS, mapInstance.Map.GenerateMonsters(short.Parse(mapEvent?.Attributes["VNum"].Value), short.Parse(mapEvent?.Attributes["Amount"].Value), move, new List<EventContainer>(), isBonus, isHostile, isBoss)));
-        //            break;
-        //        case "SummonNpcs":
-        //            evts.Add(new EventContainer(mapInstance, EventActionType.SPAWNNPCS, mapInstance.Map.GenerateNpcs(short.Parse(mapEvent?.Attributes["VNum"].Value), short.Parse(mapEvent?.Attributes["Amount"].Value), new List<EventContainer>(), isMate, isProtected)));
-        //            break;
-        //        case "StopClock":
-        //            evts.Add(new EventContainer(mapInstance, EventActionType.STOPCLOCK, null));
-        //            break;
-        //        case "StopMapClock":
-        //            evts.Add(new EventContainer(mapInstance, EventActionType.STOPMAPCLOCK, null));
-        //            break;
-        //    }
-        //}
     }
 }

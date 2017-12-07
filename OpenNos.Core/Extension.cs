@@ -18,6 +18,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 
 namespace OpenNos.Core
 {
@@ -93,6 +94,37 @@ namespace OpenNos.Core
     public static class TimeExtensions
     {
         public static DateTime RoundUp(DateTime dt, TimeSpan d) => new DateTime(((dt.Ticks + d.Ticks - 1) / d.Ticks) * d.Ticks);
+    }
+
+    namespace ExceptionExtensions
+    {
+        /// <summary>
+        /// Defines a What a Terrible Fault Exception, which should actually never be thrown.
+        /// "For those times when: 
+        /// if (true == false)
+        /// {
+        ///     Console.WriteLine("Logic is dead!");
+        /// }
+        /// actually executes.."
+        /// </summary>
+        public class WTFException : Exception
+        {
+            public WTFException()
+            {
+            }
+
+            public WTFException(string message) : base("WTF!!?!??!!1one11! " + message)
+            {
+            }
+
+            public WTFException(string message, Exception innerException) : base("WTF!!?!??!!1one11! " + message, innerException)
+            {
+            }
+
+            protected WTFException(SerializationInfo info, StreamingContext context) : base(info, context)
+            {
+            }
+        }
     }
 
     public static class ConcurrentBagExtensions

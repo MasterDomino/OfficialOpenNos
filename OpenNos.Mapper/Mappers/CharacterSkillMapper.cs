@@ -5,9 +5,19 @@ namespace OpenNos.Mapper.Mappers
 {
     public class CharacterSkillMapper
     {
-        public CharacterSkillMapper()
-        {
+        #region Methods
 
+        public bool ToCharacterSkill(CharacterSkillDTO input, CharacterSkill output)
+        {
+            if (input == null)
+            {
+                output = null;
+                return false;
+            }
+            output.CharacterId = input.CharacterId;
+            output.Id = input.Id;
+            output.SkillVNum = input.SkillVNum;
+            return true;
         }
 
         public bool ToCharacterSkillDTO(CharacterSkill input, CharacterSkillDTO output)
@@ -23,17 +33,6 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToCharacterSkill(CharacterSkillDTO input, CharacterSkill output)
-        {
-            if (input == null)
-            {
-                output = null;
-                return false;
-            }
-            output.CharacterId = input.CharacterId;
-            output.Id = input.Id;
-            output.SkillVNum = input.SkillVNum;
-            return true;
-        }
+        #endregion
     }
 }

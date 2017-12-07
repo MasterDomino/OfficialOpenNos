@@ -5,8 +5,19 @@ namespace OpenNos.Mapper.Mappers
 {
     public class RecipeMapper
     {
-        public RecipeMapper()
+        #region Methods
+
+        public bool ToRecipe(RecipeDTO input, Recipe output)
         {
+            if (input == null)
+            {
+                output = null;
+                return false;
+            }
+            output.Amount = input.Amount;
+            output.ItemVNum = input.ItemVNum;
+            output.RecipeId = input.RecipeId;
+            return true;
         }
 
         public bool ToRecipeDTO(Recipe input, RecipeDTO output)
@@ -22,18 +33,6 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToRecipe(RecipeDTO input, Recipe output)
-        {
-            if (input == null)
-            {
-                output = null;
-                return false;
-            }
-            output.Amount = input.Amount;
-            output.ItemVNum = input.ItemVNum;
-            output.RecipeId = input.RecipeId;
-            return true;
-        }
+        #endregion
     }
 }
-

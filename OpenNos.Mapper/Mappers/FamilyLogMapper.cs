@@ -5,9 +5,21 @@ namespace OpenNos.Mapper.Mappers
 {
     public class FamilyLogMapper
     {
-        public FamilyLogMapper()
-        {
+        #region Methods
 
+        public bool ToFamilyLog(FamilyLogDTO input, FamilyLog output)
+        {
+            if (input == null)
+            {
+                output = null;
+                return false;
+            }
+            output.FamilyId = input.FamilyId;
+            output.FamilyLogData = input.FamilyLogData;
+            output.FamilyLogId = input.FamilyLogId;
+            output.FamilyLogType = input.FamilyLogType;
+            output.Timestamp = input.Timestamp;
+            return true;
         }
 
         public bool ToFamilyLogDTO(FamilyLog input, FamilyLogDTO output)
@@ -25,19 +37,6 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToFamilyLog(FamilyLogDTO input, FamilyLog output)
-        {
-            if (input == null)
-            {
-                output = null;
-                return false;
-            }
-            output.FamilyId = input.FamilyId;
-            output.FamilyLogData = input.FamilyLogData;
-            output.FamilyLogId = input.FamilyLogId;
-            output.FamilyLogType = input.FamilyLogType;
-            output.Timestamp = input.Timestamp;
-            return true;
-        }
+        #endregion
     }
 }

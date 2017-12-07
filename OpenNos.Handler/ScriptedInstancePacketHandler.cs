@@ -199,7 +199,7 @@ namespace OpenNos.Handler
             Session.Character.MapX = instance.PositionX;
             Session.Character.MapY = instance.PositionY;
             ServerManager.Instance.TeleportOnRandomPlaceInMap(Session, instance.FirstMap.MapInstanceId);
-            instance.InstanceBag.Creator = Session.Character.CharacterId;
+            instance.InstanceBag.CreatorId = Session.Character.CharacterId;
             Session.SendPackets(instance.GenerateMinimap());
             Session.SendPacket(instance.GenerateMainInfo());
             Session.SendPacket(instance.FirstMap.InstanceBag.GenerateScore());
@@ -221,7 +221,7 @@ namespace OpenNos.Handler
                     switch (packet.Value)
                     {
                         case 0:
-                            if (Session.Character.Group?.Characters.Any(s => !s.CurrentMapInstance.InstanceBag.Lock && s.CurrentMapInstance.MapInstanceType == MapInstanceType.TimeSpaceInstance && s.Character.MapId == portal.MapId && s.Character.CharacterId != Session.Character.CharacterId && s.Character.MapX == portal.PositionX && s.Character.MapY == portal.PositionY) == true)
+                            if (Session.Character.Group?.Characters.Any(s => !s.CurrentMapInstance.InstanceBag?.Lock==true && s.CurrentMapInstance.MapInstanceType == MapInstanceType.TimeSpaceInstance && s.Character.MapId == portal.MapId && s.Character.CharacterId != Session.Character.CharacterId && s.Character.MapX == portal.PositionX && s.Character.MapY == portal.PositionY) == true)
                             {
                                 Session.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#wreq^3^{Session.Character.CharacterId} #wreq^0^1 {Language.Instance.GetMessageFromKey("ASK_JOIN_TEAM_TS")}"));
                             }

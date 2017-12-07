@@ -1258,7 +1258,7 @@ namespace OpenNos.Handler
 
                     if (Session.CurrentMapInstance.MapInstanceType == MapInstanceType.TimeSpaceInstance && !Session.Character.Timespace.InstanceBag.Lock)
                     {
-                        if (Session.Character.CharacterId == Session.Character.Timespace.InstanceBag.Creator)
+                        if (Session.Character.CharacterId == Session.Character.Timespace.InstanceBag.CreatorId)
                         {
                             Session.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#rstart^1 rstart {Language.Instance.GetMessageFromKey("FIRST_ROOM_START")}"));
                         }

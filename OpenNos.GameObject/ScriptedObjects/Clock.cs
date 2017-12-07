@@ -28,7 +28,7 @@ namespace OpenNos.GameObject
             StopEvents = new List<EventContainer>();
             TimeoutEvents = new List<EventContainer>();
             Type = type;
-            DeciSecondRemaining = 1;
+            SecondsRemaining = 1;
             Observable.Interval(TimeSpan.FromSeconds(1)).Subscribe(x => tick());
         }
 
@@ -36,9 +36,9 @@ namespace OpenNos.GameObject
 
         #region Properties
 
-        public int BasesSecondRemaining { get; set; }
+        public int TotalSecondsAmount { get; set; }
 
-        public int DeciSecondRemaining { get; set; }
+        public int SecondsRemaining { get; set; }
 
         public bool Enabled { get; private set; }
 
@@ -52,7 +52,7 @@ namespace OpenNos.GameObject
 
         #region Methods
 
-        public string GetClock() => $"evnt {Type} {(Enabled ? 0 : (Type != 3) ? -1 : 1)} {DeciSecondRemaining} {BasesSecondRemaining}";
+        public string GetClock() => $"evnt {Type} {(Enabled ? 0 : (Type != 3) ? -1 : 1)} {SecondsRemaining} {TotalSecondsAmount}";
 
         public void StartClock() => Enabled = true;
 
@@ -67,9 +67,9 @@ namespace OpenNos.GameObject
         {
             if (Enabled)
             {
-                if (DeciSecondRemaining > 0)
+                if (SecondsRemaining > 0)
                 {
-                    DeciSecondRemaining -= 10;
+                    SecondsRemaining -= 10;
                 }
                 else
                 {

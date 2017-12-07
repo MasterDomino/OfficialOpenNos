@@ -5,8 +5,21 @@ namespace OpenNos.Mapper.Mappers
 {
     public class ShopSkillMapper
     {
-        public ShopSkillMapper()
+        #region Methods
+
+        public bool ToShopSkill(ShopSkillDTO input, ShopSkill output)
         {
+            if (input == null)
+            {
+                output = null;
+                return false;
+            }
+            output.ShopId = input.ShopId;
+            output.ShopSkillId = input.ShopSkillId;
+            output.SkillVNum = input.SkillVNum;
+            output.Slot = input.Slot;
+            output.Type = input.Type;
+            return true;
         }
 
         public bool ToShopSkillDTO(ShopSkill input, ShopSkillDTO output)
@@ -24,20 +37,6 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToShopSkill(ShopSkillDTO input, ShopSkill output)
-        {
-            if (input == null)
-            {
-                output = null;
-                return false;
-            }
-            output.ShopId = input.ShopId;
-            output.ShopSkillId = input.ShopSkillId;
-            output.SkillVNum = input.SkillVNum;
-            output.Slot = input.Slot;
-            output.Type = input.Type;
-            return true;
-        }
+        #endregion
     }
 }
-

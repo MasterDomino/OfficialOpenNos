@@ -246,8 +246,8 @@ namespace OpenNos.GameObject.Helpers
                             break;
 
                         case EventActionType.CLOCK:
-                            evt.MapInstance.InstanceBag.Clock.BasesSecondRemaining = Convert.ToInt32(evt.Parameter);
-                            evt.MapInstance.InstanceBag.Clock.DeciSecondRemaining = Convert.ToInt32(evt.Parameter);
+                            evt.MapInstance.InstanceBag.Clock.TotalSecondsAmount = Convert.ToInt32(evt.Parameter);
+                            evt.MapInstance.InstanceBag.Clock.SecondsRemaining = Convert.ToInt32(evt.Parameter);
                             break;
 
                         case EventActionType.SETMONSTERLOCKERS:
@@ -418,8 +418,8 @@ namespace OpenNos.GameObject.Helpers
                             break;
 
                         case EventActionType.MAPCLOCK:
-                            evt.MapInstance.Clock.BasesSecondRemaining = Convert.ToInt32(evt.Parameter);
-                            evt.MapInstance.Clock.DeciSecondRemaining = Convert.ToInt32(evt.Parameter);
+                            evt.MapInstance.Clock.TotalSecondsAmount = Convert.ToInt32(evt.Parameter);
+                            evt.MapInstance.Clock.SecondsRemaining = Convert.ToInt32(evt.Parameter);
                             break;
 
                         case EventActionType.STARTCLOCK:

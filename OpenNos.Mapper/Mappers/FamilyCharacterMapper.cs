@@ -5,9 +5,23 @@ namespace OpenNos.Mapper.Mappers
 {
     public class FamilyCharacterMapper
     {
-        public FamilyCharacterMapper()
-        {
+        #region Methods
 
+        public bool ToFamilyCharacter(FamilyCharacterDTO input, FamilyCharacter output)
+        {
+            if (input == null)
+            {
+                output = null;
+                return false;
+            }
+            output.Authority = input.Authority;
+            output.CharacterId = input.CharacterId;
+            output.DailyMessage = input.DailyMessage;
+            output.Experience = input.Experience;
+            output.FamilyCharacterId = input.FamilyCharacterId;
+            output.FamilyId = input.FamilyId;
+            output.Rank = input.Rank;
+            return true;
         }
 
         public bool ToFamilyCharacterDTO(FamilyCharacter input, FamilyCharacterDTO output)
@@ -27,21 +41,6 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToFamilyCharacter(FamilyCharacterDTO input, FamilyCharacter output)
-        {
-            if (input == null)
-            {
-                output = null;
-                return false;
-            }
-            output.Authority = input.Authority;
-            output.CharacterId = input.CharacterId;
-            output.DailyMessage = input.DailyMessage;
-            output.Experience = input.Experience;
-            output.FamilyCharacterId = input.FamilyCharacterId;
-            output.FamilyId = input.FamilyId;
-            output.Rank = input.Rank;
-            return true;
-        }
+        #endregion
     }
 }
