@@ -137,7 +137,6 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        [Obsolete("LoadAll is obsolete, create a separate DAO statement for your function")]
         public IEnumerable<CharacterDTO> LoadAll()
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
@@ -244,7 +243,7 @@ namespace OpenNos.DAL.DAO
             }
             catch (Exception e)
             {
-                Logger.Error(e);
+                Logger.Error($"There should be only 1 character per slot, AccountId: {accountId} Slot: {slot}", e);
                 return null;
             }
         }

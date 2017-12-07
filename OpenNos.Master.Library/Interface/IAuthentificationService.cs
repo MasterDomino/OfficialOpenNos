@@ -27,6 +27,7 @@ namespace OpenNos.Master.Library.Interface
         /// Checks if the given Credentials are Valid and return the CharacterDTO
         /// </summary>
         /// <param name="userName"></param>
+        /// <param name="characterName"></param>
         /// <param name="passHash"></param>
         /// <returns></returns>
         CharacterDTO ValidateAccountAndCharacter(string userName, string characterName, string passHash);

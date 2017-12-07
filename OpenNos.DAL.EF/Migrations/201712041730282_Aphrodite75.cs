@@ -1,8 +1,7 @@
 namespace OpenNos.DAL.EF.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class Aphrodite75 : DbMigration
     {
         public override void Up()
@@ -22,7 +21,7 @@ namespace OpenNos.DAL.EF.Migrations
                 .ForeignKey("dbo.Character", t => t.CharacterId)
                 .Index(t => t.CharacterId);
         }
-        
+
         public override void Down()
         {
             DropForeignKey("dbo.MinigameLog", "CharacterId", "dbo.Character");

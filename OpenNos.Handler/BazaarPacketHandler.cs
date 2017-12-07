@@ -47,7 +47,7 @@ namespace OpenNos.Handler
         /// <param name="cBuyPacket"></param>
         public void BuyBazaar(CBuyPacket cBuyPacket)
         {
-            BazaarItemDTO bz = DAOFactory.BazaarItemDAO.LoadAll().FirstOrDefault(s => s.BazaarItemId == cBuyPacket.BazaarId);
+            BazaarItemDTO bz = DAOFactory.BazaarItemDAO.LoadById(cBuyPacket.BazaarId);
             if (bz != null && cBuyPacket.Amount > 0)
             {
                 long price = cBuyPacket.Amount * bz.Price;
@@ -128,7 +128,7 @@ namespace OpenNos.Handler
         public void GetBazaar(CScalcPacket cScalcPacket)
         {
             SpinWait.SpinUntil(() => !ServerManager.Instance.InBazaarRefreshMode);
-            BazaarItemDTO bz = DAOFactory.BazaarItemDAO.LoadAll().FirstOrDefault(s => s.BazaarItemId == cScalcPacket.BazaarId);
+            BazaarItemDTO bz = DAOFactory.BazaarItemDAO.LoadById(cScalcPacket.BazaarId);
             if (bz != null)
             {
                 ItemInstance itemInstance = new ItemInstance(DAOFactory.IteminstanceDAO.LoadById(bz.ItemInstanceId));
