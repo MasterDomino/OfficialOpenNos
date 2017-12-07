@@ -252,8 +252,8 @@ namespace OpenNos.GameObject
                             }
                             session.Character.Group?.Characters.ForEach(grpSession =>
                             {
-                                grpSession.SendPacket(grpSession.Character.Group.GeneraterRaidmbf(grpSession));
-                                grpSession.SendPacket(grpSession.Character.Group.GenerateRdlst());
+                                grpSession?.SendPacket(grpSession.Character.Group?.GeneraterRaidmbf(grpSession));
+                                grpSession?.SendPacket(grpSession.Character.Group?.GenerateRdlst());
                             });
                             Task.Factory.StartNew(async () =>
                             {
@@ -265,8 +265,8 @@ namespace OpenNos.GameObject
                         {
                             session.Character.Group?.Characters.ForEach(grpSession =>
                             {
-                                grpSession.SendPacket(grpSession.Character.Group.GeneraterRaidmbf(grpSession));
-                                grpSession.SendPacket(grpSession.Character.Group.GenerateRdlst());
+                                grpSession.SendPacket(grpSession.Character.Group?.GeneraterRaidmbf(grpSession));
+                                grpSession.SendPacket(grpSession.Character.Group?.GenerateRdlst());
                             });
                             session.Character.Group?.LeaveGroup(session);
                             session.SendPacket(session.Character.GenerateRaid(1, true));
