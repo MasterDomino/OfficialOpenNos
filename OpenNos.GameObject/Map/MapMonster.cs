@@ -959,30 +959,30 @@ namespace OpenNos.GameObject
                         Observable.Timer(TimeSpan.FromMilliseconds(1000)).Subscribe(o => ServerManager.Instance.AskRevive(targetSession?.Character?.CharacterId ?? 0));
                     }
                 }
-                if (npcMonsterSkill != null && (npcMonsterSkill.Skill.Range > 0 || npcMonsterSkill.Skill.TargetRange > 0))
+            }
+            if (npcMonsterSkill != null && (npcMonsterSkill.Skill.Range > 0 || npcMonsterSkill.Skill.TargetRange > 0))
+            {
+                foreach (Character characterInRange in MapInstance.GetCharactersInRange(npcMonsterSkill.Skill.TargetRange == 0 ? MapX : targetSession.Character.PositionX, npcMonsterSkill.Skill.TargetRange == 0 ? MapY : targetSession.Character.PositionY, npcMonsterSkill.Skill.TargetRange).Where(s => s.CharacterId != Target && (ServerManager.Instance.ChannelId != 51 || (MonsterVNum - (byte)s.Faction != 678 && MonsterVNum - (byte)s.Faction != 971)) && s.Hp > 0 && !s.InvisibleGm))
                 {
-                    foreach (Character characterInRange in MapInstance.GetCharactersInRange(npcMonsterSkill.Skill.TargetRange == 0 ? MapX : targetSession.Character.PositionX, npcMonsterSkill.Skill.TargetRange == 0 ? MapY : targetSession.Character.PositionY, npcMonsterSkill.Skill.TargetRange).Where(s => s.CharacterId != Target && (ServerManager.Instance.ChannelId != 51 || (MonsterVNum - (byte)s.Faction != 678 && MonsterVNum - (byte)s.Faction != 971)) && s.Hp > 0 && !s.InvisibleGm))
+                    if (characterInRange.IsSitting)
                     {
-                        if (characterInRange.IsSitting)
+                        characterInRange.IsSitting = false;
+                        MapInstance.Broadcast(characterInRange.GenerateRest());
+                    }
+                    if (characterInRange.HasGodMode)
+                    {
+                        damage = 0;
+                        hitmode = 1;
+                    }
+                    if (characterInRange.Hp > 0)
+                    {
+                        characterInRange.GetDamage(damage);
+                        MapInstance.Broadcast(null, characterInRange.GenerateStat(), ReceiverType.OnlySomeone, string.Empty, characterInRange.CharacterId);
+                        MapInstance.Broadcast(StaticPacketHelper.SkillUsed(UserType.Monster, MapMonsterId, 1, characterInRange.CharacterId, 0, Monster.BasicCooldown, 11, Monster.BasicSkill, 0, 0, characterInRange.Hp > 0, (int)(characterInRange.Hp / characterInRange.HPLoad() * 100), damage, hitmode, 0));
+                        if (characterInRange.Hp <= 0)
                         {
-                            characterInRange.IsSitting = false;
-                            MapInstance.Broadcast(characterInRange.GenerateRest());
-                        }
-                        if (characterInRange.HasGodMode)
-                        {
-                            damage = 0;
-                            hitmode = 1;
-                        }
-                        if (characterInRange.Hp > 0)
-                        {
-                            characterInRange.GetDamage(damage);
-                            MapInstance.Broadcast(null, characterInRange.GenerateStat(), ReceiverType.OnlySomeone, string.Empty, characterInRange.CharacterId);
-                            MapInstance.Broadcast(StaticPacketHelper.SkillUsed(UserType.Monster, MapMonsterId, 1, characterInRange.CharacterId, 0, Monster.BasicCooldown, 11, Monster.BasicSkill, 0, 0, characterInRange.Hp > 0, (int)(characterInRange.Hp / characterInRange.HPLoad() * 100), damage, hitmode, 0));
-                            if (characterInRange.Hp <= 0)
-                            {
-                                RemoveTarget();
-                                Observable.Timer(TimeSpan.FromMilliseconds(1000)).Subscribe(o => ServerManager.Instance.AskRevive(characterInRange?.CharacterId ?? 0));
-                            }
+                            RemoveTarget();
+                            Observable.Timer(TimeSpan.FromMilliseconds(1000)).Subscribe(o => ServerManager.Instance.AskRevive(characterInRange?.CharacterId ?? 0));
                         }
                     }
                 }
