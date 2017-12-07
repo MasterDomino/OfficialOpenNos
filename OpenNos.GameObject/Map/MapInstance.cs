@@ -199,10 +199,10 @@ namespace OpenNos.GameObject
                     }
                 }
 
-                foreach (MapCell possibilitie in possibilities.OrderBy(s => ServerManager.Instance.RandomNumber()))
+                foreach (MapCell possibility in possibilities.OrderBy(s => ServerManager.Instance.RandomNumber()))
                 {
-                    localMapX = (short)(mapX + possibilitie.X);
-                    localMapY = (short)(mapY + possibilitie.Y);
+                    localMapX = (short)(mapX + possibility.X);
+                    localMapY = (short)(mapY + possibility.Y);
                     if (!Map.IsBlockedZone(localMapX, localMapY))
                     {
                         break;
@@ -221,7 +221,6 @@ namespace OpenNos.GameObject
 
         public void DropItems(List<Tuple<short, int, short, short>> list)
         {
-            // TODO: Parallelize, if possible.
             foreach (Tuple<short, int, short, short> drop in list)
             {
                 MonsterMapItem droppedItem = new MonsterMapItem(drop.Item3, drop.Item4, drop.Item1, drop.Item2);
@@ -452,16 +451,16 @@ namespace OpenNos.GameObject
             {
                 if (InstanceBag?.EndState != 1)
                 {
-                    WaveEvents.ForEach(s =>
+                    Parallel.ForEach(WaveEvents, waveEvent =>
                     {
-                        if (s.LastStart.AddSeconds(s.Delay) <= DateTime.Now)
+                        if (waveEvent.LastStart.AddSeconds(waveEvent.Delay) <= DateTime.Now)
                         {
-                            if (s.Offset == 0)
+                            if (waveEvent.Offset == 0)
                             {
-                                s.Events.ForEach(e => EventHelper.Instance.RunEvent(e));
+                                waveEvent.Events.ForEach(e => EventHelper.Instance.RunEvent(e));
                             }
-                            s.Offset = s.Offset > 0 ? (byte)(s.Offset - 1) : (byte)0;
-                            s.LastStart = DateTime.Now;
+                            waveEvent.Offset = waveEvent.Offset > 0 ? (byte)(waveEvent.Offset - 1) : (byte)0;
+                            waveEvent.LastStart = DateTime.Now;
                         }
                     });
                     try

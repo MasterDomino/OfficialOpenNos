@@ -94,7 +94,7 @@ namespace OpenNos.DAL.DAO
                     Mapper.Mapper.Instance.MapMonsterMapper.ToMapMonster(mapMonster, entity);
                     context.MapMonster.Add(entity);
                     context.SaveChanges();
-                    if(Mapper.Mapper.Instance.MapMonsterMapper.ToMapMonsterDTO(entity, mapMonster))
+                    if (Mapper.Mapper.Instance.MapMonsterMapper.ToMapMonsterDTO(entity, mapMonster))
                     {
                         return mapMonster;
                     }
@@ -116,7 +116,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     MapMonsterDTO dto = new MapMonsterDTO();
-                    if(Mapper.Mapper.Instance.MapMonsterMapper.ToMapMonsterDTO(context.MapMonster.FirstOrDefault(i => i.MapMonsterId.Equals(mapMonsterId)), dto))
+                    if (Mapper.Mapper.Instance.MapMonsterMapper.ToMapMonsterDTO(context.MapMonster.FirstOrDefault(i => i.MapMonsterId.Equals(mapMonsterId)), dto))
                     {
                         return dto;
                     }

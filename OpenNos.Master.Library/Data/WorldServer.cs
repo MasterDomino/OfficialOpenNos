@@ -50,7 +50,6 @@ namespace OpenNos.Master.Library.Data
 
         public IScsServiceClient MailServiceClient { get; set; }
 
-
         public string WorldGroup { get; set; }
 
         #endregion

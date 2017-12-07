@@ -50,37 +50,6 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        public IEnumerable<CharacterSkillDTO> LoadByCharacterId(long characterId)
-        {
-            using (OpenNosContext context = DataAccessHelper.CreateContext())
-            {
-                List<CharacterSkillDTO> result = new List<CharacterSkillDTO>();
-                foreach (CharacterSkill entity in context.CharacterSkill.Where(i => i.CharacterId == characterId))
-                {
-                    CharacterSkillDTO output = new CharacterSkillDTO();
-                    Mapper.Mapper.Instance.CharacterSkillMapper.ToCharacterSkillDTO(entity, output);
-                    result.Add(output);
-                }
-                return result;
-            }
-        }
-
-        public IEnumerable<Guid> LoadKeysByCharacterId(long characterId)
-        {
-            try
-            {
-                using (OpenNosContext context = DataAccessHelper.CreateContext())
-                {
-                    return context.CharacterSkill.Where(i => i.CharacterId == characterId).Select(c => c.Id).ToList();
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e);
-                return null;
-            }
-        }
-
         public DeleteResult Delete(Guid id)
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
@@ -132,16 +101,47 @@ namespace OpenNos.DAL.DAO
             }
         }
 
+        public IEnumerable<CharacterSkillDTO> LoadByCharacterId(long characterId)
+        {
+            using (OpenNosContext context = DataAccessHelper.CreateContext())
+            {
+                List<CharacterSkillDTO> result = new List<CharacterSkillDTO>();
+                foreach (CharacterSkill entity in context.CharacterSkill.Where(i => i.CharacterId == characterId))
+                {
+                    CharacterSkillDTO output = new CharacterSkillDTO();
+                    Mapper.Mapper.Instance.CharacterSkillMapper.ToCharacterSkillDTO(entity, output);
+                    result.Add(output);
+                }
+                return result;
+            }
+        }
+
         public CharacterSkillDTO LoadById(Guid id)
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 CharacterSkillDTO characterSkillDTO = new CharacterSkillDTO();
-                if(Mapper.Mapper.Instance.CharacterSkillMapper.ToCharacterSkillDTO(context.CharacterSkill.FirstOrDefault(i => i.Id.Equals(id)), characterSkillDTO))
+                if (Mapper.Mapper.Instance.CharacterSkillMapper.ToCharacterSkillDTO(context.CharacterSkill.FirstOrDefault(i => i.Id.Equals(id)), characterSkillDTO))
                 {
                     return characterSkillDTO;
                 }
 
+                return null;
+            }
+        }
+
+        public IEnumerable<Guid> LoadKeysByCharacterId(long characterId)
+        {
+            try
+            {
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
+                {
+                    return context.CharacterSkill.Where(i => i.CharacterId == characterId).Select(c => c.Id).ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
                 return null;
             }
         }
@@ -152,7 +152,7 @@ namespace OpenNos.DAL.DAO
             Mapper.Mapper.Instance.CharacterSkillMapper.ToCharacterSkill(dto, entity);
             context.Set<CharacterSkill>().Add(entity);
             context.SaveChanges();
-            if(Mapper.Mapper.Instance.CharacterSkillMapper.ToCharacterSkillDTO(entity, dto))
+            if (Mapper.Mapper.Instance.CharacterSkillMapper.ToCharacterSkillDTO(entity, dto))
             {
                 return dto;
             }
@@ -181,14 +181,13 @@ namespace OpenNos.DAL.DAO
                 Mapper.Mapper.Instance.CharacterSkillMapper.ToCharacterSkill(inventory, entity);
                 context.SaveChanges();
             }
-            if(Mapper.Mapper.Instance.CharacterSkillMapper.ToCharacterSkillDTO(entity, inventory))
+            if (Mapper.Mapper.Instance.CharacterSkillMapper.ToCharacterSkillDTO(entity, inventory))
             {
                 return inventory;
             }
 
             return null;
         }
-
 
         #endregion
     }

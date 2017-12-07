@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace OpenNos.GameObject.Event
 {
@@ -52,17 +53,29 @@ namespace OpenNos.GameObject.Event
         #region Members
 
         private readonly List<long> _wonFamilies = new List<long>();
+
         private short _bossMapId = 136;
+
         private bool _bossMove;
+
         private short _bossVNum = 563;
+
         private short _bossX = 55;
+
         private short _bossY = 11;
+
         private short _destPortalX = 55;
+
         private short _destPortalY = 80;
+
         private byte _faction;
+
         private short _mapId = 135;
+
         private MapInstanceType _raidType;
+
         private short _sourcePortalX = 146;
+
         private short _sourcePortalY = 43;
 
         #endregion
@@ -174,36 +187,36 @@ namespace OpenNos.GameObject.Event
             ServerManager.Instance.StartedEvents.Remove(EventType.Act4Raid);
         }
 
-        private void openRaid(Family fami)
+        private void openRaid(Family fam)
         {
             List<EventContainer> onDeathEvents = new List<EventContainer>
             {
-                new EventContainer(fami.Act4RaidBossMap, EventActionType.THROWITEMS, new Tuple<int, short, byte, int, int>(_bossVNum, 1046, 10, 20000, 20001)),
-                new EventContainer(fami.Act4RaidBossMap, EventActionType.THROWITEMS, new Tuple<int, short, byte, int, int>(_bossVNum, 1244, 10, 5, 6))
+                new EventContainer(fam.Act4RaidBossMap, EventActionType.THROWITEMS, new Tuple<int, short, byte, int, int>(_bossVNum, 1046, 10, 20000, 20001)),
+                new EventContainer(fam.Act4RaidBossMap, EventActionType.THROWITEMS, new Tuple<int, short, byte, int, int>(_bossVNum, 1244, 10, 5, 6))
             };
             if (_raidType.Equals(MapInstanceType.Act4Berios))
             {
-                onDeathEvents.Add(new EventContainer(fami.Act4RaidBossMap, EventActionType.THROWITEMS, new Tuple<int, short, byte, int, int>(_bossVNum, 2395, 3, 1, 2)));
-                onDeathEvents.Add(new EventContainer(fami.Act4RaidBossMap, EventActionType.THROWITEMS, new Tuple<int, short, byte, int, int>(_bossVNum, 2396, 5, 1, 2)));
-                onDeathEvents.Add(new EventContainer(fami.Act4RaidBossMap, EventActionType.THROWITEMS, new Tuple<int, short, byte, int, int>(_bossVNum, 2397, 10, 1, 2)));
+                onDeathEvents.Add(new EventContainer(fam.Act4RaidBossMap, EventActionType.THROWITEMS, new Tuple<int, short, byte, int, int>(_bossVNum, 2395, 3, 1, 2)));
+                onDeathEvents.Add(new EventContainer(fam.Act4RaidBossMap, EventActionType.THROWITEMS, new Tuple<int, short, byte, int, int>(_bossVNum, 2396, 5, 1, 2)));
+                onDeathEvents.Add(new EventContainer(fam.Act4RaidBossMap, EventActionType.THROWITEMS, new Tuple<int, short, byte, int, int>(_bossVNum, 2397, 10, 1, 2)));
             }
-            onDeathEvents.Add(new EventContainer(fami.Act4RaidBossMap, EventActionType.SCRIPTEND, (byte)1));
+            onDeathEvents.Add(new EventContainer(fam.Act4RaidBossMap, EventActionType.SCRIPTEND, (byte)1));
             MonsterToSummon bossMob = new MonsterToSummon(_bossVNum, new MapCell() { X = _bossX, Y = _bossY }, -1, _bossMove)
             {
                 DeathEvents = onDeathEvents
             };
-            EventHelper.Instance.RunEvent(new EventContainer(fami.Act4RaidBossMap, EventActionType.SPAWNMONSTER, bossMob));
-            EventHelper.Instance.RunEvent(new EventContainer(fami.Act4Raid, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("ACT4RAID_OPEN"), 0)));
+            EventHelper.Instance.RunEvent(new EventContainer(fam.Act4RaidBossMap, EventActionType.SPAWNMONSTER, bossMob));
+            EventHelper.Instance.RunEvent(new EventContainer(fam.Act4Raid, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("ACT4RAID_OPEN"), 0)));
 
-            Observable.Timer(TimeSpan.FromSeconds(90)).Subscribe(o =>
-            {
-                //TODO: Summon Monsters
-            });
+            //Observable.Timer(TimeSpan.FromSeconds(90)).Subscribe(o =>
+            //{
+            //TODO: Summon Monsters
+            //});
         }
 
         private void refreshRaid(int remaining)
         {
-            foreach (Family fam in ServerManager.Instance.FamilyList.GetAllItems())
+            Parallel.ForEach(ServerManager.Instance.FamilyList.GetAllItems(), fam =>
             {
                 if (fam.Act4Raid == null)
                 {
@@ -278,7 +291,7 @@ namespace OpenNos.GameObject.Event
                     }
                     fam.Act4RaidBossMap.SummonMonsters(mobWave);
                 }
-            }
+            });
         }
 
         #endregion

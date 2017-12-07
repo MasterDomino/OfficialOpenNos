@@ -157,7 +157,7 @@ namespace OpenNos.World
             }
 
             ServerManager.Instance.ServerGroup = ConfigurationManager.AppSettings["ServerGroup"];
-            int sessionLimit = 100; // Needs workaround
+            const int sessionLimit = 100; // Needs workaround
             int? newChannelId = CommunicationServiceClient.Instance.RegisterWorldServer(new SerializableWorldServer(ServerManager.Instance.WorldId, ConfigurationManager.AppSettings["IPAddress"], port, sessionLimit, ServerManager.Instance.ServerGroup));
 
             if (newChannelId.HasValue)

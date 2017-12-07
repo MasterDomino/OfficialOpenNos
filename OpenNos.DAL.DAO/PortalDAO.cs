@@ -61,7 +61,7 @@ namespace OpenNos.DAL.DAO
                     Mapper.Mapper.Instance.PortalMapper.ToPortal(portal, entity);
                     context.Portal.Add(entity);
                     context.SaveChanges();
-                    if(Mapper.Mapper.Instance.PortalMapper.ToPortalDTO(entity, portal))
+                    if (Mapper.Mapper.Instance.PortalMapper.ToPortalDTO(entity, portal))
                     {
                         return portal;
                     }

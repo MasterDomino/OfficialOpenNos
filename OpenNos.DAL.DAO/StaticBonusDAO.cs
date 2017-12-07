@@ -99,7 +99,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     StaticBonusDTO dto = new StaticBonusDTO();
-                    if(Mapper.Mapper.Instance.StaticBonusMapper.ToStaticBonusDTO(context.StaticBonus.FirstOrDefault(s => s.StaticBonusId.Equals(sbId)),dto))
+                    if (Mapper.Mapper.Instance.StaticBonusMapper.ToStaticBonusDTO(context.StaticBonus.FirstOrDefault(s => s.StaticBonusId.Equals(sbId)), dto))
                     {
                         return dto;
                     }
@@ -138,7 +138,7 @@ namespace OpenNos.DAL.DAO
                 Mapper.Mapper.Instance.StaticBonusMapper.ToStaticBonus(sb, entity);
                 context.StaticBonus.Add(entity);
                 context.SaveChanges();
-                if(Mapper.Mapper.Instance.StaticBonusMapper.ToStaticBonusDTO(entity, sb))
+                if (Mapper.Mapper.Instance.StaticBonusMapper.ToStaticBonusDTO(entity, sb))
                 {
                     return sb;
                 }
@@ -159,7 +159,7 @@ namespace OpenNos.DAL.DAO
                 Mapper.Mapper.Instance.StaticBonusMapper.ToStaticBonus(sb, entity);
                 context.SaveChanges();
             }
-            if(Mapper.Mapper.Instance.StaticBonusMapper.ToStaticBonusDTO(entity, sb))
+            if (Mapper.Mapper.Instance.StaticBonusMapper.ToStaticBonusDTO(entity, sb))
             {
                 return sb;
             }

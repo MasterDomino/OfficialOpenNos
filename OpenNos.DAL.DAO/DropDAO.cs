@@ -59,7 +59,7 @@ namespace OpenNos.DAL.DAO
                     Drop entity = new Drop();
                     context.Drop.Add(entity);
                     context.SaveChanges();
-                    if(Mapper.Mapper.Instance.DropMapper.ToDropDTO(entity, drop))
+                    if (Mapper.Mapper.Instance.DropMapper.ToDropDTO(entity, drop))
                     {
                         return drop;
                     }
@@ -79,7 +79,7 @@ namespace OpenNos.DAL.DAO
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 List<DropDTO> result = new List<DropDTO>();
-                foreach(Drop entity in context.Drop)
+                foreach (Drop entity in context.Drop)
                 {
                     DropDTO dto = new DropDTO();
                     Mapper.Mapper.Instance.DropMapper.ToDropDTO(entity, dto);

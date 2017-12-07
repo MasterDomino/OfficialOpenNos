@@ -38,7 +38,7 @@ namespace OpenNos.DAL.DAO
                     Mapper.Mapper.Instance.RecipeListMapper.ToRecipeList(recipeList, entity);
                     context.RecipeList.Add(entity);
                     context.SaveChanges();
-                    if(Mapper.Mapper.Instance.RecipeListMapper.ToRecipeListDTO(entity, recipeList))
+                    if (Mapper.Mapper.Instance.RecipeListMapper.ToRecipeListDTO(entity, recipeList))
                     {
                         return recipeList;
                     }
@@ -75,7 +75,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     RecipeListDTO dto = new RecipeListDTO();
-                    if(Mapper.Mapper.Instance.RecipeListMapper.ToRecipeListDTO(context.RecipeList.SingleOrDefault(s => s.RecipeListId.Equals(recipeListId)), dto))
+                    if (Mapper.Mapper.Instance.RecipeListMapper.ToRecipeListDTO(context.RecipeList.SingleOrDefault(s => s.RecipeListId.Equals(recipeListId)), dto))
                     {
                         return dto;
                     }

@@ -125,7 +125,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     List<QuestProgressDTO> result = new List<QuestProgressDTO>();
-                    foreach(QuestProgress entity in context.QuestProgress.Where(s => s.CharacterId == characterId))
+                    foreach (QuestProgress entity in context.QuestProgress.Where(s => s.CharacterId == characterId))
                     {
                         QuestProgressDTO dto = new QuestProgressDTO();
                         Mapper.Mapper.Instance.QuestProgressMapper.ToQuestProgressDTO(entity, dto);
@@ -148,7 +148,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     QuestProgressDTO dto = new QuestProgressDTO();
-                    if(Mapper.Mapper.Instance.QuestProgressMapper.ToQuestProgressDTO(context.QuestProgress.FirstOrDefault(s => s.QuestProgressId == id), dto))
+                    if (Mapper.Mapper.Instance.QuestProgressMapper.ToQuestProgressDTO(context.QuestProgress.FirstOrDefault(s => s.QuestProgressId == id), dto))
                     {
                         return dto;
                     }
@@ -166,10 +166,10 @@ namespace OpenNos.DAL.DAO
         private QuestProgressDTO insert(QuestProgressDTO quest, OpenNosContext context)
         {
             QuestProgress entity = new QuestProgress();
-            Mapper.Mapper.Instance.QuestProgressMapper.ToQuestProgress(quest,entity);
+            Mapper.Mapper.Instance.QuestProgressMapper.ToQuestProgress(quest, entity);
             context.QuestProgress.Add(entity);
             context.SaveChanges();
-            if(Mapper.Mapper.Instance.QuestProgressMapper.ToQuestProgressDTO(entity, quest))
+            if (Mapper.Mapper.Instance.QuestProgressMapper.ToQuestProgressDTO(entity, quest))
             {
                 return quest;
             }
@@ -185,7 +185,7 @@ namespace OpenNos.DAL.DAO
                 context.SaveChanges();
             }
 
-            if(Mapper.Mapper.Instance.QuestProgressMapper.ToQuestProgressDTO(entity, quest))
+            if (Mapper.Mapper.Instance.QuestProgressMapper.ToQuestProgressDTO(entity, quest))
             {
                 return quest;
             }

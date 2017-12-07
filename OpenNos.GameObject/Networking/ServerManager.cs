@@ -172,13 +172,7 @@ namespace OpenNos.GameObject
                 {
                     Session.Character.RemoveVehicle();
                 }
-                List<BuffType> bufftodisable = new List<BuffType>
-                {
-                    BuffType.Bad,
-                    BuffType.Good,
-                    BuffType.Neutral
-                };
-                Session.Character.DisableBuffs(bufftodisable);
+                Session.Character.DisableBuffs(BuffType.All);
                 Session.SendPacket(Session.Character.GenerateStat());
                 Session.SendPacket(Session.Character.GenerateCond());
                 Session.SendPackets(UserInterfaceHelper.Instance.GenerateVb());
@@ -199,13 +193,7 @@ namespace OpenNos.GameObject
                 {
                     Session.Character.RemoveVehicle();
                 }
-                List<BuffType> bufftodisable = new List<BuffType>
-                {
-                    BuffType.Bad,
-                    BuffType.Good,
-                    BuffType.Neutral
-                };
-                Session.Character.DisableBuffs(bufftodisable);
+                Session.Character.DisableBuffs(BuffType.All);
                 Session.SendPacket(Session.Character.GenerateStat());
                 Session.SendPacket(Session.Character.GenerateCond());
                 Session.SendPackets(UserInterfaceHelper.Instance.GenerateVb());
@@ -826,7 +814,7 @@ namespace OpenNos.GameObject
                 NpcMonster npcMonsterObj = new NpcMonster(npcMonster);
                 npcMonsterObj.Initialize();
                 npcMonsterObj.BCards = new List<BCard>();
-                DAOFactory.BCardDAO.LoadByNpcMonsterVNum(npcMonster.NpcMonsterVNum).ToList().ForEach(s => npcMonsterObj.BCards.Add(new BCard((s))));
+                DAOFactory.BCardDAO.LoadByNpcMonsterVNum(npcMonster.NpcMonsterVNum).ToList().ForEach(s => npcMonsterObj.BCards.Add(new BCard(s)));
                 _npcs.Add(npcMonsterObj);
             });
             Logger.Info(string.Format(Language.Instance.GetMessageFromKey("NPCMONSTERS_LOADED"), _npcs.Count));
@@ -917,13 +905,12 @@ namespace OpenNos.GameObject
                     MapInstance newMap = new MapInstance(mapinfo, guid, map.ShopAllowed, MapInstanceType.BaseMapInstance, new InstanceBag());
                     _mapinstances.TryAdd(guid, newMap);
 
-                    Task.Run(() => newMap.LoadPortals());
+                    Task.Run((Action)newMap.LoadPortals);
                     newMap.LoadNpcs();
                     newMap.LoadMonsters();
 
                     Parallel.ForEach(newMap.Npcs, mapNpc =>
                     {
-                        
                         mapNpc.MapInstance = newMap;
                         newMap.AddNPC(mapNpc);
                     });
@@ -1193,7 +1180,7 @@ namespace OpenNos.GameObject
                 }
                 else
                 {
-                    Thread.Sleep(ChannelId - 1 * 2000);
+                    Thread.Sleep((ChannelId - 1) * 2000);
                 }
                 Process.Start("OpenNos.World.exe", "--nomsg");
             }
@@ -1469,7 +1456,7 @@ namespace OpenNos.GameObject
             CommunicationServiceClient.Instance.GlobalEvent += onGlobalEvent;
             CommunicationServiceClient.Instance.ShutdownEvent += onShutdown;
             CommunicationServiceClient.Instance.RestartEvent += onShutdown;
-            ConfigurationServiceClient.Instance.ConfigurationUpdate += onConfiguratinEvent; ;
+            ConfigurationServiceClient.Instance.ConfigurationUpdate += onConfiguratinEvent;
             MailServiceClient.Instance.MailSent += onMailSent;
             _lastGroupId = 1;
         }
@@ -1502,8 +1489,10 @@ namespace OpenNos.GameObject
             FamilyList = new ThreadSafeSortedList<long, Family>();
             Parallel.ForEach(DAOFactory.FamilyDAO.LoadAll(), familyDTO =>
             {
-                Family family = new Family(familyDTO);
-                family.FamilyCharacters = new List<FamilyCharacter>();
+                Family family = new Family(familyDTO)
+                {
+                    FamilyCharacters = new List<FamilyCharacter>()
+                };
                 foreach (FamilyCharacterDTO famchar in DAOFactory.FamilyCharacterDAO.LoadByFamilyId(family.FamilyId).ToList())
                 {
                     family.FamilyCharacters.Add(new FamilyCharacter(famchar));

@@ -74,7 +74,7 @@ namespace OpenNos.DAL.DAO
                     Mapper.Mapper.Instance.ItemMapper.ToItem(item, entity);
                     context.Item.Add(entity);
                     context.SaveChanges();
-                    if(Mapper.Mapper.Instance.ItemMapper.ToItemDTO(entity, item))
+                    if (Mapper.Mapper.Instance.ItemMapper.ToItemDTO(entity, item))
                     {
                         return item;
                     }
@@ -111,7 +111,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     ItemDTO dto = new ItemDTO();
-                    if(Mapper.Mapper.Instance.ItemMapper.ToItemDTO(context.Item.FirstOrDefault(i => i.VNum.Equals(vNum)), dto))
+                    if (Mapper.Mapper.Instance.ItemMapper.ToItemDTO(context.Item.FirstOrDefault(i => i.VNum.Equals(vNum)), dto))
                     {
                         return dto;
                     }

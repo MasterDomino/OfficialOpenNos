@@ -101,10 +101,8 @@ namespace OpenNos.Master.Library.Client
         public bool Authenticate(string authKey) => _client.ServiceProxy.Authenticate(authKey);
 
         public void Cleanup() => _client.ServiceProxy.Cleanup();
-        public void CleanupOutdatedSession()
-        {
-            _client.ServiceProxy.CleanupOutdatedSession();
-        }
+
+        public void CleanupOutdatedSession() => _client.ServiceProxy.CleanupOutdatedSession();
 
         public bool ConnectAccount(Guid worldId, long accountId, int sessionId) => _client.ServiceProxy.ConnectAccount(worldId, accountId, sessionId);
 

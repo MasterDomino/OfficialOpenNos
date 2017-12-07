@@ -142,7 +142,7 @@ namespace OpenNos.DAL.DAO
             Mapper.Mapper.Instance.ShellEffectMapper.ToShellEffect(shelleffect, entity);
             context.ShellEffect.Add(entity);
             context.SaveChanges();
-            if(Mapper.Mapper.Instance.ShellEffectMapper.ToShellEffectDTO(entity, shelleffect))
+            if (Mapper.Mapper.Instance.ShellEffectMapper.ToShellEffectDTO(entity, shelleffect))
             {
                 return shelleffect;
             }
@@ -158,7 +158,7 @@ namespace OpenNos.DAL.DAO
                 context.SaveChanges();
             }
 
-            if(Mapper.Mapper.Instance.ShellEffectMapper.ToShellEffectDTO(entity, shelleffect))
+            if (Mapper.Mapper.Instance.ShellEffectMapper.ToShellEffectDTO(entity, shelleffect))
             {
                 return shelleffect;
             }

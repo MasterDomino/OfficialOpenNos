@@ -20,6 +20,7 @@ using OpenNos.Data;
 using OpenNos.Data.Enums;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.Linq;
 
 namespace OpenNos.DAL.DAO
@@ -101,7 +102,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     MailDTO dto = new MailDTO();
-                    if(Mapper.Mapper.Instance.MailMapper.ToMailDTO(context.Mail.FirstOrDefault(i => i.MailId.Equals(mailId)), dto))
+                    if (Mapper.Mapper.Instance.MailMapper.ToMailDTO(context.Mail.FirstOrDefault(i => i.MailId.Equals(mailId)), dto))
                     {
                         return dto;
                     }
@@ -156,26 +157,22 @@ namespace OpenNos.DAL.DAO
                 Mapper.Mapper.Instance.MailMapper.ToMail(mail, entity);
                 context.Mail.Add(entity);
                 context.SaveChanges();
-                if(Mapper.Mapper.Instance.MailMapper.ToMailDTO(entity, mail))
+                if (Mapper.Mapper.Instance.MailMapper.ToMailDTO(entity, mail))
                 {
                     return mail;
                 }
 
                 return null;
             }
-            catch (System.Data.Entity.Validation.DbEntityValidationException dbEx)
+            catch (DbEntityValidationException dbEx)
             {
                 Exception raise = dbEx;
-                foreach (var validationErrors in dbEx.EntityValidationErrors)
+                foreach (DbEntityValidationResult validationErrors in dbEx.EntityValidationErrors)
                 {
-                    foreach (var validationError in validationErrors.ValidationErrors)
+                    foreach (DbValidationError validationError in validationErrors.ValidationErrors)
                     {
-                        string message = string.Format("{0}:{1}",
-                            validationErrors.Entry.Entity.ToString(),
-                            validationError.ErrorMessage);
-                        // raise a new exception nesting
-                        // the current instance as InnerException
-                        Logger.Error(new InvalidOperationException(message, raise));
+                        // raise a new exception nesting the current instance as InnerException
+                        Logger.Error(new InvalidOperationException($"{validationErrors.Entry.Entity}:{validationError.ErrorMessage}", raise));
                     }
                 }
                 return null;
@@ -194,7 +191,7 @@ namespace OpenNos.DAL.DAO
                 Mapper.Mapper.Instance.MailMapper.ToMail(respawn, entity);
                 context.SaveChanges();
             }
-            if(Mapper.Mapper.Instance.MailMapper.ToMailDTO(entity, respawn))
+            if (Mapper.Mapper.Instance.MailMapper.ToMailDTO(entity, respawn))
             {
                 return respawn;
             }

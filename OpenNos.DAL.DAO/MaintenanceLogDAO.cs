@@ -38,7 +38,7 @@ namespace OpenNos.DAL.DAO
                     Mapper.Mapper.Instance.MaintenanceLogMapper.ToMaintenanceLog(maintenanceLog, entity);
                     context.MaintenanceLog.Add(entity);
                     context.SaveChanges();
-                    if(Mapper.Mapper.Instance.MaintenanceLogMapper.ToMaintenanceLogDTO(entity, maintenanceLog))
+                    if (Mapper.Mapper.Instance.MaintenanceLogMapper.ToMaintenanceLogDTO(entity, maintenanceLog))
                     {
                         return maintenanceLog;
                     }
@@ -75,7 +75,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     MaintenanceLogDTO dto = new MaintenanceLogDTO();
-                    if(Mapper.Mapper.Instance.MaintenanceLogMapper.ToMaintenanceLogDTO(context.MaintenanceLog.FirstOrDefault(m => m.DateEnd > DateTime.Now), dto))
+                    if (Mapper.Mapper.Instance.MaintenanceLogMapper.ToMaintenanceLogDTO(context.MaintenanceLog.FirstOrDefault(m => m.DateEnd > DateTime.Now), dto))
                     {
                         return dto;
                     }

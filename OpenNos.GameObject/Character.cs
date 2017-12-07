@@ -1013,7 +1013,7 @@ namespace OpenNos.GameObject
                                 AddBuff(new Buff(444, Level), true);
                                 break;
                         }
-                        Mate m = Mates.Where(s => s.IsTeamMember && s.MateType == MateType.Pet).FirstOrDefault();
+                        Mate m = Mates.Find(s => s.IsTeamMember && s.MateType == MateType.Pet);
                         if (m != null)
                         {
                             switch (m.NpcMonsterVNum)
@@ -1373,12 +1373,20 @@ namespace OpenNos.GameObject
             }
         }
 
-        public void DisableBuffs(List<BuffType> types, int level = 100)
+        public void DisableBuffs(BuffType type, int level = 100)
         {
             lock (Buff)
             {
-                Buff.Where(s => types.Contains(s.Card.BuffType) && !s.StaticBuff && s.Card.Level < level).ToList()
-                    .ForEach(s => { if (BuffObservables.ContainsKey(s.Card.CardId)) { BuffObservables[s.Card.CardId].Dispose(); BuffObservables.Remove(s.Card.CardId); } RemoveBuff(s.Card.CardId); });
+                List<Buff> buff = Buff.Where(s => (type & s.Card.BuffType) == s.Card.BuffType && !s.StaticBuff && s.Card.Level < level);
+                buff.ForEach(s =>
+                {
+                    if (BuffObservables.ContainsKey(s.Card.CardId))
+                    {
+                        BuffObservables[s.Card.CardId].Dispose();
+                        BuffObservables.Remove(s.Card.CardId);
+                    }
+                    RemoveBuff(s.Card.CardId);
+                });
             }
         }
 
@@ -1846,8 +1854,8 @@ namespace OpenNos.GameObject
                         #region item drop
 
                         int levelDifference = Session.Character.Level - monsterToAttack.Monster.Level;
-                            int dropRate = ServerManager.Instance.Configuration.RateDrop * MapInstance.DropRate;
-                            int x = 0;
+                        int dropRate = ServerManager.Instance.Configuration.RateDrop * MapInstance.DropRate;
+                        int x = 0;
                         foreach (DropDTO drop in droplist.OrderBy(s => random.Next()))
                         {
                             if (x < 4)

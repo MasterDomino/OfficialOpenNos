@@ -20,14 +20,12 @@ using OpenNos.Data;
 using OpenNos.Data.Enums;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace OpenNos.DAL.DAO
 {
     public class QuestDAO : IQuestDAO
     {
         #region Methods
-
 
         public DeleteResult DeleteById(long id)
         {
@@ -124,7 +122,7 @@ namespace OpenNos.DAL.DAO
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 List<QuestDTO> result = new List<QuestDTO>();
-                foreach(Quest entity in context.Quest)
+                foreach (Quest entity in context.Quest)
                 {
                     QuestDTO dto = new QuestDTO();
                     Mapper.Mapper.Instance.QuestMapper.ToQuestDTO(entity, dto);
@@ -139,7 +137,7 @@ namespace OpenNos.DAL.DAO
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 QuestDTO dto = new QuestDTO();
-                if(Mapper.Mapper.Instance.QuestMapper.ToQuestDTO(context.Quest.Find(id), dto))
+                if (Mapper.Mapper.Instance.QuestMapper.ToQuestDTO(context.Quest.Find(id), dto))
                 {
                     return dto;
                 }
@@ -154,7 +152,7 @@ namespace OpenNos.DAL.DAO
             Mapper.Mapper.Instance.QuestMapper.ToQuest(quest, entity);
             context.Quest.Add(entity);
             context.SaveChanges();
-            if(Mapper.Mapper.Instance.QuestMapper.ToQuestDTO(entity, quest))
+            if (Mapper.Mapper.Instance.QuestMapper.ToQuestDTO(entity, quest))
             {
                 return quest;
             }
@@ -170,7 +168,7 @@ namespace OpenNos.DAL.DAO
                 context.SaveChanges();
             }
 
-            if(Mapper.Mapper.Instance.QuestMapper.ToQuestDTO(entity, quest))
+            if (Mapper.Mapper.Instance.QuestMapper.ToQuestDTO(entity, quest))
             {
                 return quest;
             }

@@ -12,12 +12,16 @@
  * GNU General Public License for more details.
  */
 
+using System;
+
 namespace OpenNos.Domain
 {
+    [Flags]
     public enum BuffType : byte
     {
         Good = 0,
         Neutral = 1,
         Bad = 2,
+        All = Good | Neutral | Bad
     }
 }

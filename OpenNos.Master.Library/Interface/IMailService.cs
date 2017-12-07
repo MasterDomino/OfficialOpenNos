@@ -12,6 +12,7 @@ namespace OpenNos.Master.Library.Interface
         /// Authenticates a Client to the Service
         /// </summary>
         /// <param name="authKey">The private Authentication key</param>
+        /// <param name="serverId"></param>
         /// <returns>true if successful, else false</returns>
         bool Authenticate(string authKey, Guid serverId);
 

@@ -98,7 +98,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     StaticBuffDTO dto = new StaticBuffDTO();
-                    if(Mapper.Mapper.Instance.StaticBuffMapper.ToStaticBuffDTO(context.StaticBuff.FirstOrDefault(s => s.StaticBuffId.Equals(sbId)),dto)) //who the fuck was so retarded and set it to respawn ?!?
+                    if (Mapper.Mapper.Instance.StaticBuffMapper.ToStaticBuffDTO(context.StaticBuff.FirstOrDefault(s => s.StaticBuffId.Equals(sbId)), dto)) //who the fuck was so retarded and set it to respawn ?!?
                     {
                         return dto;
                     }
@@ -137,7 +137,7 @@ namespace OpenNos.DAL.DAO
                 Mapper.Mapper.Instance.StaticBuffMapper.ToStaticBuff(sb, entity);
                 context.StaticBuff.Add(entity);
                 context.SaveChanges();
-                if(Mapper.Mapper.Instance.StaticBuffMapper.ToStaticBuffDTO(entity, sb))
+                if (Mapper.Mapper.Instance.StaticBuffMapper.ToStaticBuffDTO(entity, sb))
                 {
                     return sb;
                 }
@@ -158,7 +158,7 @@ namespace OpenNos.DAL.DAO
                 Mapper.Mapper.Instance.StaticBuffMapper.ToStaticBuff(sb, entity);
                 context.SaveChanges();
             }
-            if(Mapper.Mapper.Instance.StaticBuffMapper.ToStaticBuffDTO(entity, sb))
+            if (Mapper.Mapper.Instance.StaticBuffMapper.ToStaticBuffDTO(entity, sb))
             {
                 return sb;
             }

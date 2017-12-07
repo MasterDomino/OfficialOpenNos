@@ -1771,13 +1771,7 @@ namespace OpenNos.Handler
                     Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("BAD_FAIRY"), 0));
                     return;
                 }
-                List<BuffType> bufftodisable = new List<BuffType>
-                {
-                    BuffType.Bad,
-                    BuffType.Good,
-                    BuffType.Neutral
-                };
-                Session.Character.DisableBuffs(bufftodisable);
+                Session.Character.DisableBuffs(BuffType.All);
                 Session.Character.EquipmentBCards.AddRange(sp.Item.BCards);
                 Session.Character.LastTransform = DateTime.Now;
                 Session.Character.UseSp = true;
@@ -1889,26 +1883,16 @@ namespace OpenNos.Handler
         /// <param name="vnum"></param>
         private void removeSP(short vnum)
         {
-            if (Session?.HasSession == true)
+            if (Session?.HasSession == true && !Session.Character.IsVehicled)
             {
-                if (Session.Character.IsVehicled)
-                {
-                    return;
-                }
-                List<BuffType> bufftodisable = new List<BuffType>
-                {
-                    BuffType.Bad,
-                    BuffType.Good,
-                    BuffType.Neutral
-                };
-                Session.Character.DisableBuffs(bufftodisable);
+                Session.Character.DisableBuffs(BuffType.All);
                 Session.Character.EquipmentBCards.RemoveAll(s => s.ItemVNum.Equals(vnum));
                 Session.Character.UseSp = false;
                 Session.Character.LoadSpeed();
                 Session.SendPacket(Session.Character.GenerateCond());
                 Session.SendPacket(Session.Character.GenerateLev());
                 Session.Character.SpCooldown = 30;
-                if (Session.Character?.SkillsSp != null)
+                if (Session.Character.SkillsSp != null)
                 {
                     foreach (CharacterSkill ski in Session.Character.SkillsSp.Where(s => !s.CanBeUsed()))
                     {

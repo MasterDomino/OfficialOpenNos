@@ -23,7 +23,7 @@ namespace OpenNos.DAL.Interface
     {
         #region Methods
 
-        SaveResult InsertOrUpdate(ref MinigameLogDTO account);
+        SaveResult InsertOrUpdate(ref MinigameLogDTO minigameLog);
 
         MinigameLogDTO LoadById(long minigameLogId);
 

@@ -245,16 +245,15 @@ namespace OpenNos.GameObject
         /// <returns>True if the Monster is in range, False if not.</returns>
         public bool IsInRange(short mapX, short mapY, byte distance)
         {
-            return Map.GetDistance(
-                new MapCell
-                {
-                    X = mapX,
-                    Y = mapY
-                }, new MapCell
-                {
-                    X = MapX,
-                    Y = MapY
-                }) <= distance + 1;
+            return Map.GetDistance(new MapCell
+            {
+                X = mapX,
+                Y = mapY
+            }, new MapCell
+            {
+                X = MapX,
+                Y = MapY
+            }) <= distance + 1;
         }
 
         public void RunDeathEvent()
@@ -308,7 +307,6 @@ namespace OpenNos.GameObject
                 int distance = 100;
                 List<ClientSession> sess = new List<ClientSession>();
                 DamageList.Keys.ToList().ForEach(s => sess.Add(MapInstance.GetSessionByCharacterId(s)));
-                //ClientSession session = sess.OrderBy(s => distance = Map.GetDistance(new MapCell { X = MapX, Y = MapY }, new MapCell { X = s.Character.PositionX, Y = s.Character.PositionY })).FirstOrDefault();
                 Character character = sess.Where(s => s?.Character != null && (ServerManager.Instance.ChannelId != 51 || (MonsterVNum - (byte)s.Character.Faction != 678 && MonsterVNum - (byte)s.Character.Faction != 971)) && s.Character.Hp > 0 && !s.Character.InvisibleGm && !s.Character.Invisible && s.Character.MapInstance == MapInstance && Map.GetDistance(new MapCell { X = MapX, Y = MapY }, new MapCell { X = s.Character.PositionX, Y = s.Character.PositionY }) < Monster.NoticeRange).OrderBy(s => distance = Map.GetDistance(new MapCell { X = MapX, Y = MapY }, new MapCell { X = s.Character.PositionX, Y = s.Character.PositionY })).FirstOrDefault()?.Character;
                 if (distance < maxDistance && character != null)
                 {
@@ -362,7 +360,16 @@ namespace OpenNos.GameObject
             if (IsMoving && !_noMove)
             {
                 const short maxDistance = 22;
-                int distance = Map.GetDistance(new MapCell() { X = targetSession.Character.PositionX, Y = targetSession.Character.PositionY }, new MapCell() { X = MapX, Y = MapY });
+                int distance = Map.GetDistance(new MapCell()
+                {
+                    X = targetSession.Character.PositionX,
+                    Y = targetSession.Character.PositionY
+                },
+                new MapCell()
+                {
+                    X = MapX,
+                    Y = MapY
+                });
                 if (targetSession != null)
                 {
                     if (targetSession.Character.LastMonsterAggro.AddSeconds(5) < DateTime.Now || targetSession.Character.BrushFire == null)
@@ -390,9 +397,8 @@ namespace OpenNos.GameObject
                     int maxindex = Path.Count > Monster.Speed / 2 ? Monster.Speed / 2 : Path.Count;
                     short mapX = Path[maxindex - 1].X;
                     short mapY = Path[maxindex - 1].Y;
-                    double waitingtime = Map.GetDistance(new MapCell { X = mapX, Y = mapY }, new MapCell { X = MapX, Y = MapY }) / (double)Monster.Speed;
+                    double waitingtime = waitingTime(mapX, mapY);
                     MapInstance.Broadcast(new BroadcastPacket(null, PacketFactory.Serialize(StaticPacketHelper.Move(UserType.Monster, MapMonsterId, mapX, mapY, Monster.Speed)), ReceiverType.All, xCoordinate: mapX, yCoordinate: mapY));
-                    LastMove = DateTime.Now.AddSeconds(waitingtime > 1 ? 1 : waitingtime);
 
                     Observable.Timer(TimeSpan.FromMilliseconds((int)((waitingtime > 1 ? 1 : waitingtime) * 1000))).Subscribe(x =>
                     {
@@ -720,31 +726,29 @@ namespace OpenNos.GameObject
                 // check if target is in range
                 if (!targetSession.Character.InvisibleGm && !targetSession.Character.Invisible && targetSession.Character.Hp > 0)
                 {
-                    if (npcMonsterSkill != null && CurrentMp >= npcMonsterSkill.Skill.MpCost && Map.GetDistance(
-                        new MapCell
-                        {
-                            X = MapX,
-                            Y = MapY
-                        },
-                        new MapCell
-                        {
-                            X = targetSession.Character.PositionX,
-                            Y = targetSession.Character.PositionY
-                        }) < npcMonsterSkill.Skill.Range)
+                    if (npcMonsterSkill != null && CurrentMp >= npcMonsterSkill.Skill.MpCost && Map.GetDistance(new MapCell
+                    {
+                        X = MapX,
+                        Y = MapY
+                    },
+                    new MapCell
+                    {
+                        X = targetSession.Character.PositionX,
+                        Y = targetSession.Character.PositionY
+                    }) < npcMonsterSkill.Skill.Range)
                     {
                         targetHit(targetSession, npcMonsterSkill);
                     }
-                    else if (Map.GetDistance(
-                        new MapCell
-                        {
-                            X = MapX,
-                            Y = MapY
-                        },
-                        new MapCell
-                        {
-                            X = targetSession.Character.PositionX,
-                            Y = targetSession.Character.PositionY
-                        }) <= Monster.BasicRange)
+                    else if (Map.GetDistance(new MapCell
+                    {
+                        X = MapX,
+                        Y = MapY
+                    },
+                    new MapCell
+                    {
+                        X = targetSession.Character.PositionX,
+                        Y = targetSession.Character.PositionY
+                    }) <= Monster.BasicRange)
                     {
                         targetHit(targetSession, npcMonsterSkill);
                     }
@@ -758,6 +762,21 @@ namespace OpenNos.GameObject
                     followTarget(targetSession);
                 }
             }
+        }
+
+        private double waitingTime(short mapX, short mapY)
+        {
+            double waitingtime = Map.GetDistance(new MapCell
+            {
+                X = mapX,
+                Y = mapY
+            },
+            new MapCell
+            {
+                X = MapX,
+                Y = MapY
+            }) / (double)Monster.Speed;
+            LastMove = DateTime.Now.AddSeconds(waitingtime > 1 ? 1 : waitingtime); return waitingtime;
         }
 
         private void move()
@@ -787,8 +806,7 @@ namespace OpenNos.GameObject
                         }
                         short mapX = Path[maxindex - 1].X;
                         short mapY = Path[maxindex - 1].Y;
-                        double waitingtime = Map.GetDistance(new MapCell { X = mapX, Y = mapY }, new MapCell { X = MapX, Y = MapY }) / (double)Monster.Speed;
-                        LastMove = DateTime.Now.AddSeconds(waitingtime > 1 ? 1 : waitingtime);
+                        waitingTime(mapX, mapY);
 
                         Observable.Timer(TimeSpan.FromMilliseconds(timetowalk)).Subscribe(x =>
                         {
@@ -806,16 +824,15 @@ namespace OpenNos.GameObject
                     short mapX = FirstX, mapY = FirstY;
                     if (MapInstance.Map?.GetFreePosition(ref mapX, ref mapY, (byte)ServerManager.Instance.RandomNumber(0, 2), (byte)_random.Next(0, 2)) ?? false)
                     {
-                        int distance = Map.GetDistance(
-                            new MapCell
-                            {
-                                X = mapX,
-                                Y = mapY
-                            }, new MapCell
-                            {
-                                X = MapX,
-                                Y = MapY
-                            });
+                        int distance = Map.GetDistance(new MapCell
+                        {
+                            X = mapX,
+                            Y = mapY
+                        }, new MapCell
+                        {
+                            X = MapX,
+                            Y = MapY
+                        });
 
                         double value = 1000d * distance / (2 * Monster.Speed);
                         Observable.Timer(TimeSpan.FromMilliseconds(value)).Subscribe(x =>

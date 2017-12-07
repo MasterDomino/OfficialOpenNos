@@ -45,10 +45,32 @@ namespace OpenNos.GameObject.Event
         public void Run(byte faction)
         {
             MapInstance map = ServerManager.Instance.GenerateMapInstance(149, faction == 1 ? MapInstanceType.Act4ShipAngel : MapInstanceType.Act4ShipDemon, null);
-            MapNpc mapNpc1 = new MapNpc() { NpcVNum = 613, MapNpcId = map.GetNextNpcId(), Dialog = 434, MapId = 149, MapX = 8, MapY = 28, IsMoving = false, Position = 1, IsSitting = false };
+            MapNpc mapNpc1 = new MapNpc()
+            {
+                NpcVNum = 613,
+                MapNpcId = map.GetNextNpcId(),
+                Dialog = 434,
+                MapId = 149,
+                MapX = 8,
+                MapY = 28,
+                IsMoving = false,
+                Position = 1,
+                IsSitting = false
+            };
             mapNpc1.Initialize(map);
             map.AddNPC(mapNpc1);
-            MapNpc mapNpc2 = new MapNpc() { NpcVNum = 540, MapNpcId = map.GetNextNpcId(), Dialog = 433, MapId = 149, MapX = 31, MapY = 28, IsMoving = false, Position = 3, IsSitting = false };
+            MapNpc mapNpc2 = new MapNpc()
+            {
+                NpcVNum = 540,
+                MapNpcId = map.GetNextNpcId(),
+                Dialog = 433,
+                MapId = 149,
+                MapX = 31,
+                MapY = 28,
+                IsMoving = false,
+                Position = 3,
+                IsSitting = false
+            };
             mapNpc2.Initialize(map);
             map.AddNPC(mapNpc2);
             while (true)
@@ -80,31 +102,31 @@ namespace OpenNos.GameObject.Event
 
         private void teleportPlayers(List<ClientSession> sessions)
         {
-            foreach (ClientSession s in sessions)
+            foreach (ClientSession session in sessions)
             {
-                switch (s.Character.Faction)
+                switch (session.Character.Faction)
                 {
                     case FactionType.None:
-                        ServerManager.Instance.ChangeMap(s.Character.CharacterId, 145, 51, 41);
-                        s.SendPacket(UserInterfaceHelper.Instance.GenerateInfo("You need to be part of a faction to join Act 4"));
+                        ServerManager.Instance.ChangeMap(session.Character.CharacterId, 145, 51, 41);
+                        session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo("You need to be part of a faction to join Act 4"));
                         return;
 
                     case FactionType.Angel:
-                        s.Character.MapId = 130;
-                        s.Character.MapX = 12;
-                        s.Character.MapY = 40;
+                        session.Character.MapId = 130;
+                        session.Character.MapX = 12;
+                        session.Character.MapY = 40;
                         break;
 
                     case FactionType.Demon:
-                        s.Character.MapId = 131;
-                        s.Character.MapX = 12;
-                        s.Character.MapY = 40;
+                        session.Character.MapId = 131;
+                        session.Character.MapX = 12;
+                        session.Character.MapY = 40;
                         break;
                 }
 
-                //todo: get act4 channel dynamically
+                // TODO: get act4 channel dynamically
                 // Change IP to yours
-                s.Character.ChangeChannel(ServerManager.Instance.Configuration.Act4IP, ServerManager.Instance.Configuration.Act4Port, 1);
+                session.Character.ChangeChannel(ServerManager.Instance.Configuration.Act4IP, ServerManager.Instance.Configuration.Act4Port, 1);
             }
         }
 

@@ -21,7 +21,6 @@ namespace OpenNos.DAL.EF.Migrations
                 .PrimaryKey(t => t.MinigameLogId)
                 .ForeignKey("dbo.Character", t => t.CharacterId)
                 .Index(t => t.CharacterId);
-            
         }
         
         public override void Down()

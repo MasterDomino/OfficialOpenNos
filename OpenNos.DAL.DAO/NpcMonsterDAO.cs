@@ -76,7 +76,7 @@ namespace OpenNos.DAL.DAO
                     Mapper.Mapper.Instance.NpcMonsterMapper.ToNpcMonster(npc, entity);
                     context.NpcMonster.Add(entity);
                     context.SaveChanges();
-                    if(Mapper.Mapper.Instance.NpcMonsterMapper.ToNpcMonsterDTO(entity, npc))
+                    if (Mapper.Mapper.Instance.NpcMonsterMapper.ToNpcMonsterDTO(entity, npc))
                     {
                         return npc;
                     }
@@ -139,7 +139,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     NpcMonsterDTO dto = new NpcMonsterDTO();
-                    if(Mapper.Mapper.Instance.NpcMonsterMapper.ToNpcMonsterDTO(context.NpcMonster.FirstOrDefault(i => i.NpcMonsterVNum.Equals(npcMonsterVNum)), dto))
+                    if (Mapper.Mapper.Instance.NpcMonsterMapper.ToNpcMonsterDTO(context.NpcMonster.FirstOrDefault(i => i.NpcMonsterVNum.Equals(npcMonsterVNum)), dto))
                     {
                         return dto;
                     }
@@ -160,7 +160,7 @@ namespace OpenNos.DAL.DAO
             Mapper.Mapper.Instance.NpcMonsterMapper.ToNpcMonster(npcMonster, entity);
             context.NpcMonster.Add(entity);
             context.SaveChanges();
-            if(Mapper.Mapper.Instance.NpcMonsterMapper.ToNpcMonsterDTO(entity, npcMonster))
+            if (Mapper.Mapper.Instance.NpcMonsterMapper.ToNpcMonsterDTO(entity, npcMonster))
             {
                 return npcMonster;
             }
@@ -175,7 +175,7 @@ namespace OpenNos.DAL.DAO
                 Mapper.Mapper.Instance.NpcMonsterMapper.ToNpcMonster(npcMonster, entity);
                 context.SaveChanges();
             }
-            if(Mapper.Mapper.Instance.NpcMonsterMapper.ToNpcMonsterDTO(entity, npcMonster))
+            if (Mapper.Mapper.Instance.NpcMonsterMapper.ToNpcMonsterDTO(entity, npcMonster))
             {
                 return npcMonster;
             }

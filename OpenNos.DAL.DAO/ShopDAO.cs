@@ -97,7 +97,7 @@ namespace OpenNos.DAL.DAO
                         Mapper.Mapper.Instance.ShopMapper.ToShop(shop, entity);
                         context.Shop.Add(entity);
                         context.SaveChanges();
-                        if(Mapper.Mapper.Instance.ShopMapper.ToShopDTO(entity, shop))
+                        if (Mapper.Mapper.Instance.ShopMapper.ToShopDTO(entity, shop))
                         {
                             return shop;
                         }
@@ -136,7 +136,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     ShopDTO dto = new ShopDTO();
-                    if(Mapper.Mapper.Instance.ShopMapper.ToShopDTO(context.Shop.FirstOrDefault(s => s.ShopId.Equals(shopId)), dto))
+                    if (Mapper.Mapper.Instance.ShopMapper.ToShopDTO(context.Shop.FirstOrDefault(s => s.ShopId.Equals(shopId)), dto))
                     {
                         return dto;
                     }
@@ -158,7 +158,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     ShopDTO dto = new ShopDTO();
-                    if(Mapper.Mapper.Instance.ShopMapper.ToShopDTO(context.Shop.FirstOrDefault(s => s.MapNpcId.Equals(mapNpcId)), dto))
+                    if (Mapper.Mapper.Instance.ShopMapper.ToShopDTO(context.Shop.FirstOrDefault(s => s.MapNpcId.Equals(mapNpcId)), dto))
                     {
                         return dto;
                     }

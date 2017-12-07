@@ -86,7 +86,7 @@ namespace OpenNos.DAL.DAO
                     Mapper.Mapper.Instance.MapNPCMapper.ToMapNPC(npc, entity);
                     context.MapNpc.Add(entity);
                     context.SaveChanges();
-                    if(Mapper.Mapper.Instance.MapNPCMapper.ToMapNPCDTO(entity, npc))
+                    if (Mapper.Mapper.Instance.MapNPCMapper.ToMapNPCDTO(entity, npc))
                     {
                         return npc;
                     }
@@ -123,7 +123,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     MapNpcDTO dto = new MapNpcDTO();
-                    if(Mapper.Mapper.Instance.MapNPCMapper.ToMapNPCDTO(context.MapNpc.FirstOrDefault(i => i.MapNpcId.Equals(mapNpcId)), dto))
+                    if (Mapper.Mapper.Instance.MapNPCMapper.ToMapNPCDTO(context.MapNpc.FirstOrDefault(i => i.MapNpcId.Equals(mapNpcId)), dto))
                     {
                         return dto;
                     }

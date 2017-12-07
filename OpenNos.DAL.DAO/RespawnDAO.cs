@@ -78,7 +78,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     RespawnDTO dto = new RespawnDTO();
-                    if(Mapper.Mapper.Instance.RespawnMapper.ToRespawnDTO(context.Respawn.FirstOrDefault(s => s.RespawnId.Equals(respawnId)), dto))
+                    if (Mapper.Mapper.Instance.RespawnMapper.ToRespawnDTO(context.Respawn.FirstOrDefault(s => s.RespawnId.Equals(respawnId)), dto))
                     {
                         return dto;
                     }
@@ -101,7 +101,7 @@ namespace OpenNos.DAL.DAO
                 Mapper.Mapper.Instance.RespawnMapper.ToRespawn(respawn, entity);
                 context.Respawn.Add(entity);
                 context.SaveChanges();
-                if(Mapper.Mapper.Instance.RespawnMapper.ToRespawnDTO(entity, respawn))
+                if (Mapper.Mapper.Instance.RespawnMapper.ToRespawnDTO(entity, respawn))
                 {
                     return respawn;
                 }
@@ -122,7 +122,7 @@ namespace OpenNos.DAL.DAO
                 Mapper.Mapper.Instance.RespawnMapper.ToRespawn(respawn, entity);
                 context.SaveChanges();
             }
-            if(Mapper.Mapper.Instance.RespawnMapper.ToRespawnDTO(entity, respawn))
+            if (Mapper.Mapper.Instance.RespawnMapper.ToRespawnDTO(entity, respawn))
             {
                 return respawn;
             }

@@ -41,12 +41,14 @@ namespace OpenNos.Master.Library.Interface
         /// <summary>
         /// Deliver Item to the Purchaser
         /// </summary>
+        /// <param name="characterId"></param>
         /// <param name="item"></param>
         void SendItem(long characterId, MallItem item);
 
         /// <summary>
         /// Deliver StaticBonus to the Purchaser
         /// </summary>
+        /// <param name="characterId"></param>
         /// <param name="item"></param>
         void SendStaticBonus(long characterId, MallStaticBonus item);
     }

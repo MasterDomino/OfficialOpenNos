@@ -28,38 +28,6 @@ namespace OpenNos.DAL.DAO
     {
         #region Methods
 
-        public IEnumerable<QuicklistEntryDTO> LoadByCharacterId(long characterId)
-        {
-            using (OpenNosContext context = DataAccessHelper.CreateContext())
-            {
-                List<QuicklistEntryDTO> result = new List<QuicklistEntryDTO>();
-                foreach (QuicklistEntry QuicklistEntryobject in context.QuicklistEntry.Where(i => i.CharacterId == characterId))
-                {
-
-                    QuicklistEntryDTO quicklistEntryDTO = new QuicklistEntryDTO();
-                    Mapper.Mapper.Instance.QuicklistEntryMapper.ToQuicklistEntryDTO(QuicklistEntryobject, quicklistEntryDTO);
-                    result.Add(quicklistEntryDTO);
-                }
-                return result;
-            }
-        }
-
-        public IEnumerable<Guid> LoadKeysByCharacterId(long characterId)
-        {
-            try
-            {
-                using (OpenNosContext context = DataAccessHelper.CreateContext())
-                {
-                    return context.QuicklistEntry.Where(i => i.CharacterId == characterId).Select(qle => qle.Id).ToList();
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e);
-                return null;
-            }
-        }
-
         public DeleteResult Delete(Guid id)
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
@@ -111,16 +79,47 @@ namespace OpenNos.DAL.DAO
             }
         }
 
+        public IEnumerable<QuicklistEntryDTO> LoadByCharacterId(long characterId)
+        {
+            using (OpenNosContext context = DataAccessHelper.CreateContext())
+            {
+                List<QuicklistEntryDTO> result = new List<QuicklistEntryDTO>();
+                foreach (QuicklistEntry QuicklistEntryobject in context.QuicklistEntry.Where(i => i.CharacterId == characterId))
+                {
+                    QuicklistEntryDTO quicklistEntryDTO = new QuicklistEntryDTO();
+                    Mapper.Mapper.Instance.QuicklistEntryMapper.ToQuicklistEntryDTO(QuicklistEntryobject, quicklistEntryDTO);
+                    result.Add(quicklistEntryDTO);
+                }
+                return result;
+            }
+        }
+
         public QuicklistEntryDTO LoadById(Guid id)
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 QuicklistEntryDTO quicklistEntryDTO = new QuicklistEntryDTO();
-                if(Mapper.Mapper.Instance.QuicklistEntryMapper.ToQuicklistEntryDTO(context.QuicklistEntry.FirstOrDefault(i=>i.Id.Equals(id)), quicklistEntryDTO))
+                if (Mapper.Mapper.Instance.QuicklistEntryMapper.ToQuicklistEntryDTO(context.QuicklistEntry.FirstOrDefault(i => i.Id.Equals(id)), quicklistEntryDTO))
                 {
                     return quicklistEntryDTO;
                 }
 
+                return null;
+            }
+        }
+
+        public IEnumerable<Guid> LoadKeysByCharacterId(long characterId)
+        {
+            try
+            {
+                using (OpenNosContext context = DataAccessHelper.CreateContext())
+                {
+                    return context.QuicklistEntry.Where(i => i.CharacterId == characterId).Select(qle => qle.Id).ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
                 return null;
             }
         }
@@ -131,7 +130,7 @@ namespace OpenNos.DAL.DAO
             Mapper.Mapper.Instance.QuicklistEntryMapper.ToQuicklistEntry(dto, entity);
             context.Set<QuicklistEntry>().Add(entity);
             context.SaveChanges();
-            if(Mapper.Mapper.Instance.QuicklistEntryMapper.ToQuicklistEntryDTO(entity, dto))
+            if (Mapper.Mapper.Instance.QuicklistEntryMapper.ToQuicklistEntryDTO(entity, dto))
             {
                 return dto;
             }
@@ -160,7 +159,7 @@ namespace OpenNos.DAL.DAO
                 Mapper.Mapper.Instance.QuicklistEntryMapper.ToQuicklistEntry(inventory, entity);
                 context.SaveChanges();
             }
-            if(Mapper.Mapper.Instance.QuicklistEntryMapper.ToQuicklistEntryDTO(entity, inventory))
+            if (Mapper.Mapper.Instance.QuicklistEntryMapper.ToQuicklistEntryDTO(entity, inventory))
             {
                 return inventory;
             }

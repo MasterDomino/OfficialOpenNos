@@ -287,8 +287,7 @@ namespace OpenNos.DAL.DAO
             try
             {
                 ItemInstance entity = context.ItemInstance.FirstOrDefault(c => c.Id == dto.Id);
-                dto = entity == null ? Insert(dto, context) : Update(entity, dto, context);
-                return dto;
+                return entity == null ? Insert(dto, context) : Update(entity, dto, context);
             }
             catch (Exception e)
             {
@@ -301,7 +300,7 @@ namespace OpenNos.DAL.DAO
         {
             if (entity != null)
             {
-                map(inventory, entity, true);
+                map(inventory, entity);
                 context.SaveChanges();
             }
             if (map(entity, inventory))
@@ -311,6 +310,7 @@ namespace OpenNos.DAL.DAO
             return null;
         }
 
+        // TODO: Implement Exists
         private bool map(ItemInstance input, ItemInstanceDTO output)
         {
             if (input == null)
@@ -326,7 +326,7 @@ namespace OpenNos.DAL.DAO
             return true;
         }
 
-        private bool map(ItemInstanceDTO input, ItemInstance output, bool exists = false)
+        private bool map(ItemInstanceDTO input, ItemInstance output)
         {
             if (input == null)
             {

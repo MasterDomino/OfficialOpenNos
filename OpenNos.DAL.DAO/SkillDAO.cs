@@ -59,7 +59,7 @@ namespace OpenNos.DAL.DAO
                     Skill entity = new Skill();
                     Mapper.Mapper.Instance.SkillMapper.ToSkill(skill, entity); context.Skill.Add(entity);
                     context.SaveChanges();
-                    if(Mapper.Mapper.Instance.SkillMapper.ToSkillDTO(entity, skill))
+                    if (Mapper.Mapper.Instance.SkillMapper.ToSkillDTO(entity, skill))
                     {
                         return skill;
                     }
@@ -96,7 +96,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     SkillDTO dto = new SkillDTO();
-                    if(Mapper.Mapper.Instance.SkillMapper.ToSkillDTO(context.Skill.FirstOrDefault(s => s.SkillVNum.Equals(skillId)),dto))
+                    if (Mapper.Mapper.Instance.SkillMapper.ToSkillDTO(context.Skill.FirstOrDefault(s => s.SkillVNum.Equals(skillId)), dto))
                     {
                         return dto;
                     }

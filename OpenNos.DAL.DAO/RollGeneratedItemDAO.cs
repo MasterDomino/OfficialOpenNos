@@ -37,7 +37,7 @@ namespace OpenNos.DAL.DAO
                     Mapper.Mapper.Instance.RollGeneratedItemMapper.ToRollGeneratedItem(item, entity);
                     context.RollGeneratedItem.Add(entity);
                     context.SaveChanges();
-                    if(Mapper.Mapper.Instance.RollGeneratedItemMapper.ToRollGeneratedItemDTO(entity, item))
+                    if (Mapper.Mapper.Instance.RollGeneratedItemMapper.ToRollGeneratedItemDTO(entity, item))
                     {
                         return item;
                     }
@@ -74,7 +74,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     RollGeneratedItemDTO dto = new RollGeneratedItemDTO();
-                    if(Mapper.Mapper.Instance.RollGeneratedItemMapper.ToRollGeneratedItemDTO(context.RollGeneratedItem.FirstOrDefault(i => i.RollGeneratedItemId.Equals(id)), dto))
+                    if (Mapper.Mapper.Instance.RollGeneratedItemMapper.ToRollGeneratedItemDTO(context.RollGeneratedItem.FirstOrDefault(i => i.RollGeneratedItemId.Equals(id)), dto))
                     {
                         return dto;
                     }

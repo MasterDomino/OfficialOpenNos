@@ -309,7 +309,6 @@ namespace OpenNos.Handler
                             {
                                 foreach (ItemInstance itemInst in newItems)
                                 {
-
                                     switch (itemInst.Item.EquipmentSlot)
                                     {
                                         case EquipmentType.Armor:

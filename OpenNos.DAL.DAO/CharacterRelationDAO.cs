@@ -100,7 +100,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     CharacterRelationDTO dto = new CharacterRelationDTO();
-                    if(Mapper.Mapper.Instance.CharacterRelationMapper.ToCharacterRelationDTO(context.CharacterRelation.FirstOrDefault(s => s.CharacterRelationId.Equals(characterId)), dto))
+                    if (Mapper.Mapper.Instance.CharacterRelationMapper.ToCharacterRelationDTO(context.CharacterRelation.FirstOrDefault(s => s.CharacterRelationId.Equals(characterId)), dto))
                     {
                         return dto;
                     }
@@ -121,7 +121,7 @@ namespace OpenNos.DAL.DAO
             Mapper.Mapper.Instance.CharacterRelationMapper.ToCharacterRelation(relation, entity);
             context.CharacterRelation.Add(entity);
             context.SaveChanges();
-            if(Mapper.Mapper.Instance.CharacterRelationMapper.ToCharacterRelationDTO(entity, relation))
+            if (Mapper.Mapper.Instance.CharacterRelationMapper.ToCharacterRelationDTO(entity, relation))
             {
                 return relation;
             }
@@ -137,7 +137,7 @@ namespace OpenNos.DAL.DAO
                 context.SaveChanges();
             }
 
-            if(Mapper.Mapper.Instance.CharacterRelationMapper.ToCharacterRelationDTO(entity, relation))
+            if (Mapper.Mapper.Instance.CharacterRelationMapper.ToCharacterRelationDTO(entity, relation))
             {
                 return relation;
             }

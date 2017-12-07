@@ -19,7 +19,6 @@ using OpenNos.Data;
 using OpenNos.Data.Enums;
 using OpenNos.Domain;
 using OpenNos.GameObject;
-using OpenNos.Mapper;
 using OpenNos.Master.Library.Client;
 using System;
 using System.Collections.Generic;
@@ -243,9 +242,7 @@ namespace OpenNos.Handler
                     {
                         if (account.Password.ToLower().Equals(CryptographyBase.Sha512(loginPacketParts[6])) || isCrossServerLogin)
                         {
-                            Account accountobject = new Account(account);
-                            
-                            Session.InitializeAccount(accountobject, isCrossServerLogin);
+                            Session.InitializeAccount(new Account(account), isCrossServerLogin);
                         }
                         else
                         {

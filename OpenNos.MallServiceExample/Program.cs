@@ -8,9 +8,9 @@ using OpenNos.Master.Library.Data;
 
 namespace OpenNos.MallServiceExample
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        protected static void Main()
         {
             MallServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["MasterAuthKey"]);
             //Console.WriteLine("UserName:");
@@ -18,7 +18,7 @@ namespace OpenNos.MallServiceExample
             //Console.WriteLine("Password:");
             //string pass = Console.ReadLine();
 
-            //pass = Sha512(pass);
+            //pass = sha512(pass);
 
             //AccountDTO account = MallServiceClient.Instance.ValidateAccount(user, pass);
             ////if(account != null && account.Authority > AuthorityType.Unconfirmed)
@@ -60,7 +60,7 @@ namespace OpenNos.MallServiceExample
             //}
         }
 
-        static string Sha512(string inputString)
+        private static string sha512(string inputString)
         {
             using (SHA512 hash = SHA512.Create())
             {

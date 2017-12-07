@@ -84,35 +84,36 @@ namespace OpenNos.GameObject.Event.GAMES
             {
                 _map = map;
 
-                foreach (ClientSession sess in _map.Sessions)
+                foreach (ClientSession session in _map.Sessions)
                 {
-                    ServerManager.Instance.TeleportOnRandomPlaceInMap(sess, map.MapInstanceId);
-                    if (sess.Character.IsVehicled)
+                    ServerManager.Instance.TeleportOnRandomPlaceInMap(session, map.MapInstanceId);
+                    if (session.Character.IsVehicled)
                     {
-                        sess.Character.RemoveVehicle();
+                        session.Character.RemoveVehicle();
                     }
-                    if (sess.Character.UseSp)
+                    if (session.Character.UseSp)
                     {
-                        sess.Character.LastSp = (DateTime.Now - Process.GetCurrentProcess().StartTime.AddSeconds(-50)).TotalSeconds;
-                        ItemInstance specialist = sess.Character.Inventory.LoadBySlotAndType((byte)EquipmentType.Sp, InventoryType.Wear);
+                        session.Character.LastSp = (DateTime.Now - Process.GetCurrentProcess().StartTime.AddSeconds(-50)).TotalSeconds;
+                        ItemInstance specialist = session.Character.Inventory.LoadBySlotAndType((byte)EquipmentType.Sp, InventoryType.Wear);
                         if (specialist != null)
                         {
-                            removeSP(sess, specialist.ItemVNum);
+                            removeSP(session, specialist.ItemVNum);
                         }
                     }
 
-                    sess.Character.Speed = 12;
-                    sess.Character.IsVehicled = true;
-                    sess.Character.Morph = 1156;
-                    sess.Character.ArenaWinner = 0;
-                    sess.Character.MorphUpgrade = 0;
-                    sess.Character.MorphUpgrade2 = 0;
-                    sess.SendPacket(sess.Character.GenerateCond());
-                    sess.Character.LastSpeedChange = DateTime.Now;
-                    sess.CurrentMapInstance?.Broadcast(sess.Character.GenerateCMode());
+                    session.Character.Speed = 12;
+                    session.Character.IsVehicled = true;
+                    session.Character.Morph = 1156;
+                    session.Character.ArenaWinner = 0;
+                    session.Character.MorphUpgrade = 0;
+                    session.Character.MorphUpgrade2 = 0;
+                    session.SendPacket(session.Character.GenerateCond());
+                    session.Character.LastSpeedChange = DateTime.Now;
+                    session.CurrentMapInstance?.Broadcast(session.Character.GenerateCMode());
                 }
 
                 int i = 0;
+
                 while (_map?.Sessions?.Any() == true)
                 {
                     runRound(i++);
@@ -132,54 +133,44 @@ namespace OpenNos.GameObject.Event.GAMES
                 return dropParameters;
             }
 
-            private void removeSP(ClientSession Session, short vnum)
+            private void removeSP(ClientSession session, short vnum)
             {
-                if (Session?.HasSession == true)
+                if (session?.HasSession == true && !session.Character.IsVehicled)
                 {
-                    if (Session.Character.IsVehicled)
+                    session.Character.DisableBuffs(BuffType.All);
+                    session.Character.EquipmentBCards.RemoveAll(s => s.ItemVNum.Equals(vnum));
+                    session.Character.UseSp = false;
+                    session.Character.LoadSpeed();
+                    session.SendPacket(session.Character.GenerateCond());
+                    session.SendPacket(session.Character.GenerateLev());
+                    session.Character.SpCooldown = 30;
+                    if (session.Character.SkillsSp != null)
                     {
-                        return;
-                    }
-                    List<BuffType> bufftodisable = new List<BuffType>
-                    {
-                        BuffType.Bad,
-                        BuffType.Good,
-                        BuffType.Neutral
-                    };
-                    Session.Character.DisableBuffs(bufftodisable);
-                    Session.Character.EquipmentBCards.RemoveAll(s => s.ItemVNum.Equals(vnum));
-                    Session.Character.UseSp = false;
-                    Session.Character.LoadSpeed();
-                    Session.SendPacket(Session.Character.GenerateCond());
-                    Session.SendPacket(Session.Character.GenerateLev());
-                    Session.Character.SpCooldown = 30;
-                    if (Session.Character?.SkillsSp != null)
-                    {
-                        foreach (CharacterSkill ski in Session.Character.SkillsSp.Where(s => !s.CanBeUsed()))
+                        foreach (CharacterSkill ski in session.Character.SkillsSp.Where(s => !s.CanBeUsed()))
                         {
                             short time = ski.Skill.Cooldown;
                             double temp = (ski.LastUse - DateTime.Now).TotalMilliseconds + (time * 100);
                             temp /= 1000;
-                            Session.Character.SpCooldown = temp > Session.Character.SpCooldown ? (int)temp : Session.Character.SpCooldown;
+                            session.Character.SpCooldown = temp > session.Character.SpCooldown ? (int)temp : session.Character.SpCooldown;
                         }
                     }
-                    Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("STAY_TIME"), Session.Character.SpCooldown), 11));
-                    Session.SendPacket($"sd {Session.Character.SpCooldown}");
-                    Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateCMode());
-                    Session.CurrentMapInstance?.Broadcast(UserInterfaceHelper.Instance.GenerateGuri(6, 1, Session.Character.CharacterId), Session.Character.PositionX, Session.Character.PositionY);
+                    session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("STAY_TIME"), session.Character.SpCooldown), 11));
+                    session.SendPacket($"sd {session.Character.SpCooldown}");
+                    session.CurrentMapInstance?.Broadcast(session.Character.GenerateCMode());
+                    session.CurrentMapInstance?.Broadcast(UserInterfaceHelper.Instance.GenerateGuri(6, 1, session.Character.CharacterId), session.Character.PositionX, session.Character.PositionY);
 
                     // ms_c
-                    Session.SendPacket(Session.Character.GenerateSki());
-                    Session.SendPackets(Session.Character.GenerateQuicklist());
-                    Session.SendPacket(Session.Character.GenerateStat());
-                    Session.SendPacket(Session.Character.GenerateStatChar());
+                    session.SendPacket(session.Character.GenerateSki());
+                    session.SendPackets(session.Character.GenerateQuicklist());
+                    session.SendPacket(session.Character.GenerateStat());
+                    session.SendPacket(session.Character.GenerateStatChar());
 
-                    Logger.LogUserEvent("CHARACTER_SPECIALIST_RETURN", Session.GenerateIdentity(), $"SpCooldown: {Session.Character.SpCooldown}");
+                    Logger.LogUserEvent("CHARACTER_SPECIALIST_RETURN", session.GenerateIdentity(), $"SpCooldown: {session.Character.SpCooldown}");
 
-                    Observable.Timer(TimeSpan.FromMilliseconds(Session.Character.SpCooldown * 1000)).Subscribe(o =>
+                    Observable.Timer(TimeSpan.FromMilliseconds(session.Character.SpCooldown * 1000)).Subscribe(o =>
                     {
-                        Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("TRANSFORM_DISAPPEAR"), 11));
-                        Session.SendPacket("sd 0");
+                        session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("TRANSFORM_DISAPPEAR"), 11));
+                        session.SendPacket("sd 0");
                     });
                 }
             }

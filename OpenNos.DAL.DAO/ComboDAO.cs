@@ -60,7 +60,7 @@ namespace OpenNos.DAL.DAO
                     Mapper.Mapper.Instance.ComboMapper.ToCombo(combo, entity);
                     context.Combo.Add(entity);
                     context.SaveChanges();
-                    if(Mapper.Mapper.Instance.ComboMapper.ToComboDTO(entity, combo))
+                    if (Mapper.Mapper.Instance.ComboMapper.ToComboDTO(entity, combo))
                     {
                         return combo;
                     }
@@ -97,7 +97,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     ComboDTO dto = new ComboDTO();
-                    if(Mapper.Mapper.Instance.ComboMapper.ToComboDTO(context.Combo.FirstOrDefault(s => s.SkillVNum.Equals(comboId)), dto))
+                    if (Mapper.Mapper.Instance.ComboMapper.ToComboDTO(context.Combo.FirstOrDefault(s => s.SkillVNum.Equals(comboId)), dto))
                     {
                         return dto;
                     }

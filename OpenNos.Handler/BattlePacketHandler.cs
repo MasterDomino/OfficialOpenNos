@@ -295,13 +295,7 @@ namespace OpenNos.Handler
                             }
                         }
                         target.SendPacket(target.Character.GenerateFd());
-                        List<BuffType> bufftodisable = new List<BuffType>
-                        {
-                            BuffType.Bad,
-                            BuffType.Good,
-                            BuffType.Neutral
-                        };
-                        target.Character.DisableBuffs(bufftodisable);
+                        target.Character.DisableBuffs(BuffType.All);
                         target.CurrentMapInstance.Broadcast(target, target.Character.GenerateIn(), ReceiverType.AllExceptMe);
                         target.CurrentMapInstance.Broadcast(target, target.Character.GenerateGidx(), ReceiverType.AllExceptMe);
                         target.SendPacket(target.Character.GenerateSay(Language.Instance.GetMessageFromKey("ACT4_PVP_DIE"), 11));

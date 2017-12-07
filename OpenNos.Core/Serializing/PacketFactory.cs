@@ -53,8 +53,7 @@ namespace OpenNos.Core
                 KeyValuePair<Tuple<Type, string>, Dictionary<PacketIndexAttribute, PropertyInfo>> serializationInformation = getSerializationInformation(packetType);
                 PacketDefinition deserializedPacket = (PacketDefinition)Activator.CreateInstance(packetType);
                 setDeserializationInformations(deserializedPacket, packetContent, serializationInformation.Key.Item2);
-                deserializedPacket = deserialize(packetContent, deserializedPacket, serializationInformation, includesKeepAliveIdentity);
-                return deserializedPacket;
+                return deserialize(packetContent, deserializedPacket, serializationInformation, includesKeepAliveIdentity);
             }
             catch (Exception ex)
             {
@@ -80,8 +79,7 @@ namespace OpenNos.Core
                 KeyValuePair<Tuple<Type, string>, Dictionary<PacketIndexAttribute, PropertyInfo>> serializationInformation = getSerializationInformation(typeof(TPacket));
                 TPacket deserializedPacket = Activator.CreateInstance<TPacket>(); // reflection is bad, improve?
                 setDeserializationInformations(deserializedPacket, packetContent, serializationInformation.Key.Item2);
-                deserializedPacket = (TPacket)deserialize(packetContent, deserializedPacket, serializationInformation, includesKeepAliveIdentity);
-                return deserializedPacket;
+                return (TPacket)deserialize(packetContent, deserializedPacket, serializationInformation, includesKeepAliveIdentity);
             }
             catch (Exception e)
             {

@@ -16,8 +16,8 @@ using OpenNos.Core;
 using OpenNos.DAL.EF;
 using OpenNos.DAL.EF.Helpers;
 using OpenNos.DAL.Interface;
-using OpenNos.Data.Enums;
 using OpenNos.Data;
+using OpenNos.Data.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -102,7 +102,7 @@ namespace OpenNos.DAL.DAO
                 Mapper.Mapper.Instance.MinilandObjectMapper.ToMinilandObject(obj, entity);
                 context.MinilandObject.Add(entity);
                 context.SaveChanges();
-                if(Mapper.Mapper.Instance.MinilandObjectMapper.ToMinilandObjectDTO(entity, obj))
+                if (Mapper.Mapper.Instance.MinilandObjectMapper.ToMinilandObjectDTO(entity, obj))
                 {
                     return obj;
                 }
@@ -123,7 +123,7 @@ namespace OpenNos.DAL.DAO
                 Mapper.Mapper.Instance.MinilandObjectMapper.ToMinilandObject(respawn, entity);
                 context.SaveChanges();
             }
-            if(Mapper.Mapper.Instance.MinilandObjectMapper.ToMinilandObjectDTO(entity, respawn))
+            if (Mapper.Mapper.Instance.MinilandObjectMapper.ToMinilandObjectDTO(entity, respawn))
             {
                 return respawn;
             }

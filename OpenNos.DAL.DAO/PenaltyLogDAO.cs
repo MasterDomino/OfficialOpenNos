@@ -112,11 +112,10 @@ namespace OpenNos.DAL.DAO
         {
             try
             {
-
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     PenaltyLogDTO dto = new PenaltyLogDTO();
-                    if(Mapper.Mapper.Instance.PenaltyLogMapper.ToPenaltyLogDTO(context.PenaltyLog.FirstOrDefault(s => s.PenaltyLogId.Equals(penaltyLogId)), dto))
+                    if (Mapper.Mapper.Instance.PenaltyLogMapper.ToPenaltyLogDTO(context.PenaltyLog.FirstOrDefault(s => s.PenaltyLogId.Equals(penaltyLogId)), dto))
                     {
                         return dto;
                     }
@@ -137,7 +136,7 @@ namespace OpenNos.DAL.DAO
             Mapper.Mapper.Instance.PenaltyLogMapper.ToPenaltyLog(penaltylog, entity);
             context.PenaltyLog.Add(entity);
             context.SaveChanges();
-            if(Mapper.Mapper.Instance.PenaltyLogMapper.ToPenaltyLogDTO(entity,penaltylog))
+            if (Mapper.Mapper.Instance.PenaltyLogMapper.ToPenaltyLogDTO(entity, penaltylog))
             {
                 return penaltylog;
             }
@@ -152,7 +151,7 @@ namespace OpenNos.DAL.DAO
                 Mapper.Mapper.Instance.PenaltyLogMapper.ToPenaltyLog(penaltylog, entity);
                 context.SaveChanges();
             }
-            if(Mapper.Mapper.Instance.PenaltyLogMapper.ToPenaltyLogDTO(entity, penaltylog))
+            if (Mapper.Mapper.Instance.PenaltyLogMapper.ToPenaltyLogDTO(entity, penaltylog))
             {
                 return penaltylog;
             }
