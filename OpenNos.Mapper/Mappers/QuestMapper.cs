@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class QuestMapper
+    public static class QuestMapper
     {
         #region Methods
 
-        public bool ToQuest(QuestDTO input, Quest output)
+        public static bool ToQuest(QuestDTO input, Quest output)
         {
             if (input == null)
             {
@@ -19,7 +19,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToQuestDTO(Quest input, QuestDTO output)
+        public static bool ToQuestDTO(Quest input, QuestDTO output)
         {
             if (input == null)
             {

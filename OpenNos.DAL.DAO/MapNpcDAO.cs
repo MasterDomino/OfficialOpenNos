@@ -63,7 +63,7 @@ namespace OpenNos.DAL.DAO
                     foreach (MapNpcDTO Item in npcs)
                     {
                         MapNpc entity = new MapNpc();
-                        Mapper.Mapper.Instance.MapNPCMapper.ToMapNPC(Item, entity);
+                        Mapper.Mappers.MapNPCMapper.ToMapNPC(Item, entity);
                         context.MapNpc.Add(entity);
                     }
                     context.Configuration.AutoDetectChangesEnabled = true;
@@ -83,10 +83,10 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     MapNpc entity = new MapNpc();
-                    Mapper.Mapper.Instance.MapNPCMapper.ToMapNPC(npc, entity);
+                    Mapper.Mappers.MapNPCMapper.ToMapNPC(npc, entity);
                     context.MapNpc.Add(entity);
                     context.SaveChanges();
-                    if (Mapper.Mapper.Instance.MapNPCMapper.ToMapNPCDTO(entity, npc))
+                    if (Mapper.Mappers.MapNPCMapper.ToMapNPCDTO(entity, npc))
                     {
                         return npc;
                     }
@@ -109,7 +109,7 @@ namespace OpenNos.DAL.DAO
                 foreach (MapNpc entity in context.MapNpc)
                 {
                     MapNpcDTO dto = new MapNpcDTO();
-                    Mapper.Mapper.Instance.MapNPCMapper.ToMapNPCDTO(entity, dto);
+                    Mapper.Mappers.MapNPCMapper.ToMapNPCDTO(entity, dto);
                     result.Add(dto);
                 }
                 return result;
@@ -123,7 +123,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     MapNpcDTO dto = new MapNpcDTO();
-                    if (Mapper.Mapper.Instance.MapNPCMapper.ToMapNPCDTO(context.MapNpc.FirstOrDefault(i => i.MapNpcId.Equals(mapNpcId)), dto))
+                    if (Mapper.Mappers.MapNPCMapper.ToMapNPCDTO(context.MapNpc.FirstOrDefault(i => i.MapNpcId.Equals(mapNpcId)), dto))
                     {
                         return dto;
                     }
@@ -146,7 +146,7 @@ namespace OpenNos.DAL.DAO
                 foreach (MapNpc npcobject in context.MapNpc.Where(c => c.MapId.Equals(mapId)))
                 {
                     MapNpcDTO dto = new MapNpcDTO();
-                    Mapper.Mapper.Instance.MapNPCMapper.ToMapNPCDTO(npcobject, dto);
+                    Mapper.Mappers.MapNPCMapper.ToMapNPCDTO(npcobject, dto);
                     result.Add(dto);
                 }
                 return result;

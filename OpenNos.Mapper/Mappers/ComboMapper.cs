@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class ComboMapper
+    public static class ComboMapper
     {
         #region Methods
 
-        public bool ToCombo(ComboDTO input, Combo output)
+        public static bool ToCombo(ComboDTO input, Combo output)
         {
             if (input == null)
             {
@@ -22,7 +22,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToComboDTO(Combo input, ComboDTO output)
+        public static bool ToComboDTO(Combo input, ComboDTO output)
         {
             if (input == null)
             {

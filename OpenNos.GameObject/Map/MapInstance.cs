@@ -199,7 +199,7 @@ namespace OpenNos.GameObject
                     }
                 }
 
-                foreach (MapCell possibility in possibilities.OrderBy(s => ServerManager.Instance.RandomNumber()))
+                foreach (MapCell possibility in possibilities.OrderBy(s => ServerManager.RandomNumber()))
                 {
                     localMapX = (short)(mapX + possibility.X);
                     localMapY = (short)(mapY + possibility.Y);
@@ -410,11 +410,11 @@ namespace OpenNos.GameObject
             short originY = mon.MapY;
             short destX;
             short destY;
-            int amount = ServerManager.Instance.RandomNumber(parameter.Item4, parameter.Item5);
+            int amount = ServerManager.RandomNumber(parameter.Item4, parameter.Item5);
             for (int i = 0; i < parameter.Item3; i++)
             {
-                destX = (short)(originX + ServerManager.Instance.RandomNumber(-10, 10));
-                destY = (short)(originY + ServerManager.Instance.RandomNumber(-10, 10));
+                destX = (short)(originX + ServerManager.RandomNumber(-10, 10));
+                destY = (short)(originY + ServerManager.RandomNumber(-10, 10));
                 MonsterMapItem droppedItem = new MonsterMapItem(destX, destY, parameter.Item2, amount);
                 DroppedList[droppedItem.TransportId] = droppedItem;
                 Broadcast($"throw {droppedItem.ItemVNum} {droppedItem.TransportId} {originX} {originY} {droppedItem.PositionX} {droppedItem.PositionY} {(droppedItem.GoldAmount > 1 ? droppedItem.GoldAmount : droppedItem.Amount)}");
@@ -465,7 +465,7 @@ namespace OpenNos.GameObject
                     });
                     try
                     {
-                        if (Monsters.Count(s => s.IsAlive) == 0)
+                        if (!Monsters.Any(s => s.IsAlive))
                         {
                             OnMapClean.ForEach(e => EventHelper.Instance.RunEvent(e));
                             OnMapClean.RemoveAll(s => s != null);
@@ -485,7 +485,7 @@ namespace OpenNos.GameObject
 
         internal int SummonMonster(MonsterToSummon summon)
         {
-            NpcMonster npcmonster = ServerManager.Instance.GetNpc(summon.VNum);
+            NpcMonster npcmonster = ServerManager.GetNpc(summon.VNum);
             if (npcmonster != null)
             {
                 MapMonster mapMonster = new MapMonster { MonsterVNum = npcmonster.NpcMonsterVNum, MapY = summon.SpawnCell.Y, MapX = summon.SpawnCell.X, MapId = Map.MapId, IsMoving = summon.IsMoving, MapMonsterId = GetNextMonsterId(), ShouldRespawn = false, Target = summon.Target, OnDeathEvents = summon.DeathEvents, OnNoticeEvents = summon.NoticingEvents, IsTarget = summon.IsTarget, IsBonus = summon.IsBonus, IsBoss = summon.IsBoss, NoticeRange = summon.NoticeRange };
@@ -503,7 +503,7 @@ namespace OpenNos.GameObject
             ConcurrentBag<int> ids = new ConcurrentBag<int>();
             Parallel.ForEach(summonParameters, npcMonster =>
             {
-                NpcMonster npcmonster = ServerManager.Instance.GetNpc(npcMonster.VNum);
+                NpcMonster npcmonster = ServerManager.GetNpc(npcMonster.VNum);
                 if (npcmonster != null)
                 {
                     MapMonster mapMonster = new MapMonster { MonsterVNum = npcmonster.NpcMonsterVNum, MapY = npcMonster.SpawnCell.Y, MapX = npcMonster.SpawnCell.X, MapId = Map.MapId, IsMoving = npcMonster.IsMoving, MapMonsterId = GetNextMonsterId(), ShouldRespawn = false, Target = npcMonster.Target, OnDeathEvents = npcMonster.DeathEvents, OnNoticeEvents = npcMonster.NoticingEvents, IsTarget = npcMonster.IsTarget, IsBonus = npcMonster.IsBonus, IsBoss = npcMonster.IsBoss, NoticeRange = npcMonster.NoticeRange };
@@ -519,7 +519,7 @@ namespace OpenNos.GameObject
 
         internal int SummonNpc(NpcToSummon summonParameters)
         {
-            NpcMonster npcMonster = ServerManager.Instance.GetNpc(summonParameters.VNum);
+            NpcMonster npcMonster = ServerManager.GetNpc(summonParameters.VNum);
             if (npcMonster != null)
             {
                 MapNpc mapNpc = new MapNpc
@@ -549,7 +549,7 @@ namespace OpenNos.GameObject
             ConcurrentBag<int> ids = new ConcurrentBag<int>();
             Parallel.ForEach(summonParameters, npcMonster =>
             {
-                NpcMonster npcmonster = ServerManager.Instance.GetNpc(npcMonster.VNum);
+                NpcMonster npcmonster = ServerManager.GetNpc(npcMonster.VNum);
                 if (npcmonster != null)
                 {
                     MapNpc mapNpc = new MapNpc

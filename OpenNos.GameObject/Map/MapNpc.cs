@@ -116,7 +116,7 @@ namespace OpenNos.GameObject
         public void Initialize()
         {
             _random = new Random(MapNpcId);
-            Npc = ServerManager.Instance.GetNpc(NpcVNum);
+            Npc = ServerManager.GetNpc(NpcVNum);
             LastEffect = DateTime.Now;
             LastMove = DateTime.Now;
             IsHostile = Npc.IsHostile;
@@ -124,7 +124,7 @@ namespace OpenNos.GameObject
             FirstY = MapY;
             EffectActivated = true;
             EffectDelay = 4000;
-            _movetime = ServerManager.Instance.RandomNumber(500, 3000);
+            _movetime = ServerManager.RandomNumber(500, 3000);
             Path = new List<Node>();
             Recipes = ServerManager.Instance.GetRecipesByMapNpcId(MapNpcId);
             Target = -1;
@@ -201,11 +201,11 @@ namespace OpenNos.GameObject
             time = (DateTime.Now - LastMove).TotalMilliseconds;
             if (IsMoving && Npc.Speed > 0 && time > _movetime)
             {
-                _movetime = ServerManager.Instance.RandomNumber(500, 3000);
-                byte point = (byte)ServerManager.Instance.RandomNumber(2, 4);
-                byte fpoint = (byte)ServerManager.Instance.RandomNumber(0, 2);
+                _movetime = ServerManager.RandomNumber(500, 3000);
+                byte point = (byte)ServerManager.RandomNumber(2, 4);
+                byte fpoint = (byte)ServerManager.RandomNumber(0, 2);
 
-                byte xpoint = (byte)ServerManager.Instance.RandomNumber(fpoint, point);
+                byte xpoint = (byte)ServerManager.RandomNumber(fpoint, point);
                 byte ypoint = (byte)(point - xpoint);
 
                 short mapX = FirstX;
@@ -245,7 +245,7 @@ namespace OpenNos.GameObject
                     return;
                 }
                 NpcMonsterSkill npcMonsterSkill = null;
-                if (ServerManager.Instance.RandomNumber(0, 10) > 8)
+                if (ServerManager.RandomNumber(0, 10) > 8)
                 {
                     npcMonsterSkill = Npc.Skills.Where(s => (DateTime.Now - s.LastSkillUse).TotalMilliseconds >= 100 * s.Skill.Cooldown).OrderBy(rnd => _random.Next()).FirstOrDefault();
                 }
@@ -297,8 +297,8 @@ namespace OpenNos.GameObject
                         }
                         if ((Path.Count == 0 && distance >= 1 && distance < maxDistance) || (Path.Count >= maxindex && maxindex > 0 && Path[maxindex - 1] == null))
                         {
-                            short xoffset = (short)ServerManager.Instance.RandomNumber(-1, 1);
-                            short yoffset = (short)ServerManager.Instance.RandomNumber(-1, 1);
+                            short xoffset = (short)ServerManager.RandomNumber(-1, 1);
+                            short yoffset = (short)ServerManager.RandomNumber(-1, 1);
 
                             //go to monster
                             Path = BestFirstSearch.FindPath(new GridPos { X = MapX, Y = MapY }, new GridPos { X = (short)(monster.MapX + xoffset), Y = (short)(monster.MapY + yoffset) }, MapInstance.Map.Grid);

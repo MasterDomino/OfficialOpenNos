@@ -117,7 +117,7 @@ namespace OpenNos.GameObject
 
         public NpcMonster Monster
         {
-            get => _monster ?? (_monster = ServerManager.Instance.GetNpc(NpcMonsterVNum));
+            get => _monster ?? (_monster = ServerManager.GetNpc(NpcMonsterVNum));
             set => _monster = value;
         }
 

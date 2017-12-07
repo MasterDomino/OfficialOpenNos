@@ -41,7 +41,7 @@ namespace OpenNos.Core
             {
                 AutoFlush = true
             };
-            _resourceCulture = new CultureInfo(ConfigurationManager.AppSettings["Language"]);
+            _resourceCulture = new CultureInfo(ConfigurationManager.AppSettings[nameof(Language)]);
             if (Assembly.GetEntryAssembly() != null)
             {
                 _manager = new ResourceManager(Assembly.GetEntryAssembly().GetName().Name + ".Resource.LocalizedResources", Assembly.GetEntryAssembly());

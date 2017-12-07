@@ -35,11 +35,11 @@ namespace OpenNos.GameObject.Helpers
 
         #region Methods
 
-        public string GenerateDelay(int delay, int type, string argument) => $"delay {delay} {type} {argument}";
+        public static string GenerateDelay(int delay, int type, string argument) => $"delay {delay} {type} {argument}";
 
-        public string GenerateDialog(string dialog) => $"dlg {dialog}";
+        public static string GenerateDialog(string dialog) => $"dlg {dialog}";
 
-        public string GenerateFrank(byte type)
+        public static string GenerateFrank(byte type)
         {
             string packet = "frank_stc";
             int rank = 1;
@@ -135,7 +135,7 @@ namespace OpenNos.GameObject.Helpers
 
         public string GenerateFStashRemove(short slot) => $"f_stash {GenerateRemovePacket(slot)}";
 
-        public string GenerateGuri(byte type, byte argument, long callerId, int value = 0, int value2 = 0)
+        public static string GenerateGuri(byte type, byte argument, long callerId, int value = 0, int value2 = 0)
         {
             switch (type)
             {
@@ -159,23 +159,23 @@ namespace OpenNos.GameObject.Helpers
             }
         }
 
-        public string GenerateInbox(string value) => $"inbox {value}";
+        public static string GenerateInbox(string value) => $"inbox {value}";
 
-        public string GenerateInfo(string message) => $"info {message}";
+        public static string GenerateInfo(string message) => $"info {message}";
 
         public string GenerateInventoryRemove(InventoryType Type, short Slot) => $"ivn {(byte)Type} {GenerateRemovePacket(Slot)}";
 
-        public string GenerateMapOut() => "mapout";
+        public static string GenerateMapOut() => "mapout";
 
-        public string GenerateModal(string message, int type) => $"modal {type} {message}";
+        public static string GenerateModal(string message, int type) => $"modal {type} {message}";
 
-        public string GenerateMsg(string message, int type) => $"msg {type} {message}";
+        public static string GenerateMsg(string message, int type) => $"msg {type} {message}";
 
-        public string GeneratePClear() => "p_clear";
+        public static string GeneratePClear() => "p_clear";
 
         public string GeneratePStashRemove(short slot) => $"pstash {GenerateRemovePacket(slot)}";
 
-        public string GenerateRCBList(CBListPacket packet)
+        public static string GenerateRCBList(CBListPacket packet)
         {
             if (packet == null || packet.ItemVNumFilter == null)
             {
@@ -296,34 +296,34 @@ namespace OpenNos.GameObject.Helpers
                                     }
                                 }
                             }
-                            else if ((packet.SubTypeFilter == 2 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 10)
-                                || (packet.SubTypeFilter == 3 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 11)
-                                || (packet.SubTypeFilter == 4 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 2)
-                                || (packet.SubTypeFilter == 5 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 3)
-                                || (packet.SubTypeFilter == 6 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 13)
-                                || (packet.SubTypeFilter == 7 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 5)
-                                || (packet.SubTypeFilter == 8 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 12)
-                                || (packet.SubTypeFilter == 9 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 4)
-                                || (packet.SubTypeFilter == 10 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 7)
-                                || (packet.SubTypeFilter == 11 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 15)
-                                || (packet.SubTypeFilter == 12 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 6)
-                                || (packet.SubTypeFilter == 13 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 14)
-                                || (packet.SubTypeFilter == 14 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 9)
-                                || (packet.SubTypeFilter == 15 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 8)
-                                || (packet.SubTypeFilter == 16 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 1)
-                                || (packet.SubTypeFilter == 17 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 16)
-                                || (packet.SubTypeFilter == 18 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 17)
-                                || ((packet.SubTypeFilter == 19 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 18)
-                                || (packet.SubTypeFilter == 20 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 19)
-                                || (packet.SubTypeFilter == 21 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 20)
-                                || (packet.SubTypeFilter == 22 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 21)
-                                || (packet.SubTypeFilter == 23 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 22)
-                                || (packet.SubTypeFilter == 24 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 23)
-                                || (packet.SubTypeFilter == 25 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 24)
-                                || (packet.SubTypeFilter == 26 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 25)
-                                || (packet.SubTypeFilter == 27 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 26)
-                                || (packet.SubTypeFilter == 28 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 27)
-                                || (packet.SubTypeFilter == 29 && ServerManager.Instance.GetItem(bz.Item.HoldingVNum).Morph == 28)))
+                            else if ((packet.SubTypeFilter == 2 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 10)
+                                || (packet.SubTypeFilter == 3 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 11)
+                                || (packet.SubTypeFilter == 4 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 2)
+                                || (packet.SubTypeFilter == 5 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 3)
+                                || (packet.SubTypeFilter == 6 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 13)
+                                || (packet.SubTypeFilter == 7 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 5)
+                                || (packet.SubTypeFilter == 8 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 12)
+                                || (packet.SubTypeFilter == 9 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 4)
+                                || (packet.SubTypeFilter == 10 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 7)
+                                || (packet.SubTypeFilter == 11 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 15)
+                                || (packet.SubTypeFilter == 12 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 6)
+                                || (packet.SubTypeFilter == 13 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 14)
+                                || (packet.SubTypeFilter == 14 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 9)
+                                || (packet.SubTypeFilter == 15 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 8)
+                                || (packet.SubTypeFilter == 16 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 1)
+                                || (packet.SubTypeFilter == 17 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 16)
+                                || (packet.SubTypeFilter == 18 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 17)
+                                || ((packet.SubTypeFilter == 19 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 18)
+                                || (packet.SubTypeFilter == 20 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 19)
+                                || (packet.SubTypeFilter == 21 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 20)
+                                || (packet.SubTypeFilter == 22 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 21)
+                                || (packet.SubTypeFilter == 23 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 22)
+                                || (packet.SubTypeFilter == 24 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 23)
+                                || (packet.SubTypeFilter == 25 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 24)
+                                || (packet.SubTypeFilter == 26 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 25)
+                                || (packet.SubTypeFilter == 27 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 26)
+                                || (packet.SubTypeFilter == 28 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 27)
+                                || (packet.SubTypeFilter == 29 && ServerManager.GetItem(bz.Item.HoldingVNum).Morph == 28)))
                             {
                                 if (packet.LevelFilter == 0 || (bz.Item.SpLevel < (packet.LevelFilter * 10) + 1 && bz.Item.SpLevel >= (packet.LevelFilter * 10) - 9))
                                 {
@@ -461,9 +461,9 @@ namespace OpenNos.GameObject.Helpers
             return $"rc_blist {packet.Index} {itembazar} ";
         }
 
-        public string GenerateRemovePacket(short slot) => $"{slot}.-1.0.0.0";
+        public static string GenerateRemovePacket(short slot) => $"{slot}.-1.0.0.0";
 
-        public string GenerateRl(byte type)
+        public static string GenerateRl(byte type)
         {
             string str = $"rl {type}";
             ServerManager.Instance.GroupList.ToList().ForEach(s =>
@@ -477,15 +477,15 @@ namespace OpenNos.GameObject.Helpers
             return str;
         }
 
-        public string GenerateRp(int mapid, int x, int y, string param) => $"rp {mapid} {x} {y} {param}";
+        public static string GenerateRp(int mapid, int x, int y, string param) => $"rp {mapid} {x} {y} {param}";
 
-        public string GenerateSay(string message, int type, long callerId = 0) => $"say 1 {callerId} {type} {message}";
+        public static string GenerateSay(string message, int type, long callerId = 0) => $"say 1 {callerId} {type} {message}";
 
-        public string GenerateShopMemo(int type, string message) => $"s_memo {type} {message}";
+        public static string GenerateShopMemo(int type, string message) => $"s_memo {type} {message}";
 
         public string GenerateStashRemove(short slot) => $"stash {GenerateRemovePacket(slot)}";
 
-        public IEnumerable<string> GenerateVb() => new[] { "vb 340 0 0", "vb 339 0 0", "vb 472 0 0", "vb 471 0 0" };
+        public static IEnumerable<string> GenerateVb() => new[] { "vb 340 0 0", "vb 339 0 0", "vb 472 0 0", "vb 471 0 0" };
 
         #endregion
     }

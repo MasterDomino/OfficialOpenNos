@@ -59,10 +59,10 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     ShopItem entity = new ShopItem();
-                    Mapper.Mapper.Instance.ShopItemMapper.ToShopItem(item, entity);
+                    Mapper.Mappers.ShopItemMapper.ToShopItem(item, entity);
                     context.ShopItem.Add(entity);
                     context.SaveChanges();
-                    if (Mapper.Mapper.Instance.ShopItemMapper.ToShopItemDTO(entity, item))
+                    if (Mapper.Mappers.ShopItemMapper.ToShopItemDTO(entity, item))
                     {
                         return item;
                     }
@@ -87,7 +87,7 @@ namespace OpenNos.DAL.DAO
                     foreach (ShopItemDTO Item in items)
                     {
                         ShopItem entity = new ShopItem();
-                        Mapper.Mapper.Instance.ShopItemMapper.ToShopItem(Item, entity);
+                        Mapper.Mappers.ShopItemMapper.ToShopItem(Item, entity);
                         context.ShopItem.Add(entity);
                     }
                     context.Configuration.AutoDetectChangesEnabled = true;
@@ -108,7 +108,7 @@ namespace OpenNos.DAL.DAO
                 foreach (ShopItem entity in context.ShopItem)
                 {
                     ShopItemDTO dto = new ShopItemDTO();
-                    Mapper.Mapper.Instance.ShopItemMapper.ToShopItemDTO(entity, dto);
+                    Mapper.Mappers.ShopItemMapper.ToShopItemDTO(entity, dto);
                     result.Add(dto);
                 }
                 return result;
@@ -122,7 +122,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     ShopItemDTO dto = new ShopItemDTO();
-                    if (Mapper.Mapper.Instance.ShopItemMapper.ToShopItemDTO(context.ShopItem.FirstOrDefault(i => i.ShopItemId.Equals(itemId)), dto))
+                    if (Mapper.Mappers.ShopItemMapper.ToShopItemDTO(context.ShopItem.FirstOrDefault(i => i.ShopItemId.Equals(itemId)), dto))
                     {
                         return dto;
                     }
@@ -145,7 +145,7 @@ namespace OpenNos.DAL.DAO
                 foreach (ShopItem ShopItem in context.ShopItem.Where(i => i.ShopId.Equals(shopId)))
                 {
                     ShopItemDTO dto = new ShopItemDTO();
-                    Mapper.Mapper.Instance.ShopItemMapper.ToShopItemDTO(ShopItem, dto);
+                    Mapper.Mappers.ShopItemMapper.ToShopItemDTO(ShopItem, dto);
                     result.Add(dto);
                 }
                 return result;

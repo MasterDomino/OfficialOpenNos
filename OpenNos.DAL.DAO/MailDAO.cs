@@ -88,7 +88,7 @@ namespace OpenNos.DAL.DAO
                 foreach (Mail mail in context.Mail)
                 {
                     MailDTO dto = new MailDTO();
-                    Mapper.Mapper.Instance.MailMapper.ToMailDTO(mail, dto);
+                    Mapper.Mappers.MailMapper.ToMailDTO(mail, dto);
                     result.Add(dto);
                 }
                 return result;
@@ -102,7 +102,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     MailDTO dto = new MailDTO();
-                    if (Mapper.Mapper.Instance.MailMapper.ToMailDTO(context.Mail.FirstOrDefault(i => i.MailId.Equals(mailId)), dto))
+                    if (Mapper.Mappers.MailMapper.ToMailDTO(context.Mail.FirstOrDefault(i => i.MailId.Equals(mailId)), dto))
                     {
                         return dto;
                     }
@@ -126,7 +126,7 @@ namespace OpenNos.DAL.DAO
                 foreach (Mail mail in context.Mail.Where(s => s.SenderId == characterId && s.IsSenderCopy).Take(40))
                 {
                     MailDTO dto = new MailDTO();
-                    Mapper.Mapper.Instance.MailMapper.ToMailDTO(mail, dto);
+                    Mapper.Mappers.MailMapper.ToMailDTO(mail, dto);
                     result.Add(dto);
                 }
                 return result;
@@ -142,22 +142,22 @@ namespace OpenNos.DAL.DAO
                 foreach (Mail mail in context.Mail.Where(s => s.ReceiverId == characterId && !s.IsSenderCopy).Take(40))
                 {
                     MailDTO dto = new MailDTO();
-                    Mapper.Mapper.Instance.MailMapper.ToMailDTO(mail, dto);
+                    Mapper.Mappers.MailMapper.ToMailDTO(mail, dto);
                     result.Add(dto);
                 }
                 return result;
             }
         }
 
-        private MailDTO insert(MailDTO mail, OpenNosContext context)
+        private static MailDTO insert(MailDTO mail, OpenNosContext context)
         {
             try
             {
                 Mail entity = new Mail();
-                Mapper.Mapper.Instance.MailMapper.ToMail(mail, entity);
+                Mapper.Mappers.MailMapper.ToMail(mail, entity);
                 context.Mail.Add(entity);
                 context.SaveChanges();
-                if (Mapper.Mapper.Instance.MailMapper.ToMailDTO(entity, mail))
+                if (Mapper.Mappers.MailMapper.ToMailDTO(entity, mail))
                 {
                     return mail;
                 }
@@ -184,14 +184,14 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        private MailDTO update(Mail entity, MailDTO respawn, OpenNosContext context)
+        private static MailDTO update(Mail entity, MailDTO respawn, OpenNosContext context)
         {
             if (entity != null)
             {
-                Mapper.Mapper.Instance.MailMapper.ToMail(respawn, entity);
+                Mapper.Mappers.MailMapper.ToMail(respawn, entity);
                 context.SaveChanges();
             }
-            if (Mapper.Mapper.Instance.MailMapper.ToMailDTO(entity, respawn))
+            if (Mapper.Mappers.MailMapper.ToMailDTO(entity, respawn))
             {
                 return respawn;
             }

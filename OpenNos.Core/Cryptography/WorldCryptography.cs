@@ -48,7 +48,7 @@ namespace OpenNos.Core
                         {
                             receiveData.Add(unchecked((byte)(str[i] ^ 0xFF)));
                         }
-                        catch
+                        catch (Exception)
                         {
                             receiveData.Add(255);
                         }
@@ -67,7 +67,7 @@ namespace OpenNos.Core
                         {
                             highbyte = str[i];
                         }
-                        catch
+                        catch (Exception)
                         {
                             highbyte = 0;
                         }
@@ -79,7 +79,7 @@ namespace OpenNos.Core
                         {
                             lowbyte = str[i];
                         }
-                        catch
+                        catch (Exception)
                         {
                             lowbyte = 0;
                         }
@@ -103,20 +103,21 @@ namespace OpenNos.Core
 
         public override string Decrypt(byte[] data, int sessionId = 0)
         {
-            string encryptedString = string.Empty;
             int sessionKey = sessionId & 0xFF;
             byte sessionNumber = unchecked((byte)(sessionId >> 6));
             sessionNumber &= 0xFF;
             sessionNumber &= unchecked((byte)0x80000003);
 
+            StringBuilder decryptPart = new StringBuilder();
             switch (sessionNumber)
             {
                 case 0:
+
                     foreach (byte character in data)
                     {
                         byte firstbyte = unchecked((byte)(sessionKey + 0x40));
                         byte highbyte = unchecked((byte)(character - firstbyte));
-                        encryptedString += (char)highbyte;
+                        decryptPart.Append((char)highbyte);
                     }
                     break;
 
@@ -125,7 +126,7 @@ namespace OpenNos.Core
                     {
                         byte firstbyte = unchecked((byte)(sessionKey + 0x40));
                         byte highbyte = unchecked((byte)(character + firstbyte));
-                        encryptedString += (char)highbyte;
+                        decryptPart.Append((char)highbyte);
                     }
                     break;
 
@@ -134,7 +135,7 @@ namespace OpenNos.Core
                     {
                         byte firstbyte = unchecked((byte)(sessionKey + 0x40));
                         byte highbyte = unchecked((byte)(character - firstbyte ^ 0xC3));
-                        encryptedString += (char)highbyte;
+                        decryptPart.Append((char)highbyte);
                     }
                     break;
 
@@ -143,38 +144,40 @@ namespace OpenNos.Core
                     {
                         byte firstbyte = unchecked((byte)(sessionKey + 0x40));
                         byte highbyte = unchecked((byte)(character + firstbyte ^ 0xC3));
-                        encryptedString += (char)highbyte;
+                        decryptPart.Append((char)highbyte);
                     }
                     break;
 
                 default:
-                    encryptedString += (char)0xF;
+                    decryptPart.Append((char)0xF);
                     break;
             }
 
-            string save = string.Empty;
-            string[] encryptedSplit = encryptedString.Split((char)0xFF);
+            StringBuilder decrypted = new StringBuilder();
+
+            string[] encryptedSplit = decryptPart.ToString().Split((char)0xFF);
             for (int i = 0; i < encryptedSplit.Length; i++)
             {
-                save += Decrypt2(encryptedSplit[i]);
+                decrypted.Append(Decrypt2(encryptedSplit[i]));
                 if (i < encryptedSplit.Length - 2)
                 {
-                    save += (char)0xFF;
+                    decrypted.Append((char)0xFF);
                 }
             }
-            return save;
+
+            return decrypted.ToString();
         }
 
         public override string DecryptCustomParameter(byte[] data)
         {
             try
             {
-                string encryptedString = string.Empty;
+                StringBuilder builder = new StringBuilder();
                 for (int i = 1; i < data.Length; i++)
                 {
                     if (Convert.ToChar(data[i]) == 0xE)
                     {
-                        return encryptedString;
+                        return builder.ToString();
                     }
 
                     int firstByte = Convert.ToInt32(data[i] - 0xF);
@@ -187,20 +190,20 @@ namespace OpenNos.Core
                     {
                         case 0:
                         case 1:
-                            encryptedString += ' ';
+                            builder.Append(' ');
                             break;
 
                         case 2:
-                            encryptedString += '-';
+                            builder.Append('-');
                             break;
 
                         case 3:
-                            encryptedString += '.';
+                            builder.Append('.');
                             break;
 
                         default:
                             secondByte += 0x2C;
-                            encryptedString += Convert.ToChar(secondByte);
+                            builder.Append(Convert.ToChar(secondByte));
                             break;
                     }
 
@@ -208,25 +211,25 @@ namespace OpenNos.Core
                     {
                         case 0:
                         case 1:
-                            encryptedString += ' ';
+                            builder.Append(' ');
                             break;
 
                         case 2:
-                            encryptedString += '-';
+                            builder.Append('-');
                             break;
 
                         case 3:
-                            encryptedString += '.';
+                            builder.Append('.');
                             break;
 
                         default:
                             firstByte += 0x2C;
-                            encryptedString += Convert.ToChar(firstByte);
+                            builder.Append(Convert.ToChar(firstByte));
                             break;
                     }
                 }
 
-                return encryptedString;
+                return builder.ToString();
             }
             catch (OverflowException)
             {

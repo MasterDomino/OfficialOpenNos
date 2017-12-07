@@ -59,7 +59,7 @@ namespace OpenNos.DAL.DAO
                 foreach (CellonOption entity in context.CellonOption.Where(c => c.EquipmentSerialId == wearableInstanceId))
                 {
                     CellonOptionDTO dto = new CellonOptionDTO();
-                    Mapper.Mapper.Instance.CellonOptionMapper.ToCellonOptionDTO(entity, dto);
+                    Mapper.Mappers.CellonOptionMapper.ToCellonOptionDTO(entity, dto);
                     result.Add(dto);
                 }
                 return result;
@@ -98,7 +98,7 @@ namespace OpenNos.DAL.DAO
                     void insert(CellonOptionDTO cellonoption)
                     {
                         CellonOption _entity = new CellonOption();
-                        Mapper.Mapper.Instance.CellonOptionMapper.ToCellonOption(cellonoption, _entity);
+                        Mapper.Mappers.CellonOptionMapper.ToCellonOption(cellonoption, _entity);
                         context.CellonOption.Add(_entity);
                         context.SaveChanges();
                         cellonoption.CellonOptionId = _entity.CellonOptionId;
@@ -108,7 +108,7 @@ namespace OpenNos.DAL.DAO
                     {
                         if (_entity != null)
                         {
-                            Mapper.Mapper.Instance.CellonOptionMapper.ToCellonOption(cellonoption, _entity);
+                            Mapper.Mappers.CellonOptionMapper.ToCellonOption(cellonoption, _entity);
                         }
                     }
 
@@ -136,13 +136,13 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        private CellonOptionDTO insert(CellonOptionDTO cellonOption, OpenNosContext context)
+        private static CellonOptionDTO insert(CellonOptionDTO cellonOption, OpenNosContext context)
         {
             CellonOption entity = new CellonOption();
-            Mapper.Mapper.Instance.CellonOptionMapper.ToCellonOption(cellonOption, entity);
+            Mapper.Mappers.CellonOptionMapper.ToCellonOption(cellonOption, entity);
             context.CellonOption.Add(entity);
             context.SaveChanges();
-            if (Mapper.Mapper.Instance.CellonOptionMapper.ToCellonOptionDTO(entity, cellonOption))
+            if (Mapper.Mappers.CellonOptionMapper.ToCellonOptionDTO(entity, cellonOption))
             {
                 return cellonOption;
             }
@@ -150,15 +150,15 @@ namespace OpenNos.DAL.DAO
             return null;
         }
 
-        private CellonOptionDTO update(CellonOption entity, CellonOptionDTO cellonOption, OpenNosContext context)
+        private static CellonOptionDTO update(CellonOption entity, CellonOptionDTO cellonOption, OpenNosContext context)
         {
             if (entity != null)
             {
-                Mapper.Mapper.Instance.CellonOptionMapper.ToCellonOption(cellonOption, entity);
+                Mapper.Mappers.CellonOptionMapper.ToCellonOption(cellonOption, entity);
                 context.SaveChanges();
             }
 
-            if (Mapper.Mapper.Instance.CellonOptionMapper.ToCellonOptionDTO(entity, cellonOption))
+            if (Mapper.Mappers.CellonOptionMapper.ToCellonOptionDTO(entity, cellonOption))
             {
                 return cellonOption;
             }

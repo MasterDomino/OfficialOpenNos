@@ -16,7 +16,7 @@ using System;
 
 namespace OpenNos.PathFinder
 {
-    public class Node : GridPos, IComparable<Node>
+    public class Node : GridPos, IComparable<Node>, IEquatable<Node>
     {
         #region Instantiation
 
@@ -50,6 +50,45 @@ namespace OpenNos.PathFinder
         #region Methods
 
         public int CompareTo(Node other) => F > other.F ? 1 : F < other.F ? -1 : 0;
+
+        public bool Equals(Node other) => ReferenceEquals(this, other);
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (ReferenceEquals(obj, null))
+            {
+                return false;
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode() => GetHashCode();
+
+        public static bool operator ==(Node left, Node right)
+        {
+            if (ReferenceEquals(left, null))
+            {
+                return ReferenceEquals(right, null);
+            }
+
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Node left, Node right) => !(left == right);
+
+        public static bool operator <(Node left, Node right) => ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0;
+
+        public static bool operator <=(Node left, Node right) => ReferenceEquals(left, null) || left.CompareTo(right) <= 0;
+
+        public static bool operator >(Node left, Node right) => !ReferenceEquals(left, null) && left.CompareTo(right) > 0;
+
+        public static bool operator >=(Node left, Node right) => ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0;
 
         #endregion
     }

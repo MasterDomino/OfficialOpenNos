@@ -42,10 +42,7 @@ namespace OpenNos.Import.Console
             bool ignoreStartupMessages = false;
             foreach (string arg in args)
             {
-                if (arg == "--nomsg")
-                {
-                    ignoreStartupMessages = true;
-                }
+                ignoreStartupMessages |= arg == "--nomsg";
             }
 
             // initialize logger
@@ -65,11 +62,11 @@ namespace OpenNos.Import.Console
             System.Console.BackgroundColor = ConsoleColor.Blue;
             System.Console.WriteLine("Root");
             System.Console.ResetColor();
-            System.Console.WriteLine($"-----_code_{ConfigurationManager.AppSettings["Language"]}_Card.txt");
-            System.Console.WriteLine($"-----_code_{ConfigurationManager.AppSettings["Language"]}_Item.txt");
-            System.Console.WriteLine($"-----_code_{ConfigurationManager.AppSettings["Language"]}_MapIDData.txt");
-            System.Console.WriteLine($"-----_code_{ConfigurationManager.AppSettings["Language"]}_monster.txt");
-            System.Console.WriteLine($"-----_code_{ConfigurationManager.AppSettings["Language"]}_Skill.txt");
+            System.Console.WriteLine($"-----_code_{ConfigurationManager.AppSettings[nameof(Language)]}_Card.txt");
+            System.Console.WriteLine($"-----_code_{ConfigurationManager.AppSettings[nameof(Language)]}_Item.txt");
+            System.Console.WriteLine($"-----_code_{ConfigurationManager.AppSettings[nameof(Language)]}_MapIDData.txt");
+            System.Console.WriteLine($"-----_code_{ConfigurationManager.AppSettings[nameof(Language)]}_monster.txt");
+            System.Console.WriteLine($"-----_code_{ConfigurationManager.AppSettings[nameof(Language)]}_Skill.txt");
             System.Console.WriteLine("-----packet.txt");
             System.Console.WriteLine("-----Card.dat");
             System.Console.WriteLine("-----Item.dat");
@@ -106,9 +103,9 @@ namespace OpenNos.Import.Console
                 {
                     factory.ImportMaps();
                     factory.LoadMaps();
-                    factory.ImportRespawnMapType();
-                    factory.ImportMapType();
-                    factory.ImportMapTypeMap();
+                    ImportFactory.ImportRespawnMapType();
+                    ImportFactory.ImportMapType();
+                    ImportFactory.ImportMapTypeMap();
                     ImportFactory.ImportAccounts();
                     factory.ImportPortals();
                     factory.ImportScriptedInstances();
@@ -140,8 +137,8 @@ namespace OpenNos.Import.Console
                     key = System.Console.ReadKey(true);
                     if (key.KeyChar != 'n')
                     {
-                        factory.ImportMapType();
-                        factory.ImportMapTypeMap();
+                        ImportFactory.ImportMapType();
+                        ImportFactory.ImportMapTypeMap();
                     }
 
                     System.Console.WriteLine($"{Language.Instance.GetMessageFromKey("PARSE_ACCOUNTS")} [Y/n]");

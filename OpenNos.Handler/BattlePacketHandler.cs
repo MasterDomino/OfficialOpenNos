@@ -62,7 +62,7 @@ namespace OpenNos.Handler
             if ((DateTime.Now - Session.Character.LastTransform).TotalSeconds < 3)
             {
                 Session.SendPacket(StaticPacketHelper.Cancel());
-                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("CANT_ATTACK"), 0));
+                Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("CANT_ATTACK"), 0));
                 return;
             }
             if (mutliTargetListPacket.TargetsAmount > 0 && mutliTargetListPacket.TargetsAmount == mutliTargetListPacket.Targets.Count && mutliTargetListPacket.Targets != null)
@@ -112,7 +112,7 @@ namespace OpenNos.Handler
                         {
                             targetHit(useSkillPacket.CastId, useSkillPacket.MapMonsterId);
                             int[] fairyWings = Session.Character.GetBuff(BCardType.CardType.EffectSummon, 11);
-                            int random = ServerManager.Instance.RandomNumber();
+                            int random = ServerManager.RandomNumber();
                             if (fairyWings[0] > random)
                             {
                                 Observable.Timer(TimeSpan.FromSeconds(1)).Subscribe(o =>
@@ -140,7 +140,7 @@ namespace OpenNos.Handler
                                 targetHit(useSkillPacket.CastId, useSkillPacket.MapMonsterId);
                             }
                             int[] fairyWings = Session.Character.GetBuff(BCardType.CardType.EffectSummon, 11);
-                            int random = ServerManager.Instance.RandomNumber();
+                            int random = ServerManager.RandomNumber();
                             if (fairyWings[0] > random)
                             {
                                 Observable.Timer(TimeSpan.FromSeconds(1)).Subscribe(o =>
@@ -187,7 +187,7 @@ namespace OpenNos.Handler
                 if (Session.Character.LastTransform.AddSeconds(3) > DateTime.Now)
                 {
                     Session.SendPacket(StaticPacketHelper.Cancel());
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("CANT_ATTACK"), 0));
+                    Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("CANT_ATTACK"), 0));
                     return;
                 }
                 if (Session.Character.CanFight && Session.Character.Hp > 0)
@@ -231,8 +231,8 @@ namespace OpenNos.Handler
                     short onyxX = (short)(hitRequest.Session.Character.PositionX + 2);
                     short onyxY = (short)(hitRequest.Session.Character.PositionY + 2);
                     int onyxId = target.CurrentMapInstance.GetNextMonsterId();
-                    MapMonster onyx = new MapMonster() { MonsterVNum = 2371, MapX = onyxX, MapY = onyxY, MapMonsterId = onyxId, IsHostile = false, IsMoving = false, ShouldRespawn = false };
-                    target.CurrentMapInstance.Broadcast(UserInterfaceHelper.Instance.GenerateGuri(31, 1, hitRequest.Session.Character.CharacterId, onyxX, onyxY));
+                    MapMonster onyx = new MapMonster { MonsterVNum = 2371, MapX = onyxX, MapY = onyxY, MapMonsterId = onyxId, IsHostile = false, IsMoving = false, ShouldRespawn = false };
+                    target.CurrentMapInstance.Broadcast(UserInterfaceHelper.GenerateGuri(31, 1, hitRequest.Session.Character.CharacterId, onyxX, onyxY));
                     onyx.Initialize(target.CurrentMapInstance);
                     target.CurrentMapInstance.AddMonster(onyx);
                     target.CurrentMapInstance.Broadcast(onyx.GenerateIn());
@@ -299,13 +299,13 @@ namespace OpenNos.Handler
                         target.CurrentMapInstance.Broadcast(target, target.Character.GenerateIn(), ReceiverType.AllExceptMe);
                         target.CurrentMapInstance.Broadcast(target, target.Character.GenerateGidx(), ReceiverType.AllExceptMe);
                         target.SendPacket(target.Character.GenerateSay(Language.Instance.GetMessageFromKey("ACT4_PVP_DIE"), 11));
-                        target.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("ACT4_PVP_DIE"), 0));
+                        target.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("ACT4_PVP_DIE"), 0));
                         Observable.Timer(TimeSpan.FromMilliseconds(30000)).Subscribe(o =>
                         {
                             target.Character.Hp = (int)target.Character.HPLoad();
                             target.Character.Mp = (int)target.Character.MPLoad();
-                            short x = (short)(39 + ServerManager.Instance.RandomNumber(-2, 3));
-                            short y = (short)(42 + ServerManager.Instance.RandomNumber(-2, 3));
+                            short x = (short)(39 + ServerManager.RandomNumber(-2, 3));
+                            short y = (short)(42 + ServerManager.RandomNumber(-2, 3));
                             if (target.Character.Faction == FactionType.Angel)
                             {
                                 ServerManager.Instance.ChangeMap(target.Character.CharacterId, 130, x, y);
@@ -355,7 +355,7 @@ namespace OpenNos.Handler
                                 case (byte)ShellWeaponEffectType.Blackout:
                                     {
                                         Buff buff = new Buff(7, battleEntity.Level);
-                                        if (ServerManager.Instance.RandomNumber() < shell.Value
+                                        if (ServerManager.RandomNumber() < shell.Value
                                             - (shell.Value * (battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedStun)?.Value
                                             + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllStun)?.Value
                                             + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllNegativeEffect)?.Value) / 100D))
@@ -367,7 +367,7 @@ namespace OpenNos.Handler
                                 case (byte)ShellWeaponEffectType.DeadlyBlackout:
                                     {
                                         Buff buff = new Buff(66, battleEntity.Level);
-                                        if (ServerManager.Instance.RandomNumber() < shell.Value
+                                        if (ServerManager.RandomNumber() < shell.Value
                                             - (shell.Value * (battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllStun)?.Value
                                             + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllNegativeEffect)?.Value) / 100D))
                                         {
@@ -378,7 +378,7 @@ namespace OpenNos.Handler
                                 case (byte)ShellWeaponEffectType.MinorBleeding:
                                     {
                                         Buff buff = new Buff(1, battleEntity.Level);
-                                        if (ServerManager.Instance.RandomNumber() < shell.Value
+                                        if (ServerManager.RandomNumber() < shell.Value
                                             - (shell.Value * (battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedMinorBleeding)?.Value
                                             + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedBleedingAndMinorBleeding)?.Value
                                             + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllBleedingType)?.Value
@@ -391,7 +391,7 @@ namespace OpenNos.Handler
                                 case (byte)ShellWeaponEffectType.Bleeding:
                                     {
                                         Buff buff = new Buff(21, battleEntity.Level);
-                                        if (ServerManager.Instance.RandomNumber() < shell.Value
+                                        if (ServerManager.RandomNumber() < shell.Value
                                             - (shell.Value * (battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedBleedingAndMinorBleeding)?.Value
                                             + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllBleedingType)?.Value
                                             + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllNegativeEffect)?.Value) / 100D))
@@ -403,7 +403,7 @@ namespace OpenNos.Handler
                                 case (byte)ShellWeaponEffectType.HeavyBleeding:
                                     {
                                         Buff buff = new Buff(42, battleEntity.Level);
-                                        if (ServerManager.Instance.RandomNumber() < shell.Value
+                                        if (ServerManager.RandomNumber() < shell.Value
                                             - (shell.Value * (battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllBleedingType)?.Value
                                             + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllNegativeEffect)?.Value) / 100D))
                                         {
@@ -414,7 +414,7 @@ namespace OpenNos.Handler
                                 case (byte)ShellWeaponEffectType.Freeze:
                                     {
                                         Buff buff = new Buff(27, battleEntity.Level);
-                                        if (ServerManager.Instance.RandomNumber() < shell.Value
+                                        if (ServerManager.RandomNumber() < shell.Value
                                             - (shell.Value * (battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedFreeze)?.Value
                                             + battleEntityDefense.ShellArmorEffects?.Find(s => s.Effect == (byte)ShellArmorEffectType.ReducedAllNegativeEffect)?.Value) / 100D))
                                         {
@@ -503,7 +503,7 @@ namespace OpenNos.Handler
             if ((DateTime.Now - Session.Character.LastTransform).TotalSeconds < 3)
             {
                 Session.SendPacket(StaticPacketHelper.Cancel());
-                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("CANT_ATTACK"), 0));
+                Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("CANT_ATTACK"), 0));
                 return;
             }
 

@@ -82,7 +82,7 @@ namespace OpenNos.DAL.DAO
                     void insert(QuestProgressDTO quest)
                     {
                         QuestProgress _entity = new QuestProgress();
-                        Mapper.Mapper.Instance.QuestProgressMapper.ToQuestProgress(quest, _entity);
+                        Mapper.Mappers.QuestProgressMapper.ToQuestProgress(quest, _entity);
                         context.QuestProgress.Add(_entity);
                     }
 
@@ -90,7 +90,7 @@ namespace OpenNos.DAL.DAO
                     {
                         if (_entity != null)
                         {
-                            Mapper.Mapper.Instance.QuestProgressMapper.ToQuestProgress(quest, _entity);
+                            Mapper.Mappers.QuestProgressMapper.ToQuestProgress(quest, _entity);
                             context.SaveChanges();
                         }
                     }
@@ -128,7 +128,7 @@ namespace OpenNos.DAL.DAO
                     foreach (QuestProgress entity in context.QuestProgress.Where(s => s.CharacterId == characterId))
                     {
                         QuestProgressDTO dto = new QuestProgressDTO();
-                        Mapper.Mapper.Instance.QuestProgressMapper.ToQuestProgressDTO(entity, dto);
+                        Mapper.Mappers.QuestProgressMapper.ToQuestProgressDTO(entity, dto);
                         result.Add(dto);
                     }
                     return result;
@@ -148,7 +148,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     QuestProgressDTO dto = new QuestProgressDTO();
-                    if (Mapper.Mapper.Instance.QuestProgressMapper.ToQuestProgressDTO(context.QuestProgress.FirstOrDefault(s => s.QuestProgressId == id), dto))
+                    if (Mapper.Mappers.QuestProgressMapper.ToQuestProgressDTO(context.QuestProgress.FirstOrDefault(s => s.QuestProgressId == id), dto))
                     {
                         return dto;
                     }
@@ -163,13 +163,13 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        private QuestProgressDTO insert(QuestProgressDTO quest, OpenNosContext context)
+        private static QuestProgressDTO insert(QuestProgressDTO quest, OpenNosContext context)
         {
             QuestProgress entity = new QuestProgress();
-            Mapper.Mapper.Instance.QuestProgressMapper.ToQuestProgress(quest, entity);
+            Mapper.Mappers.QuestProgressMapper.ToQuestProgress(quest, entity);
             context.QuestProgress.Add(entity);
             context.SaveChanges();
-            if (Mapper.Mapper.Instance.QuestProgressMapper.ToQuestProgressDTO(entity, quest))
+            if (Mapper.Mappers.QuestProgressMapper.ToQuestProgressDTO(entity, quest))
             {
                 return quest;
             }
@@ -177,15 +177,15 @@ namespace OpenNos.DAL.DAO
             return null;
         }
 
-        private QuestProgressDTO update(QuestProgress entity, QuestProgressDTO quest, OpenNosContext context)
+        private static QuestProgressDTO update(QuestProgress entity, QuestProgressDTO quest, OpenNosContext context)
         {
             if (entity != null)
             {
-                Mapper.Mapper.Instance.QuestProgressMapper.ToQuestProgress(quest, entity);
+                Mapper.Mappers.QuestProgressMapper.ToQuestProgress(quest, entity);
                 context.SaveChanges();
             }
 
-            if (Mapper.Mapper.Instance.QuestProgressMapper.ToQuestProgressDTO(entity, quest))
+            if (Mapper.Mappers.QuestProgressMapper.ToQuestProgressDTO(entity, quest))
             {
                 return quest;
             }

@@ -50,7 +50,7 @@ namespace OpenNos.DAL.Mock
             return SaveResult.Inserted;
         }
 
-        public IEnumerable<CharacterRelationDTO> LoadAll(long characterId) => throw new NotImplementedException();
+        public static IEnumerable<CharacterRelationDTO> LoadAll(long characterId) => throw new NotImplementedException();
 
         public CharacterRelationDTO LoadById(long characterId) => Container.SingleOrDefault(c => c.CharacterId == characterId);
 

@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class FamilyMapper
+    public static class FamilyMapper
     {
         #region Methods
 
-        public bool ToFamily(FamilyDTO input, Family output)
+        public static bool ToFamily(FamilyDTO input, Family output)
         {
             if (input == null)
             {
@@ -33,7 +33,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToFamilyDTO(Family input, FamilyDTO output)
+        public static bool ToFamilyDTO(Family input, FamilyDTO output)
         {
             if (input == null)
             {

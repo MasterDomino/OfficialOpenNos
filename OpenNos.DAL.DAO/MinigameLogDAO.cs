@@ -67,7 +67,7 @@ namespace OpenNos.DAL.DAO
                         foreach (MinigameLog input in minigameLog)
                         {
                             MinigameLogDTO dto = new MinigameLogDTO();
-                            if (Mapper.Mapper.Instance.MinigameLogMapper.ToMinigameLogDTO(input, dto))
+                            if (Mapper.Mappers.MinigameLogMapper.ToMinigameLogDTO(input, dto))
                             {
                                 result.Add(dto);
                             }
@@ -93,7 +93,7 @@ namespace OpenNos.DAL.DAO
                     if (minigameLog != null)
                     {
                         MinigameLogDTO minigameLogDTO = new MinigameLogDTO();
-                        if (Mapper.Mapper.Instance.MinigameLogMapper.ToMinigameLogDTO(minigameLog, minigameLogDTO))
+                        if (Mapper.Mappers.MinigameLogMapper.ToMinigameLogDTO(minigameLog, minigameLogDTO))
                         {
                             return minigameLogDTO;
                         }
@@ -107,25 +107,25 @@ namespace OpenNos.DAL.DAO
             return null;
         }
 
-        private MinigameLogDTO insert(MinigameLogDTO account, OpenNosContext context)
+        private static MinigameLogDTO insert(MinigameLogDTO account, OpenNosContext context)
         {
             MinigameLog entity = new MinigameLog();
-            Mapper.Mapper.Instance.MinigameLogMapper.ToMinigameLog(account, entity);
+            Mapper.Mappers.MinigameLogMapper.ToMinigameLog(account, entity);
             context.MinigameLog.Add(entity);
             context.SaveChanges();
-            Mapper.Mapper.Instance.MinigameLogMapper.ToMinigameLogDTO(entity, account);
+            Mapper.Mappers.MinigameLogMapper.ToMinigameLogDTO(entity, account);
             return account;
         }
 
-        private MinigameLogDTO update(MinigameLog entity, MinigameLogDTO account, OpenNosContext context)
+        private static MinigameLogDTO update(MinigameLog entity, MinigameLogDTO account, OpenNosContext context)
         {
             if (entity != null)
             {
-                Mapper.Mapper.Instance.MinigameLogMapper.ToMinigameLog(account, entity);
+                Mapper.Mappers.MinigameLogMapper.ToMinigameLog(account, entity);
                 context.Entry(entity).State = EntityState.Modified;
                 context.SaveChanges();
             }
-            if (Mapper.Mapper.Instance.MinigameLogMapper.ToMinigameLogDTO(entity, account))
+            if (Mapper.Mappers.MinigameLogMapper.ToMinigameLogDTO(entity, account))
             {
                 return account;
             }

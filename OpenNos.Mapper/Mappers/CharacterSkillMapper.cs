@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class CharacterSkillMapper
+    public static class CharacterSkillMapper
     {
         #region Methods
 
-        public bool ToCharacterSkill(CharacterSkillDTO input, CharacterSkill output)
+        public static bool ToCharacterSkill(CharacterSkillDTO input, CharacterSkill output)
         {
             if (input == null)
             {
@@ -20,7 +20,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToCharacterSkillDTO(CharacterSkill input, CharacterSkillDTO output)
+        public static bool ToCharacterSkillDTO(CharacterSkill input, CharacterSkillDTO output)
         {
             if (input == null)
             {

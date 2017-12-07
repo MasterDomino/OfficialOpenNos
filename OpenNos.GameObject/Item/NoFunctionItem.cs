@@ -44,9 +44,9 @@ namespace OpenNos.GameObject
                                 }
                                 session.Character.Inventory.RemoveItemAmount(1036);
                                 session.Character.Inventory.RemoveItemAmount(1013);
-                                if (ServerManager.Instance.RandomNumber() < 25)
+                                if (ServerManager.RandomNumber() < 25)
                                 {
-                                    switch (ServerManager.Instance.RandomNumber(0, 2))
+                                    switch (ServerManager.RandomNumber(0, 2))
                                     {
                                         case 0:
                                             session.Character.GiftAdd(1015, 1);
@@ -64,9 +64,9 @@ namespace OpenNos.GameObject
                                 }
                                 session.Character.Inventory.RemoveItemAmount(1038);
                                 session.Character.Inventory.RemoveItemAmount(1013);
-                                if (ServerManager.Instance.RandomNumber() < 25)
+                                if (ServerManager.RandomNumber() < 25)
                                 {
-                                    switch (ServerManager.Instance.RandomNumber(0, 4))
+                                    switch (ServerManager.RandomNumber(0, 4))
                                     {
                                         case 0:
                                             session.Character.GiftAdd(1031, 1);
@@ -90,9 +90,9 @@ namespace OpenNos.GameObject
                                 }
                                 session.Character.Inventory.RemoveItemAmount(1037);
                                 session.Character.Inventory.RemoveItemAmount(1013);
-                                if (ServerManager.Instance.RandomNumber() < 25)
+                                if (ServerManager.RandomNumber() < 25)
                                 {
-                                    switch (ServerManager.Instance.RandomNumber(0, 17))
+                                    switch (ServerManager.RandomNumber(0, 17))
                                     {
                                         case 0:
                                         case 1:
@@ -130,7 +130,7 @@ namespace OpenNos.GameObject
                                 break;
                         }
 
-                        session.Character.GiftAdd(1014, (byte)ServerManager.Instance.RandomNumber(5,11));
+                        session.Character.GiftAdd(1014, (byte)ServerManager.RandomNumber(5, 11));
                     }
                     break;
                 default:

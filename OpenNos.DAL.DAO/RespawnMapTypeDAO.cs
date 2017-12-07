@@ -38,7 +38,7 @@ namespace OpenNos.DAL.DAO
                     foreach (RespawnMapTypeDTO RespawnMapType in respawnMapTypes)
                     {
                         RespawnMapType entity = new RespawnMapType();
-                        Mapper.Mapper.Instance.RespawnMapTypeMapper.ToRespawnMapType(RespawnMapType, entity);
+                        Mapper.Mappers.RespawnMapTypeMapper.ToRespawnMapType(RespawnMapType, entity);
                         context.RespawnMapType.Add(entity);
                     }
                     context.Configuration.AutoDetectChangesEnabled = true;
@@ -85,7 +85,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     RespawnMapTypeDTO dto = new RespawnMapTypeDTO();
-                    if (Mapper.Mapper.Instance.RespawnMapTypeMapper.ToRespawnMapTypeDTO(context.RespawnMapType.FirstOrDefault(s => s.RespawnMapTypeId.Equals(respawnMapTypeId)), dto))
+                    if (Mapper.Mappers.RespawnMapTypeMapper.ToRespawnMapTypeDTO(context.RespawnMapType.FirstOrDefault(s => s.RespawnMapTypeId.Equals(respawnMapTypeId)), dto))
                     {
                         return dto;
                     }
@@ -107,7 +107,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     RespawnMapTypeDTO dto = new RespawnMapTypeDTO();
-                    if (Mapper.Mapper.Instance.RespawnMapTypeMapper.ToRespawnMapTypeDTO(context.RespawnMapType.FirstOrDefault(s => s.DefaultMapId.Equals(mapId)), dto))
+                    if (Mapper.Mappers.RespawnMapTypeMapper.ToRespawnMapTypeDTO(context.RespawnMapType.FirstOrDefault(s => s.DefaultMapId.Equals(mapId)), dto))
                     {
                         return dto;
                     }
@@ -122,15 +122,15 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        private RespawnMapTypeDTO insert(RespawnMapTypeDTO respawnMapType, OpenNosContext context)
+        private static RespawnMapTypeDTO insert(RespawnMapTypeDTO respawnMapType, OpenNosContext context)
         {
             try
             {
                 RespawnMapType entity = new RespawnMapType();
-                Mapper.Mapper.Instance.RespawnMapTypeMapper.ToRespawnMapType(respawnMapType, entity);
+                Mapper.Mappers.RespawnMapTypeMapper.ToRespawnMapType(respawnMapType, entity);
                 context.RespawnMapType.Add(entity);
                 context.SaveChanges();
-                if (Mapper.Mapper.Instance.RespawnMapTypeMapper.ToRespawnMapTypeDTO(entity, respawnMapType))
+                if (Mapper.Mappers.RespawnMapTypeMapper.ToRespawnMapTypeDTO(entity, respawnMapType))
                 {
                     return respawnMapType;
                 }
@@ -144,14 +144,14 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        private RespawnMapTypeDTO update(RespawnMapType entity, RespawnMapTypeDTO respawnMapType, OpenNosContext context)
+        private static RespawnMapTypeDTO update(RespawnMapType entity, RespawnMapTypeDTO respawnMapType, OpenNosContext context)
         {
             if (entity != null)
             {
-                Mapper.Mapper.Instance.RespawnMapTypeMapper.ToRespawnMapType(respawnMapType, entity);
+                Mapper.Mappers.RespawnMapTypeMapper.ToRespawnMapType(respawnMapType, entity);
                 context.SaveChanges();
             }
-            if (Mapper.Mapper.Instance.RespawnMapTypeMapper.ToRespawnMapTypeDTO(entity, respawnMapType))
+            if (Mapper.Mappers.RespawnMapTypeMapper.ToRespawnMapTypeDTO(entity, respawnMapType))
             {
                 return respawnMapType;
             }

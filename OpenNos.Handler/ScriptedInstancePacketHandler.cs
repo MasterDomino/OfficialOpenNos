@@ -96,7 +96,7 @@ namespace OpenNos.Handler
                 }
                 else
                 {
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg("RAID_TEAM_NOT_READY", 0));
+                    Session.SendPacket(UserInterfaceHelper.GenerateMsg("RAID_TEAM_NOT_READY", 0));
                 }
             }
         }
@@ -109,7 +109,7 @@ namespace OpenNos.Handler
         {
             if (Session.Character.Timespace?.FirstMap?.MapInstanceType == MapInstanceType.TimeSpaceInstance)
             {
-                Guid mapInstanceId = ServerManager.Instance.GetBaseMapInstanceIdByMapId(Session.Character.MapId);
+                Guid mapInstanceId = ServerManager.GetBaseMapInstanceIdByMapId(Session.Character.MapId);
                 if (Session.Character.Timespace?.FirstMap.InstanceBag.EndState == 5)
                 {
                     Session.Character.SetReputation(Session.Character.Timespace.Reputation);
@@ -185,14 +185,14 @@ namespace OpenNos.Handler
             {
                 if (Session.Character.Inventory.CountItem(gift.VNum) < gift.Amount)
                 {
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_REQUIERED_ITEM"), ServerManager.Instance.GetItem(gift.VNum).Name), 0));
+                    Session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_REQUIERED_ITEM"), ServerManager.GetItem(gift.VNum).Name), 0));
                     return;
                 }
                 Session.Character.Inventory.RemoveItemAmount(gift.VNum, gift.Amount);
             }
             if (instance.LevelMinimum > Session.Character.Level)
             {
-                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_REQUIERED_LEVEL"), 0));
+                Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_REQUIERED_LEVEL"), 0));
                 return;
             }
 
@@ -221,9 +221,9 @@ namespace OpenNos.Handler
                     switch (packet.Value)
                     {
                         case 0:
-                            if (Session.Character.Group?.Characters.Any(s => !s.CurrentMapInstance.InstanceBag?.Lock==true && s.CurrentMapInstance.MapInstanceType == MapInstanceType.TimeSpaceInstance && s.Character.MapId == portal.MapId && s.Character.CharacterId != Session.Character.CharacterId && s.Character.MapX == portal.PositionX && s.Character.MapY == portal.PositionY) == true)
+                            if (Session.Character.Group?.Characters.Any(s => s.CurrentMapInstance.InstanceBag?.Lock == false && s.CurrentMapInstance.MapInstanceType == MapInstanceType.TimeSpaceInstance && s.Character.MapId == portal.MapId && s.Character.CharacterId != Session.Character.CharacterId && s.Character.MapX == portal.PositionX && s.Character.MapY == portal.PositionY) == true)
                             {
-                                Session.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#wreq^3^{Session.Character.CharacterId} #wreq^0^1 {Language.Instance.GetMessageFromKey("ASK_JOIN_TEAM_TS")}"));
+                                Session.SendPacket(UserInterfaceHelper.GenerateDialog($"#wreq^3^{Session.Character.CharacterId} #wreq^0^1 {Language.Instance.GetMessageFromKey("ASK_JOIN_TEAM_TS")}"));
                             }
                             else
                             {
@@ -238,7 +238,7 @@ namespace OpenNos.Handler
                             }
                             else if (packet.Param.HasValue && packet.Param.Value == 1)
                             {
-                                GetTreq(new TreqPacket()
+                                GetTreq(new TreqPacket
                                 {
                                     X = portal.PositionX,
                                     Y = portal.PositionY,
@@ -254,7 +254,7 @@ namespace OpenNos.Handler
                             {
                                 if (portal.LevelMinimum > Session.Character.Level)
                                 {
-                                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_REQUIERED_LEVEL"), 0));
+                                    Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_REQUIERED_LEVEL"), 0));
                                     return;
                                 }
 

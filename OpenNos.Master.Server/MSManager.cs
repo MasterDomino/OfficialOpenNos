@@ -36,7 +36,7 @@ namespace OpenNos.Master.Server
             LoginServers = new List<IScsServiceClient>();
             ConnectedAccounts = new ThreadSafeGenericList<AccountConnection>();
             AuthentificatedClients = new List<long>();
-            ConfigurationObject = new ConfigurationObject()
+            ConfigurationObject = new ConfigurationObject
             {
                 RateXP = int.Parse(ConfigurationManager.AppSettings["RateXp"]),
                 RateHeroicXP = int.Parse(ConfigurationManager.AppSettings["RateHeroicXp"]),

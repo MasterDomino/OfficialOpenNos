@@ -100,7 +100,7 @@ namespace OpenNos.Handler
             FamilyDTO fam = Session.Character.Family;
             DAOFactory.FamilyDAO.InsertOrUpdate(ref fam);
             ServerManager.Instance.FamilyRefresh(Session.Character.Family.FamilyId);
-            CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+            CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage
             {
                 DestinationCharacterId = fam.FamilyId,
                 SourceCharacterId = Session.Character.CharacterId,
@@ -128,13 +128,13 @@ namespace OpenNos.Handler
                 }
                 if (Session.Character.Gold < 200000)
                 {
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("NOT_ENOUGH_MONEY")));
+                    Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("NOT_ENOUGH_MONEY")));
                     return;
                 }
                 string name = createFamilyPacket.CharacterName;
                 if (DAOFactory.FamilyDAO.LoadByName(name) != null)
                 {
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("FAMILY_NAME_ALREADY_USED")));
+                    Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("FAMILY_NAME_ALREADY_USED")));
                     return;
                 }
                 Session.Character.Gold -= 200000;
@@ -151,7 +151,7 @@ namespace OpenNos.Handler
 
                 Logger.LogUserEvent("GUILDCREATE", Session.GenerateIdentity(), $"[FamilyCreate][{family.FamilyId}]");
 
-                ServerManager.Instance.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("FAMILY_FOUNDED"), name), 0));
+                ServerManager.Instance.Broadcast(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("FAMILY_FOUNDED"), name), 0));
                 foreach (ClientSession session in Session.Character.Group.Characters.GetAllItems())
                 {
                     FamilyCharacterDTO familyCharacter = new FamilyCharacterDTO
@@ -166,7 +166,7 @@ namespace OpenNos.Handler
                     DAOFactory.FamilyCharacterDAO.InsertOrUpdate(ref familyCharacter);
                 }
                 ServerManager.Instance.FamilyRefresh(family.FamilyId);
-                CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+                CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage
                 {
                     DestinationCharacterId = family.FamilyId,
                     SourceCharacterId = Session.Character.CharacterId,
@@ -197,12 +197,12 @@ namespace OpenNos.Handler
                         i++;
                     }
                     Logger.LogUserEvent("GUILDCOMMAND", Session.GenerateIdentity(), $"[FamilyShout][{Session.Character.Family.FamilyId}]Message: {msg}");
-                    CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+                    CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage
                     {
                         DestinationCharacterId = Session.Character.Family.FamilyId,
                         SourceCharacterId = Session.Character.CharacterId,
                         SourceWorldId = ServerManager.Instance.WorldId,
-                        Message = UserInterfaceHelper.Instance.GenerateMsg($"<{Language.Instance.GetMessageFromKey("FAMILYCALL")}> {msg}", 0),
+                        Message = UserInterfaceHelper.GenerateMsg($"<{Language.Instance.GetMessageFromKey("FAMILYCALL")}> {msg}", 0),
                         Type = MessageType.Family
                     });
                 }
@@ -240,7 +240,7 @@ namespace OpenNos.Handler
 
                 Logger.LogUserEvent("GUILDCHAT", Session.GenerateIdentity(), $"[FamilyChat][{Session.Character.Family.FamilyId}]Message: {msg}");
 
-                CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+                CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage
                 {
                     DestinationCharacterId = Session.Character.Family.FamilyId,
                     SourceCharacterId = Session.Character.CharacterId,
@@ -287,7 +287,7 @@ namespace OpenNos.Handler
                 || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Member && Session.Character.Family.MemberAuthorityType != FamilyAuthorityType.NONE)
                 || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager && Session.Character.Family.ManagerAuthorityType != FamilyAuthorityType.NONE)))
             {
-                Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("NO_FAMILY_RIGHT")));
+                Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("NO_FAMILY_RIGHT")));
                 return;
             }
 
@@ -332,7 +332,7 @@ namespace OpenNos.Handler
 
             List<ClientSession> sessions = ServerManager.Instance.Sessions.Where(s => s.Character?.Family != null && s.Character.Family.FamilyId == fam.FamilyId).ToList();
 
-            CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+            CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage
             {
                 DestinationCharacterId = fam.FamilyId,
                 SourceCharacterId = Session.Character.CharacterId,
@@ -359,7 +359,7 @@ namespace OpenNos.Handler
                 }
                 if (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Member || Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager)
                 {
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("NOT_ALLOWED_KICK"))));
+                    Session.SendPacket(UserInterfaceHelper.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("NOT_ALLOWED_KICK"))));
                     return;
                 }
 
@@ -370,12 +370,12 @@ namespace OpenNos.Handler
                 {
                     if (kickSession.Character.FamilyCharacter?.Authority == FamilyAuthority.Head)
                     {
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("CANT_KICK_HEAD")));
+                        Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("CANT_KICK_HEAD")));
                         return;
                     }
                     if (kickSession.Character.CharacterId == Session.Character.CharacterId)
                     {
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("CANT_KICK_YOURSELF")));
+                        Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("CANT_KICK_YOURSELF")));
                         return;
                     }
                     DAOFactory.FamilyCharacterDAO.Delete(packetsplit[2]);
@@ -394,7 +394,7 @@ namespace OpenNos.Handler
                     {
                         if (CommunicationServiceClient.Instance.IsCharacterConnected(ServerManager.Instance.ServerGroup, dbCharacter.CharacterId))
                         {
-                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("CANT_KICK_PLAYER_ONLINE_OTHER_CHANNEL")));
+                            Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("CANT_KICK_PLAYER_ONLINE_OTHER_CHANNEL")));
                             return;
                         }
                         FamilyCharacterDTO dbFamilyCharacter = DAOFactory.FamilyCharacterDAO.LoadByCharacterId(dbCharacter.CharacterId);
@@ -402,7 +402,7 @@ namespace OpenNos.Handler
                         {
                             if (dbFamilyCharacter.Authority == FamilyAuthority.Head)
                             {
-                                Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("CANT_KICK_HEAD")));
+                                Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("CANT_KICK_HEAD")));
                                 return;
                             }
                             DAOFactory.FamilyCharacterDAO.Delete(packetsplit[2]);
@@ -428,7 +428,7 @@ namespace OpenNos.Handler
                 }
                 if (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Head)
                 {
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("CANNOT_LEAVE_FAMILY")));
+                    Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("CANNOT_LEAVE_FAMILY")));
                     return;
                 }
 
@@ -491,17 +491,17 @@ namespace OpenNos.Handler
                 case FamilyAuthority.Head:
                     if (targetSession == null)
                     {
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("PLAYER_OFFLINE")));
+                        Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("PLAYER_OFFLINE")));
                         return;
                     }
                     if (Session.Character.FamilyCharacter.Authority != FamilyAuthority.Head)
                     {
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("NOT_FAMILY_HEAD")));
+                        Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("NOT_FAMILY_HEAD")));
                         return;
                     }
                     if (targetSession.Character.FamilyCharacter.Authority != FamilyAuthority.Assistant)
                     {
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("ONLY_PROMOTE_ASSISTANT")));
+                        Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("ONLY_PROMOTE_ASSISTANT")));
                         return;
                     }
                     targetSession.Character.FamilyCharacter.Authority = FamilyAuthority.Head;
@@ -512,32 +512,32 @@ namespace OpenNos.Handler
                     Session.Character.FamilyCharacter.Authority = FamilyAuthority.Assistant;
                     FamilyCharacterDTO chara2 = Session.Character.FamilyCharacter;
                     DAOFactory.FamilyCharacterDAO.InsertOrUpdate(ref chara2);
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("DONE")));
+                    Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("DONE")));
                     break;
 
                 case FamilyAuthority.Assistant:
                     if (targetSession == null)
                     {
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("PLAYER_OFFLINE")));
+                        Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("PLAYER_OFFLINE")));
                         return;
                     }
                     if (Session.Character.FamilyCharacter.Authority != FamilyAuthority.Head)
                     {
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("NOT_FAMILY_HEAD")));
+                        Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("NOT_FAMILY_HEAD")));
                         return;
                     }
                     if (targetSession.Character.FamilyCharacter.Authority == FamilyAuthority.Head)
                     {
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("HEAD_UNDEMOTABLE")));
+                        Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("HEAD_UNDEMOTABLE")));
                         return;
                     }
                     if (DAOFactory.FamilyCharacterDAO.LoadByFamilyId(Session.Character.Family.FamilyId).Count(s => s.Authority == FamilyAuthority.Assistant) == 2)
                     {
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("ALREADY_TWO_ASSISTANT")));
+                        Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("ALREADY_TWO_ASSISTANT")));
                         return;
                     }
                     targetSession.Character.FamilyCharacter.Authority = FamilyAuthority.Assistant;
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("DONE")));
+                    Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("DONE")));
 
                     chara = targetSession.Character.FamilyCharacter;
                     DAOFactory.FamilyCharacterDAO.InsertOrUpdate(ref chara);
@@ -546,21 +546,21 @@ namespace OpenNos.Handler
                 case FamilyAuthority.Manager:
                     if (targetSession == null)
                     {
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("PLAYER_OFFLINE")));
+                        Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("PLAYER_OFFLINE")));
                         return;
                     }
                     if (targetSession.Character.FamilyCharacter.Authority == FamilyAuthority.Head)
                     {
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("HEAD_UNDEMOTABLE")));
+                        Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("HEAD_UNDEMOTABLE")));
                         return;
                     }
                     if (targetSession.Character.FamilyCharacter.Authority == FamilyAuthority.Assistant && Session.Character.FamilyCharacter.Authority != FamilyAuthority.Head)
                     {
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("ASSISTANT_UNDEMOTABLE")));
+                        Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("ASSISTANT_UNDEMOTABLE")));
                         return;
                     }
                     targetSession.Character.FamilyCharacter.Authority = FamilyAuthority.Manager;
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("DONE")));
+                    Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("DONE")));
                     chara = targetSession.Character.FamilyCharacter;
                     DAOFactory.FamilyCharacterDAO.InsertOrUpdate(ref chara);
                     break;
@@ -568,21 +568,21 @@ namespace OpenNos.Handler
                 case FamilyAuthority.Member:
                     if (targetSession == null)
                     {
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("PLAYER_OFFLINE")));
+                        Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("PLAYER_OFFLINE")));
                         return;
                     }
                     if (targetSession.Character.FamilyCharacter.Authority == FamilyAuthority.Head)
                     {
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("HEAD_UNDEMOTABLE")));
+                        Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("HEAD_UNDEMOTABLE")));
                         return;
                     }
                     if (targetSession.Character.FamilyCharacter.Authority == FamilyAuthority.Assistant && Session.Character.FamilyCharacter.Authority != FamilyAuthority.Head)
                     {
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("ASSISTANT_UNDEMOTABLE")));
+                        Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("ASSISTANT_UNDEMOTABLE")));
                         return;
                     }
                     targetSession.Character.FamilyCharacter.Authority = FamilyAuthority.Member;
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("DONE")));
+                    Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("DONE")));
 
                     chara = targetSession.Character.FamilyCharacter;
                     DAOFactory.FamilyCharacterDAO.InsertOrUpdate(ref chara);
@@ -621,7 +621,7 @@ namespace OpenNos.Handler
                     FamilyDTO fam = Session.Character.Family;
                     DAOFactory.FamilyDAO.InsertOrUpdate(ref fam);
                     ServerManager.Instance.FamilyRefresh(Session.Character.Family.FamilyId);
-                    CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+                    CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage
                     {
                         DestinationCharacterId = Session.Character.Family.FamilyId,
                         SourceCharacterId = Session.Character.CharacterId,
@@ -631,12 +631,12 @@ namespace OpenNos.Handler
                     });
                     if (!string.IsNullOrWhiteSpace(msg))
                     {
-                        CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+                        CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage
                         {
                             DestinationCharacterId = Session.Character.Family.FamilyId,
                             SourceCharacterId = Session.Character.CharacterId,
                             SourceWorldId = ServerManager.Instance.WorldId,
-                            Message = UserInterfaceHelper.Instance.GenerateInfo("--- Family Message ---\n" + Session.Character.Family.FamilyMessage),
+                            Message = UserInterfaceHelper.GenerateInfo("--- Family Message ---\n" + Session.Character.Family.FamilyMessage),
                             Type = MessageType.Family
                         });
                     }
@@ -648,7 +648,7 @@ namespace OpenNos.Handler
         /// frank_cts packet
         /// </summary>
         /// <param name="frankCtsPacket"></param>
-        public void FamilyRank(FrankCtsPacket frankCtsPacket) => Session.SendPacket(UserInterfaceHelper.Instance.GenerateFrank(frankCtsPacket.Type));
+        public void FamilyRank(FrankCtsPacket frankCtsPacket) => Session.SendPacket(UserInterfaceHelper.GenerateFrank(frankCtsPacket.Type));
 
         /// <summary>
         /// fhis_cts packet
@@ -667,7 +667,7 @@ namespace OpenNos.Handler
                 || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Member && Session.Character.Family.MemberAuthorityType == FamilyAuthorityType.ALL)
                 || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager && Session.Character.Family.ManagerAuthorityType == FamilyAuthorityType.ALL)))
             {
-                Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("NO_FAMILY_RIGHT")));
+                Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("NO_FAMILY_RIGHT")));
                 return;
             }
 
@@ -753,7 +753,7 @@ namespace OpenNos.Handler
                 || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Member && Session.Character.Family.MemberAuthorityType == FamilyAuthorityType.ALL)
                 || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager && Session.Character.Family.ManagerAuthorityType == FamilyAuthorityType.ALL)))
             {
-                Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("NO_FAMILY_RIGHT")));
+                Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("NO_FAMILY_RIGHT")));
                 return;
             }
             ItemInstance previousInventory = Session.Character.Family.Warehouse.LoadBySlotAndType(fWithdrawPacket.Slot, InventoryType.FamilyWareHouse);
@@ -806,7 +806,7 @@ namespace OpenNos.Handler
 
             if (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Member || (Session.Character.FamilyCharacter.Authority == FamilyAuthority.Manager && !Session.Character.Family.ManagerCanInvite))
             {
-                Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("FAMILY_INVITATION_NOT_ALLOWED"))));
+                Session.SendPacket(UserInterfaceHelper.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("FAMILY_INVITATION_NOT_ALLOWED"))));
                 return;
             }
 
@@ -814,35 +814,35 @@ namespace OpenNos.Handler
             ClientSession otherSession = ServerManager.Instance.GetSessionByCharacterName(packetsplit[2]);
             if (otherSession == null)
             {
-                Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("USER_NOT_FOUND"))));
+                Session.SendPacket(UserInterfaceHelper.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("USER_NOT_FOUND"))));
                 return;
             }
 
             if (Session.Character.IsBlockedByCharacter(otherSession.Character.CharacterId))
             {
-                Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("BLACKLIST_BLOCKED")));
+                Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("BLACKLIST_BLOCKED")));
                 return;
             }
 
             if (Session.Character.Family.FamilyCharacters.Count + 1 > Session.Character.Family.MaxSize)
             {
-                Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("FAMILY_FULL")));
+                Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("FAMILY_FULL")));
                 return;
             }
 
             if (otherSession.Character.Family != null || otherSession.Character.FamilyCharacter != null)
             {
-                Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("ALREADY_IN_FAMILY")));
+                Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("ALREADY_IN_FAMILY")));
                 return;
             }
             if (otherSession.Character.LastFamilyLeave > DateTime.Now.AddDays(-1).Ticks)
             {
-                Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("CANT_ENTER_FAMILY")));
+                Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("CANT_ENTER_FAMILY")));
                 return;
             }
 
-            Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("FAMILY_INVITED"), otherSession.Character.Name)));
-            otherSession.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#gjoin^1^{Session.Character.CharacterId} #gjoin^2^{Session.Character.CharacterId} {string.Format(Language.Instance.GetMessageFromKey("ASK_FAMILY_INVITED"), Session.Character.Family.Name)}"));
+            Session.SendPacket(UserInterfaceHelper.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("FAMILY_INVITED"), otherSession.Character.Name)));
+            otherSession.SendPacket(UserInterfaceHelper.GenerateDialog($"#gjoin^1^{Session.Character.CharacterId} #gjoin^2^{Session.Character.CharacterId} {string.Format(Language.Instance.GetMessageFromKey("ASK_FAMILY_INVITED"), Session.Character.Family.Name)}"));
             Session.Character.FamilyInviteCharacters.Add(otherSession.Character.CharacterId);
         }
 
@@ -876,12 +876,12 @@ namespace OpenNos.Handler
 
                     Logger.LogUserEvent("GUILDJOIN", Session.GenerateIdentity(), $"[FamilyJoin][{inviteSession.Character.Family.FamilyId}]");
 
-                    CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+                    CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage
                     {
                         DestinationCharacterId = inviteSession.Character.Family.FamilyId,
                         SourceCharacterId = Session.Character.CharacterId,
                         SourceWorldId = ServerManager.Instance.WorldId,
-                        Message = UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("FAMILY_JOINED"), Session.Character.Name, inviteSession.Character.Family.Name), 0),
+                        Message = UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("FAMILY_JOINED"), Session.Character.Name, inviteSession.Character.Family.Name), 0),
                         Type = MessageType.Family
                     });
 
@@ -917,7 +917,7 @@ namespace OpenNos.Handler
                 fam.FamilyHeadGender = (GenderType)rank;
                 DAOFactory.FamilyDAO.InsertOrUpdate(ref fam);
                 ServerManager.Instance.FamilyRefresh(Session.Character.Family.FamilyId);
-                CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+                CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage
                 {
                     DestinationCharacterId = fam.FamilyId,
                     SourceCharacterId = Session.Character.CharacterId,
@@ -928,12 +928,12 @@ namespace OpenNos.Handler
                 Session.SendPacket(Session.Character.GenerateFamilyMember());
                 Session.SendPacket(Session.Character.GenerateFamilyMemberMessage());
 
-                CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+                CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage
                 {
                     DestinationCharacterId = fam.FamilyId,
                     SourceCharacterId = Session.Character.CharacterId,
                     SourceWorldId = ServerManager.Instance.WorldId,
-                    Message = UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("FAMILY_HEAD_CHANGE_GENDER")), 0),
+                    Message = UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("FAMILY_HEAD_CHANGE_GENDER")), 0),
                     Type = MessageType.Family
                 });
             }
@@ -960,7 +960,7 @@ namespace OpenNos.Handler
 
                     DAOFactory.FamilyCharacterDAO.InsertOrUpdate(ref fchar);
                     ServerManager.Instance.FamilyRefresh(Session.Character.Family.FamilyId);
-                    CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+                    CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage
                     {
                         DestinationCharacterId = Session.Character.Family.FamilyId,
                         SourceCharacterId = Session.Character.CharacterId,
@@ -1004,7 +1004,7 @@ namespace OpenNos.Handler
                 }
                 else
                 {
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("CANT_CHANGE_MESSAGE")));
+                    Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("CANT_CHANGE_MESSAGE")));
                 }
             }
         }

@@ -32,7 +32,7 @@ namespace OpenNos.DAL.Mock
 
         public IEnumerable<short> LoadTypeByCharacterId(long characterId) => throw new NotImplementedException();
 
-        public void RemoveOutDated() => throw new NotImplementedException();
+        public static void RemoveOutDated() => throw new NotImplementedException();
 
         #endregion
     }

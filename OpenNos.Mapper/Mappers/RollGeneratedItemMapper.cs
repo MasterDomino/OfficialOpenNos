@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class RollGeneratedItemMapper
+    public static class RollGeneratedItemMapper
     {
         #region Methods
 
-        public bool ToRollGeneratedItem(RollGeneratedItemDTO input, RollGeneratedItem output)
+        public static bool ToRollGeneratedItem(RollGeneratedItemDTO input, RollGeneratedItem output)
         {
             if (input == null)
             {
@@ -26,7 +26,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToRollGeneratedItemDTO(RollGeneratedItem input, RollGeneratedItemDTO output)
+        public static bool ToRollGeneratedItemDTO(RollGeneratedItem input, RollGeneratedItemDTO output)
         {
             if (input == null)
             {

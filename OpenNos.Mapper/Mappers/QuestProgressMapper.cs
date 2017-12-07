@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class QuestProgressMapper
+    public static class QuestProgressMapper
     {
         #region Methods
 
-        public bool ToQuestProgress(QuestProgressDTO input, QuestProgress output)
+        public static bool ToQuestProgress(QuestProgressDTO input, QuestProgress output)
         {
             if (input == null)
             {
@@ -22,7 +22,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToQuestProgressDTO(QuestProgress input, QuestProgressDTO output)
+        public static bool ToQuestProgressDTO(QuestProgress input, QuestProgressDTO output)
         {
             if (input == null)
             {

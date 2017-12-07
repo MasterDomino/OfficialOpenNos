@@ -64,7 +64,7 @@ namespace OpenNos.DAL.DAO
                 foreach (Respawn Respawnobject in context.Respawn.Where(i => i.CharacterId.Equals(characterId)))
                 {
                     RespawnDTO dto = new RespawnDTO();
-                    Mapper.Mapper.Instance.RespawnMapper.ToRespawnDTO(Respawnobject, dto);
+                    Mapper.Mappers.RespawnMapper.ToRespawnDTO(Respawnobject, dto);
                     result.Add(dto);
                 }
                 return result;
@@ -78,7 +78,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     RespawnDTO dto = new RespawnDTO();
-                    if (Mapper.Mapper.Instance.RespawnMapper.ToRespawnDTO(context.Respawn.FirstOrDefault(s => s.RespawnId.Equals(respawnId)), dto))
+                    if (Mapper.Mappers.RespawnMapper.ToRespawnDTO(context.Respawn.FirstOrDefault(s => s.RespawnId.Equals(respawnId)), dto))
                     {
                         return dto;
                     }
@@ -93,15 +93,15 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        private RespawnDTO insert(RespawnDTO respawn, OpenNosContext context)
+        private static RespawnDTO insert(RespawnDTO respawn, OpenNosContext context)
         {
             try
             {
                 Respawn entity = new Respawn();
-                Mapper.Mapper.Instance.RespawnMapper.ToRespawn(respawn, entity);
+                Mapper.Mappers.RespawnMapper.ToRespawn(respawn, entity);
                 context.Respawn.Add(entity);
                 context.SaveChanges();
-                if (Mapper.Mapper.Instance.RespawnMapper.ToRespawnDTO(entity, respawn))
+                if (Mapper.Mappers.RespawnMapper.ToRespawnDTO(entity, respawn))
                 {
                     return respawn;
                 }
@@ -115,14 +115,14 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        private RespawnDTO update(Respawn entity, RespawnDTO respawn, OpenNosContext context)
+        private static RespawnDTO update(Respawn entity, RespawnDTO respawn, OpenNosContext context)
         {
             if (entity != null)
             {
-                Mapper.Mapper.Instance.RespawnMapper.ToRespawn(respawn, entity);
+                Mapper.Mappers.RespawnMapper.ToRespawn(respawn, entity);
                 context.SaveChanges();
             }
-            if (Mapper.Mapper.Instance.RespawnMapper.ToRespawnDTO(entity, respawn))
+            if (Mapper.Mappers.RespawnMapper.ToRespawnDTO(entity, respawn))
             {
                 return respawn;
             }

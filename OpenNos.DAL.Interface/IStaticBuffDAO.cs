@@ -27,7 +27,6 @@ namespace OpenNos.DAL.Interface
         /// <summary>
         /// Inserts new object to database context
         /// </summary>
-        /// <param name="staticBonus"></param>
         /// <param name="staticBuff"></param>
         /// <returns></returns>
         SaveResult InsertOrUpdate(ref StaticBuffDTO staticBuff);
@@ -39,6 +38,11 @@ namespace OpenNos.DAL.Interface
         /// <returns></returns>
         IEnumerable<StaticBuffDTO> LoadByCharacterId(long characterId);
 
+        /// <summary>
+        /// Loads by CharacterId
+        /// </summary>
+        /// <param name="characterId"></param>
+        /// <returns>IEnumerable list of CardIds</returns>
         IEnumerable<short> LoadByTypeCharacterId(long characterId);
 
         #endregion

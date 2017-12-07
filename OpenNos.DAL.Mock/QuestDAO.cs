@@ -10,7 +10,7 @@ namespace OpenNos.DAL.Mock
     {
         public DeleteResult DeleteById(long id) => throw new NotImplementedException();
 
-        public void InitializeMapper() => throw new NotImplementedException();
+        public static void InitializeMapper() => throw new NotImplementedException();
 
         public QuestDTO InsertOrUpdate(QuestDTO quest) => throw new NotImplementedException();
 

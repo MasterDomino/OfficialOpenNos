@@ -38,7 +38,7 @@ namespace OpenNos.DAL.DAO
                     foreach (PortalDTO Item in portals)
                     {
                         Portal entity = new Portal();
-                        Mapper.Mapper.Instance.PortalMapper.ToPortal(Item, entity);
+                        Mapper.Mappers.PortalMapper.ToPortal(Item, entity);
                         context.Portal.Add(entity);
                     }
                     context.Configuration.AutoDetectChangesEnabled = true;
@@ -58,10 +58,10 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     Portal entity = new Portal();
-                    Mapper.Mapper.Instance.PortalMapper.ToPortal(portal, entity);
+                    Mapper.Mappers.PortalMapper.ToPortal(portal, entity);
                     context.Portal.Add(entity);
                     context.SaveChanges();
-                    if (Mapper.Mapper.Instance.PortalMapper.ToPortalDTO(entity, portal))
+                    if (Mapper.Mappers.PortalMapper.ToPortalDTO(entity, portal))
                     {
                         return portal;
                     }
@@ -84,7 +84,7 @@ namespace OpenNos.DAL.DAO
                 foreach (Portal Portalobject in context.Portal.Where(c => c.SourceMapId.Equals(mapId)))
                 {
                     PortalDTO dto = new PortalDTO();
-                    Mapper.Mapper.Instance.PortalMapper.ToPortalDTO(Portalobject, dto);
+                    Mapper.Mappers.PortalMapper.ToPortalDTO(Portalobject, dto);
                     result.Add(dto);
                 }
                 return result;

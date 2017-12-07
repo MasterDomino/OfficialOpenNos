@@ -4,11 +4,11 @@ using System;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class ItemInstanceMapper
+    public static class ItemInstanceMapper
     {
         #region Methods
 
-        public bool ToItemInstance(ItemInstanceDTO input, ItemInstance output)
+        public static bool ToItemInstance(ItemInstanceDTO input, ItemInstance output)
         {
             if (input == null)
             {
@@ -75,7 +75,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToItemInstanceDTO(ItemInstance input, ItemInstanceDTO output)
+        public static bool ToItemInstanceDTO(ItemInstance input, ItemInstanceDTO output)
         {
             if (input == null)
             {

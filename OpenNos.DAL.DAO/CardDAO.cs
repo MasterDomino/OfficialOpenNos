@@ -34,10 +34,10 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     Card entity = new Card();
-                    Mapper.Mapper.Instance.CardMapper.ToCard(card, entity);
+                    Mapper.Mappers.CardMapper.ToCard(card, entity);
                     context.Card.Add(entity);
                     context.SaveChanges();
-                    if (Mapper.Mapper.Instance.CardMapper.ToCardDTO(entity, card))
+                    if (Mapper.Mappers.CardMapper.ToCardDTO(entity, card))
                     {
                         return card;
                     }
@@ -62,7 +62,7 @@ namespace OpenNos.DAL.DAO
                     foreach (CardDTO card in cards)
                     {
                         Card entity = new Card();
-                        Mapper.Mapper.Instance.CardMapper.ToCard(card, entity);
+                        Mapper.Mappers.CardMapper.ToCard(card, entity);
                         context.Card.Add(entity);
                     }
                     context.Configuration.AutoDetectChangesEnabled = true;
@@ -83,7 +83,7 @@ namespace OpenNos.DAL.DAO
                 foreach (Card card in context.Card)
                 {
                     CardDTO dto = new CardDTO();
-                    Mapper.Mapper.Instance.CardMapper.ToCardDTO(card, dto);
+                    Mapper.Mappers.CardMapper.ToCardDTO(card, dto);
                     result.Add(dto);
                 }
                 return result;
@@ -97,7 +97,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     CardDTO dto = new CardDTO();
-                    if (Mapper.Mapper.Instance.CardMapper.ToCardDTO(context.Card.FirstOrDefault(s => s.CardId.Equals(cardId)), dto))
+                    if (Mapper.Mappers.CardMapper.ToCardDTO(context.Card.FirstOrDefault(s => s.CardId.Equals(cardId)), dto))
                     {
                         return dto;
                     }

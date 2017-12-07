@@ -53,10 +53,7 @@ namespace OpenNos.Login
                     bool ignoreStartupMessages = false;
                     foreach (string arg in args)
                     {
-                        if (arg == "--nomsg")
-                        {
-                            ignoreStartupMessages = true;
-                        }
+                        ignoreStartupMessages |= arg == "--nomsg";
                     }
 
                     // initialize Logger

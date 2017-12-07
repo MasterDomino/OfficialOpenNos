@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class AccountMapper
+    public static class AccountMapper
     {
         #region Methods
 
-        public bool ToAccount(AccountDTO input, Account output)
+        public static bool ToAccount(AccountDTO input, Account output)
         {
             if (input == null)
             {
@@ -25,7 +25,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToAccountDTO(Account input, AccountDTO output)
+        public static bool ToAccountDTO(Account input, AccountDTO output)
         {
             if (input == null)
             {

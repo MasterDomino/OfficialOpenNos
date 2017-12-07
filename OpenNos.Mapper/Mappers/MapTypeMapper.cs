@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class MapTypeMapper
+    public static class MapTypeMapper
     {
         #region Methods
 
-        public bool ToMapType(MapTypeDTO input, MapType output)
+        public static bool ToMapType(MapTypeDTO input, MapType output)
         {
             if (input == null)
             {
@@ -22,7 +22,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToMapTypeDTO(MapType input, MapTypeDTO output)
+        public static bool ToMapTypeDTO(MapType input, MapTypeDTO output)
         {
             if (input == null)
             {

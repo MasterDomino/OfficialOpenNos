@@ -139,7 +139,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
 
         #region Methods
 
-        public async Task ClearLowPriorityQueue() => await _communicationChannel.ClearLowPriorityQueue().ConfigureAwait(false);
+        public async Task ClearLowPriorityQueueAsync() => await _communicationChannel.ClearLowPriorityQueueAsync().ConfigureAwait(false);
 
         /// <summary>
         /// Connects to server.
@@ -293,8 +293,9 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
 
                 _communicationChannel.SendMessage(new ScsPingMessage(), 10);
             }
-            catch
+            catch (Exception)
             {
+                throw;
             }
         }
 

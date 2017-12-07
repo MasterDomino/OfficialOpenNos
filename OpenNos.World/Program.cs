@@ -180,8 +180,7 @@ namespace OpenNos.World
             string serverGroup = ConfigurationManager.AppSettings["ServerGroup"];
             int port = Convert.ToInt32(ConfigurationManager.AppSettings["WorldPort"]);
             CommunicationServiceClient.Instance.UnregisterWorldServer(ServerManager.Instance.WorldId);
-
-            ServerManager.Instance.Shout(string.Format(Language.Instance.GetMessageFromKey("SHUTDOWN_SEC"), 5));
+            ServerManager.Shout(string.Format(Language.Instance.GetMessageFromKey("SHUTDOWN_SEC"), 5));
             ServerManager.Instance.SaveAll();
 
             Thread.Sleep(5000);
@@ -211,6 +210,7 @@ namespace OpenNos.World
                     {
                         Logger.Error(new Exception($"Unable to report crash to management Server. Please report this issue to the Developer: {response[0]}"));
                     }
+                    wc.Dispose();
                 }
             }
             catch (Exception ex)
@@ -221,8 +221,7 @@ namespace OpenNos.World
             string serverGroup = ConfigurationManager.AppSettings["ServerGroup"];
             int port = Convert.ToInt32(ConfigurationManager.AppSettings["WorldPort"]);
             CommunicationServiceClient.Instance.UnregisterWorldServer(ServerManager.Instance.WorldId);
-
-            ServerManager.Instance.Shout(string.Format(Language.Instance.GetMessageFromKey("SHUTDOWN_SEC"), 5));
+            ServerManager.Shout(string.Format(Language.Instance.GetMessageFromKey("SHUTDOWN_SEC"), 5));
             ServerManager.Instance.SaveAll();
 
             Process.Start("OpenNos.World.exe", "--nomsg");

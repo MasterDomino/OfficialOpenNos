@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class GeneralLogMapper
+    public static class GeneralLogMapper
     {
         #region Methods
 
-        public bool ToGeneralLog(GeneralLogDTO input, GeneralLog output)
+        public static bool ToGeneralLog(GeneralLogDTO input, GeneralLog output)
         {
             if (input == null)
             {
@@ -24,7 +24,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToGeneralLogDTO(GeneralLog input, GeneralLogDTO output)
+        public static bool ToGeneralLogDTO(GeneralLog input, GeneralLogDTO output)
         {
             if (input == null)
             {

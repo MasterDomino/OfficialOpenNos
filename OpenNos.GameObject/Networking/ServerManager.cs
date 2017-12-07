@@ -175,10 +175,10 @@ namespace OpenNos.GameObject
                 Session.Character.DisableBuffs(BuffType.All);
                 Session.SendPacket(Session.Character.GenerateStat());
                 Session.SendPacket(Session.Character.GenerateCond());
-                Session.SendPackets(UserInterfaceHelper.Instance.GenerateVb());
+                Session.SendPackets(UserInterfaceHelper.GenerateVb());
 
                 Session.SendPacket("eff_ob -1 -1 0 4269");
-                Session.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#revival^2 #revival^1 {Language.Instance.GetMessageFromKey("ASK_REVIVE_PVP")}"));
+                Session.SendPacket(UserInterfaceHelper.GenerateDialog($"#revival^2 #revival^1 {Language.Instance.GetMessageFromKey("ASK_REVIVE_PVP")}"));
                 reviveTask(Session);
             }
         }
@@ -196,7 +196,7 @@ namespace OpenNos.GameObject
                 session.Character.DisableBuffs(BuffType.All);
                 session.SendPacket(session.Character.GenerateStat());
                 session.SendPacket(session.Character.GenerateCond());
-                session.SendPackets(UserInterfaceHelper.Instance.GenerateVb());
+                session.SendPackets(UserInterfaceHelper.GenerateVb());
 
                 switch (session.CurrentMapInstance.MapInstanceType)
                 {
@@ -214,7 +214,7 @@ namespace OpenNos.GameObject
                             session.CurrentMapInstance.Broadcast(session, session.Character.GenerateGidx(), ReceiverType.AllExceptMe);
                         }
                         session.SendPacket("eff_ob -1 -1 0 4269");
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#revival^0 #revival^1 {(session.Character.Level > 20 ? Language.Instance.GetMessageFromKey("ASK_REVIVE") : Language.Instance.GetMessageFromKey("ASK_REVIVE_FREE"))}"));
+                        session.SendPacket(UserInterfaceHelper.GenerateDialog($"#revival^0 #revival^1 {(session.Character.Level > 20 ? Language.Instance.GetMessageFromKey("ASK_REVIVE") : Language.Instance.GetMessageFromKey("ASK_REVIVE_FREE"))}"));
                         reviveTask(session);
                         break;
 
@@ -225,8 +225,8 @@ namespace OpenNos.GameObject
                             session.Character.Mp = 1;
                             return;
                         }
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("YOU_HAVE_LIFE"), session.CurrentMapInstance.InstanceBag.Lives - session.CurrentMapInstance.InstanceBag.DeadList.Count + 1), 0));
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#revival^1 #revival^1 {(session.Character.Level > 10 ? Language.Instance.GetMessageFromKey("ASK_REVIVE_TS_LOW_LEVEL") : Language.Instance.GetMessageFromKey("ASK_REVIVE_TS"))}"));
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("YOU_HAVE_LIFE"), session.CurrentMapInstance.InstanceBag.Lives - session.CurrentMapInstance.InstanceBag.DeadList.Count + 1), 0));
+                        session.SendPacket(UserInterfaceHelper.GenerateDialog($"#revival^1 #revival^1 {(session.Character.Level > 10 ? Language.Instance.GetMessageFromKey("ASK_REVIVE_TS_LOW_LEVEL") : Language.Instance.GetMessageFromKey("ASK_REVIVE_TS"))}"));
                         session.CurrentMapInstance.InstanceBag.DeadList.Add(session.Character.CharacterId);
                         reviveTask(session);
                         break;
@@ -240,8 +240,8 @@ namespace OpenNos.GameObject
                         }
                         else if (2 - save.Count(s => s == session.Character.CharacterId) > 0)
                         {
-                            session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("YOU_HAVE_LIFE_RAID"), 2 - session.CurrentMapInstance.InstanceBag.DeadList.Count(s => s == session.Character.CharacterId))));
-                            session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("RAID_MEMBER_DEAD"), session.Character.Name)));
+                            session.SendPacket(UserInterfaceHelper.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("YOU_HAVE_LIFE_RAID"), 2 - session.CurrentMapInstance.InstanceBag.DeadList.Count(s => s == session.Character.CharacterId))));
+                            session.SendPacket(UserInterfaceHelper.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("RAID_MEMBER_DEAD"), session.Character.Name)));
                             try
                             {
                                 session.Character.Group?.Raid?.InstanceBag.DeadList.Add(session.Character.CharacterId);
@@ -271,12 +271,12 @@ namespace OpenNos.GameObject
                             session.Character.Group?.LeaveGroup(session);
                             session.SendPacket(session.Character.GenerateRaid(1, true));
                             session.SendPacket(session.Character.GenerateRaid(2, true));
-                            session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("KICKED_FROM_RAID"), 0));
+                            session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("KICKED_FROM_RAID"), 0));
                         }
                         break;
 
                     case MapInstanceType.LodInstance:
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#revival^0 #revival^1 {Language.Instance.GetMessageFromKey("ASK_REVIVE_LOD")}"));
+                        session.SendPacket(UserInterfaceHelper.GenerateDialog($"#revival^0 #revival^1 {Language.Instance.GetMessageFromKey("ASK_REVIVE_LOD")}"));
                         reviveTask(session);
                         break;
 
@@ -372,7 +372,7 @@ namespace OpenNos.GameObject
                     session.SendPacket(session.Character.GeneratePairy());
                     session.SendPacket(session.Character.GeneratePinit());
                     session.SendPackets(session.Character.GeneratePst());
-                    session.SendPacket(session.Character.GenerateAct());
+                    session.SendPacket(Character.GenerateAct());
                     session.SendPacket(session.Character.GenerateScpStc());
                     if (ChannelId == 51)
                     {
@@ -498,7 +498,7 @@ namespace OpenNos.GameObject
 
         public void FamilyRefresh(long FamilyId) => CommunicationServiceClient.Instance.UpdateFamily(ServerGroup, FamilyId);
 
-        public MapInstance GenerateMapInstance(short mapId, MapInstanceType type, InstanceBag mapclock)
+        public static MapInstance GenerateMapInstance(short mapId, MapInstanceType type, InstanceBag mapclock)
         {
             Map map = _maps.FirstOrDefault(m => m.MapId.Equals(mapId));
             if (map != null)
@@ -524,31 +524,31 @@ namespace OpenNos.GameObject
             return null;
         }
 
-        public IEnumerable<Card> GetAllCard() => _cards;
+        public static IEnumerable<Card> GetAllCard() => _cards;
 
-        public List<MapInstance> GetAllMapInstances() => _mapinstances.Values.ToList();
+        public static List<MapInstance> GetAllMapInstances() => _mapinstances.Values.ToList();
 
         public List<Recipe> GetAllRecipes() => _recipes.GetAllItems();
 
-        public IEnumerable<Skill> GetAllSkill() => _skills;
+        public static IEnumerable<Skill> GetAllSkill() => _skills;
 
-        public Guid GetBaseMapInstanceIdByMapId(short MapId) => _mapinstances.FirstOrDefault(s => s.Value?.Map.MapId == MapId && s.Value.MapInstanceType == MapInstanceType.BaseMapInstance).Key;
+        public static Guid GetBaseMapInstanceIdByMapId(short MapId) => _mapinstances.FirstOrDefault(s => s.Value?.Map.MapId == MapId && s.Value.MapInstanceType == MapInstanceType.BaseMapInstance).Key;
 
-        public Card GetCard(short cardId) => _cards.FirstOrDefault(m => m.CardId.Equals(cardId));
+        public static Card GetCard(short cardId) => _cards.FirstOrDefault(m => m.CardId.Equals(cardId));
 
         public List<DropDTO> GetDropsByMonsterVNum(short monsterVNum) => _monsterDrops.ContainsKey(monsterVNum) ? _generalDrops.Concat(_monsterDrops[monsterVNum]).ToList() : new List<DropDTO>();
 
         public Group GetGroupByCharacterId(long characterId) => Groups?.SingleOrDefault(g => g.IsMemberOfGroup(characterId));
 
-        public Item GetItem(short vnum) => _items.FirstOrDefault(m => m.VNum.Equals(vnum));
+        public static Item GetItem(short vnum) => _items.FirstOrDefault(m => m.VNum.Equals(vnum));
 
-        public MapInstance GetMapInstance(Guid id) => _mapinstances.ContainsKey(id) ? _mapinstances[id] : null;
+        public static MapInstance GetMapInstance(Guid id) => _mapinstances.ContainsKey(id) ? _mapinstances[id] : null;
 
-        public List<MapInstance> GetMapInstances() => _mapinstances.Values.ToList();
+        public static List<MapInstance> GetMapInstances() => _mapinstances.Values.ToList();
 
         public long GetNextGroupId() => ++_lastGroupId;
 
-        public NpcMonster GetNpc(short npcVNum) => _npcs.FirstOrDefault(m => m.NpcMonsterVNum.Equals(npcVNum));
+        public static NpcMonster GetNpc(short npcVNum) => _npcs.FirstOrDefault(m => m.NpcMonsterVNum.Equals(npcVNum));
 
         public T GetProperty<T>(string charName, string property)
         {
@@ -594,7 +594,7 @@ namespace OpenNos.GameObject
 
         public ClientSession GetSessionBySessionId(int sessionId) => Sessions.SingleOrDefault(s => s.SessionId == sessionId);
 
-        public Skill GetSkill(short skillVNum) => _skills.FirstOrDefault(m => m.SkillVNum.Equals(skillVNum));
+        public static Skill GetSkill(short skillVNum) => _skills.FirstOrDefault(m => m.SkillVNum.Equals(skillVNum));
 
         public T GetUserMethod<T>(long characterId, string methodName)
         {
@@ -621,7 +621,7 @@ namespace OpenNos.GameObject
                         case GroupType.Team:
                             if (grp.Characters.ElementAt(0) == session && grp.CharacterCount > 1)
                             {
-                                Broadcast(session, UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("NEW_LEADER")), ReceiverType.OnlySomeone, string.Empty, grp.Characters.ElementAt(1).Character.CharacterId);
+                                Broadcast(session, UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("NEW_LEADER")), ReceiverType.OnlySomeone, string.Empty, grp.Characters.ElementAt(1).Character.CharacterId);
                             }
                             grp.LeaveGroup(session);
                             session.SendPacket(session.Character.GenerateRaid(1, true));
@@ -635,7 +635,7 @@ namespace OpenNos.GameObject
                             {
                                 ChangeMap(session.Character.CharacterId, session.Character.MapId, session.Character.MapX, session.Character.MapY);
                             }
-                            session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("RAID_LEFT"), 0));
+                            session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("RAID_LEFT"), 0));
                             break;
 
                         case GroupType.GiantTeam:
@@ -645,7 +645,7 @@ namespace OpenNos.GameObject
                             {
                                 if (targetSession != null)
                                 {
-                                    targetSession.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("GROUP_CLOSED"), 0));
+                                    targetSession.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("GROUP_CLOSED"), 0));
                                     Broadcast(targetSession.Character.GeneratePidx(true));
                                     grp.LeaveGroup(targetSession);
                                     targetSession.SendPacket(targetSession.Character.GeneratePinit());
@@ -659,7 +659,7 @@ namespace OpenNos.GameObject
                         case GroupType.Group:
                             if (grp.Characters.ElementAt(0) == session && grp.CharacterCount > 1)
                             {
-                                Broadcast(session, UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("NEW_LEADER")), ReceiverType.OnlySomeone, string.Empty, grp.Characters.ElementAt(1).Character.CharacterId);
+                                Broadcast(session, UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("NEW_LEADER")), ReceiverType.OnlySomeone, string.Empty, grp.Characters.ElementAt(1).Character.CharacterId);
                             }
                             grp.LeaveGroup(session);
                             if (grp.CharacterCount == 1)
@@ -667,7 +667,7 @@ namespace OpenNos.GameObject
                                 ClientSession targetSession = grp.Characters.ElementAt(0);
                                 if (targetSession != null)
                                 {
-                                    targetSession.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("GROUP_CLOSED"), 0));
+                                    targetSession.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("GROUP_CLOSED"), 0));
                                     Broadcast(targetSession.Character.GeneratePidx(true));
                                     grp.LeaveGroup(targetSession);
                                     targetSession.SendPacket(targetSession.Character.GeneratePinit());
@@ -680,13 +680,13 @@ namespace OpenNos.GameObject
                                 {
                                     groupSession.SendPacket(groupSession.Character.GeneratePinit());
                                     groupSession.SendPackets(session.Character.GeneratePst());
-                                    groupSession.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("LEAVE_GROUP"), session.Character.Name), 0));
+                                    groupSession.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("LEAVE_GROUP"), session.Character.Name), 0));
                                 }
                             }
                             session.SendPacket(session.Character.GeneratePinit());
                             session.SendPackets(session.Character.GeneratePst());
                             Broadcast(session.Character.GeneratePidx(true));
-                            session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("GROUP_LEFT"), 0));
+                            session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("GROUP_LEFT"), 0));
                             break;
 
                         default:
@@ -703,7 +703,7 @@ namespace OpenNos.GameObject
             Act4AngelStat = new Act4Stat();
             Act4DemonStat = new Act4Stat();
 
-            // Load Configuration         
+            // Load Configuration
 
             Schedules = ConfigurationManager.GetSection("eventScheduler") as List<Schedule>;
 
@@ -980,7 +980,7 @@ namespace OpenNos.GameObject
             ChangeMapInstance(Session.Character.CharacterId, MinilandOwner.Character.Miniland.MapInstanceId, 5, 8);
             if (Session.Character.Miniland.MapInstanceId != MinilandOwner.Character.Miniland.MapInstanceId)
             {
-                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Session.Character.MinilandMessage.Replace(' ', '^'), 0));
+                Session.SendPacket(UserInterfaceHelper.GenerateMsg(Session.Character.MinilandMessage.Replace(' ', '^'), 0));
                 Session.SendPacket(Session.Character.GenerateMlinfobr());
                 MinilandOwner.Character.GeneralLogs.Add(new GeneralLogDTO { AccountId = Session.Account.AccountId, CharacterId = Session.Character.CharacterId, IpAddress = Session.IpAddress, LogData = "Miniland", LogType = "World", Timestamp = DateTime.Now });
                 Session.SendPacket(MinilandOwner.Character.GenerateMinilandObjectForFriends());
@@ -1010,7 +1010,7 @@ namespace OpenNos.GameObject
             {
                 return;
             }
-            session.SendPacket(UserInterfaceHelper.Instance.GenerateMapOut());
+            session.SendPacket(UserInterfaceHelper.GenerateMapOut());
             if (!session.Character.InvisibleGm)
             {
                 session.Character.Mates.Where(s => s.IsTeamMember).ToList().ForEach(s => session.CurrentMapInstance?.Broadcast(session, StaticPacketHelper.Out(UserType.Npc, s.MateTransportId), ReceiverType.AllExceptMe));
@@ -1020,7 +1020,7 @@ namespace OpenNos.GameObject
 
         public bool MapNpcHasRecipe(int mapNpcId) => _recipeLists.Any(r => r.MapNpcId == mapNpcId);
 
-        public int RandomNumber(int min = 0, int max = 100) => _random.Next(min, max);
+        public static int RandomNumber(int min = 0, int max = 100) => _random.Next(min, max);
 
         public void RefreshRanking()
         {
@@ -1036,7 +1036,7 @@ namespace OpenNos.GameObject
             SpinWait.SpinUntil(() => !_inRelationRefreshMode);
         }
 
-        public void RemoveMapInstance(Guid MapId)
+        public static void RemoveMapInstance(Guid MapId)
         {
             KeyValuePair<Guid, MapInstance> map = _mapinstances.FirstOrDefault(s => s.Key == MapId);
             if (!map.Equals(default))
@@ -1117,13 +1117,13 @@ namespace OpenNos.GameObject
             propertyinfo.SetValue(session.Character, value, null);
         }
 
-        public void Shout(string message)
+        public static void Shout(string message)
         {
-            Instance.Broadcast(UserInterfaceHelper.Instance.GenerateSay($"({Language.Instance.GetMessageFromKey("ADMINISTRATOR")}){message}", 10));
-            Instance.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(message, 2));
+            Instance.Broadcast(UserInterfaceHelper.GenerateSay($"({Language.Instance.GetMessageFromKey("ADMINISTRATOR")}){message}", 10));
+            Instance.Broadcast(UserInterfaceHelper.GenerateMsg(message, 2));
         }
 
-        public async void ShutdownTask()
+        public async Task ShutdownTaskAsync()
         {
             Shout(string.Format(Language.Instance.GetMessageFromKey("SHUTDOWN_MIN"), 5));
             for (int i = 0; i < 60 * 4; i++)
@@ -1172,11 +1172,11 @@ namespace OpenNos.GameObject
             {
                 if (ChannelId == 51)
                 {
-                    Thread.Sleep(16000);
+                    await Task.Delay(16000).ConfigureAwait(false);
                 }
                 else
                 {
-                    Thread.Sleep((ChannelId - 1) * 2000);
+                    await Task.Delay((ChannelId - 1) * 2000).ConfigureAwait(false);
                 }
                 Process.Start("OpenNos.World.exe", "--nomsg");
             }
@@ -1240,7 +1240,7 @@ namespace OpenNos.GameObject
             return new List<TeleporterDTO>();
         }
 
-        internal void StopServer()
+        internal static void StopServer()
         {
             Instance.ShutdownStop = true;
             Instance.TaskShutdown = null;
@@ -1382,7 +1382,7 @@ namespace OpenNos.GameObject
         }
 
         // Server
-        private void botProcess()
+        private static void botProcess()
         {
             try
             {
@@ -1429,9 +1429,9 @@ namespace OpenNos.GameObject
 
             Observable.Interval(TimeSpan.FromMinutes(1)).Subscribe(x => maintenanceProcess());
 
-            EventHelper.Instance.RunEvent(new EventContainer(Instance.GetMapInstance(Instance.GetBaseMapInstanceIdByMapId(98)), EventActionType.NPCSEFFECTCHANGESTATE, true));
-            Parallel.ForEach(Schedules, schedule => Observable.Timer(TimeSpan.FromSeconds(EventHelper.Instance.GetMilisecondsBeforeTime(schedule.Time).TotalSeconds), TimeSpan.FromDays(1)).Subscribe(e => EventHelper.Instance.GenerateEvent(schedule.Event)));
-            EventHelper.Instance.GenerateEvent(EventType.ACT4SHIP);
+            EventHelper.Instance.RunEvent(new EventContainer(ServerManager.GetMapInstance(ServerManager.GetBaseMapInstanceIdByMapId(98)), EventActionType.NPCSEFFECTCHANGESTATE, true));
+            Parallel.ForEach(Schedules, schedule => Observable.Timer(TimeSpan.FromSeconds(EventHelper.GetMilisecondsBeforeTime(schedule.Time).TotalSeconds), TimeSpan.FromDays(1)).Subscribe(e => EventHelper.GenerateEvent(schedule.Event)));
+            EventHelper.GenerateEvent(EventType.ACT4SHIP);
 
             Observable.Interval(TimeSpan.FromSeconds(1)).Subscribe(x => removeItemProcess());
             Observable.Interval(TimeSpan.FromMilliseconds(400)).Subscribe(x =>
@@ -1451,7 +1451,7 @@ namespace OpenNos.GameObject
             CommunicationServiceClient.Instance.PenaltyLogRefresh += onPenaltyLogRefresh;
             CommunicationServiceClient.Instance.GlobalEvent += onGlobalEvent;
             CommunicationServiceClient.Instance.ShutdownEvent += onShutdown;
-            CommunicationServiceClient.Instance.RestartEvent += onShutdown;
+            CommunicationServiceClient.Instance.RestartEvent += onRestart;
             ConfigurationServiceClient.Instance.ConfigurationUpdate += onConfiguratinEvent;
             MailServiceClient.Instance.MailSent += onMailSent;
             _lastGroupId = 1;
@@ -1527,7 +1527,7 @@ namespace OpenNos.GameObject
                         {
                             siObj.LoadGlobals();
                             Raids.Add(siObj);
-                            Portal port = new Portal()
+                            Portal port = new Portal
                             {
                                 Type = (byte)PortalType.Raid,
                                 SourceMapId = siObj.MapId,
@@ -1658,7 +1658,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        private void onGlobalEvent(object sender, EventArgs e) => EventHelper.Instance.GenerateEvent((EventType)sender);
+        private static void onGlobalEvent(object sender, EventArgs e) => EventHelper.GenerateEvent((EventType)sender);
 
         private void onMessageSentToCharacter(object sender, EventArgs e)
         {
@@ -1678,7 +1678,7 @@ namespace OpenNos.GameObject
 
                         if (targetSession.Character.GmPvtBlock)
                         {
-                            CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+                            CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage
                             {
                                 DestinationCharacterId = message.SourceCharacterId,
                                 SourceCharacterId = message.DestinationCharacterId.Value,
@@ -1689,12 +1689,12 @@ namespace OpenNos.GameObject
                         }
                         else if (targetSession.Character.WhisperBlocked)
                         {
-                            CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+                            CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage
                             {
                                 DestinationCharacterId = message.SourceCharacterId,
                                 SourceCharacterId = message.DestinationCharacterId.Value,
                                 SourceWorldId = WorldId,
-                                Message = UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("USER_WHISPER_BLOCKED"), 0),
+                                Message = UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("USER_WHISPER_BLOCKED"), 0),
                                 Type = MessageType.PrivateChat
                             });
                         }
@@ -1702,7 +1702,7 @@ namespace OpenNos.GameObject
                         {
                             if (message.SourceWorldId != WorldId)
                             {
-                                CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+                                CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage
                                 {
                                     DestinationCharacterId = message.SourceCharacterId,
                                     SourceCharacterId = message.DestinationCharacterId.Value,
@@ -1821,7 +1821,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        private void onShutdown(object sender, EventArgs e)
+        private static void onShutdown(object sender, EventArgs e)
         {
             if (Instance.TaskShutdown != null)
             {
@@ -1830,12 +1830,12 @@ namespace OpenNos.GameObject
             }
             else
             {
-                Instance.TaskShutdown = new Task(Instance.ShutdownTask);
+                Instance.TaskShutdown = Instance.ShutdownTaskAsync();
                 Instance.TaskShutdown.Start();
             }
         }
 
-        private void onRestart(object sender, EventArgs e)
+        private static void onRestart(object sender, EventArgs e)
         {
             if (Instance.TaskShutdown != null)
             {
@@ -1846,7 +1846,7 @@ namespace OpenNos.GameObject
             else
             {
                 Instance.IsReboot = true;
-                Instance.TaskShutdown = new Task(Instance.ShutdownTask);
+                Instance.TaskShutdown = Instance.ShutdownTaskAsync();
                 Instance.TaskShutdown.Start();
             }
         }
@@ -1863,7 +1863,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        private void reviveTask(ClientSession Session)
+        private static void reviveTask(ClientSession Session)
         {
             Task.Factory.StartNew(async () =>
             {

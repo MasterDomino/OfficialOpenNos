@@ -85,21 +85,21 @@ namespace OpenNos.DAL.DAO
                 foreach (StaticBonus entity in context.StaticBonus.Where(i => i.CharacterId == characterId && i.DateEnd > DateTime.Now))
                 {
                     StaticBonusDTO dto = new StaticBonusDTO();
-                    Mapper.Mapper.Instance.StaticBonusMapper.ToStaticBonusDTO(entity, dto);
+                    Mapper.Mappers.StaticBonusMapper.ToStaticBonusDTO(entity, dto);
                     result.Add(dto);
                 }
                 return result;
             }
         }
 
-        public StaticBonusDTO LoadById(long sbId)
+        public static StaticBonusDTO LoadById(long sbId)
         {
             try
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     StaticBonusDTO dto = new StaticBonusDTO();
-                    if (Mapper.Mapper.Instance.StaticBonusMapper.ToStaticBonusDTO(context.StaticBonus.FirstOrDefault(s => s.StaticBonusId.Equals(sbId)), dto))
+                    if (Mapper.Mappers.StaticBonusMapper.ToStaticBonusDTO(context.StaticBonus.FirstOrDefault(s => s.StaticBonusId.Equals(sbId)), dto))
                     {
                         return dto;
                     }
@@ -130,15 +130,15 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        private StaticBonusDTO insert(StaticBonusDTO sb, OpenNosContext context)
+        private static StaticBonusDTO insert(StaticBonusDTO sb, OpenNosContext context)
         {
             try
             {
                 StaticBonus entity = new StaticBonus();
-                Mapper.Mapper.Instance.StaticBonusMapper.ToStaticBonus(sb, entity);
+                Mapper.Mappers.StaticBonusMapper.ToStaticBonus(sb, entity);
                 context.StaticBonus.Add(entity);
                 context.SaveChanges();
-                if (Mapper.Mapper.Instance.StaticBonusMapper.ToStaticBonusDTO(entity, sb))
+                if (Mapper.Mappers.StaticBonusMapper.ToStaticBonusDTO(entity, sb))
                 {
                     return sb;
                 }
@@ -152,14 +152,14 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        private StaticBonusDTO update(StaticBonus entity, StaticBonusDTO sb, OpenNosContext context)
+        private static StaticBonusDTO update(StaticBonus entity, StaticBonusDTO sb, OpenNosContext context)
         {
             if (entity != null)
             {
-                Mapper.Mapper.Instance.StaticBonusMapper.ToStaticBonus(sb, entity);
+                Mapper.Mappers.StaticBonusMapper.ToStaticBonus(sb, entity);
                 context.SaveChanges();
             }
-            if (Mapper.Mapper.Instance.StaticBonusMapper.ToStaticBonusDTO(entity, sb))
+            if (Mapper.Mappers.StaticBonusMapper.ToStaticBonusDTO(entity, sb))
             {
                 return sb;
             }

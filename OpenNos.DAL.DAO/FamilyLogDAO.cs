@@ -86,20 +86,20 @@ namespace OpenNos.DAL.DAO
                 foreach (FamilyLog familylog in context.FamilyLog.Where(fc => fc.FamilyId.Equals(familyId)))
                 {
                     FamilyLogDTO dto = new FamilyLogDTO();
-                    Mapper.Mapper.Instance.FamilyLogMapper.ToFamilyLogDTO(familylog, dto);
+                    Mapper.Mappers.FamilyLogMapper.ToFamilyLogDTO(familylog, dto);
                     result.Add(dto);
                 }
                 return result;
             }
         }
 
-        private FamilyLogDTO insert(FamilyLogDTO famlog, OpenNosContext context)
+        private static FamilyLogDTO insert(FamilyLogDTO famlog, OpenNosContext context)
         {
             FamilyLog entity = new FamilyLog();
-            Mapper.Mapper.Instance.FamilyLogMapper.ToFamilyLog(famlog, entity);
+            Mapper.Mappers.FamilyLogMapper.ToFamilyLog(famlog, entity);
             context.FamilyLog.Add(entity);
             context.SaveChanges();
-            if (Mapper.Mapper.Instance.FamilyLogMapper.ToFamilyLogDTO(entity, famlog))
+            if (Mapper.Mappers.FamilyLogMapper.ToFamilyLogDTO(entity, famlog))
             {
                 return famlog;
             }
@@ -107,15 +107,15 @@ namespace OpenNos.DAL.DAO
             return null;
         }
 
-        private FamilyLogDTO update(FamilyLog entity, FamilyLogDTO famlog, OpenNosContext context)
+        private static FamilyLogDTO update(FamilyLog entity, FamilyLogDTO famlog, OpenNosContext context)
         {
             if (entity != null)
             {
-                Mapper.Mapper.Instance.FamilyLogMapper.ToFamilyLog(famlog, entity);
+                Mapper.Mappers.FamilyLogMapper.ToFamilyLog(famlog, entity);
                 context.SaveChanges();
             }
 
-            if (Mapper.Mapper.Instance.FamilyLogMapper.ToFamilyLogDTO(entity, famlog))
+            if (Mapper.Mappers.FamilyLogMapper.ToFamilyLogDTO(entity, famlog))
             {
                 return famlog;
             }

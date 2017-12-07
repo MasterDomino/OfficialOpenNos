@@ -87,7 +87,7 @@ namespace OpenNos.DAL.DAO
                 foreach (BazaarItem bazaarItem in context.BazaarItem)
                 {
                     BazaarItemDTO dto = new BazaarItemDTO();
-                    Mapper.Mapper.Instance.BazaarItemMapper.ToBazaarItemDTO(bazaarItem, dto);
+                    Mapper.Mappers.BazaarItemMapper.ToBazaarItemDTO(bazaarItem, dto);
                     result.Add(dto);
                 }
                 return result;
@@ -101,7 +101,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     BazaarItemDTO dto = new BazaarItemDTO();
-                    if (Mapper.Mapper.Instance.BazaarItemMapper.ToBazaarItemDTO(context.BazaarItem.FirstOrDefault(i => i.BazaarItemId.Equals(bazaarItemId)), dto))
+                    if (Mapper.Mappers.BazaarItemMapper.ToBazaarItemDTO(context.BazaarItem.FirstOrDefault(i => i.BazaarItemId.Equals(bazaarItemId)), dto))
                     {
                         return dto;
                     }
@@ -135,13 +135,13 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        private BazaarItemDTO insert(BazaarItemDTO bazaarItem, OpenNosContext context)
+        private static BazaarItemDTO insert(BazaarItemDTO bazaarItem, OpenNosContext context)
         {
             BazaarItem entity = new BazaarItem();
-            Mapper.Mapper.Instance.BazaarItemMapper.ToBazaarItem(bazaarItem, entity);
+            Mapper.Mappers.BazaarItemMapper.ToBazaarItem(bazaarItem, entity);
             context.BazaarItem.Add(entity);
             context.SaveChanges();
-            if (Mapper.Mapper.Instance.BazaarItemMapper.ToBazaarItemDTO(entity, bazaarItem))
+            if (Mapper.Mappers.BazaarItemMapper.ToBazaarItemDTO(entity, bazaarItem))
             {
                 return bazaarItem;
             }
@@ -149,14 +149,14 @@ namespace OpenNos.DAL.DAO
             return null;
         }
 
-        private BazaarItemDTO update(BazaarItem entity, BazaarItemDTO bazaarItem, OpenNosContext context)
+        private static BazaarItemDTO update(BazaarItem entity, BazaarItemDTO bazaarItem, OpenNosContext context)
         {
             if (entity != null)
             {
-                Mapper.Mapper.Instance.BazaarItemMapper.ToBazaarItem(bazaarItem, entity);
+                Mapper.Mappers.BazaarItemMapper.ToBazaarItem(bazaarItem, entity);
                 context.SaveChanges();
             }
-            if (Mapper.Mapper.Instance.BazaarItemMapper.ToBazaarItemDTO(entity, bazaarItem))
+            if (Mapper.Mappers.BazaarItemMapper.ToBazaarItemDTO(entity, bazaarItem))
             {
                 return bazaarItem;
             }

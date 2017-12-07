@@ -88,7 +88,7 @@ namespace OpenNos.DAL.DAO
                     if (account != null)
                     {
                         AccountDTO accountDTO = new AccountDTO();
-                        if (Mapper.Mapper.Instance.AccountMapper.ToAccountDTO(account, accountDTO))
+                        if (Mapper.Mappers.AccountMapper.ToAccountDTO(account, accountDTO))
                         {
                             return accountDTO;
                         }
@@ -112,7 +112,7 @@ namespace OpenNos.DAL.DAO
                     if (account != null)
                     {
                         AccountDTO accountDTO = new AccountDTO();
-                        if (Mapper.Mapper.Instance.AccountMapper.ToAccountDTO(account, accountDTO))
+                        if (Mapper.Mappers.AccountMapper.ToAccountDTO(account, accountDTO))
                         {
                             return accountDTO;
                         }
@@ -152,25 +152,25 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        private AccountDTO insert(AccountDTO account, OpenNosContext context)
+        private static AccountDTO insert(AccountDTO account, OpenNosContext context)
         {
             Account entity = new Account();
-            Mapper.Mapper.Instance.AccountMapper.ToAccount(account, entity);
+            Mapper.Mappers.AccountMapper.ToAccount(account, entity);
             context.Account.Add(entity);
             context.SaveChanges();
-            Mapper.Mapper.Instance.AccountMapper.ToAccountDTO(entity, account);
+            Mapper.Mappers.AccountMapper.ToAccountDTO(entity, account);
             return account;
         }
 
-        private AccountDTO update(Account entity, AccountDTO account, OpenNosContext context)
+        private static AccountDTO update(Account entity, AccountDTO account, OpenNosContext context)
         {
             if (entity != null)
             {
-                Mapper.Mapper.Instance.AccountMapper.ToAccount(account, entity);
+                Mapper.Mappers.AccountMapper.ToAccount(account, entity);
                 context.Entry(entity).State = EntityState.Modified;
                 context.SaveChanges();
             }
-            if (Mapper.Mapper.Instance.AccountMapper.ToAccountDTO(entity, account))
+            if (Mapper.Mappers.AccountMapper.ToAccountDTO(entity, account))
             {
                 return account;
             }

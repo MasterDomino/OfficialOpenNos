@@ -12,6 +12,7 @@
  * GNU General Public License for more details.
  */
 
+using OpenNos.Core.ExceptionExtensions;
 using OpenNos.Core.Networking.Communication.Scs.Communication.Messages;
 using OpenNos.Core.Networking.Communication.Scs.Communication.Protocols;
 using System;
@@ -150,7 +151,7 @@ namespace OpenNos.Core
             // Read length of the message
             if (frameLength > MAX_MESSAGE_LENGTH)
             {
-                throw new Exception("Message is too big (" + frameLength + " bytes). Max allowed length is " + MAX_MESSAGE_LENGTH + " bytes.");
+                throw new CommunicationException("Message is too big (" + frameLength + " bytes). Max allowed length is " + MAX_MESSAGE_LENGTH + " bytes.");
             }
 
             // Read bytes of serialized message and deserialize it

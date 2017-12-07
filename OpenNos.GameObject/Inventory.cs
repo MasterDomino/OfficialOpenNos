@@ -154,7 +154,7 @@ namespace OpenNos.GameObject
             {
                 ItemInstance newItem = InstantiateItemInstance(vnum, Owner.CharacterId, amount);
                 newItem.Rare = Rare;
-                newItem.Upgrade = Upgrade == 0 ? newItem.Item.ItemType == ItemType.Shell ? (byte)ServerManager.Instance.RandomNumber(50, 80) : Upgrade : Upgrade;
+                newItem.Upgrade = Upgrade == 0 ? newItem.Item.ItemType == ItemType.Shell ? (byte)ServerManager.RandomNumber(50, 80) : Upgrade : Upgrade;
                 newItem.Design = Design;
                 return AddToInventory(newItem, type);
             }
@@ -258,7 +258,7 @@ namespace OpenNos.GameObject
 
         public int BackpackSize() => DEFAULT_BACKPACK_SIZE + ((Owner.HaveBackpack() ? 1 : 0) * 12);
 
-        public bool CanAddItem(short itemVnum) => canAddItem(ServerManager.Instance.GetItem(itemVnum).Type);
+        public bool CanAddItem(short itemVnum) => canAddItem(ServerManager.GetItem(itemVnum).Type);
 
         public int CountItem(int itemVNum) => Where(s => s.ItemVNum == itemVNum && s.Type != InventoryType.FamilyWareHouse && s.Type != InventoryType.Bazaar && s.Type != InventoryType.Warehouse && s.Type != InventoryType.PetWarehouse).Sum(i => i.Amount);
 
@@ -390,7 +390,7 @@ namespace OpenNos.GameObject
             }
             catch (InvalidOperationException ioEx)
             {
-                Logger.LogUserEventError("LoadBySlotAndType", Owner?.Session?.GenerateIdentity(), "Multiple items in slot, Splitting...", ioEx);
+                Logger.LogUserEventError(nameof(LoadBySlotAndType), Owner?.Session?.GenerateIdentity(), "Multiple items in slot, Splitting...", ioEx);
                 bool isFirstItem = true;
                 foreach (ItemInstance item in Where(i => i?.GetType().Equals(typeof(T)) == true && i.Slot == slot && i.Type == type))
                 {
@@ -430,7 +430,7 @@ namespace OpenNos.GameObject
             }
             catch (InvalidOperationException ioEx)
             {
-                Logger.LogUserEventError("LoadBySlotAndType", Owner?.Session?.GenerateIdentity(), "Multiple items in slot, Splitting...", ioEx);
+                Logger.LogUserEventError(nameof(LoadBySlotAndType), Owner?.Session?.GenerateIdentity(), "Multiple items in slot, Splitting...", ioEx);
                 bool isFirstItem = true;
                 foreach (ItemInstance item in Where(i => i.Slot.Equals(slot) && i.Type.Equals(type)))
                 {

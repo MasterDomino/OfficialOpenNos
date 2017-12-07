@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class MailMapper
+    public static class MailMapper
     {
         #region Methods
 
-        public bool ToMail(MailDTO input, Mail output)
+        public static bool ToMail(MailDTO input, Mail output)
         {
             if (input == null)
             {
@@ -36,7 +36,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToMailDTO(Mail input, MailDTO output)
+        public static bool ToMailDTO(Mail input, MailDTO output)
         {
             if (input == null)
             {

@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class NpcMonsterMapper
+    public static class NpcMonsterMapper
     {
         #region Methods
 
-        public bool ToNpcMonster(NpcMonsterDTO input, NpcMonster output)
+        public static bool ToNpcMonster(NpcMonsterDTO input, NpcMonster output)
         {
             if (input == null)
             {
@@ -60,7 +60,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToNpcMonsterDTO(NpcMonster input, NpcMonsterDTO output)
+        public static bool ToNpcMonsterDTO(NpcMonster input, NpcMonsterDTO output)
         {
             if (input == null)
             {

@@ -37,7 +37,7 @@ namespace OpenNos.Core
                 ArrayTraverse walker = new ArrayTraverse(array);
                 do
                 {
-                    action(array, walker.Position);
+                    action?.Invoke(array, walker._position);
                 }
                 while (walker.Step());
             }
@@ -49,7 +49,8 @@ namespace OpenNos.Core
         {
             #region Members
 
-            public int[] Position;
+            public readonly int[] _position;
+
             private readonly int[] _maxLengths;
 
             #endregion
@@ -63,7 +64,7 @@ namespace OpenNos.Core
                 {
                     _maxLengths[i] = array.GetLength(i) - 1;
                 }
-                Position = new int[array.Rank];
+                _position = new int[array.Rank];
             }
 
             #endregion
@@ -72,14 +73,14 @@ namespace OpenNos.Core
 
             public bool Step()
             {
-                for (int i = 0; i < Position.Length; ++i)
+                for (int i = 0; i < _position.Length; ++i)
                 {
-                    if (Position[i] < _maxLengths[i])
+                    if (_position[i] < _maxLengths[i])
                     {
-                        Position[i]++;
+                        _position[i]++;
                         for (int j = 0; j < i; j++)
                         {
-                            Position[j] = 0;
+                            _position[j] = 0;
                         }
                         return true;
                     }
@@ -100,7 +101,7 @@ namespace OpenNos.Core
     {
         /// <summary>
         /// Defines a What a Terrible Fault Exception, which should actually never be thrown.
-        /// "For those times when: 
+        /// "For those times when:
         /// if (true == false)
         /// {
         ///     Console.WriteLine("Logic is dead!");
@@ -122,6 +123,28 @@ namespace OpenNos.Core
             }
 
             protected WTFException(SerializationInfo info, StreamingContext context) : base(info, context)
+            {
+            }
+        }
+
+        /// <summary>
+        /// Defines a CommunicationException thrown mostly by TcpConnections
+        /// </summary>
+        public class CommunicationException : Exception
+        {
+            public CommunicationException()
+            {
+            }
+
+            public CommunicationException(string message) : base(nameof(CommunicationException) + message)
+            {
+            }
+
+            public CommunicationException(string message, Exception innerException) : base(nameof(CommunicationException) + message, innerException)
+            {
+            }
+
+            protected CommunicationException(SerializationInfo info, StreamingContext context) : base(info, context)
             {
             }
         }

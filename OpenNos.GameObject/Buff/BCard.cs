@@ -82,14 +82,14 @@ namespace OpenNos.GameObject
                             {
                                 buff = new Buff((short)SecondData, character.Level);
                             }
-                            if (ServerManager.Instance.RandomNumber() < FirstData)
+                            if (ServerManager.RandomNumber() < FirstData)
                             {
                                 character.AddBuff(buff);
                             }
                         }
                         else if (type == typeof(MapMonster))
                         {
-                            if (ServerManager.Instance.RandomNumber() < FirstData && session is MapMonster mapMonster)
+                            if (ServerManager.RandomNumber() < FirstData && session is MapMonster mapMonster)
                             {
                                 mapMonster.AddBuff(new Buff((short)SecondData, mapMonster.Monster.Level));
                             }
@@ -123,11 +123,11 @@ namespace OpenNos.GameObject
                             List<MonsterToSummon> summonParameters = new List<MonsterToSummon>();
                             for (int i = 0; i < FirstData; i++)
                             {
-                                short x = (short)(ServerManager.Instance.RandomNumber(-3, 3) + mapMonster.MapX);
-                                short y = (short)(ServerManager.Instance.RandomNumber(-3, 3) + mapMonster.MapY);
-                                summonParameters.Add(new MonsterToSummon((short)SecondData, new MapCell() { X = x, Y = y }, -1, true));
+                                short x = (short)(ServerManager.RandomNumber(-3, 3) + mapMonster.MapX);
+                                short y = (short)(ServerManager.RandomNumber(-3, 3) + mapMonster.MapY);
+                                summonParameters.Add(new MonsterToSummon((short)SecondData, new MapCell { X = x, Y = y }, -1, true));
                             }
-                            if (ServerManager.Instance.RandomNumber() <= Math.Abs(ThirdData) || ThirdData == 0)
+                            if (ServerManager.RandomNumber() <= Math.Abs(ThirdData) || ThirdData == 0)
                             {
                                 switch (SubType)
                                 {
@@ -265,7 +265,7 @@ namespace OpenNos.GameObject
                     }
                     else if (type == typeof(MapMonster))
                     {
-                        if (ServerManager.Instance.RandomNumber() < FirstData && session is MapMonster mapMonster)
+                        if (ServerManager.RandomNumber() < FirstData && session is MapMonster mapMonster)
                         {
                             mapMonster.AddBuff(new Buff((short)SecondData, mapMonster.Monster.Level));
                         }
@@ -292,7 +292,7 @@ namespace OpenNos.GameObject
                     {
                         if (session is MapMonster mapMonster && sender is ClientSession senderSession)
                         {
-                            NpcMonster mateNpc = ServerManager.Instance.GetNpc(mapMonster.MonsterVNum);
+                            NpcMonster mateNpc = ServerManager.GetNpc(mapMonster.MonsterVNum);
                             if (mateNpc != null)
                             {
                                 if (mapMonster.Monster.Catch)
@@ -303,13 +303,13 @@ namespace OpenNos.GameObject
                                         {
 #warning find a new algorithm
                                             int[] chance = { 100, 80, 60, 40, 20, 0 };
-                                            if (ServerManager.Instance.RandomNumber() < chance[ServerManager.Instance.RandomNumber(0, 5)])
+                                            if (ServerManager.RandomNumber() < chance[ServerManager.RandomNumber(0, 5)])
                                             {
                                                 Mate mate = new Mate(senderSession.Character, mateNpc, (byte)(mapMonster.Monster.Level - 15 > 0 ? mapMonster.Monster.Level - 15 : 1), MateType.Pet);
                                                 if (senderSession.Character.CanAddMate(mate))
                                                 {
                                                     senderSession.Character.AddPetWithSkill(mate);
-                                                    senderSession.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("CATCH_SUCCESS"), 0));
+                                                    senderSession.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("CATCH_SUCCESS"), 0));
                                                     senderSession.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, senderSession.Character.CharacterId, 197));
                                                     senderSession.CurrentMapInstance?.Broadcast(StaticPacketHelper.SkillUsed(UserType.Player, senderSession.Character.CharacterId, 3, mapMonster.MapMonsterId, -1, 0, 15, -1, -1, -1, true, (int)((float)mapMonster.CurrentHp / (float)mapMonster.MaxHp * 100), 0, -1, 0));
                                                     mapMonster.SetDeathStatement();
@@ -323,25 +323,25 @@ namespace OpenNos.GameObject
                                             }
                                             else
                                             {
-                                                senderSession.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("CATCH_FAIL"), 0));
+                                                senderSession.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("CATCH_FAIL"), 0));
                                                 senderSession.CurrentMapInstance?.Broadcast(StaticPacketHelper.SkillUsed(UserType.Player, senderSession.Character.CharacterId, 3, mapMonster.MapMonsterId, -1, 0, 15, -1, -1, -1, true, (int)((float)mapMonster.CurrentHp / (float)mapMonster.MaxHp * 100), 0, -1, 0));
                                             }
                                         }
                                         else
                                         {
-                                            senderSession.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("LEVEL_LOWER_THAN_MONSTER"), 0));
+                                            senderSession.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("LEVEL_LOWER_THAN_MONSTER"), 0));
                                             senderSession.SendPacket(StaticPacketHelper.Cancel(2, mapMonster.MapMonsterId));
                                         }
                                     }
                                     else
                                     {
-                                        senderSession.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("CURRENT_HP_TOO_HIGH"), 0));
+                                        senderSession.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("CURRENT_HP_TOO_HIGH"), 0));
                                         senderSession.SendPacket(StaticPacketHelper.Cancel(2, mapMonster.MapMonsterId));
                                     }
                                 }
                                 else
                                 {
-                                    senderSession.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("MONSTER_CANT_BE_CAPTURED"), 0));
+                                    senderSession.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("MONSTER_CANT_BE_CAPTURED"), 0));
                                     senderSession.SendPacket(StaticPacketHelper.Cancel(2, mapMonster.MapMonsterId));
                                 }
                             }
@@ -467,10 +467,10 @@ namespace OpenNos.GameObject
                     {
                         if (type == typeof(Character) && session is Character character)
                         {
-                            if (SkillVNum.HasValue && SubType.Equals((byte)AdditionalTypes.MeditationSkill.CausingChance / 10) && ServerManager.Instance.RandomNumber() < FirstData)
+                            if (SkillVNum.HasValue && SubType.Equals((byte)AdditionalTypes.MeditationSkill.CausingChance / 10) && ServerManager.RandomNumber() < FirstData)
                             {
-                                Skill skill = ServerManager.Instance.GetSkill(SkillVNum.Value);
-                                Skill newSkill = ServerManager.Instance.GetSkill((short)SecondData);
+                                Skill skill = ServerManager.GetSkill(SkillVNum.Value);
+                                Skill newSkill = ServerManager.GetSkill((short)SecondData);
                                 Observable.Timer(TimeSpan.FromMilliseconds(100)).Subscribe(observer =>
                                 {
                                     foreach (QuicklistEntryDTO quicklistEntry in character.QuicklistEntries.Where(s => s.Pos.Equals(skill.CastId)))

@@ -34,10 +34,10 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     RollGeneratedItem entity = new RollGeneratedItem();
-                    Mapper.Mapper.Instance.RollGeneratedItemMapper.ToRollGeneratedItem(item, entity);
+                    Mapper.Mappers.RollGeneratedItemMapper.ToRollGeneratedItem(item, entity);
                     context.RollGeneratedItem.Add(entity);
                     context.SaveChanges();
-                    if (Mapper.Mapper.Instance.RollGeneratedItemMapper.ToRollGeneratedItemDTO(entity, item))
+                    if (Mapper.Mappers.RollGeneratedItemMapper.ToRollGeneratedItemDTO(entity, item))
                     {
                         return item;
                     }
@@ -60,7 +60,7 @@ namespace OpenNos.DAL.DAO
                 foreach (RollGeneratedItem item in context.RollGeneratedItem)
                 {
                     RollGeneratedItemDTO dto = new RollGeneratedItemDTO();
-                    Mapper.Mapper.Instance.RollGeneratedItemMapper.ToRollGeneratedItemDTO(item, dto);
+                    Mapper.Mappers.RollGeneratedItemMapper.ToRollGeneratedItemDTO(item, dto);
                     result.Add(dto);
                 }
                 return result;
@@ -74,7 +74,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     RollGeneratedItemDTO dto = new RollGeneratedItemDTO();
-                    if (Mapper.Mapper.Instance.RollGeneratedItemMapper.ToRollGeneratedItemDTO(context.RollGeneratedItem.FirstOrDefault(i => i.RollGeneratedItemId.Equals(id)), dto))
+                    if (Mapper.Mappers.RollGeneratedItemMapper.ToRollGeneratedItemDTO(context.RollGeneratedItem.FirstOrDefault(i => i.RollGeneratedItemId.Equals(id)), dto))
                     {
                         return dto;
                     }
@@ -97,7 +97,7 @@ namespace OpenNos.DAL.DAO
                 foreach (RollGeneratedItem item in context.RollGeneratedItem.Where(s => s.OriginalItemVNum == vnum))
                 {
                     RollGeneratedItemDTO dto = new RollGeneratedItemDTO();
-                    Mapper.Mapper.Instance.RollGeneratedItemMapper.ToRollGeneratedItemDTO(item, dto);
+                    Mapper.Mappers.RollGeneratedItemMapper.ToRollGeneratedItemDTO(item, dto);
                     result.Add(dto);
                 }
                 return result;

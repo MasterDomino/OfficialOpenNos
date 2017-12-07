@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class MateMapper
+    public static class MateMapper
     {
         #region Methods
 
-        public bool ToMate(MateDTO input, Mate output)
+        public static bool ToMate(MateDTO input, Mate output)
         {
             if (input == null)
             {
@@ -36,7 +36,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToMateDTO(Mate input, MateDTO output)
+        public static bool ToMateDTO(Mate input, MateDTO output)
         {
             if (input == null)
             {

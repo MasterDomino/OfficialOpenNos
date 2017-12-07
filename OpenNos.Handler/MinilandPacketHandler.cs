@@ -55,7 +55,7 @@ namespace OpenNos.Handler
                 }
                 else
                 {
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("MINILAND_CLOSED_BY_FRIEND")));
+                    Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("MINILAND_CLOSED_BY_FRIEND")));
                 }
             }
         }
@@ -78,16 +78,16 @@ namespace OpenNos.Handler
                     case 1:
                         if (mlobj.ItemInstance.DurabilityPoint <= 0)
                         {
-                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_ENOUGH_DURABILITY_POINT"), 0));
+                            Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_ENOUGH_DURABILITY_POINT"), 0));
                             return;
                         }
                         if (Session.Character.MinilandPoint <= 0)
                         {
                             Session.SendPacket($"qna #mg^1^7^3125^1^1 {Language.Instance.GetMessageFromKey("NOT_ENOUGH_MINILAND_POINT")}");
                         }
-                        Session.Character.MapInstance.Broadcast(UserInterfaceHelper.Instance.GenerateGuri(2, 1, Session.Character.CharacterId));
+                        Session.Character.MapInstance.Broadcast(UserInterfaceHelper.GenerateGuri(2, 1, Session.Character.CharacterId));
                         Session.Character.CurrentMinigame = (short)(game == 0 ? 5102 : game == 1 ? 5103 : game == 2 ? 5105 : game == 3 ? 5104 : game == 4 ? 5113 : 5112);
-                        Session.Character.MinigameLog = new Data.MinigameLogDTO()
+                        Session.Character.MinigameLog = new Data.MinigameLogDTO
                         {
                             CharacterId = Session.Character.CharacterId,
                             StartTime = DateTime.Now.Ticks,
@@ -99,12 +99,12 @@ namespace OpenNos.Handler
                     //stop
                     case 2:
                         Session.Character.CurrentMinigame = 0;
-                        Session.Character.MapInstance.Broadcast(UserInterfaceHelper.Instance.GenerateGuri(6, 1, Session.Character.CharacterId));
+                        Session.Character.MapInstance.Broadcast(UserInterfaceHelper.GenerateGuri(6, 1, Session.Character.CharacterId));
                         break;
 
                     case 3:
                         Session.Character.CurrentMinigame = 0;
-                        Session.Character.MapInstance.Broadcast(UserInterfaceHelper.Instance.GenerateGuri(6, 1, Session.Character.CharacterId));
+                        Session.Character.MapInstance.Broadcast(UserInterfaceHelper.GenerateGuri(6, 1, Session.Character.CharacterId));
                         if (packet.Point.HasValue && Session.Character.MinigameLog != null)
                         {
                             Session.Character.MinigameLog.EndTime = DateTime.Now.Ticks;
@@ -194,7 +194,7 @@ namespace OpenNos.Handler
                             Session.Character.Gold -= (int)packet.Point;
                             Session.SendPacket(Session.Character.GenerateGold());
                             mlobj.ItemInstance.DurabilityPoint += (int)(packet.Point / 100);
-                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("REFILL_MINIGAME"), (int)packet.Point / 100)));
+                            Session.SendPacket(UserInterfaceHelper.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("REFILL_MINIGAME"), (int)packet.Point / 100)));
                             Session.SendPacket(Session.Character.GenerateMloMg(mlobj, packet));
                         }
                         break;
@@ -255,7 +255,7 @@ namespace OpenNos.Handler
                                 List<ItemInstance> inv = Session.Character.Inventory.AddNewToInventory(itemVNum, itemAmount);
                                 if (inv.Count > 0)
                                 {
-                                    Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {ServerManager.Instance.GetItem(itemVNum).Name} x {itemAmount}", 12));
+                                    Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {ServerManager.GetItem(itemVNum).Name} x {itemAmount}", 12));
                                 }
                                 else
                                 {
@@ -280,7 +280,7 @@ namespace OpenNos.Handler
                             Session.Character.Inventory.RemoveItemAmount(itemVNum);
                             int point = itemVNum == 1269 ? 300 : 500;
                             mlobj.ItemInstance.DurabilityPoint += point;
-                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("REFILL_MINIGAME"), point)));
+                            Session.SendPacket(UserInterfaceHelper.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("REFILL_MINIGAME"), point)));
                             Session.SendPacket(Session.Character.GenerateMloMg(mlobj, packet));
                         }
                         break;
@@ -353,12 +353,12 @@ namespace OpenNos.Handler
                     }
                     else
                     {
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("MINILAND_NEED_LOCK"), 0));
+                        Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("MINILAND_NEED_LOCK"), 0));
                     }
                 }
                 else
                 {
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("ALREADY_THIS_MINILANDOBJECT"), 0));
+                    Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("ALREADY_THIS_MINILANDOBJECT"), 0));
                 }
             }
         }
@@ -373,7 +373,7 @@ namespace OpenNos.Handler
             {
                 case 1:
                     Session.SendPacket($"mlintro {mlEditPacket.Parameters.Replace(' ', '^')}");
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("MINILAND_INFO_CHANGED")));
+                    Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("MINILAND_INFO_CHANGED")));
                     break;
 
                 case 2:
@@ -383,19 +383,19 @@ namespace OpenNos.Handler
                     switch (state)
                     {
                         case MinilandState.Private:
-                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("MINILAND_PRIVATE"), 0));
+                            Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("MINILAND_PRIVATE"), 0));
 
                             //Need to be review to permit one friend limit on the miniland
                             Session.Character.Miniland.Sessions.Where(s => s.Character != Session.Character).ToList().ForEach(s => ServerManager.Instance.ChangeMap(s.Character.CharacterId, s.Character.MapId, s.Character.MapX, s.Character.MapY));
                             break;
 
                         case MinilandState.Lock:
-                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("MINILAND_LOCK"), 0));
+                            Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("MINILAND_LOCK"), 0));
                             Session.Character.Miniland.Sessions.Where(s => s.Character != Session.Character).ToList().ForEach(s => ServerManager.Instance.ChangeMap(s.Character.CharacterId, s.Character.MapId, s.Character.MapX, s.Character.MapY));
                             break;
 
                         case MinilandState.Open:
-                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("MINILAND_PUBLIC"), 0));
+                            Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("MINILAND_PUBLIC"), 0));
                             break;
                     }
 
@@ -430,7 +430,7 @@ namespace OpenNos.Handler
                 }
                 else
                 {
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("MINILAND_NEED_LOCK"), 0));
+                    Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("MINILAND_NEED_LOCK"), 0));
                 }
             }
         }

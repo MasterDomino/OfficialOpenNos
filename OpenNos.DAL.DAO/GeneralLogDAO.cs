@@ -50,10 +50,10 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     GeneralLog entity = new GeneralLog();
-                    Mapper.Mapper.Instance.GeneralLogMapper.ToGeneralLog(generalLog, entity);
+                    Mapper.Mappers.GeneralLogMapper.ToGeneralLog(generalLog, entity);
                     context.GeneralLog.Add(entity);
                     context.SaveChanges();
-                    if (Mapper.Mapper.Instance.GeneralLogMapper.ToGeneralLogDTO(entity, generalLog))
+                    if (Mapper.Mappers.GeneralLogMapper.ToGeneralLogDTO(entity, generalLog))
                     {
                         return generalLog;
                     }
@@ -76,7 +76,7 @@ namespace OpenNos.DAL.DAO
                 foreach (GeneralLog generalLog in context.GeneralLog)
                 {
                     GeneralLogDTO dto = new GeneralLogDTO();
-                    Mapper.Mapper.Instance.GeneralLogMapper.ToGeneralLogDTO(generalLog, dto);
+                    Mapper.Mappers.GeneralLogMapper.ToGeneralLogDTO(generalLog, dto);
                     result.Add(dto);
                 }
                 return result;
@@ -91,7 +91,7 @@ namespace OpenNos.DAL.DAO
                 foreach (GeneralLog GeneralLog in context.GeneralLog.Where(s => s.AccountId == accountId))
                 {
                     GeneralLogDTO dto = new GeneralLogDTO();
-                    Mapper.Mapper.Instance.GeneralLogMapper.ToGeneralLogDTO(GeneralLog, dto);
+                    Mapper.Mappers.GeneralLogMapper.ToGeneralLogDTO(GeneralLog, dto);
                     result.Add(dto);
                 }
                 return result;
@@ -106,7 +106,7 @@ namespace OpenNos.DAL.DAO
                 foreach (GeneralLog log in context.GeneralLog.Where(c => c.LogType.Equals(logType) && c.CharacterId == characterId))
                 {
                     GeneralLogDTO dto = new GeneralLogDTO();
-                    Mapper.Mapper.Instance.GeneralLogMapper.ToGeneralLogDTO(log, dto);
+                    Mapper.Mappers.GeneralLogMapper.ToGeneralLogDTO(log, dto);
                     result.Add(dto);
                 }
                 return result;

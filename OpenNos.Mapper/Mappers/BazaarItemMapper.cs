@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class BazaarItemMapper
+    public static class BazaarItemMapper
     {
         #region Methods
 
-        public bool ToBazaarItem(BazaarItemDTO input, BazaarItem output)
+        public static bool ToBazaarItem(BazaarItemDTO input, BazaarItem output)
         {
             if (input == null)
             {
@@ -26,7 +26,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToBazaarItemDTO(BazaarItem input, BazaarItemDTO output)
+        public static bool ToBazaarItemDTO(BazaarItem input, BazaarItemDTO output)
         {
             if (input == null)
             {

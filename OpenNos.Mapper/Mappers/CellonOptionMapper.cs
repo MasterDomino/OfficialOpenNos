@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class CellonOptionMapper
+    public static class CellonOptionMapper
     {
         #region Methods
 
-        public bool ToCellonOption(CellonOptionDTO input, CellonOption output)
+        public static bool ToCellonOption(CellonOptionDTO input, CellonOption output)
         {
             if (input == null)
             {
@@ -22,7 +22,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToCellonOptionDTO(CellonOption input, CellonOptionDTO output)
+        public static bool ToCellonOptionDTO(CellonOption input, CellonOptionDTO output)
         {
             if (input == null)
             {

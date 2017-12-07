@@ -130,8 +130,9 @@ namespace OpenNos.Core.Threading
             {
                 _currentProcessTask.Wait();
             }
-            catch
+            catch (Exception)
             {
+                throw;
             }
         }
 

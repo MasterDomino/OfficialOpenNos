@@ -252,9 +252,9 @@ namespace OpenNos.Core
                 {
                     return _items[v];
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Logger.Error("Tell Master that i dropped and IOR exception somewhere, also stop crying about it.");
+                    Logger.Error("Tell Master that i dropped and IOR exception somewhere, also stop crying about it.", ex);
                 }
                 finally
                 {
@@ -291,7 +291,6 @@ namespace OpenNos.Core
         /// Searches for an element that matches the conditions defined by the specified predicate,
         /// and returns the first occurrence within the entire List&lt;T&gt;.
         /// </summary>
-        /// <param name="predicate"></param>
         /// <returns>T object</returns>
         public T FirstOrDefault()
         {

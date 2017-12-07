@@ -36,7 +36,7 @@ namespace OpenNos.DAL.DAO
                 foreach (Item item in context.Item.Where(s => string.IsNullOrEmpty(name) ? s.Name.Equals(string.Empty) : s.Name.Contains(name)))
                 {
                     ItemDTO dto = new ItemDTO();
-                    Mapper.Mapper.Instance.ItemMapper.ToItemDTO(item, dto);
+                    Mapper.Mappers.ItemMapper.ToItemDTO(item, dto);
                     result.Add(dto);
                 }
                 return result;
@@ -52,7 +52,7 @@ namespace OpenNos.DAL.DAO
                     foreach (ItemDTO Item in items)
                     {
                         Item entity = new Item();
-                        Mapper.Mapper.Instance.ItemMapper.ToItem(Item, entity);
+                        Mapper.Mappers.ItemMapper.ToItem(Item, entity);
                         context.Item.Add(entity);
                     }
                     context.SaveChanges();
@@ -71,10 +71,10 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     Item entity = new Item();
-                    Mapper.Mapper.Instance.ItemMapper.ToItem(item, entity);
+                    Mapper.Mappers.ItemMapper.ToItem(item, entity);
                     context.Item.Add(entity);
                     context.SaveChanges();
-                    if (Mapper.Mapper.Instance.ItemMapper.ToItemDTO(entity, item))
+                    if (Mapper.Mappers.ItemMapper.ToItemDTO(entity, item))
                     {
                         return item;
                     }
@@ -97,7 +97,7 @@ namespace OpenNos.DAL.DAO
                 foreach (Item item in context.Item)
                 {
                     ItemDTO dto = new ItemDTO();
-                    Mapper.Mapper.Instance.ItemMapper.ToItemDTO(item, dto);
+                    Mapper.Mappers.ItemMapper.ToItemDTO(item, dto);
                     result.Add(dto);
                 }
                 return result;
@@ -111,7 +111,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     ItemDTO dto = new ItemDTO();
-                    if (Mapper.Mapper.Instance.ItemMapper.ToItemDTO(context.Item.FirstOrDefault(i => i.VNum.Equals(vNum)), dto))
+                    if (Mapper.Mappers.ItemMapper.ToItemDTO(context.Item.FirstOrDefault(i => i.VNum.Equals(vNum)), dto))
                     {
                         return dto;
                     }

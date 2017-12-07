@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class MaintenanceLogMapper
+    public static class MaintenanceLogMapper
     {
         #region Methods
 
-        public bool ToMaintenanceLog(MaintenanceLogDTO input, MaintenanceLog output)
+        public static bool ToMaintenanceLog(MaintenanceLogDTO input, MaintenanceLog output)
         {
             if (input == null)
             {
@@ -21,7 +21,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToMaintenanceLogDTO(MaintenanceLog input, MaintenanceLogDTO output)
+        public static bool ToMaintenanceLogDTO(MaintenanceLog input, MaintenanceLogDTO output)
         {
             if (input == null)
             {

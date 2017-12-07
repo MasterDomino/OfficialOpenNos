@@ -41,7 +41,7 @@ namespace OpenNos.GameObject.Helpers
 
         #region Methods
 
-        public int CalculateComboPoint(int n)
+        public static int CalculateComboPoint(int n)
         {
             int a = 4;
             int b = 7;
@@ -54,7 +54,7 @@ namespace OpenNos.GameObject.Helpers
             return a;
         }
 
-        public void GenerateEvent(EventType type)
+        public static void GenerateEvent(EventType type)
         {
             if (!ServerManager.Instance.StartedEvents.Contains(type))
             {
@@ -97,7 +97,7 @@ namespace OpenNos.GameObject.Helpers
             }
         }
 
-        public TimeSpan GetMilisecondsBeforeTime(TimeSpan time)
+        public static TimeSpan GetMilisecondsBeforeTime(TimeSpan time)
         {
             TimeSpan now = TimeSpan.Parse(DateTime.Now.ToString("HH:mm"));
             TimeSpan timeLeftUntilFirstRun = time - now;
@@ -268,8 +268,8 @@ namespace OpenNos.GameObject.Helpers
                                     ClientSession client = evt.MapInstance.Sessions.FirstOrDefault();
                                     if (client != null)
                                     {
-                                        Guid MapInstanceId = ServerManager.Instance.GetBaseMapInstanceIdByMapId(client.Character.MapId);
-                                        MapInstance map = ServerManager.Instance.GetMapInstance(MapInstanceId);
+                                        Guid MapInstanceId = ServerManager.GetBaseMapInstanceIdByMapId(client.Character.MapId);
+                                        MapInstance map = ServerManager.GetMapInstance(MapInstanceId);
                                         ScriptedInstance si = map.ScriptedInstances.Find(s => s.PositionX == client.Character.MapX && s.PositionY == client.Character.MapY);
                                         byte penalty = 0;
                                         if (penalty > (client.Character.Level - si.LevelMinimum) * 2)
@@ -316,7 +316,7 @@ namespace OpenNos.GameObject.Helpers
                                             }
                                             Logger.LogUserEvent("RAID_SUCCESS", grp.Characters.ElementAt(0).Character.Name, $"RaidId: {grp.GroupId}");
 
-                                            ServerManager.Instance.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("RAID_SUCCEED"), grp?.Raid?.Label, grp.Characters.ElementAt(0).Character.Name), 0));
+                                            ServerManager.Instance.Broadcast(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("RAID_SUCCEED"), grp?.Raid?.Label, grp.Characters.ElementAt(0).Character.Name), 0));
                                         }
 
                                         Observable.Timer(TimeSpan.FromSeconds(evt.MapInstance.InstanceBag.EndState == 1 ? 30 : 0)).Subscribe(o =>
@@ -332,7 +332,7 @@ namespace OpenNos.GameObject.Helpers
                                                         targetSession.Character.Hp = 1;
                                                         targetSession.Character.Mp = 1;
                                                     }
-                                                    targetSession.SendPacket(targetSession.Character.GenerateRaidBf(evt.MapInstance.InstanceBag.EndState));
+                                                    targetSession.SendPacket(Character.GenerateRaidBf(evt.MapInstance.InstanceBag.EndState));
                                                     targetSession.SendPacket(targetSession.Character.GenerateRaid(1, true));
                                                     targetSession.SendPacket(targetSession.Character.GenerateRaid(2, true));
                                                     grp.LeaveGroup(targetSession);
@@ -513,7 +513,7 @@ namespace OpenNos.GameObject.Helpers
                             if (cl?.Character != null)
                             {
                                 ServerManager.Instance.Broadcast(cl, cl.Character?.Group?.GeneraterRaidmbf(cl), ReceiverType.Group);
-                                ServerManager.Instance.Broadcast(cl, UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NEW_MISSION"), 0), ReceiverType.Group);
+                                ServerManager.Instance.Broadcast(cl, UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NEW_MISSION"), 0), ReceiverType.Group);
                             }
                             break;
 

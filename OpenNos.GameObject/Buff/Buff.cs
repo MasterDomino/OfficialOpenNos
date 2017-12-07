@@ -28,7 +28,7 @@ namespace OpenNos.GameObject
 
         public Buff(short id, byte level)
         {
-            Card = ServerManager.Instance.GetCard(id);
+            Card = ServerManager.GetCard(id);
             Level = level;
         }
 

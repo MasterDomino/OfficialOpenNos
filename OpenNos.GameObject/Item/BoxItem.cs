@@ -72,14 +72,14 @@ namespace OpenNos.GameObject
                                                    && s.MaximumOriginalItemRare >= box.Rare
                                                    && s.OriginalItemDesign == box.Design).ToList();
                                 int probabilities = roll.Sum(s => s.Probability);
-                                int rnd = ServerManager.Instance.RandomNumber(0, probabilities);
+                                int rnd = ServerManager.RandomNumber(0, probabilities);
                                 int currentrnd = 0;
                                 foreach (RollGeneratedItemDTO rollitem in roll)
                                 {
                                     currentrnd += rollitem.Probability;
                                     if (currentrnd >= rnd)
                                     {
-                                        Item i = ServerManager.Instance.GetItem(rollitem.ItemGeneratedVNum);
+                                        Item i = ServerManager.GetItem(rollitem.ItemGeneratedVNum);
                                         sbyte rare = 0;
                                         byte upgrade = 0;
                                         if (i.ItemType == ItemType.Armor || i.ItemType == ItemType.Weapon || i.ItemType == ItemType.Shell)
@@ -88,7 +88,7 @@ namespace OpenNos.GameObject
                                         }
                                         if (i.ItemType == ItemType.Shell)
                                         {
-                                            upgrade = (byte)ServerManager.Instance.RandomNumber(50, 81);
+                                            upgrade = (byte)ServerManager.RandomNumber(50, 81);
                                         }
                                         session.Character.GiftAdd(rollitem.ItemGeneratedVNum, rollitem.ItemGeneratedAmount, (byte)rare, upgrade);
                                         session.SendPacket($"rdi {rollitem.ItemGeneratedVNum} {rollitem.ItemGeneratedAmount}");
@@ -123,8 +123,8 @@ namespace OpenNos.GameObject
                                     box.SpDamage = mate.Attack;
                                     box.SpDefence = mate.Defence;
                                     session.Character.Mates.Remove(mate);
-                                    session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("PET_STORED")));
-                                    session.SendPacket(UserInterfaceHelper.Instance.GeneratePClear());
+                                    session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("PET_STORED")));
+                                    session.SendPacket(UserInterfaceHelper.GeneratePClear());
                                     session.SendPackets(session.Character.GenerateScP());
                                     session.SendPackets(session.Character.GenerateScN());
                                     session.CurrentMapInstance?.Broadcast(mate.GenerateOut());
@@ -132,7 +132,7 @@ namespace OpenNos.GameObject
                             }
                             else
                             {
-                                NpcMonster heldMonster = ServerManager.Instance.GetNpc(box.HoldingVNum);
+                                NpcMonster heldMonster = ServerManager.GetNpc(box.HoldingVNum);
                                 if (heldMonster != null)
                                 {
                                     Mate mate = new Mate(session.Character, heldMonster, 1, MateType.Pet)
@@ -143,7 +143,7 @@ namespace OpenNos.GameObject
                                     if (session.Character.AddPet(mate))
                                     {
                                         session.Character.Inventory.RemoveItemFromInventory(inv.Id);
-                                        session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("PET_LEAVE_BEAD")));
+                                        session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("PET_LEAVE_BEAD")));
                                     }
                                 }
                             }
@@ -158,14 +158,14 @@ namespace OpenNos.GameObject
                     }
                     else
                     {
-                        NpcMonster heldMonster = ServerManager.Instance.GetNpc((short)EffectValue);
+                        NpcMonster heldMonster = ServerManager.GetNpc((short)EffectValue);
                         if (session.CurrentMapInstance == session.Character.Miniland && heldMonster != null)
                         {
                             Mate mate = new Mate(session.Character, heldMonster, LevelMinimum, ItemSubType == 1 ? MateType.Partner : MateType.Pet);
                             if (session.Character.AddPet(mate))
                             {
                                 session.Character.Inventory.RemoveItemFromInventory(inv.Id);
-                                session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("PET_LEAVE_BEAD")));
+                                session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("PET_LEAVE_BEAD")));
                             }
                         }
                         else
@@ -226,7 +226,7 @@ namespace OpenNos.GameObject
                                 }
                                 else
                                 {
-                                    session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_ENOUGH_PLACE"), 0));
+                                    session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_ENOUGH_PLACE"), 0));
                                 }
                             }
                         }
@@ -264,7 +264,7 @@ namespace OpenNos.GameObject
                                 }
                                 else
                                 {
-                                    session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_ENOUGH_PLACE"), 0));
+                                    session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_ENOUGH_PLACE"), 0));
                                 }
                             }
                         }
@@ -293,7 +293,7 @@ namespace OpenNos.GameObject
                                 }
                                 else
                                 {
-                                    session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_ENOUGH_PLACE"), 0));
+                                    session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_ENOUGH_PLACE"), 0));
                                 }
                             }
                         }

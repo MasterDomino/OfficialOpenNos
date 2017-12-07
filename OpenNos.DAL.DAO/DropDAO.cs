@@ -37,7 +37,7 @@ namespace OpenNos.DAL.DAO
                     foreach (DropDTO Drop in drops)
                     {
                         Drop entity = new Drop();
-                        Mapper.Mapper.Instance.DropMapper.ToDrop(Drop, entity);
+                        Mapper.Mappers.DropMapper.ToDrop(Drop, entity);
                         context.Drop.Add(entity);
                     }
                     context.Configuration.AutoDetectChangesEnabled = true;
@@ -59,7 +59,7 @@ namespace OpenNos.DAL.DAO
                     Drop entity = new Drop();
                     context.Drop.Add(entity);
                     context.SaveChanges();
-                    if (Mapper.Mapper.Instance.DropMapper.ToDropDTO(entity, drop))
+                    if (Mapper.Mappers.DropMapper.ToDropDTO(entity, drop))
                     {
                         return drop;
                     }
@@ -82,7 +82,7 @@ namespace OpenNos.DAL.DAO
                 foreach (Drop entity in context.Drop)
                 {
                     DropDTO dto = new DropDTO();
-                    Mapper.Mapper.Instance.DropMapper.ToDropDTO(entity, dto);
+                    Mapper.Mappers.DropMapper.ToDropDTO(entity, dto);
                     result.Add(dto);
                 }
                 return result;
@@ -98,7 +98,7 @@ namespace OpenNos.DAL.DAO
                 foreach (Drop Drop in context.Drop.Where(s => s.MonsterVNum == monsterVNum || s.MonsterVNum == null))
                 {
                     DropDTO dto = new DropDTO();
-                    Mapper.Mapper.Instance.DropMapper.ToDropDTO(Drop, dto);
+                    Mapper.Mappers.DropMapper.ToDropDTO(Drop, dto);
                     result.Add(dto);
                 }
                 return result;

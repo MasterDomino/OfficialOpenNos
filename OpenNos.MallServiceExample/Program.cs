@@ -47,7 +47,7 @@ namespace OpenNos.MallServiceExample
             byte count = byte.Parse(Console.ReadLine());
             while (count != 0)
             {
-                MallServiceClient.Instance.SendItem(charId, new MallItem()
+                MallServiceClient.Instance.SendItem(charId, new MallItem
                 {
                     ItemVNum = vnum,
                     Amount = amount,

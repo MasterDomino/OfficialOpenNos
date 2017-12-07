@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class MinigameLogMapper
+    public static class MinigameLogMapper
     {
         #region Methods
 
-        public bool ToMinigameLog(MinigameLogDTO input, MinigameLog output)
+        public static bool ToMinigameLog(MinigameLogDTO input, MinigameLog output)
         {
             if (input == null)
             {
@@ -24,7 +24,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToMinigameLogDTO(MinigameLog input, MinigameLogDTO output)
+        public static bool ToMinigameLogDTO(MinigameLog input, MinigameLogDTO output)
         {
             if (input == null)
             {

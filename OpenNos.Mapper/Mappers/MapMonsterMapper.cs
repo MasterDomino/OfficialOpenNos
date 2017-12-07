@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class MapMonsterMapper
+    public static class MapMonsterMapper
     {
         #region Methods
 
-        public bool ToMapMonster(MapMonsterDTO input, MapMonster output)
+        public static bool ToMapMonster(MapMonsterDTO input, MapMonster output)
         {
             if (input == null)
             {
@@ -25,7 +25,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToMapMonsterDTO(MapMonster input, MapMonsterDTO output)
+        public static bool ToMapMonsterDTO(MapMonster input, MapMonsterDTO output)
         {
             if (input == null)
             {

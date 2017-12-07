@@ -79,8 +79,8 @@ namespace OpenNos.Handler
                             JobLevel = 1,
                             Level = 1,
                             MapId = 1,
-                            MapX = (short)ServerManager.Instance.RandomNumber(78, 81),
-                            MapY = (short)ServerManager.Instance.RandomNumber(114, 118),
+                            MapX = (short)ServerManager.RandomNumber(78, 81),
+                            MapY = (short)ServerManager.RandomNumber(114, 118),
                             Mp = 221,
                             MaxMateCount = 10,
                             SpPoint = 10000,
@@ -134,15 +134,16 @@ namespace OpenNos.Handler
                         DAOFactory.CharacterSkillDAO.InsertOrUpdate(sk2);
                         DAOFactory.CharacterSkillDAO.InsertOrUpdate(sk3);
 
-                        Inventory startupInventory = new Inventory(new Character(newCharacter));
-                        startupInventory.AddNewToInventory(1, 1, InventoryType.Wear);
-                        startupInventory.AddNewToInventory(8, 1, InventoryType.Wear);
-                        startupInventory.AddNewToInventory(12, 1, InventoryType.Wear);
-                        startupInventory.AddNewToInventory(2024, 10, InventoryType.Etc);
-                        startupInventory.AddNewToInventory(2081, 1, InventoryType.Etc);
-                        startupInventory.ForEach(i => DAOFactory.IteminstanceDAO.InsertOrUpdate(i));
-
-                        LoadCharacters(characterCreatePacket.OriginalContent);
+                        using (Inventory startupInventory = new Inventory(new Character(newCharacter)))
+                        {
+                            startupInventory.AddNewToInventory(1, 1, InventoryType.Wear);
+                            startupInventory.AddNewToInventory(8, 1, InventoryType.Wear);
+                            startupInventory.AddNewToInventory(12, 1, InventoryType.Wear);
+                            startupInventory.AddNewToInventory(2024, 10, InventoryType.Etc);
+                            startupInventory.AddNewToInventory(2081, 1, InventoryType.Etc);
+                            startupInventory.ForEach(i => DAOFactory.IteminstanceDAO.InsertOrUpdate(i));
+                            LoadCharacters(characterCreatePacket.OriginalContent);
+                        }
                     }
                     else
                     {
@@ -269,7 +270,7 @@ namespace OpenNos.Handler
             {
                 if (byte.TryParse(loginPacketParts[6], out byte slot))
                 {
-                    SelectCharacter(new SelectPacket() { Slot = slot });
+                    SelectCharacter(new SelectPacket { Slot = slot });
                 }
             }
             else
@@ -332,7 +333,7 @@ namespace OpenNos.Handler
 
                     character.GeneralLogs = new ThreadSafeGenericList<GeneralLogDTO>();
                     character.GeneralLogs.AddRange(DAOFactory.GeneralLogDAO.LoadByAccount(Session.Account.AccountId).Where(s => s.CharacterId == character.CharacterId).ToList());
-                    character.MapInstanceId = ServerManager.Instance.GetBaseMapInstanceIdByMapId(character.MapId);
+                    character.MapInstanceId = ServerManager.GetBaseMapInstanceIdByMapId(character.MapId);
                     character.PositionX = character.MapX;
                     character.PositionY = character.MapY;
                     character.Authority = Session.Account.Authority;
@@ -362,7 +363,7 @@ namespace OpenNos.Handler
                             Owner = Session.Character
                         };
                         mate.GeneateMateTransportId();
-                        mate.Monster = ServerManager.Instance.GetNpc(s.NpcMonsterVNum);
+                        mate.Monster = ServerManager.GetNpc(s.NpcMonsterVNum);
                         Session.Character.Mates.Add(mate);
                     });
                     Observable.Interval(TimeSpan.FromMilliseconds(300)).Subscribe(x => Session.Character.CharacterLife());

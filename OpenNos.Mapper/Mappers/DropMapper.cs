@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class DropMapper
+    public static class DropMapper
     {
         #region Methods
 
-        public bool ToDrop(DropDTO input, Drop output)
+        public static bool ToDrop(DropDTO input, Drop output)
         {
             if (input == null)
             {
@@ -23,7 +23,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToDropDTO(Drop input, DropDTO output)
+        public static bool ToDropDTO(Drop input, DropDTO output)
         {
             if (input == null)
             {

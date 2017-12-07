@@ -37,7 +37,7 @@ namespace OpenNos.DAL.DAO
                     foreach (ComboDTO combo in combos)
                     {
                         Combo entity = new Combo();
-                        Mapper.Mapper.Instance.ComboMapper.ToCombo(combo, entity);
+                        Mapper.Mappers.ComboMapper.ToCombo(combo, entity);
                         context.Combo.Add(entity);
                     }
                     context.Configuration.AutoDetectChangesEnabled = true;
@@ -57,10 +57,10 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     Combo entity = new Combo();
-                    Mapper.Mapper.Instance.ComboMapper.ToCombo(combo, entity);
+                    Mapper.Mappers.ComboMapper.ToCombo(combo, entity);
                     context.Combo.Add(entity);
                     context.SaveChanges();
-                    if (Mapper.Mapper.Instance.ComboMapper.ToComboDTO(entity, combo))
+                    if (Mapper.Mappers.ComboMapper.ToComboDTO(entity, combo))
                     {
                         return combo;
                     }
@@ -83,7 +83,7 @@ namespace OpenNos.DAL.DAO
                 foreach (Combo combo in context.Combo)
                 {
                     ComboDTO dto = new ComboDTO();
-                    Mapper.Mapper.Instance.ComboMapper.ToComboDTO(combo, dto);
+                    Mapper.Mappers.ComboMapper.ToComboDTO(combo, dto);
                     result.Add(dto);
                 }
                 return result;
@@ -97,7 +97,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     ComboDTO dto = new ComboDTO();
-                    if (Mapper.Mapper.Instance.ComboMapper.ToComboDTO(context.Combo.FirstOrDefault(s => s.SkillVNum.Equals(comboId)), dto))
+                    if (Mapper.Mappers.ComboMapper.ToComboDTO(context.Combo.FirstOrDefault(s => s.SkillVNum.Equals(comboId)), dto))
                     {
                         return dto;
                     }
@@ -120,7 +120,7 @@ namespace OpenNos.DAL.DAO
                 foreach (Combo combo in context.Combo.Where(c => c.SkillVNum == skillVNum))
                 {
                     ComboDTO dto = new ComboDTO();
-                    Mapper.Mapper.Instance.ComboMapper.ToComboDTO(combo, dto);
+                    Mapper.Mappers.ComboMapper.ToComboDTO(combo, dto);
                     result.Add(dto);
                 }
                 return result;
@@ -135,7 +135,7 @@ namespace OpenNos.DAL.DAO
                 foreach (Combo combo in context.Combo.Where(s => s.SkillVNum == skillVNum && s.Hit == hit && s.Effect == effect))
                 {
                     ComboDTO dto = new ComboDTO();
-                    Mapper.Mapper.Instance.ComboMapper.ToComboDTO(combo, dto);
+                    Mapper.Mappers.ComboMapper.ToComboDTO(combo, dto);
                     result.Add(dto);
                 }
                 return result;

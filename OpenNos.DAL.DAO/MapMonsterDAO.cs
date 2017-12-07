@@ -71,7 +71,7 @@ namespace OpenNos.DAL.DAO
                     foreach (MapMonsterDTO monster in mapMonsters)
                     {
                         MapMonster entity = new MapMonster();
-                        Mapper.Mapper.Instance.MapMonsterMapper.ToMapMonster(monster, entity);
+                        Mapper.Mappers.MapMonsterMapper.ToMapMonster(monster, entity);
                         context.MapMonster.Add(entity);
                     }
                     context.Configuration.AutoDetectChangesEnabled = true;
@@ -91,10 +91,10 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     MapMonster entity = new MapMonster();
-                    Mapper.Mapper.Instance.MapMonsterMapper.ToMapMonster(mapMonster, entity);
+                    Mapper.Mappers.MapMonsterMapper.ToMapMonster(mapMonster, entity);
                     context.MapMonster.Add(entity);
                     context.SaveChanges();
-                    if (Mapper.Mapper.Instance.MapMonsterMapper.ToMapMonsterDTO(entity, mapMonster))
+                    if (Mapper.Mappers.MapMonsterMapper.ToMapMonsterDTO(entity, mapMonster))
                     {
                         return mapMonster;
                     }
@@ -116,7 +116,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     MapMonsterDTO dto = new MapMonsterDTO();
-                    if (Mapper.Mapper.Instance.MapMonsterMapper.ToMapMonsterDTO(context.MapMonster.FirstOrDefault(i => i.MapMonsterId.Equals(mapMonsterId)), dto))
+                    if (Mapper.Mappers.MapMonsterMapper.ToMapMonsterDTO(context.MapMonster.FirstOrDefault(i => i.MapMonsterId.Equals(mapMonsterId)), dto))
                     {
                         return dto;
                     }
@@ -139,7 +139,7 @@ namespace OpenNos.DAL.DAO
                 foreach (MapMonster MapMonsterobject in context.MapMonster.Where(c => c.MapId.Equals(mapId)))
                 {
                     MapMonsterDTO dto = new MapMonsterDTO();
-                    Mapper.Mapper.Instance.MapMonsterMapper.ToMapMonsterDTO(MapMonsterobject, dto);
+                    Mapper.Mappers.MapMonsterMapper.ToMapMonsterDTO(MapMonsterobject, dto);
                     result.Add(dto);
                 }
                 return result;

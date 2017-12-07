@@ -43,7 +43,7 @@ namespace OpenNos.DAL.Mock
 
         public AccountDTO LoadByName(string name) => Container.SingleOrDefault(a => a.Name == name);
 
-        public void LogIn(string name) => throw new NotImplementedException();
+        public static void LogIn(string name) => throw new NotImplementedException();
 
         public void UpdateLastSessionAndIp(string name, int session, string ip)
         {

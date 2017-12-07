@@ -129,7 +129,7 @@ namespace OpenNos.GameObject
                     }
                 }
             }
-            return cells.OrderBy(s => ServerManager.Instance.RandomNumber(0, int.MaxValue)).FirstOrDefault();
+            return cells.OrderBy(s => ServerManager.RandomNumber(0, int.MaxValue)).FirstOrDefault();
         }
 
         public bool IsBlockedZone(int x, int y)
@@ -138,7 +138,7 @@ namespace OpenNos.GameObject
             {
                 return Grid?[x, y].IsWalkable() == false;
             }
-            catch
+            catch (Exception)
             {
                 return true;
             }
@@ -222,7 +222,7 @@ namespace OpenNos.GameObject
                     for (short t = 0; t < XLength; ++t)
                     {
                         stream.Read(bytes, numBytesRead, numBytesToRead);
-                        Grid[t, i] = new GridPos()
+                        Grid[t, i] = new GridPos
                         {
                             Value = bytes[0],
                             X = t,

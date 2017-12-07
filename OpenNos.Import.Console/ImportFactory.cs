@@ -71,7 +71,7 @@ namespace OpenNos.Import.Console
         public void ImportCards()
         {
             string fileCardDat = $"{_folder}\\Card.dat";
-            string fileCardLang = $"{_folder}\\_code_{ConfigurationManager.AppSettings["Language"]}_Card.txt";
+            string fileCardLang = $"{_folder}\\_code_{ConfigurationManager.AppSettings[nameof(Language)]}_Card.txt";
             List<CardDTO> cards = new List<CardDTO>();
             Dictionary<string, string> dictionaryIdLang = new Dictionary<string, string>();
             CardDTO card = new CardDTO();
@@ -139,7 +139,7 @@ namespace OpenNos.Import.Console
                             {
                                 int first = int.Parse(currentLine[6 + (i * 6)]);
 
-                                bcard = new BCardDTO()
+                                bcard = new BCardDTO
                                 {
                                     CardId = card.CardId,
                                     Type = byte.Parse(currentLine[2 + (i * 6)]),
@@ -162,7 +162,7 @@ namespace OpenNos.Import.Console
                             int first = int.Parse(currentLine[6 + (i * 6)]);
                             if (currentLine[2 + (i * 6)] != "-1" && currentLine[2 + (i * 6)] != "0")
                             {
-                                bcard = new BCardDTO()
+                                bcard = new BCardDTO
                                 {
                                     CastType = 1,
                                     CardId = card.CardId,
@@ -195,7 +195,7 @@ namespace OpenNos.Import.Console
 
                 BCardDTO returnBCard(short cardId, byte type, byte subType, int firstData, int secondData = 0, int thirdData = 0, byte castType = 0, bool isLevelScaled = false, bool isLevelDivided = false)
                 {
-                    return new BCardDTO()
+                    return new BCardDTO
                     {
                         CardId = cardId,
                         Type = type,
@@ -487,7 +487,7 @@ namespace OpenNos.Import.Console
                     npctest.IsSitting = currentPacket[13] != "1";
                     npctest.IsDisabled = false;
 
-                    if (DAOFactory.NpcMonsterDAO.LoadByVNum(npctest.NpcVNum) == null || DAOFactory.MapNpcDAO.LoadById(npctest.MapNpcId) != null || npcs.Count(i => i.MapNpcId == npctest.MapNpcId) != 0)
+                    if (DAOFactory.NpcMonsterDAO.LoadByVNum(npctest.NpcVNum) == null || DAOFactory.MapNpcDAO.LoadById(npctest.MapNpcId) != null || npcs.Any(i => i.MapNpcId == npctest.MapNpcId))
                     {
                         continue;
                     }
@@ -496,12 +496,13 @@ namespace OpenNos.Import.Console
             }
             DAOFactory.MapNpcDAO.Insert(npcs);
             Logger.Info(string.Format(Language.Instance.GetMessageFromKey("NPCS_PARSED"), npcs.Count));
+            effPacketsDictionary.Dispose();
         }
 
         public void ImportMaps()
         {
             string fileMapIdDat = $"{_folder}\\MapIDData.dat";
-            string fileMapIdLang = $"{_folder}\\_code_{ConfigurationManager.AppSettings["Language"]}_MapIDData.txt";
+            string fileMapIdLang = $"{_folder}\\_code_{ConfigurationManager.AppSettings[nameof(Language)]}_MapIDData.txt";
             string folderMap = $"{_folder}\\map";
             ThreadSafeSortedList<short, MapDTO> maps = new ThreadSafeSortedList<short, MapDTO>();
             Dictionary<int, string> dictionaryId = new Dictionary<int, string>();
@@ -582,9 +583,11 @@ namespace OpenNos.Import.Console
 
             DAOFactory.MapDAO.Insert(maps.GetAllItems());
             Logger.Info(string.Format(Language.Instance.GetMessageFromKey("MAPS_PARSED"), maps.Count));
+            dictionaryMusic.Dispose();
+            maps.Dispose();
         }
 
-        public void ImportMapType()
+        public static void ImportMapType()
         {
             List<MapTypeDTO> list = DAOFactory.MapTypeDAO.LoadAll().ToList();
             MapTypeDTO mt1 = new MapTypeDTO
@@ -854,7 +857,7 @@ namespace OpenNos.Import.Console
             Logger.Info(Language.Instance.GetMessageFromKey("MAPTYPES_PARSED"));
         }
 
-        public void ImportMapTypeMap()
+        public static void ImportMapTypeMap()
         {
             List<MapTypeMapDTO> maptypemaps = new List<MapTypeMapDTO>();
             short mapTypeId = 1;
@@ -1030,7 +1033,7 @@ namespace OpenNos.Import.Console
                         IsDisabled = false
                     };
                     monster.IsMoving = mobMvPacketsList.Contains(monster.MapMonsterId);
-                    if (DAOFactory.NpcMonsterDAO.LoadByVNum(monster.MonsterVNum) == null || DAOFactory.MapMonsterDAO.LoadById(monster.MapMonsterId) != null || monsters.Count(i => i.MapMonsterId == monster.MapMonsterId) != 0)
+                    if (DAOFactory.NpcMonsterDAO.LoadByVNum(monster.MonsterVNum) == null || DAOFactory.MapMonsterDAO.LoadById(monster.MapMonsterId) != null || monsters.Any(i => i.MapMonsterId == monster.MapMonsterId))
                     {
                         continue;
                     }
@@ -1123,7 +1126,7 @@ namespace OpenNos.Import.Console
             }
 
             string fileNpcId = $"{_folder}\\monster.dat";
-            string fileNpcLang = $"{_folder}\\_code_{ConfigurationManager.AppSettings["Language"]}_monster.txt";
+            string fileNpcLang = $"{_folder}\\_code_{ConfigurationManager.AppSettings[nameof(Language)]}_monster.txt";
             List<NpcMonsterDTO> npcs = new List<NpcMonsterDTO>();
 
             // Store like this: (vnum, (name, level))
@@ -1347,7 +1350,7 @@ namespace OpenNos.Import.Console
                             {
                                 break;
                             }
-                            if (DAOFactory.SkillDAO.LoadById(vnum) == null || DAOFactory.NpcMonsterSkillDAO.LoadByNpcMonster(npc.NpcMonsterVNum).Count(s => s.SkillVNum == vnum) != 0)
+                            if (DAOFactory.SkillDAO.LoadById(vnum) == null || DAOFactory.NpcMonsterSkillDAO.LoadByNpcMonster(npc.NpcMonsterVNum).Any(s => s.SkillVNum == vnum))
                             {
                                 continue;
                             }
@@ -1418,7 +1421,7 @@ namespace OpenNos.Import.Console
                             {
                                 break;
                             }
-                            if (DAOFactory.DropDAO.LoadByMonster(npc.NpcMonsterVNum).Count(s => s.ItemVNum == vnum) != 0)
+                            if (DAOFactory.DropDAO.LoadByMonster(npc.NpcMonsterVNum).Any(s => s.ItemVNum == vnum))
                             {
                                 continue;
                             }
@@ -1995,7 +1998,7 @@ namespace OpenNos.Import.Console
             Logger.Info(string.Format(Language.Instance.GetMessageFromKey("RECIPES_PARSED"), count));
         }
 
-        public void ImportRespawnMapType()
+        public static void ImportRespawnMapType()
         {
             List<RespawnMapTypeDTO> respawnmaptypemaps = new List<RespawnMapTypeDTO>
             {
@@ -2059,7 +2062,7 @@ namespace OpenNos.Import.Console
                 }
                 else if (currentPacket.Length > 6 && currentPacket[0] == "wp")
                 {
-                    ScriptedInstanceDTO ts = new ScriptedInstanceDTO()
+                    ScriptedInstanceDTO ts = new ScriptedInstanceDTO
                     {
                         PositionX = short.Parse(currentPacket[1]),
                         PositionY = short.Parse(currentPacket[2]),
@@ -2075,7 +2078,7 @@ namespace OpenNos.Import.Console
                 {
                     if (sbyte.Parse(currentPacket[4]) == (byte)PortalType.Raid)
                     {
-                        ScriptedInstanceDTO ts = new ScriptedInstanceDTO()
+                        ScriptedInstanceDTO ts = new ScriptedInstanceDTO
                         {
                             PositionX = short.Parse(currentPacket[1]),
                             PositionY = short.Parse(currentPacket[2]),
@@ -2154,33 +2157,37 @@ namespace OpenNos.Import.Console
 
         public void ImportShops()
         {
-            ThreadSafeSortedList<int, ShopDTO> shops = new ThreadSafeSortedList<int, ShopDTO>();
-            Parallel.ForEach(_packetList.Where(o => o.Length > 6 && o[0].Equals("shop") && o[1].Equals("2")), currentPacket =>
+            using (ThreadSafeSortedList<int, ShopDTO> shops = new ThreadSafeSortedList<int, ShopDTO>())
             {
-                MapNpcDTO npc = DAOFactory.MapNpcDAO.LoadById(short.Parse(currentPacket[2]));
-                if (npc != null)
+                Parallel.ForEach(_packetList.Where(o => o.Length > 6 && o[0].Equals("shop") && o[1].Equals("2")), currentPacket =>
                 {
-                    string name = string.Empty;
-                    for (int j = 6; j < currentPacket.Length; j++)
+                    MapNpcDTO npc = DAOFactory.MapNpcDAO.LoadById(short.Parse(currentPacket[2]));
+                    if (npc != null)
                     {
-                        name += $"{currentPacket[j]} ";
+                        string name = string.Empty;
+                        StringBuilder builder = new StringBuilder();
+                        for (int j = 6; j < currentPacket.Length; j++)
+                        {
+                            builder.Append(currentPacket[j]).Append(" ");
+                        }
+                        name = builder.ToString();
+                        name = name.Trim();
+                        ShopDTO shop = new ShopDTO
+                        {
+                            Name = name,
+                            MapNpcId = npc.MapNpcId,
+                            MenuType = byte.Parse(currentPacket[4]),
+                            ShopType = byte.Parse(currentPacket[5])
+                        };
+                        if (DAOFactory.ShopDAO.LoadByNpc(npc.MapNpcId) == null && !shops.ContainsKey(npc.MapNpcId))
+                        {
+                            shops[shop.MapNpcId] = shop;
+                        }
                     }
-                    name = name.Trim();
-                    ShopDTO shop = new ShopDTO
-                    {
-                        Name = name,
-                        MapNpcId = npc.MapNpcId,
-                        MenuType = byte.Parse(currentPacket[4]),
-                        ShopType = byte.Parse(currentPacket[5])
-                    };
-                    if (DAOFactory.ShopDAO.LoadByNpc(npc.MapNpcId) == null && !shops.ContainsKey(npc.MapNpcId))
-                    {
-                        shops[shop.MapNpcId] = shop;
-                    }
-                }
-            });
-            DAOFactory.ShopDAO.Insert(shops.GetAllItems());
-            Logger.Info(string.Format(Language.Instance.GetMessageFromKey("SHOPS_PARSED"), shops.Count));
+                });
+                DAOFactory.ShopDAO.Insert(shops.GetAllItems());
+                Logger.Info(string.Format(Language.Instance.GetMessageFromKey("SHOPS_PARSED"), shops.Count));
+            }
         }
 
         public void ImportShopSkills()
@@ -2227,7 +2234,7 @@ namespace OpenNos.Import.Console
         public void ImportSkills()
         {
             string fileSkillId = $"{_folder}\\Skill.dat";
-            string fileSkillLang = $"{_folder}\\_code_{ConfigurationManager.AppSettings["Language"]}_Skill.txt";
+            string fileSkillLang = $"{_folder}\\_code_{ConfigurationManager.AppSettings[nameof(Language)]}_Skill.txt";
             List<SkillDTO> skills = new List<SkillDTO>();
 
             Dictionary<string, string> dictionaryIdLang = new Dictionary<string, string>();
@@ -2553,7 +2560,7 @@ namespace OpenNos.Import.Console
         internal void ImportItems()
         {
             string fileId = $"{_folder}\\Item.dat";
-            string fileLang = $"{_folder}\\_code_{ConfigurationManager.AppSettings["Language"]}_Item.txt";
+            string fileLang = $"{_folder}\\_code_{ConfigurationManager.AppSettings[nameof(Language)]}_Item.txt";
             Dictionary<string, string> dictionaryName = new Dictionary<string, string>();
             string line;
             List<ItemDTO> items = new List<ItemDTO>();
@@ -3110,39 +3117,41 @@ namespace OpenNos.Import.Console
                                     }
                                     else
                                     {
-                                        if (item.ElementRate == 0)
+                                        switch (item.ElementRate)
                                         {
-                                            if (item.VNum >= 800 && item.VNum <= 804)
-                                            {
-                                                item.MaxElementRate = 50;
-                                            }
-                                            else
-                                            {
+                                            case 0:
+                                                if (item.VNum >= 800 && item.VNum <= 804)
+                                                {
+                                                    item.MaxElementRate = 50;
+                                                }
+                                                else
+                                                {
+                                                    item.MaxElementRate = 70;
+                                                }
+                                                break;
+
+                                            case 30:
+                                                if (item.VNum >= 884 && item.VNum <= 887)
+                                                {
+                                                    item.MaxElementRate = 50;
+                                                }
+                                                else
+                                                {
+                                                    item.MaxElementRate = 30;
+                                                }
+                                                break;
+
+                                            case 35:
+                                                item.MaxElementRate = 35;
+                                                break;
+
+                                            case 40:
                                                 item.MaxElementRate = 70;
-                                            }
-                                        }
-                                        else if (item.ElementRate == 30)
-                                        {
-                                            if (item.VNum >= 884 && item.VNum <= 887)
-                                            {
-                                                item.MaxElementRate = 50;
-                                            }
-                                            else
-                                            {
-                                                item.MaxElementRate = 30;
-                                            }
-                                        }
-                                        else if (item.ElementRate == 35)
-                                        {
-                                            item.MaxElementRate = 35;
-                                        }
-                                        else if (item.ElementRate == 40)
-                                        {
-                                            item.MaxElementRate = 70;
-                                        }
-                                        else if (item.ElementRate == 50)
-                                        {
-                                            item.MaxElementRate = 80;
+                                                break;
+
+                                            case 50:
+                                                item.MaxElementRate = 80;
+                                                break;
                                         }
                                     }
                                 }
@@ -3438,22 +3447,25 @@ namespace OpenNos.Import.Console
                                 {
                                     case 150:
                                     case 151:
-                                        if (int.Parse(currentLine[4]) == 1)
+                                        switch (int.Parse(currentLine[4]))
                                         {
-                                            item.EffectValue = 30000;
+                                            case 1:
+                                                item.EffectValue = 30000;
+                                                break;
+
+                                            case 2:
+                                                item.EffectValue = 70000;
+                                                break;
+
+                                            case 3:
+                                                item.EffectValue = 180000;
+                                                break;
+
+                                            default:
+                                                item.EffectValue = int.Parse(currentLine[4]);
+                                                break;
                                         }
-                                        else if (int.Parse(currentLine[4]) == 2)
-                                        {
-                                            item.EffectValue = 70000;
-                                        }
-                                        else if (int.Parse(currentLine[4]) == 3)
-                                        {
-                                            item.EffectValue = 180000;
-                                        }
-                                        else
-                                        {
-                                            item.EffectValue = int.Parse(currentLine[4]);
-                                        }
+
                                         break;
 
                                     case 204:

@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class ShopSkillMapper
+    public static class ShopSkillMapper
     {
         #region Methods
 
-        public bool ToShopSkill(ShopSkillDTO input, ShopSkill output)
+        public static bool ToShopSkill(ShopSkillDTO input, ShopSkill output)
         {
             if (input == null)
             {
@@ -22,7 +22,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToShopSkillDTO(ShopSkill input, ShopSkillDTO output)
+        public static bool ToShopSkillDTO(ShopSkill input, ShopSkillDTO output)
         {
             if (input == null)
             {

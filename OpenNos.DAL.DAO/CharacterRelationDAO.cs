@@ -86,7 +86,7 @@ namespace OpenNos.DAL.DAO
                 foreach (CharacterRelation entity in context.CharacterRelation)
                 {
                     CharacterRelationDTO dto = new CharacterRelationDTO();
-                    Mapper.Mapper.Instance.CharacterRelationMapper.ToCharacterRelationDTO(entity, dto);
+                    Mapper.Mappers.CharacterRelationMapper.ToCharacterRelationDTO(entity, dto);
                     result.Add(dto);
                 }
                 return result;
@@ -100,7 +100,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     CharacterRelationDTO dto = new CharacterRelationDTO();
-                    if (Mapper.Mapper.Instance.CharacterRelationMapper.ToCharacterRelationDTO(context.CharacterRelation.FirstOrDefault(s => s.CharacterRelationId.Equals(characterId)), dto))
+                    if (Mapper.Mappers.CharacterRelationMapper.ToCharacterRelationDTO(context.CharacterRelation.FirstOrDefault(s => s.CharacterRelationId.Equals(characterId)), dto))
                     {
                         return dto;
                     }
@@ -115,13 +115,13 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        private CharacterRelationDTO insert(CharacterRelationDTO relation, OpenNosContext context)
+        private static CharacterRelationDTO insert(CharacterRelationDTO relation, OpenNosContext context)
         {
             CharacterRelation entity = new CharacterRelation();
-            Mapper.Mapper.Instance.CharacterRelationMapper.ToCharacterRelation(relation, entity);
+            Mapper.Mappers.CharacterRelationMapper.ToCharacterRelation(relation, entity);
             context.CharacterRelation.Add(entity);
             context.SaveChanges();
-            if (Mapper.Mapper.Instance.CharacterRelationMapper.ToCharacterRelationDTO(entity, relation))
+            if (Mapper.Mappers.CharacterRelationMapper.ToCharacterRelationDTO(entity, relation))
             {
                 return relation;
             }
@@ -129,15 +129,15 @@ namespace OpenNos.DAL.DAO
             return null;
         }
 
-        private CharacterRelationDTO update(CharacterRelation entity, CharacterRelationDTO relation, OpenNosContext context)
+        private static CharacterRelationDTO update(CharacterRelation entity, CharacterRelationDTO relation, OpenNosContext context)
         {
             if (entity != null)
             {
-                Mapper.Mapper.Instance.CharacterRelationMapper.ToCharacterRelation(relation, entity);
+                Mapper.Mappers.CharacterRelationMapper.ToCharacterRelation(relation, entity);
                 context.SaveChanges();
             }
 
-            if (Mapper.Mapper.Instance.CharacterRelationMapper.ToCharacterRelationDTO(entity, relation))
+            if (Mapper.Mappers.CharacterRelationMapper.ToCharacterRelationDTO(entity, relation))
             {
                 return relation;
             }

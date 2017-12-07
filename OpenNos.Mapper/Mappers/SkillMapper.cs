@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class SkillMapper
+    public static class SkillMapper
     {
         #region Methods
 
-        public bool ToSkill(SkillDTO input, Skill output)
+        public static bool ToSkill(SkillDTO input, Skill output)
         {
             if (input == null)
             {
@@ -47,7 +47,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToSkillDTO(Skill input, SkillDTO output)
+        public static bool ToSkillDTO(Skill input, SkillDTO output)
         {
             if (input == null)
             {

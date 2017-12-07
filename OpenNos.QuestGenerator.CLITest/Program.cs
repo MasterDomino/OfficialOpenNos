@@ -14,7 +14,7 @@ namespace OpenNos.QuestGenerator.CLITest
         {
             QuestModel questModel = new QuestModel
             {
-                QuestGiver = new QuestGiver()
+                QuestGiver = new QuestGiver
                 {
                     Type = Domain.QuestGiverType.InitialQuest,
                     QuestGiverId = -1,
@@ -22,19 +22,19 @@ namespace OpenNos.QuestGenerator.CLITest
                     MaximumLevel = 255
                 },
 
-                WalkObjective = new WalkObjective()
+                WalkObjective = new WalkObjective
                 {
                     MapId = 1,
                     MapX = 53,
                     MapY = 154
                 },
 
-                Reward = new Reward()
+                Reward = new Reward
                 {
                     DisplayRewardWindow = true,
                     ForceLevelUp = 5,
                     QuestId = -1,
-                    TeleportPosition = new TeleportTo()
+                    TeleportPosition = new TeleportTo
                     {
                         MapId = 1,
                         MapX = 75,

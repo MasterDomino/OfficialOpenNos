@@ -36,7 +36,7 @@ namespace OpenNos.DAL.DAO
                 foreach (NpcMonster npcMonster in context.NpcMonster.Where(s => string.IsNullOrEmpty(name) ? s.Name.Equals(string.Empty) : s.Name.Contains(name)))
                 {
                     NpcMonsterDTO dto = new NpcMonsterDTO();
-                    Mapper.Mapper.Instance.NpcMonsterMapper.ToNpcMonsterDTO(npcMonster, dto);
+                    Mapper.Mappers.NpcMonsterMapper.ToNpcMonsterDTO(npcMonster, dto);
                     result.Add(dto);
                 }
                 return result;
@@ -53,7 +53,7 @@ namespace OpenNos.DAL.DAO
                     foreach (NpcMonsterDTO Item in npcMonsters)
                     {
                         NpcMonster entity = new NpcMonster();
-                        Mapper.Mapper.Instance.NpcMonsterMapper.ToNpcMonster(Item, entity);
+                        Mapper.Mappers.NpcMonsterMapper.ToNpcMonster(Item, entity);
                         context.NpcMonster.Add(entity);
                     }
                     context.Configuration.AutoDetectChangesEnabled = true;
@@ -73,10 +73,10 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     NpcMonster entity = new NpcMonster();
-                    Mapper.Mapper.Instance.NpcMonsterMapper.ToNpcMonster(npc, entity);
+                    Mapper.Mappers.NpcMonsterMapper.ToNpcMonster(npc, entity);
                     context.NpcMonster.Add(entity);
                     context.SaveChanges();
-                    if (Mapper.Mapper.Instance.NpcMonsterMapper.ToNpcMonsterDTO(entity, npc))
+                    if (Mapper.Mappers.NpcMonsterMapper.ToNpcMonsterDTO(entity, npc))
                     {
                         return npc;
                     }
@@ -125,7 +125,7 @@ namespace OpenNos.DAL.DAO
                 foreach (NpcMonster NpcMonster in context.NpcMonster)
                 {
                     NpcMonsterDTO dto = new NpcMonsterDTO();
-                    Mapper.Mapper.Instance.NpcMonsterMapper.ToNpcMonsterDTO(NpcMonster, dto);
+                    Mapper.Mappers.NpcMonsterMapper.ToNpcMonsterDTO(NpcMonster, dto);
                     result.Add(dto);
                 }
                 return result;
@@ -139,7 +139,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     NpcMonsterDTO dto = new NpcMonsterDTO();
-                    if (Mapper.Mapper.Instance.NpcMonsterMapper.ToNpcMonsterDTO(context.NpcMonster.FirstOrDefault(i => i.NpcMonsterVNum.Equals(npcMonsterVNum)), dto))
+                    if (Mapper.Mappers.NpcMonsterMapper.ToNpcMonsterDTO(context.NpcMonster.FirstOrDefault(i => i.NpcMonsterVNum.Equals(npcMonsterVNum)), dto))
                     {
                         return dto;
                     }
@@ -154,13 +154,13 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        private NpcMonsterDTO insert(NpcMonsterDTO npcMonster, OpenNosContext context)
+        private static NpcMonsterDTO insert(NpcMonsterDTO npcMonster, OpenNosContext context)
         {
             NpcMonster entity = new NpcMonster();
-            Mapper.Mapper.Instance.NpcMonsterMapper.ToNpcMonster(npcMonster, entity);
+            Mapper.Mappers.NpcMonsterMapper.ToNpcMonster(npcMonster, entity);
             context.NpcMonster.Add(entity);
             context.SaveChanges();
-            if (Mapper.Mapper.Instance.NpcMonsterMapper.ToNpcMonsterDTO(entity, npcMonster))
+            if (Mapper.Mappers.NpcMonsterMapper.ToNpcMonsterDTO(entity, npcMonster))
             {
                 return npcMonster;
             }
@@ -168,14 +168,14 @@ namespace OpenNos.DAL.DAO
             return null;
         }
 
-        private NpcMonsterDTO update(NpcMonster entity, NpcMonsterDTO npcMonster, OpenNosContext context)
+        private static NpcMonsterDTO update(NpcMonster entity, NpcMonsterDTO npcMonster, OpenNosContext context)
         {
             if (entity != null)
             {
-                Mapper.Mapper.Instance.NpcMonsterMapper.ToNpcMonster(npcMonster, entity);
+                Mapper.Mappers.NpcMonsterMapper.ToNpcMonster(npcMonster, entity);
                 context.SaveChanges();
             }
-            if (Mapper.Mapper.Instance.NpcMonsterMapper.ToNpcMonsterDTO(entity, npcMonster))
+            if (Mapper.Mappers.NpcMonsterMapper.ToNpcMonsterDTO(entity, npcMonster))
             {
                 return npcMonster;
             }

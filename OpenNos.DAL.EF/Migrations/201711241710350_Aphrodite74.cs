@@ -2,7 +2,7 @@ namespace OpenNos.DAL.EF.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class Aphrodite74 : DbMigration
     {
         public override void Up()
@@ -11,7 +11,7 @@ namespace OpenNos.DAL.EF.Migrations
             DropColumn("dbo.ItemInstance", "MP1");
             DropColumn("dbo.ItemInstance", "Discriminator");
         }
-        
+
         public override void Down()
         {
             AddColumn("dbo.ItemInstance", "Discriminator", c => c.String(nullable: false, maxLength: 128));

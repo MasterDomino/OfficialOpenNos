@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class ShellEffectMapper
+    public static class ShellEffectMapper
     {
         #region Methods
 
-        public bool ToShellEffect(ShellEffectDTO input, ShellEffect output)
+        public static bool ToShellEffect(ShellEffectDTO input, ShellEffect output)
         {
             if (input == null)
             {
@@ -22,7 +22,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToShellEffectDTO(ShellEffect input, ShellEffectDTO output)
+        public static bool ToShellEffectDTO(ShellEffect input, ShellEffectDTO output)
         {
             if (input == null)
             {

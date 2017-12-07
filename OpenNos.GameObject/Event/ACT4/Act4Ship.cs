@@ -29,23 +29,22 @@ namespace OpenNos.GameObject.Event
 
         public static void GenerateAct4Ship(byte faction)
         {
-            EventHelper.Instance.RunEvent(new EventContainer(ServerManager.Instance.GetMapInstance(ServerManager.Instance.GetBaseMapInstanceIdByMapId(145)), EventActionType.NPCSEFFECTCHANGESTATE, true));
-            Act4ShipThread shipThread = new Act4ShipThread();
+            EventHelper.Instance.RunEvent(new EventContainer(ServerManager.GetMapInstance(ServerManager.GetBaseMapInstanceIdByMapId(145)), EventActionType.NPCSEFFECTCHANGESTATE, true));
             DateTime result = TimeExtensions.RoundUp(DateTime.Now, TimeSpan.FromMinutes(5));
-            Observable.Timer(result - DateTime.Now).Subscribe(X => shipThread.Run(faction));
+            Observable.Timer(result - DateTime.Now).Subscribe(X => Act4ShipThread.Run(faction));
         }
 
         #endregion
     }
 
-    public class Act4ShipThread
+    public static class Act4ShipThread
     {
         #region Methods
 
-        public void Run(byte faction)
+        public static void Run(byte faction)
         {
-            MapInstance map = ServerManager.Instance.GenerateMapInstance(149, faction == 1 ? MapInstanceType.Act4ShipAngel : MapInstanceType.Act4ShipDemon, null);
-            MapNpc mapNpc1 = new MapNpc()
+            MapInstance map = ServerManager.GenerateMapInstance(149, faction == 1 ? MapInstanceType.Act4ShipAngel : MapInstanceType.Act4ShipDemon, null);
+            MapNpc mapNpc1 = new MapNpc
             {
                 NpcVNum = 613,
                 MapNpcId = map.GetNextNpcId(),
@@ -59,7 +58,7 @@ namespace OpenNos.GameObject.Event
             };
             mapNpc1.Initialize(map);
             map.AddNPC(mapNpc1);
-            MapNpc mapNpc2 = new MapNpc()
+            MapNpc mapNpc2 = new MapNpc
             {
                 NpcVNum = 540,
                 MapNpcId = map.GetNextNpcId(),
@@ -77,30 +76,30 @@ namespace OpenNos.GameObject.Event
             {
                 openShip();
                 Thread.Sleep(60 * 1000);
-                map.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("SHIP_MINUTES"), 4), 0));
+                map.Broadcast(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("SHIP_MINUTES"), 4), 0));
                 Thread.Sleep(60 * 1000);
-                map.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("SHIP_MINUTES"), 3), 0));
+                map.Broadcast(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("SHIP_MINUTES"), 3), 0));
                 Thread.Sleep(60 * 1000);
-                map.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("SHIP_MINUTES"), 2), 0));
+                map.Broadcast(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("SHIP_MINUTES"), 2), 0));
                 Thread.Sleep(60 * 1000);
-                map.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("SHIP_MINUTE"), 0));
+                map.Broadcast(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("SHIP_MINUTE"), 0));
                 lockShip();
                 Thread.Sleep(30 * 1000);
-                map.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("SHIP_SECONDS"), 30), 0));
+                map.Broadcast(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("SHIP_SECONDS"), 30), 0));
                 Thread.Sleep(20 * 1000);
-                map.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("SHIP_SECONDS"), 10), 0));
+                map.Broadcast(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("SHIP_SECONDS"), 10), 0));
                 Thread.Sleep(10 * 1000);
-                map.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("SHIP_SETOFF"), 0));
+                map.Broadcast(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("SHIP_SETOFF"), 0));
                 List<ClientSession> sessions = map.Sessions.Where(s => s?.Character != null).ToList();
                 Observable.Timer(TimeSpan.FromSeconds(0)).Subscribe(X => teleportPlayers(sessions));
             }
         }
 
-        private void lockShip() => EventHelper.Instance.RunEvent(new EventContainer(ServerManager.Instance.GetMapInstance(ServerManager.Instance.GetBaseMapInstanceIdByMapId(145)), EventActionType.NPCSEFFECTCHANGESTATE, true));
+        private static void lockShip() => EventHelper.Instance.RunEvent(new EventContainer(ServerManager.GetMapInstance(ServerManager.GetBaseMapInstanceIdByMapId(145)), EventActionType.NPCSEFFECTCHANGESTATE, true));
 
-        private void openShip() => EventHelper.Instance.RunEvent(new EventContainer(ServerManager.Instance.GetMapInstance(ServerManager.Instance.GetBaseMapInstanceIdByMapId(145)), EventActionType.NPCSEFFECTCHANGESTATE, false));
+        private static void openShip() => EventHelper.Instance.RunEvent(new EventContainer(ServerManager.GetMapInstance(ServerManager.GetBaseMapInstanceIdByMapId(145)), EventActionType.NPCSEFFECTCHANGESTATE, false));
 
-        private void teleportPlayers(List<ClientSession> sessions)
+        private static void teleportPlayers(List<ClientSession> sessions)
         {
             foreach (ClientSession session in sessions)
             {
@@ -108,7 +107,7 @@ namespace OpenNos.GameObject.Event
                 {
                     case FactionType.None:
                         ServerManager.Instance.ChangeMap(session.Character.CharacterId, 145, 51, 41);
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo("You need to be part of a faction to join Act 4"));
+                        session.SendPacket(UserInterfaceHelper.GenerateInfo("You need to be part of a faction to join Act 4"));
                         return;
 
                     case FactionType.Angel:

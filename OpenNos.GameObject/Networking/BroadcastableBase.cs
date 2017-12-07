@@ -154,7 +154,7 @@ namespace OpenNos.GameObject
                 switch (sentPacket.Receiver)
                 {
                     case ReceiverType.All: // send packet to everyone
-                        if (sentPacket.Packet.StartsWith("out"))
+                        if (sentPacket.Packet.StartsWith("out", StringComparison.CurrentCulture))
                         {
                             foreach (ClientSession session in Sessions)
                             {
@@ -197,7 +197,7 @@ namespace OpenNos.GameObject
                         break;
 
                     case ReceiverType.AllExceptMe: // send to everyone except the sender
-                        if (sentPacket.Packet.StartsWith("out"))
+                        if (sentPacket.Packet.StartsWith("out", StringComparison.CurrentCulture))
                         {
                             foreach (ClientSession session in Sessions.Where(s => s?.SessionId != sentPacket.Sender?.SessionId))
                             {
@@ -240,7 +240,7 @@ namespace OpenNos.GameObject
                         break;
 
                     case ReceiverType.AllExceptGroup:
-                        if (sentPacket.Packet.StartsWith("out"))
+                        if (sentPacket.Packet.StartsWith("out", StringComparison.CurrentCulture))
                         {
                             foreach (ClientSession session in Sessions.Where(s => s.SessionId != sentPacket.Sender.SessionId))
                             {
@@ -336,7 +336,7 @@ namespace OpenNos.GameObject
                                     }
                                     else
                                     {
-                                        sentPacket.Sender.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("BLACKLIST_BLOCKED")));
+                                        sentPacket.Sender.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("BLACKLIST_BLOCKED")));
                                     }
                                 }
                                 else

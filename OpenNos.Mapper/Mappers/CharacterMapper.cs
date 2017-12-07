@@ -4,11 +4,11 @@ using OpenNos.Domain;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class CharacterMapper
+    public static class CharacterMapper
     {
         #region Methods
 
-        public bool ToCharacter(CharacterDTO input, Character output)
+        public static bool ToCharacter(CharacterDTO input, Character output)
         {
             if (input == null)
             {
@@ -74,7 +74,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToCharacterDTO(Character input, CharacterDTO output)
+        public static bool ToCharacterDTO(Character input, CharacterDTO output)
         {
             if (input == null)
             {

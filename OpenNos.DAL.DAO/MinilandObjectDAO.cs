@@ -87,22 +87,22 @@ namespace OpenNos.DAL.DAO
                 foreach (MinilandObject obj in context.MinilandObject.Where(s => s.CharacterId == characterId))
                 {
                     MinilandObjectDTO dto = new MinilandObjectDTO();
-                    Mapper.Mapper.Instance.MinilandObjectMapper.ToMinilandObjectDTO(obj, dto);
+                    Mapper.Mappers.MinilandObjectMapper.ToMinilandObjectDTO(obj, dto);
                     result.Add(dto);
                 }
                 return result;
             }
         }
 
-        private MinilandObjectDTO insert(MinilandObjectDTO obj, OpenNosContext context)
+        private static MinilandObjectDTO insert(MinilandObjectDTO obj, OpenNosContext context)
         {
             try
             {
                 MinilandObject entity = new MinilandObject();
-                Mapper.Mapper.Instance.MinilandObjectMapper.ToMinilandObject(obj, entity);
+                Mapper.Mappers.MinilandObjectMapper.ToMinilandObject(obj, entity);
                 context.MinilandObject.Add(entity);
                 context.SaveChanges();
-                if (Mapper.Mapper.Instance.MinilandObjectMapper.ToMinilandObjectDTO(entity, obj))
+                if (Mapper.Mappers.MinilandObjectMapper.ToMinilandObjectDTO(entity, obj))
                 {
                     return obj;
                 }
@@ -116,14 +116,14 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        private MinilandObjectDTO update(MinilandObject entity, MinilandObjectDTO respawn, OpenNosContext context)
+        private static MinilandObjectDTO update(MinilandObject entity, MinilandObjectDTO respawn, OpenNosContext context)
         {
             if (entity != null)
             {
-                Mapper.Mapper.Instance.MinilandObjectMapper.ToMinilandObject(respawn, entity);
+                Mapper.Mappers.MinilandObjectMapper.ToMinilandObject(respawn, entity);
                 context.SaveChanges();
             }
-            if (Mapper.Mapper.Instance.MinilandObjectMapper.ToMinilandObjectDTO(entity, respawn))
+            if (Mapper.Mappers.MinilandObjectMapper.ToMinilandObjectDTO(entity, respawn))
             {
                 return respawn;
             }

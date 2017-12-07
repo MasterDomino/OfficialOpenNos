@@ -86,20 +86,20 @@ namespace OpenNos.DAL.DAO
                 foreach (Mate mate in context.Mate.Where(s => s.CharacterId == characterId))
                 {
                     MateDTO dto = new MateDTO();
-                    Mapper.Mapper.Instance.MateMapper.ToMateDTO(mate, dto);
+                    Mapper.Mappers.MateMapper.ToMateDTO(mate, dto);
                     result.Add(dto);
                 }
                 return result;
             }
         }
 
-        private MateDTO insert(MateDTO mate, OpenNosContext context)
+        private static MateDTO insert(MateDTO mate, OpenNosContext context)
         {
             Mate entity = new Mate();
-            Mapper.Mapper.Instance.MateMapper.ToMate(mate, entity);
+            Mapper.Mappers.MateMapper.ToMate(mate, entity);
             context.Mate.Add(entity);
             context.SaveChanges();
-            if (Mapper.Mapper.Instance.MateMapper.ToMateDTO(entity, mate))
+            if (Mapper.Mappers.MateMapper.ToMateDTO(entity, mate))
             {
                 return mate;
             }
@@ -107,15 +107,15 @@ namespace OpenNos.DAL.DAO
             return null;
         }
 
-        private MateDTO update(Mate entity, MateDTO character, OpenNosContext context)
+        private static MateDTO update(Mate entity, MateDTO character, OpenNosContext context)
         {
             if (entity != null)
             {
-                Mapper.Mapper.Instance.MateMapper.ToMate(character, entity);
+                Mapper.Mappers.MateMapper.ToMate(character, entity);
                 context.SaveChanges();
             }
 
-            if (Mapper.Mapper.Instance.MateMapper.ToMateDTO(entity, character))
+            if (Mapper.Mappers.MateMapper.ToMateDTO(entity, character))
             {
                 return character;
             }

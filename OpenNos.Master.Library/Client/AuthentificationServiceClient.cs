@@ -49,9 +49,9 @@ namespace OpenNos.Master.Library.Client
                 {
                     _client.Connect();
                 }
-                catch
+                catch (Exception)
                 {
-                    Logger.Error(Language.Instance.GetMessageFromKey("RETRY_CONNECTION"), memberName: "AuthentificationServiceClient");
+                    Logger.Error(Language.Instance.GetMessageFromKey("RETRY_CONNECTION"), memberName: nameof(AuthentificationServiceClient));
                     System.Threading.Thread.Sleep(1000);
                 }
             }

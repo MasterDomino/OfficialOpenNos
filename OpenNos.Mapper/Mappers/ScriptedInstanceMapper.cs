@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class ScriptedInstanceMapper
+    public static class ScriptedInstanceMapper
     {
         #region Methods
 
-        public bool ToScriptedInstance(ScriptedInstanceDTO input, ScriptedInstance output)
+        public static bool ToScriptedInstance(ScriptedInstanceDTO input, ScriptedInstance output)
         {
             if (input == null)
             {
@@ -23,7 +23,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToScriptedInstanceDTO(ScriptedInstance input, ScriptedInstanceDTO output)
+        public static bool ToScriptedInstanceDTO(ScriptedInstance input, ScriptedInstanceDTO output)
         {
             if (input == null)
             {

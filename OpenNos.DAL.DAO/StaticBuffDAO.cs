@@ -84,21 +84,21 @@ namespace OpenNos.DAL.DAO
                 foreach (StaticBuff entity in context.StaticBuff.Where(i => i.CharacterId == characterId))
                 {
                     StaticBuffDTO dto = new StaticBuffDTO();
-                    Mapper.Mapper.Instance.StaticBuffMapper.ToStaticBuffDTO(entity, dto);
+                    Mapper.Mappers.StaticBuffMapper.ToStaticBuffDTO(entity, dto);
                     result.Add(dto);
                 }
                 return result;
             }
         }
 
-        public StaticBuffDTO LoadById(long sbId)
+        public static StaticBuffDTO LoadById(long sbId)
         {
             try
             {
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     StaticBuffDTO dto = new StaticBuffDTO();
-                    if (Mapper.Mapper.Instance.StaticBuffMapper.ToStaticBuffDTO(context.StaticBuff.FirstOrDefault(s => s.StaticBuffId.Equals(sbId)), dto)) //who the fuck was so retarded and set it to respawn ?!?
+                    if (Mapper.Mappers.StaticBuffMapper.ToStaticBuffDTO(context.StaticBuff.FirstOrDefault(s => s.StaticBuffId.Equals(sbId)), dto)) //who the fuck was so retarded and set it to respawn ?!?
                     {
                         return dto;
                     }
@@ -129,15 +129,15 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        private StaticBuffDTO insert(StaticBuffDTO sb, OpenNosContext context)
+        private static StaticBuffDTO insert(StaticBuffDTO sb, OpenNosContext context)
         {
             try
             {
                 StaticBuff entity = new StaticBuff();
-                Mapper.Mapper.Instance.StaticBuffMapper.ToStaticBuff(sb, entity);
+                Mapper.Mappers.StaticBuffMapper.ToStaticBuff(sb, entity);
                 context.StaticBuff.Add(entity);
                 context.SaveChanges();
-                if (Mapper.Mapper.Instance.StaticBuffMapper.ToStaticBuffDTO(entity, sb))
+                if (Mapper.Mappers.StaticBuffMapper.ToStaticBuffDTO(entity, sb))
                 {
                     return sb;
                 }
@@ -151,14 +151,14 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        private StaticBuffDTO update(StaticBuff entity, StaticBuffDTO sb, OpenNosContext context)
+        private static StaticBuffDTO update(StaticBuff entity, StaticBuffDTO sb, OpenNosContext context)
         {
             if (entity != null)
             {
-                Mapper.Mapper.Instance.StaticBuffMapper.ToStaticBuff(sb, entity);
+                Mapper.Mappers.StaticBuffMapper.ToStaticBuff(sb, entity);
                 context.SaveChanges();
             }
-            if (Mapper.Mapper.Instance.StaticBuffMapper.ToStaticBuffDTO(entity, sb))
+            if (Mapper.Mappers.StaticBuffMapper.ToStaticBuffDTO(entity, sb))
             {
                 return sb;
             }

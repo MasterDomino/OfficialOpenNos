@@ -82,7 +82,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        private void regenerate(ClientSession session, Item item)
+        private static void regenerate(ClientSession session, Item item)
         {
             session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 6000));
             session.Character.FoodAmount++;
@@ -98,7 +98,7 @@ namespace OpenNos.GameObject
             session.Character.FoodAmount--;
         }
 
-        private void sync(ClientSession session)
+        private static void sync(ClientSession session)
         {
             for (session.Character.MaxFood = 0; session.Character.MaxFood < 5; session.Character.MaxFood++)
             {

@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class RecipeListMapper
+    public static class RecipeListMapper
     {
         #region Methods
 
-        public bool ToRecipeList(RecipeListDTO input, RecipeList output)
+        public static bool ToRecipeList(RecipeListDTO input, RecipeList output)
         {
             if (input == null)
             {
@@ -21,7 +21,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToRecipeListDTO(RecipeList input, RecipeListDTO output)
+        public static bool ToRecipeListDTO(RecipeList input, RecipeListDTO output)
         {
             if (input == null)
             {

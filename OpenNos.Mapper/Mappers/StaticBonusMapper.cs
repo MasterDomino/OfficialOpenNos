@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class StaticBonusMapper
+    public static class StaticBonusMapper
     {
         #region Methods
 
-        public bool ToStaticBonus(StaticBonusDTO input, StaticBonus output)
+        public static bool ToStaticBonus(StaticBonusDTO input, StaticBonus output)
         {
             if (input == null)
             {
@@ -21,7 +21,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToStaticBonusDTO(StaticBonus input, StaticBonusDTO output)
+        public static bool ToStaticBonusDTO(StaticBonus input, StaticBonusDTO output)
         {
             if (input == null)
             {

@@ -18,14 +18,6 @@ namespace OpenNos.DAL.EF
 {
     public class RollGeneratedItem
     {
-        #region Instantiation
-
-        public RollGeneratedItem()
-        {
-        }
-
-        #endregion
-
         #region Properties
 
         public bool IsRareRandom { get; set; }

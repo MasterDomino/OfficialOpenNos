@@ -60,7 +60,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
 
         #region Methods
 
-        Task ClearLowPriorityQueue();
+        Task ClearLowPriorityQueueAsync();
 
         /// <summary>
         /// Sends a message to the remote application.

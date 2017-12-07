@@ -83,7 +83,7 @@ namespace OpenNos.DAL.DAO
                     void insert(ShellEffectDTO shelleffect)
                     {
                         ShellEffect _entity = new ShellEffect();
-                        Mapper.Mapper.Instance.ShellEffectMapper.ToShellEffect(shelleffect, _entity);
+                        Mapper.Mappers.ShellEffectMapper.ToShellEffect(shelleffect, _entity);
                         context.ShellEffect.Add(_entity);
                         context.SaveChanges();
                         shelleffect.ShellEffectId = _entity.ShellEffectId;
@@ -93,7 +93,7 @@ namespace OpenNos.DAL.DAO
                     {
                         if (_entity != null)
                         {
-                            Mapper.Mapper.Instance.ShellEffectMapper.ToShellEffect(shelleffect, _entity);
+                            Mapper.Mappers.ShellEffectMapper.ToShellEffect(shelleffect, _entity);
                         }
                     }
 
@@ -129,20 +129,20 @@ namespace OpenNos.DAL.DAO
                 foreach (ShellEffect entity in context.ShellEffect.Where(c => c.EquipmentSerialId == id))
                 {
                     ShellEffectDTO dto = new ShellEffectDTO();
-                    Mapper.Mapper.Instance.ShellEffectMapper.ToShellEffectDTO(entity, dto);
+                    Mapper.Mappers.ShellEffectMapper.ToShellEffectDTO(entity, dto);
                     result.Add(dto);
                 }
                 return result;
             }
         }
 
-        private ShellEffectDTO insert(ShellEffectDTO shelleffect, OpenNosContext context)
+        private static ShellEffectDTO insert(ShellEffectDTO shelleffect, OpenNosContext context)
         {
             ShellEffect entity = new ShellEffect();
-            Mapper.Mapper.Instance.ShellEffectMapper.ToShellEffect(shelleffect, entity);
+            Mapper.Mappers.ShellEffectMapper.ToShellEffect(shelleffect, entity);
             context.ShellEffect.Add(entity);
             context.SaveChanges();
-            if (Mapper.Mapper.Instance.ShellEffectMapper.ToShellEffectDTO(entity, shelleffect))
+            if (Mapper.Mappers.ShellEffectMapper.ToShellEffectDTO(entity, shelleffect))
             {
                 return shelleffect;
             }
@@ -150,15 +150,15 @@ namespace OpenNos.DAL.DAO
             return null;
         }
 
-        private ShellEffectDTO update(ShellEffect entity, ShellEffectDTO shelleffect, OpenNosContext context)
+        private static ShellEffectDTO update(ShellEffect entity, ShellEffectDTO shelleffect, OpenNosContext context)
         {
             if (entity != null)
             {
-                Mapper.Mapper.Instance.ShellEffectMapper.ToShellEffect(shelleffect, entity);
+                Mapper.Mappers.ShellEffectMapper.ToShellEffect(shelleffect, entity);
                 context.SaveChanges();
             }
 
-            if (Mapper.Mapper.Instance.ShellEffectMapper.ToShellEffectDTO(entity, shelleffect))
+            if (Mapper.Mappers.ShellEffectMapper.ToShellEffectDTO(entity, shelleffect))
             {
                 return shelleffect;
             }

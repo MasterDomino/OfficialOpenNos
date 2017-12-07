@@ -50,8 +50,8 @@ namespace OpenNos.GameObject
                         if (!mate.IsTeamMember)
                         {
                             session.Character.Mates.Remove(mate);
-                            session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("PET_RELEASED")));
-                            session.SendPacket(UserInterfaceHelper.Instance.GeneratePClear());
+                            session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("PET_RELEASED")));
+                            session.SendPacket(UserInterfaceHelper.GeneratePClear());
                             session.SendPackets(session.Character.GenerateScP());
                             session.SendPackets(session.Character.GenerateScN());
                             session.CurrentMapInstance?.Broadcast(mate.GenerateOut());
@@ -59,7 +59,7 @@ namespace OpenNos.GameObject
                         }
                         else
                         {
-                            session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("PET_IN_TEAM_UNRELEASABLE"), 0));
+                            session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("PET_IN_TEAM_UNRELEASABLE"), 0));
                         }
                     }
                 }
@@ -85,7 +85,7 @@ namespace OpenNos.GameObject
                 case 13:
                     if (int.TryParse(packetsplit[3], out mateTransportId) && session.Character.Mates.Any(s => s.MateTransportId == mateTransportId))
                     {
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateGuri(10, 1, mateTransportId, 2));
+                        session.SendPacket(UserInterfaceHelper.GenerateGuri(10, 1, mateTransportId, 2));
                         session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
                     break;
@@ -115,7 +115,7 @@ namespace OpenNos.GameObject
                             mate.IsSummonable = true;
                             session.SendPackets(session.Character.GenerateScP());
                             session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PET_SUMMONABLE"), mate.Name), 10));
-                            session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PET_SUMMONABLE"), mate.Name), 0));
+                            session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PET_SUMMONABLE"), mate.Name), 0));
                             session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                         }
                     }

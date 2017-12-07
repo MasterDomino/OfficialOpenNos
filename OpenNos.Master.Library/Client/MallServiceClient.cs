@@ -50,9 +50,9 @@ namespace OpenNos.Master.Library.Client
                 {
                     _client.Connect();
                 }
-                catch
+                catch (Exception)
                 {
-                    Logger.Error(Language.Instance.GetMessageFromKey("RETRY_CONNECTION"), memberName: "MallServiceClient");
+                    Logger.Error(Language.Instance.GetMessageFromKey("RETRY_CONNECTION"), memberName: nameof(MallServiceClient));
                     System.Threading.Thread.Sleep(1000);
                 }
             }

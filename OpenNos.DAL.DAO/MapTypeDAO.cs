@@ -35,10 +35,10 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     MapType entity = new MapType();
-                    Mapper.Mapper.Instance.MapTypeMapper.ToMapType(mapType, entity);
+                    Mapper.Mappers.MapTypeMapper.ToMapType(mapType, entity);
                     context.MapType.Add(entity);
                     context.SaveChanges();
-                    if (Mapper.Mapper.Instance.MapTypeMapper.ToMapTypeDTO(entity, mapType))
+                    if (Mapper.Mappers.MapTypeMapper.ToMapTypeDTO(entity, mapType))
                     {
                         return mapType;
                     }
@@ -61,7 +61,7 @@ namespace OpenNos.DAL.DAO
                 foreach (MapType MapType in context.MapType)
                 {
                     MapTypeDTO dto = new MapTypeDTO();
-                    Mapper.Mapper.Instance.MapTypeMapper.ToMapTypeDTO(MapType, dto);
+                    Mapper.Mappers.MapTypeMapper.ToMapTypeDTO(MapType, dto);
                     result.Add(dto);
                 }
                 return result;
@@ -75,7 +75,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     MapTypeDTO dto = new MapTypeDTO();
-                    if (Mapper.Mapper.Instance.MapTypeMapper.ToMapTypeDTO(context.MapType.FirstOrDefault(s => s.MapTypeId.Equals(maptypeId)), dto))
+                    if (Mapper.Mappers.MapTypeMapper.ToMapTypeDTO(context.MapType.FirstOrDefault(s => s.MapTypeId.Equals(maptypeId)), dto))
                     {
                         return dto;
                     }

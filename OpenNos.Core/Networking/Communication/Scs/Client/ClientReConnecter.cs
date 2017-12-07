@@ -129,9 +129,10 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
                 _client.Connect();
                 _reconnectTimer.Stop();
             }
-            catch
+            catch (Exception)
             {
                 // No need to catch since it will try to re-connect again
+                throw;
             }
         }
 

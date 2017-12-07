@@ -115,7 +115,7 @@ namespace OpenNos.GameObject
 
         public bool IsBound => BoundCharacterId.HasValue;
 
-        public Item Item => _item ?? (_item = ServerManager.Instance.GetItem(ItemVNum));
+        public Item Item => _item ?? (_item = ServerManager.GetItem(ItemVNum));
 
         public long TransportId
         {
@@ -208,7 +208,7 @@ namespace OpenNos.GameObject
 
             string skill = string.Empty;
             List<CharacterSkill> skillsSp = new List<CharacterSkill>();
-            foreach (Skill ski in ServerManager.Instance.GetAllSkill().Where(ski => ski.Class == Item.Morph + 31 && ski.LevelMinimum <= SpLevel))
+            foreach (Skill ski in ServerManager.GetAllSkill().Where(ski => ski.Class == Item.Morph + 31 && ski.LevelMinimum <= SpLevel))
             {
                 skillsSp.Add(new CharacterSkill
                 {
@@ -340,17 +340,17 @@ namespace OpenNos.GameObject
 
             ItemInstance specialist = session.Character.Inventory.GetItemInstanceById(Id);
 
-            int rnd = ServerManager.Instance.RandomNumber();
+            int rnd = ServerManager.RandomNumber();
             if (rnd < upsuccess[upmode - 1])
             {
-                byte type = (byte)ServerManager.Instance.RandomNumber(0, 16), count = 1;
+                byte type = (byte)ServerManager.RandomNumber(0, 16), count = 1;
                 if (upmode == 4)
                 {
                     count = 2;
                 }
                 if (upmode == 5)
                 {
-                    count = (byte)ServerManager.Instance.RandomNumber(3, 6);
+                    count = (byte)ServerManager.RandomNumber(3, 6);
                 }
 
                 session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 3005), session.Character.MapX, session.Character.MapY);
@@ -359,56 +359,56 @@ namespace OpenNos.GameObject
                 {
                     specialist.SpDamage += count;
                     session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_ATTACK"), count), 12));
-                    session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_ATTACK"), count), 0));
+                    session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_ATTACK"), count), 0));
                 }
                 else if (type < 6)
                 {
                     specialist.SpDefence += count;
                     session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_DEFENSE"), count), 12));
-                    session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_DEFENSE"), count), 0));
+                    session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_DEFENSE"), count), 0));
                 }
                 else if (type < 9)
                 {
                     specialist.SpElement += count;
                     session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_ELEMENT"), count), 12));
-                    session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_ELEMENT"), count), 0));
+                    session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_ELEMENT"), count), 0));
                 }
                 else if (type < 12)
                 {
                     specialist.SpHP += count;
                     session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_HPMP"), count), 12));
-                    session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_HPMP"), count), 0));
+                    session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_HPMP"), count), 0));
                 }
                 else if (type == 12)
                 {
                     specialist.SpFire += count;
                     session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_FIRE"), count), 12));
-                    session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_FIRE"), count), 0));
+                    session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_FIRE"), count), 0));
                 }
                 else if (type == 13)
                 {
                     specialist.SpWater += count;
                     session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_WATER"), count), 12));
-                    session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_WATER"), count), 0));
+                    session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_WATER"), count), 0));
                 }
                 else if (type == 14)
                 {
                     specialist.SpLight += count;
                     session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_LIGHT"), count), 12));
-                    session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_LIGHT"), count), 0));
+                    session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_LIGHT"), count), 0));
                 }
                 else if (type == 15)
                 {
                     specialist.SpDark += count;
                     session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_SHADOW"), count), 12));
-                    session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_SHADOW"), count), 0));
+                    session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_SHADOW"), count), 0));
                 }
                 specialist.SpStoneUpgrade++;
             }
             else
             {
                 session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("PERFECTSP_FAILURE"), 11));
-                session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("PERFECTSP_FAILURE"), 0));
+                session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("PERFECTSP_FAILURE"), 0));
             }
             session.SendPacket(specialist.GenerateInventoryAdd());
             session.Character.Gold -= goldprice[upmode - 1];
@@ -448,12 +448,12 @@ namespace OpenNos.GameObject
             }
             if (sesion.Character.Inventory.CountItem(fullmoonVnum) < fullmoon[Upgrade])
             {
-                sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.Instance.GetItem(fullmoonVnum).Name, fullmoon[Upgrade])), 10));
+                sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.GetItem(fullmoonVnum).Name, fullmoon[Upgrade])), 10));
                 return;
             }
             if (sesion.Character.Inventory.CountItem(featherVnum) < feather[Upgrade])
             {
-                sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.Instance.GetItem(featherVnum).Name, feather[Upgrade])), 10));
+                sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.GetItem(featherVnum).Name, feather[Upgrade])), 10));
                 return;
             }
             if (sesion.Character.Gold < goldprice[Upgrade])
@@ -472,14 +472,14 @@ namespace OpenNos.GameObject
                     {
                         if (sesion.Character.Inventory.CountItem(greenSoulVnum) < soul[Upgrade])
                         {
-                            sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.Instance.GetItem(greenSoulVnum).Name, soul[Upgrade])), 10));
+                            sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.GetItem(greenSoulVnum).Name, soul[Upgrade])), 10));
                             return;
                         }
                         if (protect == UpgradeProtection.Protected)
                         {
                             if (sesion.Character.Inventory.CountItem(blueScrollVnum) < 1)
                             {
-                                sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.Instance.GetItem(blueScrollVnum).Name, 1)), 10));
+                                sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.GetItem(blueScrollVnum).Name, 1)), 10));
                                 return;
                             }
                             sesion.Character.Inventory.RemoveItemAmount(blueScrollVnum);
@@ -490,14 +490,14 @@ namespace OpenNos.GameObject
                     {
                         if (sesion.Character.Inventory.CountItem(dragonSkinVnum) < soul[Upgrade])
                         {
-                            sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.Instance.GetItem(dragonSkinVnum).Name, soul[Upgrade])), 10));
+                            sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.GetItem(dragonSkinVnum).Name, soul[Upgrade])), 10));
                             return;
                         }
                         if (protect == UpgradeProtection.Protected)
                         {
                             if (sesion.Character.Inventory.CountItem(blueScrollVnum) < 1)
                             {
-                                sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.Instance.GetItem(blueScrollVnum).Name, 1)), 10));
+                                sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.GetItem(blueScrollVnum).Name, 1)), 10));
                                 return;
                             }
                             sesion.Character.Inventory.RemoveItemAmount(blueScrollVnum);
@@ -520,14 +520,14 @@ namespace OpenNos.GameObject
                     {
                         if (sesion.Character.Inventory.CountItem(redSoulVnum) < soul[Upgrade])
                         {
-                            sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.Instance.GetItem(redSoulVnum).Name, soul[Upgrade])), 10));
+                            sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.GetItem(redSoulVnum).Name, soul[Upgrade])), 10));
                             return;
                         }
                         if (protect == UpgradeProtection.Protected)
                         {
                             if (sesion.Character.Inventory.CountItem(blueScrollVnum) < 1)
                             {
-                                sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.Instance.GetItem(blueScrollVnum).Name, 1)), 10));
+                                sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.GetItem(blueScrollVnum).Name, 1)), 10));
                                 return;
                             }
                             sesion.Character.Inventory.RemoveItemAmount(blueScrollVnum);
@@ -539,14 +539,14 @@ namespace OpenNos.GameObject
                     {
                         if (sesion.Character.Inventory.CountItem(dragonBloodVnum) < soul[Upgrade])
                         {
-                            sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.Instance.GetItem(dragonBloodVnum).Name, soul[Upgrade])), 10));
+                            sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.GetItem(dragonBloodVnum).Name, soul[Upgrade])), 10));
                             return;
                         }
                         if (protect == UpgradeProtection.Protected)
                         {
                             if (sesion.Character.Inventory.CountItem(blueScrollVnum) < 1)
                             {
-                                sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.Instance.GetItem(blueScrollVnum).Name, 1)), 10));
+                                sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.GetItem(blueScrollVnum).Name, 1)), 10));
                                 return;
                             }
                             sesion.Character.Inventory.RemoveItemAmount(blueScrollVnum);
@@ -569,7 +569,7 @@ namespace OpenNos.GameObject
                     {
                         if (sesion.Character.Inventory.CountItem(blueSoulVnum) < soul[Upgrade])
                         {
-                            sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.Instance.GetItem(blueSoulVnum).Name, soul[Upgrade])), 10));
+                            sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.GetItem(blueSoulVnum).Name, soul[Upgrade])), 10));
                             return;
                         }
                         if (protect == UpgradeProtection.Protected)
@@ -593,7 +593,7 @@ namespace OpenNos.GameObject
                         {
                             if (sesion.Character.Inventory.CountItem(redScrollVnum) < 1)
                             {
-                                sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.Instance.GetItem(redScrollVnum).Name, 1)), 10));
+                                sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.GetItem(redScrollVnum).Name, 1)), 10));
                                 return;
                             }
                             sesion.Character.Inventory.RemoveItemAmount(redScrollVnum);
@@ -617,21 +617,21 @@ namespace OpenNos.GameObject
 
             ItemInstance wearable = sesion.Character.Inventory.GetItemInstanceById(Id);
             ItemInstance inventory = sesion.Character.Inventory.GetItemInstanceById(Id);
-            int rnd = ServerManager.Instance.RandomNumber();
+            int rnd = ServerManager.RandomNumber();
             if (rnd < destroy[Upgrade])
             {
                 if (protect == UpgradeProtection.Protected)
                 {
                     sesion.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, sesion.Character.CharacterId, 3004), sesion.Character.MapX, sesion.Character.MapY);
                     sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey("UPGRADESP_FAILED_SAVED"), 11));
-                    sesion.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADESP_FAILED_SAVED"), 0));
+                    sesion.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADESP_FAILED_SAVED"), 0));
                 }
                 else
                 {
                     sesion.Character.Inventory.RemoveItemAmount(itemToRemove, soul[Upgrade]);
                     wearable.Rare = -2;
                     sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey("UPGRADESP_DESTROYED"), 11));
-                    sesion.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADESP_DESTROYED"), 0));
+                    sesion.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADESP_DESTROYED"), 0));
                     sesion.SendPacket(wearable.GenerateInventoryAdd());
                 }
             }
@@ -646,7 +646,7 @@ namespace OpenNos.GameObject
                     sesion.Character.Inventory.RemoveItemAmount(itemToRemove, soul[Upgrade]);
                 }
                 sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey("UPGRADESP_FAILED"), 11));
-                sesion.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADESP_FAILED"), 0));
+                sesion.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADESP_FAILED"), 0));
             }
             else
             {
@@ -657,7 +657,7 @@ namespace OpenNos.GameObject
                 sesion.Character.Inventory.RemoveItemAmount(itemToRemove, soul[Upgrade]);
                 sesion.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, sesion.Character.CharacterId, 3005), sesion.Character.MapX, sesion.Character.MapY);
                 sesion.SendPacket(sesion.Character.GenerateSay(Language.Instance.GetMessageFromKey("UPGRADESP_SUCCESS"), 12));
-                sesion.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADESP_SUCCESS"), 0));
+                sesion.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADESP_SUCCESS"), 0));
                 wearable.Upgrade++;
                 if (wearable.Upgrade > 8)
                 {
@@ -740,7 +740,7 @@ namespace OpenNos.GameObject
                                 $"e_info 7 {ItemVNum} 0" : $"e_info 7 {ItemVNum} 1 {HoldingVNum} {SpLevel} {XP} 100 {SpDamage} {SpDefence}";
 
                         case 2:
-                            Item spitem = ServerManager.Instance.GetItem(HoldingVNum);
+                            Item spitem = ServerManager.GetItem(HoldingVNum);
                             return HoldingVNum == 0 ?
                                 $"e_info 7 {ItemVNum} 0" :
                                 $"e_info 7 {ItemVNum} 1 {HoldingVNum} {SpLevel} {XP} {CharacterHelper.SPXPData[SpLevel == 0 ? 0 : SpLevel - 1]} {Upgrade} {CharacterHelper.SlPoint(SlDamage, 0)} {CharacterHelper.SlPoint(SlDefence, 1)} {CharacterHelper.SlPoint(SlElement, 2)} {CharacterHelper.SlPoint(SlHP, 3)} {CharacterHelper.SPPoint(SpLevel, Upgrade) - SlDamage - SlHP - SlElement - SlDefence} {SpStoneUpgrade} {spitem.FireResistance} {spitem.WaterResistance} {spitem.LightResistance} {spitem.DarkResistance} {SpDamage} {SpDefence} {SpElement} {SpHP} {SpFire} {SpWater} {SpLight} {SpDark}";
@@ -751,7 +751,7 @@ namespace OpenNos.GameObject
                                 $"e_info 11 {ItemVNum} 1 {HoldingVNum}";
 
                         case 5:
-                            Item fairyitem = ServerManager.Instance.GetItem(HoldingVNum);
+                            Item fairyitem = ServerManager.GetItem(HoldingVNum);
                             return HoldingVNum == 0 ?
                                 $"e_info 12 {ItemVNum} 0" :
                                 $"e_info 12 {ItemVNum} 1 {HoldingVNum} {ElementRate + fairyitem.ElementRate}";
@@ -862,11 +862,11 @@ namespace OpenNos.GameObject
                         byte option = 0;
                         if (dataIndex < 5)
                         {
-                            option = (byte)ServerManager.Instance.RandomNumber(0, 4);
+                            option = (byte)ServerManager.RandomNumber(0, 4);
                         }
                         else
                         {
-                            option = (byte)ServerManager.Instance.RandomNumber(0, 6);
+                            option = (byte)ServerManager.RandomNumber(0, 6);
                         }
 
                         if (CellonOptions.Any(s => s.Type == (CellonOptionType)option))
@@ -874,14 +874,14 @@ namespace OpenNos.GameObject
                             return new short[] { -1, -1 };
                         }
 
-                        return new short[] { option, (short)ServerManager.Instance.RandomNumber(minimumData[dataIndex][option], maximumData[dataIndex][option] + 1) };
+                        return new short[] { option, (short)ServerManager.RandomNumber(minimumData[dataIndex][option], maximumData[dataIndex][option] + 1) };
                     }
 
                     short[] value = generateOption();
                     Logger.LogUserEvent("OPTION", session.GenerateIdentity(), $"[OptionItem]Serial: {EquipmentSerialId} Type: {value[0]} Value: {value[1]}");
                     if (value[0] != -1)
                     {
-                        CellonOptionDTO cellonOptionDTO = new CellonOptionDTO()
+                        CellonOptionDTO cellonOptionDTO = new CellonOptionDTO
                         {
                             EquipmentSerialId = EquipmentSerialId,
                             Level = (byte)(dataIndex + 1),
@@ -892,14 +892,14 @@ namespace OpenNos.GameObject
                         CellonOptions.Add(cellonOptionDTO);
 
                         session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("OPTION_SUCCESS"), Rare), 12));
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("OPTION_SUCCESS"), Rare), 0));
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("OPTION_SUCCESS"), Rare), 0));
                         session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 3005), session.Character.PositionX, session.Character.PositionY);
                         session.SendPacket("shop_end 1");
                     }
                     else
                     {
                         session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("OPTION_FAIL"), Rare), 12));
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("OPTION_FAIL"), Rare), 0));
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("OPTION_FAIL"), Rare), 0));
                         session.SendPacket("shop_end 1");
                     }
                     session.Character.Inventory.RemoveItemAmount(cellonVNum);
@@ -935,11 +935,11 @@ namespace OpenNos.GameObject
                 rare[0] = 0;
                 rare[1] = 0;
                 rare[2] = 0;
-                rnd = ServerManager.Instance.RandomNumber(0, 80);
+                rnd = ServerManager.RandomNumber(0, 80);
             }
             else
             {
-                rnd = ServerManager.Instance.RandomNumber(0, 1000) / 10D;
+                rnd = ServerManager.RandomNumber(0, 1000) / 10D;
             }
             if (protection == RarifyProtection.RedAmulet)
             {
@@ -1010,7 +1010,7 @@ namespace OpenNos.GameObject
                     Logger.LogUserEvent("GAMBLE", session.GenerateIdentity(), $"[RarifyItem]Protection: {protection.ToString()} IIId: {Id} ItemVnum: {ItemVNum} Result: Success");
 
                     session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("RARIFY_SUCCESS"), Rare), 12));
-                    session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("RARIFY_SUCCESS"), Rare), 0));
+                    session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("RARIFY_SUCCESS"), Rare), 0));
                     session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 3005), session.Character.PositionX, session.Character.PositionY);
                     session.SendPacket("shop_end 1");
                 }
@@ -1075,14 +1075,14 @@ namespace OpenNos.GameObject
 
                     session.Character.DeleteItemByItemInstanceId(Id);
                     session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("RARIFY_FAILED"), 11));
-                    session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("RARIFY_FAILED"), 0));
+                    session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("RARIFY_FAILED"), 0));
                 }
                 else
                 {
                     Logger.LogUserEvent("GAMBLE", session.GenerateIdentity(), $"[RarifyItem]Protection: {protection.ToString()} IIId: {Id} ItemVnum: {ItemVNum} Result: Fail");
 
                     session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("RARIFY_FAILED_ITEM_SAVED"), 11));
-                    session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("RARIFY_FAILED_ITEM_SAVED"), 0));
+                    session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("RARIFY_FAILED_ITEM_SAVED"), 0));
                     session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 3004), session.Character.MapX, session.Character.MapY);
                 }
             }
@@ -1112,7 +1112,7 @@ namespace OpenNos.GameObject
                         {
                             for (int i = 0; i < point; i++)
                             {
-                                int rndn = ServerManager.Instance.RandomNumber(0, 3);
+                                int rndn = ServerManager.RandomNumber(0, 3);
                                 if (rndn == 0)
                                 {
                                     Concentrate++;
@@ -1148,7 +1148,7 @@ namespace OpenNos.GameObject
                         {
                             for (int i = 0; i < point; i++)
                             {
-                                int rndn = ServerManager.Instance.RandomNumber(0, 3);
+                                int rndn = ServerManager.RandomNumber(0, 3);
                                 if (rndn == 0)
                                 {
                                     DefenceDodge++;
@@ -1978,7 +1978,7 @@ namespace OpenNos.GameObject
                     {
                         max = (short)(min + 1);
                     }
-                    return (short)ServerManager.Instance.RandomNumber(min, max);
+                    return (short)ServerManager.RandomNumber(min, max);
                 }
             }
 
@@ -2026,7 +2026,7 @@ namespace OpenNos.GameObject
                                     maximum = new short[] { 55, 55, 55, 8, 30, 30, 45, 15, 30, 48, 48 };
                                 }
 
-                                int position = ServerManager.Instance.RandomNumber(0, effects.Length);
+                                int position = ServerManager.RandomNumber(0, effects.Length);
                                 byte effect = effects[position];
                                 short value = CalculateEffect(maximum[position]);
 
@@ -2035,7 +2035,7 @@ namespace OpenNos.GameObject
                                     continue;
                                 }
 
-                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.CNormal, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
+                                effectsList.Add(new ShellEffectDTO { EffectLevel = ShellEffectLevelType.CNormal, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
                                 return;
                             }
                         case ShellEffectLevelType.BNormal:
@@ -2089,7 +2089,7 @@ namespace OpenNos.GameObject
                                     maximum = new short[] { 95, 95, 95, 13, 40, 85, 85, 27, 42, 38, 27, 8, 8, 8, 8 };
                                 }
 
-                                int position = ServerManager.Instance.RandomNumber(0, effects.Length);
+                                int position = ServerManager.RandomNumber(0, effects.Length);
                                 byte effect = effects[position];
                                 short value = CalculateEffect(maximum[position]);
 
@@ -2098,7 +2098,7 @@ namespace OpenNos.GameObject
                                     continue;
                                 }
 
-                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.BNormal, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
+                                effectsList.Add(new ShellEffectDTO { EffectLevel = ShellEffectLevelType.BNormal, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
                                 return;
                             }
                         case ShellEffectLevelType.ANormal:
@@ -2143,7 +2143,7 @@ namespace OpenNos.GameObject
                                     maximum = new short[] { 160, 160, 160, 43, 35, 40, 40, 80, 80, 16, 16, 16, 16 };
                                 }
 
-                                int position = ServerManager.Instance.RandomNumber(0, effects.Length);
+                                int position = ServerManager.RandomNumber(0, effects.Length);
                                 byte effect = effects[position];
                                 short value = CalculateEffect(maximum[position]);
 
@@ -2152,7 +2152,7 @@ namespace OpenNos.GameObject
                                     continue;
                                 }
 
-                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.ANormal, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
+                                effectsList.Add(new ShellEffectDTO { EffectLevel = ShellEffectLevelType.ANormal, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
                                 return;
                             }
                         case ShellEffectLevelType.SNormal:
@@ -2178,7 +2178,7 @@ namespace OpenNos.GameObject
                                     maximum = new short[] { 20, 33, 22, 56 };
                                 }
 
-                                int position = ServerManager.Instance.RandomNumber(0, effects.Length);
+                                int position = ServerManager.RandomNumber(0, effects.Length);
                                 byte effect = effects[position];
                                 short value = CalculateEffect(maximum[position]);
 
@@ -2187,7 +2187,7 @@ namespace OpenNos.GameObject
                                     continue;
                                 }
 
-                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.SNormal, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
+                                effectsList.Add(new ShellEffectDTO { EffectLevel = ShellEffectLevelType.SNormal, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
                                 return;
                             }
                         case ShellEffectLevelType.CBonus:
@@ -2210,7 +2210,7 @@ namespace OpenNos.GameObject
                                     maximum = new short[] { 45, 43 };
                                 }
 
-                                int position = ServerManager.Instance.RandomNumber(0, effects.Length);
+                                int position = ServerManager.RandomNumber(0, effects.Length);
                                 byte effect = effects[position];
                                 short value = CalculateEffect(maximum[position]);
 
@@ -2219,7 +2219,7 @@ namespace OpenNos.GameObject
                                     continue;
                                 }
 
-                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.CBonus, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
+                                effectsList.Add(new ShellEffectDTO { EffectLevel = ShellEffectLevelType.CBonus, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
                                 return;
                             }
                         case ShellEffectLevelType.BBonus:
@@ -2243,7 +2243,7 @@ namespace OpenNos.GameObject
                                     maximum = new short[] { 56, 47, 21 };
                                 }
 
-                                int position = ServerManager.Instance.RandomNumber(0, effects.Length);
+                                int position = ServerManager.RandomNumber(0, effects.Length);
                                 byte effect = effects[position];
                                 short value = CalculateEffect(maximum[position]);
 
@@ -2252,7 +2252,7 @@ namespace OpenNos.GameObject
                                     continue;
                                 }
 
-                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.BBonus, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
+                                effectsList.Add(new ShellEffectDTO { EffectLevel = ShellEffectLevelType.BBonus, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
                                 return;
                             }
                         case ShellEffectLevelType.ABonus:
@@ -2276,7 +2276,7 @@ namespace OpenNos.GameObject
                                     maximum = new short[] { 60, 60, 46 };
                                 }
 
-                                int position = ServerManager.Instance.RandomNumber(0, effects.Length);
+                                int position = ServerManager.RandomNumber(0, effects.Length);
                                 byte effect = effects[position];
                                 short value = CalculateEffect(maximum[position]);
 
@@ -2285,7 +2285,7 @@ namespace OpenNos.GameObject
                                     continue;
                                 }
 
-                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.ABonus, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
+                                effectsList.Add(new ShellEffectDTO { EffectLevel = ShellEffectLevelType.ABonus, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
                                 return;
                             }
                         case ShellEffectLevelType.SBonus:
@@ -2309,7 +2309,7 @@ namespace OpenNos.GameObject
                                     maximum = new short[] { 60, 75, 55 };
                                 }
 
-                                int position = ServerManager.Instance.RandomNumber(0, effects.Length);
+                                int position = ServerManager.RandomNumber(0, effects.Length);
                                 byte effect = effects[position];
                                 short value = CalculateEffect(maximum[position]);
 
@@ -2318,7 +2318,7 @@ namespace OpenNos.GameObject
                                     continue;
                                 }
 
-                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.SBonus, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
+                                effectsList.Add(new ShellEffectDTO { EffectLevel = ShellEffectLevelType.SBonus, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
                                 return;
                             }
                         case ShellEffectLevelType.CPVP:
@@ -2344,7 +2344,7 @@ namespace OpenNos.GameObject
                                     maximum = new short[] { 9, 4, 4, 4 };
                                 }
 
-                                int position = ServerManager.Instance.RandomNumber(0, effects.Length);
+                                int position = ServerManager.RandomNumber(0, effects.Length);
                                 byte effect = effects[position];
                                 short value = CalculateEffect(maximum[position]);
 
@@ -2353,7 +2353,7 @@ namespace OpenNos.GameObject
                                     continue;
                                 }
 
-                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.CPVP, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
+                                effectsList.Add(new ShellEffectDTO { EffectLevel = ShellEffectLevelType.CPVP, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
                                 return;
                             }
                         case ShellEffectLevelType.BPVP:
@@ -2382,7 +2382,7 @@ namespace OpenNos.GameObject
                                     maximum = new short[] { 11, 6, 6, 6 };
                                 }
 
-                                int position = ServerManager.Instance.RandomNumber(0, effects.Length);
+                                int position = ServerManager.RandomNumber(0, effects.Length);
                                 byte effect = effects[position];
                                 short value = CalculateEffect(maximum[position]);
 
@@ -2391,7 +2391,7 @@ namespace OpenNos.GameObject
                                     continue;
                                 }
 
-                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.BPVP, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
+                                effectsList.Add(new ShellEffectDTO { EffectLevel = ShellEffectLevelType.BPVP, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
                                 return;
                             }
                         case ShellEffectLevelType.APVP:
@@ -2421,7 +2421,7 @@ namespace OpenNos.GameObject
                                     maximum = new short[] { 20, 12, 12, 12, 0 };
                                 }
 
-                                int position = ServerManager.Instance.RandomNumber(0, effects.Length);
+                                int position = ServerManager.RandomNumber(0, effects.Length);
                                 byte effect = effects[position];
                                 short value = CalculateEffect(maximum[position]);
 
@@ -2430,7 +2430,7 @@ namespace OpenNos.GameObject
                                     continue;
                                 }
 
-                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.APVP, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
+                                effectsList.Add(new ShellEffectDTO { EffectLevel = ShellEffectLevelType.APVP, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
                                 return;
                             }
                         case ShellEffectLevelType.SPVP:
@@ -2453,7 +2453,7 @@ namespace OpenNos.GameObject
                                     maximum = new short[] { 32, 16 };
                                 }
 
-                                int position = ServerManager.Instance.RandomNumber(0, effects.Length);
+                                int position = ServerManager.RandomNumber(0, effects.Length);
                                 byte effect = effects[position];
                                 short value = CalculateEffect(maximum[position]);
 
@@ -2462,7 +2462,7 @@ namespace OpenNos.GameObject
                                     continue;
                                 }
 
-                                effectsList.Add(new ShellEffectDTO() { EffectLevel = ShellEffectLevelType.SPVP, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
+                                effectsList.Add(new ShellEffectDTO { EffectLevel = ShellEffectLevelType.SPVP, Effect = effect, Value = value, EquipmentSerialId = EquipmentSerialId });
                                 return;
                             }
                     }
@@ -2560,7 +2560,7 @@ namespace OpenNos.GameObject
                     session.Character.Inventory.RemoveItemAmount(sandVnum, (byte)sand[Upgrade]);
                     session.Character.Gold -= goldprice[Upgrade];
 
-                    int rnd = ServerManager.Instance.RandomNumber();
+                    int rnd = ServerManager.RandomNumber();
                     if (rnd < upsuccess[Upgrade + itemToSum.Upgrade])
                     {
                         Logger.LogUserEvent("SUM_ITEM", session.GenerateIdentity(), $"[SumItem]ItemId {Id} ItemToSumId: {itemToSum.Id} Upgrade: {Upgrade} ItemToSumUpgrade: {itemToSum.Upgrade} Result: Success");
@@ -2572,22 +2572,22 @@ namespace OpenNos.GameObject
                         FireResistance += (short)(itemToSum.FireResistance + itemToSum.Item.FireResistance);
                         session.Character.DeleteItemByItemInstanceId(itemToSum.Id);
                         session.SendPacket($"pdti 10 {ItemVNum} 1 27 {Upgrade} 0");
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("SUM_SUCCESS"), 0));
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("SUM_SUCCESS"), 0));
                         session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("SUM_SUCCESS"), 12));
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateGuri(19, 1, session.Character.CharacterId, 1324));
+                        session.SendPacket(UserInterfaceHelper.GenerateGuri(19, 1, session.Character.CharacterId, 1324));
                         session.SendPacket(GenerateInventoryAdd());
                     }
                     else
                     {
                         Logger.LogUserEvent("SUM_ITEM", session.GenerateIdentity(), $"[SumItem]ItemId {Id} ItemToSumId: {itemToSum.Id} Upgrade: {Upgrade} ItemToSumUpgrade: {itemToSum.Upgrade} Result: Fail");
 
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("SUM_FAILED"), 0));
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("SUM_FAILED"), 0));
                         session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("SUM_FAILED"), 11));
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateGuri(19, 1, session.Character.CharacterId, 1332));
+                        session.SendPacket(UserInterfaceHelper.GenerateGuri(19, 1, session.Character.CharacterId, 1332));
                         session.Character.DeleteItemByItemInstanceId(itemToSum.Id);
                         session.Character.DeleteItemByItemInstanceId(Id);
                     }
-                    session.CurrentMapInstance?.Broadcast(UserInterfaceHelper.Instance.GenerateGuri(6, 1, session.Character.CharacterId), session.Character.MapX, session.Character.MapY);
+                    session.CurrentMapInstance?.Broadcast(UserInterfaceHelper.GenerateGuri(6, 1, session.Character.CharacterId), session.Character.MapX, session.Character.MapY);
                     session.SendPacket(session.Character.GenerateGold());
                     session.SendPacket("shop_end 1");
                 }
@@ -2653,19 +2653,19 @@ namespace OpenNos.GameObject
                         }
                         if (session.Character.Inventory.CountItem(cellaVnum) < cella[Upgrade] * reducedpricefactor)
                         {
-                            session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.Instance.GetItem(cellaVnum).Name, cella[Upgrade] * reducedpricefactor), 10));
+                            session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.GetItem(cellaVnum).Name, cella[Upgrade] * reducedpricefactor), 10));
                             return;
                         }
                         if (protection == UpgradeProtection.Protected && !isCommand && session.Character.Inventory.CountItem(goldScrollVnum) < 1)
                         {
-                            session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.Instance.GetItem(goldScrollVnum).Name, cella[Upgrade] * reducedpricefactor), 10));
+                            session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.GetItem(goldScrollVnum).Name, cella[Upgrade] * reducedpricefactor), 10));
                             return;
                         }
                         if (Upgrade < 5)
                         {
                             if (session.Character.Inventory.CountItem(gemVnum) < gem[Upgrade])
                             {
-                                session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.Instance.GetItem(gemVnum).Name, gem[Upgrade]), 10));
+                                session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.GetItem(gemVnum).Name, gem[Upgrade]), 10));
                                 return;
                             }
                             session.Character.Inventory.RemoveItemAmount(gemVnum, gem[Upgrade]);
@@ -2674,7 +2674,7 @@ namespace OpenNos.GameObject
                         {
                             if (session.Character.Inventory.CountItem(gemFullVnum) < gem[Upgrade])
                             {
-                                session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.Instance.GetItem(gemFullVnum).Name, gem[Upgrade]), 10));
+                                session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.GetItem(gemFullVnum).Name, gem[Upgrade]), 10));
                                 return;
                             }
                             session.Character.Inventory.RemoveItemAmount(gemFullVnum, gem[Upgrade]);
@@ -2701,14 +2701,14 @@ namespace OpenNos.GameObject
                         }
                         if (protection == UpgradeProtection.Protected && !isCommand && session.Character.Inventory.CountItem(normalScrollVnum) < 1)
                         {
-                            session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.Instance.GetItem(normalScrollVnum).Name, 1), 10));
+                            session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.GetItem(normalScrollVnum).Name, 1), 10));
                             return;
                         }
                         if (Upgrade < 5)
                         {
                             if (session.Character.Inventory.CountItem(gemVnum) < gem[Upgrade])
                             {
-                                session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.Instance.GetItem(gemVnum).Name, gem[Upgrade]), 10));
+                                session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.GetItem(gemVnum).Name, gem[Upgrade]), 10));
                                 return;
                             }
                             session.Character.Inventory.RemoveItemAmount(gemVnum, gem[Upgrade]);
@@ -2717,7 +2717,7 @@ namespace OpenNos.GameObject
                         {
                             if (session.Character.Inventory.CountItem(gemFullVnum) < gem[Upgrade])
                             {
-                                session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.Instance.GetItem(gemFullVnum).Name, gem[Upgrade]), 10));
+                                session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_ITEMS"), ServerManager.GetItem(gemFullVnum).Name, gem[Upgrade]), 10));
                                 return;
                             }
                             session.Character.Inventory.RemoveItemAmount(gemFullVnum, gem[Upgrade]);
@@ -2733,7 +2733,7 @@ namespace OpenNos.GameObject
                         break;
                 }
                 ItemInstance wearable = session.Character.Inventory.GetItemInstanceById(Id);
-                int rnd = ServerManager.Instance.RandomNumber();
+                int rnd = ServerManager.RandomNumber();
                 if (Rare == 8)
                 {
                     if (rnd < upfail[Upgrade])
@@ -2743,14 +2743,14 @@ namespace OpenNos.GameObject
                         if (protection == UpgradeProtection.None)
                         {
                             session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("UPGRADE_FAILED"), 11));
-                            session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADE_FAILED"), 0));
+                            session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADE_FAILED"), 0));
                             session.Character.DeleteItemByItemInstanceId(Id);
                         }
                         else
                         {
                             session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 3004), session.Character.MapX, session.Character.MapY);
                             session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("SCROLL_PROTECT_USED"), 11));
-                            session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADE_FAILED_ITEM_SAVED"), 0));
+                            session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADE_FAILED_ITEM_SAVED"), 0));
                         }
                     }
                     else if (rnd < upfix[Upgrade])
@@ -2760,7 +2760,7 @@ namespace OpenNos.GameObject
                         session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 3004), session.Character.MapX, session.Character.MapY);
                         wearable.IsFixed = true;
                         session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("UPGRADE_FIXED"), 11));
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADE_FIXED"), 0));
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADE_FIXED"), 0));
                     }
                     else
                     {
@@ -2768,7 +2768,7 @@ namespace OpenNos.GameObject
 
                         session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 3005), session.Character.MapX, session.Character.MapY);
                         session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("UPGRADE_SUCCESS"), 12));
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADE_SUCCESS"), 0));
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADE_SUCCESS"), 0));
                         wearable.Upgrade++;
                         if (wearable.Upgrade > 4)
                         {
@@ -2786,7 +2786,7 @@ namespace OpenNos.GameObject
                         session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 3004), session.Character.MapX, session.Character.MapY);
                         wearable.IsFixed = true;
                         session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("UPGRADE_FIXED"), 11));
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADE_FIXED"), 0));
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADE_FIXED"), 0));
                     }
                     else if (rnd < upfail[Upgrade] + upfix[Upgrade])
                     {
@@ -2795,14 +2795,14 @@ namespace OpenNos.GameObject
                         if (protection == UpgradeProtection.None)
                         {
                             session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("UPGRADE_FAILED"), 11));
-                            session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADE_FAILED"), 0));
+                            session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADE_FAILED"), 0));
                             session.Character.DeleteItemByItemInstanceId(Id);
                         }
                         else
                         {
                             session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 3004), session.Character.MapX, session.Character.MapY);
                             session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("SCROLL_PROTECT_USED"), 11));
-                            session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADE_FAILED_ITEM_SAVED"), 0));
+                            session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADE_FAILED_ITEM_SAVED"), 0));
                         }
                     }
                     else
@@ -2811,7 +2811,7 @@ namespace OpenNos.GameObject
 
                         session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 3005), session.Character.MapX, session.Character.MapY);
                         session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("UPGRADE_SUCCESS"), 12));
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADE_SUCCESS"), 0));
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("UPGRADE_SUCCESS"), 0));
                         wearable.Upgrade++;
                         if (wearable.Upgrade > 4)
                         {

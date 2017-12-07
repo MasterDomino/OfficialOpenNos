@@ -101,7 +101,6 @@ namespace OpenNos.Core
         /// <summary>
         /// Wraps up the error message with the Logging Event
         /// </summary>
-        /// <param name="message"></param>
         /// <param name="logEvent"></param>
         /// <param name="data"></param>
         /// <param name="ex"></param>
@@ -140,11 +139,9 @@ namespace OpenNos.Core
         /// <summary>
         /// Wraps up the error message with the Logging Event
         /// </summary>
-        /// <param name="message"></param>
         /// <param name="logEvent"></param>
         /// <param name="caller"></param>
         /// <param name="data"></param>
-        /// <param name="ex"></param>
         public static void LogUserEvent(string logEvent, string caller, string data) => Log?.Info($"[{logEvent}][{caller}]{data}");
 
         /// <summary>

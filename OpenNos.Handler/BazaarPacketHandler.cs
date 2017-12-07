@@ -20,7 +20,6 @@ using OpenNos.GameObject;
 using OpenNos.GameObject.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 
 namespace OpenNos.Handler
@@ -68,7 +67,7 @@ namespace OpenNos.Handler
                     {
                         if (!Session.Character.Inventory.CanAddItem(bzcree.Item.ItemVNum))
                         {
-                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_ENOUGH_PLACE"), 0));
+                            Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_ENOUGH_PLACE"), 0));
                             return;
                         }
 
@@ -106,18 +105,18 @@ namespace OpenNos.Handler
                     }
                     else
                     {
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateModal(Language.Instance.GetMessageFromKey("STATE_CHANGED"), 1));
+                        Session.SendPacket(UserInterfaceHelper.GenerateModal(Language.Instance.GetMessageFromKey("STATE_CHANGED"), 1));
                     }
                 }
                 else
                 {
                     Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NOT_ENOUGH_MONEY"), 10));
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateModal(Language.Instance.GetMessageFromKey("NOT_ENOUGH_MONEY"), 1));
+                    Session.SendPacket(UserInterfaceHelper.GenerateModal(Language.Instance.GetMessageFromKey("NOT_ENOUGH_MONEY"), 1));
                 }
             }
             else
             {
-                Session.SendPacket(UserInterfaceHelper.Instance.GenerateModal(Language.Instance.GetMessageFromKey("STATE_CHANGED"), 1));
+                Session.SendPacket(UserInterfaceHelper.GenerateModal(Language.Instance.GetMessageFromKey("STATE_CHANGED"), 1));
             }
         }
 
@@ -173,13 +172,13 @@ namespace OpenNos.Handler
                     }
                     else
                     {
-                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("MAX_GOLD"), 0));
+                        Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("MAX_GOLD"), 0));
                         Session.SendPacket($"rc_scalc 1 {bz.Price} 0 {bz.Amount} 0 0");
                     }
                 }
                 else
                 {
-                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("NOT_ENOUGH_PLACE")));
+                    Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("NOT_ENOUGH_PLACE")));
                     Session.SendPacket($"rc_scalc 1 {bz.Price} 0 {bz.Amount} 0 0");
                 }
             }
@@ -201,12 +200,12 @@ namespace OpenNos.Handler
             {
                 byte Medal = medal.StaticBonusType == StaticBonusType.BazaarMedalGold ? (byte)MedalType.Gold : (byte)MedalType.Silver;
                 int Time = (int)(medal.DateEnd - DateTime.Now).TotalHours;
-                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NOTICE_BAZAAR"), 0));
+                Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NOTICE_BAZAAR"), 0));
                 Session.SendPacket($"wopen 32 {Medal} {Time}");
             }
             else
             {
-                Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("INFO_BAZAAR")));
+                Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("INFO_BAZAAR")));
             }
         }
 
@@ -217,7 +216,7 @@ namespace OpenNos.Handler
         public void RefreshBazarList(CBListPacket cbListPacket)
         {
             SpinWait.SpinUntil(() => !ServerManager.Instance.InBazaarRefreshMode);
-            Session.SendPacket(UserInterfaceHelper.Instance.GenerateRCBList(cbListPacket));
+            Session.SendPacket(UserInterfaceHelper.GenerateRCBList(cbListPacket));
         }
 
         /// <summary>
@@ -256,12 +255,12 @@ namespace OpenNos.Handler
             }
             if (Session.Character.Inventory.CountItemInAnInventory(InventoryType.Bazaar) > 10 * (medal == null ? 1 : 10))
             {
-                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("LIMIT_EXCEEDED"), 0));
+                Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("LIMIT_EXCEEDED"), 0));
                 return;
             }
             if (price >= (medal == null ? 1000000 : maxGold))
             {
-                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("PRICE_EXCEEDED"), 0));
+                Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("PRICE_EXCEEDED"), 0));
                 return;
             }
             if (cRegPacket.Price < 0)
@@ -317,7 +316,7 @@ namespace OpenNos.Handler
             Session.SendPacket(Session.Character.GenerateGold());
 
             Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("OBJECT_IN_BAZAAR"), 10));
-            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OBJECT_IN_BAZAAR"), 0));
+            Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("OBJECT_IN_BAZAAR"), 0));
 
             Logger.LogUserEvent("BAZAAR_INSERT", Session.GenerateIdentity(), $"BazaarId: {bazaarItem.BazaarItemId}, IIId: {bazaarItem.ItemInstanceId} VNum: {bazaar.ItemVNum} Amount: {cRegPacket.Amount} Price: {cRegPacket.Price} Time: {duration}");
 

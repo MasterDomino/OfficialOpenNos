@@ -86,7 +86,7 @@ namespace OpenNos.GameObject.Mock
 
         #region Methods
 
-        public async Task ClearLowPriorityQueue() => await Task.CompletedTask;
+        public async Task ClearLowPriorityQueueAsync() => await Task.CompletedTask;
 
         public void Disconnect() => IsConnected = false;
 

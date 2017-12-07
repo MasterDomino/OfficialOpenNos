@@ -55,7 +55,7 @@ namespace OpenNos.GameObject
                     {
                         session.Character.SpAdditionPoint = 1000000;
                     }
-                    session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("SP_POINTSADDED"), EffectValue), 0));
+                    session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("SP_POINTSADDED"), EffectValue), 0));
                     session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     session.SendPacket(session.Character.GenerateSpPoint());
                     break;
@@ -72,7 +72,7 @@ namespace OpenNos.GameObject
                     {
                         session.Character.SpPoint = 10000;
                     }
-                    session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("SP_POINTSADDEDBOTH"), EffectValue, EffectValue * 3), 0));
+                    session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("SP_POINTSADDEDBOTH"), EffectValue, EffectValue * 3), 0));
                     session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     session.SendPacket(session.Character.GenerateSpPoint());
                     break;
@@ -90,14 +90,14 @@ namespace OpenNos.GameObject
                     ScriptedInstance raid = ServerManager.Instance.Raids.FirstOrDefault(s => s.RequiredItems?.Any(obj => obj?.VNum == raidSeal.ItemVNum) == true)?.Copy();
                     if (raid != null)
                     {
-                        Group group = new Group()
+                        Group group = new Group
                         {
                             GroupType = GroupType.BigTeam,
                             Raid = raid
                         };
                         group.JoinGroup(session.Character.CharacterId);
                         ServerManager.Instance.AddGroup(group);
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("RAID_LEADER"), session.Character.Name), 0));
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("RAID_LEADER"), session.Character.Name), 0));
                         session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("RAID_LEADER"), session.Character.Name), 10));
                         if (session.Character.Level > raid.LevelMaximum || session.Character.Level < raid.LevelMinimum)
                         {
@@ -125,15 +125,15 @@ namespace OpenNos.GameObject
                 case 250:
                     if (!session.Character.Buff.ContainsKey(131))
                     {
-                        session.Character.AddStaticBuff(new StaticBuffDTO() { CardId = 131 });
+                        session.Character.AddStaticBuff(new StaticBuffDTO { CardId = 131 });
                         session.CurrentMapInstance?.Broadcast(session.Character.GeneratePairy());
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("EFFECT_ACTIVATED"), inv.Item.Name), 0));
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("EFFECT_ACTIVATED"), inv.Item.Name), 0));
                         session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 3014), session.Character.MapX, session.Character.MapY);
                         session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
                     else
                     {
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("ITEM_IN_USE"), 0));
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("ITEM_IN_USE"), 0));
                     }
                     break;
 
@@ -152,7 +152,7 @@ namespace OpenNos.GameObject
                                 wearInstance.EquipmentSerialId = Guid.NewGuid();
                             }
                             session.Character.Inventory.RemoveItemFromInventory(inv.Id);
-                            session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_DELETE"), 0));
+                            session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_DELETE"), 0));
                         }
                     }
                     else
@@ -171,11 +171,11 @@ namespace OpenNos.GameObject
                     if (!session.Character.Buff.ContainsKey(121))
                     {
                         session.Character.Inventory.RemoveItemFromInventory(inv.Id);
-                        session.Character.AddStaticBuff(new StaticBuffDTO() { CardId = 121 });
+                        session.Character.AddStaticBuff(new StaticBuffDTO { CardId = 121 });
                     }
                     else
                     {
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("ITEM_IN_USE"), 0));
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("ITEM_IN_USE"), 0));
                     }
                     break;
 
@@ -183,11 +183,11 @@ namespace OpenNos.GameObject
                     if (!session.Character.Buff.ContainsKey(146))
                     {
                         session.Character.Inventory.RemoveItemFromInventory(inv.Id);
-                        session.Character.AddStaticBuff(new StaticBuffDTO() { CardId = 146 });
+                        session.Character.AddStaticBuff(new StaticBuffDTO { CardId = 146 });
                     }
                     else
                     {
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("ITEM_IN_USE"), 0));
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("ITEM_IN_USE"), 0));
                     }
                     break;
 
@@ -215,14 +215,14 @@ namespace OpenNos.GameObject
                     {
                         session.SendPacket(session.Character.Family == null
                             ? $"qna #guri^750^{EffectValue} {Language.Instance.GetMessageFromKey($"ASK_CHANGE_FACTION{EffectValue}")}"
-                            : UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("IN_FAMILY"),
+                            : UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("IN_FAMILY"),
                             0));
                     }
                     else
                     {
                         session.SendPacket(session.Character.Family != null
                             ? $"qna #guri^750^{EffectValue} {Language.Instance.GetMessageFromKey($"ASK_CHANGE_FACTION{EffectValue}")}"
-                            : UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_FAMILY"),
+                            : UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NO_FAMILY"),
                             0));
                     }
 
@@ -269,7 +269,7 @@ namespace OpenNos.GameObject
                     }
                     else
                     {
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NO_SP"), 0));
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NO_SP"), 0));
                     }
                     break;
 
@@ -277,7 +277,7 @@ namespace OpenNos.GameObject
                 case 203:
                     if (!session.Character.IsVehicled && Option == 0)
                     {
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateGuri(10, 2, session.Character.CharacterId, 1));
+                        session.SendPacket(UserInterfaceHelper.GenerateGuri(10, 2, session.Character.CharacterId, 1));
                     }
                     break;
 
@@ -297,7 +297,7 @@ namespace OpenNos.GameObject
                     }
                     else
                     {
-                        session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("EQ_NOT_EMPTY"), 0));
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("EQ_NOT_EMPTY"), 0));
                     }
                     break;
 
@@ -317,7 +317,7 @@ namespace OpenNos.GameObject
                                 session.CurrentMapInstance?.Broadcast(session.Character.GenerateRest());
                             }
                             session.Character.LastDelay = DateTime.Now;
-                            session.SendPacket(UserInterfaceHelper.Instance.GenerateDelay(3000, 3, $"#u_i^1^{session.Character.CharacterId}^{(byte)inv.Type}^{inv.Slot}^2"));
+                            session.SendPacket(UserInterfaceHelper.GenerateDelay(3000, 3, $"#u_i^1^{session.Character.CharacterId}^{(byte)inv.Type}^{inv.Slot}^2"));
                         }
                         else
                         {
@@ -350,7 +350,7 @@ namespace OpenNos.GameObject
                 case 1002:
                     if (EffectValue == 69)
                     {
-                        int rnd = ServerManager.Instance.RandomNumber(0, 1000);
+                        int rnd = ServerManager.RandomNumber(0, 1000);
                         if (rnd < 5)
                         {
                             short[] vnums =
@@ -359,13 +359,13 @@ namespace OpenNos.GameObject
                                 4715, 4716
                             };
                             byte[] counts = { 1, 1, 1, 1, 10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-                            int item = ServerManager.Instance.RandomNumber(0, 17);
+                            int item = ServerManager.RandomNumber(0, 17);
                             session.Character.GiftAdd(vnums[item], counts[item]);
                         }
                         else if (rnd < 30)
                         {
                             short[] vnums = { 361, 362, 363, 366, 367, 368, 371, 372, 373 };
-                            session.Character.GiftAdd(vnums[ServerManager.Instance.RandomNumber(0, 9)], 1);
+                            session.Character.GiftAdd(vnums[ServerManager.RandomNumber(0, 9)], 1);
                         }
                         else
                         {
@@ -380,7 +380,7 @@ namespace OpenNos.GameObject
                                 10, 10, 20, 5, 1, 1, 99, 1, 1, 5, 5, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 5, 20,
                                 20, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
                             };
-                            int item = ServerManager.Instance.RandomNumber(0, 42);
+                            int item = ServerManager.RandomNumber(0, 42);
                             session.Character.GiftAdd(vnums[item], counts[item]);
                         }
                         session.Character.Inventory.RemoveItemFromInventory(inv.Id);
@@ -388,9 +388,9 @@ namespace OpenNos.GameObject
                     else if (session.HasCurrentMapInstance && session.CurrentMapInstance.Map.MapTypes.All(m => m.MapTypeId != (short)MapTypeEnum.Act4))
                     {
                         short[] vnums = { 1386, 1387, 1388, 1389, 1390, 1391, 1392, 1393, 1394, 1395, 1396, 1397, 1398, 1399, 1400, 1401, 1402, 1403, 1404, 1405 };
-                        short vnum = vnums[ServerManager.Instance.RandomNumber(0, 20)];
+                        short vnum = vnums[ServerManager.RandomNumber(0, 20)];
 
-                        NpcMonster npcmonster = ServerManager.Instance.GetNpc(vnum);
+                        NpcMonster npcmonster = ServerManager.GetNpc(vnum);
                         if (npcmonster == null)
                         {
                             return;
@@ -518,7 +518,7 @@ namespace OpenNos.GameObject
                     {
                         for (int i = 0; i < 5; i++)
                         {
-                            session.Character.GiftAdd((short)(Effect + ServerManager.Instance.RandomNumber(0, 10)), 1);
+                            session.Character.GiftAdd((short)(Effect + ServerManager.RandomNumber(0, 10)), 1);
                         }
                         session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
@@ -534,7 +534,7 @@ namespace OpenNos.GameObject
                     switch (VNum)
                     {
                         case 5841:
-                            int rnd = ServerManager.Instance.RandomNumber(0, 1000);
+                            int rnd = ServerManager.RandomNumber(0, 1000);
                             short[] vnums = null;
                             if (rnd < 900)
                             {
@@ -544,7 +544,7 @@ namespace OpenNos.GameObject
                             {
                                 vnums = new short[] { 4360, 4361, 4362, 4363 };
                             }
-                            session.Character.GiftAdd(vnums[ServerManager.Instance.RandomNumber(0, 4)], 1);
+                            session.Character.GiftAdd(vnums[ServerManager.RandomNumber(0, 4)], 1);
                             session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                             break;
 

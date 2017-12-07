@@ -21,7 +21,7 @@ namespace OpenNos.DAL.EF.Migrations
                 .ForeignKey("dbo.Character", t => t.CharacterId)
                 .Index(t => t.QuestId)
                 .Index(t => t.CharacterId);
-            
+
             CreateTable(
                 "dbo.Quest",
                 c => new
@@ -31,7 +31,7 @@ namespace OpenNos.DAL.EF.Migrations
                     })
                 .PrimaryKey(t => t.QuestId);
         }
-        
+
         public override void Down()
         {
             DropForeignKey("dbo.QuestProgress", "CharacterId", "dbo.Character");

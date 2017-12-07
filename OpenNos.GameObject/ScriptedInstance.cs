@@ -219,7 +219,7 @@ namespace OpenNos.GameObject
                 {
                     foreach (XMLModel.Objects.CreateMap createMap in Model.InstanceEvents.CreateMap)
                     {
-                        MapInstance mapInstance = ServerManager.Instance.GenerateMapInstance(createMap.VNum, mapinstancetype, InstanceBag);
+                        MapInstance mapInstance = ServerManager.GenerateMapInstance(createMap.VNum, mapinstancetype, InstanceBag);
                         mapInstance.Portals?.Clear();
                         mapInstance.MapIndexX = createMap.IndexX;
                         mapInstance.MapIndexY = createMap.IndexY;
@@ -316,7 +316,7 @@ namespace OpenNos.GameObject
                         // SendMessage
                         if (createMap.OnLockerOpen.SendMessage != null)
                         {
-                            onLockerOpen.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(createMap.OnLockerOpen.SendMessage.Value, createMap.OnLockerOpen.SendMessage.Type)));
+                            onLockerOpen.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.GenerateMsg(createMap.OnLockerOpen.SendMessage.Value, createMap.OnLockerOpen.SendMessage.Type)));
                         }
 
                         // RefreshMapItems
@@ -335,7 +335,7 @@ namespace OpenNos.GameObject
                         {
                             List<EventContainer> onAreaEntryEvents = new List<EventContainer>();
                             onAreaEntryEvents.AddRange(summonMonster(mapInstance, onAreaEntry.SummonMonster));
-                            evts.Add(new EventContainer(mapInstance, EventActionType.SETAREAENTRY, new ZoneEvent() { X = onAreaEntry.PositionX, Y = onAreaEntry.PositionY, Range = onAreaEntry.Range, Events = onAreaEntryEvents }));
+                            evts.Add(new EventContainer(mapInstance, EventActionType.SETAREAENTRY, new ZoneEvent { X = onAreaEntry.PositionX, Y = onAreaEntry.PositionY, Range = onAreaEntry.Range, Events = onAreaEntryEvents }));
                         }
                     }
 
@@ -380,7 +380,7 @@ namespace OpenNos.GameObject
                 // SendMessage
                 if (createMap.OnCharacterDiscoveringMap.SendMessage != null)
                 {
-                    onDiscoverEvents.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(createMap.OnCharacterDiscoveringMap.SendMessage.Value, createMap.OnCharacterDiscoveringMap.SendMessage.Type)));
+                    onDiscoverEvents.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.GenerateMsg(createMap.OnCharacterDiscoveringMap.SendMessage.Value, createMap.OnCharacterDiscoveringMap.SendMessage.Type)));
                 }
 
                 // SendPacket
@@ -410,7 +410,7 @@ namespace OpenNos.GameObject
             return evts;
         }
 
-        private List<EventContainer> onMapClean(MapInstance mapInstance, XMLModel.Events.OnMapClean onMapClean)
+        private static List<EventContainer> onMapClean(MapInstance mapInstance, XMLModel.Events.OnMapClean onMapClean)
         {
             List<EventContainer> evts = new List<EventContainer>();
 
@@ -437,7 +437,7 @@ namespace OpenNos.GameObject
                 // SendMessage
                 if (onMapClean.SendMessage != null)
                 {
-                    onMapCleanEvents.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(onMapClean.SendMessage.Value, onMapClean.SendMessage.Type)));
+                    onMapCleanEvents.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.GenerateMsg(onMapClean.SendMessage.Value, onMapClean.SendMessage.Type)));
                 }
 
                 // SendPacket
@@ -471,7 +471,7 @@ namespace OpenNos.GameObject
                 // SendMessage
                 if (onMoveOnMap.SendMessage != null)
                 {
-                    onMoveOnMapEvents.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(onMoveOnMap.SendMessage.Value, onMoveOnMap.SendMessage.Type)));
+                    onMoveOnMapEvents.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.GenerateMsg(onMoveOnMap.SendMessage.Value, onMoveOnMap.SendMessage.Type)));
                 }
 
                 // SendPacket
@@ -501,7 +501,7 @@ namespace OpenNos.GameObject
                         }
                         if (onMoveOnMap.StartClock.OnStop.SendMessage != null)
                         {
-                            onStop.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(onMoveOnMap.StartClock.OnStop.SendMessage.Value, onMoveOnMap.StartClock.OnStop.SendMessage.Type)));
+                            onStop.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.GenerateMsg(onMoveOnMap.StartClock.OnStop.SendMessage.Value, onMoveOnMap.StartClock.OnStop.SendMessage.Type)));
                         }
                         if (onMoveOnMap.StartClock.OnStop.SendPacket != null)
                         {
@@ -537,7 +537,7 @@ namespace OpenNos.GameObject
                         }
                         if (onMoveOnMap.StartMapClock.OnStop.SendMessage != null)
                         {
-                            onStop.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(onMoveOnMap.StartMapClock.OnStop.SendMessage.Value, onMoveOnMap.StartMapClock.OnStop.SendMessage.Type)));
+                            onStop.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.GenerateMsg(onMoveOnMap.StartMapClock.OnStop.SendMessage.Value, onMoveOnMap.StartMapClock.OnStop.SendMessage.Type)));
                         }
                         if (onMoveOnMap.StartMapClock.OnStop.SendPacket != null)
                         {
@@ -569,7 +569,7 @@ namespace OpenNos.GameObject
                         // SendMessage
                         if (wave.SendMessage != null)
                         {
-                            waveEvent.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(wave.SendMessage.Value, wave.SendMessage.Type)));
+                            waveEvent.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.GenerateMsg(wave.SendMessage.Value, wave.SendMessage.Type)));
                         }
 
                         onMoveOnMapEvents.Add(new EventContainer(mapInstance, EventActionType.REGISTERWAVE, new EventWave(wave.Delay, waveEvent, wave.Offset)));
@@ -641,7 +641,7 @@ namespace OpenNos.GameObject
                         // SendMessage
                         if (spawn.OnFirstEnable.SendMessage != null)
                         {
-                            onFirst.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(spawn.OnFirstEnable.SendMessage.Value, spawn.OnFirstEnable.SendMessage.Type)));
+                            onFirst.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.GenerateMsg(spawn.OnFirstEnable.SendMessage.Value, spawn.OnFirstEnable.SendMessage.Type)));
                         }
 
                         // OnMapClean
@@ -682,7 +682,7 @@ namespace OpenNos.GameObject
                 foreach (XMLModel.Events.SpawnPortal portalEvent in spawnPortal)
                 {
                     _mapInstanceDictionary.TryGetValue(portalEvent.ToMap, out MapInstance destinationMap);
-                    Portal portal = new Portal()
+                    Portal portal = new Portal
                     {
                         PortalId = portalEvent.IdOnMap,
                         SourceX = portalEvent.PositionX,
@@ -729,7 +729,7 @@ namespace OpenNos.GameObject
                         }
                     }
                     MonsterAmount++;
-                    MonsterToSummon monster = new MonsterToSummon(summon.VNum, new MapCell() { X = positionX, Y = positionY }, -1, summon.Move, summon.IsTarget, summon.IsBonus, summon.IsHostile, summon.IsBoss);
+                    MonsterToSummon monster = new MonsterToSummon(summon.VNum, new MapCell { X = positionX, Y = positionY }, -1, summon.Move, summon.IsTarget, summon.IsBonus, summon.IsHostile, summon.IsBoss);
 
                     // OnDeath
                     if (summon.OnDeath != null)
@@ -758,7 +758,7 @@ namespace OpenNos.GameObject
                         // SendMessage
                         if (summon.OnDeath.SendMessage != null)
                         {
-                            monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(summon.OnDeath.SendMessage.Value, summon.OnDeath.SendMessage.Type)));
+                            monster.DeathEvents.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.GenerateMsg(summon.OnDeath.SendMessage.Value, summon.OnDeath.SendMessage.Type)));
                         }
 
                         // SendPacket
@@ -835,7 +835,7 @@ namespace OpenNos.GameObject
                             //    //events.Add(new EventContainer(mapInstance, EventActionType.ONTARGET, summon.OnNoticing.Move.OnTarget.));
                             //}
 
-                            monster.NoticingEvents.Add(new EventContainer(mapInstance, EventActionType.MOVE, new ZoneEvent() { X = summon.OnNoticing.Move.PositionX, Y = summon.OnNoticing.Move.PositionY, Events = events }));
+                            monster.NoticingEvents.Add(new EventContainer(mapInstance, EventActionType.MOVE, new ZoneEvent { X = summon.OnNoticing.Move.PositionX, Y = summon.OnNoticing.Move.PositionY, Events = events }));
                         }
 
                         // SummonMonster Child
@@ -874,7 +874,7 @@ namespace OpenNos.GameObject
                     }
 
                     NpcAmount++;
-                    NpcToSummon npcToSummon = new NpcToSummon(summon.VNum, new MapCell() { X = positionX, Y = positionY }, -1, summon.IsMate, summon.IsProtected, summon.Move);
+                    NpcToSummon npcToSummon = new NpcToSummon(summon.VNum, new MapCell { X = positionX, Y = positionY }, -1, summon.IsMate, summon.IsProtected, summon.Move);
 
                     // OnDeath
                     if (summon.OnDeath != null)

@@ -86,7 +86,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     FamilyCharacterDTO dto = new FamilyCharacterDTO();
-                    if (Mapper.Mapper.Instance.FamilyCharacterMapper.ToFamilyCharacterDTO(context.FamilyCharacter.FirstOrDefault(c => c.CharacterId == characterId), dto))
+                    if (Mapper.Mappers.FamilyCharacterMapper.ToFamilyCharacterDTO(context.FamilyCharacter.FirstOrDefault(c => c.CharacterId == characterId), dto))
                     {
                         return dto;
                     }
@@ -109,7 +109,7 @@ namespace OpenNos.DAL.DAO
                 foreach (FamilyCharacter entity in context.FamilyCharacter.Where(fc => fc.FamilyId.Equals(familyId)))
                 {
                     FamilyCharacterDTO dto = new FamilyCharacterDTO();
-                    Mapper.Mapper.Instance.FamilyCharacterMapper.ToFamilyCharacterDTO(entity, dto);
+                    Mapper.Mappers.FamilyCharacterMapper.ToFamilyCharacterDTO(entity, dto);
                     result.Add(dto);
                 }
                 return result;
@@ -123,7 +123,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     FamilyCharacterDTO dto = new FamilyCharacterDTO();
-                    if (Mapper.Mapper.Instance.FamilyCharacterMapper.ToFamilyCharacterDTO(context.FamilyCharacter.FirstOrDefault(c => c.FamilyCharacterId.Equals(familyCharacterId)), dto))
+                    if (Mapper.Mappers.FamilyCharacterMapper.ToFamilyCharacterDTO(context.FamilyCharacter.FirstOrDefault(c => c.FamilyCharacterId.Equals(familyCharacterId)), dto))
                     {
                         return dto;
                     }
@@ -138,13 +138,13 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        private FamilyCharacterDTO insert(FamilyCharacterDTO character, OpenNosContext context)
+        private static FamilyCharacterDTO insert(FamilyCharacterDTO character, OpenNosContext context)
         {
             FamilyCharacter entity = new FamilyCharacter();
-            Mapper.Mapper.Instance.FamilyCharacterMapper.ToFamilyCharacter(character, entity);
+            Mapper.Mappers.FamilyCharacterMapper.ToFamilyCharacter(character, entity);
             context.FamilyCharacter.Add(entity);
             context.SaveChanges();
-            if (Mapper.Mapper.Instance.FamilyCharacterMapper.ToFamilyCharacterDTO(entity, character))
+            if (Mapper.Mappers.FamilyCharacterMapper.ToFamilyCharacterDTO(entity, character))
             {
                 return character;
             }
@@ -152,14 +152,14 @@ namespace OpenNos.DAL.DAO
             return null;
         }
 
-        private FamilyCharacterDTO update(FamilyCharacter entity, FamilyCharacterDTO character, OpenNosContext context)
+        private static FamilyCharacterDTO update(FamilyCharacter entity, FamilyCharacterDTO character, OpenNosContext context)
         {
             if (entity != null)
             {
-                Mapper.Mapper.Instance.FamilyCharacterMapper.ToFamilyCharacter(character, entity);
+                Mapper.Mappers.FamilyCharacterMapper.ToFamilyCharacter(character, entity);
                 context.SaveChanges();
             }
-            if (Mapper.Mapper.Instance.FamilyCharacterMapper.ToFamilyCharacterDTO(entity, character))
+            if (Mapper.Mappers.FamilyCharacterMapper.ToFamilyCharacterDTO(entity, character))
             {
                 return character;
             }

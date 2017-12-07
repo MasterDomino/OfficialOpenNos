@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class NpcMonsterSkillMapper
+    public static class NpcMonsterSkillMapper
     {
         #region Methods
 
-        public bool ToNpcMonsterSkill(NpcMonsterSkillDTO input, NpcMonsterSkill output)
+        public static bool ToNpcMonsterSkill(NpcMonsterSkillDTO input, NpcMonsterSkill output)
         {
             if (input == null)
             {
@@ -21,7 +21,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToNpcMonsterSkillDTO(NpcMonsterSkill input, NpcMonsterSkillDTO output)
+        public static bool ToNpcMonsterSkillDTO(NpcMonsterSkill input, NpcMonsterSkillDTO output)
         {
             if (input == null)
             {

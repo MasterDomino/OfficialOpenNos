@@ -37,7 +37,7 @@ namespace OpenNos.DAL.DAO
                     foreach (SkillDTO skill in skills)
                     {
                         Skill entity = new Skill();
-                        Mapper.Mapper.Instance.SkillMapper.ToSkill(skill, entity);
+                        Mapper.Mappers.SkillMapper.ToSkill(skill, entity);
                         context.Skill.Add(entity);
                     }
                     context.Configuration.AutoDetectChangesEnabled = true;
@@ -57,9 +57,9 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     Skill entity = new Skill();
-                    Mapper.Mapper.Instance.SkillMapper.ToSkill(skill, entity); context.Skill.Add(entity);
+                    Mapper.Mappers.SkillMapper.ToSkill(skill, entity); context.Skill.Add(entity);
                     context.SaveChanges();
-                    if (Mapper.Mapper.Instance.SkillMapper.ToSkillDTO(entity, skill))
+                    if (Mapper.Mappers.SkillMapper.ToSkillDTO(entity, skill))
                     {
                         return skill;
                     }
@@ -82,7 +82,7 @@ namespace OpenNos.DAL.DAO
                 foreach (Skill Skill in context.Skill)
                 {
                     SkillDTO dto = new SkillDTO();
-                    Mapper.Mapper.Instance.SkillMapper.ToSkillDTO(Skill, dto);
+                    Mapper.Mappers.SkillMapper.ToSkillDTO(Skill, dto);
                     result.Add(dto);
                 }
                 return result;
@@ -96,7 +96,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     SkillDTO dto = new SkillDTO();
-                    if (Mapper.Mapper.Instance.SkillMapper.ToSkillDTO(context.Skill.FirstOrDefault(s => s.SkillVNum.Equals(skillId)), dto))
+                    if (Mapper.Mappers.SkillMapper.ToSkillDTO(context.Skill.FirstOrDefault(s => s.SkillVNum.Equals(skillId)), dto))
                     {
                         return dto;
                     }

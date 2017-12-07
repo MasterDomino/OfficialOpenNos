@@ -11,7 +11,7 @@ namespace OpenNos.Test
         #region Methods
 
         [TestMethod]
-        public async Task TestParelellConnections()
+        public async Task TestParelellConnectionsAsync()
         {
             CommunicationServiceClient.Instance.Cleanup();
 

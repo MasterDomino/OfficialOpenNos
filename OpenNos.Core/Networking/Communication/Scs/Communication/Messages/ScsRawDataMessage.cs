@@ -87,10 +87,10 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messages
                 return false;
             }
 
-            throw new NotImplementedException();
+            return false;
         }
 
-        public override int GetHashCode() => throw new NotImplementedException();
+        public override int GetHashCode() => GetHashCode();
 
         public static bool operator ==(ScsRawDataMessage left, ScsRawDataMessage right)
         {

@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class PenaltyLogMapper
+    public static class PenaltyLogMapper
     {
         #region Methods
 
-        public bool ToPenaltyLog(PenaltyLogDTO input, PenaltyLog output)
+        public static bool ToPenaltyLog(PenaltyLogDTO input, PenaltyLog output)
         {
             if (input == null)
             {
@@ -24,7 +24,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToPenaltyLogDTO(PenaltyLog input, PenaltyLogDTO output)
+        public static bool ToPenaltyLogDTO(PenaltyLog input, PenaltyLogDTO output)
         {
             if (input == null)
             {

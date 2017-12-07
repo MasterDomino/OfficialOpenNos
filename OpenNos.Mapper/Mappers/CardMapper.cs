@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class CardMapper
+    public static class CardMapper
     {
         #region Methods
 
-        public bool ToCard(CardDTO input, Card output)
+        public static bool ToCard(CardDTO input, Card output)
         {
             if (input == null)
             {
@@ -27,7 +27,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToCardDTO(Card input, CardDTO output)
+        public static bool ToCardDTO(Card input, CardDTO output)
         {
             if (input == null)
             {

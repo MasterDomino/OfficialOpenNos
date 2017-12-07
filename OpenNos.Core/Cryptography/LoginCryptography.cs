@@ -33,24 +33,26 @@ namespace OpenNos.Core
         {
             bool equal = password.Length % 2 == 0;
             string str = equal ? password.Remove(0, 3) : password.Remove(0, 4);
-            string decpass = string.Empty;
+            StringBuilder decryptpass = new StringBuilder();
+
             for (int i = 0; i < str.Length; i += 2)
             {
-                decpass += str[i];
+                decryptpass.Append(str[i]);
             }
-            if (decpass.Length % 2 != 0)
+            if (decryptpass.Length % 2 != 0)
             {
                 str = password.Remove(0, 2);
-                decpass = string.Empty;
+                decryptpass = decryptpass.Clear();
                 for (int i = 0; i < str.Length; i += 2)
                 {
-                    decpass += str[i];
+                    decryptpass.Append(str[i]);
                 }
             }
+
             StringBuilder passwd = new StringBuilder();
-            for (int i = 0; i < decpass.Length; i += 2)
+            for (int i = 0; i < decryptpass.Length; i += 2)
             {
-                passwd.Append(Convert.ToChar(Convert.ToUInt32(decpass.Substring(i, 2), 16)));
+                passwd.Append(Convert.ToChar(Convert.ToUInt32(decryptpass.ToString().Substring(i, 2), 16)));
             }
             return passwd.ToString();
         }
@@ -59,23 +61,21 @@ namespace OpenNos.Core
         {
             try
             {
-                string decryptedPacket = string.Empty;
-
+                StringBuilder builder = new StringBuilder();
                 foreach (byte character in data)
                 {
                     if (character > 14)
                     {
-                        decryptedPacket += Convert.ToChar((character - 15) ^ 195);
+                        builder.Append(Convert.ToChar((character - 15) ^ 195));
                     }
                     else
                     {
-                        decryptedPacket += Convert.ToChar((256 - (15 - character)) ^ 195);
+                        builder.Append(Convert.ToChar((256 - (15 - character)) ^ 195));
                     }
                 }
-
-                return decryptedPacket;
+                return builder.ToString();
             }
-            catch
+            catch (Exception)
             {
                 return string.Empty;
             }
@@ -95,7 +95,7 @@ namespace OpenNos.Core
                 dataBytes[dataBytes.Length - 1] = 25;
                 return dataBytes;
             }
-            catch
+            catch (Exception)
             {
                 return new byte[0];
             }

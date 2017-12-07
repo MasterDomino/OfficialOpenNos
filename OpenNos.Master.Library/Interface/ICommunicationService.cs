@@ -38,7 +38,6 @@ namespace OpenNos.Master.Library.Interface
 
         void CleanupOutdatedSession();
 
-
         /// <summary>
         /// Registers the Login of the given Account and removes the permission to login
         /// </summary>
@@ -162,7 +161,6 @@ namespace OpenNos.Master.Library.Interface
         /// <summary>
         /// Generates list of sessionId for given IpAddress
         /// </summary>
-        /// <param name="ipAddress">IpAddress to gather wanted SessionIds</param>
         /// <param name="characterId"></param>
         /// <returns>List of SessionId</returns>
         long[][] RetrieveOnlineCharacters(long characterId);

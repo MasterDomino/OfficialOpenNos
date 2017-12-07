@@ -147,7 +147,7 @@ namespace OpenNos.GameObject
 
         #region Methods
 
-        public void ClearLowPriorityQueue() => _client.ClearLowPriorityQueue();
+        public void ClearLowPriorityQueue() => _client.ClearLowPriorityQueueAsync();
 
         public void Destroy()
         {
@@ -177,7 +177,7 @@ namespace OpenNos.GameObject
                 }
                 if (Character?.Miniland != null)
                 {
-                    ServerManager.Instance.RemoveMapInstance(Character.Miniland.MapInstanceId);
+                    ServerManager.RemoveMapInstance(Character.Miniland.MapInstanceId);
                 }
 
                 // TODO: Check why ExchangeInfo.TargetCharacterId is null Character.CloseTrade();

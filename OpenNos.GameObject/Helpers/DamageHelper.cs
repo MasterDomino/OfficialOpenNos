@@ -259,7 +259,7 @@ namespace OpenNos.GameObject
                 soft[0] += skin[0];
                 soft[1] += skin[1];
             }
-            if (ServerManager.Instance.RandomNumber() < soft[0])
+            if (ServerManager.RandomNumber() < soft[0])
             {
                 boostCategory3 += soft[1] / 100D;
                 if (attacker.EntityType.Equals(EntityType.Player) && attacker.Session != null)
@@ -296,7 +296,7 @@ namespace OpenNos.GameObject
             }
 
             int[] def = GetAttackerBenefitingBuffs(CardType.Block, (byte)AdditionalTypes.Block.ChanceAllIncreased);
-            if (ServerManager.Instance.RandomNumber() < def[0])
+            if (ServerManager.RandomNumber() < def[0])
             {
                 boostCategory3 += def[1] / 100D;
             }
@@ -364,7 +364,7 @@ namespace OpenNos.GameObject
 
             #region Softdef finishing
 
-            if (ServerManager.Instance.RandomNumber() < def[0])
+            if (ServerManager.RandomNumber() < def[0])
             {
                 boostCategory3 += def[1] / 100D;
             }
@@ -546,7 +546,7 @@ namespace OpenNos.GameObject
                 bonus += GetShellArmorEffectValue(ShellArmorEffectType.DodgeAllAttacksInPVP);
             }
 
-            if (!defender.Invincible && ServerManager.Instance.RandomNumber() - bonus < chance)
+            if (!defender.Invincible && ServerManager.RandomNumber() - bonus < chance)
             {
                 hitMode = 1;
                 return 0;
@@ -556,8 +556,8 @@ namespace OpenNos.GameObject
 
             #region Base Damage
 
-            int baseDamage = ServerManager.Instance.RandomNumber(attacker.DamageMinimum, attacker.DamageMaximum + 1);
-            int weaponDamage = ServerManager.Instance.RandomNumber(attacker.WeaponDamageMinimum, attacker.WeaponDamageMaximum + 1);
+            int baseDamage = ServerManager.RandomNumber(attacker.DamageMinimum, attacker.DamageMaximum + 1);
+            int weaponDamage = ServerManager.RandomNumber(attacker.WeaponDamageMinimum, attacker.WeaponDamageMaximum + 1);
 
             #region Attack Level Calculation
 
@@ -736,7 +736,7 @@ namespace OpenNos.GameObject
                 attacker.CritRate -= defender.CellonOptions.Where(s => s.Type == CellonOptionType.CritReduce).Sum(s => s.Value);
             }
 
-            if (ServerManager.Instance.RandomNumber() < attacker.CritChance && attacker.AttackType != AttackType.Magical)
+            if (ServerManager.RandomNumber() < attacker.CritChance && attacker.AttackType != AttackType.Magical)
             {
                 double multiplier = attacker.CritRate / 100D;
                 if (multiplier > 3)
@@ -900,7 +900,7 @@ namespace OpenNos.GameObject
 
             if (totalDamage < 5)
             {
-                totalDamage = ServerManager.Instance.RandomNumber(1, 6);
+                totalDamage = ServerManager.RandomNumber(1, 6);
             }
 
             if (attacker.EntityType == EntityType.Monster || attacker.EntityType == EntityType.NPC)
@@ -913,7 +913,7 @@ namespace OpenNos.GameObject
             #region Onyx Wings
 
             int[] onyxBuff = GetAttackerBenefitingBuffs(CardType.StealBuff, (byte)AdditionalTypes.StealBuff.ChanceSummonOnyxDragon);
-            if (onyxBuff[0] > ServerManager.Instance.RandomNumber())
+            if (onyxBuff[0] > ServerManager.RandomNumber())
             {
                 onyxWings = true;
             }
@@ -923,7 +923,7 @@ namespace OpenNos.GameObject
             return totalDamage;
         }
 
-        private int[] getBuff(byte Level, List<Buff> buffs, List<BCard> bcards, CardType type, byte subtype, BuffType btype, ref int count)
+        private static int[] getBuff(byte Level, List<Buff> buffs, List<BCard> bcards, CardType type, byte subtype, BuffType btype, ref int count)
         {
             int value1 = 0;
             int value2 = 0;
@@ -1005,7 +1005,7 @@ namespace OpenNos.GameObject
             return new[] { value1, value2, value3 };
         }
 
-        private int getMonsterDamageBonus(byte Level)
+        private static int getMonsterDamageBonus(byte Level)
         {
             if (Level < 45)
             {

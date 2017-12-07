@@ -114,7 +114,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
 
         #region Methods
 
-        public async Task ClearLowPriorityQueue() => await _communicationChannel.ClearLowPriorityQueue().ConfigureAwait(false);
+        public async Task ClearLowPriorityQueueAsync() => await _communicationChannel.ClearLowPriorityQueueAsync().ConfigureAwait(false);
 
         /// <summary>
         /// Disconnects from client and closes underlying communication channel.

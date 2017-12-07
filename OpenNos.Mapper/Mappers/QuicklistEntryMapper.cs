@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class QuicklistEntryMapper
+    public static class QuicklistEntryMapper
     {
         #region Methods
 
-        public bool ToQuicklistEntry(QuicklistEntryDTO input, QuicklistEntry output)
+        public static bool ToQuicklistEntry(QuicklistEntryDTO input, QuicklistEntry output)
         {
             if (input == null)
             {
@@ -25,7 +25,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToQuicklistEntryDTO(QuicklistEntry input, QuicklistEntryDTO output)
+        public static bool ToQuicklistEntryDTO(QuicklistEntry input, QuicklistEntryDTO output)
         {
             if (input == null)
             {

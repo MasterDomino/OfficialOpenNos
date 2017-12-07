@@ -34,10 +34,10 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     ShopSkill entity = new ShopSkill();
-                    Mapper.Mapper.Instance.ShopSkillMapper.ToShopSkill(shopSkill, entity);
+                    Mapper.Mappers.ShopSkillMapper.ToShopSkill(shopSkill, entity);
                     context.ShopSkill.Add(entity);
                     context.SaveChanges();
-                    if (Mapper.Mapper.Instance.ShopSkillMapper.ToShopSkillDTO(entity, shopSkill))
+                    if (Mapper.Mappers.ShopSkillMapper.ToShopSkillDTO(entity, shopSkill))
                     {
                         return shopSkill;
                     }
@@ -62,7 +62,7 @@ namespace OpenNos.DAL.DAO
                     foreach (ShopSkillDTO Skill in skills)
                     {
                         ShopSkill entity = new ShopSkill();
-                        Mapper.Mapper.Instance.ShopSkillMapper.ToShopSkill(Skill, entity);
+                        Mapper.Mappers.ShopSkillMapper.ToShopSkill(Skill, entity);
                         context.ShopSkill.Add(entity);
                     }
                     context.Configuration.AutoDetectChangesEnabled = true;
@@ -83,7 +83,7 @@ namespace OpenNos.DAL.DAO
                 foreach (ShopSkill entity in context.ShopSkill)
                 {
                     ShopSkillDTO dto = new ShopSkillDTO();
-                    Mapper.Mapper.Instance.ShopSkillMapper.ToShopSkillDTO(entity, dto);
+                    Mapper.Mappers.ShopSkillMapper.ToShopSkillDTO(entity, dto);
                     result.Add(dto);
                 }
                 return result;
@@ -98,7 +98,7 @@ namespace OpenNos.DAL.DAO
                 foreach (ShopSkill ShopSkill in context.ShopSkill.Where(s => s.ShopId.Equals(shopId)))
                 {
                     ShopSkillDTO dto = new ShopSkillDTO();
-                    Mapper.Mapper.Instance.ShopSkillMapper.ToShopSkillDTO(ShopSkill, dto);
+                    Mapper.Mappers.ShopSkillMapper.ToShopSkillDTO(ShopSkill, dto);
                     result.Add(dto);
                 }
                 return result;

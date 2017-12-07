@@ -126,7 +126,7 @@ namespace OpenNos.Master.Server
                                     {
                                         { "key", guid },
                                         { "ip", world.Endpoint.IpAddress },
-                                        { "port", world.Endpoint.TcpPort.ToString() },
+                                        { nameof(port), world.Endpoint.TcpPort.ToString() },
                                         { "server", world.WorldGroup },
                                         { "channel", world.ChannelId.ToString() },
                                         { "userCount", MSManager.Instance.ConnectedAccounts.CountLinq(c => c.ConnectedWorld?.Id == world.Id).ToString() }
@@ -138,6 +138,7 @@ namespace OpenNos.Master.Server
                                         Logger.Error(new Exception($"Unable to send statistics to management Server. Please report this issue to the Developer: {resp[0]}"));
                                     }
                                 }
+                                wc.Dispose();
                             }
                             catch (Exception ex)
                             {

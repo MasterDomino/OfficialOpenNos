@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class MinilandObjectMapper
+    public static class MinilandObjectMapper
     {
         #region Methods
 
-        public bool ToMinilandObject(MinilandObjectDTO input, MinilandObject output)
+        public static bool ToMinilandObject(MinilandObjectDTO input, MinilandObject output)
         {
             if (input == null)
             {
@@ -27,7 +27,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToMinilandObjectDTO(MinilandObject input, MinilandObjectDTO output)
+        public static bool ToMinilandObjectDTO(MinilandObject input, MinilandObjectDTO output)
         {
             if (input == null)
             {

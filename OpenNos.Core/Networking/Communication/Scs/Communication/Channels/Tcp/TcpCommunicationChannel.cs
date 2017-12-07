@@ -97,7 +97,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
             _highPriorityBuffer = new ConcurrentQueue<byte[]>();
             _lowPriorityBuffer = new ConcurrentQueue<byte[]>();
             CancellationToken cancellationToken = _sendCancellationToken.Token;
-            _sendTask = StartSending(SendInterval, new TimeSpan(0, 0, 0, 0, isLagMode ? 1000 : 10), cancellationToken);
+            _sendTask = StartSendingAsyncAsync(SendInterval, new TimeSpan(0, 0, 0, 0, isLagMode ? 1000 : 10), cancellationToken);
         }
 
         #endregion
@@ -113,22 +113,22 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
 
         #region Methods
 
-        public static async Task StartSending(Action action, TimeSpan period, CancellationToken _sendCancellationToken)
+        public static async Task StartSendingAsyncAsync(Action action, TimeSpan period, CancellationToken _sendCancellationToken)
         {
             while (!_sendCancellationToken.IsCancellationRequested)
             {
                 await Task.Delay(period, _sendCancellationToken).ConfigureAwait(false);
                 if (!_sendCancellationToken.IsCancellationRequested)
                 {
-                    action();
+                    action?.Invoke();
                 }
             }
         }
 
-        public override async Task ClearLowPriorityQueue()
+        public override Task ClearLowPriorityQueueAsync()
         {
             _lowPriorityBuffer.Clear();
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -152,9 +152,10 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
 
                 _clientSocket.Dispose();
             }
-            catch
+            catch (Exception)
             {
                 // do nothing
+                throw;
             }
             finally
             {
@@ -188,9 +189,10 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
                     sendByPriority(_lowPriorityBuffer);
                 }
             }
-            catch
+            catch (Exception)
             {
                 // disconnect
+                throw;
             }
             if (!_clientSocket.Connected)
             {
@@ -248,9 +250,10 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
                 // Complete sending the data to the remote device.
                 int bytesSent = client.EndSend(result);
             }
-            catch
+            catch (Exception)
             {
                 // disconnect
+                throw;
             }
         }
 
@@ -300,7 +303,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
                     _clientSocket.BeginReceive(_buffer, 0, _buffer.Length, 0, receiveCallback, null);
                 }
             }
-            catch
+            catch (Exception)
             {
                 Disconnect();
             }

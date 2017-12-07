@@ -131,7 +131,7 @@ namespace OpenNos.GameObject
             };
             DAOFactory.FamilyLogDAO.InsertOrUpdate(ref log);
             ServerManager.Instance.FamilyRefresh(FamilyId);
-            CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+            CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage
             {
                 DestinationCharacterId = FamilyId,
                 SourceCharacterId = 0,

@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class RespawnMapper
+    public static class RespawnMapper
     {
         #region Methods
 
-        public bool ToRespawn(RespawnDTO input, Respawn output)
+        public static bool ToRespawn(RespawnDTO input, Respawn output)
         {
             if (input == null)
             {
@@ -23,7 +23,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToRespawnDTO(Respawn input, RespawnDTO output)
+        public static bool ToRespawnDTO(Respawn input, RespawnDTO output)
         {
             if (input == null)
             {

@@ -38,7 +38,7 @@ namespace OpenNos.DAL.DAO
                     foreach (MapTypeMapDTO mapTypeMap in mapTypeMaps)
                     {
                         MapTypeMap entity = new MapTypeMap();
-                        Mapper.Mapper.Instance.MapTypeMapMapper.ToMapTypeMap(mapTypeMap, entity);
+                        Mapper.Mappers.MapTypeMapMapper.ToMapTypeMap(mapTypeMap, entity);
                         context.MapTypeMap.Add(entity);
                     }
                     context.Configuration.AutoDetectChangesEnabled = true;
@@ -59,7 +59,7 @@ namespace OpenNos.DAL.DAO
                 foreach (MapTypeMap MapTypeMap in context.MapTypeMap)
                 {
                     MapTypeMapDTO dto = new MapTypeMapDTO();
-                    Mapper.Mapper.Instance.MapTypeMapMapper.ToMapTypeMapDTO(MapTypeMap, dto);
+                    Mapper.Mappers.MapTypeMapMapper.ToMapTypeMapDTO(MapTypeMap, dto);
                     result.Add(dto);
                 }
                 return result;
@@ -73,7 +73,7 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     MapTypeMapDTO dto = new MapTypeMapDTO();
-                    if (Mapper.Mapper.Instance.MapTypeMapMapper.ToMapTypeMapDTO(context.MapTypeMap.FirstOrDefault(i => i.MapId.Equals(mapId) && i.MapTypeId.Equals(maptypeId)), dto))
+                    if (Mapper.Mappers.MapTypeMapMapper.ToMapTypeMapDTO(context.MapTypeMap.FirstOrDefault(i => i.MapId.Equals(mapId) && i.MapTypeId.Equals(maptypeId)), dto))
                     {
                         return dto;
                     }
@@ -96,7 +96,7 @@ namespace OpenNos.DAL.DAO
                 foreach (MapTypeMap MapTypeMap in context.MapTypeMap.Where(c => c.MapId.Equals(mapId)))
                 {
                     MapTypeMapDTO dto = new MapTypeMapDTO();
-                    Mapper.Mapper.Instance.MapTypeMapMapper.ToMapTypeMapDTO(MapTypeMap, dto);
+                    Mapper.Mappers.MapTypeMapMapper.ToMapTypeMapDTO(MapTypeMap, dto);
                     result.Add(dto);
                 }
                 return result;
@@ -111,7 +111,7 @@ namespace OpenNos.DAL.DAO
                 foreach (MapTypeMap MapTypeMap in context.MapTypeMap.Where(c => c.MapTypeId.Equals(maptypeId)))
                 {
                     MapTypeMapDTO dto = new MapTypeMapDTO();
-                    Mapper.Mapper.Instance.MapTypeMapMapper.ToMapTypeMapDTO(MapTypeMap, dto);
+                    Mapper.Mappers.MapTypeMapMapper.ToMapTypeMapDTO(MapTypeMap, dto);
                     result.Add(dto);
                 }
                 return result;

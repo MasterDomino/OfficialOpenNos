@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class StaticBuffMapper
+    public static class StaticBuffMapper
     {
         #region Methods
 
-        public bool ToStaticBuff(StaticBuffDTO input, StaticBuff output)
+        public static bool ToStaticBuff(StaticBuffDTO input, StaticBuff output)
         {
             if (input == null)
             {
@@ -21,7 +21,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToStaticBuffDTO(StaticBuff input, StaticBuffDTO output)
+        public static bool ToStaticBuffDTO(StaticBuff input, StaticBuffDTO output)
         {
             if (input == null)
             {

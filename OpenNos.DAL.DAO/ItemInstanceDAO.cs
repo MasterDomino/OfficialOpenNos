@@ -78,21 +78,22 @@ namespace OpenNos.DAL.DAO
                     }
                     context.SaveChanges();
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Logger.LogUserEventError("DELETEGUIDLIST_EXCEPTION", "Saving Process","Items were not deleted!", ex);
                     foreach (Guid id in guids)
                     {
                         try
                         {
                             Delete(id);
                         }
-                        catch (Exception ex)
+                        catch (Exception exc)
                         {
                             // TODO: Work on: statement conflicted with the REFERENCE constraint
                             //       "FK_dbo.BazaarItem_dbo.ItemInstance_ItemInstanceId". The
                             //       conflict occurred in database "opennos", table "dbo.BazaarItem",
                             //       column 'ItemInstanceId'.
-                            Logger.LogUserEventError("ONSAVEDELETION_EXCEPTION", "Saving Process", $"Detailed Item Information: Item ID = {id}", ex);
+                            Logger.LogUserEventError("ONSAVEDELETION_EXCEPTION", "Saving Process", $"FALLBACK FUNCTION FAILED! Detailed Item Information: Item ID = {id}", exc);
                         }
                     }
                 }
@@ -268,7 +269,7 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        protected ItemInstanceDTO Insert(ItemInstanceDTO dto, OpenNosContext context)
+        protected static ItemInstanceDTO Insert(ItemInstanceDTO dto, OpenNosContext context)
         {
             ItemInstance entity = new ItemInstance();
             map(dto, entity);
@@ -282,7 +283,7 @@ namespace OpenNos.DAL.DAO
             return null;
         }
 
-        protected ItemInstanceDTO InsertOrUpdate(OpenNosContext context, ItemInstanceDTO dto)
+        protected static ItemInstanceDTO InsertOrUpdate(OpenNosContext context, ItemInstanceDTO dto)
         {
             try
             {
@@ -296,7 +297,7 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        protected ItemInstanceDTO Update(ItemInstance entity, ItemInstanceDTO inventory, OpenNosContext context)
+        protected static ItemInstanceDTO Update(ItemInstance entity, ItemInstanceDTO inventory, OpenNosContext context)
         {
             if (entity != null)
             {
@@ -311,14 +312,14 @@ namespace OpenNos.DAL.DAO
         }
 
         // TODO: Implement Exists
-        private bool map(ItemInstance input, ItemInstanceDTO output)
+        private static bool map(ItemInstance input, ItemInstanceDTO output)
         {
             if (input == null)
             {
                 output = null;
                 return false;
             }
-            Mapper.Mapper.Instance.ItemInstanceMapper.ToItemInstanceDTO(input, output);
+            Mapper.Mappers.ItemInstanceMapper.ToItemInstanceDTO(input, output);
             if (output.EquipmentSerialId == Guid.Empty)
             {
                 output.EquipmentSerialId = Guid.NewGuid();
@@ -326,14 +327,14 @@ namespace OpenNos.DAL.DAO
             return true;
         }
 
-        private bool map(ItemInstanceDTO input, ItemInstance output)
+        private static bool map(ItemInstanceDTO input, ItemInstance output)
         {
             if (input == null)
             {
                 output = null;
                 return false;
             }
-            Mapper.Mapper.Instance.ItemInstanceMapper.ToItemInstance(input, output);
+            Mapper.Mappers.ItemInstanceMapper.ToItemInstance(input, output);
             if (output.EquipmentSerialId == Guid.Empty)
             {
                 output.EquipmentSerialId = Guid.NewGuid();

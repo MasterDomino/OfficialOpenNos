@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class ShopItemMapper
+    public static class ShopItemMapper
     {
         #region Methods
 
-        public bool ToShopItem(ShopItemDTO input, ShopItem output)
+        public static bool ToShopItem(ShopItemDTO input, ShopItem output)
         {
             if (input == null)
             {
@@ -25,7 +25,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToShopItemDTO(ShopItem input, ShopItemDTO output)
+        public static bool ToShopItemDTO(ShopItem input, ShopItemDTO output)
         {
             if (input == null)
             {

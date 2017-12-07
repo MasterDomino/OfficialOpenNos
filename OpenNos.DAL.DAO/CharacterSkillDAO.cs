@@ -109,7 +109,7 @@ namespace OpenNos.DAL.DAO
                 foreach (CharacterSkill entity in context.CharacterSkill.Where(i => i.CharacterId == characterId))
                 {
                     CharacterSkillDTO output = new CharacterSkillDTO();
-                    Mapper.Mapper.Instance.CharacterSkillMapper.ToCharacterSkillDTO(entity, output);
+                    Mapper.Mappers.CharacterSkillMapper.ToCharacterSkillDTO(entity, output);
                     result.Add(output);
                 }
                 return result;
@@ -121,7 +121,7 @@ namespace OpenNos.DAL.DAO
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
                 CharacterSkillDTO characterSkillDTO = new CharacterSkillDTO();
-                if (Mapper.Mapper.Instance.CharacterSkillMapper.ToCharacterSkillDTO(context.CharacterSkill.FirstOrDefault(i => i.Id.Equals(id)), characterSkillDTO))
+                if (Mapper.Mappers.CharacterSkillMapper.ToCharacterSkillDTO(context.CharacterSkill.FirstOrDefault(i => i.Id.Equals(id)), characterSkillDTO))
                 {
                     return characterSkillDTO;
                 }
@@ -146,13 +146,13 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        protected CharacterSkillDTO Insert(CharacterSkillDTO dto, OpenNosContext context)
+        protected static CharacterSkillDTO Insert(CharacterSkillDTO dto, OpenNosContext context)
         {
             CharacterSkill entity = new CharacterSkill();
-            Mapper.Mapper.Instance.CharacterSkillMapper.ToCharacterSkill(dto, entity);
+            Mapper.Mappers.CharacterSkillMapper.ToCharacterSkill(dto, entity);
             context.Set<CharacterSkill>().Add(entity);
             context.SaveChanges();
-            if (Mapper.Mapper.Instance.CharacterSkillMapper.ToCharacterSkillDTO(entity, dto))
+            if (Mapper.Mappers.CharacterSkillMapper.ToCharacterSkillDTO(entity, dto))
             {
                 return dto;
             }
@@ -160,7 +160,7 @@ namespace OpenNos.DAL.DAO
             return null;
         }
 
-        protected CharacterSkillDTO InsertOrUpdate(OpenNosContext context, CharacterSkillDTO dto)
+        protected static CharacterSkillDTO InsertOrUpdate(OpenNosContext context, CharacterSkillDTO dto)
         {
             Guid primaryKey = dto.Id;
             CharacterSkill entity = context.Set<CharacterSkill>().FirstOrDefault(c => c.Id == primaryKey);
@@ -174,14 +174,14 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        protected CharacterSkillDTO Update(CharacterSkill entity, CharacterSkillDTO inventory, OpenNosContext context)
+        protected static CharacterSkillDTO Update(CharacterSkill entity, CharacterSkillDTO inventory, OpenNosContext context)
         {
             if (entity != null)
             {
-                Mapper.Mapper.Instance.CharacterSkillMapper.ToCharacterSkill(inventory, entity);
+                Mapper.Mappers.CharacterSkillMapper.ToCharacterSkill(inventory, entity);
                 context.SaveChanges();
             }
-            if (Mapper.Mapper.Instance.CharacterSkillMapper.ToCharacterSkillDTO(entity, inventory))
+            if (Mapper.Mappers.CharacterSkillMapper.ToCharacterSkillDTO(entity, inventory))
             {
                 return inventory;
             }

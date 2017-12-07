@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class PortalMapper
+    public static class PortalMapper
     {
         #region Methods
 
-        public bool ToPortal(PortalDTO input, Portal output)
+        public static bool ToPortal(PortalDTO input, Portal output)
         {
             if (input == null)
             {
@@ -26,7 +26,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToPortalDTO(Portal input, PortalDTO output)
+        public static bool ToPortalDTO(Portal input, PortalDTO output)
         {
             if (input == null)
             {

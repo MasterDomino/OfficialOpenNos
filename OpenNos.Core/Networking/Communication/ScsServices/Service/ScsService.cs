@@ -43,7 +43,7 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Service
         /// </remarks>
         public IScsServiceClient CurrentClient
         {
-            get => GetCurrentClient();
+            get => getCurrentClient();
             set => _currentClient = value;
         }
 
@@ -51,13 +51,13 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Service
 
         #region Methods
 
-        private IScsServiceClient GetCurrentClient()
+        private static IScsServiceClient getCurrentClient()
         {
             if (_currentClient != null)
             {
                 return _currentClient;
             }
-            throw new ArgumentNullException("Client channel can not be obtained. CurrentClient property must be called by the thread which runs the service method.");
+            throw new ArgumentNullException(string.Empty, "Client channel can not be obtained. CurrentClient property must be called by the thread which runs the service method.");
         }
 
         #endregion

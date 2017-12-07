@@ -100,7 +100,7 @@ namespace OpenNos.GameObject
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, "GenerateRdlst");
+                Logger.Error(ex, nameof(GenerateRdlst));
             }
             return result;
         }
@@ -163,7 +163,7 @@ namespace OpenNos.GameObject
             session.Character.Group = null;
             if (IsLeader(session) && GroupType != GroupType.Group && Characters.Count > 1)
             {
-                Characters.ForEach(s => s.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("TEAM_LEADER_CHANGE"), Characters.ElementAt(0).Character?.Name), 0)));
+                Characters.ForEach(s => s.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("TEAM_LEADER_CHANGE"), Characters.ElementAt(0).Character?.Name), 0)));
             }
             Characters.RemoveAll(s => s?.Character.CharacterId == session.Character.CharacterId);
         }

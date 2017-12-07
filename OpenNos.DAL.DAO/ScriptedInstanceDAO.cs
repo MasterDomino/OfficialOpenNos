@@ -37,7 +37,7 @@ namespace OpenNos.DAL.DAO
                     foreach (ScriptedInstanceDTO scriptedInstance in scriptedInstances)
                     {
                         ScriptedInstance entity = new ScriptedInstance();
-                        Mapper.Mapper.Instance.ScriptedInstanceMapper.ToScriptedInstance(scriptedInstance, entity);
+                        Mapper.Mappers.ScriptedInstanceMapper.ToScriptedInstance(scriptedInstance, entity);
                         context.ScriptedInstance.Add(entity);
                     }
                     context.Configuration.AutoDetectChangesEnabled = true;
@@ -57,10 +57,10 @@ namespace OpenNos.DAL.DAO
                 using (OpenNosContext context = DataAccessHelper.CreateContext())
                 {
                     ScriptedInstance entity = new ScriptedInstance();
-                    Mapper.Mapper.Instance.ScriptedInstanceMapper.ToScriptedInstance(scriptedInstance, entity);
+                    Mapper.Mappers.ScriptedInstanceMapper.ToScriptedInstance(scriptedInstance, entity);
                     context.ScriptedInstance.Add(entity);
                     context.SaveChanges();
-                    if (Mapper.Mapper.Instance.ScriptedInstanceMapper.ToScriptedInstanceDTO(entity, scriptedInstance))
+                    if (Mapper.Mappers.ScriptedInstanceMapper.ToScriptedInstanceDTO(entity, scriptedInstance))
                     {
                         return scriptedInstance;
                     }
@@ -83,7 +83,7 @@ namespace OpenNos.DAL.DAO
                 foreach (ScriptedInstance timespaceObject in context.ScriptedInstance.Where(c => c.MapId.Equals(mapId)))
                 {
                     ScriptedInstanceDTO dto = new ScriptedInstanceDTO();
-                    Mapper.Mapper.Instance.ScriptedInstanceMapper.ToScriptedInstanceDTO(timespaceObject, dto);
+                    Mapper.Mappers.ScriptedInstanceMapper.ToScriptedInstanceDTO(timespaceObject, dto);
                     result.Add(dto);
                 }
                 return result;

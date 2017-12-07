@@ -53,7 +53,7 @@ namespace OpenNos.GameObject
             get; set;
         }
 
-        public Skill Skill => _skill ?? (_skill = ServerManager.Instance.GetSkill(SkillVNum));
+        public Skill Skill => _skill ?? (_skill = ServerManager.GetSkill(SkillVNum));
 
         #endregion
 

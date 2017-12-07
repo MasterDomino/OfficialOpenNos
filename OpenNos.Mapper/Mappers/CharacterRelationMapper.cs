@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class CharacterRelationMapper
+    public static class CharacterRelationMapper
     {
         #region Methods
 
-        public bool ToCharacterRelation(CharacterRelationDTO input, CharacterRelation output)
+        public static bool ToCharacterRelation(CharacterRelationDTO input, CharacterRelation output)
         {
             if (input == null)
             {
@@ -21,7 +21,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToCharacterRelationDTO(CharacterRelation input, CharacterRelationDTO output)
+        public static bool ToCharacterRelationDTO(CharacterRelation input, CharacterRelationDTO output)
         {
             if (input == null)
             {

@@ -139,7 +139,7 @@ namespace OpenNos.Master.Library.Interface
         void SendPacketToMap(Guid channelId, string packet, Guid mapInstanceId);
 
         /// <summary>
-        /// Send an Item using the Mail Service to the whole Map 
+        /// Send an Item using the Mail Service to the whole Map
         /// </summary>
         /// <param name="channelId">Id of the Channel, null for all</param>
         /// <param name="senderName">Name that should be shown as Sender</param>

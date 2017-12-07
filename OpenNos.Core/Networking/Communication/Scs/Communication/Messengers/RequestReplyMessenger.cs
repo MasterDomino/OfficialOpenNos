@@ -153,7 +153,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
 
         #region Methods
 
-        public async Task ClearLowPriorityQueue() => await Task.CompletedTask;
+        public async Task ClearLowPriorityQueueAsync() => await Task.CompletedTask;
 
         /// <summary>
         /// Calls Stop method of this object.

@@ -3,11 +3,11 @@ using OpenNos.Data;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class TeleporterMapper
+    public static class TeleporterMapper
     {
         #region Methods
 
-        public bool ToTeleporter(TeleporterDTO input, Teleporter output)
+        public static bool ToTeleporter(TeleporterDTO input, Teleporter output)
         {
             if (input == null)
             {
@@ -23,7 +23,7 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToTeleporterDTO(Teleporter input, TeleporterDTO output)
+        public static bool ToTeleporterDTO(Teleporter input, TeleporterDTO output)
         {
             if (input == null)
             {
