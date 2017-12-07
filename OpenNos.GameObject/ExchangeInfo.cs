@@ -22,18 +22,18 @@ namespace OpenNos.GameObject
 
         public ExchangeInfo()
         {
-            Confirm = false;
+            Confirmed = false;
             Gold = 0;
             TargetCharacterId = -1;
             ExchangeList = new List<ItemInstance>();
-            Validate = false;
+            Validated = false;
         }
 
         #endregion
 
         #region Properties
 
-        public bool Confirm { get; set; }
+        public bool Confirmed { get; set; }
 
         public List<ItemInstance> ExchangeList { get; set; }
 
@@ -41,7 +41,7 @@ namespace OpenNos.GameObject
 
         public long TargetCharacterId { get; set; }
 
-        public bool Validate { get; set; }
+        public bool Validated { get; set; }
 
         #endregion
     }

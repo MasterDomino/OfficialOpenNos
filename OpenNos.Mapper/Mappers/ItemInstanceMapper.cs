@@ -6,9 +6,73 @@ namespace OpenNos.Mapper.Mappers
 {
     public class ItemInstanceMapper
     {
-        public ItemInstanceMapper()
-        {
+        #region Methods
 
+        public bool ToItemInstance(ItemInstanceDTO input, ItemInstance output)
+        {
+            if (input == null)
+            {
+                output = null;
+                return false;
+            }
+            output.Ammo = input.Ammo;
+            output.Amount = input.Amount;
+            output.BoundCharacterId = input.BoundCharacterId;
+            output.Cellon = input.Cellon;
+            output.CharacterId = input.CharacterId;
+            output.CloseDefence = input.CloseDefence;
+            output.Concentrate = input.Concentrate;
+            output.CriticalDodge = input.CriticalDodge;
+            output.CriticalLuckRate = input.CriticalLuckRate;
+            output.CriticalRate = input.CriticalRate;
+            output.DamageMaximum = input.DamageMaximum;
+            output.DamageMinimum = input.DamageMinimum;
+            output.DarkElement = input.DarkElement;
+            output.DarkResistance = input.DarkResistance;
+            output.DefenceDodge = input.DefenceDodge;
+            output.Design = input.Design;
+            output.DistanceDefence = input.DistanceDefence;
+            output.DistanceDefenceDodge = input.DistanceDefenceDodge;
+            output.DurabilityPoint = input.DurabilityPoint;
+            output.ElementRate = input.ElementRate;
+            output.EquipmentSerialId = input.EquipmentSerialId;
+            output.FireElement = input.FireElement;
+            output.FireResistance = input.FireResistance;
+            output.HitRate = input.HitRate;
+            output.HoldingVNum = input.HoldingVNum;
+            output.HP = input.HP;
+            output.Id = input.Id;
+            output.IsEmpty = input.IsEmpty;
+            output.IsFixed = input.IsFixed;
+            output.ItemDeleteTime = input.ItemDeleteTime;
+            output.ItemVNum = input.ItemVNum;
+            output.LightElement = input.LightElement;
+            output.LightResistance = input.LightResistance;
+            output.MagicDefence = input.MagicDefence;
+            output.MaxElementRate = input.MaxElementRate;
+            output.MP = input.MP;
+            output.Rare = input.Rare;
+            output.SlDamage = input.SlDamage;
+            output.SlDefence = input.SlDefence;
+            output.SlElement = input.SlElement;
+            output.SlHP = input.SlHP;
+            output.Slot = input.Slot;
+            output.SpDamage = input.SpDamage;
+            output.SpDark = input.SpDark;
+            output.SpDefence = input.SpDefence;
+            output.SpElement = input.SpElement;
+            output.SpFire = input.SpFire;
+            output.SpHP = input.SpHP;
+            output.SpLevel = input.SpLevel;
+            output.SpLight = input.SpLight;
+            output.SpStoneUpgrade = input.SpStoneUpgrade;
+            output.SpWater = input.SpWater;
+            output.Type = input.Type;
+            output.Upgrade = input.Upgrade;
+            output.WaterElement = input.WaterElement;
+            output.WaterResistance = input.WaterResistance;
+            output.XP = input.XP;
+            return true;
         }
 
         public bool ToItemInstanceDTO(ItemInstance input, ItemInstanceDTO output)
@@ -78,71 +142,6 @@ namespace OpenNos.Mapper.Mappers
             return true;
         }
 
-        public bool ToItemInstance(ItemInstanceDTO input, ItemInstance output)
-        {
-            if (input == null)
-            {
-                output = null;
-                return false;
-            }
-            output.Ammo = input.Ammo;
-            output.Amount = input.Amount;
-            output.BoundCharacterId = input.BoundCharacterId;
-            output.Cellon = input.Cellon;
-            output.CharacterId = input.CharacterId;
-            output.CloseDefence = input.CloseDefence;
-            output.Concentrate = input.Concentrate;
-            output.CriticalDodge = input.CriticalDodge;
-            output.CriticalLuckRate = input.CriticalLuckRate;
-            output.CriticalRate = input.CriticalRate;
-            output.DamageMaximum = input.DamageMaximum;
-            output.DamageMinimum = input.DamageMinimum;
-            output.DarkElement = input.DarkElement;
-            output.DarkResistance = input.DarkResistance;
-            output.DefenceDodge = input.DefenceDodge;
-            output.Design = input.Design;
-            output.DistanceDefence = input.DistanceDefence;
-            output.DistanceDefenceDodge = input.DistanceDefenceDodge;
-            output.DurabilityPoint = input.DurabilityPoint;
-            output.ElementRate = input.ElementRate;
-            output.EquipmentSerialId = input.EquipmentSerialId;
-            output.FireElement = input.FireElement;
-            output.FireResistance = input.FireResistance;
-            output.HitRate = input.HitRate;
-            output.HoldingVNum = input.HoldingVNum;
-            output.HP = input.HP;
-            output.Id = input.Id;
-            output.IsEmpty = input.IsEmpty;
-            output.IsFixed = input.IsFixed;
-            output.ItemDeleteTime = input.ItemDeleteTime;
-            output.ItemVNum = input.ItemVNum;
-            output.LightElement = input.LightElement;
-            output.LightResistance = input.LightResistance;
-            output.MagicDefence = input.MagicDefence;
-            output.MaxElementRate = input.MaxElementRate;
-            output.MP = input.MP;
-            output.Rare = input.Rare;
-            output.SlDamage = input.SlDamage;
-            output.SlDefence = input.SlDefence;
-            output.SlElement = input.SlElement;
-            output.SlHP = input.SlHP;
-            output.Slot = input.Slot;
-            output.SpDamage = input.SpDamage;
-            output.SpDark = input.SpDark;
-            output.SpDefence = input.SpDefence;
-            output.SpElement = input.SpElement;
-            output.SpFire = input.SpFire;
-            output.SpHP = input.SpHP;
-            output.SpLevel = input.SpLevel;
-            output.SpLight = input.SpLight;
-            output.SpStoneUpgrade = input.SpStoneUpgrade;
-            output.SpWater = input.SpWater;
-            output.Type = input.Type;
-            output.Upgrade = input.Upgrade;
-            output.WaterElement = input.WaterElement;
-            output.WaterResistance = input.WaterResistance;
-            output.XP = input.XP;
-            return true;
-        }
+        #endregion
     }
 }

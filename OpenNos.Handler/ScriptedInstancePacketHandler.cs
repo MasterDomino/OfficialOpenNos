@@ -199,7 +199,7 @@ namespace OpenNos.Handler
             Session.Character.MapX = instance.PositionX;
             Session.Character.MapY = instance.PositionY;
             ServerManager.Instance.TeleportOnRandomPlaceInMap(Session, instance.FirstMap.MapInstanceId);
-            instance.InstanceBag.Creator = Session.Character.CharacterId;
+            instance.InstanceBag.CreatorId = Session.Character.CharacterId;
             Session.SendPackets(instance.GenerateMinimap());
             Session.SendPacket(instance.GenerateMainInfo());
             Session.SendPacket(instance.FirstMap.InstanceBag.GenerateScore());

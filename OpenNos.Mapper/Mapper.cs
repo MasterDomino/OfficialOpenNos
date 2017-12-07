@@ -4,257 +4,171 @@ namespace OpenNos.Mapper
 {
     public class Mapper
     {
-        private AccountMapper _accountMapper;
-
-        private BazaarItemMapper _bazaarItemMapper;
-
-        private BCardMapper _bCardMapper;
-
-        private ItemInstanceMapper _boxItemMapper;
-
-        private CardMapper _cardMapper;
-
-        private CellonOptionMapper _cellonOptionMapper;
-
-        private CharacterMapper _characterMapper;
-
-        private CharacterRelationMapper _characterRelationMapper;
-
-        private CharacterSkillMapper _characterSkillMapper;
-
-        private ComboMapper _comboMapper;
-
-        private DropMapper _dropMapper;
-
-        private FamilyCharacterMapper _familyCharacterMapper;
-
-        private FamilyLogMapper _familyLogMapper;
-
-        private FamilyMapper _familyMapper;
-
-        private GeneralLogMapper _generalLogMapper;
-
-        private ItemInstanceMapper _itemInstanceMapper;
-
-        private ItemMapper _itemMapper;
-
-        private MailMapper _mailMapper;
-
-        private MaintenanceLogMapper _maintenanceLogMapper;
-
-        private MapMapper _mapMapper;
-
-        private MapMonsterMapper _mapMonsterMapper;
-
-        private MapNPCMapper _mapNPCMapper;
-
-        private MapTypeMapMapper _mapTypeMapMapper;
-
-        private MapTypeMapper _mapTypeMapper;
-
-        private MateMapper _mateMapper;
-
-        private MinigameLogMapper _minigameLogMapper;
-
-        private MinilandObjectMapper _minilandObjectMapper;
-
-        private NpcMonsterMapper _npcMonsterMapper;
-
-        private NpcMonsterSkillMapper _npcMonsterSkillMapper;
-
-        private PenaltyLogMapper _penaltyLogMapper;
-
-        private PortalMapper _portalMapper;
-
-        private QuestMapper _questMapper;
-
-        private QuestProgressMapper _questProgressMapper;
-
-        private QuicklistEntryMapper _quicklistEntryMapper;
-
-        private RecipeItemMapper _recipeItemMapper;
-
-        private RecipeListMapper _recipeListMapper;
-
-        private RecipeMapper _recipeMapper;
-
-        private RespawnMapper _respawnMapper;
-
-        private RespawnMapTypeMapper _respawnMapTypeMapper;
-
-        private RollGeneratedItemMapper _rollGeneratedItemMapper;
-
-        private ScriptedInstanceMapper _scriptedInstanceMapper;
-
-        private ShellEffectMapper _shellEffectMapper;
-
-        private ShopItemMapper _shopItemMapper;
-
-        private ShopMapper _shopMapper;
-
-        private ShopSkillMapper _shopSkillMapper;
-
-        private SkillMapper _skillMapper;
-
-        private StaticBonusMapper _staticBonusMapper;
-
-        private StaticBuffMapper _staticBuffMapper;
-
-        private TeleporterMapper _teleporterMapper;
+        #region Members
 
         private static Mapper _instance;
 
+        #endregion
+
+        #region Instantiation
+
         public Mapper()
         {
-            _accountMapper = new AccountMapper();
-            _bazaarItemMapper = new BazaarItemMapper();
-            _bCardMapper = new BCardMapper();
-            _boxItemMapper = new ItemInstanceMapper();
-            _cardMapper = new CardMapper();
-            _cellonOptionMapper = new CellonOptionMapper();
-            _characterMapper = new CharacterMapper();
-            _characterRelationMapper = new CharacterRelationMapper();
-            _characterSkillMapper = new CharacterSkillMapper();
-            _comboMapper = new ComboMapper();
-            _dropMapper = new DropMapper();
-            _familyCharacterMapper = new FamilyCharacterMapper();
-            _familyLogMapper = new FamilyLogMapper();
-            _familyMapper = new FamilyMapper();
-            _generalLogMapper = new GeneralLogMapper();
-            _itemInstanceMapper = new ItemInstanceMapper();
-            _itemMapper = new ItemMapper();
-            _mailMapper = new MailMapper();
-            _maintenanceLogMapper = new MaintenanceLogMapper();
-            _mapMapper = new MapMapper();
-            _mapMonsterMapper = new MapMonsterMapper();
-            _mapNPCMapper = new MapNPCMapper();
-            _mapTypeMapMapper = new MapTypeMapMapper();
-            _mapTypeMapper = new MapTypeMapper();
-            _mateMapper = new MateMapper();
-            _minigameLogMapper = new MinigameLogMapper();
-            _minilandObjectMapper = new MinilandObjectMapper();
-            _npcMonsterMapper = new NpcMonsterMapper();
-            _npcMonsterSkillMapper = new NpcMonsterSkillMapper();
-            _penaltyLogMapper = new PenaltyLogMapper();
-            _portalMapper = new PortalMapper();
-            _questMapper = new QuestMapper();
-            _questProgressMapper = new QuestProgressMapper();
-            _quicklistEntryMapper = new QuicklistEntryMapper();
-            _recipeItemMapper = new RecipeItemMapper();
-            _recipeListMapper = new RecipeListMapper();
-            _recipeMapper = new RecipeMapper();
-            _respawnMapper = new RespawnMapper();
-            _respawnMapTypeMapper = new RespawnMapTypeMapper();
-            _rollGeneratedItemMapper = new RollGeneratedItemMapper();
-            _scriptedInstanceMapper = new ScriptedInstanceMapper();
-            _shellEffectMapper = new ShellEffectMapper();
-            _shopItemMapper = new ShopItemMapper();
-            _shopMapper = new ShopMapper();
-            _shopSkillMapper = new ShopSkillMapper();
-            _skillMapper = new SkillMapper();
-            _staticBonusMapper = new StaticBonusMapper();
-            _staticBuffMapper = new StaticBuffMapper();
-            _teleporterMapper = new TeleporterMapper();
+            AccountMapper = new AccountMapper();
+            BazaarItemMapper = new BazaarItemMapper();
+            BCardMapper = new BCardMapper();
+            BoxItemMapper = new ItemInstanceMapper();
+            CardMapper = new CardMapper();
+            CellonOptionMapper = new CellonOptionMapper();
+            CharacterMapper = new CharacterMapper();
+            CharacterRelationMapper = new CharacterRelationMapper();
+            CharacterSkillMapper = new CharacterSkillMapper();
+            ComboMapper = new ComboMapper();
+            DropMapper = new DropMapper();
+            FamilyCharacterMapper = new FamilyCharacterMapper();
+            FamilyLogMapper = new FamilyLogMapper();
+            FamilyMapper = new FamilyMapper();
+            GeneralLogMapper = new GeneralLogMapper();
+            ItemInstanceMapper = new ItemInstanceMapper();
+            ItemMapper = new ItemMapper();
+            MailMapper = new MailMapper();
+            MaintenanceLogMapper = new MaintenanceLogMapper();
+            MapMapper = new MapMapper();
+            MapMonsterMapper = new MapMonsterMapper();
+            MapNPCMapper = new MapNPCMapper();
+            MapTypeMapMapper = new MapTypeMapMapper();
+            MapTypeMapper = new MapTypeMapper();
+            MateMapper = new MateMapper();
+            MinigameLogMapper = new MinigameLogMapper();
+            MinilandObjectMapper = new MinilandObjectMapper();
+            NpcMonsterMapper = new NpcMonsterMapper();
+            NpcMonsterSkillMapper = new NpcMonsterSkillMapper();
+            PenaltyLogMapper = new PenaltyLogMapper();
+            PortalMapper = new PortalMapper();
+            QuestMapper = new QuestMapper();
+            QuestProgressMapper = new QuestProgressMapper();
+            QuicklistEntryMapper = new QuicklistEntryMapper();
+            RecipeItemMapper = new RecipeItemMapper();
+            RecipeListMapper = new RecipeListMapper();
+            RecipeMapper = new RecipeMapper();
+            RespawnMapper = new RespawnMapper();
+            RespawnMapTypeMapper = new RespawnMapTypeMapper();
+            RollGeneratedItemMapper = new RollGeneratedItemMapper();
+            ScriptedInstanceMapper = new ScriptedInstanceMapper();
+            ShellEffectMapper = new ShellEffectMapper();
+            ShopItemMapper = new ShopItemMapper();
+            ShopMapper = new ShopMapper();
+            ShopSkillMapper = new ShopSkillMapper();
+            SkillMapper = new SkillMapper();
+            StaticBonusMapper = new StaticBonusMapper();
+            StaticBuffMapper = new StaticBuffMapper();
+            TeleporterMapper = new TeleporterMapper();
         }
+
+        #endregion
+
+        #region Properties
 
         public static Mapper Instance => _instance ?? (_instance = new Mapper());
 
-        public AccountMapper AccountMapper => _accountMapper;
+        public AccountMapper AccountMapper { get; }
 
-        public BazaarItemMapper BazaarItemMapper => _bazaarItemMapper;
+        public BazaarItemMapper BazaarItemMapper { get; }
 
-        public BCardMapper BCardMapper => _bCardMapper;
+        public BCardMapper BCardMapper { get; }
 
-        public ItemInstanceMapper BoxItemMapper => _boxItemMapper;
+        public ItemInstanceMapper BoxItemMapper { get; }
 
-        public CardMapper CardMapper => _cardMapper;
+        public CardMapper CardMapper { get; }
 
-        public CellonOptionMapper CellonOptionMapper => _cellonOptionMapper;
+        public CellonOptionMapper CellonOptionMapper { get; }
 
-        public CharacterMapper CharacterMapper => _characterMapper;
+        public CharacterMapper CharacterMapper { get; }
 
-        public CharacterRelationMapper CharacterRelationMapper => _characterRelationMapper;
+        public CharacterRelationMapper CharacterRelationMapper { get; }
 
-        public CharacterSkillMapper CharacterSkillMapper => _characterSkillMapper;
+        public CharacterSkillMapper CharacterSkillMapper { get; }
 
-        public ComboMapper ComboMapper => _comboMapper;
+        public ComboMapper ComboMapper { get; }
 
-        public DropMapper DropMapper => _dropMapper;
+        public DropMapper DropMapper { get; }
 
-        public FamilyCharacterMapper FamilyCharacterMapper => _familyCharacterMapper;
+        public FamilyCharacterMapper FamilyCharacterMapper { get; }
 
-        public FamilyLogMapper FamilyLogMapper => _familyLogMapper;
+        public FamilyLogMapper FamilyLogMapper { get; }
 
-        public FamilyMapper FamilyMapper => _familyMapper;
+        public FamilyMapper FamilyMapper { get; }
 
-        public GeneralLogMapper GeneralLogMapper => _generalLogMapper;
+        public GeneralLogMapper GeneralLogMapper { get; }
 
-        public ItemInstanceMapper ItemInstanceMapper => _itemInstanceMapper;
+        public ItemInstanceMapper ItemInstanceMapper { get; }
 
-        public ItemMapper ItemMapper => _itemMapper;
+        public ItemMapper ItemMapper { get; }
 
-        public MailMapper MailMapper => _mailMapper;
+        public MailMapper MailMapper { get; }
 
-        public MaintenanceLogMapper MaintenanceLogMapper => _maintenanceLogMapper;
+        public MaintenanceLogMapper MaintenanceLogMapper { get; }
 
-        public MapMapper MapMapper => _mapMapper;
+        public MapMapper MapMapper { get; }
 
-        public MapMonsterMapper MapMonsterMapper => _mapMonsterMapper;
+        public MapMonsterMapper MapMonsterMapper { get; }
 
-        public MapNPCMapper MapNPCMapper => _mapNPCMapper;
+        public MapNPCMapper MapNPCMapper { get; }
 
-        public MapTypeMapMapper MapTypeMapMapper => _mapTypeMapMapper;
+        public MapTypeMapMapper MapTypeMapMapper { get; }
 
-        public MapTypeMapper MapTypeMapper => _mapTypeMapper;
+        public MapTypeMapper MapTypeMapper { get; }
 
-        public MateMapper MateMapper => _mateMapper;
+        public MateMapper MateMapper { get; }
 
-        public MinigameLogMapper MinigameLogMapper => _minigameLogMapper;
+        public MinigameLogMapper MinigameLogMapper { get; }
 
-        public MinilandObjectMapper MinilandObjectMapper => _minilandObjectMapper;
+        public MinilandObjectMapper MinilandObjectMapper { get; }
 
-        public NpcMonsterMapper NpcMonsterMapper => _npcMonsterMapper;
+        public NpcMonsterMapper NpcMonsterMapper { get; }
 
-        public NpcMonsterSkillMapper NpcMonsterSkillMapper => _npcMonsterSkillMapper;
+        public NpcMonsterSkillMapper NpcMonsterSkillMapper { get; }
 
-        public PenaltyLogMapper PenaltyLogMapper => _penaltyLogMapper;
+        public PenaltyLogMapper PenaltyLogMapper { get; }
 
-        public PortalMapper PortalMapper => _portalMapper;
+        public PortalMapper PortalMapper { get; }
 
-        public QuestMapper QuestMapper => _questMapper;
+        public QuestMapper QuestMapper { get; }
 
-        public QuestProgressMapper QuestProgressMapper => _questProgressMapper;
+        public QuestProgressMapper QuestProgressMapper { get; }
 
-        public QuicklistEntryMapper QuicklistEntryMapper => _quicklistEntryMapper;
+        public QuicklistEntryMapper QuicklistEntryMapper { get; }
 
-        public RecipeItemMapper RecipeItemMapper => _recipeItemMapper;
+        public RecipeItemMapper RecipeItemMapper { get; }
 
-        public RecipeListMapper RecipeListMapper => _recipeListMapper;
+        public RecipeListMapper RecipeListMapper { get; }
 
-        public RecipeMapper RecipeMapper => _recipeMapper;
+        public RecipeMapper RecipeMapper { get; }
 
-        public RespawnMapper RespawnMapper => _respawnMapper;
+        public RespawnMapper RespawnMapper { get; }
 
-        public RespawnMapTypeMapper RespawnMapTypeMapper => _respawnMapTypeMapper;
+        public RespawnMapTypeMapper RespawnMapTypeMapper { get; }
 
-        public RollGeneratedItemMapper RollGeneratedItemMapper => _rollGeneratedItemMapper;
+        public RollGeneratedItemMapper RollGeneratedItemMapper { get; }
 
-        public ScriptedInstanceMapper ScriptedInstanceMapper => _scriptedInstanceMapper;
+        public ScriptedInstanceMapper ScriptedInstanceMapper { get; }
 
-        public ShellEffectMapper ShellEffectMapper => _shellEffectMapper;
+        public ShellEffectMapper ShellEffectMapper { get; }
 
-        public ShopItemMapper ShopItemMapper => _shopItemMapper;
+        public ShopItemMapper ShopItemMapper { get; }
 
-        public ShopMapper ShopMapper => _shopMapper;
+        public ShopMapper ShopMapper { get; }
 
-        public ShopSkillMapper ShopSkillMapper => _shopSkillMapper;
+        public ShopSkillMapper ShopSkillMapper { get; }
 
-        public SkillMapper SkillMapper => _skillMapper;
+        public SkillMapper SkillMapper { get; }
 
-        public StaticBonusMapper StaticBonusMapper => _staticBonusMapper;
+        public StaticBonusMapper StaticBonusMapper { get; }
 
-        public StaticBuffMapper StaticBuffMapper => _staticBuffMapper;
+        public StaticBuffMapper StaticBuffMapper { get; }
 
-        public TeleporterMapper TeleporterMapper => _teleporterMapper;
+        public TeleporterMapper TeleporterMapper { get; }
+
+        #endregion
     }
 }

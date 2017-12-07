@@ -47,13 +47,12 @@ namespace OpenNos.Core
                     decpass += str[i];
                 }
             }
-            StringBuilder temp = new StringBuilder();
+            StringBuilder passwd = new StringBuilder();
             for (int i = 0; i < decpass.Length; i += 2)
             {
-                temp.Append(Convert.ToChar(Convert.ToUInt32(decpass.Substring(i, 2), 16)));
+                passwd.Append(Convert.ToChar(Convert.ToUInt32(decpass.Substring(i, 2), 16)));
             }
-            decpass = temp.ToString();
-            return decpass;
+            return passwd.ToString();
         }
 
         public override string Decrypt(byte[] data, int sessionId = 0)
