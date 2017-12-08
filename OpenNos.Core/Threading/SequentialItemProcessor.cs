@@ -14,7 +14,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace OpenNos.Core.Threading
 {
@@ -40,11 +40,6 @@ namespace OpenNos.Core.Threading
         /// An object to synchronize threads.
         /// </summary>
         private readonly object _syncObj = new object();
-
-        /// <summary>
-        /// A reference to the current Task that is processing an item in ProcessItem method.
-        /// </summary>
-        private Task _currentProcessTask;
 
         /// <summary>
         /// Indicates state of the item processing.
@@ -96,7 +91,7 @@ namespace OpenNos.Core.Threading
 
                 if (!_isProcessing)
                 {
-                    _currentProcessTask = Task.Factory.StartNew(processItem);
+                    ThreadPool.QueueUserWorkItem(processItem);
                 }
             }
         }
@@ -113,35 +108,20 @@ namespace OpenNos.Core.Threading
         {
             _isRunning = false;
 
-            // Clear all incoming messages
+            //Clear all incoming messages
             lock (_syncObj)
             {
                 _queue.Clear();
-            }
-
-            // Check if is there a message that is being processed now
-            if (!_isProcessing)
-            {
-                return;
-            }
-
-            // Wait current processing task to finish
-            try
-            {
-                _currentProcessTask.Wait();
-            }
-            catch (Exception)
-            {
-                throw;
             }
         }
 
         /// <summary>
         /// This method runs on a new seperated Task (thread) to process items on the queue.
         /// </summary>
-        private void processItem()
+        /// <param name="state">todo: describe state parameter on processItem</param>
+        private void processItem(object state)
         {
-            // Try to get an item from queue to process it.
+            //Try to get an item from queue to process it.
             TItem itemToProcess;
             lock (_syncObj)
             {
@@ -159,10 +139,17 @@ namespace OpenNos.Core.Threading
                 itemToProcess = _queue.Dequeue();
             }
 
-            // Process the item (by calling the _processMethod delegate)
-            _processMethod(itemToProcess);
+            try
+            {
+                //Process the item (by calling the _processMethod delegate)
+                _processMethod(itemToProcess);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
 
-            // Process next item if available
+            //Process next item if available
             lock (_syncObj)
             {
                 _isProcessing = false;
@@ -171,8 +158,8 @@ namespace OpenNos.Core.Threading
                     return;
                 }
 
-                // Start a new task
-                _currentProcessTask = Task.Factory.StartNew(processItem);
+                //Start a new task
+                ThreadPool.QueueUserWorkItem(processItem);
             }
         }
 

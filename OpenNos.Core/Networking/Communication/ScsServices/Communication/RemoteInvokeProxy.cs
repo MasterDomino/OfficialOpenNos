@@ -67,7 +67,8 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Communication
             {
                 ServiceClassName = typeof(TProxy).Name,
                 MethodName = message.MethodName,
-                Parameters = message.InArgs
+                //Parameters = message.InArgs
+                Parameters = message.Args
             };
 
             ScsRemoteInvokeReturnMessage responseMessage = _clientMessenger.SendMessageAndWaitForResponse(requestMessage, 10) as ScsRemoteInvokeReturnMessage;
@@ -76,9 +77,18 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Communication
                 return null;
             }
 
+            object[] args = null;
+            int length = 0;
+
+            if (responseMessage.Parameters != null)
+            {
+                args = responseMessage.Parameters;
+                length = args.Length;
+            }
+
             return responseMessage.RemoteException != null
                        ? new ReturnMessage(responseMessage.RemoteException, message)
-                       : new ReturnMessage(responseMessage.ReturnValue, null, 0, message.LogicalCallContext, message);
+                       : new ReturnMessage(responseMessage.ReturnValue, args, length, message.LogicalCallContext, message);
         }
 
         #endregion

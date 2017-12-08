@@ -16,6 +16,7 @@ using OpenNos.Core.Networking.Communication.Scs.Communication.Channels;
 using OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp;
 using OpenNos.Core.Networking.Communication.Scs.Communication.EndPoints.Tcp;
 using System.Net;
+using System.Net.Sockets;
 
 namespace OpenNos.Core.Networking.Communication.Scs.Client.Tcp
 {
@@ -31,6 +32,11 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client.Tcp
         /// </summary>
         private readonly ScsTcpEndPoint _serverEndPoint;
 
+        /// <summary>
+        /// The existing socket information or <c>null</c>.
+        /// </summary>
+        private SocketInformation? _existingSocketInformation;
+
         #endregion
 
         #region Instantiation
@@ -39,7 +45,12 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client.Tcp
         /// Creates a new ScsTcpClient object.
         /// </summary>
         /// <param name="serverEndPoint">The endpoint address to connect to the server</param>
-        public ScsTcpClient(ScsTcpEndPoint serverEndPoint) => _serverEndPoint = serverEndPoint;
+        /// <param name="existingSocketInformation">The existing socket information.</param>
+        public ScsTcpClient(ScsTcpEndPoint serverEndPoint, SocketInformation? existingSocketInformation)
+        {
+            _serverEndPoint = serverEndPoint;
+            _existingSocketInformation = existingSocketInformation;
+        }
 
         #endregion
 
@@ -49,7 +60,22 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client.Tcp
         /// Creates a communication channel using ServerIpAddress and ServerPort.
         /// </summary>
         /// <returns>Ready communication channel to communicate</returns>
-        protected override ICommunicationChannel CreateCommunicationChannel() => new TcpCommunicationChannel(TcpHelper.ConnectToServer(new IPEndPoint(IPAddress.Parse(_serverEndPoint.IpAddress), _serverEndPoint.TcpPort), ConnectTimeout));
+        protected override ICommunicationChannel CreateCommunicationChannel()
+        {
+            Socket socket;
+
+            if (_existingSocketInformation.HasValue)
+            {
+                socket = new Socket(_existingSocketInformation.Value);
+                _existingSocketInformation = null;
+            }
+            else
+            {
+                socket = TcpHelper.ConnectToServer(new IPEndPoint(_serverEndPoint.IpAddress, _serverEndPoint.TcpPort), ConnectTimeout);
+            }
+
+            return new TcpCommunicationChannel(socket);
+        }
 
         #endregion
     }

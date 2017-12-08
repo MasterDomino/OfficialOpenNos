@@ -32,7 +32,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
         /// <summary>
         /// Default timeout value for connecting a server.
         /// </summary>
-        private const int DefaultConnectionAttemptTimeout = 15000;
+        private const int DEFAULTTIMEOUT = 15000;
 
         /// <summary>
         /// This timer is used to send PingMessage messages to server periodically.
@@ -45,6 +45,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
         private ICommunicationChannel _communicationChannel;
 
         private bool _disposed;
+
         private IScsWireProtocol _wireProtocol;
 
         #endregion
@@ -58,7 +59,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
         {
             _pingTimer = new Timer(30000);
             _pingTimer.Elapsed += PingTimer_Elapsed;
-            ConnectTimeout = DefaultConnectionAttemptTimeout;
+            ConnectTimeout = DEFAULTTIMEOUT;
             WireProtocol = WireProtocolManager.GetDefaultWireProtocol();
         }
 
@@ -90,6 +91,9 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
         #endregion
 
         #region Properties
+
+        /// <inheritdoc/>
+        public ICommunicationChannel CommunicationChannel => _communicationChannel;
 
         /// <summary>
         /// Gets the communication state of the Client.

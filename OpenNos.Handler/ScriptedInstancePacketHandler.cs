@@ -180,6 +180,11 @@ namespace OpenNos.Handler
             {
                 return;
             }
+            if (Session.Character.Level < instance.LevelMinimum)
+            {
+                Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_REQUIERED_LEVEL"), 0));
+                return;
+            }
 
             foreach (Gift gift in instance.RequiredItems)
             {
@@ -189,11 +194,6 @@ namespace OpenNos.Handler
                     return;
                 }
                 Session.Character.Inventory.RemoveItemAmount(gift.VNum, gift.Amount);
-            }
-            if (instance.LevelMinimum > Session.Character.Level)
-            {
-                Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_REQUIERED_LEVEL"), 0));
-                return;
             }
 
             Session.Character.MapX = instance.PositionX;
@@ -252,7 +252,7 @@ namespace OpenNos.Handler
                             ClientSession clientSession = Session.Character.Group?.Characters.Find(s => s.Character.CharacterId == packet.Param);
                             if (clientSession != null)
                             {
-                                if (portal.LevelMinimum > Session.Character.Level)
+                                if (Session.Character.Level < portal.LevelMinimum)
                                 {
                                     Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_REQUIERED_LEVEL"), 0));
                                     return;

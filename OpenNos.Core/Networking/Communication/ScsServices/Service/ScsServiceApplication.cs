@@ -18,6 +18,7 @@ using OpenNos.Core.Networking.Communication.Scs.Server;
 using OpenNos.Core.Networking.Communication.ScsServices.Communication.Messages;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace OpenNos.Core.Networking.Communication.ScsServices.Service
@@ -161,7 +162,10 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Service
         /// <param name="requestMessage">Request message</param>
         /// <param name="returnValue">Return value to send</param>
         /// <param name="exception">Exception to send</param>
-        private static void SendInvokeResponse(IMessenger client, IScsMessage requestMessage, object returnValue, ScsRemoteException exception)
+        /// <param name="parameters">
+        /// Parameters possibly modified in the method call by out or ref
+        /// </param>
+        private static void SendInvokeResponse(IMessenger client, IScsMessage requestMessage, object returnValue, ScsRemoteException exception, object[] parameters = null)
         {
             try
             {
@@ -169,7 +173,8 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Service
                 {
                     RepliedMessageId = requestMessage.MessageId,
                     ReturnValue = returnValue,
-                    RemoteException = exception
+                    RemoteException = exception,
+                    Parameters = parameters
                 }, 10);
             }
             catch (Exception ex)
@@ -232,19 +237,19 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Service
                     }
 
                     // Send method invocation return value to the client
-                    SendInvokeResponse(requestReplyMessenger, invokeMessage, returnValue, null);
+                    SendInvokeResponse(requestReplyMessenger, invokeMessage, returnValue, null, invokeMessage.Parameters);
                 }
                 catch (TargetInvocationException ex)
                 {
                     Exception innerEx = ex.InnerException;
                     if (innerEx != null)
                     {
-                        SendInvokeResponse(requestReplyMessenger, invokeMessage, null, new ScsRemoteException(innerEx.Message + Environment.NewLine + "Service Version: " + serviceObject.ServiceAttribute.Version, innerEx));
+                        SendInvokeResponse(requestReplyMessenger, invokeMessage, null, new ScsRemoteInvocationException(invokeMessage.ServiceClassName, serviceObject.ServiceAttribute?.Version ?? "", invokeMessage.MethodName, innerEx.Message, innerEx));
                     }
                 }
                 catch (Exception ex)
                 {
-                    SendInvokeResponse(requestReplyMessenger, invokeMessage, null, new ScsRemoteException(ex.Message + Environment.NewLine + "Service Version: " + serviceObject.ServiceAttribute.Version, ex));
+                    SendInvokeResponse(requestReplyMessenger, invokeMessage, null, new ScsRemoteInvocationException(invokeMessage.ServiceClassName, serviceObject.ServiceAttribute?.Version ?? "", invokeMessage.MethodName, ex.Message, ex));
                 }
             }
             catch (Exception ex)
@@ -337,16 +342,18 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Service
             {
                 Service = service;
                 object[] classAttributes = serviceInterfaceType.GetCustomAttributes(typeof(ScsServiceAttribute), true);
-                if (classAttributes.Length <= 0)
-                {
-                    throw new Exception("Service interface (" + serviceInterfaceType.Name + ") must has ScsService attribute.");
-                }
 
-                ServiceAttribute = classAttributes[0] as ScsServiceAttribute;
+                ServiceAttribute = classAttributes.Length > 0
+                    ? classAttributes[0] as ScsServiceAttribute
+                    : new ScsServiceAttribute { Version = serviceInterfaceType.Assembly.GetName().Version.ToString() };
+
                 _methods = new SortedList<string, MethodInfo>();
-                foreach (MethodInfo methodInfo in serviceInterfaceType.GetMethods())
+                foreach (Type serviceInterface in serviceInterfaceType.GetInterfaces().Union(new[] { serviceInterfaceType }))
                 {
-                    _methods.Add(methodInfo.Name, methodInfo);
+                    foreach (MethodInfo methodInfo in serviceInterface.GetMethods())
+                    {
+                        _methods[methodInfo.Name] = methodInfo;
+                    }
                 }
             }
 

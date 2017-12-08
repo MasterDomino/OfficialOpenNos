@@ -111,7 +111,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels
             {
                 throw new ArgumentNullException(nameof(message));
             }
-            SendMessagepublic(message, priority);
+            SendMessagePublic(message, priority);
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels
         /// </summary>
         public void Start()
         {
-            Startpublic();
+            StartPublic();
             CommunicationState = CommunicationStates.Connected;
         }
 
@@ -147,12 +147,12 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels
         /// </summary>
         /// <param name="message">Message to be sent</param>
         /// <param name="priority">Priority of message to send</param>
-        protected abstract void SendMessagepublic(IScsMessage message, byte priority);
+        protected abstract void SendMessagePublic(IScsMessage message, byte priority);
 
         /// <summary>
         /// Starts the communication with remote application really.
         /// </summary>
-        protected abstract void Startpublic();
+        protected abstract void StartPublic();
 
         #endregion
     }

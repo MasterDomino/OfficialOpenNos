@@ -40,6 +40,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client.Tcp
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             try
             {
+                socket.UseOnlyOverlappedIO = true;
                 socket.Blocking = false;
                 socket.Connect(endPoint);
                 socket.Blocking = true;

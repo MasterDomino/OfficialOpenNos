@@ -14,11 +14,13 @@
 
 using OpenNos.Core.Networking.Communication.Scs.Client;
 using OpenNos.Core.Networking.Communication.Scs.Communication;
+using OpenNos.Core.Networking.Communication.Scs.Communication.Channels;
 using OpenNos.Core.Networking.Communication.Scs.Communication.Messages;
 using OpenNos.Core.Networking.Communication.Scs.Communication.Messengers;
 using OpenNos.Core.Networking.Communication.ScsServices.Communication;
 using OpenNos.Core.Networking.Communication.ScsServices.Communication.Messages;
 using System;
+using System.Linq;
 using System.Reflection;
 
 namespace OpenNos.Core.Networking.Communication.ScsServices.Client
@@ -99,6 +101,9 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Client
 
         #region Properties
 
+        /// <inheritdoc/>
+        public ICommunicationChannel CommunicationChannel => _client.CommunicationChannel;
+
         /// <summary>
         /// Gets the current communication state.
         /// </summary>
@@ -155,6 +160,13 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Client
                 _disposed = true;
             }
         }
+
+        /// <summary>
+        /// Gets a service proxy for the specified <typeparamref name="TServiceInterface"/>.
+        /// </summary>
+        /// <typeparam name="TServiceInterface">the service interface type</typeparam>
+        /// <returns></returns>
+        public TServiceInterface GetServiceProxy<TServiceInterface>() => (TServiceInterface)new AutoConnectRemoteInvokeProxy<TServiceInterface, IScsClient>(_requestReplyMessenger, this).GetTransparentProxy();
 
         protected virtual void Dispose(bool disposing)
         {
@@ -232,7 +244,7 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Client
             {
                 // reflection?
                 Type type = _clientObject.GetType();
-                MethodInfo method = type.GetMethod(invokeMessage.MethodName);
+                MethodInfo method = type.GetMethod(invokeMessage.MethodName) ?? type.GetInterfaces().Select(t => t.GetMethod(invokeMessage.MethodName)).FirstOrDefault(m => m != null);
                 returnValue = method.Invoke(_clientObject, invokeMessage.Parameters);
             }
             catch (TargetInvocationException ex)

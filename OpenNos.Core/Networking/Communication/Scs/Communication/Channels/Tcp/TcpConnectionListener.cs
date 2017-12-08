@@ -86,6 +86,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         /// </summary>
         private void doListenAsThread()
         {
+            TcpCommunicationChannel tcpChannel = null;
             while (_running)
             {
                 try
@@ -93,7 +94,8 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
                     Socket clientSocket = _listenerSocket.AcceptSocket();
                     if (clientSocket.Connected)
                     {
-                        OnCommunicationChannelConnected(new TcpCommunicationChannel(clientSocket));
+                        tcpChannel = new TcpCommunicationChannel(clientSocket);
+                        OnCommunicationChannelConnected(tcpChannel);
                     }
                 }
                 catch (Exception)
@@ -115,6 +117,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
                     }
                 }
             }
+            tcpChannel.Dispose();
         }
 
         /// <summary>
@@ -122,7 +125,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         /// </summary>
         private void startSocket()
         {
-            _listenerSocket = new TcpListener(IPAddress.Any, _endPoint.TcpPort);
+            _listenerSocket = new TcpListener(_endPoint.IpAddress ?? IPAddress.Any, _endPoint.TcpPort);
             _listenerSocket.Start();
         }
 

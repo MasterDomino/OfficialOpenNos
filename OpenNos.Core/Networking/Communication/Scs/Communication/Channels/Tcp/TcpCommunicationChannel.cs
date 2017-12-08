@@ -37,7 +37,9 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         /// <summary>
         /// Size of the buffer that is used to receive bytes from TCP socket.
         /// </summary>
-        private const int _receiveBufferSize = 4 * 1024;
+        private const int RECEIVE_BUFFER_SIZE = 4 * 1024; // 4KB
+        private const ushort PING_REQUEST = 0x0779;
+        private const ushort PING_RESPONSE = 0x0988;
 
         /// <summary>
         /// This buffer is used to receive bytes
@@ -50,8 +52,11 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         private readonly Socket _clientSocket;
 
         private readonly ConcurrentQueue<byte[]> _highPriorityBuffer;
+
         private readonly ConcurrentQueue<byte[]> _lowPriorityBuffer;
+
         private readonly Random _random = new Random();
+
         private readonly ScsTcpEndPoint _remoteEndPoint;
 
         private readonly CancellationTokenSource _sendCancellationToken = new CancellationTokenSource();
@@ -84,20 +89,17 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         {
             _clientSocket = clientSocket;
             _clientSocket.NoDelay = true;
-
-            // initialize lagging mode
-            bool isLagMode = string.Equals(ConfigurationManager.AppSettings["LagMode"], "true", StringComparison.CurrentCultureIgnoreCase);
-
             IPEndPoint ipEndPoint = (IPEndPoint)_clientSocket.RemoteEndPoint;
-            _remoteEndPoint = new ScsTcpEndPoint(ipEndPoint.Address.ToString(), ipEndPoint.Port);
-
-            _buffer = new byte[_receiveBufferSize];
+            _remoteEndPoint = new ScsTcpEndPoint(ipEndPoint.Address, ipEndPoint.Port);
+            _buffer = new byte[RECEIVE_BUFFER_SIZE];
             _syncLock = new object();
-
             _highPriorityBuffer = new ConcurrentQueue<byte[]>();
             _lowPriorityBuffer = new ConcurrentQueue<byte[]>();
             CancellationToken cancellationToken = _sendCancellationToken.Token;
-            _sendTask = StartSendingAsyncAsync(SendInterval, new TimeSpan(0, 0, 0, 0, isLagMode ? 1000 : 10), cancellationToken);
+
+            // initialize lagging mode
+            bool isLagMode = string.Equals(ConfigurationManager.AppSettings["LagMode"], "true", StringComparison.CurrentCultureIgnoreCase);
+            _sendTask = StartSendingAsync(SendInterval, new TimeSpan(0, 0, 0, 0, isLagMode ? 1000 : 10), cancellationToken);
         }
 
         #endregion
@@ -113,7 +115,27 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
 
         #region Methods
 
-        public static async Task StartSendingAsyncAsync(Action action, TimeSpan period, CancellationToken _sendCancellationToken)
+        /// <summary>
+        /// Duplicates the client socket and closes.
+        /// </summary>
+        /// <param name="processId">The process identifier.</param>
+        /// <returns></returns>
+        /// <summary>The callee should dispose anything relying on this channel immediately.</summary>
+        public SocketInformation DuplicateSocketAndClose(int processId)
+        {
+            // request ping from host to kill our async BeginReceive
+            _clientSocket.Send(BitConverter.GetBytes(PING_REQUEST));
+
+            // wait for response
+            while (_running)
+            {
+                Thread.Sleep(20);
+            }
+
+            return _clientSocket.DuplicateAndClose(processId);
+        }
+
+        public static async Task StartSendingAsync(Action action, TimeSpan period, CancellationToken _sendCancellationToken)
         {
             while (!_sendCancellationToken.IsCancellationRequested)
             {
@@ -214,7 +236,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         /// </summary>
         /// <param name="message">Message to be sent</param>
         /// <param name="priority">Priority of message to send</param>
-        protected override void SendMessagepublic(IScsMessage message, byte priority)
+        protected override void SendMessagePublic(IScsMessage message, byte priority)
         {
             if (priority > 5)
             {
@@ -229,7 +251,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         /// <summary>
         /// Starts the thread to receive messages from socket.
         /// </summary>
-        protected override void Startpublic()
+        protected override void StartPublic()
         {
             _running = true;
             _clientSocket.BeginReceive(_buffer, 0, _buffer.Length, 0, receiveCallback, null);
@@ -278,6 +300,17 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
 
                 if (bytesRead > 0)
                 {
+                    switch (BitConverter.ToUInt16(_buffer, 0))
+                    {
+                        case PING_REQUEST:
+                            _clientSocket.Send(BitConverter.GetBytes(PING_RESPONSE));
+                            goto CONT_RECEIVE;
+
+                        case PING_RESPONSE:
+                            _running = false;
+                            return;
+                    }
+
                     LastReceivedMessageTime = DateTime.Now;
 
                     // Copy received bytes to a new byte array
@@ -297,6 +330,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
                     Disconnect();
                 }
 
+                CONT_RECEIVE:
                 // Read more bytes if still running
                 if (_running)
                 {

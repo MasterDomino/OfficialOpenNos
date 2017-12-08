@@ -37,6 +37,11 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Communication.Messag
         /// </summary>
         public object ReturnValue { get; set; }
 
+        /// <summary>
+        /// Parameters that may have been modified by out or ref in the call to the method
+        /// </summary>
+        public object[] Parameters { get; set; }
+
         #endregion
 
         #region Methods

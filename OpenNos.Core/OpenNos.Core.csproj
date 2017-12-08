@@ -75,6 +75,7 @@
     <Compile Include="CryptoRandom.cs" />
     <Compile Include="Extension.cs" />
     <Compile Include="Handling\HandlerMethodReference.cs" />
+    <Compile Include="Networking\Communication\ScsServices\Communication\Messages\ScsRemoteInvocationException.cs" />
     <Compile Include="Networking\Communication\Scs\Communication\Messages\ScsPingMessage.cs" />
     <Compile Include="Networking\INetworkClient.cs" />
     <Compile Include="Handling\IPacketHandler.cs" />
