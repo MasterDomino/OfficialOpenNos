@@ -35,6 +35,10 @@ namespace OpenNos.GameObject.Helpers
 
         #region Methods
 
+        public static string GenerateBSInfo(byte mode, short title, short time, short text) => $"bsinfo {mode} {title} {time} {text}";
+
+        public static string GenerateCHDM(int maxhp, int angeldmg, int demondmg, short time) => $"ch_dm {maxhp} {angeldmg} {demondmg} {time}";
+
         public static string GenerateDelay(int delay, int type, string argument) => $"delay {delay} {type} {argument}";
 
         public static string GenerateDialog(string dialog) => $"dlg {dialog}";

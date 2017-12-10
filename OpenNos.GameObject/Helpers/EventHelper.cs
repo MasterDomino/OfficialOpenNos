@@ -92,6 +92,10 @@ namespace OpenNos.GameObject.Helpers
                             ACT4SHIP.GenerateAct4Ship(1);
                             ACT4SHIP.GenerateAct4Ship(2);
                             break;
+
+                        case EventType.TALENTARENA:
+                            TalentArena.Run();
+                            break;
                     }
                 });
             }

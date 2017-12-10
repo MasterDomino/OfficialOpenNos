@@ -89,8 +89,11 @@
     <Compile Include="Buff\Card.cs" />
     <Compile Include="Event\ACT4\Act4Raid.cs" />
     <Compile Include="Event\ACT4\Act4Ship.cs" />
+    <Compile Include="Event\ACT4\CaligorRaid.cs" />
     <Compile Include="Event\EventWave.cs" />
     <Compile Include="Event\GAMES\MeteoriteGame.cs" />
+    <Compile Include="Event\TALENTARENA\TalentArena.cs" />
+    <Compile Include="Event\TALENTARENA\TalentArenaBattle.cs" />
     <Compile Include="Helpers\StaticPacketHelper.cs" />
     <Compile Include="BattleEntity.cs" />
     <Compile Include="Helpers\DamageHelper.cs" />

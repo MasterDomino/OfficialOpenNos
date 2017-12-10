@@ -23,6 +23,8 @@ namespace OpenNos.Domain
         RANKINGREFRESH,
         ACT4SHIP,
         Act4Raid,
-        METEORITEGAME
+        METEORITEGAME,
+        TALENTARENA,
+        CALIGOR
     }
 }
