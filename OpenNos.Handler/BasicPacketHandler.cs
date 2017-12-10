@@ -17,6 +17,7 @@ using OpenNos.DAL;
 using OpenNos.Data;
 using OpenNos.Domain;
 using OpenNos.GameObject;
+using OpenNos.GameObject.Event;
 using OpenNos.GameObject.Helpers;
 using OpenNos.GameObject.Packets.ClientPackets;
 using OpenNos.Master.Library.Client;
@@ -1302,7 +1303,7 @@ namespace OpenNos.Handler
                     }
                     else
                     {
-                        if (portal.DestinationMapInstanceId == OpenNos.GameObject.Event.CaligorRaid.CaligorMapInstance.MapInstanceId)
+                        if (portal.DestinationMapInstanceId == CaligorRaid.CaligorMapInstance?.MapInstanceId)
                         {
 
                             ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, portal.DestinationMapInstanceId, 60, 159);

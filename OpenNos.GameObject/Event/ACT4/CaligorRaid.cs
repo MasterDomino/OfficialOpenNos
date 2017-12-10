@@ -71,8 +71,8 @@ namespace OpenNos.GameObject.Event
                 SourceX = 70,
                 SourceY = 159,
                 DestinationMapId = 0,
-                DestinationX = 1,
-                DestinationY = 1,
+                DestinationX = 70,
+                DestinationY = 159,
                 DestinationMapInstanceId = CaligorRaid.CaligorMapInstance.MapInstanceId,
                 Type = -1
             });
@@ -82,8 +82,8 @@ namespace OpenNos.GameObject.Event
                 SourceX = 110,
                 SourceY = 159,
                 DestinationMapId = 0,
-                DestinationX = 1,
-                DestinationY = 1,
+                DestinationX = 110,
+                DestinationY = 159,
                 DestinationMapInstanceId = CaligorRaid.CaligorMapInstance.MapInstanceId,
                 Type = -1
             });
@@ -124,6 +124,7 @@ namespace OpenNos.GameObject.Event
                 CaligorRaid.UnknownLandMapInstance.Broadcast(p.GenerateGp());
             }
             ServerManager.Shout(Language.Instance.GetMessageFromKey("CALIGOR_LOCKED"), true);
+            CaligorRaid.IsLocked = true;
         }
 
         private void endRaid()
