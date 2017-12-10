@@ -1117,9 +1117,9 @@ namespace OpenNos.GameObject
             propertyinfo.SetValue(session.Character, value, null);
         }
 
-        public static void Shout(string message)
+        public static void Shout(string message, bool noAdminTag = false)
         {
-            Instance.Broadcast(UserInterfaceHelper.GenerateSay($"({Language.Instance.GetMessageFromKey("ADMINISTRATOR")}){message}", 10));
+            Instance.Broadcast(UserInterfaceHelper.GenerateSay($"{(noAdminTag ? string.Empty : $"({Language.Instance.GetMessageFromKey("ADMINISTRATOR")})")}{message}", 10));
             Instance.Broadcast(UserInterfaceHelper.GenerateMsg(message, 2));
         }
 

@@ -96,6 +96,9 @@ namespace OpenNos.GameObject.Helpers
                         case EventType.TALENTARENA:
                             TalentArena.Run();
                             break;
+                        case EventType.CALIGOR:
+                            CaligorRaid.Run();
+                            break;
                     }
                 });
             }
@@ -417,6 +420,42 @@ namespace OpenNos.GameObject.Helpers
                                             });
                                         }
                                     }
+                                    break;
+                                case MapInstanceType.CaligorInstance:
+
+                                    FactionType winningFaction = CaligorRaid.AngelDamage > CaligorRaid.DemonDamage ? FactionType.Angel : FactionType.Demon;
+
+                                    foreach (ClientSession sess in evt.MapInstance.Sessions)
+                                    {
+                                        if (sess?.Character != null)
+                                        {
+                                            if (CaligorRaid.RemainingTime > 2400)
+                                            {
+                                                if (sess.Character.Faction == winningFaction)
+                                                {
+                                                    sess.Character.GiftAdd(5960, 1);
+                                                }
+                                                else
+                                                {
+                                                    sess.Character.GiftAdd(5961, 1);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (sess.Character.Faction == winningFaction)
+                                                {
+                                                    sess.Character.GiftAdd(5961, 1);
+                                                }
+                                                else
+                                                {
+                                                    sess.Character.GiftAdd(5958, 1);
+                                                }
+                                            }
+                                            sess.Character.GiftAdd(5959, 1);
+                                            sess.Character.GenerateFamilyXp(500);
+                                        }
+                                    }
+                                    evt.MapInstance.Broadcast(UserInterfaceHelper.GenerateCHDM(ServerManager.GetNpc(2305).MaxHP, CaligorRaid.AngelDamage, CaligorRaid.DemonDamage, CaligorRaid.RemainingTime));
                                     break;
                             }
                             break;

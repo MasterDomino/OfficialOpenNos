@@ -16,6 +16,7 @@ using OpenNos.Core;
 using OpenNos.Data;
 using OpenNos.Domain;
 using OpenNos.GameObject.Battle;
+using OpenNos.GameObject.Event;
 using OpenNos.GameObject.Helpers;
 using OpenNos.PathFinder;
 using System;
@@ -546,6 +547,18 @@ namespace OpenNos.GameObject
                     else
                     {
                         DamageList.Add(hitRequest.Session.Character.CharacterId, damage);
+                    }
+                    if(IsBoss && MapInstance == CaligorRaid.CaligorMapInstance)
+                    {
+                        switch (hitRequest.Session.Character.Faction)
+                        {
+                            case FactionType.Angel:
+                                CaligorRaid.AngelDamage += damage;
+                                break;
+                            case FactionType.Demon:
+                                CaligorRaid.DemonDamage += damage;
+                                break;
+                        }
                     }
                     if (isCaptureSkill)
                     {

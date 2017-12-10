@@ -1278,6 +1278,7 @@ namespace OpenNos.Handler
                             Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("CANT_MOVE"), 10));
                             return;
                         }
+
                     }
                     Session.SendPacket(Session.CurrentMapInstance.GenerateRsfn());
 
@@ -1301,9 +1302,18 @@ namespace OpenNos.Handler
                     }
                     else
                     {
-                        ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, portal.DestinationMapInstanceId, portal.DestinationX, portal.DestinationY);
+                        if (portal.DestinationMapInstanceId == OpenNos.GameObject.Event.CaligorRaid.CaligorMapInstance.MapInstanceId)
+                        {
+
+                            ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, portal.DestinationMapInstanceId, 60, 159);
+                        }
+
+                        else
+                        {
+                            ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, portal.DestinationMapInstanceId, portal.DestinationX, portal.DestinationY);
+                        }
                     }
-                }
+                    }
             });
         }
 

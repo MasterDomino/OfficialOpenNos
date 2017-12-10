@@ -39,7 +39,7 @@ namespace OpenNos.GameObject.Event
             RegisteredParticipants = new ThreadSafeSortedList<long, ClientSession>();
             RegisteredGroups = new ThreadSafeSortedList<long, Group>();
 
-            ServerManager.Shout(Language.Instance.GetMessageFromKey("TALENTARENA_OPEN"));
+            ServerManager.Shout(Language.Instance.GetMessageFromKey("TALENTARENA_OPEN"), true);
 
             // Create Matchmaking thread
             // Create other threads
