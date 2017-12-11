@@ -3810,7 +3810,14 @@ namespace OpenNos.GameObject
         {
             Reputation += val;
             Session.SendPacket(GenerateFd());
-            Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("REPUT_INCREASE"), val), 11));
+            if (val > 0)
+            {
+                Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("REPUT_INCREASE"), val), 11));
+            }
+            else
+            {
+                Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("REPUT_DECREASE"), val), 12));
+            }
         }
 
         public void SetRespawnPoint(short mapId, short mapX, short mapY)

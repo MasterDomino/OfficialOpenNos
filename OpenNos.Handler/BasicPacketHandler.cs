@@ -1220,8 +1220,10 @@ namespace OpenNos.Handler
 
                         case (sbyte)PortalType.BlueRaid:
                         case (sbyte)PortalType.DarkRaid:
-                            if ((int)Session.Character.Faction == portal.Type - 9 && Session.Character.Family?.Act4Raid != null)
+                            if ((int)Session.Character.Faction == portal.Type - 9 && Session.Character.Family?.Act4Raid != null && Session.Character.Level > 59 || Session.Character.Reputation > 60000)
                             {
+                                Session.Character.SetReputation(Session.Character.Level * -50);
+
                                 Session.Character.LastPortal = currentRunningSeconds;
 
                                 switch (Session.Character.Family.Act4Raid.MapInstanceType)
@@ -1608,6 +1610,25 @@ namespace OpenNos.Handler
                             else
                             {
                                 Session.Character.Inventory.RemoveItemAmount(saver);
+                                Session.Character.Hp = (int)Session.Character.HPLoad();
+                                Session.Character.Mp = (int)Session.Character.MPLoad();
+                                Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateRevive());
+                                Session.SendPacket(Session.Character.GenerateStat());
+                            }
+                            break;
+
+                        case MapInstanceType.Act4Berios:
+                        case MapInstanceType.Act4Calvina:
+                        case MapInstanceType.Act4Hatus:
+                        case MapInstanceType.Act4Morcos:
+                            if (Session.Character.Reputation < Session.Character.Level * 10)
+                            {
+                                Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_ENOUGH_REPUT"), 0));
+                                ServerManager.Instance.ReviveFirstPosition(Session.Character.CharacterId);
+                            }
+                            else
+                            {
+                                Session.Character.SetReputation(Session.Character.Level * -10);
                                 Session.Character.Hp = (int)Session.Character.HPLoad();
                                 Session.Character.Mp = (int)Session.Character.MPLoad();
                                 Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateRevive());

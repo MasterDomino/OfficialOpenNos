@@ -280,6 +280,14 @@ namespace OpenNos.GameObject
                         reviveTask(session);
                         break;
 
+                    case MapInstanceType.Act4Berios:
+                    case MapInstanceType.Act4Calvina:
+                    case MapInstanceType.Act4Hatus:
+                    case MapInstanceType.Act4Morcos:
+                        session.SendPacket(UserInterfaceHelper.GenerateDialog($"#revival^0 #revival^1 {Language.Instance.GetMessageFromKey("ASK_REVIVE_ACT4RAID")}"));
+                        reviveTask(session);
+                        break;
+
                     default:
                         Instance.ReviveFirstPosition(session.Character.CharacterId);
                         break;
@@ -1076,18 +1084,21 @@ namespace OpenNos.GameObject
                             ChangeMap(session.Character.CharacterId, 131, x, y);
                         }
                     }
-                    session.Character.Hp = 1;
-                    session.Character.Mp = 1;
-                    if (session.CurrentMapInstance.MapInstanceType == MapInstanceType.BaseMapInstance)
-                    {
-                        RespawnMapTypeDTO resp = session.Character.Respawn;
-                        short x = (short)(resp.DefaultX + RandomNumber(-3, 3));
-                        short y = (short)(resp.DefaultY + RandomNumber(-3, 3));
-                        ChangeMap(session.Character.CharacterId, resp.DefaultMapId, x, y);
-                    }
                     else
                     {
-                        Instance.ChangeMap(session.Character.CharacterId, session.Character.MapId, session.Character.MapX, session.Character.MapY);
+                        session.Character.Hp = 1;
+                        session.Character.Mp = 1;
+                        if (session.CurrentMapInstance.MapInstanceType == MapInstanceType.BaseMapInstance)
+                        {
+                            RespawnMapTypeDTO resp = session.Character.Respawn;
+                            short x = (short)(resp.DefaultX + RandomNumber(-3, 3));
+                            short y = (short)(resp.DefaultY + RandomNumber(-3, 3));
+                            ChangeMap(session.Character.CharacterId, resp.DefaultMapId, x, y);
+                        }
+                        else
+                        {
+                            Instance.ChangeMap(session.Character.CharacterId, session.Character.MapId, session.Character.MapX, session.Character.MapY);
+                        }
                     }
                     session.CurrentMapInstance?.Broadcast(session, session.Character.GenerateTp());
                     session.CurrentMapInstance?.Broadcast(session.Character.GenerateRevive());
