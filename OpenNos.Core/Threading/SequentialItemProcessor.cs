@@ -146,7 +146,7 @@ namespace OpenNos.Core.Threading
             }
             catch (Exception)
             {
-                throw;
+                // do nothing
             }
 
             //Process next item if available

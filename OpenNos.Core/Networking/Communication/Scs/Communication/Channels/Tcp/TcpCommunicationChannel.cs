@@ -177,7 +177,6 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
             catch (Exception)
             {
                 // do nothing
-                throw;
             }
             finally
             {
@@ -214,7 +213,6 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
             catch (Exception)
             {
                 // disconnect
-                throw;
             }
             if (!_clientSocket.Connected)
             {
@@ -275,7 +273,6 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
             catch (Exception)
             {
                 // disconnect
-                throw;
             }
         }
 

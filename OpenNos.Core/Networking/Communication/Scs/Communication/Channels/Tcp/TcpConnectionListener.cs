@@ -113,7 +113,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
                     }
                     catch (Exception)
                     {
-                        throw;
+                        // do nothing
                     }
                 }
             }
@@ -140,7 +140,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
             }
             catch (Exception)
             {
-                throw;
+                // do nothing
             }
         }
 

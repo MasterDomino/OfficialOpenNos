@@ -2007,7 +2007,7 @@ namespace OpenNos.Handler
                 }
                 catch (Exception)
                 {
-                    throw;
+                    // do nothing
                 }
                 if (!string.IsNullOrWhiteSpace(Session.Character.Family.FamilyMessage))
                 {

@@ -299,7 +299,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
             }
             catch (Exception)
             {
-                throw;
+                // do nothing
             }
         }
 
