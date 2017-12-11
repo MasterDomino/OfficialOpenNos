@@ -14,6 +14,7 @@
 
 using System.Configuration;
 using System.Globalization;
+using System.IO;
 using System.Reflection;
 using System.Resources;
 
@@ -37,10 +38,17 @@ namespace OpenNos.Core
 
         private Language()
         {
-            _streamWriter = new System.IO.StreamWriter("MissingLanguageKeys.txt")
+            try
+            { 
+                _streamWriter = new StreamWriter("MissingLanguageKeys.txt", true)
+                {
+                    AutoFlush = true
+                };
+            }
+            catch (IOException)
             {
-                AutoFlush = true
-            };
+                Logger.Info("MissingLanguageKeys.txt was in use but i was able to catch this exception");
+            }
             _resourceCulture = new CultureInfo(ConfigurationManager.AppSettings[nameof(Language)]);
             if (Assembly.GetEntryAssembly() != null)
             {

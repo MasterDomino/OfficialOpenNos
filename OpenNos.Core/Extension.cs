@@ -16,6 +16,7 @@ using OpenNos.Core.ArrayExtensions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -188,6 +189,25 @@ namespace OpenNos.Core
         #region Methods
 
         public static string Truncate(this string str, int length) => str.Length > length ? str.Substring(0, length) : str;
+
+        public static bool IsFileLocked(this FileInfo file)
+        {
+            FileStream stream = null;
+
+            try
+            {
+                stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
+            }
+            catch (IOException)
+            {
+                return true;
+            }
+            finally
+            {
+                stream?.Close();
+            }
+            return false;
+        }
 
         #endregion
     }
