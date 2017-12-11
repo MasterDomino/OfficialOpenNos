@@ -130,7 +130,7 @@ namespace OpenNos.Handler
 
                     // select gift
                     case 4:
-                        if (Session.Character.MinilandPoint >= 100 && Session.Character.MinigameLog != null && packet.Point.HasValue)
+                        if (Session.Character.MinilandPoint >= 100 && Session.Character.MinigameLog != null && packet.Point.HasValue && packet.Point > 0)
                         {
                             if (getMinilandMaxPoint(game)[packet.Point.Value - 1] < Session.Character.MinigameLog.Score)
                             {
