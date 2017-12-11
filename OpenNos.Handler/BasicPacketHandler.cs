@@ -1313,12 +1313,12 @@ namespace OpenNos.Handler
                                 switch (Session.Character.Faction)
                                 {
                                     case FactionType.Angel:
-                                        destinationX = 1;
-                                        destinationY = 1;
+                                        destinationX = 50;
+                                        destinationY = 172;
                                         break;
                                     case FactionType.Demon:
-                                        destinationX = 1;
-                                        destinationY = 1;
+                                        destinationX = 130;
+                                        destinationY = 172;
                                         break;
                                 }
                             }
@@ -1327,12 +1327,12 @@ namespace OpenNos.Handler
                                 switch (Session.Character.Faction)
                                 {
                                     case FactionType.Angel:
-                                        destinationX = 1;
-                                        destinationY = 1;
+                                        destinationX = 50;
+                                        destinationY = 172;
                                         break;
                                     case FactionType.Demon:
-                                        destinationX = 1;
-                                        destinationY = 1;
+                                        destinationX = 130;
+                                        destinationY = 172;
                                         break;
                                 }
                             }

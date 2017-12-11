@@ -26,20 +26,119 @@ namespace OpenNos.GameObject.Event
 {
     public static class Act4Raid
     {
+        public static List<MapMonster> Guardians { get; set; }
         #region Methods
 
         public static void GenerateRaid(MapInstanceType raidType, byte faction)
         {
-            ServerManager.GetMapInstance(ServerManager.GetBaseMapInstanceIdByMapId((short)(129 + faction))).CreatePortal(new Portal
+            Guardians = new List<MapMonster>();
+            MapInstance bitoren = ServerManager.GetMapInstance(ServerManager.GetBaseMapInstanceIdByMapId(134));
+            bitoren.CreatePortal(new Portal
             {
-                SourceMapId = (short)(129 + faction),
-                SourceX = 53,
-                SourceY = 53,
+                SourceMapId = 134,
+                SourceX = 140,
+                SourceY = 100,
                 DestinationMapId = 0,
                 DestinationX = 1,
                 DestinationY = 1,
                 Type = (short)(9 + faction)
             });
+
+            #region Guardian Spawning
+
+            Guardians.Add(new MapMonster
+            {
+                MonsterVNum = (short)(678 + faction),
+                MapX = 147,
+                MapY = 88,
+                MapId = 134,
+                Position = 2,
+                IsMoving = false,
+                MapMonsterId = bitoren.GetNextMonsterId(),
+                ShouldRespawn = false,
+                IsHostile = true
+            });
+            Guardians.Add(new MapMonster
+            {
+                MonsterVNum = (short)(678 + faction),
+                MapX = 149,
+                MapY = 94,
+                MapId = 134,
+                Position = 2,
+                IsMoving = false,
+                MapMonsterId = bitoren.GetNextMonsterId(),
+                ShouldRespawn = false,
+                IsHostile = true
+            });
+            Guardians.Add(new MapMonster
+            {
+                MonsterVNum = (short)(678 + faction),
+                MapX = 147,
+                MapY = 101,
+                MapId = 134,
+                Position = 2,
+                IsMoving = false,
+                MapMonsterId = bitoren.GetNextMonsterId(),
+                ShouldRespawn = false,
+                IsHostile = true
+            });
+            Guardians.Add(new MapMonster
+            {
+                MonsterVNum = (short)(678 + faction),
+                MapX = 139,
+                MapY = 105,
+                MapId = 134,
+                Position = 2,
+                IsMoving = false,
+                MapMonsterId = bitoren.GetNextMonsterId(),
+                ShouldRespawn = false,
+                IsHostile = true
+            });
+            Guardians.Add(new MapMonster
+            {
+                MonsterVNum = (short)(678 + faction),
+                MapX = 132,
+                MapY = 101,
+                MapId = 134,
+                Position = 2,
+                IsMoving = false,
+                MapMonsterId = bitoren.GetNextMonsterId(),
+                ShouldRespawn = false,
+                IsHostile = true
+            });
+            Guardians.Add(new MapMonster
+            {
+                MonsterVNum = (short)(678 + faction),
+                MapX = 129,
+                MapY = 94,
+                MapId = 134,
+                Position = 2,
+                IsMoving = false,
+                MapMonsterId = bitoren.GetNextMonsterId(),
+                ShouldRespawn = false,
+                IsHostile = true
+            });
+            Guardians.Add(new MapMonster
+            {
+                MonsterVNum = (short)(678 + faction),
+                MapX = 132,
+                MapY = 88,
+                MapId = 134,
+                Position = 2,
+                IsMoving = false,
+                MapMonsterId = bitoren.GetNextMonsterId(),
+                ShouldRespawn = false,
+                IsHostile = true
+            });
+
+            #endregion
+
+            foreach (MapMonster monster in Guardians)
+            {
+                monster.Initialize(bitoren);
+                bitoren.AddMonster(monster);
+                bitoren.Broadcast(monster.GenerateIn());
+            }
 
             Act4RaidThread raidThread = new Act4RaidThread();
             Observable.Timer(TimeSpan.FromMinutes(0)).Subscribe(X => raidThread.Run(raidType, faction));
@@ -162,8 +261,10 @@ namespace OpenNos.GameObject.Event
                     fam.Act4RaidBossMap = null;
                 }
             }
-            ServerManager.GetMapInstance(ServerManager.GetBaseMapInstanceIdByMapId(130)).Portals.RemoveAll(s => s.Type.Equals(10));
-            ServerManager.GetMapInstance(ServerManager.GetBaseMapInstanceIdByMapId(131)).Portals.RemoveAll(s => s.Type.Equals(11));
+            MapInstance bitoren = ServerManager.GetMapInstance(ServerManager.GetBaseMapInstanceIdByMapId(134));
+
+            bitoren.Portals.RemoveAll(s => s.Type.Equals(10));
+            bitoren.Portals.RemoveAll(s => s.Type.Equals(11));
             switch (_faction)
             {
                 case 1:
@@ -184,6 +285,14 @@ namespace OpenNos.GameObject.Event
             }
 
             ServerManager.Instance.StartedEvents.Remove(EventType.Act4Raid);
+
+            foreach(MapMonster monster in Act4Raid.Guardians)
+            {
+                bitoren.Broadcast(StaticPacketHelper.Out(UserType.Monster, monster.MapMonsterId));
+                bitoren.RemoveMonster(monster);
+            }
+
+            Act4Raid.Guardians.Clear();
         }
 
         private void openRaid(Family fam)
