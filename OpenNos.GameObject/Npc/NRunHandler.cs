@@ -16,6 +16,7 @@ using OpenNos.Core;
 using OpenNos.DAL;
 using OpenNos.Data;
 using OpenNos.Domain;
+using OpenNos.GameObject.Event;
 using OpenNos.GameObject.Helpers;
 using OpenNos.Master.Library.Client;
 using System;
@@ -318,6 +319,16 @@ namespace OpenNos.GameObject
                     if (tp != null)
                     {
                         ServerManager.Instance.ChangeMap(Session.Character.CharacterId, tp.MapId, tp.MapX, tp.MapY);
+                    }
+                    break;
+
+                case 135:
+                    if (TalentArena.IsRunning)
+                    {
+                        TalentArena.RegisteredParticipants[Session.Character.CharacterId] = Session;
+                        Session.SendPacket(UserInterfaceHelper.GenerateBSInfo(0, 3, 300, 5));
+                        // TODO: Send initial Messages
+
                     }
                     break;
 

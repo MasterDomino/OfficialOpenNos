@@ -17,6 +17,7 @@ using OpenNos.DAL;
 using OpenNos.Data;
 using OpenNos.Domain;
 using OpenNos.GameObject;
+using OpenNos.GameObject.Event;
 using OpenNos.GameObject.Helpers;
 using OpenNos.GameObject.Packets.ClientPackets;
 using OpenNos.Master.Library.Client;
@@ -1219,8 +1220,10 @@ namespace OpenNos.Handler
 
                         case (sbyte)PortalType.BlueRaid:
                         case (sbyte)PortalType.DarkRaid:
-                            if ((int)Session.Character.Faction == portal.Type - 9 && Session.Character.Family?.Act4Raid != null)
+                            if ((int)Session.Character.Faction == portal.Type - 9 && Session.Character.Family?.Act4Raid != null && Session.Character.Level > 59 || Session.Character.Reputation > 60000)
                             {
+                                Session.Character.SetReputation(Session.Character.Level * -50);
+
                                 Session.Character.LastPortal = currentRunningSeconds;
 
                                 switch (Session.Character.Family.Act4Raid.MapInstanceType)
@@ -1278,6 +1281,7 @@ namespace OpenNos.Handler
                             Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("CANT_MOVE"), 10));
                             return;
                         }
+
                     }
                     Session.SendPacket(Session.CurrentMapInstance.GenerateRsfn());
 
@@ -1301,9 +1305,47 @@ namespace OpenNos.Handler
                     }
                     else
                     {
-                        ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, portal.DestinationMapInstanceId, portal.DestinationX, portal.DestinationY);
+                        if (ServerManager.Instance.ChannelId == 51)
+                        {
+                            short destinationX = portal.DestinationX;
+                            short destinationY = portal.DestinationY;
+
+                            if (portal.DestinationMapInstanceId == CaligorRaid.CaligorMapInstance?.MapInstanceId) /* Caligor Raid Map */
+                            {
+                                switch (Session.Character.Faction)
+                                {
+                                    case FactionType.Angel:
+                                        destinationX = 50;
+                                        destinationY = 172;
+                                        break;
+                                    case FactionType.Demon:
+                                        destinationX = 130;
+                                        destinationY = 172;
+                                        break;
+                                }
+                            }
+                            else if (portal.DestinationMapId == 153) /* Unknown Land */
+                            {
+                                switch (Session.Character.Faction)
+                                {
+                                    case FactionType.Angel:
+                                        destinationX = 50;
+                                        destinationY = 172;
+                                        break;
+                                    case FactionType.Demon:
+                                        destinationX = 130;
+                                        destinationY = 172;
+                                        break;
+                                }
+                            }
+                            ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, portal.DestinationMapInstanceId, destinationX, destinationY);
+                        }
+                        else
+                        {
+                            ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, portal.DestinationMapInstanceId, portal.DestinationX, portal.DestinationY);
+                        }
                     }
-                }
+                    }
             });
         }
 
@@ -1568,6 +1610,25 @@ namespace OpenNos.Handler
                             else
                             {
                                 Session.Character.Inventory.RemoveItemAmount(saver);
+                                Session.Character.Hp = (int)Session.Character.HPLoad();
+                                Session.Character.Mp = (int)Session.Character.MPLoad();
+                                Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateRevive());
+                                Session.SendPacket(Session.Character.GenerateStat());
+                            }
+                            break;
+
+                        case MapInstanceType.Act4Berios:
+                        case MapInstanceType.Act4Calvina:
+                        case MapInstanceType.Act4Hatus:
+                        case MapInstanceType.Act4Morcos:
+                            if (Session.Character.Reputation < Session.Character.Level * 10)
+                            {
+                                Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_ENOUGH_REPUT"), 0));
+                                ServerManager.Instance.ReviveFirstPosition(Session.Character.CharacterId);
+                            }
+                            else
+                            {
+                                Session.Character.SetReputation(Session.Character.Level * -10);
                                 Session.Character.Hp = (int)Session.Character.HPLoad();
                                 Session.Character.Mp = (int)Session.Character.MPLoad();
                                 Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateRevive());

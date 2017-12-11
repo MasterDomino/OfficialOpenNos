@@ -17,6 +17,7 @@ using OpenNos.DAL;
 using OpenNos.Data;
 using OpenNos.Domain;
 using OpenNos.GameObject.Battle;
+using OpenNos.GameObject.Event;
 using OpenNos.GameObject.Helpers;
 using OpenNos.GameObject.Packets.ServerPackets;
 using OpenNos.Master.Library.Client;
@@ -1827,7 +1828,7 @@ namespace OpenNos.GameObject
                     group = ServerManager.Instance.Groups.Find(g => g.IsMemberOfGroup((long)dropOwner));
                 }
 
-                if (ServerManager.Instance.ChannelId == 51 && ServerManager.Instance.Act4DemonStat.Mode == 0 && ServerManager.Instance.Act4AngelStat.Mode == 0)
+                if (ServerManager.Instance.ChannelId == 51 && ServerManager.Instance.Act4DemonStat.Mode == 0 && ServerManager.Instance.Act4AngelStat.Mode == 0 && !CaligorRaid.IsRunning)
                 {
                     if (Faction == FactionType.Angel)
                     {
@@ -3809,7 +3810,14 @@ namespace OpenNos.GameObject
         {
             Reputation += val;
             Session.SendPacket(GenerateFd());
-            Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("REPUT_INCREASE"), val), 11));
+            if (val > 0)
+            {
+                Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("REPUT_INCREASE"), val), 11));
+            }
+            else
+            {
+                Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("REPUT_DECREASE"), val), 12));
+            }
         }
 
         public void SetRespawnPoint(short mapId, short mapX, short mapY)
