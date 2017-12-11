@@ -1303,12 +1303,41 @@ namespace OpenNos.Handler
                     }
                     else
                     {
-                        if (portal.DestinationMapInstanceId == CaligorRaid.CaligorMapInstance?.MapInstanceId)
+                        if (ServerManager.Instance.ChannelId == 51)
                         {
+                            short destinationX = portal.DestinationX;
+                            short destinationY = portal.DestinationY;
 
-                            ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, portal.DestinationMapInstanceId, 60, 159);
+                            if (portal.DestinationMapInstanceId == CaligorRaid.CaligorMapInstance?.MapInstanceId) /* Caligor Raid Map */
+                            {
+                                switch (Session.Character.Faction)
+                                {
+                                    case FactionType.Angel:
+                                        destinationX = 1;
+                                        destinationY = 1;
+                                        break;
+                                    case FactionType.Demon:
+                                        destinationX = 1;
+                                        destinationY = 1;
+                                        break;
+                                }
+                            }
+                            else if (portal.DestinationMapId == 153) /* Unknown Land */
+                            {
+                                switch (Session.Character.Faction)
+                                {
+                                    case FactionType.Angel:
+                                        destinationX = 1;
+                                        destinationY = 1;
+                                        break;
+                                    case FactionType.Demon:
+                                        destinationX = 1;
+                                        destinationY = 1;
+                                        break;
+                                }
+                            }
+                            ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, portal.DestinationMapInstanceId, destinationX, destinationY);
                         }
-
                         else
                         {
                             ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, portal.DestinationMapInstanceId, portal.DestinationX, portal.DestinationY);
