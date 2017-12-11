@@ -30,7 +30,7 @@ namespace OpenNos.Core
 
         private readonly CultureInfo _resourceCulture;
 
-        private readonly System.IO.StreamWriter _streamWriter;
+        private readonly StreamWriter _streamWriter;
 
         #endregion
 
@@ -39,7 +39,7 @@ namespace OpenNos.Core
         private Language()
         {
             try
-            { 
+            {
                 _streamWriter = new StreamWriter("MissingLanguageKeys.txt", true)
                 {
                     AutoFlush = true
@@ -47,7 +47,7 @@ namespace OpenNos.Core
             }
             catch (IOException)
             {
-                Logger.Info("MissingLanguageKeys.txt was in use but i was able to catch this exception");
+                Logger.Warn("MissingLanguageKeys.txt was in use but i was able to catch this exception", null, "LanguageKeys");
             }
             _resourceCulture = new CultureInfo(ConfigurationManager.AppSettings[nameof(Language)]);
             if (Assembly.GetEntryAssembly() != null)
@@ -72,7 +72,7 @@ namespace OpenNos.Core
 
             if (string.IsNullOrEmpty(resourceMessage))
             {
-                _streamWriter.WriteLine(message);
+                _streamWriter?.WriteLine(message);
                 return $"#<{message}>";
             }
 
