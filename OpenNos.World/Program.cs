@@ -79,6 +79,7 @@ namespace OpenNos.World
             Console.Title = $"OpenNos World Server{(_isDebug ? " Development Environment" : string.Empty)}";
 
             bool ignoreStartupMessages = false;
+            int port = Convert.ToInt32(ConfigurationManager.AppSettings["WorldPort"]);
             foreach (string arg in args)
             {
                 switch (arg)
@@ -91,12 +92,16 @@ namespace OpenNos.World
                         _ignoreTelemetry = true;
                         break;
                 }
+                if (arg.StartsWith("--port", StringComparison.CurrentCulture))
+                {
+                    int.TryParse(arg.Substring(7), out port);
+                    Console.WriteLine(port);
+                }
             }
 
             // initialize Logger
             Logger.InitializeLogger(LogManager.GetLogger(typeof(Program)));
 
-            int port = Convert.ToInt32(ConfigurationManager.AppSettings["WorldPort"]);
             if (!ignoreStartupMessages)
             {
                 Assembly assembly = Assembly.GetExecutingAssembly();
