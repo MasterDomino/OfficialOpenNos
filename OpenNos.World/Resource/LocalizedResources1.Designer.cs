@@ -2320,6 +2320,15 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This map does not exist!.
+        /// </summary>
+        internal static string MAP_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("MAP_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} MapMonsters loaded!.
         /// </summary>
         internal static string MAPMONSTERS_LOADED {
