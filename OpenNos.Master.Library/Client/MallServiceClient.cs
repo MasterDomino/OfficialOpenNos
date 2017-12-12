@@ -72,6 +72,8 @@ namespace OpenNos.Master.Library.Client
 
         public bool Authenticate(string authKey) => _client.ServiceProxy.Authenticate(authKey);
 
+        public bool IsAuthenticated() => _client.ServiceProxy.IsAuthenticated();
+
         public AccountDTO ValidateAccount(string userName, string passHash) => _client.ServiceProxy.ValidateAccount(userName, passHash);
 
         public IEnumerable<CharacterDTO> GetCharacters(long accountId) => _client.ServiceProxy.GetCharacters(accountId);
