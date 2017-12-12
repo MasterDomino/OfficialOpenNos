@@ -14,6 +14,7 @@
 
 using OpenNos.Core;
 using OpenNos.Domain;
+using OpenNos.GameObject.Event;
 using OpenNos.GameObject.Helpers;
 using System;
 using System.Collections.Generic;
@@ -55,6 +56,8 @@ namespace OpenNos.GameObject
         public ScriptedInstance Raid { get; set; }
 
         public byte SharingMode { get; set; }
+
+        public TalentArenaBattle TalentArenaBattle { get; set; }
 
         #endregion
 
