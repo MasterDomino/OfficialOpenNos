@@ -209,6 +209,14 @@ namespace OpenNos.Core
             return false;
         }
 
+        public static IEnumerable<List<T>> Split<T>(this List<T> locations, int nSize)
+        {
+            for (int i = 0; i < locations.Count; i += nSize)
+            {
+                yield return locations.GetRange(i, Math.Min(nSize, locations.Count - i));
+            }
+        }
+
         #endregion
     }
 

@@ -316,9 +316,9 @@ namespace OpenNos.GameObject
         }
 
         // Both partly
-        public void ChangeMapInstance(long sessionId, Guid MapInstanceId, short? mapX = null, short? mapY = null)
+        public void ChangeMapInstance(long characterId, Guid MapInstanceId, short? mapX = null, short? mapY = null)
         {
-            ClientSession session = GetSessionByCharacterId(sessionId);
+            ClientSession session = GetSessionByCharacterId(characterId);
             if (session?.Character != null && !session.Character.IsChangingMapInstance)
             {
                 try

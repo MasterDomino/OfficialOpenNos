@@ -43,6 +43,8 @@ namespace OpenNos.GameObject.Event
         {
             RegisteredParticipants = new ThreadSafeSortedList<long, ClientSession>();
             RegisteredGroups = new ThreadSafeSortedList<long, Group>();
+            PlayingGroups = new ThreadSafeSortedList<long, List<Group>>();
+
 
             ServerManager.Shout(Language.Instance.GetMessageFromKey("TALENTARENA_OPEN"), true);
 
@@ -51,6 +53,8 @@ namespace OpenNos.GameObject.Event
 
             MatchmakingThread matchmakingThread = new MatchmakingThread();
             Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe(observer => matchmakingThread.Run());
+
+            IsRunning = true;
 
             Observable.Timer(TimeSpan.FromMinutes(30)).Subscribe(observer =>
             {
@@ -74,23 +78,29 @@ namespace OpenNos.GameObject.Event
                 {
                     IEnumerable<IGrouping<byte, ClientSession>> groups = from sess in RegisteredParticipants.GetAllItems()
                                                                          group sess by levelCaps.FirstOrDefault(s => s > sess.Character.Level) into grouping
-                                                                         where grouping.Count() == 3
                                                                          select grouping;
                     foreach (IGrouping<byte, ClientSession> group in groups)
                     {
-                        Group g = new Group
+                        foreach (List<ClientSession> grp in group.ToList().Split(3).Where(s => s.Count == 3))
                         {
-                            GroupType = GroupType.TalentArena
-                        };
+                            Group g = new Group
+                            {
+                                GroupType = GroupType.TalentArena,
+                                TalentArenaBattle = new TalentArenaBattle()
+                                {
+                                    GroupLevel = group.Key
+                                }
+                            };
 
-                        foreach (ClientSession sess in group)
-                        {
-                            RegisteredParticipants.Remove(sess);
-                            g.JoinGroup(sess);
-                            sess.SendPacket(UserInterfaceHelper.GenerateBSInfo(1, 3, -1, 6));
-                            Observable.Timer(TimeSpan.FromSeconds(1)).Subscribe(observer => sess?.SendPacket(UserInterfaceHelper.GenerateBSInfo(1, 3, 300, 1)));
+                            foreach (ClientSession sess in grp)
+                            {
+                                RegisteredParticipants.Remove(sess);
+                                g.JoinGroup(sess);
+                                sess.SendPacket(UserInterfaceHelper.GenerateBSInfo(1, 3, -1, 6));
+                                Observable.Timer(TimeSpan.FromSeconds(1)).Subscribe(observer => sess?.SendPacket(UserInterfaceHelper.GenerateBSInfo(1, 3, 300, 1)));
+                            }
+                            RegisteredGroups[g.GroupId] = g;
                         }
-                        RegisteredGroups[g.GroupId] = g;
                     }
 
                     Thread.Sleep(5000);
@@ -133,6 +143,7 @@ namespace OpenNos.GameObject.Event
                                 RegisteredGroups.Remove(prevGroup);
 
                                 MapInstance mapInstance = ServerManager.GenerateMapInstance(2015, MapInstanceType.NormalInstance, new InstanceBag());
+                                mapInstance.IsPVP = true;
 
                                 g.TalentArenaBattle.MapInstance = mapInstance;
                                 prevGroup.TalentArenaBattle.MapInstance = mapInstance;
@@ -143,19 +154,28 @@ namespace OpenNos.GameObject.Event
                                 g.TalentArenaBattle.Calls = 5;
                                 prevGroup.TalentArenaBattle.Calls = 5;
 
-                                foreach (ClientSession sess in g.Characters.GetAllItems().Concat(prevGroup.Characters.GetAllItems()))
+                                IEnumerable<ClientSession> gs = g.Characters.GetAllItems().Concat(prevGroup.Characters.GetAllItems());
+                                foreach (ClientSession sess in gs)
                                 {
-                                    sess.SendPacket(UserInterfaceHelper.GenerateBSInfo(1, 3, -1, 10));
-
-                                    Observable.Timer(TimeSpan.FromSeconds(1)).Subscribe(observer =>
+                                    sess.SendPacket(UserInterfaceHelper.GenerateBSInfo(1, 3, -1, 2));
+                                }
+                                Thread.Sleep(1000);
+                                foreach (ClientSession sess in gs)
+                                {
+                                    sess.SendPacket(UserInterfaceHelper.GenerateBSInfo(2, 3, 0, 0));
+                                    sess.SendPacket(UserInterfaceHelper.GenerateTeamArenaClose());
+                                }
+                                Thread.Sleep(5000);
+                                foreach (ClientSession sess in gs)
+                                {
+                                    sess.SendPacket(UserInterfaceHelper.GenerateTeamArenaMenu(0, 0, 0, 0, 0));
+                                    short x = 125;
+                                    if (sess.Character.Group.TalentArenaBattle.Side == 0)
                                     {
-                                        short x = 125;
-                                        if (sess.Character.Group.TalentArenaBattle.Side == 0)
-                                        {
-                                            x = 15;
-                                        }
-                                        ServerManager.Instance.ChangeMapInstance(sess.SessionId, mapInstance.MapInstanceId, x, 39);
-                                    });
+                                        x = 15;
+                                    }
+                                    ServerManager.Instance.ChangeMapInstance(sess.Character.CharacterId, mapInstance.MapInstanceId, x, 39);
+                                    sess.SendPacketAfter(UserInterfaceHelper.GenerateTeamArenaMenu(3, 0, 0, 60, 0), 5000);
                                 }
 
 #warning TODO: Other Setup stuff

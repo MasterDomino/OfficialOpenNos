@@ -489,6 +489,10 @@ namespace OpenNos.GameObject.Helpers
 
         public string GenerateStashRemove(short slot) => $"stash {GenerateRemovePacket(slot)}";
 
+        public static string GenerateTeamArenaClose() => "ta_close";
+
+        public static string GenerateTeamArenaMenu(byte mode, byte zenasScore, byte ereniaScore, int time, byte arenaType) => $"ta_m {mode} {zenasScore} {ereniaScore} {time} {arenaType}";
+
         public static IEnumerable<string> GenerateVb() => new[] { "vb 340 0 0", "vb 339 0 0", "vb 472 0 0", "vb 471 0 0" };
 
         #endregion
