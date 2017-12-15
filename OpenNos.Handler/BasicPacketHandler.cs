@@ -964,9 +964,9 @@ namespace OpenNos.Handler
                     if (guriPacket.Argument == 1)
                     {
                         Mate mate = Session.Character.Mates.Find(s => s.MateTransportId == guriPacket.Data);
-                        if (mate != null)
+                        if (mate != null && Session.Character.Inventory.CountItem(petnameVNum) > 0)
                         {
-                            mate.Name = guriPacket.Value;
+                            mate.Name = guriPacket.Value.Truncate(16);
                             Session.CurrentMapInstance?.Broadcast(mate.GenerateOut(), ReceiverType.AllExceptMe);
                             Session.CurrentMapInstance?.Broadcast(mate.GenerateIn());
                             Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("NEW_NAME_PET")));
