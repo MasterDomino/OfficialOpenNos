@@ -123,8 +123,6 @@ namespace OpenNos.GameObject.Event
                         break;
                 }
 
-                // TODO: get act4 channel dynamically
-                // Change IP to yours
                 session.Character.ChangeChannel(ServerManager.Instance.Configuration.Act4IP, ServerManager.Instance.Configuration.Act4Port, 1);
             }
         }

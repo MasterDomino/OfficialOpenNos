@@ -64,7 +64,6 @@ namespace OpenNos.Core
 
         public void SendPackets(IEnumerable<string> packets, byte priority = 10)
         {
-            // TODO: maybe send at once with delimiter
             foreach (string packet in packets)
             {
                 SendPacket(packet, priority);

@@ -170,7 +170,7 @@ namespace OpenNos.GameObject
                         }
                         else
                         {
-                            //TODO ADD MINILAND SENDPACKET
+                            session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NOT_IN_MINILAND"), 12));
                         }
                     }
 

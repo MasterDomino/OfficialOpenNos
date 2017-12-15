@@ -1480,7 +1480,6 @@ namespace OpenNos.Handler
                     double timeSpanSinceLastSpUsage = currentRunningSeconds - Session.Character.LastSp;
                     if (timeSpanSinceLastSpUsage >= Session.Character.SpCooldown)
                     {
-                        // TODO: add check on packetheader instead of this type check, way to abuse
                         if (spTransformPacket.Type == 1)
                         {
                             DateTime delay = DateTime.Now.AddSeconds(-6);

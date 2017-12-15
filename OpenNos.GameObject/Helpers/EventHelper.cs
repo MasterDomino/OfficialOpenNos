@@ -22,6 +22,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using OpenNos.Master.Library.Client;
+using OpenNos.Master.Library.Data;
 
 namespace OpenNos.GameObject.Helpers
 {
@@ -398,7 +400,15 @@ namespace OpenNos.GameObject.Helpers
                                             }
                                             Logger.LogEvent("FAMILYRAID_SUCCESS", $"[fam.Name]FamilyRaidId: {evt.MapInstance.MapInstanceType.ToString()}");
 
-                                            //TODO: Raid Ending Messages, Famlog etc
+                                            //TODO: Famlog
+                                            CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage
+                                            {
+                                                DestinationCharacterId = fam.FamilyId,
+                                                SourceCharacterId = client.Character.CharacterId,
+                                                SourceWorldId = ServerManager.Instance.WorldId,
+                                                Message = UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("FAMILYRAID_SUCCESS"), 0),
+                                                Type = MessageType.Family
+                                            });
                                             //ServerManager.Instance.Broadcast(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("FAMILYRAID_SUCCESS"), grp?.Raid?.Label, grp.Characters.ElementAt(0).Character.Name), 0));
 
                                             Observable.Timer(TimeSpan.FromSeconds(30)).Subscribe(o =>

@@ -138,8 +138,6 @@ namespace OpenNos.GameObject
 
         #endregion
 
-        //// TODO: create Interface
-
         #region Methods
 
         public ItemInstance DeepCopy() => (ItemInstance)MemberwiseClone();

@@ -81,7 +81,7 @@ namespace OpenNos.GameObject
                 case 301:
                     if (ServerManager.Instance.IsCharacterMemberOfGroup(session.Character.CharacterId))
                     {
-                        //TODO you are in group
+                        session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("RAID_OPEN_GROUP"), 12));
                         return;
                     }
                     ItemInstance raidSeal = session.Character.Inventory.LoadBySlotAndType<ItemInstance>(inv.Slot, InventoryType.Main);
