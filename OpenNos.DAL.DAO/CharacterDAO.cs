@@ -41,9 +41,7 @@ namespace OpenNos.DAL.DAO
                     if (character != null)
                     {
                         character.State = (byte)CharacterState.Inactive;
-                        CharacterDTO dto = new CharacterDTO();
-                        Mapper.Mappers.CharacterMapper.ToCharacterDTO(character, dto);
-                        update(character, dto, context);
+                        context.SaveChanges();
                     }
 
                     return DeleteResult.Deleted;
@@ -265,7 +263,11 @@ namespace OpenNos.DAL.DAO
         {
             if (entity != null)
             {
+                // State Updates should only occur upon deleting character, so outside of this method.
+                byte state = entity.State;
                 Mapper.Mappers.CharacterMapper.ToCharacter(character, entity);
+                entity.State = state;
+
                 context.SaveChanges();
             }
 

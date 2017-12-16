@@ -232,7 +232,7 @@ namespace OpenNos.GameObject
                         break;
 
                     case MapInstanceType.RaidInstance:
-                        List<long> save = session.CurrentMapInstance.InstanceBag.DeadList.ConvertAll(s => s);
+                        List<long> save = session.CurrentMapInstance.InstanceBag.DeadList.ToList();
                         if (session.CurrentMapInstance.InstanceBag.Lives - session.CurrentMapInstance.InstanceBag.DeadList.Count < 0)
                         {
                             session.Character.Hp = 1;
@@ -316,9 +316,9 @@ namespace OpenNos.GameObject
         }
 
         // Both partly
-        public void ChangeMapInstance(long sessionId, Guid MapInstanceId, short? mapX = null, short? mapY = null)
+        public void ChangeMapInstance(long characterId, Guid MapInstanceId, short? mapX = null, short? mapY = null)
         {
-            ClientSession session = GetSessionByCharacterId(sessionId);
+            ClientSession session = GetSessionByCharacterId(characterId);
             if (session?.Character != null && !session.Character.IsChangingMapInstance)
             {
                 try
@@ -979,7 +979,7 @@ namespace OpenNos.GameObject
 
         public bool IsCharacterMemberOfGroup(long characterId) => Groups?.Any(g => g.IsMemberOfGroup(characterId)) == true;
 
-        public bool IsCharactersGroupFull(long characterId) => Groups?.Any(g => g.IsMemberOfGroup(characterId) && g.CharacterCount == (byte)g.GroupType) == true;
+        public bool IsCharactersGroupFull(long characterId) => Groups?.Any(g => g.IsMemberOfGroup(characterId) && (g.CharacterCount == (byte)g.GroupType || g.GroupType == GroupType.TalentArena)) == true;
 
         public bool ItemHasRecipe(short itemVNum) => _recipeLists.Any(r => r.ItemVNum == itemVNum);
 

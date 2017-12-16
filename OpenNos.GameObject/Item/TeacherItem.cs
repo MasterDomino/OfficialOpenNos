@@ -86,7 +86,6 @@ namespace OpenNos.GameObject
                     if (int.TryParse(packetsplit[3], out mateTransportId) && session.Character.Mates.Any(s => s.MateTransportId == mateTransportId))
                     {
                         session.SendPacket(UserInterfaceHelper.GenerateGuri(10, 1, mateTransportId, 2));
-                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
                     break;
 

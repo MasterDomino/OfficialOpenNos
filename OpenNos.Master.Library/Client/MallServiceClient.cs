@@ -38,10 +38,14 @@ namespace OpenNos.Master.Library.Client
 
         #region Instantiation
 
-        public MallServiceClient()
+        public MallServiceClient(string ip = null, int port = 0)
         {
-            string ip = ConfigurationManager.AppSettings["MasterIP"];
-            int port = Convert.ToInt32(ConfigurationManager.AppSettings["MasterPort"]);
+            if (ip == null && port == 0)
+            {
+                ip = ConfigurationManager.AppSettings["MasterIP"];
+                port = Convert.ToInt32(ConfigurationManager.AppSettings["MasterPort"]);
+            }
+
             _client = ScsServiceClientBuilder.CreateClient<IMallService>(new ScsTcpEndPoint(ip, port));
             System.Threading.Thread.Sleep(1000);
             while (_client.CommunicationState != CommunicationStates.Connected)
@@ -70,7 +74,15 @@ namespace OpenNos.Master.Library.Client
 
         #region Methods
 
+        public static void InitAndConnect(string ip, string port)
+        {
+            _instance = new MallServiceClient(ip, Convert.ToInt32(port));
+            
+        }
+
         public bool Authenticate(string authKey) => _client.ServiceProxy.Authenticate(authKey);
+
+        public bool IsAuthenticated() => _client.ServiceProxy.IsAuthenticated();
 
         public AccountDTO ValidateAccount(string userName, string passHash) => _client.ServiceProxy.ValidateAccount(userName, passHash);
 

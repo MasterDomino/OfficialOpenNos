@@ -44,6 +44,15 @@ namespace OpenNos.Master.Server
             return false;
         }
 
+        public bool IsAuthenticated()
+        {
+            if (MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
+            {
+                return true;
+            }
+            return false;
+        }
+
         public AuthorityType GetAuthority(long accountId)
         {
             if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))

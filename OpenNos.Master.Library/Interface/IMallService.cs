@@ -17,6 +17,12 @@ namespace OpenNos.Master.Library.Interface
         bool Authenticate(string authKey);
 
         /// <summary>
+        /// Checks if the Client is already Authenticated
+        /// </summary>
+        /// <returns></returns>
+        bool IsAuthenticated();
+
+        /// <summary>
         /// Checks if the given Credentials are Valid
         /// </summary>
         /// <param name="userName"></param>

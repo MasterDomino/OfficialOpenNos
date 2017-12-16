@@ -2320,6 +2320,15 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This map does not exist!.
+        /// </summary>
+        internal static string MAP_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("MAP_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} MapMonsters loaded!.
         /// </summary>
         internal static string MAPMONSTERS_LOADED {
@@ -3108,6 +3117,24 @@ namespace OpenNos.World.Resource {
         internal static string PACKET_FAILURE {
             get {
                 return ResourceManager.GetString("PACKET_FAILURE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One of your party members is still under family penalty..
+        /// </summary>
+        internal static string PARTY_MEMBER_HAS_PENALTY {
+            get {
+                return ResourceManager.GetString("PARTY_MEMBER_HAS_PENALTY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One of your party members is already in another family..
+        /// </summary>
+        internal static string PARTY_MEMBER_IN_FAMILY {
+            get {
+                return ResourceManager.GetString("PARTY_MEMBER_IN_FAMILY", resourceCulture);
             }
         }
         

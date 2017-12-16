@@ -937,7 +937,7 @@ namespace OpenNos.GameObject.Helpers
             }
         }
 
-        // TODO: Change or Verify
+        // TODO: Improve with Official Source Code
         private static void loadStats()
         {
             _minHit = new int[4, 256];

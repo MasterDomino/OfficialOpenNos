@@ -2868,7 +2868,14 @@ namespace OpenNos.Handler
                 if (short.TryParse(teleportPacket.Data, out short mapId))
                 {
                     Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Teleport]MapId: {teleportPacket.Data} MapX: {teleportPacket.X} MapY: {teleportPacket.Y}");
-                    ServerManager.Instance.ChangeMap(Session.Character.CharacterId, mapId, teleportPacket.X, teleportPacket.Y);
+                    if (ServerManager.GetBaseMapInstanceIdByMapId(mapId) != default)
+                    {
+                        ServerManager.Instance.ChangeMap(Session.Character.CharacterId, mapId, teleportPacket.X, teleportPacket.Y);
+                    }
+                    else
+                    {
+                        Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("MAP_NOT_FOUND"), 0));
+                    }
                 }
                 else
                 {

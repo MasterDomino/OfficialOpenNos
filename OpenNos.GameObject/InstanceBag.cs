@@ -12,6 +12,7 @@
  * GNU General Public License for more details.
  */
 
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace OpenNos.GameObject
@@ -23,7 +24,7 @@ namespace OpenNos.GameObject
         public InstanceBag()
         {
             Clock = new Clock(1);
-            DeadList = new List<long>();
+            DeadList = new ConcurrentBag<long>();
             UnlockEvents = new List<EventContainer>();
             ButtonLocker = new Locker();
             MonsterLocker = new Locker();
@@ -41,7 +42,7 @@ namespace OpenNos.GameObject
 
         public long CreatorId { get; set; }
 
-        public List<long> DeadList { get; set; }
+        public ConcurrentBag<long> DeadList { get; set; }
 
         public byte EndState { get; set; }
 

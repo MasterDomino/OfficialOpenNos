@@ -197,25 +197,10 @@ namespace OpenNos.GameObject
 
         private void loadZone()
         {
-            // TODO: Optimize
-            using (Stream stream = new MemoryStream(Data))
+            using (BinaryReader reader = new BinaryReader(new MemoryStream(Data)))
             {
-                const int numBytesToRead = 1;
-                const int numBytesRead = 0;
-                byte[] bytes = new byte[numBytesToRead];
-
-                byte[] xlength = new byte[2];
-                byte[] ylength = new byte[2];
-                stream.Read(bytes, numBytesRead, numBytesToRead);
-                xlength[0] = bytes[0];
-                stream.Read(bytes, numBytesRead, numBytesToRead);
-                xlength[1] = bytes[0];
-                stream.Read(bytes, numBytesRead, numBytesToRead);
-                ylength[0] = bytes[0];
-                stream.Read(bytes, numBytesRead, numBytesToRead);
-                ylength[1] = bytes[0];
-                YLength = BitConverter.ToInt16(ylength, 0);
-                XLength = BitConverter.ToInt16(xlength, 0);
+                XLength = reader.ReadInt16();
+                YLength = reader.ReadInt16();
 
                 JaggedGrid = JaggedArrayExtensions.CreateJaggedArray<GridPos>(XLength, YLength);
                 for (short i = 0; i < YLength; ++i)
@@ -225,7 +210,7 @@ namespace OpenNos.GameObject
                         stream.Read(bytes, numBytesRead, numBytesToRead);
                         JaggedGrid[t][i] = new GridPos
                         {
-                            Value = bytes[0],
+                            Value = reader.ReadByte(),
                             X = t,
                             Y = i,
                         };

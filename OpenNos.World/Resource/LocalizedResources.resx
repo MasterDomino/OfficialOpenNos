@@ -1556,6 +1556,15 @@
     <value>Monsters cannot be captured.</value>
   </data>
   <data name="PET_SLOT_FULL" xml:space="preserve">
-    <value></value>
+    <value />
+  </data>
+  <data name="MAP_NOT_FOUND" xml:space="preserve">
+    <value>This map does not exist!</value>
+  </data>
+  <data name="PARTY_MEMBER_HAS_PENALTY" xml:space="preserve">
+    <value>One of your party members is still under family penalty.</value>
+  </data>
+  <data name="PARTY_MEMBER_IN_FAMILY" xml:space="preserve">
+    <value>One of your party members is already in another family.</value>
   </data>
 </root>

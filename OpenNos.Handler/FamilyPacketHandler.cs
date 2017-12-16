@@ -121,8 +121,14 @@ namespace OpenNos.Handler
             {
                 foreach (ClientSession session in Session.Character.Group.Characters.GetAllItems())
                 {
-                    if (session.Character.Family != null || session.Character.FamilyCharacter != null || session.Character.LastFamilyLeave > DateTime.Now.AddDays(-1).Ticks)
+                    if (session.Character.Family != null || session.Character.FamilyCharacter != null)
                     {
+                        Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("PARTY_MEMBER_IN_FAMILY")));
+                        return;
+                    }
+                    else if(session.Character.LastFamilyLeave > DateTime.Now.AddDays(-1).Ticks)
+                    {
+                        Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("PARTY_MEMBER_HAS_PENALTY")));
                         return;
                     }
                 }
