@@ -163,7 +163,7 @@ namespace OpenNos.GameObject
                 Target = -1;
 
                 //return to origin
-                Path = BestFirstSearch.FindPath(new Node { X = MapX, Y = MapY }, new Node { X = FirstX, Y = FirstY }, MapInstance.Map.Grid);
+                Path = BestFirstSearch.FindPathJagged(new Node { X = MapX, Y = MapY }, new Node { X = FirstX, Y = FirstY }, MapInstance.Map.JaggedGrid);
             }
         }
 
@@ -301,7 +301,7 @@ namespace OpenNos.GameObject
                             short yoffset = (short)ServerManager.RandomNumber(-1, 1);
 
                             //go to monster
-                            Path = BestFirstSearch.FindPath(new GridPos { X = MapX, Y = MapY }, new GridPos { X = (short)(monster.MapX + xoffset), Y = (short)(monster.MapY + yoffset) }, MapInstance.Map.Grid);
+                            Path = BestFirstSearch.FindPathJagged(new GridPos { X = MapX, Y = MapY }, new GridPos { X = (short)(monster.MapX + xoffset), Y = (short)(monster.MapY + yoffset) }, MapInstance.Map.JaggedGrid);
                             maxindex = Path.Count > Npc.Speed / 2 && Npc.Speed > 1 ? Npc.Speed / 2 : Path.Count;
                         }
                         if (DateTime.Now > LastMove && Npc.Speed > 0 && Path.Count > 0)

@@ -201,7 +201,7 @@ namespace OpenNos.Handler
         {
             if (target?.Character.Hp > 0 && hitRequest?.Session.Character.Hp > 0)
             {
-                if ((Session.CurrentMapInstance.MapInstanceId == ServerManager.Instance.ArenaInstance.MapInstanceId || Session.CurrentMapInstance.MapInstanceId == ServerManager.Instance.FamilyArenaInstance.MapInstanceId) && Session.CurrentMapInstance.Map.Grid[Session.Character.PositionX, Session.Character.PositionY]?.Value != 0)
+                if ((Session.CurrentMapInstance.MapInstanceId == ServerManager.Instance.ArenaInstance.MapInstanceId || Session.CurrentMapInstance.MapInstanceId == ServerManager.Instance.FamilyArenaInstance.MapInstanceId) && Session.CurrentMapInstance.Map.JaggedGrid[Session.Character.PositionX][Session.Character.PositionY]?.Value != 0)
                 {
                     // User in SafeZone
                     hitRequest.Session.SendPacket(StaticPacketHelper.Cancel(2, target.Character.CharacterId));

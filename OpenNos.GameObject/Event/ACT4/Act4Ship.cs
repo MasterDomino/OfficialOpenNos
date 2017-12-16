@@ -30,7 +30,7 @@ namespace OpenNos.GameObject.Event
         public static void GenerateAct4Ship(byte faction)
         {
             EventHelper.Instance.RunEvent(new EventContainer(ServerManager.GetMapInstance(ServerManager.GetBaseMapInstanceIdByMapId(145)), EventActionType.NPCSEFFECTCHANGESTATE, true));
-            DateTime result = TimeExtensions.RoundUp(DateTime.Now, TimeSpan.FromMinutes(5));
+            DateTime result = Core.Extensions.TimeExtensions.RoundUp(DateTime.Now, TimeSpan.FromMinutes(5));
             Observable.Timer(result - DateTime.Now).Subscribe(X => Act4ShipThread.Run(faction));
         }
 

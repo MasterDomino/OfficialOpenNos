@@ -22,6 +22,7 @@ using OpenNos.PathFinder;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using static OpenNos.Domain.BCardType;
@@ -342,7 +343,7 @@ namespace OpenNos.GameObject
                 Target = -1;
 
                 //return to origin
-                Path = BestFirstSearch.FindPath(new Node { X = MapX, Y = MapY }, new Node { X = FirstX, Y = FirstY }, MapInstance.Map.Grid);
+                Path = BestFirstSearch.FindPathJagged(new Node { X = MapX, Y = MapY }, new Node { X = FirstX, Y = FirstY }, MapInstance.Map.JaggedGrid);
             }
         }
 
@@ -367,7 +368,7 @@ namespace OpenNos.GameObject
                 });
                 if (targetSession != null)
                 {
-                    if (targetSession.Character.LastMonsterAggro.AddSeconds(5) < DateTime.Now || targetSession.Character.BrushFire == null)
+                    if (targetSession.Character.LastMonsterAggro.AddSeconds(5) < DateTime.Now || targetSession.Character.BrushFireJagged == null)
                     {
                         targetSession.Character.UpdateBushFire();
                     }
@@ -379,7 +380,7 @@ namespace OpenNos.GameObject
                     short yoffset = (short)ServerManager.RandomNumber(-1, 1);
                     try
                     {
-                        Path = BestFirstSearch.TracePath(new Node { X = MapX, Y = MapY }, targetSession.Character.BrushFire, targetSession.Character.MapInstance.Map.Grid);
+                        Path = BestFirstSearch.TracePathJagged(new Node { X = MapX, Y = MapY }, targetSession.Character.BrushFireJagged, targetSession.Character.MapInstance.Map.JaggedGrid);
                     }
                     catch (Exception ex)
                     {
@@ -548,7 +549,7 @@ namespace OpenNos.GameObject
                     {
                         DamageList.Add(hitRequest.Session.Character.CharacterId, damage);
                     }
-                    if(IsBoss && MapInstance == CaligorRaid.CaligorMapInstance)
+                    if (IsBoss && MapInstance == CaligorRaid.CaligorMapInstance)
                     {
                         switch (hitRequest.Session.Character.Faction)
                         {

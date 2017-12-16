@@ -13,6 +13,7 @@
  */
 
 using OpenNos.Core;
+using OpenNos.Core.Extensions;
 using OpenNos.Core.Handling;
 using OpenNos.Data;
 using OpenNos.Domain;

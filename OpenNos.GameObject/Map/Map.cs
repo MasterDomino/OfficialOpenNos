@@ -12,6 +12,7 @@
  * GNU General Public License for more details.
  */
 
+using OpenNos.Core.ArrayExtensions;
 using OpenNos.DAL;
 using OpenNos.Data;
 using OpenNos.PathFinder;
@@ -70,7 +71,7 @@ namespace OpenNos.GameObject
 
         public RespawnMapTypeDTO DefaultReturn { get; }
 
-        public GridPos[,] Grid { get; set; }
+        public GridPos[][] JaggedGrid { get; set; }
 
         public short MapId { get; set; }
 
@@ -136,7 +137,7 @@ namespace OpenNos.GameObject
         {
             try
             {
-                return Grid?[x, y].IsWalkable() == false;
+                return JaggedGrid?[x][y].IsWalkable() == false;
             }
             catch (Exception)
             {
@@ -216,13 +217,13 @@ namespace OpenNos.GameObject
                 YLength = BitConverter.ToInt16(ylength, 0);
                 XLength = BitConverter.ToInt16(xlength, 0);
 
-                Grid = new GridPos[XLength, YLength];
+                JaggedGrid = JaggedArrayExtensions.CreateJaggedArray<GridPos>(XLength, YLength);
                 for (short i = 0; i < YLength; ++i)
                 {
                     for (short t = 0; t < XLength; ++t)
                     {
                         stream.Read(bytes, numBytesRead, numBytesToRead);
-                        Grid[t, i] = new GridPos
+                        JaggedGrid[t][i] = new GridPos
                         {
                             Value = bytes[0],
                             X = t,
