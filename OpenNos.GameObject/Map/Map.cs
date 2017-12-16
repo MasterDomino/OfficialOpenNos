@@ -207,7 +207,6 @@ namespace OpenNos.GameObject
                 {
                     for (short t = 0; t < XLength; ++t)
                     {
-                        stream.Read(bytes, numBytesRead, numBytesToRead);
                         JaggedGrid[t][i] = new GridPos
                         {
                             Value = reader.ReadByte(),

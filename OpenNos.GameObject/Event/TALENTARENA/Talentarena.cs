@@ -13,6 +13,7 @@
  */
 
 using OpenNos.Core;
+using OpenNos.Core.Extensions;
 using OpenNos.DAL;
 using OpenNos.Data;
 using OpenNos.Domain;
@@ -28,7 +29,6 @@ namespace OpenNos.GameObject.Event
 {
     public static class TalentArena
     {
-
         public static bool IsRunning { get; set; }
 
         public static ThreadSafeSortedList<long, ClientSession> RegisteredParticipants { get; set; }
@@ -44,7 +44,6 @@ namespace OpenNos.GameObject.Event
             RegisteredParticipants = new ThreadSafeSortedList<long, ClientSession>();
             RegisteredGroups = new ThreadSafeSortedList<long, Group>();
             PlayingGroups = new ThreadSafeSortedList<long, List<Group>>();
-
 
             ServerManager.Shout(Language.Instance.GetMessageFromKey("TALENTARENA_OPEN"), true);
 
@@ -73,11 +72,11 @@ namespace OpenNos.GameObject.Event
 
             public void Run()
             {
-                byte[] levelCaps = new byte[] { 40, 50, 60, 70, 80, 85, 90, 95, 100, 120, 150, 180, 255 };
+                byte[] levelCaps = { 40, 50, 60, 70, 80, 85, 90, 95, 100, 120, 150, 180, 255 };
                 while (!_shouldStop)
                 {
                     IEnumerable<IGrouping<byte, ClientSession>> groups = from sess in RegisteredParticipants.GetAllItems()
-                                                                         group sess by levelCaps.FirstOrDefault(s => s > sess.Character.Level) into grouping
+                                                                         group sess by Array.Find(levelCaps, s => s > sess.Character.Level) into grouping
                                                                          select grouping;
                     foreach (IGrouping<byte, ClientSession> group in groups)
                     {
@@ -86,7 +85,7 @@ namespace OpenNos.GameObject.Event
                             Group g = new Group
                             {
                                 GroupType = GroupType.TalentArena,
-                                TalentArenaBattle = new TalentArenaBattle()
+                                TalentArenaBattle = new TalentArenaBattle
                                 {
                                     GroupLevel = group.Key
                                 }
@@ -107,10 +106,7 @@ namespace OpenNos.GameObject.Event
                 }
             }
 
-            public void RequestStop()
-            {
-                _shouldStop = true;
-            }
+            public void RequestStop() => _shouldStop = true;
         }
 
         private class MatchmakingThread
@@ -128,7 +124,6 @@ namespace OpenNos.GameObject.Event
 
                     foreach (IGrouping<byte, Group> group in groups)
                     {
-
                         Group prevGroup = null;
 
                         foreach (Group g in group)
@@ -178,9 +173,9 @@ namespace OpenNos.GameObject.Event
                                     sess.SendPacketAfter(UserInterfaceHelper.GenerateTeamArenaMenu(3, 0, 0, 60, 0), 5000);
                                 }
 
-#warning TODO: Other Setup stuff
+                                #warning TODO: Other Setup stuff
 
-                                PlayingGroups[g.GroupId] = new List<Group>() { g, prevGroup };
+                                PlayingGroups[g.GroupId] = new List<Group> { g, prevGroup };
 
                                 BattleThread battleThread = new BattleThread();
                                 Observable.Timer(TimeSpan.FromSeconds(0)).Subscribe(observer => battleThread.Run(PlayingGroups[g.GroupId]));
@@ -194,21 +189,17 @@ namespace OpenNos.GameObject.Event
                 }
             }
 
-            public void RequestStop()
-            {
-                _shouldStop = true;
-            }
+            public void RequestStop() => _shouldStop = true;
         }
 
         private class BattleThread
         {
             private List<ClientSession> Characters { get; set; }
-            public void Run(List<Group> groups)
-            {
 
-                Characters = groups[0].Characters.GetAllItems().Concat(groups[1].Characters.GetAllItems()).ToList();
-#warning TODO: Battle Thread System main loop
-            }
+            public void Run(List<Group> groups) => Characters = groups[0].Characters.GetAllItems().Concat(groups[1].Characters.GetAllItems()).ToList();
+
+            #warning TODO: Battle Thread System main loop
+
         }
 
         #endregion

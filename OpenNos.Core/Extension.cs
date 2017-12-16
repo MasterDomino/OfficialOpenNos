@@ -276,6 +276,14 @@ namespace OpenNos.Core
                 return false;
             }
 
+            public static IEnumerable<List<T>> Split<T>(this List<T> locations, int nSize)
+            {
+                for (int i = 0; i < locations.Count; i += nSize)
+                {
+                    yield return locations.GetRange(i, Math.Min(nSize, locations.Count - i));
+                }
+            }
+
             public static string Truncate(this string str, int length) => str.Length > length ? str.Substring(0, length) : str;
 
             #endregion
@@ -291,7 +299,7 @@ namespace OpenNos.Core
 
             #region Methods
 
-            public static object Copy(this object originalObject) => internalCopy(originalObject, new Dictionary<object, object>(new ReferenceEqualityComparer()));
+            public static object Copy(this object originalObject) => InternalCopy(originalObject, new Dictionary<object, object>(new ReferenceEqualityComparer()));
 
             public static T Copy<T>(this T original) => (T)Copy((object)original);
 
@@ -304,7 +312,7 @@ namespace OpenNos.Core
                 return type.IsValueType & type.IsPrimitive;
             }
 
-            private static void copyFields(object originalObject, IDictionary<object, object> visited, object cloneObject, Type typeToReflect, BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy, Func<FieldInfo, bool> filter = null)
+            private static void CopyFields(object originalObject, IDictionary<object, object> visited, object cloneObject, Type typeToReflect, BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy, Func<FieldInfo, bool> filter = null)
             {
                 foreach (FieldInfo fieldInfo in typeToReflect.GetFields(bindingFlags))
                 {
@@ -317,12 +325,12 @@ namespace OpenNos.Core
                         continue;
                     }
                     object originalFieldValue = fieldInfo.GetValue(originalObject);
-                    object clonedFieldValue = internalCopy(originalFieldValue, visited);
+                    object clonedFieldValue = InternalCopy(originalFieldValue, visited);
                     fieldInfo.SetValue(cloneObject, clonedFieldValue);
                 }
             }
 
-            private static object internalCopy(object originalObject, IDictionary<object, object> visited)
+            private static object InternalCopy(object originalObject, IDictionary<object, object> visited)
             {
                 if (originalObject == null)
                 {
@@ -348,21 +356,21 @@ namespace OpenNos.Core
                     if (IsPrimitive(arrayType))
                     {
                         Array clonedArray = (Array)cloneObject;
-                        clonedArray.ForEach((array, indices) => array.SetValue(internalCopy(clonedArray.GetValue(indices), visited), indices));
+                        clonedArray.ForEach((array, indices) => array.SetValue(InternalCopy(clonedArray.GetValue(indices), visited), indices));
                     }
                 }
                 visited.Add(originalObject, cloneObject);
-                copyFields(originalObject, visited, cloneObject, typeToReflect);
-                recursiveCopyBaseTypePrivateFields(originalObject, visited, cloneObject, typeToReflect);
+                CopyFields(originalObject, visited, cloneObject, typeToReflect);
+                RecursiveCopyBaseTypePrivateFields(originalObject, visited, cloneObject, typeToReflect);
                 return cloneObject;
             }
 
-            private static void recursiveCopyBaseTypePrivateFields(object originalObject, IDictionary<object, object> visited, object cloneObject, Type typeToReflect)
+            private static void RecursiveCopyBaseTypePrivateFields(object originalObject, IDictionary<object, object> visited, object cloneObject, Type typeToReflect)
             {
                 if (typeToReflect.BaseType != null)
                 {
-                    recursiveCopyBaseTypePrivateFields(originalObject, visited, cloneObject, typeToReflect.BaseType);
-                    copyFields(originalObject, visited, cloneObject, typeToReflect.BaseType, BindingFlags.Instance | BindingFlags.NonPublic, info => info.IsPrivate);
+                    RecursiveCopyBaseTypePrivateFields(originalObject, visited, cloneObject, typeToReflect.BaseType);
+                    CopyFields(originalObject, visited, cloneObject, typeToReflect.BaseType, BindingFlags.Instance | BindingFlags.NonPublic, info => info.IsPrivate);
                 }
             }
 
