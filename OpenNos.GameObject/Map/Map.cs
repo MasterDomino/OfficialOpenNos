@@ -12,6 +12,7 @@
  * GNU General Public License for more details.
  */
 
+using OpenNos.Core.ArrayExtensions;
 using OpenNos.DAL;
 using OpenNos.Data;
 using OpenNos.PathFinder;
@@ -70,7 +71,7 @@ namespace OpenNos.GameObject
 
         public RespawnMapTypeDTO DefaultReturn { get; }
 
-        public GridPos[,] Grid { get; set; }
+        public GridPos[][] JaggedGrid { get; set; }
 
         public short MapId { get; set; }
 
@@ -136,7 +137,7 @@ namespace OpenNos.GameObject
         {
             try
             {
-                return Grid?[x, y].IsWalkable() == false;
+                return JaggedGrid?[x][y].IsWalkable() == false;
             }
             catch (Exception)
             {
@@ -196,35 +197,19 @@ namespace OpenNos.GameObject
 
         private void loadZone()
         {
-            // TODO: Optimize
-            using (Stream stream = new MemoryStream(Data))
+            using (BinaryReader reader = new BinaryReader(new MemoryStream(Data)))
             {
-                const int numBytesToRead = 1;
-                const int numBytesRead = 0;
-                byte[] bytes = new byte[numBytesToRead];
+                XLength = reader.ReadInt16();
+                YLength = reader.ReadInt16();
 
-                byte[] xlength = new byte[2];
-                byte[] ylength = new byte[2];
-                stream.Read(bytes, numBytesRead, numBytesToRead);
-                xlength[0] = bytes[0];
-                stream.Read(bytes, numBytesRead, numBytesToRead);
-                xlength[1] = bytes[0];
-                stream.Read(bytes, numBytesRead, numBytesToRead);
-                ylength[0] = bytes[0];
-                stream.Read(bytes, numBytesRead, numBytesToRead);
-                ylength[1] = bytes[0];
-                YLength = BitConverter.ToInt16(ylength, 0);
-                XLength = BitConverter.ToInt16(xlength, 0);
-
-                Grid = new GridPos[XLength, YLength];
+                JaggedGrid = JaggedArrayExtensions.CreateJaggedArray<GridPos>(XLength, YLength);
                 for (short i = 0; i < YLength; ++i)
                 {
                     for (short t = 0; t < XLength; ++t)
                     {
-                        stream.Read(bytes, numBytesRead, numBytesToRead);
-                        Grid[t, i] = new GridPos
+                        JaggedGrid[t][i] = new GridPos
                         {
-                            Value = bytes[0],
+                            Value = reader.ReadByte(),
                             X = t,
                             Y = i,
                         };

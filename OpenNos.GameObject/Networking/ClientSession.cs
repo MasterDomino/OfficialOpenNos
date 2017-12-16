@@ -180,7 +180,7 @@ namespace OpenNos.GameObject
                     ServerManager.RemoveMapInstance(Character.Miniland.MapInstanceId);
                 }
 
-                // TODO: Check why ExchangeInfo.TargetCharacterId is null Character.CloseTrade();
+                Character.CloseExchangeOrTrade();
 
                 // disconnect client
                 CommunicationServiceClient.Instance.DisconnectCharacter(ServerManager.Instance.WorldId, Character.CharacterId);

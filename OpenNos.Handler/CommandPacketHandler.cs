@@ -2072,7 +2072,7 @@ namespace OpenNos.Handler
         {
             Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), "[Position]");
 
-            Session.SendPacket(Session.Character.GenerateSay($"Map:{Session.Character.MapInstance.Map.MapId} - X:{Session.Character.PositionX} - Y:{Session.Character.PositionY} - Dir:{Session.Character.Direction} - Cell:{Session.CurrentMapInstance.Map.Grid[Session.Character.PositionX, Session.Character.PositionY]?.Value}", 12));
+            Session.SendPacket(Session.Character.GenerateSay($"Map:{Session.Character.MapInstance.Map.MapId} - X:{Session.Character.PositionX} - Y:{Session.Character.PositionY} - Dir:{Session.Character.Direction} - Cell:{Session.CurrentMapInstance.Map.JaggedGrid[Session.Character.PositionX][Session.Character.PositionY]?.Value}", 12));
         }
 
         /// <summary>

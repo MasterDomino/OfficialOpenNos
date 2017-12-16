@@ -154,7 +154,7 @@ namespace OpenNos.GameObject
 
         public AuthorityType Authority { get; set; }
 
-        public Node[,] BrushFire { get; set; }
+        public Node[][] BrushFireJagged { get; set; }
 
         public ThreadSafeSortedList<short, Buff> Buff { get; internal set; }
 
@@ -3868,11 +3868,11 @@ namespace OpenNos.GameObject
 
         public void UpdateBushFire()
         {
-            Session.Character.BrushFire = BestFirstSearch.LoadBrushFire(new GridPos
+            Session.Character.BrushFireJagged = BestFirstSearch.LoadBrushFireJagged(new GridPos
             {
                 X = Session.Character.PositionX,
                 Y = Session.Character.PositionY
-            }, Session.CurrentMapInstance.Map.Grid);
+            }, Session.CurrentMapInstance.Map.JaggedGrid);
         }
 
         public bool WeaponLoaded(CharacterSkill ski)

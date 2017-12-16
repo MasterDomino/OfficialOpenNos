@@ -131,7 +131,7 @@ namespace OpenNos.Handler
                                         Logger.Error("General Error SessionId: " + newSessionId, ex);
                                     }
                                     string[] clientData = loginPacket.ClientData.Split('.');
-                                    bool ignoreUserName = short.TryParse(clientData[3], out short clientVersion) ? (clientVersion < 3075 || ConfigurationManager.AppSettings["UseOldCrypto"] == "true") : false;
+                                    bool ignoreUserName = short.TryParse(clientData[3], out short clientVersion) && (clientVersion < 3075 || ConfigurationManager.AppSettings["UseOldCrypto"] == "true");
                                     _session.SendPacket(BuildServersPacket(user.Name, newSessionId, ignoreUserName));
                                 }
                                 break;

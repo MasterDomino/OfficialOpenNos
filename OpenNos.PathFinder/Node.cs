@@ -60,7 +60,7 @@ namespace OpenNos.PathFinder
                 return true;
             }
 
-            if (ReferenceEquals(obj, null))
+            if (obj is null)
             {
                 return false;
             }
@@ -72,9 +72,9 @@ namespace OpenNos.PathFinder
 
         public static bool operator ==(Node left, Node right)
         {
-            if (ReferenceEquals(left, null))
+            if (left is null)
             {
-                return ReferenceEquals(right, null);
+                return right is null;
             }
 
             return left.Equals(right);
@@ -82,13 +82,13 @@ namespace OpenNos.PathFinder
 
         public static bool operator !=(Node left, Node right) => !(left == right);
 
-        public static bool operator <(Node left, Node right) => ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0;
+        public static bool operator <(Node left, Node right) => left is null ? !(right is null) : left.CompareTo(right) < 0;
 
-        public static bool operator <=(Node left, Node right) => ReferenceEquals(left, null) || left.CompareTo(right) <= 0;
+        public static bool operator <=(Node left, Node right) => left is null || left.CompareTo(right) <= 0;
 
-        public static bool operator >(Node left, Node right) => !ReferenceEquals(left, null) && left.CompareTo(right) > 0;
+        public static bool operator >(Node left, Node right) => !(left is null) && left.CompareTo(right) > 0;
 
-        public static bool operator >=(Node left, Node right) => ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0;
+        public static bool operator >=(Node left, Node right) => left is null ? right is null : left.CompareTo(right) >= 0;
 
         #endregion
     }

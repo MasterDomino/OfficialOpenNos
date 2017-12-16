@@ -82,7 +82,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messages
                 return true;
             }
 
-            if (ReferenceEquals(obj, null))
+            if (obj is null)
             {
                 return false;
             }
@@ -94,9 +94,9 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messages
 
         public static bool operator ==(ScsRawDataMessage left, ScsRawDataMessage right)
         {
-            if (ReferenceEquals(left, null))
+            if (left is null)
             {
-                return ReferenceEquals(right, null);
+                return right is null;
             }
 
             return left.Equals(right);
@@ -104,13 +104,13 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messages
 
         public static bool operator !=(ScsRawDataMessage left, ScsRawDataMessage right) => !(left == right);
 
-        public static bool operator <(ScsRawDataMessage left, ScsRawDataMessage right) => ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0;
+        public static bool operator <(ScsRawDataMessage left, ScsRawDataMessage right) => left is null ? !(right is null) : left.CompareTo(right) < 0;
 
-        public static bool operator <=(ScsRawDataMessage left, ScsRawDataMessage right) => ReferenceEquals(left, null) || left.CompareTo(right) <= 0;
+        public static bool operator <=(ScsRawDataMessage left, ScsRawDataMessage right) => left is null || left.CompareTo(right) <= 0;
 
-        public static bool operator >(ScsRawDataMessage left, ScsRawDataMessage right) => !ReferenceEquals(left, null) && left.CompareTo(right) > 0;
+        public static bool operator >(ScsRawDataMessage left, ScsRawDataMessage right) => !(left is null) && left.CompareTo(right) > 0;
 
-        public static bool operator >=(ScsRawDataMessage left, ScsRawDataMessage right) => ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0;
+        public static bool operator >=(ScsRawDataMessage left, ScsRawDataMessage right) => left is null ? right is null : left.CompareTo(right) >= 0;
 
         #endregion
     }

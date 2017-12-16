@@ -13,6 +13,7 @@
  */
 
 using OpenNos.Core;
+using OpenNos.Core.Extensions;
 using OpenNos.DAL;
 using OpenNos.Data;
 using OpenNos.Domain;
@@ -964,9 +965,9 @@ namespace OpenNos.Handler
                     if (guriPacket.Argument == 1)
                     {
                         Mate mate = Session.Character.Mates.Find(s => s.MateTransportId == guriPacket.Data);
-                        if (mate != null)
+                        if (mate != null && Session.Character.Inventory.CountItem(petnameVNum) > 0)
                         {
-                            mate.Name = guriPacket.Value;
+                            mate.Name = guriPacket.Value.Truncate(16);
                             Session.CurrentMapInstance?.Broadcast(mate.GenerateOut(), ReceiverType.AllExceptMe);
                             Session.CurrentMapInstance?.Broadcast(mate.GenerateIn());
                             Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("NEW_NAME_PET")));
@@ -2178,7 +2179,7 @@ namespace OpenNos.Handler
                 {
                     return;
                 }
-                string characterName = whisperPacket.Message.Split(' ')[whisperPacket.Message.StartsWith("GM ") ? 1 : 0].Replace("[Support]", string.Empty).Replace("[BitchNiggerFaggot]", string.Empty);
+                string characterName = whisperPacket.Message.Split(' ')[whisperPacket.Message.StartsWith("GM ", StringComparison.CurrentCulture) ? 1 : 0].Replace("[Support]", string.Empty).Replace("[BitchNiggerFaggot]", string.Empty);
                 string message = string.Empty;
                 string[] packetsplit = whisperPacket.Message.Split(' ');
                 for (int i = packetsplit[0] == "GM" ? 2 : 1; i < packetsplit.Length; i++)

@@ -327,8 +327,6 @@ namespace OpenNos.GameObject
                     {
                         TalentArena.RegisteredParticipants[Session.Character.CharacterId] = Session;
                         Session.SendPacket(UserInterfaceHelper.GenerateBSInfo(0, 3, 300, 5));
-                        // TODO: Send initial Messages
-
                     }
                     break;
 

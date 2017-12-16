@@ -79,6 +79,12 @@
     <Compile Include="BestFirstSearch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpenNos.Core\OpenNos.Core.csproj">
+      <Project>{C93A0A40-0551-4732-B594-171B87679AC1}</Project>
+      <Name>OpenNos.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

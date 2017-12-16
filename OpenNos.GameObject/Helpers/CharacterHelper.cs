@@ -937,7 +937,7 @@ namespace OpenNos.GameObject.Helpers
             }
         }
 
-        // TODO: Change or Verify
+        // TODO: Improve with Official Source Code
         private static void loadStats()
         {
             _minHit = new int[4, 256];
@@ -1052,34 +1052,40 @@ namespace OpenNos.GameObject.Helpers
             {
                 if (i < 79)
                 {
-                    if (i == 14)
+                    switch (i)
                     {
-                        variable = 6 / 3d;
+                        case 14:
+                            variable = 6 / 3d;
+                            break;
+
+                        case 39:
+                            variable = 19 / 3d;
+                            break;
+
+                        case 59:
+                            variable = 70 / 3d;
+                            break;
                     }
-                    else if (i == 39)
-                    {
-                        variable = 19 / 3d;
-                    }
-                    else if (i == 59)
-                    {
-                        variable = 70 / 3d;
-                    }
+
                     _xpData[i] = Convert.ToInt64(_xpData[i - 1] + (variable * v[i - 1]));
                 }
                 if (i >= 79)
                 {
-                    if (i == 79)
+                    switch (i)
                     {
-                        variable = 5000;
+                        case 79:
+                            variable = 5000;
+                            break;
+
+                        case 82:
+                            variable = 9000;
+                            break;
+
+                        case 84:
+                            variable = 13000;
+                            break;
                     }
-                    if (i == 82)
-                    {
-                        variable = 9000;
-                    }
-                    if (i == 84)
-                    {
-                        variable = 13000;
-                    }
+
                     _xpData[i] = Convert.ToInt64(_xpData[i - 1] + (variable * (i + 2) * (i + 2)));
                 }
 
