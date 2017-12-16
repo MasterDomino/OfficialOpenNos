@@ -203,6 +203,7 @@ namespace OpenNos.GameObject
             #region Boost
 
             boostCategory1 += GetAttackerBenefitingBuffs(CardType.Damage, (byte)AdditionalTypes.Damage.DamageIncreased)[0] / 100D;
+            boostCategory1 += GetDefenderBenefitingBuffs(CardType.Damage, (byte)AdditionalTypes.Damage.DamageDecreased)[0] / 100D;
             boostCategory1 += GetAttackerBenefitingBuffs(CardType.Item, (byte)AdditionalTypes.Item.AttackIncreased)[0] / 100D;
             boostCategory1 += GetDefenderBenefitingBuffs(CardType.Item, (byte)AdditionalTypes.Item.DefenceIncreased)[0] / 100D;
             shellBoostCategory1 += GetShellWeaponEffectValue(ShellWeaponEffectType.PercentageTotalDamage) / 100D;

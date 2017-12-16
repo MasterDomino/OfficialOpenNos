@@ -450,6 +450,18 @@ namespace OpenNos.GameObject
                     bool onyxWings = false;
                     BattleEntity battleEntity = new BattleEntity(hitRequest.Session.Character, hitRequest.Skill);
                     int damage = DamageHelper.Instance.CalculateDamage(battleEntity, new BattleEntity(this), hitRequest.Skill, ref hitmode, ref onyxWings);
+                    if(Monster.BCards.FirstOrDefault(s=>s.Type == (byte)CardType.LightAndShadow && s.SubType == (byte)AdditionalTypes.LightAndShadow.InflictDamageToMP) is BCard card)
+                    {
+                        int reduce = damage / 100 * card.FirstData;
+                        if(CurrentMp < reduce)
+                        {
+                            CurrentMp = 0;
+                        }
+                        else
+                        {
+                            CurrentMp -= reduce;
+                        }
+                    }
                     if (damage >= CurrentHp && Monster.BCards.Any(s => s.Type == 39 && s.SubType == 0 && s.ThirdData == -1))
                     {
                         damage = CurrentHp - 1;
@@ -893,10 +905,6 @@ namespace OpenNos.GameObject
         {
             if (Monster != null && targetSession?.Character != null && ((DateTime.Now - LastSkill).TotalMilliseconds >= 1000 + (Monster.BasicCooldown * 200) || npcMonsterSkill != null) && !_noAttack)
             {
-                int hitmode = 0;
-                bool onyxWings = false;
-                int damage = DamageHelper.Instance.CalculateDamage(new BattleEntity(this), new BattleEntity(targetSession.Character, null), npcMonsterSkill?.Skill, ref hitmode, ref onyxWings);
-
                 if (npcMonsterSkill != null)
                 {
                     if (CurrentMp < npcMonsterSkill.Skill.MpCost)
@@ -910,11 +918,30 @@ namespace OpenNos.GameObject
                 }
                 LastMove = DateTime.Now;
 
+                int hitmode = 0;
+                bool onyxWings = false;
+                int damage = DamageHelper.Instance.CalculateDamage(new BattleEntity(this), new BattleEntity(targetSession.Character, null), npcMonsterSkill?.Skill, ref hitmode, ref onyxWings);
+                
                 // deal 0 damage to GM with GodMode
                 if (targetSession.Character.HasGodMode)
                 {
                     damage = 0;
                 }
+
+                int[] manaShield = targetSession.Character.GetBuff(CardType.LightAndShadow, (byte)AdditionalTypes.LightAndShadow.InflictDamageToMP);
+                if (manaShield[0] != 0 && hitmode != 1)
+                {
+                    int reduce = damage / 100 * manaShield[0];
+                    if (targetSession.Character.Mp < reduce)
+                    {
+                        targetSession.Character.Mp = 0;
+                    }
+                    else
+                    {
+                        targetSession.Character.Mp -= reduce;
+                    }
+                }
+
                 if (targetSession.Character.IsSitting)
                 {
                     targetSession.Character.IsSitting = false;

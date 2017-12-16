@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
+using static OpenNos.Domain.BCardType;
 
 namespace OpenNos.GameObject
 {
@@ -252,6 +253,18 @@ namespace OpenNos.GameObject
                 int hitmode = 0;
                 bool onyxWings = false;
                 int damage = DamageHelper.Instance.CalculateDamage(new BattleEntity(this), new BattleEntity(monster), npcMonsterSkill?.Skill, ref hitmode, ref onyxWings);
+                if (monster.Monster.BCards.FirstOrDefault(s => s.Type == (byte)CardType.LightAndShadow && s.SubType == (byte)AdditionalTypes.LightAndShadow.InflictDamageToMP) is BCard card)
+                {
+                    int reduce = damage / 100 * card.FirstData;
+                    if (monster.CurrentMp < reduce)
+                    {
+                        monster.CurrentMp = 0;
+                    }
+                    else
+                    {
+                        monster.CurrentMp -= reduce;
+                    }
+                }
                 int distance = Map.GetDistance(new MapCell { X = MapX, Y = MapY }, new MapCell { X = monster.MapX, Y = monster.MapY });
                 if (monster.CurrentHp > 0 && ((npcMonsterSkill != null && distance < npcMonsterSkill.Skill.Range) || distance <= Npc.BasicRange))
                 {

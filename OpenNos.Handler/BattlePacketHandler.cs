@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
+using static OpenNos.Domain.BCardType;
 
 namespace OpenNos.Handler
 {
@@ -226,6 +227,21 @@ namespace OpenNos.Handler
                     damage = 0;
                     hitmode = 1;
                 }
+
+                int[] manaShield = target.Character.GetBuff(CardType.LightAndShadow, (byte)AdditionalTypes.LightAndShadow.InflictDamageToMP);
+                if (manaShield[0] != 0 && hitmode != 1)
+                {
+                    int reduce = damage / 100 * manaShield[0];
+                    if (target.Character.Mp < reduce)
+                    {
+                        target.Character.Mp = 0;
+                    }
+                    else
+                    {
+                        target.Character.Mp -= reduce;
+                    }
+                }
+
                 if (onyxWings && hitmode != 1)
                 {
                     short onyxX = (short)(hitRequest.Session.Character.PositionX + 2);
