@@ -63,7 +63,7 @@ namespace OpenNos.GameObject
                                 }
                                 if ((wearable.Item.ItemType == ItemType.Weapon && weapon) || (wearable.Item.ItemType == ItemType.Armor && !weapon))
                                 {
-                                    if (inv.ShellEffects.Count > 0 && ServerManager.RandomNumber() < 50)
+                                    if (wearable.ShellEffects.Count > 0 && ServerManager.RandomNumber() < 50)
                                     {
                                         session.Character.DeleteItemByItemInstanceId(inv.Id);
                                         session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_APPLY_FAIL"), 0));
