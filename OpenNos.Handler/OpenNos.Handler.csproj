@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="BazaarPacketHandler.cs" />
     <Compile Include="CharacterScreenPacketHandler.cs" />
+    <Compile Include="CustomPacketHandler.cs" />
     <Compile Include="FamilyPacketHandler.cs" />
     <Compile Include="ScriptedInstancePacketHandler.cs" />
     <Compile Include="MinilandPacketHandler.cs" />
