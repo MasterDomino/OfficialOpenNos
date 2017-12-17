@@ -2240,6 +2240,44 @@ namespace OpenNos.Handler
             }
         }
 
+        public void ReturnPoint(ReturnPointPacket packet)
+        {
+            if (packet != null)
+            {
+                if (!Session.Character.StaticBonusList.Any(s => s.StaticBonusType == StaticBonusType.MultipleReturns))
+                {
+                    Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("RETURNPOINT_NOT_PERMITTED"), 10));
+                    return;
+                }
+                if (Session.Character.MapInstance.MapInstanceType != MapInstanceType.BaseMapInstance)
+                {
+                    Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("CANT_USE_THAT"), 10));
+                    return;
+                }
+                if (packet.ReturnPointId < 1 || packet.ReturnPointId > 5)
+                {
+                    return;
+                }
+                RespawnDTO resp = Session.Character.Respawns.FirstOrDefault(s => s.RespawnMapTypeId == packet.ReturnPointId + 50);
+                if (resp == null)
+                {
+                    Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("RETURNPOINT_NOT_SET"), 10));
+                    return;
+                }
+                if (ServerManager.Instance.ChannelId == 51 || ServerManager.GetMapInstance(ServerManager.GetBaseMapInstanceIdByMapId(resp.MapId)).Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4))
+                {
+                    Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("CANT_USE_THAT"), 10));
+                    return;
+                }
+                ServerManager.Instance.LeaveMap(Session.Character.CharacterId);
+                ServerManager.Instance.ChangeMap(Session.Character.CharacterId, resp.MapId, resp.X, resp.Y);
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay(ReturnPointPacket.ReturnHelp(), 10));
+            }
+        }
+
         /// <summary>
         /// $SearchItem Command
         /// </summary>
@@ -2384,6 +2422,47 @@ namespace OpenNos.Handler
             else
             {
                 Session.SendPacket(Session.Character.GenerateSay(UpgradeCommandPacket.ReturnHelp(), 10));
+            }
+        }
+
+        public void SetReturnPoint(SetReturnPointPacket packet)
+        {
+            if (packet != null)
+            {
+                if (!Session.Character.StaticBonusList.Any(s => s.StaticBonusType == StaticBonusType.MultipleReturns))
+                {
+                    Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("RETURNPOINT_NOT_PERMITTED"), 10));
+                    return;
+                }
+                if (Session.Character.MapInstance.MapInstanceType != MapInstanceType.BaseMapInstance)
+                {
+                    Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("CANT_USE_THAT"), 10));
+                    return;
+                }
+                if (packet.ReturnPointId < 1 || packet.ReturnPointId > 5)
+                {
+                    return;
+                }
+                if (Session.HasCurrentMapInstance && Session.CurrentMapInstance.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4))
+                {
+                    RespawnDTO resp = Session.Character.Respawns.FirstOrDefault(s => s.RespawnMapTypeId == packet.ReturnPointId + 50);
+                    if (resp == null)
+                    {
+                        resp = new RespawnDTO { CharacterId = Session.Character.CharacterId, MapId = Session.Character.MapId, X = Session.Character.MapX, Y = Session.Character.MapY, RespawnMapTypeId = packet.ReturnPointId + 50 };
+                        Session.Character.Respawns.Add(resp);
+                    }
+                    else
+                    {
+                        resp.X = Session.Character.PositionX;
+                        resp.Y = Session.Character.PositionY;
+                        resp.MapId = Session.Character.MapInstance.Map.MapId;
+                    }
+                    Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("RETURNPOINT_SET"), 10));
+                }
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay(SetReturnPointPacket.ReturnHelp(), 10));
             }
         }
 
