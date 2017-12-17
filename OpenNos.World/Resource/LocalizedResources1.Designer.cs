@@ -673,6 +673,33 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The portals to Caligor&apos;s Realm closed!.
+        /// </summary>
+        internal static string CALIGOR_CLOSED {
+            get {
+                return ResourceManager.GetString("CALIGOR_CLOSED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The raid in Caligor&apos;s realm ended!.
+        /// </summary>
+        internal static string CALIGOR_END {
+            get {
+                return ResourceManager.GetString("CALIGOR_END", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The portals to Caligor&apos;s Realm opened!.
+        /// </summary>
+        internal static string CALIGOR_OPEN {
+            get {
+                return ResourceManager.GetString("CALIGOR_OPEN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You can&apos;t attack right now..
         /// </summary>
         internal static string CANT_ATTACK {
@@ -2311,6 +2338,33 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t send OpenDollar. Please log in to the OpenMall to create your Mall Account..
+        /// </summary>
+        internal static string MALL_ACCOUNT_NOT_EXISTING {
+            get {
+                return ResourceManager.GetString("MALL_ACCOUNT_NOT_EXISTING", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You&apos;ve got {0} OpenDollars!.
+        /// </summary>
+        internal static string MALL_CURRENCY_RECEIVE {
+            get {
+                return ResourceManager.GetString("MALL_CURRENCY_RECEIVE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error while connecting to the OpenMall. Please try again later..
+        /// </summary>
+        internal static string MALL_UNKNOWN_ERROR {
+            get {
+                return ResourceManager.GetString("MALL_UNKNOWN_ERROR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Manager.
         /// </summary>
         internal static string MANAGER {
@@ -3103,6 +3157,24 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enhancement failed.
+        /// </summary>
+        internal static string OPTION_FAIL {
+            get {
+                return ResourceManager.GetString("OPTION_FAIL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enhancement was successful.
+        /// </summary>
+        internal static string OPTION_SUCCESS {
+            get {
+                return ResourceManager.GetString("OPTION_SUCCESS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Packet arrived, packet: {0}.
         /// </summary>
         internal static string PACKET_ARRIVED {
@@ -3387,6 +3459,15 @@ namespace OpenNos.World.Resource {
         internal static string QNA_ITEM {
             get {
                 return ResourceManager.GetString("QNA_ITEM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} Quests loaded!.
+        /// </summary>
+        internal static string QUESTS_LOADED {
+            get {
+                return ResourceManager.GetString("QUESTS_LOADED", resourceCulture);
             }
         }
         
@@ -3702,6 +3783,42 @@ namespace OpenNos.World.Resource {
         internal static string SHARING_BY_ORDER {
             get {
                 return ResourceManager.GetString("SHARING_BY_ORDER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The ship will depart in one minute!.
+        /// </summary>
+        internal static string SHIP_MINUTE {
+            get {
+                return ResourceManager.GetString("SHIP_MINUTE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The ship will depart in {0} minutes!.
+        /// </summary>
+        internal static string SHIP_MINUTES {
+            get {
+                return ResourceManager.GetString("SHIP_MINUTES", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The ship will depart in {0} seconds!.
+        /// </summary>
+        internal static string SHIP_SECONDS {
+            get {
+                return ResourceManager.GetString("SHIP_SECONDS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Okay, we&apos;re setting off! Raise the anchor!.
+        /// </summary>
+        internal static string SHIP_SETOFF {
+            get {
+                return ResourceManager.GetString("SHIP_SETOFF", resourceCulture);
             }
         }
         
@@ -4035,6 +4152,15 @@ namespace OpenNos.World.Resource {
         internal static string SWORDMAN {
             get {
                 return ResourceManager.GetString("SWORDMAN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The TalentArena opened!.
+        /// </summary>
+        internal static string TALENTARENA_OPEN {
+            get {
+                return ResourceManager.GetString("TALENTARENA_OPEN", resourceCulture);
             }
         }
         

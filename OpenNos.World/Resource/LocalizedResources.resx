@@ -1567,4 +1567,46 @@
   <data name="PARTY_MEMBER_IN_FAMILY" xml:space="preserve">
     <value>One of your party members is already in another family.</value>
   </data>
+  <data name="CALIGOR_CLOSED" xml:space="preserve">
+    <value>The portals to Caligor's Realm closed!</value>
+  </data>
+  <data name="CALIGOR_END" xml:space="preserve">
+    <value>The raid in Caligor's realm ended!</value>
+  </data>
+  <data name="CALIGOR_OPEN" xml:space="preserve">
+    <value>The portals to Caligor's Realm opened!</value>
+  </data>
+  <data name="MALL_ACCOUNT_NOT_EXISTING" xml:space="preserve">
+    <value>Can't send OpenDollar. Please log in to the OpenMall to create your Mall Account.</value>
+  </data>
+  <data name="MALL_CURRENCY_RECEIVE" xml:space="preserve">
+    <value>You've got {0} OpenDollars!</value>
+  </data>
+  <data name="MALL_UNKNOWN_ERROR" xml:space="preserve">
+    <value>Error while connecting to the OpenMall. Please try again later.</value>
+  </data>
+  <data name="OPTION_FAIL" xml:space="preserve">
+    <value>Enhancement failed</value>
+  </data>
+  <data name="OPTION_SUCCESS" xml:space="preserve">
+    <value>Enhancement was successful</value>
+  </data>
+  <data name="QUESTS_LOADED" xml:space="preserve">
+    <value>{0} Quests loaded!</value>
+  </data>
+  <data name="SHIP_MINUTE" xml:space="preserve">
+    <value>The ship will depart in one minute!</value>
+  </data>
+  <data name="SHIP_MINUTES" xml:space="preserve">
+    <value>The ship will depart in {0} minutes!</value>
+  </data>
+  <data name="SHIP_SECONDS" xml:space="preserve">
+    <value>The ship will depart in {0} seconds!</value>
+  </data>
+  <data name="SHIP_SETOFF" xml:space="preserve">
+    <value>Okay, we're setting off! Raise the anchor!</value>
+  </data>
+  <data name="TALENTARENA_OPEN" xml:space="preserve">
+    <value>The TalentArena opened!</value>
+  </data>
 </root>
