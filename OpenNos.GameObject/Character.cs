@@ -312,6 +312,8 @@ namespace OpenNos.GameObject
 
         public DateTime LastTransform { get; set; }
 
+        public DateTime LastVessel { get; set; }
+
         public int LightResistance { get; set; }
 
         public int MagicalDefence { get; set; }

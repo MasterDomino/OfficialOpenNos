@@ -386,7 +386,8 @@ namespace OpenNos.GameObject
                         }
                         session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
-                    else if (session.HasCurrentMapInstance && session.CurrentMapInstance.Map.MapTypes.All(m => m.MapTypeId != (short)MapTypeEnum.Act4))
+                    else if (session.HasCurrentMapInstance && session.CurrentMapInstance.MapInstanceType == MapInstanceType.BaseMapInstance
+                        && (session.Character.LastVessel.AddSeconds(1) <= DateTime.Now || session.Character.StaticBonusList.Any(s => s.StaticBonusType == StaticBonusType.FastVessels)))
                     {
                         short[] vnums = { 1386, 1387, 1388, 1389, 1390, 1391, 1392, 1393, 1394, 1395, 1396, 1397, 1398, 1399, 1400, 1401, 1402, 1403, 1404, 1405 };
                         short vnum = vnums[ServerManager.RandomNumber(0, 20)];
@@ -411,6 +412,7 @@ namespace OpenNos.GameObject
                         session.CurrentMapInstance.AddMonster(monster);
                         session.CurrentMapInstance.Broadcast(monster.GenerateIn());
                         session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                        session.Character.LastVessel = DateTime.Now;
                     }
                     break;
 
