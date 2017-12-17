@@ -55,7 +55,9 @@ namespace OpenNos.Master.Server
                 SessionLimit = int.Parse(ConfigurationManager.AppSettings["SessionLimit"]),
                 WorldInformation = bool.Parse(ConfigurationManager.AppSettings["WorldInformation"]),
                 Act4IP = ConfigurationManager.AppSettings["Act4IP"],
-                Act4Port = int.Parse(ConfigurationManager.AppSettings["Act4Port"])
+                Act4Port = int.Parse(ConfigurationManager.AppSettings["Act4Port"]),
+                MallBaseURL = ConfigurationManager.AppSettings["MallBaseURL"],
+                MallAPIKey = ConfigurationManager.AppSettings["MallAPIKey"]
             };
         }
 

@@ -40,5 +40,9 @@ namespace OpenNos.Master.Library.Data
         public int RateFairyXP { get; set; }
 
         public byte MaxUpgrade { get; set; }
+
+        public string MallBaseURL { get; set; }
+
+        public string MallAPIKey { get; set; }
     }
 }

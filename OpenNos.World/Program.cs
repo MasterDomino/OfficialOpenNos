@@ -172,6 +172,7 @@ namespace OpenNos.World
                 MailServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["MasterAuthKey"], ServerManager.Instance.WorldId);
                 ConfigurationServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["MasterAuthKey"], ServerManager.Instance.WorldId);
                 ServerManager.Instance.Configuration = ConfigurationServiceClient.Instance.GetConfigurationObject();
+                ServerManager.Instance.MallAPI = new GameObject.Helpers.MallAPIHelper(ServerManager.Instance.Configuration.MallBaseURL);
             }
             else
             {
