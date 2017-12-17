@@ -47,7 +47,7 @@ namespace OpenNos.Core
             }
             catch (IOException)
             {
-                Logger.Warn("MissingLanguageKeys.txt was in use but i was able to catch this exception", null, "LanguageKeys");
+                Logger.Warn("MissingLanguageKeys.txt was in use, but i was able to catch this exception", null, "LanguageKeys");
             }
             _resourceCulture = new CultureInfo(ConfigurationManager.AppSettings[nameof(Language)]);
             if (Assembly.GetEntryAssembly() != null)

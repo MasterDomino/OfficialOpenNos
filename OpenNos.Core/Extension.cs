@@ -39,61 +39,6 @@ namespace OpenNos.Core
                 return array;
             }
 
-            public static T CreateJaggedArray<T>(params int[] lengths) => (T)InitializeJaggedArray(typeof(T).GetElementType(), 0, lengths);
-
-            public static object InitializeJaggedArray(Type type, int index, int[] lengths)
-            {
-                Array array = Array.CreateInstance(type, lengths[index]);
-                Type elementType = type.GetElementType();
-
-                if (elementType != null)
-                {
-                    for (int i = 0; i < lengths[index]; i++)
-                    {
-                        array.SetValue(InitializeJaggedArray(elementType, index + 1, lengths), i);
-                    }
-                }
-
-                return array;
-            }
-
-            public static int GetDimensionHeight<T>(this T[][] jaggedArray, int dimension) =>
-                jaggedArray.Length <= dimension ? jaggedArray[dimension].Length : 0;
-
-            public static int GetDimensionLength<T>(this T[][] jaggedArray, int dimension)
-            {
-                int count = 0;
-                foreach(T[] array in jaggedArray)
-                {
-                    if (dimension < array.Length)
-                    {
-                        count++;
-                    }
-                }
-                return count;
-            }
-
-            #endregion
-        }
-
-        internal static class ArrayExtensions
-        {
-            #region Methods
-
-            public static void ForEach(this Array array, Action<Array, int[]> action)
-            {
-                if (array.LongLength == 0)
-                {
-                    return;
-                }
-                ArrayTraverse walker = new ArrayTraverse(array);
-                do
-                {
-                    action?.Invoke(array, walker._position);
-                }
-                while (walker.Step());
-            }
-
             #endregion
         }
 
@@ -328,6 +273,20 @@ namespace OpenNos.Core
                     object clonedFieldValue = InternalCopy(originalFieldValue, visited);
                     fieldInfo.SetValue(cloneObject, clonedFieldValue);
                 }
+            }
+
+            private static void ForEach(this Array array, Action<Array, int[]> action)
+            {
+                if (array.LongLength == 0)
+                {
+                    return;
+                }
+                ArrayTraverse walker = new ArrayTraverse(array);
+                do
+                {
+                    action?.Invoke(array, walker._position);
+                }
+                while (walker.Step());
             }
 
             private static object InternalCopy(object originalObject, IDictionary<object, object> visited)
