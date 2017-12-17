@@ -95,6 +95,27 @@ namespace OpenNos.Handler
             }
         }
 
+        public void Act4Stat(Act4StatPacket packet)
+        {
+            if(packet != null && ServerManager.Instance.ChannelId == 51)
+            {
+                switch (packet.Faction)
+                {
+                    case 1:
+                        ServerManager.Instance.Act4AngelStat.Percentage = packet.Value;
+                        break;
+                    case 2:
+                        ServerManager.Instance.Act4DemonStat.Percentage = packet.Value;
+                        break;
+                }
+                Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay(AddMonsterPacket.ReturnHelp(), 10));
+            }
+        }
+
         /// <summary>
         /// $AddMonster Command
         /// </summary>

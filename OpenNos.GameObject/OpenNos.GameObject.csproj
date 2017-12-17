@@ -110,6 +110,7 @@
     <Compile Include="Event\LOD\LOD.cs" />
     <Compile Include="Event\MINILANDREFRESH\MinilandRefresh.cs" />
     <Compile Include="Helpers\UserInterfaceHelper.cs" />
+    <Compile Include="Packets\CommandPackets\Act4StatPacket.cs" />
     <Compile Include="Packets\CommandPackets\ReturnPointPacket.cs" />
     <Compile Include="Packets\CommandPackets\SetReturnPointPacket.cs" />
     <Compile Include="ScriptedObjects\Clock.cs" />
