@@ -35,7 +35,7 @@ namespace OpenNos.Master.Server
                 return false;
             }
 
-            if (authKey == ConfigurationManager.AppSettings["MasterAuthKey"])
+            if (authKey == ConfigurationManager.AppSettings["MallAuthKey"])
             {
                 MSManager.Instance.AuthentificatedClients.Add(CurrentClient.ClientId);
                 return true;
