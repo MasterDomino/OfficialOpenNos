@@ -3229,6 +3229,25 @@ namespace OpenNos.GameObject
             return HPMax;
         }
 
+        public void IncreaseDollars(int amount)
+        {
+            try
+            {
+                if (!ServerManager.Instance.MallAPI.SendCurrencyAsync(ServerManager.Instance.Configuration.MallAPIKey, Session.Account.AccountId, amount).Result)
+                {
+                    Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("MALL_ACCOUNT_NOT_EXISTING"), 10));
+                    return;
+                }
+            }
+            catch
+            {
+                Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("MALL_UNKNOWN_ERROR"), 10));
+                return;
+            }
+
+            Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MALL_CURRENCY_RECEIVE"), amount), 10));
+        }
+
         public void Initialize()
         {
             _random = new Random();
