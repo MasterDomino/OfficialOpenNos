@@ -20,6 +20,11 @@ namespace OpenNos.Domain
         BazaarMedalSilver = 1,
         BackPack = 2,
         PetBasket = 3,
-        PetBackPack = 4
+        PetBackPack = 4,
+
+
+        AutoLoot = 250,
+        FastVessels = 251,
+        MultipleReturns = 252
     }
 }

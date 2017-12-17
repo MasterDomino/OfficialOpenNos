@@ -1810,6 +1810,49 @@ namespace OpenNos.GameObject
 
         public void GenerateKillBonus(MapMonster monsterToAttack)
         {
+            void _handleGoldDrop(DropDTO drop, long maxGold, long? dropOwner, short posX, short posY)
+            {
+                Observable.Timer(TimeSpan.FromMilliseconds(500)).Subscribe(o =>
+                {
+                    if (Session.HasCurrentMapInstance)
+                    {
+                        if (CharacterId == dropOwner && StaticBonusList.Any(s => s.StaticBonusType == StaticBonusType.AutoLoot))
+                        {
+                            Gold += drop.Amount;
+                            if (Gold > maxGold)
+                            {
+                                Gold = maxGold;
+                                Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("MAX_GOLD"), 0));
+                            }
+                            Session.SendPacket(GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {ServerManager.GetItem(drop.ItemVNum).Name} x {drop.Amount}", 10));
+                            Session.SendPacket(GenerateGold());
+                        }
+                        else
+                        {
+                            Session.CurrentMapInstance.DropItemByMonster(dropOwner, drop, monsterToAttack.MapX, monsterToAttack.MapY);
+                        }
+                    }
+                });
+            }
+
+            void _handleItemDrop(DropDTO drop, long? owner, short posX, short posY)
+            {
+                Observable.Timer(TimeSpan.FromMilliseconds(500)).Subscribe(o =>
+                {
+                    if (Session.HasCurrentMapInstance)
+                    {
+                        if (CharacterId == owner && StaticBonusList.Any(s => s.StaticBonusType == StaticBonusType.AutoLoot))
+                        {
+                            GiftAdd(drop.ItemVNum, (byte)drop.Amount);
+                        }
+                        else
+                        {
+                            Session.CurrentMapInstance.DropItemByMonster(owner, drop, posX, posY);
+                        }
+                    }
+                });
+            }
+
             lock (_syncObj)
             {
                 if (monsterToAttack == null || monsterToAttack.IsAlive)
@@ -1893,14 +1936,8 @@ namespace OpenNos.GameObject
                                                 }
                                             }
 
-                                            long? owner = dropOwner;
-                                            Observable.Timer(TimeSpan.FromMilliseconds(500)).Subscribe(o =>
-                                            {
-                                                if (Session.HasCurrentMapInstance)
-                                                {
-                                                    Session.CurrentMapInstance.DropItemByMonster(owner, drop, monsterToAttack.MapX, monsterToAttack.MapY);
-                                                }
-                                            });
+                                            _handleItemDrop(drop, dropOwner, monsterToAttack.MapX, monsterToAttack.MapY);
+
                                         }
                                     }
                                 }
@@ -1968,14 +2005,7 @@ namespace OpenNos.GameObject
                                         }
                                     }
 
-                                    // delayed Drop
-                                    Observable.Timer(TimeSpan.FromMilliseconds(500)).Subscribe(o =>
-                                    {
-                                        if (Session.HasCurrentMapInstance)
-                                        {
-                                            Session.CurrentMapInstance.DropItemByMonster(dropOwner, drop2, monsterToAttack.MapX, monsterToAttack.MapY);
-                                        }
-                                    });
+                                    _handleGoldDrop(drop2, maxGold, dropOwner, monsterToAttack.MapX, monsterToAttack.MapY);
                                 }
                             }
                         }
