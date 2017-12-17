@@ -107,8 +107,8 @@ namespace OpenNos.Master.Server
                     _server.AddService<IMailService, MailService>(new MailService());
                     _server.AddService<IMallService, MallService>(new MallService());
                     _server.AddService<IAuthentificationService, AuthentificationService>(new AuthentificationService());
-                    _server.ClientConnected += onClientConnected;
-                    _server.ClientDisconnected += onClientDisconnected;
+                    _server.ClientConnected += OnClientConnected;
+                    _server.ClientDisconnected += OnClientDisconnected;
 
                     _server.Start();
                     Logger.Info(Language.Instance.GetMessageFromKey("STARTED"));
@@ -159,9 +159,9 @@ namespace OpenNos.Master.Server
             }
         }
 
-        private static void onClientConnected(object sender, ServiceClientEventArgs e) => Logger.Info(Language.Instance.GetMessageFromKey("NEW_CONNECT") + e.Client.ClientId);
+        private static void OnClientConnected(object sender, ServiceClientEventArgs e) => Logger.Info(Language.Instance.GetMessageFromKey("NEW_CONNECT") + e.Client.ClientId);
 
-        private static void onClientDisconnected(object sender, ServiceClientEventArgs e) => Logger.Info(Language.Instance.GetMessageFromKey("DISCONNECT") + e.Client.ClientId);
+        private static void OnClientDisconnected(object sender, ServiceClientEventArgs e) => Logger.Info(Language.Instance.GetMessageFromKey("DISCONNECT") + e.Client.ClientId);
 
         #endregion
     }
