@@ -41,6 +41,8 @@ namespace OpenNos.GameObject
 
         private Random _random;
 
+        private int _waitCount;
+
         #endregion
 
         #region Instantiation
@@ -407,7 +409,16 @@ namespace OpenNos.GameObject
 
                 if (targetSession == null || MapId != targetSession.Character.MapInstance.Map.MapId || distance > (maxDistance) + 3)
                 {
-                    RemoveTarget();
+                    if (_waitCount == 10)
+                    {
+                        RemoveTarget();
+                        _waitCount = 0;
+                    }
+                    _waitCount++;
+                }
+                else
+                {
+                    _waitCount = 0;
                 }
             }
         }
