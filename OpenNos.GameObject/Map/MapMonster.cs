@@ -567,9 +567,13 @@ namespace OpenNos.GameObject
                         {
                             case FactionType.Angel:
                                 CaligorRaid.AngelDamage += damage;
+                                if (onyxWings)
+                                    CaligorRaid.AngelDamage += damage / 2;
                                 break;
                             case FactionType.Demon:
                                 CaligorRaid.DemonDamage += damage;
+                                if (onyxWings)
+                                    CaligorRaid.DemonDamage += damage / 2;
                                 break;
                         }
                     }
