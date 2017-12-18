@@ -138,6 +138,8 @@ namespace OpenNos.GameObject.Event
             }
             EventHelper.Instance.RunEvent(new EventContainer(CaligorRaid.CaligorMapInstance, EventActionType.DISPOSEMAP, null));
             CaligorRaid.IsRunning = false;
+            CaligorRaid.AngelDamage = 0;
+            CaligorRaid.DemonDamage = 0;
 
 
             ServerManager.Instance.StartedEvents.Remove(EventType.CALIGOR);
