@@ -131,8 +131,14 @@ namespace OpenNos.GameObject.Event
         {
             ServerManager.Shout(Language.Instance.GetMessageFromKey("CALIGOR_END"), true);
 
+            foreach(ClientSession sess in CaligorRaid.CaligorMapInstance.Sessions.ToList())
+            {
+                ServerManager.Instance.ChangeMapInstance(sess.Character.CharacterId, CaligorRaid.UnknownLandMapInstance.MapInstanceId, sess.Character.MapX, sess.Character.MapY);
+                Thread.Sleep(100);
+            }
             EventHelper.Instance.RunEvent(new EventContainer(CaligorRaid.CaligorMapInstance, EventActionType.DISPOSEMAP, null));
-            CaligorRaid.CaligorMapInstance = null;
+            CaligorRaid.IsRunning = false;
+
 
             ServerManager.Instance.StartedEvents.Remove(EventType.CALIGOR);
         }
