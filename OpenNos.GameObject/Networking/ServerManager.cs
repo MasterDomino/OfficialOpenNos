@@ -318,7 +318,7 @@ namespace OpenNos.GameObject
         }
 
         // Both partly
-        public void ChangeMapInstance(long characterId, Guid MapInstanceId, short? mapX = null, short? mapY = null)
+        public void ChangeMapInstance(long characterId, Guid MapInstanceId, short? mapX = null, short? mapY = null, bool noAggroLoss = false)
         {
             ClientSession session = GetSessionByCharacterId(characterId);
             if (session?.Character != null && !session.Character.IsChangingMapInstance)
@@ -334,7 +334,11 @@ namespace OpenNos.GameObject
                         session.Character.CloseShop();
                     }
 
-                    session.CurrentMapInstance.RemoveMonstersTarget(session.Character.CharacterId);
+                    if (!noAggroLoss)
+                    {
+                        session.CurrentMapInstance.RemoveMonstersTarget(session.Character.CharacterId);
+                    }
+
                     session.CurrentMapInstance.UnregisterSession(session.Character.CharacterId);
 
                     LeaveMap(session.Character.CharacterId);

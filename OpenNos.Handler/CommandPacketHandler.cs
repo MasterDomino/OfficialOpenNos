@@ -3175,7 +3175,7 @@ namespace OpenNos.Handler
                 }
                 else
                 {
-                    ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, Session.Character.MapInstanceId, Session.Character.PositionX, Session.Character.PositionY);
+                    ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, Session.Character.MapInstanceId, Session.Character.PositionX, Session.Character.PositionY, true);
                     Session.SendPacket(StaticPacketHelper.Cancel(2));
                 }
             }
