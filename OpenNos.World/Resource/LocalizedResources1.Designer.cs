@@ -277,6 +277,15 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do you really want to change your spawn location?.
+        /// </summary>
+        internal static string ASK_CHANGE_SPAWNLOCATION {
+            get {
+                return ResourceManager.GetString("ASK_CHANGE_SPAWNLOCATION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Do you want to start the mission?.
         /// </summary>
         internal static string ASK_ENTRY_IN_FIRST_ROOM {
@@ -300,6 +309,15 @@ namespace OpenNos.World.Resource {
         internal static string ASK_KICK_PET {
             get {
                 return ResourceManager.GetString("ASK_KICK_PET", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you really want to open the box?.
+        /// </summary>
+        internal static string ASK_OPEN_BOX {
+            get {
+                return ResourceManager.GetString("ASK_OPEN_BOX", resourceCulture);
             }
         }
         
@@ -2050,6 +2068,15 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You can&apos;t unfix the item, it is not fixed!.
+        /// </summary>
+        internal static string ITEM_IS_NOT_FIXED {
+            get {
+                return ResourceManager.GetString("ITEM_IS_NOT_FIXED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You cant drop that item!.
         /// </summary>
         internal static string ITEM_NOT_DROPPABLE {
@@ -2136,6 +2163,15 @@ namespace OpenNos.World.Resource {
         internal static string JOBLEVEL_CHANGED {
             get {
                 return ResourceManager.GetString("JOBLEVEL_CHANGED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} joined the team..
+        /// </summary>
+        internal static string JOIN_TEAM {
+            get {
+                return ResourceManager.GetString("JOIN_TEAM", resourceCulture);
             }
         }
         
@@ -2599,6 +2635,15 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Monster not found!.
+        /// </summary>
+        internal static string MONSTER_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("MONSTER_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Monster removed (MapMonsterId: {0}, Name: {1}, MapId: {2}, MapX: {3}, MapY: {4}).
         /// </summary>
         internal static string MONSTER_REMOVED {
@@ -2748,6 +2793,15 @@ namespace OpenNos.World.Resource {
         internal static string NEW_MAIL {
             get {
                 return ResourceManager.GetString("NEW_MAIL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The mission has been updated!.
+        /// </summary>
+        internal static string NEW_MISSION {
+            get {
+                return ResourceManager.GetString("NEW_MISSION", resourceCulture);
             }
         }
         
@@ -3063,6 +3117,15 @@ namespace OpenNos.World.Resource {
         internal static string NOT_HUNGRY_MALE {
             get {
                 return ResourceManager.GetString("NOT_HUNGRY_MALE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You&apos;re not in your Miniland! You can&apos;t do this right now..
+        /// </summary>
+        internal static string NOT_IN_MINILAND {
+            get {
+                return ResourceManager.GetString("NOT_IN_MINILAND", resourceCulture);
             }
         }
         
@@ -3544,6 +3607,15 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {1} led their {0} Raidteam to a success!.
+        /// </summary>
+        internal static string RAID_SUCCEED {
+            get {
+                return ResourceManager.GetString("RAID_SUCCEED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Raid has been unregistered..
         /// </summary>
         internal static string RAID_UNREGISTERED {
@@ -3670,20 +3742,29 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reputation decreased!.
+        ///   Looks up a localized string similar to Reputation decreased by {0}.
         /// </summary>
-        internal static string REPUT_DECREASED {
+        internal static string REPUT_DECREASE {
             get {
-                return ResourceManager.GetString("REPUT_DECREASED", resourceCulture);
+                return ResourceManager.GetString("REPUT_DECREASE", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reputation has been increased..
+        ///   Looks up a localized string similar to Reputation increased by {0}.
         /// </summary>
         internal static string REPUT_INCREASE {
             get {
                 return ResourceManager.GetString("REPUT_INCREASE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your spawn location was set to the current town..
+        /// </summary>
+        internal static string RESPAWNLOCATION_CHANGED {
+            get {
+                return ResourceManager.GetString("RESPAWNLOCATION_CHANGED", resourceCulture);
             }
         }
         
@@ -3801,6 +3882,15 @@ namespace OpenNos.World.Resource {
         internal static string SHIP_MINUTES {
             get {
                 return ResourceManager.GetString("SHIP_MINUTES", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The ship has not yet returned!.
+        /// </summary>
+        internal static string SHIP_NOTARRIVED {
+            get {
+                return ResourceManager.GetString("SHIP_NOTARRIVED", resourceCulture);
             }
         }
         
@@ -4165,6 +4255,15 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The Team Leader changed. {0} is the new leader.
+        /// </summary>
+        internal static string TEAM_LEADER_CHANGE {
+            get {
+                return ResourceManager.GetString("TEAM_LEADER_CHANGE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} Teleporters loaded!.
         /// </summary>
         internal static string TELEPORTERS_LOADED {
@@ -4381,6 +4480,15 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The player you&apos;re seeking for is currently not on a public map..
+        /// </summary>
+        internal static string USER_ON_INSTANCEMAP {
+            get {
+                return ResourceManager.GetString("USER_ON_INSTANCEMAP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User has blocked private messages!.
         /// </summary>
         internal static string USER_WHISPER_BLOCKED {
@@ -4440,6 +4548,15 @@ namespace OpenNos.World.Resource {
         internal static string WHISPER_UNLOCKED {
             get {
                 return ResourceManager.GetString("WHISPER_UNLOCKED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You&apos;ve earned {0} Family XP!.
+        /// </summary>
+        internal static string WIN_FXP {
+            get {
+                return ResourceManager.GetString("WIN_FXP", resourceCulture);
             }
         }
         

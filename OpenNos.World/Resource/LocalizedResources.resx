@@ -508,8 +508,8 @@
   <data name="REMOVE_SP" xml:space="preserve">
     <value>If you want to learn skill, you need to remove your sp card.</value>
   </data>
-  <data name="REPUT_DECREASED" xml:space="preserve">
-    <value>Reputation decreased!</value>
+  <data name="REPUT_DECREASE" xml:space="preserve">
+    <value>Reputation decreased by {0}</value>
   </data>
   <data name="REP_CHANGED" xml:space="preserve">
     <value>Reputation changed</value>
@@ -1301,7 +1301,7 @@
     <value>Total visits: {0}, Daily visits: {1}</value>
   </data>
   <data name="REPUT_INCREASE" xml:space="preserve">
-    <value>Reputation has been increased.</value>
+    <value>Reputation increased by {0}</value>
   </data>
   <data name="WIN_MONEY" xml:space="preserve">
     <value>Money: +{0}</value>
@@ -1608,5 +1608,44 @@
   </data>
   <data name="TALENTARENA_OPEN" xml:space="preserve">
     <value>The TalentArena opened!</value>
+  </data>
+  <data name="ASK_CHANGE_SPAWNLOCATION" xml:space="preserve">
+    <value>Do you really want to change your spawn location?</value>
+  </data>
+  <data name="ASK_OPEN_BOX" xml:space="preserve">
+    <value>Do you really want to open the box?</value>
+  </data>
+  <data name="ITEM_IS_NOT_FIXED" xml:space="preserve">
+    <value>You can't unfix the item, it is not fixed!</value>
+  </data>
+  <data name="JOIN_TEAM" xml:space="preserve">
+    <value>{0} joined the team.</value>
+  </data>
+  <data name="MONSTER_NOT_FOUND" xml:space="preserve">
+    <value>Monster not found!</value>
+  </data>
+  <data name="NEW_MISSION" xml:space="preserve">
+    <value>The mission has been updated!</value>
+  </data>
+  <data name="NOT_IN_MINILAND" xml:space="preserve">
+    <value>You're not in your Miniland! You can't do this right now.</value>
+  </data>
+  <data name="RAID_SUCCEED" xml:space="preserve">
+    <value>{1} led their {0} Raidteam to a success!</value>
+  </data>
+  <data name="RESPAWNLOCATION_CHANGED" xml:space="preserve">
+    <value>Your spawn location was set to the current town.</value>
+  </data>
+  <data name="SHIP_NOTARRIVED" xml:space="preserve">
+    <value>The ship has not yet returned!</value>
+  </data>
+  <data name="TEAM_LEADER_CHANGE" xml:space="preserve">
+    <value>The Team Leader changed. {0} is the new leader</value>
+  </data>
+  <data name="USER_ON_INSTANCEMAP" xml:space="preserve">
+    <value>The player you're seeking for is currently not on a public map.</value>
+  </data>
+  <data name="WIN_FXP" xml:space="preserve">
+    <value>You've earned {0} Family XP!</value>
   </data>
 </root>
