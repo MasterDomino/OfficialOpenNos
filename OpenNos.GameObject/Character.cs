@@ -31,6 +31,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using static OpenNos.Domain.BCardType;
+using OpenNos.Core.ConcurrencyExtensions;
 
 namespace OpenNos.GameObject
 {
@@ -70,6 +71,9 @@ namespace OpenNos.GameObject
             BuffObservables = new ThreadSafeSortedList<short, IDisposable>();
             CellonOptions = new ThreadSafeGenericList<CellonOptionDTO>();
             PVELockObject = new object();
+            ShellEffectArmor = new ConcurrentBag<ShellEffectDTO>();
+            ShellEffectMain = new ConcurrentBag<ShellEffectDTO>();
+            ShellEffectSecondary = new ConcurrentBag<ShellEffectDTO>();
         }
 
         public Character(CharacterDTO input)
@@ -146,6 +150,9 @@ namespace OpenNos.GameObject
             BuffObservables = new ThreadSafeSortedList<short, IDisposable>();
             CellonOptions = new ThreadSafeGenericList<CellonOptionDTO>();
             PVELockObject = new object();
+            ShellEffectArmor = new ConcurrentBag<ShellEffectDTO>();
+            ShellEffectMain = new ConcurrentBag<ShellEffectDTO>();
+            ShellEffectSecondary = new ConcurrentBag<ShellEffectDTO>();
         }
 
         #endregion
@@ -458,6 +465,12 @@ namespace OpenNos.GameObject
         public int ScPage { get; set; }
 
         public ClientSession Session { get; private set; }
+
+        public ConcurrentBag<ShellEffectDTO> ShellEffectArmor { get; set; }
+
+        public ConcurrentBag<ShellEffectDTO> ShellEffectMain { get; set; }
+
+        public ConcurrentBag<ShellEffectDTO> ShellEffectSecondary { get; set; }
 
         public int Size { get; set; } = 10;
 
@@ -1549,6 +1562,40 @@ namespace OpenNos.GameObject
                         if (item.Item.EquipmentSlot != EquipmentType.Sp)
                         {
                             EquipmentBCards.AddRange(item.Item.BCards);
+                            switch (item.Item.ItemType)
+                            {
+                                case ItemType.Armor:
+                                    ShellEffectArmor.Clear();
+
+                                    foreach (ShellEffectDTO dto in item.ShellEffects)
+                                    {
+                                        ShellEffectArmor.Add(dto);
+                                    }
+                                    break;
+                                case ItemType.Weapon:
+                                    switch (item.Item.EquipmentSlot)
+                                    {
+                                        case EquipmentType.MainWeapon:
+                                            ShellEffectMain.Clear();
+
+                                            foreach (ShellEffectDTO dto in item.ShellEffects)
+                                            {
+                                                ShellEffectMain.Add(dto);
+                                            }
+                                            break;
+
+                                        case EquipmentType.SecondaryWeapon:
+                                            ShellEffectSecondary.Clear();
+
+                                            foreach (ShellEffectDTO dto in item.ShellEffects)
+                                            {
+                                                ShellEffectSecondary.Add(dto);
+                                            }
+                                            break;
+                                    }
+                                    break;
+                            }
+
                         }
                         eqlist += $" {i}.{item.Item.VNum}.{item.Rare}.{(item.Item.IsColored ? item.Design : item.Upgrade)}.0";
                     }
@@ -1975,13 +2022,15 @@ namespace OpenNos.GameObject
                                             ClientSession session = ServerManager.Instance.GetSessionByCharacterId(charId);
                                             if (session != null)
                                             {
-                                                session.Character.Gold += drop2.Amount;
+                                                double multiplier = 1 + (GetBuff(CardType.Item, (byte)AdditionalTypes.Item.IncreaseEarnedGold)[0] / 10D);
+                                                multiplier += ShellEffectMain.FirstOrDefault(s => s.Effect == (byte)ShellWeaponEffectType.GainMoreGold)?.Value ?? 0;
+                                                session.Character.Gold += (int)(drop2.Amount * multiplier);
                                                 if (session.Character.Gold > maxGold)
                                                 {
                                                     session.Character.Gold = maxGold;
                                                     session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("MAX_GOLD"), 0));
                                                 }
-                                                session.SendPacket(session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {ServerManager.GetItem(drop2.ItemVNum).Name} x {drop2.Amount}", 10));
+                                                session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {ServerManager.GetItem(drop2.ItemVNum).Name} x {drop2.Amount}{(multiplier > 1 ? $"{(int)(drop2.Amount * multiplier) - drop2.Amount}" : string.Empty)}", 10));
                                                 session.SendPacket(session.Character.GenerateGold());
                                             }
                                             alreadyGifted.Add(charId);

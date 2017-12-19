@@ -138,7 +138,7 @@ namespace OpenNos.GameObject
                 WeaponDamageMinimum = weapon.DamageMinimum + weapon.Item.DamageMinimum;
                 WeaponDamageMaximum = weapon.DamageMaximum + weapon.Item.DamageMinimum;
 
-                ShellWeaponEffects = new List<ShellEffectDTO>(weapon.ShellEffects);
+                ShellWeaponEffects = character.ShellEffectMain.ToList();
             }
 
             ItemInstance armor = character.Inventory.LoadBySlotAndType((byte)EquipmentType.Armor, InventoryType.Wear);
@@ -149,7 +149,7 @@ namespace OpenNos.GameObject
                 ArmorRangeDefense = armor.DistanceDefence + armor.Item.DistanceDefence;
                 ArmorMagicalDefense = armor.MagicDefence + armor.Item.MagicDefence;
 
-                ShellArmorEffects = new List<ShellEffectDTO>(armor.ShellEffects);
+                ShellArmorEffects = character.ShellEffectArmor.ToList();
             }
 
             CellonOptions = Session.Character.CellonOptions.GetAllItems();

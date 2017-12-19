@@ -18,6 +18,7 @@ using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
 using System;
 using System.Diagnostics;
+using OpenNos.Core.ConcurrencyExtensions;
 
 namespace OpenNos.GameObject
 {
@@ -172,6 +173,40 @@ namespace OpenNos.GameObject
                     Logger.LogUserEvent("EQUIPMENT_WEAR", session.GenerateIdentity(), $"IIId: {inv.Id} ItemVnum: {inv.ItemVNum} Upgrade: {inv.Upgrade} Rare: {inv.Rare}");
 
                     session.Character.EquipmentBCards.AddRange(inv.Item.BCards);
+
+                    switch (inv.Item.ItemType)
+                    {
+                        case ItemType.Armor:
+                            session.Character.ShellEffectArmor.Clear();
+
+                            foreach (ShellEffectDTO dto in inv.ShellEffects)
+                            {
+                                session.Character.ShellEffectArmor.Add(dto);
+                            }
+                            break;
+                        case ItemType.Weapon:
+                            switch (inv.Item.EquipmentSlot)
+                            {
+                                case EquipmentType.MainWeapon:
+                                    session.Character.ShellEffectMain.Clear();
+
+                                    foreach (ShellEffectDTO dto in inv.ShellEffects)
+                                    {
+                                        session.Character.ShellEffectMain.Add(dto);
+                                    }
+                                    break;
+
+                                case EquipmentType.SecondaryWeapon:
+                                    session.Character.ShellEffectSecondary.Clear();
+
+                                    foreach (ShellEffectDTO dto in inv.ShellEffects)
+                                    {
+                                        session.Character.ShellEffectSecondary.Add(dto);
+                                    }
+                                    break;
+                            }
+                            break;
+                    }
 
                     if (Option == 0)
                     {
