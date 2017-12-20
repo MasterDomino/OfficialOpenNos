@@ -636,17 +636,17 @@ namespace OpenNos.Handler
                         {
                             // handle gold drop
                             long maxGold = ServerManager.Instance.Configuration.MaxGold;
-                            if (mapItem is MonsterMapItem droppedGold && Session.Character.Gold + droppedGold.GoldAmount <= maxGold)
+                            double multiplier = 1 + (Session.Character.GetBuff(CardType.Item, (byte)AdditionalTypes.Item.IncreaseEarnedGold)[0] / 10D);
+                            multiplier += (Session.Character.ShellEffectMain.FirstOrDefault(s => s.Effect == (byte)ShellWeaponEffectType.GainMoreGold)?.Value ?? 0) / 10D;
+                            if (mapItem is MonsterMapItem droppedGold && Session.Character.Gold + (droppedGold.GoldAmount * multiplier) <= maxGold)
                             {
                                 if (getPacket.PickerType == 2)
                                 {
                                     Session.SendPacket(Session.Character.GenerateIcon(1, 1, 1046));
                                 }
-                                double multiplier = 1 + (Session.Character.GetBuff(CardType.Item, (byte)AdditionalTypes.Item.IncreaseEarnedGold)[0] / 10D);
-                                multiplier += Session.Character.ShellEffectMain.FirstOrDefault(s => s.Effect == (byte)ShellWeaponEffectType.GainMoreGold)?.Value ?? 0;
-                                Session.Character.Gold += (int)(droppedGold.Amount * multiplier);
-                                Logger.LogUserEvent("CHARACTER_ITEM_GET", Session.GenerateIdentity(), $"[GetItem]Gold: {(int)(droppedGold.Amount * multiplier)})");
-                                Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {mapItem.GetItemInstance().Item.Name} x {droppedGold.GoldAmount}{(multiplier > 1 ? $"{(int)(droppedGold.GoldAmount * multiplier) - droppedGold.GoldAmount}" : string.Empty)}", 12));
+                                Session.Character.Gold += (int)(droppedGold.GoldAmount * multiplier);
+                                Logger.LogUserEvent("CHARACTER_ITEM_GET", Session.GenerateIdentity(), $"[GetItem]Gold: {(int)(droppedGold.GoldAmount * multiplier)})");
+                                Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {mapItem.GetItemInstance().Item.Name} x {droppedGold.GoldAmount}{(multiplier > 1 ? $" + {(int)(droppedGold.GoldAmount * multiplier) - droppedGold.GoldAmount}" : string.Empty)}", 12));
                             }
                             else
                             {
