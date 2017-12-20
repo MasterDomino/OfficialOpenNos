@@ -636,8 +636,8 @@ namespace OpenNos.Handler
                         {
                             // handle gold drop
                             long maxGold = ServerManager.Instance.Configuration.MaxGold;
-                            double multiplier = 1 + (Session.Character.GetBuff(CardType.Item, (byte)AdditionalTypes.Item.IncreaseEarnedGold)[0] / 10D);
-                            multiplier += (Session.Character.ShellEffectMain.FirstOrDefault(s => s.Effect == (byte)ShellWeaponEffectType.GainMoreGold)?.Value ?? 0) / 10D;
+                            double multiplier = 1 + (Session.Character.GetBuff(CardType.Item, (byte)AdditionalTypes.Item.IncreaseEarnedGold)[0] / 100D);
+                            multiplier += (Session.Character.ShellEffectMain.FirstOrDefault(s => s.Effect == (byte)ShellWeaponEffectType.GainMoreGold)?.Value ?? 0) / 100D;
                             if (mapItem is MonsterMapItem droppedGold && Session.Character.Gold + (droppedGold.GoldAmount * multiplier) <= maxGold)
                             {
                                 if (getPacket.PickerType == 2)
