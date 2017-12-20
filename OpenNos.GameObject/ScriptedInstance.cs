@@ -841,7 +841,7 @@ namespace OpenNos.GameObject
                         // SummonMonster Child
                         if (!isChildMonster)
                         {
-                            monster.DeathEvents.AddRange(this.summonMonster(mapInstance, summon.OnDeath.SummonMonster, true));
+                            monster.DeathEvents.AddRange(this.summonMonster(mapInstance, summon.OnDeath?.SummonMonster, true));
                         }
                     }
 
@@ -879,7 +879,7 @@ namespace OpenNos.GameObject
                         // SummonMonster Child
                         if (!isChildMonster)
                         {
-                            monster.NoticingEvents.AddRange(this.summonMonster(mapInstance, summon.OnDeath.SummonMonster, true));
+                            monster.NoticingEvents.AddRange(this.summonMonster(mapInstance, summon.OnDeath?.SummonMonster, true));
                         }
                     }
 
