@@ -316,6 +316,11 @@ namespace OpenNos.Handler
                         target.CurrentMapInstance.Broadcast(target, target.Character.GenerateGidx(), ReceiverType.AllExceptMe);
                         target.SendPacket(target.Character.GenerateSay(Language.Instance.GetMessageFromKey("ACT4_PVP_DIE"), 11));
                         target.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("ACT4_PVP_DIE"), 0));
+                        Observable.Timer(TimeSpan.FromMilliseconds(2000)).Subscribe(o =>
+                        {
+                            target.CurrentMapInstance?.Broadcast(target, $"c_mode 1 {target.Character.CharacterId} 1564 0 0 0");
+                            target.CurrentMapInstance?.Broadcast(target.Character.GenerateRevive());
+                        });
                         Observable.Timer(TimeSpan.FromMilliseconds(30000)).Subscribe(o =>
                         {
                             target.Character.Hp = (int)target.Character.HPLoad();
