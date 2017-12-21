@@ -325,6 +325,17 @@ namespace OpenNos.GameObject
                             onLockerOpen.Add(new EventContainer(mapInstance, EventActionType.REFRESHMAPITEMS, null));
                         }
 
+                        // Set Monster Lockers
+                        if (createMap.OnLockerOpen.SetMonsterLockers != null)
+                        {
+                            onLockerOpen.Add(new EventContainer(mapInstance, EventActionType.SETMONSTERLOCKERS, createMap.OnLockerOpen.SetMonsterLockers.Value));
+                        }
+                        // Set Button Lockers
+                        if (createMap.OnLockerOpen.SetButtonLockers != null)
+                        {
+                            onLockerOpen.Add(new EventContainer(mapInstance, EventActionType.SETBUTTONLOCKERS, createMap.OnLockerOpen.SetButtonLockers.Value));
+                        }
+
                         evts.Add(new EventContainer(mapInstance, EventActionType.REGISTEREVENT, new Tuple<string, List<EventContainer>>(nameof(XMLModel.Events.OnLockerOpen), onLockerOpen)));
                     }
 
@@ -402,6 +413,17 @@ namespace OpenNos.GameObject
                 if (createMap.OnCharacterDiscoveringMap.OnMoveOnMap != null)
                 {
                     onDiscoverEvents.AddRange(onMoveOnMap(mapInstance, createMap.OnCharacterDiscoveringMap.OnMoveOnMap));
+                }
+
+                // Set Monster Lockers
+                if(createMap.OnCharacterDiscoveringMap.SetMonsterLockers != null)
+                {
+                    onDiscoverEvents.Add(new EventContainer(mapInstance, EventActionType.SETMONSTERLOCKERS, createMap.OnCharacterDiscoveringMap.SetMonsterLockers.Value));
+                }
+                // Set Button Lockers
+                if (createMap.OnCharacterDiscoveringMap.SetButtonLockers != null)
+                {
+                    onDiscoverEvents.Add(new EventContainer(mapInstance, EventActionType.SETBUTTONLOCKERS, createMap.OnCharacterDiscoveringMap.SetButtonLockers.Value));
                 }
 
                 evts.Add(new EventContainer(mapInstance, EventActionType.REGISTEREVENT, new Tuple<string, List<EventContainer>>(nameof(XMLModel.Events.OnCharacterDiscoveringMap), onDiscoverEvents)));
@@ -619,6 +641,17 @@ namespace OpenNos.GameObject
 
                 // OnMapClean
                 onMoveOnMapEvents.AddRange(onMapClean(mapInstance, onMoveOnMap.OnMapClean));
+
+                // Set Monster Lockers
+                if (onMoveOnMap.SetMonsterLockers != null)
+                {
+                    onMoveOnMapEvents.Add(new EventContainer(mapInstance, EventActionType.SETMONSTERLOCKERS, onMoveOnMap.SetMonsterLockers.Value));
+                }
+                // Set Button Lockers
+                if (onMoveOnMap.SetButtonLockers != null)
+                {
+                    onMoveOnMapEvents.Add(new EventContainer(mapInstance, EventActionType.SETBUTTONLOCKERS, onMoveOnMap.SetButtonLockers.Value));
+                }
 
                 evts.Add(new EventContainer(mapInstance, EventActionType.REGISTEREVENT, new Tuple<string, List<EventContainer>>(nameof(XMLModel.Events.OnMoveOnMap), onMoveOnMapEvents)));
             }
