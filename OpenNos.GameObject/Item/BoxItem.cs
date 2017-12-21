@@ -115,9 +115,8 @@ namespace OpenNos.GameObject
                             }
                             else if (box.HoldingVNum == 0)
                             {
-                                if (packetsplit.Length == 1 && int.TryParse(packetsplit[0], out int PetId))
+                                if (packetsplit.Length == 1 && int.TryParse(packetsplit[0], out int PetId) && session.Character.Mates.Find(s => s.MateTransportId == PetId) is Mate mate)
                                 {
-                                    Mate mate = session.Character.Mates.Find(s => s.MateTransportId == PetId);
                                     box.HoldingVNum = mate.NpcMonsterVNum;
                                     box.SpLevel = mate.Level;
                                     box.SpDamage = mate.Attack;
