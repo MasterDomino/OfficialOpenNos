@@ -174,7 +174,7 @@ namespace OpenNos.GameObject.Helpers
                                     break;
 
                                 case "OnLockerOpen":
-                                    evt.MapInstance.InstanceBag.UnlockEvents.AddRange(even.Item2);
+                                    evt.MapInstance.UnlockEvents.AddRange(even.Item2);
                                     break;
                             }
                             break;
@@ -196,8 +196,8 @@ namespace OpenNos.GameObject.Helpers
                             }
                             if (evt.MapInstance.InstanceBag.MonsterLocker.Current == 0 && evt.MapInstance.InstanceBag.ButtonLocker.Current == 0)
                             {
-                                evt.MapInstance.InstanceBag.UnlockEvents.ForEach(s => RunEvent(s));
-                                evt.MapInstance.InstanceBag.UnlockEvents.RemoveAll(s => s != null);
+                                evt.MapInstance.UnlockEvents.ForEach(s => RunEvent(s));
+                                evt.MapInstance.UnlockEvents.RemoveAll(s => s != null);
                             }
                             break;
 
@@ -209,8 +209,8 @@ namespace OpenNos.GameObject.Helpers
                             }
                             if (evt.MapInstance.InstanceBag.MonsterLocker.Current == 0 && evt.MapInstance.InstanceBag.ButtonLocker.Current == 0)
                             {
-                                evt.MapInstance.InstanceBag.UnlockEvents.ForEach(s => RunEvent(s));
-                                evt.MapInstance.InstanceBag.UnlockEvents.RemoveAll(s => s != null);
+                                evt.MapInstance.UnlockEvents.ForEach(s => RunEvent(s));
+                                evt.MapInstance.UnlockEvents.RemoveAll(s => s != null);
                             }
                             break;
 

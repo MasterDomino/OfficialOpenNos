@@ -76,6 +76,7 @@ namespace OpenNos.GameObject
             _mapNpcIds = new ThreadSafeSortedList<int, int>();
             DroppedList = new ThreadSafeSortedList<long, MapItem>();
             Portals = new List<Portal>();
+            UnlockEvents = new List<EventContainer>();
             UserShops = new Dictionary<long, MapShop>();
             StartLife();
         }
@@ -155,6 +156,8 @@ namespace OpenNos.GameObject
         public List<ScriptedInstance> ScriptedInstances { get; set; }
 
         public bool ShopAllowed { get; set; }
+
+        public List<EventContainer> UnlockEvents { get; set; }
 
         public Dictionary<long, MapShop> UserShops { get; }
 

@@ -25,7 +25,6 @@ namespace OpenNos.GameObject
         {
             Clock = new Clock(1);
             DeadList = new ConcurrentBag<long>();
-            UnlockEvents = new List<EventContainer>();
             ButtonLocker = new Locker();
             MonsterLocker = new Locker();
         }
@@ -59,8 +58,6 @@ namespace OpenNos.GameObject
         public int Point { get; set; }
 
         public int RoomsVisited { get; set; }
-
-        public List<EventContainer> UnlockEvents { get; set; }
 
         #endregion
 
