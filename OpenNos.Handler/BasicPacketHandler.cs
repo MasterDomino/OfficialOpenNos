@@ -1184,170 +1184,169 @@ namespace OpenNos.Handler
                 Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("CANT_MOVE"), 10));
                 return;
             }
-            Parallel.ForEach(Session.CurrentMapInstance.Portals.Concat(Session.Character.GetExtraPortal()), portal =>
+
+            if (Session.CurrentMapInstance.Portals.Concat(Session.Character.GetExtraPortal())
+            .FirstOrDefault(s => Session.Character.PositionY >= s.SourceY - 1 && Session.Character.PositionY <= s.SourceY + 1
+            && Session.Character.PositionX >= s.SourceX - 1 && Session.Character.PositionX <= s.SourceX + 1) is Portal portal)
             {
-                if (Session.Character.PositionY >= portal.SourceY - 1 && Session.Character.PositionY <= portal.SourceY + 1
-                    && Session.Character.PositionX >= portal.SourceX - 1 && Session.Character.PositionX <= portal.SourceX + 1)
+                switch (portal.Type)
                 {
-                    switch (portal.Type)
-                    {
-                        case (sbyte)PortalType.MapPortal:
-                        case (sbyte)PortalType.TSNormal:
-                        case (sbyte)PortalType.Open:
-                        case (sbyte)PortalType.Miniland:
-                        case (sbyte)PortalType.TSEnd:
-                        case (sbyte)PortalType.Exit:
-                        case (sbyte)PortalType.Effect:
-                        case (sbyte)PortalType.ShopTeleport:
-                            break;
+                    case (sbyte)PortalType.MapPortal:
+                    case (sbyte)PortalType.TSNormal:
+                    case (sbyte)PortalType.Open:
+                    case (sbyte)PortalType.Miniland:
+                    case (sbyte)PortalType.TSEnd:
+                    case (sbyte)PortalType.Exit:
+                    case (sbyte)PortalType.Effect:
+                    case (sbyte)PortalType.ShopTeleport:
+                        break;
 
-                        case (sbyte)PortalType.Raid:
-                            if (Session.Character.Group?.Raid != null)
+                    case (sbyte)PortalType.Raid:
+                        if (Session.Character.Group?.Raid != null)
+                        {
+                            if (Session.Character.Group.IsLeader(Session))
                             {
-                                if (Session.Character.Group.IsLeader(Session))
-                                {
-                                    Session.SendPacket($"qna #mkraid^0^275 {Language.Instance.GetMessageFromKey("RAID_START_QUESTION")}");
-                                }
-                                else
-                                {
-                                    Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NOT_TEAM_LEADER"), 10));
-                                }
+                                Session.SendPacket($"qna #mkraid^0^275 {Language.Instance.GetMessageFromKey("RAID_START_QUESTION")}");
                             }
                             else
                             {
-                                Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NEED_TEAM"), 10));
+                                Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NOT_TEAM_LEADER"), 10));
                             }
-                            return;
-
-                        case (sbyte)PortalType.BlueRaid:
-                        case (sbyte)PortalType.DarkRaid:
-                            if ((int)Session.Character.Faction == portal.Type - 9 && Session.Character.Family?.Act4Raid != null && Session.Character.Level > 59 || Session.Character.Reputation > 60000)
-                            {
-                                Session.Character.SetReputation(Session.Character.Level * -50);
-
-                                Session.Character.LastPortal = currentRunningSeconds;
-
-                                switch (Session.Character.Family.Act4Raid.MapInstanceType)
-                                {
-                                    case MapInstanceType.Act4Morcos:
-                                        ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, Session.Character.Family.Act4Raid.MapInstanceId, 43, 179);
-                                        break;
-
-                                    case MapInstanceType.Act4Hatus:
-                                        ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, Session.Character.Family.Act4Raid.MapInstanceId, 15, 9);
-                                        break;
-
-                                    case MapInstanceType.Act4Calvina:
-                                        ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, Session.Character.Family.Act4Raid.MapInstanceId, 24, 6);
-                                        break;
-
-                                    case MapInstanceType.Act4Berios:
-                                        ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, Session.Character.Family.Act4Raid.MapInstanceId, 20, 20);
-                                        break;
-                                }
-                            }
-                            else
-                            {
-                                Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("PORTAL_BLOCKED"), 10));
-                            }
-                            return;
-
-                        default:
-                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("PORTAL_BLOCKED"), 10));
-                            return;
-                    }
-
-                    if (Session.CurrentMapInstance.MapInstanceType == MapInstanceType.TimeSpaceInstance && !Session.Character.Timespace.InstanceBag.Lock)
-                    {
-                        if (Session.Character.CharacterId == Session.Character.Timespace.InstanceBag.CreatorId)
-                        {
-                            Session.SendPacket(UserInterfaceHelper.GenerateDialog($"#rstart^1 rstart {Language.Instance.GetMessageFromKey("FIRST_ROOM_START")}"));
-                        }
-                        return;
-                    }
-                    portal.OnTraversalEvents.ForEach(e => EventHelper.Instance.RunEvent(e));
-                    if (portal.DestinationMapInstanceId == default)
-                    {
-                        return;
-                    }
-                    if (ServerManager.Instance.ChannelId == 51)
-                    {
-                        if ((Session.Character.Faction == FactionType.Angel && portal.DestinationMapId == 131) || (Session.Character.Faction == FactionType.Demon && portal.DestinationMapId == 130))
-                        {
-                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("PORTAL_BLOCKED"), 10));
-                            return;
-                        }
-                        if ((portal.DestinationMapId == 130 || portal.DestinationMapId == 131) && timeSpanSinceLastPortal < 60)
-                        {
-                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("CANT_MOVE"), 10));
-                            return;
-                        }
-
-                    }
-                    Session.SendPacket(Session.CurrentMapInstance.GenerateRsfn());
-
-                    Session.Character.LastPortal = currentRunningSeconds;
-
-                    if (ServerManager.GetMapInstance(portal.SourceMapInstanceId).MapInstanceType != MapInstanceType.BaseMapInstance && ServerManager.GetMapInstance(portal.DestinationMapInstanceId).MapInstanceType == MapInstanceType.BaseMapInstance)
-                    {
-                        ServerManager.Instance.ChangeMap(Session.Character.CharacterId, Session.Character.MapId, Session.Character.MapX, Session.Character.MapY);
-                    }
-                    else if (portal.DestinationMapInstanceId == Session.Character.Miniland.MapInstanceId)
-                    {
-                        ServerManager.Instance.JoinMiniland(Session, Session);
-                    }
-                    else if (portal.DestinationMapId == 20000)
-                    {
-                        ClientSession sess = ServerManager.Instance.Sessions.FirstOrDefault(s => s.Character.Miniland.MapInstanceId == portal.DestinationMapInstanceId);
-                        if (sess != null)
-                        {
-                            ServerManager.Instance.JoinMiniland(Session, sess);
-                        }
-                    }
-                    else
-                    {
-                        if (ServerManager.Instance.ChannelId == 51)
-                        {
-                            short destinationX = portal.DestinationX;
-                            short destinationY = portal.DestinationY;
-
-                            if (portal.DestinationMapInstanceId == CaligorRaid.CaligorMapInstance?.MapInstanceId) /* Caligor Raid Map */
-                            {
-                                switch (Session.Character.Faction)
-                                {
-                                    case FactionType.Angel:
-                                        destinationX = 50;
-                                        destinationY = 172;
-                                        break;
-                                    case FactionType.Demon:
-                                        destinationX = 130;
-                                        destinationY = 172;
-                                        break;
-                                }
-                            }
-                            else if (portal.DestinationMapId == 153) /* Unknown Land */
-                            {
-                                switch (Session.Character.Faction)
-                                {
-                                    case FactionType.Angel:
-                                        destinationX = 50;
-                                        destinationY = 172;
-                                        break;
-                                    case FactionType.Demon:
-                                        destinationX = 130;
-                                        destinationY = 172;
-                                        break;
-                                }
-                            }
-                            ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, portal.DestinationMapInstanceId, destinationX, destinationY);
                         }
                         else
                         {
-                            ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, portal.DestinationMapInstanceId, portal.DestinationX, portal.DestinationY);
+                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NEED_TEAM"), 10));
                         }
+                        return;
+
+                    case (sbyte)PortalType.BlueRaid:
+                    case (sbyte)PortalType.DarkRaid:
+                        if ((int)Session.Character.Faction == portal.Type - 9 && Session.Character.Family?.Act4Raid != null && Session.Character.Level > 59 || Session.Character.Reputation > 60000)
+                        {
+                            Session.Character.SetReputation(Session.Character.Level * -50);
+
+                            Session.Character.LastPortal = currentRunningSeconds;
+
+                            switch (Session.Character.Family.Act4Raid.MapInstanceType)
+                            {
+                                case MapInstanceType.Act4Morcos:
+                                    ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, Session.Character.Family.Act4Raid.MapInstanceId, 43, 179);
+                                    break;
+
+                                case MapInstanceType.Act4Hatus:
+                                    ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, Session.Character.Family.Act4Raid.MapInstanceId, 15, 9);
+                                    break;
+
+                                case MapInstanceType.Act4Calvina:
+                                    ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, Session.Character.Family.Act4Raid.MapInstanceId, 24, 6);
+                                    break;
+
+                                case MapInstanceType.Act4Berios:
+                                    ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, Session.Character.Family.Act4Raid.MapInstanceId, 20, 20);
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("PORTAL_BLOCKED"), 10));
+                        }
+                        return;
+
+                    default:
+                        Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("PORTAL_BLOCKED"), 10));
+                        return;
+                }
+
+                if (Session.CurrentMapInstance.MapInstanceType == MapInstanceType.TimeSpaceInstance && !Session.Character.Timespace.InstanceBag.Lock)
+                {
+                    if (Session.Character.CharacterId == Session.Character.Timespace.InstanceBag.CreatorId)
+                    {
+                        Session.SendPacket(UserInterfaceHelper.GenerateDialog($"#rstart^1 rstart {Language.Instance.GetMessageFromKey("FIRST_ROOM_START")}"));
                     }
+                    return;
+                }
+                portal.OnTraversalEvents.ForEach(e => EventHelper.Instance.RunEvent(e));
+                if (portal.DestinationMapInstanceId == default)
+                {
+                    return;
+                }
+                if (ServerManager.Instance.ChannelId == 51)
+                {
+                    if ((Session.Character.Faction == FactionType.Angel && portal.DestinationMapId == 131) || (Session.Character.Faction == FactionType.Demon && portal.DestinationMapId == 130))
+                    {
+                        Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("PORTAL_BLOCKED"), 10));
+                        return;
                     }
-            });
+                    if ((portal.DestinationMapId == 130 || portal.DestinationMapId == 131) && timeSpanSinceLastPortal < 60)
+                    {
+                        Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("CANT_MOVE"), 10));
+                        return;
+                    }
+
+                }
+                Session.SendPacket(Session.CurrentMapInstance.GenerateRsfn());
+
+                Session.Character.LastPortal = currentRunningSeconds;
+
+                if (ServerManager.GetMapInstance(portal.SourceMapInstanceId).MapInstanceType != MapInstanceType.BaseMapInstance && ServerManager.GetMapInstance(portal.DestinationMapInstanceId).MapInstanceType == MapInstanceType.BaseMapInstance)
+                {
+                    ServerManager.Instance.ChangeMap(Session.Character.CharacterId, Session.Character.MapId, Session.Character.MapX, Session.Character.MapY);
+                }
+                else if (portal.DestinationMapInstanceId == Session.Character.Miniland.MapInstanceId)
+                {
+                    ServerManager.Instance.JoinMiniland(Session, Session);
+                }
+                else if (portal.DestinationMapId == 20000)
+                {
+                    ClientSession sess = ServerManager.Instance.Sessions.FirstOrDefault(s => s.Character.Miniland.MapInstanceId == portal.DestinationMapInstanceId);
+                    if (sess != null)
+                    {
+                        ServerManager.Instance.JoinMiniland(Session, sess);
+                    }
+                }
+                else
+                {
+                    if (ServerManager.Instance.ChannelId == 51)
+                    {
+                        short destinationX = portal.DestinationX;
+                        short destinationY = portal.DestinationY;
+
+                        if (portal.DestinationMapInstanceId == CaligorRaid.CaligorMapInstance?.MapInstanceId) /* Caligor Raid Map */
+                        {
+                            switch (Session.Character.Faction)
+                            {
+                                case FactionType.Angel:
+                                    destinationX = 50;
+                                    destinationY = 172;
+                                    break;
+                                case FactionType.Demon:
+                                    destinationX = 130;
+                                    destinationY = 172;
+                                    break;
+                            }
+                        }
+                        else if (portal.DestinationMapId == 153) /* Unknown Land */
+                        {
+                            switch (Session.Character.Faction)
+                            {
+                                case FactionType.Angel:
+                                    destinationX = 50;
+                                    destinationY = 172;
+                                    break;
+                                case FactionType.Demon:
+                                    destinationX = 130;
+                                    destinationY = 172;
+                                    break;
+                            }
+                        }
+                        ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, portal.DestinationMapInstanceId, destinationX, destinationY);
+                    }
+                    else
+                    {
+                        ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, portal.DestinationMapInstanceId, portal.DestinationX, portal.DestinationY);
+                    }
+                }
+            }
         }
 
         /// <summary>
