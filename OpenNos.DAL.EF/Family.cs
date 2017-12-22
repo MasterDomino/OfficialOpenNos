@@ -59,7 +59,7 @@ namespace OpenNos.DAL.EF
 
         public bool ManagerCanShout { get; set; }
 
-        public byte MaxSize { get; set; }
+        public short MaxSize { get; set; }
 
         public FamilyAuthorityType MemberAuthorityType { get; set; }
 
