@@ -501,6 +501,7 @@ namespace OpenNos.GameObject
                             EventHelper.Instance.RunEvent(e.Item1, session);
                         }
                     });
+                    session.CurrentMapInstance.OnCharacterDiscoveringMapEvents.Clear();
                 }
                 catch (Exception)
                 {
