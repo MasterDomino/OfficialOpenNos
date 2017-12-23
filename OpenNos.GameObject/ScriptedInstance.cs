@@ -335,6 +335,7 @@ namespace OpenNos.GameObject
                         {
                             onLockerOpen.Add(new EventContainer(mapInstance, EventActionType.SETBUTTONLOCKERS, createMap.OnLockerOpen.SetButtonLockers.Value));
                         }
+                        onLockerOpen.AddRange(this.summonMonster(mapInstance, createMap.OnLockerOpen.SummonMonster, true));
 
                         evts.Add(new EventContainer(mapInstance, EventActionType.REGISTEREVENT, new Tuple<string, List<EventContainer>>(nameof(XMLModel.Events.OnLockerOpen), onLockerOpen)));
                     }

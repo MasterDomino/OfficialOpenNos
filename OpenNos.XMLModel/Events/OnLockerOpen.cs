@@ -23,6 +23,9 @@ namespace OpenNos.XMLModel.Events
         [XmlElement]
         public SetMonsterLockers SetMonsterLockers { get; set; }
 
+        [XmlElement]
+        public SummonMonster[] SummonMonster { get; set; }
+
         #endregion
     }
 }
