@@ -964,19 +964,7 @@ namespace OpenNos.Handler
                 Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[CharStat]CharacterName: {characterStatsPacket.CharacterName}");
 
                 string name = characterStatsPacket.CharacterName;
-                if (int.TryParse(characterStatsPacket.CharacterName, out int sessionId))
-                {
-                    if (ServerManager.Instance.GetSessionBySessionId(sessionId) != null)
-                    {
-                        Character character = ServerManager.Instance.GetSessionBySessionId(sessionId).Character;
-                        sendStats(character);
-                    }
-                    else
-                    {
-                        Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("USER_NOT_FOUND"), 10));
-                    }
-                }
-                else if (!string.IsNullOrEmpty(name))
+                if (!string.IsNullOrWhiteSpace(name))
                 {
                     if (ServerManager.Instance.GetSessionByCharacterName(name) != null)
                     {
