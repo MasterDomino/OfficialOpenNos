@@ -3506,7 +3506,7 @@ namespace OpenNos.GameObject
             }
 
             // reload vehicle speed after opening an shop for instance
-            if (IsVehicled)
+            if (IsVehicled && !IsCustomSpeed)
             {
                 Speed = VehicleSpeed;
             }

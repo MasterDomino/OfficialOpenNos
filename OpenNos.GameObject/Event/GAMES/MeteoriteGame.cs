@@ -103,6 +103,7 @@ namespace OpenNos.GameObject.Event.GAMES
 
                     session.Character.Speed = 12;
                     session.Character.IsVehicled = true;
+                    session.Character.IsCustomSpeed = true;
                     session.Character.Morph = 1156;
                     session.Character.ArenaWinner = 0;
                     session.Character.MorphUpgrade = 0;
@@ -235,6 +236,7 @@ namespace OpenNos.GameObject.Event.GAMES
                                 {
                                     // Your reward for the last three living players
                                 }
+                                character.IsCustomSpeed = false;
                                 character.RemoveVehicle();
                                 character.GetDamage(655350);
                                 Observable.Timer(TimeSpan.FromMilliseconds(1000)).Subscribe(o => ServerManager.Instance.AskRevive(character.CharacterId));
