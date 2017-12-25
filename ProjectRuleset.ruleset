@@ -438,5 +438,6 @@
     <Rule Id="RCS1073" Action="Warning" />
     <Rule Id="RCS1073FadeOut" Action="Warning" />
     <Rule Id="RCS1079" Action="None" />
+    <Rule Id="RCS1163" Action="None" />
   </Rules>
 </RuleSet>
