@@ -53,7 +53,7 @@ namespace OpenNos.Core
         #region Properties
 
         /// <summary>
-        /// Gets the number of elements contained in the List&lt;T&gt;.
+        /// Gets the number of elements contained in the <see cref="List{T}"/>.
         /// </summary>
         public int Count
         {
@@ -80,7 +80,7 @@ namespace OpenNos.Core
         #region Methods
 
         /// <summary>
-        /// Adds an object to the end of the List&lt;T&gt;.
+        /// Adds an object to the end of the <see cref="List{T}"/>.
         /// </summary>
         /// <param name="value"></param>
         public void Add(T value)
@@ -100,7 +100,7 @@ namespace OpenNos.Core
         }
 
         /// <summary>
-        /// Adds the elements of the specified collection to the end of the List&lt;T&gt;.
+        /// Adds the elements of the specified collection to the end of the <see cref="List{T}"/>.
         /// </summary>
         /// <param name="value"></param>
         public void AddRange(List<T> value)
@@ -123,7 +123,7 @@ namespace OpenNos.Core
         /// Determines whether all elements of a sequence satisfy a condition.
         /// </summary>
         /// <param name="predicate"></param>
-        /// <returns>True; if elements satisgy the condition</returns>
+        /// <returns><see cref="bool"/> True; if elements satisfy the condition</returns>
         public bool All(Func<T, bool> predicate)
         {
             if (!_disposed)
@@ -145,7 +145,7 @@ namespace OpenNos.Core
         /// Determines whether any element of a sequence satisfies a condition.
         /// </summary>
         /// <param name="predicate"></param>
-        /// <returns></returns>
+        /// <returns><see cref="bool"/></returns>
         public bool Any(Func<T, bool> predicate)
         {
             if (!_disposed)
@@ -164,7 +164,7 @@ namespace OpenNos.Core
         }
 
         /// <summary>
-        /// Removes all elements from the List&lt;T&gt;.
+        /// Removes all elements from the <see cref="List{T}"/>.
         /// </summary>
         public void Clear()
         {
@@ -183,7 +183,7 @@ namespace OpenNos.Core
         }
 
         /// <summary>
-        /// Copies the entire List&lt;T&gt; to a compatible one-dimensional array, starting at the
+        /// Copies the entire <see cref="List{T}"/> to a compatible one-dimensional array, starting at the
         /// beginning of the target array.
         /// </summary>
         /// <param name="grpmembers"></param>
@@ -207,7 +207,7 @@ namespace OpenNos.Core
         /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
         /// </summary>
         /// <param name="predicate"></param>
-        /// <returns>integer number of found elements</returns>
+        /// <returns><see cref="int"/> number of found elements</returns>
         public int CountLinq(Func<T, bool> predicate)
         {
             if (!_disposed)
@@ -242,7 +242,7 @@ namespace OpenNos.Core
         /// Returns the element at given index
         /// </summary>
         /// <param name="v"></param>
-        /// <returns>T object</returns>
+        /// <returns><see cref="T"/> object</returns>
         public T ElementAt(int v)
         {
             if (!_disposed)
@@ -254,7 +254,7 @@ namespace OpenNos.Core
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error("Tell Master that i dropped and IOR exception somewhere, also stop crying about it.", ex);
+                    Logger.Error("Tell Master that I dropped and IOR exception somewhere, also stop crying about it.", ex);
                 }
                 finally
                 {
@@ -266,10 +266,10 @@ namespace OpenNos.Core
 
         /// <summary>
         /// Searches for an element that matches the conditions defined by the specified predicate,
-        /// and returns the first occurrence within the entire List&lt;T&gt;.
+        /// and returns the first occurrence within the entire <see cref="List{T}"/>.
         /// </summary>
         /// <param name="predicate"></param>
-        /// <returns>T object</returns>
+        /// <returns><see cref="T"/> object</returns>
         public T Find(Predicate<T> predicate)
         {
             if (!_disposed)
@@ -289,9 +289,9 @@ namespace OpenNos.Core
 
         /// <summary>
         /// Searches for an element that matches the conditions defined by the specified predicate,
-        /// and returns the first occurrence within the entire List&lt;T&gt;.
+        /// and returns the first occurrence within the entire <see cref="List{T}"/>.
         /// </summary>
-        /// <returns>T object</returns>
+        /// <returns><see cref="T"/> object</returns>
         public T FirstOrDefault()
         {
             if (!_disposed)
@@ -310,32 +310,7 @@ namespace OpenNos.Core
         }
 
         /// <summary>
-        /// Searches for an element that matches the conditions defined by the specified predicate,
-        /// and returns the first occurrence within the entire List&lt;T&gt;.
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns>T object</returns>
-        public T FirstOrDefault(Func<T, bool> predicate)
-        {
-            if (!_disposed)
-            {
-                _lock.EnterReadLock();
-                try
-                {
-#pragma warning disable RCS1119 // Call 'Find' instead of 'FirstOrDefault'.
-                    return _items.FirstOrDefault(predicate);
-#pragma warning restore RCS1119 // Call 'Find' instead of 'FirstOrDefault'.
-                }
-                finally
-                {
-                    _lock.ExitReadLock();
-                }
-            }
-            return default;
-        }
-
-        /// <summary>
-        /// Performs the specified action on each element of the List&lt;T&gt;.
+        /// Performs the specified action on each element of the <see cref="List{T}"/>.
         /// </summary>
         /// <param name="action"></param>
         public void ForEach(Action<T> action)
@@ -357,7 +332,7 @@ namespace OpenNos.Core
         /// <summary>
         /// returns a list of all objects in current thread safe generic list
         /// </summary>
-        /// <returns>List&lt;T&gt;</returns>
+        /// <returns><see cref="List{T}"/></returns>
         public List<T> GetAllItems()
         {
             if (!_disposed)
@@ -380,7 +355,7 @@ namespace OpenNos.Core
         /// no such element is found.
         /// </summary>
         /// <param name="predicate"></param>
-        /// <returns>TV object</returns>
+        /// <returns><see cref="T"/> object</returns>
         public T LastOrDefault(Func<T, bool> predicate)
         {
             if (!_disposed)
@@ -399,7 +374,7 @@ namespace OpenNos.Core
         }
 
         /// <summary>
-        /// Removes the first occurrence of a specific object from the List&lt;T&gt;.
+        /// Removes the first occurrence of a specific object from the <see cref="List{T}"/>.
         /// </summary>
         /// <param name="match"></param>
         public void Remove(T match)
@@ -443,7 +418,7 @@ namespace OpenNos.Core
         /// an exception if more than one such element exists.
         /// </summary>
         /// <param name="predicate"></param>
-        /// <returns>TV object</returns>
+        /// <returns><see cref="T"/> object</returns>
         public T Single(Func<T, bool> predicate)
         {
             if (!_disposed)
@@ -467,7 +442,8 @@ namespace OpenNos.Core
         /// satisfies the condition.
         /// </summary>
         /// <param name="predicate"></param>
-        /// <returns>TV object</returns>
+        /// <returns><see cref="T"/> object</returns>
+        /// <exception cref="InvalidOperationException"/>
         public T SingleOrDefault(Func<T, bool> predicate)
         {
             if (!_disposed)
@@ -489,7 +465,7 @@ namespace OpenNos.Core
         /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
         /// </summary>
         /// <param name="selector"></param>
-        /// <returns>integer number of found elements</returns>
+        /// <returns><see cref="int"/> number of found elements</returns>
         public int Sum(Func<T, int> selector)
         {
             if (!_disposed)
@@ -511,7 +487,7 @@ namespace OpenNos.Core
         /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
         /// </summary>
         /// <param name="selector"></param>
-        /// <returns>integer number of found elements</returns>
+        /// <returns>int? number of found elements</returns>
         public int? Sum(Func<T, int?> selector)
         {
             if (!_disposed)
@@ -533,7 +509,7 @@ namespace OpenNos.Core
         /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
         /// </summary>
         /// <param name="selector"></param>
-        /// <returns>integer number of found elements</returns>
+        /// <returns><see cref="long"/> number of found elements</returns>
         public long Sum(Func<T, long> selector)
         {
             if (!_disposed)
@@ -555,7 +531,7 @@ namespace OpenNos.Core
         /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
         /// </summary>
         /// <param name="selector"></param>
-        /// <returns>integer number of found elements</returns>
+        /// <returns>long? number of found elements</returns>
         public long? Sum(Func<T, long?> selector)
         {
             if (!_disposed)
@@ -577,7 +553,7 @@ namespace OpenNos.Core
         /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
         /// </summary>
         /// <param name="selector"></param>
-        /// <returns>integer number of found elements</returns>
+        /// <returns><see cref="double"/> number of found elements</returns>
         public double Sum(Func<T, double> selector)
         {
             if (!_disposed)
@@ -599,7 +575,7 @@ namespace OpenNos.Core
         /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
         /// </summary>
         /// <param name="selector"></param>
-        /// <returns>integer number of found elements</returns>
+        /// <returns>double? number of found elements</returns>
         public double? Sum(Func<T, double?> selector)
         {
             if (!_disposed)
@@ -621,7 +597,7 @@ namespace OpenNos.Core
         /// Filters a sequence of values based on a predicate.
         /// </summary>
         /// <param name="predicate"></param>
-        /// <returns></returns>
+        /// <returns><see cref="List{T}"/></returns>
         public List<T> Where(Func<T, bool> predicate)
         {
             if (!_disposed)

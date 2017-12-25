@@ -53,7 +53,7 @@ namespace OpenNos.Core
                 KeyValuePair<Tuple<Type, string>, Dictionary<PacketIndexAttribute, PropertyInfo>> serializationInformation = GetSerializationInformation(packetType);
                 PacketDefinition deserializedPacket = (PacketDefinition)Activator.CreateInstance(packetType);
                 SetDeserializationInformations(deserializedPacket, packetContent, serializationInformation.Key.Item2);
-                return deserialize(packetContent, deserializedPacket, serializationInformation, includesKeepAliveIdentity);
+                return Deserialize(packetContent, deserializedPacket, serializationInformation, includesKeepAliveIdentity);
             }
             catch (Exception ex)
             {
@@ -79,7 +79,7 @@ namespace OpenNos.Core
                 KeyValuePair<Tuple<Type, string>, Dictionary<PacketIndexAttribute, PropertyInfo>> serializationInformation = GetSerializationInformation(typeof(TPacket));
                 TPacket deserializedPacket = Activator.CreateInstance<TPacket>(); // reflection is bad, improve?
                 SetDeserializationInformations(deserializedPacket, packetContent, serializationInformation.Key.Item2);
-                return (TPacket)deserialize(packetContent, deserializedPacket, serializationInformation, includesKeepAliveIdentity);
+                return (TPacket)Deserialize(packetContent, deserializedPacket, serializationInformation, includesKeepAliveIdentity);
             }
             catch (Exception e)
             {
@@ -152,7 +152,7 @@ namespace OpenNos.Core
             }
         }
 
-        private static PacketDefinition deserialize(string packetContent, PacketDefinition deserializedPacket, KeyValuePair<Tuple<Type, string>,
+        private static PacketDefinition Deserialize(string packetContent, PacketDefinition deserializedPacket, KeyValuePair<Tuple<Type, string>,
                                                                                     Dictionary<PacketIndexAttribute, PropertyInfo>> serializationInformation, bool includesKeepAliveIdentity)
         {
             MatchCollection matches = Regex.Matches(packetContent, @"([^\s]+[\.][^\s]+[\s]?)+((?=\s)|$)|([^\s]+)((?=\s)|$)");
@@ -169,14 +169,14 @@ namespace OpenNos.Core
                         {
                             // get the value to the end and stop deserialization
                             string valueToEnd = packetContent.Substring(matches[currentIndex].Index, packetContent.Length - matches[currentIndex].Index);
-                            packetBasePropertyInfo.Value.SetValue(deserializedPacket, deserializeValue(packetBasePropertyInfo.Value.PropertyType, valueToEnd, packetBasePropertyInfo.Key, matches, includesKeepAliveIdentity));
+                            packetBasePropertyInfo.Value.SetValue(deserializedPacket, DeserializeValue(packetBasePropertyInfo.Value.PropertyType, valueToEnd, packetBasePropertyInfo.Key, matches, includesKeepAliveIdentity));
                             break;
                         }
 
                         string currentValue = matches[currentIndex].Value;
 
                         // set the value & convert currentValue
-                        packetBasePropertyInfo.Value.SetValue(deserializedPacket, deserializeValue(packetBasePropertyInfo.Value.PropertyType, currentValue, packetBasePropertyInfo.Key, matches, includesKeepAliveIdentity));
+                        packetBasePropertyInfo.Value.SetValue(deserializedPacket, DeserializeValue(packetBasePropertyInfo.Value.PropertyType, currentValue, packetBasePropertyInfo.Key, matches, includesKeepAliveIdentity));
                     }
                     else
                     {
@@ -194,19 +194,19 @@ namespace OpenNos.Core
         /// <param name="currentValues">String to convert</param>
         /// <param name="genericListType">Type of the property to convert</param>
         /// <returns>The string as converted List</returns>
-        private static IList deserializeSimpleList(string currentValues, Type genericListType)
+        private static IList DeserializeSimpleList(string currentValues, Type genericListType)
         {
             IList subpackets = (IList)Convert.ChangeType(Activator.CreateInstance(genericListType), genericListType);
             foreach (string currentValue in (IEnumerable<string>)currentValues.Split('.'))
             {
-                object value = deserializeValue(genericListType.GenericTypeArguments[0], currentValue, null, null);
+                object value = DeserializeValue(genericListType.GenericTypeArguments[0], currentValue, null, null);
                 subpackets.Add(value);
             }
 
             return subpackets;
         }
 
-        private static object deserializeSubpacket(string currentSubValues, Type packetBasePropertyType, KeyValuePair<Tuple<Type, string>, Dictionary<PacketIndexAttribute, PropertyInfo>> subpacketSerializationInfo, bool isReturnPacket = false)
+        private static object DeserializeSubpacket(string currentSubValues, Type packetBasePropertyType, KeyValuePair<Tuple<Type, string>, Dictionary<PacketIndexAttribute, PropertyInfo>> subpacketSerializationInfo, bool isReturnPacket = false)
         {
             string[] subpacketValues = currentSubValues.Split(isReturnPacket ? '^' : '.');
             object newSubpacket = Activator.CreateInstance(packetBasePropertyType);
@@ -216,7 +216,7 @@ namespace OpenNos.Core
                 int currentSubIndex = isReturnPacket ? subpacketPropertyInfo.Key.Index + 1 : subpacketPropertyInfo.Key.Index; // return packets do include header
                 string currentSubValue = subpacketValues[currentSubIndex];
 
-                subpacketPropertyInfo.Value.SetValue(newSubpacket, deserializeValue(subpacketPropertyInfo.Value.PropertyType, currentSubValue, subpacketPropertyInfo.Key, null));
+                subpacketPropertyInfo.Value.SetValue(newSubpacket, DeserializeValue(subpacketPropertyInfo.Value.PropertyType, currentSubValue, subpacketPropertyInfo.Key, null));
             }
 
             return newSubpacket;
@@ -232,7 +232,7 @@ namespace OpenNos.Core
         /// <param name="currentIndex"></param>
         /// <param name="includesKeepAliveIdentity"></param>
         /// <returns>List of Deserialized subpackets</returns>
-        private static IList deserializeSubpackets(string currentValue, Type packetBasePropertyType, bool shouldRemoveSeparator, MatchCollection packetMatchCollections, int? currentIndex, bool includesKeepAliveIdentity)
+        private static IList DeserializeSubpackets(string currentValue, Type packetBasePropertyType, bool shouldRemoveSeparator, MatchCollection packetMatchCollections, int? currentIndex, bool includesKeepAliveIdentity)
         {
             // split into single values
             List<string> splittedSubpackets = currentValue.Split(' ').ToList();
@@ -287,13 +287,13 @@ namespace OpenNos.Core
 
             foreach (string subpacket in splittedSubpackets)
             {
-                subpackets.Add(deserializeSubpacket(subpacket, subPacketType, subpacketSerializationInfo));
+                subpackets.Add(DeserializeSubpacket(subpacket, subPacketType, subpacketSerializationInfo));
             }
 
             return subpackets;
         }
 
-        private static object deserializeValue(Type packetPropertyType, string currentValue, PacketIndexAttribute packetIndexAttribute, MatchCollection packetMatches, bool includesKeepAliveIdentity = false)
+        private static object DeserializeValue(Type packetPropertyType, string currentValue, PacketIndexAttribute packetIndexAttribute, MatchCollection packetMatches, bool includesKeepAliveIdentity = false)
         {
             // check for empty value and cast it to null
             if (currentValue == "-1" || currentValue == "-")
@@ -326,16 +326,16 @@ namespace OpenNos.Core
             if (packetPropertyType.BaseType?.Equals(typeof(PacketDefinition)) == true) // subpacket
             {
                 KeyValuePair<Tuple<Type, string>, Dictionary<PacketIndexAttribute, PropertyInfo>> subpacketSerializationInfo = GetSerializationInformation(packetPropertyType);
-                return deserializeSubpacket(currentValue, packetPropertyType, subpacketSerializationInfo, packetIndexAttribute?.IsReturnPacket ?? false);
+                return DeserializeSubpacket(currentValue, packetPropertyType, subpacketSerializationInfo, packetIndexAttribute?.IsReturnPacket ?? false);
             }
             if (packetPropertyType.IsGenericType && packetPropertyType.GetGenericTypeDefinition().IsAssignableFrom(typeof(List<>)) // subpacket list
                 && packetPropertyType.GenericTypeArguments[0].BaseType.Equals(typeof(PacketDefinition)))
             {
-                return deserializeSubpackets(currentValue, packetPropertyType, packetIndexAttribute?.RemoveSeparator ?? false, packetMatches, packetIndexAttribute?.Index, includesKeepAliveIdentity);
+                return DeserializeSubpackets(currentValue, packetPropertyType, packetIndexAttribute?.RemoveSeparator ?? false, packetMatches, packetIndexAttribute?.Index, includesKeepAliveIdentity);
             }
             if (packetPropertyType.IsGenericType && packetPropertyType.GetGenericTypeDefinition().IsAssignableFrom(typeof(List<>))) // simple list
             {
-                return deserializeSimpleList(currentValue, packetPropertyType);
+                return DeserializeSimpleList(currentValue, packetPropertyType);
             }
             if (Nullable.GetUnderlyingType(packetPropertyType) != null && string.IsNullOrEmpty(currentValue)) // empty nullable value
             {
@@ -360,12 +360,11 @@ namespace OpenNos.Core
             foreach (Type packetBaseType in typeof(TPacketDefinition).Assembly.GetTypes().Where(p => !p.IsInterface && typeof(TPacketDefinition).BaseType.IsAssignableFrom(p)))
             {
                 // add to serialization informations
-                KeyValuePair<Tuple<Type, string>, Dictionary<PacketIndexAttribute, PropertyInfo>> serializationInformations =
-                    generateSerializationInformations(packetBaseType);
+                KeyValuePair<Tuple<Type, string>, Dictionary<PacketIndexAttribute, PropertyInfo>> serializationInformations = GenerateSerializationInformations(packetBaseType);
             }
         }
 
-        private static KeyValuePair<Tuple<Type, string>, Dictionary<PacketIndexAttribute, PropertyInfo>> generateSerializationInformations(Type serializationType)
+        private static KeyValuePair<Tuple<Type, string>, Dictionary<PacketIndexAttribute, PropertyInfo>> GenerateSerializationInformations(Type serializationType)
         {
             string[] header = serializationType.GetCustomAttribute<PacketHeaderAttribute>()?.Identification;
 
@@ -407,7 +406,7 @@ namespace OpenNos.Core
         {
             return _packetSerializationInformations.Any(si => si.Key.Item1 == serializationType)
                                               ? _packetSerializationInformations.FirstOrDefault(si => si.Key.Item1 == serializationType)
-                                              : generateSerializationInformations(serializationType); // generic runtime serialization parameter generation
+                                              : GenerateSerializationInformations(serializationType); // generic runtime serialization parameter generation
         }
 
         /// <summary>

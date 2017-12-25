@@ -35,7 +35,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         /// <summary>
         /// Default Timeout value.
         /// </summary>
-        private const int DefaultTimeout = 60000;
+        private const int DEFAULT_TIMEOUT = 60000;
 
         /// <summary>
         /// This object is used to process incoming messages sequentially.
@@ -72,7 +72,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
             messenger.MessageSent += Messenger_MessageSent;
             _incomingMessageProcessor = new SequentialItemProcessor<IScsMessage>(OnMessageReceived);
             _waitingMessages = new SortedList<string, WaitingMessage>();
-            Timeout = DefaultTimeout;
+            Timeout = DEFAULT_TIMEOUT;
         }
 
         #endregion
@@ -232,6 +232,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
                 {
                     case WaitingMessageStates.WaitingForResponse:
                         throw new TimeoutException("Timeout occured. Can not received response.");
+
                     case WaitingMessageStates.Cancelled:
                         throw new CommunicationException("Disconnected before response received.");
                 }

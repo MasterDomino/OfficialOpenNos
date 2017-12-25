@@ -91,7 +91,7 @@ namespace OpenNos.GameObject.Event
             List<EventContainer> onDeathEvents = new List<EventContainer>();
             onDeathEvents.Add(new EventContainer(CaligorRaid.CaligorMapInstance, EventActionType.SCRIPTEND, (byte)1));
 
-            MapMonster caligor = CaligorRaid.CaligorMapInstance.Monsters.FirstOrDefault(s => s.Monster.NpcMonsterVNum == 2305);
+            MapMonster caligor = CaligorRaid.CaligorMapInstance.Monsters.Find(s => s.Monster.NpcMonsterVNum == 2305);
 
             if (caligor != null)
             {

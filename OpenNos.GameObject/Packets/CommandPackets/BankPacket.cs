@@ -23,10 +23,10 @@ namespace OpenNos.GameObject.CommandPackets
         {
 
             return "Display Help: $Bank Help\n" +
-                "Display Balance: $Bank Balance\n" +
-                "Deposit Gold: $Bank Deposit AMOUNT\n" +
-                "Withdraw Gold: $Bank Withdraw AMOUNT\n" +
-                "Send Gold: $Bank Send RECEIVER AMOUNT";
+                   "Display Balance: $Bank Balance\n" +
+                   "Deposit Gold: $Bank Deposit AMOUNT\n" +
+                   "Withdraw Gold: $Bank Withdraw AMOUNT\n" +
+                   "Send Gold: $Bank Send RECEIVER AMOUNT";
         }
 
         #endregion

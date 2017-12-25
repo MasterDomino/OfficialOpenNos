@@ -461,7 +461,7 @@ namespace OpenNos.GameObject
         public T LoadByVNum<T>(short vNum) where T : ItemInstance => (T)FirstOrDefault(i => i.ItemVNum.Equals(vNum));
 
         /// <summary>
-        /// Moves one item from one Inventory to another. Example: Equipment &lt;-&gt; Wear,
+        /// Moves one item from one <see cref="Inventory"/> to another. Example: Equipment &lt;-&gt; Wear,
         /// Equipment &lt;-&gt; Costume, Equipment &lt;-&gt; Specialist
         /// </summary>
         /// <param name="sourceSlot"></param>

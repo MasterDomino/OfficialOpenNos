@@ -462,7 +462,7 @@ namespace OpenNos.GameObject
                     bool onyxWings = false;
                     BattleEntity battleEntity = new BattleEntity(hitRequest.Session.Character, hitRequest.Skill);
                     int damage = DamageHelper.Instance.CalculateDamage(battleEntity, new BattleEntity(this), hitRequest.Skill, ref hitmode, ref onyxWings);
-                    if(Monster.BCards.FirstOrDefault(s=>s.Type == (byte)CardType.LightAndShadow && s.SubType == (byte)AdditionalTypes.LightAndShadow.InflictDamageToMP) is BCard card)
+                    if(Monster.BCards.Find(s=>s.Type == (byte)CardType.LightAndShadow && s.SubType == (byte)AdditionalTypes.LightAndShadow.InflictDamageToMP) is BCard card)
                     {
                         int reduce = damage / 100 * card.FirstData;
                         if(CurrentMp < reduce)

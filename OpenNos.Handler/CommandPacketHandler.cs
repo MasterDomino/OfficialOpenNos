@@ -2267,7 +2267,7 @@ namespace OpenNos.Handler
                 {
                     return;
                 }
-                RespawnDTO resp = Session.Character.Respawns.FirstOrDefault(s => s.RespawnMapTypeId == packet.ReturnPointId + 50);
+                RespawnDTO resp = Session.Character.Respawns.Find(s => s.RespawnMapTypeId == packet.ReturnPointId + 50);
                 if (resp == null)
                 {
                     Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("RETURNPOINT_NOT_SET"), 10));
@@ -2454,10 +2454,17 @@ namespace OpenNos.Handler
                 }
                 if (Session.HasCurrentMapInstance && Session.CurrentMapInstance.Map.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4))
                 {
-                    RespawnDTO resp = Session.Character.Respawns.FirstOrDefault(s => s.RespawnMapTypeId == packet.ReturnPointId + 50);
+                    RespawnDTO resp = Session.Character.Respawns.Find(s => s.RespawnMapTypeId == packet.ReturnPointId + 50);
                     if (resp == null)
                     {
-                        resp = new RespawnDTO { CharacterId = Session.Character.CharacterId, MapId = Session.Character.MapId, X = Session.Character.MapX, Y = Session.Character.MapY, RespawnMapTypeId = packet.ReturnPointId + 50 };
+                        resp = new RespawnDTO
+                        {
+                            CharacterId = Session.Character.CharacterId,
+                            MapId = Session.Character.MapId,
+                            X = Session.Character.MapX,
+                            Y = Session.Character.MapY,
+                            RespawnMapTypeId = packet.ReturnPointId + 50
+                        };
                         Session.Character.Respawns.Add(resp);
                     }
                     else

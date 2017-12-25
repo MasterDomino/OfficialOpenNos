@@ -91,7 +91,7 @@ namespace OpenNos.Core.Threading
 
                 if (!_isProcessing)
                 {
-                    ThreadPool.QueueUserWorkItem(processItem);
+                    ThreadPool.QueueUserWorkItem(ProcessItem);
                 }
             }
         }
@@ -119,7 +119,7 @@ namespace OpenNos.Core.Threading
         /// This method runs on a new seperated Task (thread) to process items on the queue.
         /// </summary>
         /// <param name="state">todo: describe state parameter on processItem</param>
-        private void processItem(object state)
+        private void ProcessItem(object state)
         {
             //Try to get an item from queue to process it.
             TItem itemToProcess;
@@ -159,7 +159,7 @@ namespace OpenNos.Core.Threading
                 }
 
                 //Start a new task
-                ThreadPool.QueueUserWorkItem(processItem);
+                ThreadPool.QueueUserWorkItem(ProcessItem);
             }
         }
 

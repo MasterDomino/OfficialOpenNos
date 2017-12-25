@@ -348,7 +348,7 @@ namespace OpenNos.Master.Server
                 return null;
             }
 
-            AccountConnection account = MSManager.Instance.ConnectedAccounts.FirstOrDefault(s => s.AccountId.Equals(accountId));
+            AccountConnection account = MSManager.Instance.ConnectedAccounts.Find(s => s.AccountId.Equals(accountId));
             if (account?.OriginWorld != null)
             {
                 return $"{account.OriginWorld.Endpoint.IpAddress}:{account.OriginWorld.Endpoint.TcpPort}";

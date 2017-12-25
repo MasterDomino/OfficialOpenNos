@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Threading;
 
@@ -21,7 +22,7 @@ namespace OpenNos.Core
 {
     /// <summary>
     /// This class is used to store key-value based items in a thread safe manner. It uses
-    /// System.Collections.Generic.SortedList publicly.
+    /// <see cref="SortedList"/> publicly.
     /// </summary>
     /// <typeparam name="TK">Key type</typeparam>
     /// <typeparam name="TV">Value type</typeparam>
@@ -134,7 +135,7 @@ namespace OpenNos.Core
         /// Determines whether all elements of a sequence satisfy a condition.
         /// </summary>
         /// <param name="predicate"></param>
-        /// <returns>True; if elements satisgy the condition</returns>
+        /// <returns><see cref="bool"/> True; if elements satisgy the condition</returns>
         public bool All(Func<TV, bool> predicate)
         {
             if (!_disposed)
@@ -156,7 +157,7 @@ namespace OpenNos.Core
         /// Determines whether any element of a sequence satisfies a condition.
         /// </summary>
         /// <param name="predicate"></param>
-        /// <returns></returns>
+        /// <returns><see cref="bool"/></returns>
         public bool Any(Func<TV, bool> predicate)
         {
             if (!_disposed)
@@ -197,7 +198,7 @@ namespace OpenNos.Core
         /// Checks if collection contains spesified key.
         /// </summary>
         /// <param name="key">Key to check</param>
-        /// <returns>True; if collection contains given key</returns>
+        /// <returns><see cref="bool"/> True; if collection contains given key</returns>
         public bool ContainsKey(TK key)
         {
             if (!_disposed)
@@ -219,7 +220,7 @@ namespace OpenNos.Core
         /// Checks if collection contains spesified item.
         /// </summary>
         /// <param name="item">Item to check</param>
-        /// <returns>True; if collection contains given item</returns>
+        /// <returns><see cref="bool"/> True; if collection contains given item</returns>
         public bool ContainsValue(TV item)
         {
             if (!_disposed)
@@ -241,7 +242,7 @@ namespace OpenNos.Core
         /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
         /// </summary>
         /// <param name="predicate"></param>
-        /// <returns>integer number of found elements</returns>
+        /// <returns><see cref="int"/> number of found elements</returns>
         public int CountLinq(Func<TV, bool> predicate)
         {
             if (!_disposed)
@@ -277,7 +278,7 @@ namespace OpenNos.Core
         /// if no such element is found.
         /// </summary>
         /// <param name="predicate"></param>
-        /// <returns>TV object</returns>
+        /// <returns><see cref="TV"/> object</returns>
         public TV FirstOrDefault(Func<TV, bool> predicate)
         {
             if (!_disposed)
@@ -296,7 +297,7 @@ namespace OpenNos.Core
         }
 
         /// <summary>
-        /// Performs the specified action on each element of the List&lt;T&gt;.
+        /// Performs the specified action on each element of the <see cref="List{T}"/>.
         /// </summary>
         /// <param name="action"></param>
         public void ForEach(Action<TV> action)
@@ -318,7 +319,7 @@ namespace OpenNos.Core
         /// <summary>
         /// Gets all items in collection.
         /// </summary>
-        /// <returns>Item list</returns>
+        /// <returns><see cref="List{TV}"/></returns>
         public List<TV> GetAllItems()
         {
             if (!_disposed)
@@ -339,7 +340,7 @@ namespace OpenNos.Core
         /// <summary>
         /// Gets then removes all items in collection.
         /// </summary>
-        /// <returns>Item list</returns>
+        /// <returns><see cref="List{TV}"/></returns>
         public List<TV> GetAndClearAllItems()
         {
             if (!_disposed)
@@ -363,7 +364,7 @@ namespace OpenNos.Core
         /// Returns the last element of a sequence that satisfies a specified condition.
         /// </summary>
         /// <param name="predicate"></param>
-        /// <returns>TV object</returns>
+        /// <returns><see cref="TV"/> object</returns>
         public TV Last(Func<TV, bool> predicate)
         {
             if (!_disposed)
@@ -384,7 +385,7 @@ namespace OpenNos.Core
         /// <summary>
         /// Returns the last element of a sequence.
         /// </summary>
-        /// <returns>TV object</returns>
+        /// <returns><see cref="TV"/> object</returns>
         public TV Last()
         {
             if (!_disposed)
@@ -407,7 +408,7 @@ namespace OpenNos.Core
         /// no such element is found.
         /// </summary>
         /// <param name="predicate"></param>
-        /// <returns>TV object</returns>
+        /// <returns><see cref="TV"/> object</returns>
         public TV LastOrDefault(Func<TV, bool> predicate)
         {
             if (!_disposed)
@@ -428,7 +429,7 @@ namespace OpenNos.Core
         /// <summary>
         /// Returns the last element of a sequence, or a default value if the sequence contains no elements.
         /// </summary>
-        /// <returns>TV object</returns>
+        /// <returns><see cref="TV"/> object</returns>
         public TV LastOrDefault()
         {
             if (!_disposed)
@@ -450,6 +451,7 @@ namespace OpenNos.Core
         /// Removes an item from collection.
         /// </summary>
         /// <param name="key">Key of item to remove</param>
+        /// <returns><see cref="bool"/> if removed</returns>
         public bool Remove(TK key)
         {
             if (!_disposed)
@@ -477,6 +479,7 @@ namespace OpenNos.Core
         /// Removes an item from collection.
         /// </summary>
         /// <param name="value">Value of item to remove</param>
+        /// <returns><see cref="bool"/> if removed</returns>
         public bool Remove(TV value)
         {
             if (!_disposed)
@@ -527,7 +530,7 @@ namespace OpenNos.Core
         /// an exception if more than one such element exists.
         /// </summary>
         /// <param name="predicate"></param>
-        /// <returns>TV object</returns>
+        /// <returns><see cref="TV"/> object</returns>
         public TV Single(Func<TV, bool> predicate)
         {
             if (!_disposed)
@@ -551,7 +554,7 @@ namespace OpenNos.Core
         /// satisfies the condition.
         /// </summary>
         /// <param name="predicate"></param>
-        /// <returns>TV object</returns>
+        /// <returns><see cref="TV"/> object</returns>
         public TV SingleOrDefault(Func<TV, bool> predicate)
         {
             if (!_disposed)
@@ -573,7 +576,7 @@ namespace OpenNos.Core
         /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
         /// </summary>
         /// <param name="selector"></param>
-        /// <returns>integer number of found elements</returns>
+        /// <returns><see cref="int"/> number of found elements</returns>
         public int Sum(Func<TV, int> selector)
         {
             if (!_disposed)
@@ -595,7 +598,7 @@ namespace OpenNos.Core
         /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
         /// </summary>
         /// <param name="selector"></param>
-        /// <returns>integer number of found elements</returns>
+        /// <returns>int? number of found elements</returns>
         public int? Sum(Func<TV, int?> selector)
         {
             if (!_disposed)
@@ -617,7 +620,7 @@ namespace OpenNos.Core
         /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
         /// </summary>
         /// <param name="selector"></param>
-        /// <returns>integer number of found elements</returns>
+        /// <returns><see cref="long"/> number of found elements</returns>
         public long Sum(Func<TV, long> selector)
         {
             if (!_disposed)
@@ -639,7 +642,7 @@ namespace OpenNos.Core
         /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
         /// </summary>
         /// <param name="selector"></param>
-        /// <returns>integer number of found elements</returns>
+        /// <returns>long? number of found elements</returns>
         public long? Sum(Func<TV, long?> selector)
         {
             if (!_disposed)
@@ -661,7 +664,7 @@ namespace OpenNos.Core
         /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
         /// </summary>
         /// <param name="selector"></param>
-        /// <returns>integer number of found elements</returns>
+        /// <returns><see cref="double"/> number of found elements</returns>
         public double Sum(Func<TV, double> selector)
         {
             if (!_disposed)
@@ -683,7 +686,7 @@ namespace OpenNos.Core
         /// Returns a number that represents how many elements in the specified sequence satisfy a condition.
         /// </summary>
         /// <param name="selector"></param>
-        /// <returns>integer number of found elements</returns>
+        /// <returns>double? number of found elements</returns>
         public double? Sum(Func<TV, double?> selector)
         {
             if (!_disposed)
@@ -705,7 +708,7 @@ namespace OpenNos.Core
         /// Filters a sequence of values based on a predicate.
         /// </summary>
         /// <param name="predicate"></param>
-        /// <returns></returns>
+        /// <returns><see cref="List{TV}"/></returns>
         public List<TV> Where(Func<TV, bool> predicate)
         {
             if (!_disposed)
