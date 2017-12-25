@@ -1994,6 +1994,12 @@ namespace OpenNos.Handler
             Session.SendPacket("zzim");
             Session.SendPacket($"twk 1 {Session.Character.CharacterId} {Session.Account.Name} {Session.Character.Name} shtmxpdlfeoqkr");
 
+            long? familyId = DAOFactory.FamilyCharacterDAO.LoadByCharacterId(Session.Character.CharacterId)?.FamilyId;
+            if (familyId.HasValue)
+            {
+                Session.Character.Family = ServerManager.Instance.FamilyList[familyId.Value];
+            }
+
             if (Session.Character.Family != null && Session.Character.FamilyCharacter != null)
             {
                 Session.SendPacket(Session.Character.GenerateGInfo());
@@ -2013,12 +2019,6 @@ namespace OpenNos.Handler
                 {
                     Session.SendPacket(UserInterfaceHelper.GenerateInfo("--- Family Message ---\n" + Session.Character.Family.FamilyMessage));
                 }
-            }
-
-            long? familyId = DAOFactory.FamilyCharacterDAO.LoadByCharacterId(Session.Character.CharacterId)?.FamilyId;
-            if (familyId.HasValue)
-            {
-                Session.Character.Family = ServerManager.Instance.FamilyList[familyId.Value];
             }
 
             // qstlist target sqst bf
