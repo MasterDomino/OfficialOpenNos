@@ -16,16 +16,22 @@ using System;
 
 namespace OpenNos.Core.Handling
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public sealed class PacketAttribute : Attribute
     {
         #region Instantiation
 
         //[Obsolete]
-        public PacketAttribute(string header, int amount = 1)
+        public PacketAttribute(int amount = 1, params string[] header)
         {
             Header = header;
             Amount = amount;
+        }
+
+        public PacketAttribute(params string[] header)
+        {
+            Header = header;
+            Amount = 1;
         }
 
         #endregion
@@ -34,7 +40,7 @@ namespace OpenNos.Core.Handling
 
         public int Amount { get; }
 
-        public string Header { get; }
+        public string[] Header { get; }
 
         #endregion
     }

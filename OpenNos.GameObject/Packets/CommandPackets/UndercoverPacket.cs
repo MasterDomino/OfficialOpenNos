@@ -5,12 +5,12 @@ using OpenNos.Domain;
 
 namespace OpenNos.GameObject.CommandPackets
 {
-    [PacketHeader("$Undercover", PassNonParseablePacket = true, Authority = AuthorityType.GameMaster)]
+    [PacketHeader("$Undercover", "$UC", PassNonParseablePacket = true, Authority = AuthorityType.GameMaster)]
     public class UndercoverPacket : PacketDefinition
     {
         public static string ReturnHelp()
         {
-            return "$Undercover";
+            return "$Undercover\n$UC";
         }
     }
 }

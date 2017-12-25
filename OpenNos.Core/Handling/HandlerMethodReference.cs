@@ -53,9 +53,9 @@ namespace OpenNos.Core.Handling
         public PacketAttribute HandlerMethodAttribute { get; }
 
         /// <summary>
-        /// Unique identification of the Packet by Header
+        /// String identification of the Packet by Header
         /// </summary>
-        public string Identification { get; }
+        public string[] Identification { get; }
 
         public Type PacketDefinitionParameterType { get; }
 

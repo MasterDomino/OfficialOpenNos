@@ -47,7 +47,7 @@ namespace OpenNos.GameObject
 
         private Character _character;
 
-        private IDictionary<string, HandlerMethodReference> _handlerMethods;
+        private IDictionary<string[], HandlerMethodReference> _handlerMethods;
 
         private int _lastPacketId;
 
@@ -111,9 +111,9 @@ namespace OpenNos.GameObject
 
         public MapInstance CurrentMapInstance { get; set; }
 
-        public IDictionary<string, HandlerMethodReference> HandlerMethods
+        public IDictionary<string[], HandlerMethodReference> HandlerMethods
         {
-            get => _handlerMethods ?? (_handlerMethods = new Dictionary<string, HandlerMethodReference>());
+            get => _handlerMethods ?? (_handlerMethods = new Dictionary<string[], HandlerMethodReference>());
             private set => _handlerMethods = value;
         }
 
@@ -521,7 +521,8 @@ namespace OpenNos.GameObject
             }
             if (!IsDisposing)
             {
-                HandlerMethodReference methodReference = HandlerMethods.ContainsKey(packetHeader) ? HandlerMethods[packetHeader] : null;
+                string[] key = HandlerMethods.Keys.FirstOrDefault(s => s.Any(m => m == packetHeader));
+                HandlerMethodReference methodReference = key != null ? HandlerMethods[key] : null;
                 if (methodReference != null)
                 {
                     if (methodReference.HandlerMethodAttribute != null && !force && methodReference.HandlerMethodAttribute.Amount > 1 && !_waitForPacketsAmount.HasValue)

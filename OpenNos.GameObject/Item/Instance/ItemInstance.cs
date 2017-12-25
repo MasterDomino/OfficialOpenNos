@@ -822,38 +822,38 @@ namespace OpenNos.GameObject
                         break;
 
                     case 1026:
-                        return; //no data known, not implemented in the client at all right now
-
+                        return;
+                        //no data known, not implemented in the client at all right now
                         //dataIndex = 9;
                         //break;
                 }
 
                 if (Item.MaxCellonLvl > dataIndex && session.Character.Gold >= goldAmount)
                 {
-                    short[][] minimumData = new short[][] {
-                    new short[] { 30, 50, 5, 8, 0, 0 },                 //lv1
-                    new short[] { 120, 150, 14, 16, 0, 0 },             //lv2
-                    new short[] { 220, 280, 22, 28, 0, 0 },             //lv3
-                    new short[] { 330, 350, 30, 38, 0, 0 },             //lv4
-                    new short[] { 430, 450, 40, 50, 0, 0 },             //lv5
-                    new short[] { 600, 600, 55, 65, 1, 1 },             //lv6
-                    new short[] { 800, 800, 75, 75, 8, 11 },            //lv7
-                    new short[] { 1000, 1000, 100, 100, 13, 21 },       //lv8
-                    new short[] { 1100, 1100, 110, 110, 14, 22 },       //lv9
-                    new short[] { 0, 0, 0, 0, 0, 0 }                    //lv10 (NOT EXISTING!)
-                };
-                    short[][] maximumData = new short[][] {
-                    new short[] { 100, 150, 10, 15, 0, 0 },          //lv1
-                    new short[] { 200, 250, 20, 25, 0, 0 },          //lv1
-                    new short[] { 300, 330, 28, 35, 0, 0 },          //lv1
-                    new short[] { 400, 420, 38, 45, 0, 0 },          //lv1
-                    new short[] { 550, 550, 50, 60, 0, 0 },          //lv1
-                    new short[] { 750, 750, 70, 80, 7, 10 },         //lv1
+                    short[][] minimumData = {
+                    new short[] { 30, 50, 5, 8, 0, 0 },             //lv1
+                    new short[] { 120, 150, 14, 16, 0, 0 },         //lv2
+                    new short[] { 220, 280, 22, 28, 0, 0 },         //lv3
+                    new short[] { 330, 350, 30, 38, 0, 0 },         //lv4
+                    new short[] { 430, 450, 40, 50, 0, 0 },         //lv5
+                    new short[] { 600, 600, 55, 65, 1, 1 },         //lv6
+                    new short[] { 800, 800, 75, 75, 8, 11 },        //lv7
+                    new short[] { 1000, 1000, 100, 100, 13, 21 },   //lv8
+                    new short[] { 1100, 1100, 110, 110, 14, 22 },   //lv9
+                    new short[] { 0, 0, 0, 0, 0, 0 }                //lv10 (NOT EXISTING!)
+                    };
+                    short[][] maximumData = {
+                    new short[] { 100, 150, 10, 15, 0, 0 },         //lv1
+                    new short[] { 200, 250, 20, 25, 0, 0 },         //lv1
+                    new short[] { 300, 330, 28, 35, 0, 0 },         //lv1
+                    new short[] { 400, 420, 38, 45, 0, 0 },         //lv1
+                    new short[] { 550, 550, 50, 60, 0, 0 },         //lv1
+                    new short[] { 750, 750, 70, 80, 7, 10 },        //lv1
                     new short[] { 1000, 1000, 90,90, 12, 20 },      //lv1
-                    new short[] { 1300, 1300, 120, 120, 17, 35 },    //lv1
-                    new short[] { 1500, 1500, 135, 135, 21, 45 },    //lv1
-                    new short[] { 0, 0, 0, 0, 0, 0 }            //lv10 (NOT EXISTING!)
-                };
+                    new short[] { 1300, 1300, 120, 120, 17, 35 },   //lv1
+                    new short[] { 1500, 1500, 135, 135, 21, 45 },   //lv1
+                    new short[] { 0, 0, 0, 0, 0, 0 }                //lv10 (NOT EXISTING!)
+                    };
 
                     short[] generateOption()
                     {
@@ -1990,8 +1990,7 @@ namespace OpenNos.GameObject
                     {
                         case ShellEffectLevelType.CNormal:
                             {
-                                byte[] effects = new byte[]
-                                {
+                                byte[] effects = {
                                     (byte)ShellWeaponEffectType.DamageImproved,
                                     (byte)ShellWeaponEffectType.DamageIncreasedtothePlant,
                                     (byte)ShellWeaponEffectType.DamageIncreasedtotheAnimal,
@@ -2003,7 +2002,7 @@ namespace OpenNos.GameObject
                                     (byte)ShellWeaponEffectType.Blackout,
                                     (byte)ShellWeaponEffectType.MinorBleeding,
                                 };
-                                short[] maximum = new short[] { 80, 8, 8, 8, 10, 50, 0, 10, 4, 4 };
+                                short[] maximum = { 80, 8, 8, 8, 10, 50, 0, 10, 4, 4 };
 
                                 if (!IsWeapon)
                                 {
@@ -2038,8 +2037,7 @@ namespace OpenNos.GameObject
                             }
                         case ShellEffectLevelType.BNormal:
                             {
-                                byte[] effects = new byte[]
-                                {
+                                byte[] effects = {
                                     (byte)ShellWeaponEffectType.DamageImproved,
                                     (byte)ShellWeaponEffectType.DamageIncreasedtothePlant,
                                     (byte)ShellWeaponEffectType.DamageIncreasedtotheAnimal,
@@ -2062,7 +2060,7 @@ namespace OpenNos.GameObject
                                     (byte)ShellWeaponEffectType.HPRecoveryForKilling,
                                     (byte)ShellWeaponEffectType.MPRecoveryForKilling
                                 };
-                                short[] maximum = new short[] { 120, 16, 16, 16, 8, 8, 16, 75, 20, 4, 4, 61, 61, 61, 61, 10, 10, 10, 10, 150, 150 };
+                                short[] maximum = { 120, 16, 16, 16, 8, 8, 16, 75, 20, 4, 4, 61, 61, 61, 61, 10, 10, 10, 10, 150, 150 };
 
                                 if (!IsWeapon)
                                 {
@@ -2101,8 +2099,7 @@ namespace OpenNos.GameObject
                             }
                         case ShellEffectLevelType.ANormal:
                             {
-                                byte[] effects = new byte[]
-                                {
+                                byte[] effects = {
                                     (byte)ShellWeaponEffectType.DamageImproved,
                                     (byte)ShellWeaponEffectType.DamageIncreasedtotheUnDead,
                                     (byte)ShellWeaponEffectType.DamageincreasedtotheSmallMonster,
@@ -2118,7 +2115,7 @@ namespace OpenNos.GameObject
                                     (byte)ShellWeaponEffectType.HPRecoveryForKilling,
                                     (byte)ShellWeaponEffectType.MPRecoveryForKilling
                                 };
-                                short[] maximum = new short[] { 160, 16, 16, 1, 125, 125, 125, 125, 15, 15, 15, 15, 175, 175 };
+                                short[] maximum = { 160, 16, 16, 1, 125, 125, 125, 125, 15, 15, 15, 15, 175, 175 };
 
                                 if (!IsWeapon)
                                 {
@@ -2155,14 +2152,13 @@ namespace OpenNos.GameObject
                             }
                         case ShellEffectLevelType.SNormal:
                             {
-                                byte[] effects = new byte[]
-                                {
+                                byte[] effects = {
                                     (byte)ShellWeaponEffectType.PercentageTotalDamage,
                                     (byte)ShellWeaponEffectType.DamageincreasedtotheBigMonster,
                                     (byte)ShellWeaponEffectType.IncreasedElementalProperties,
                                     (byte)ShellWeaponEffectType.SLGlobal,
                                 };
-                                short[] maximum = new short[] { 20, 25, 140, 9 };
+                                short[] maximum = { 20, 25, 140, 9 };
 
                                 if (!IsWeapon)
                                 {
@@ -2190,13 +2186,12 @@ namespace OpenNos.GameObject
                             }
                         case ShellEffectLevelType.CBonus:
                             {
-                                byte[] effects = new byte[]
-                                {
+                                byte[] effects = {
                                     (byte)ShellWeaponEffectType.GainMoreGold,
                                     (byte)ShellWeaponEffectType.GainMoreXP,
                                     (byte)ShellWeaponEffectType.GainMoreCXP
                                 };
-                                short[] maximum = new short[] { 7, 4, 4 };
+                                short[] maximum = { 7, 4, 4 };
 
                                 if (!IsWeapon)
                                 {
@@ -2222,13 +2217,12 @@ namespace OpenNos.GameObject
                             }
                         case ShellEffectLevelType.BBonus:
                             {
-                                byte[] effects = new byte[]
-                                {
+                                byte[] effects = {
                                     (byte)ShellWeaponEffectType.GainMoreGold,
                                     (byte)ShellWeaponEffectType.GainMoreXP,
                                     (byte)ShellWeaponEffectType.GainMoreCXP
                                 };
-                                short[] maximum = new short[] { 13, 6, 6 };
+                                short[] maximum = { 13, 6, 6 };
 
                                 if (!IsWeapon)
                                 {
@@ -2255,13 +2249,12 @@ namespace OpenNos.GameObject
                             }
                         case ShellEffectLevelType.ABonus:
                             {
-                                byte[] effects = new byte[]
-                                {
+                                byte[] effects = {
                                     (byte)ShellWeaponEffectType.GainMoreGold,
                                     (byte)ShellWeaponEffectType.GainMoreXP,
                                     (byte)ShellWeaponEffectType.GainMoreCXP
                                 };
-                                short[] maximum = new short[] { 28, 12, 12 };
+                                short[] maximum = { 28, 12, 12 };
 
                                 if (!IsWeapon)
                                 {
@@ -2288,13 +2281,12 @@ namespace OpenNos.GameObject
                             }
                         case ShellEffectLevelType.SBonus:
                             {
-                                byte[] effects = new byte[]
-                                {
+                                byte[] effects = {
                                     (byte)ShellWeaponEffectType.GainMoreGold,
                                     (byte)ShellWeaponEffectType.GainMoreXP,
                                     (byte)ShellWeaponEffectType.GainMoreCXP
                                 };
-                                short[] maximum = new short[] { 40, 18, 18 };
+                                short[] maximum = { 40, 18, 18 };
 
                                 if (!IsWeapon)
                                 {
@@ -2321,14 +2313,13 @@ namespace OpenNos.GameObject
                             }
                         case ShellEffectLevelType.CPVP:
                             {
-                                byte[] effects = new byte[]
-                                {
+                                byte[] effects = {
                                     (byte)ShellWeaponEffectType.PercentageDamageInPVP,
                                     (byte)ShellWeaponEffectType.ReducesPercentageEnemyDefenceInPVP,
                                     (byte)ShellWeaponEffectType.PVPDamageAt15Percent,
                                     (byte)ShellWeaponEffectType.ReducesEnemyMPInPVP,
                                 };
-                                short[] maximum = new short[] { 8, 8, 54, 12 };
+                                short[] maximum = { 8, 8, 54, 12 };
 
                                 if (!IsWeapon)
                                 {
@@ -2356,8 +2347,7 @@ namespace OpenNos.GameObject
                             }
                         case ShellEffectLevelType.BPVP:
                             {
-                                byte[] effects = new byte[]
-                                {
+                                byte[] effects = {
                                     (byte)ShellWeaponEffectType.PercentageDamageInPVP,
                                     (byte)ShellWeaponEffectType.ReducesPercentageEnemyDefenceInPVP,
                                     (byte)ShellWeaponEffectType.ReducesEnemyMPInPVP,
@@ -2366,7 +2356,7 @@ namespace OpenNos.GameObject
                                     (byte)ShellWeaponEffectType.ReducesEnemyLightResistanceInPVP,
                                     (byte)ShellWeaponEffectType.ReducesEnemyDarkResistanceInPVP
                                 };
-                                short[] maximum = new short[] { 12, 12, 20, 6, 6, 6, 6 };
+                                short[] maximum = { 12, 12, 20, 6, 6, 6, 6 };
 
                                 if (!IsWeapon)
                                 {
@@ -2394,8 +2384,7 @@ namespace OpenNos.GameObject
                             }
                         case ShellEffectLevelType.APVP:
                             {
-                                byte[] effects = new byte[]
-                                {
+                                byte[] effects = {
                                     (byte)ShellWeaponEffectType.PercentageDamageInPVP,
                                     (byte)ShellWeaponEffectType.ReducesPercentageEnemyDefenceInPVP,
                                     (byte)ShellWeaponEffectType.ReducesEnemyMPInPVP,
@@ -2404,7 +2393,7 @@ namespace OpenNos.GameObject
                                     (byte)ShellWeaponEffectType.ReducesEnemyLightResistanceInPVP,
                                     (byte)ShellWeaponEffectType.ReducesEnemyDarkResistanceInPVP
                                 };
-                                short[] maximum = new short[] { 17, 17, 42, 15, 15, 15, 15 };
+                                short[] maximum = { 17, 17, 42, 15, 15, 15, 15 };
 
                                 if (!IsWeapon)
                                 {
@@ -2433,13 +2422,12 @@ namespace OpenNos.GameObject
                             }
                         case ShellEffectLevelType.SPVP:
                             {
-                                byte[] effects = new byte[]
-                                {
+                                byte[] effects = {
                                     (byte)ShellWeaponEffectType.PercentageDamageInPVP,
                                     (byte)ShellWeaponEffectType.ReducesPercentageEnemyDefenceInPVP,
                                     (byte)ShellWeaponEffectType.ReducesEnemyAllResistancesInPVP
                                 };
-                                short[] maximum = new short[] { 35, 35, 17 };
+                                short[] maximum = { 35, 35, 17 };
 
                                 if (!IsWeapon)
                                 {

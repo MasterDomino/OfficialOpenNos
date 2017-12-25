@@ -188,7 +188,7 @@ namespace OpenNos.Test
                     if (packet != null)
                     {
                         packets.Add(packet);
-                        if (packet.StartsWith(lastPacketHeader))
+                        if (packet.StartsWith(lastPacketHeader, StringComparison.CurrentCulture))
                         {
                             return packets;
                         }

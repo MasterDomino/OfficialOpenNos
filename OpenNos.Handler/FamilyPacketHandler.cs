@@ -126,7 +126,7 @@ namespace OpenNos.Handler
                         Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("PARTY_MEMBER_IN_FAMILY")));
                         return;
                     }
-                    else if(session.Character.LastFamilyLeave > DateTime.Now.AddDays(-1).Ticks)
+                    else if (session.Character.LastFamilyLeave > DateTime.Now.AddDays(-1).Ticks)
                     {
                         Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("PARTY_MEMBER_HAS_PENALTY")));
                         return;
@@ -184,8 +184,7 @@ namespace OpenNos.Handler
             }
         }
 
-        [Packet("%Familyshout")]
-        [Packet("%Cridefamille")]
+        [Packet("%Familyshout", "%Cridefamille")]
         public void FamilyCall(string packet)
         {
             if (Session.Character.Family != null && Session.Character.FamilyCharacter != null)
@@ -346,14 +345,10 @@ namespace OpenNos.Handler
                 Message = "fhis_stc",
                 Type = MessageType.Family
             });
-            Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe(observer =>
-            {
-                sessions?.ForEach(s => s?.CurrentMapInstance.Broadcast(s.Character.GenerateGidx()));
-            });
+            Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe(observer => sessions?.ForEach(s => s?.CurrentMapInstance.Broadcast(s.Character.GenerateGidx())));
         }
 
-        [Packet("%Familydismiss")]
-        [Packet("%Rejetdefamille")]
+        [Packet("%Familydismiss", "%Rejetdefamille")]
         public void FamilyKick(string packet)
         {
             string[] packetsplit = packet.Split(' ');
@@ -421,8 +416,7 @@ namespace OpenNos.Handler
             }
         }
 
-        [Packet("%Familyleave")]
-        [Packet("%Congédefamille")]
+        [Packet("%Familyleave", "%Congédefamille")]
         public void FamilyLeave(string packet)
         {
             string[] packetsplit = packet.Split(' ');
@@ -602,8 +596,7 @@ namespace OpenNos.Handler
             }
         }
 
-        [Packet("%Notice")]
-        [Packet("%Avertissement")]
+        [Packet("%Notice", "%Avertissement")]
         public void FamilyMessage(string packet)
         {
             if (Session.Character.Family != null && Session.Character.FamilyCharacter != null)
@@ -796,8 +789,7 @@ namespace OpenNos.Handler
             Session.Character.Family.InsertFamilyLog(FamilyLogType.WareHouseRemoved, Session.Character.Name, message: $"{item2.ItemVNum}|{fWithdrawPacket.Amount}");
         }
 
-        [Packet("%Familyinvite")]
-        [Packet("%Invitationdefamille")]
+        [Packet("%Familyinvite", "%Invitationdefamille")]
         public void InviteFamily(string packet)
         {
             string[] packetsplit = packet.Split(' ');
@@ -899,8 +891,7 @@ namespace OpenNos.Handler
             }
         }
 
-        [Packet("%Sex")]
-        [Packet("%Sexe")]
+        [Packet("%Sex", "%Sexe")]
         public void ResetSex(string packet)
         {
             string[] packetsplit = packet.Split(' ');
@@ -945,8 +936,7 @@ namespace OpenNos.Handler
             }
         }
 
-        [Packet("%Title")]
-        [Packet("%Titre")]
+        [Packet("%Title", "%Titre")]
         public void TitleChange(string packet)
         {
             if (Session.Character.Family != null && Session.Character.FamilyCharacter != null && Session.Character.FamilyCharacter.Authority == FamilyAuthority.Head)
@@ -980,8 +970,7 @@ namespace OpenNos.Handler
             }
         }
 
-        [Packet("%Today")]
-        [Packet("%Aujourd'hui")]
+        [Packet("%Today", "%Aujourd'hui")]
         public void TodayMessage(string packet)
         {
             if (Session.Character.Family != null && Session.Character.FamilyCharacter != null)
@@ -999,7 +988,7 @@ namespace OpenNos.Handler
 
                 Logger.LogUserEvent("GUILDCOMMAND", Session.GenerateIdentity(), $"[Today][{Session.Character.Family.FamilyId}]CharacterName: {Session.Character.Name} Title: {msg}");
 
-                bool islog = Session.Character.Family.FamilyLogs.Any(s => s.FamilyLogType == FamilyLogType.DailyMessage && s.FamilyLogData.StartsWith(Session.Character.Name) && s.Timestamp.AddDays(1) > DateTime.Now);
+                bool islog = Session.Character.Family.FamilyLogs.Any(s => s.FamilyLogType == FamilyLogType.DailyMessage && s.FamilyLogData.StartsWith(Session.Character.Name, StringComparison.CurrentCulture) && s.Timestamp.AddDays(1) > DateTime.Now);
                 if (!islog)
                 {
                     Session.Character.FamilyCharacter.DailyMessage = msg;

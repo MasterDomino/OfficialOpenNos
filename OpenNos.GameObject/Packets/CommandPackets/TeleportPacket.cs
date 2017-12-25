@@ -5,7 +5,7 @@ using OpenNos.Domain;
 
 namespace OpenNos.GameObject.CommandPackets
 {
-    [PacketHeader("$Teleport", PassNonParseablePacket = true, Authority = AuthorityType.GameMaster)]
+    [PacketHeader("$Teleport", "$Tp", "$TP" , PassNonParseablePacket = true, Authority = AuthorityType.GameMaster)]
     public class TeleportPacket : PacketDefinition
     {
         #region Properties

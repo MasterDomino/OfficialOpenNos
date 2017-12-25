@@ -22,7 +22,7 @@ namespace OpenNos.Core
     {
         #region Instantiation
 
-        public PacketHeaderAttribute(string identification) => Identification = identification;
+        public PacketHeaderAttribute(params string[] identification) => Identification = identification;
 
         #endregion
 
@@ -34,9 +34,9 @@ namespace OpenNos.Core
         public AuthorityType Authority { get; set; }
 
         /// <summary>
-        /// Unique identification of the Packet
+        /// String identification of the Packet
         /// </summary>
-        public string Identification { get; set; }
+        public string[] Identification { get; set; }
 
         /// <summary>
         /// Pass the packet to handler method even if the serialization has failed.

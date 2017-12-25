@@ -90,7 +90,7 @@ namespace OpenNos.Handler
                             AccountId = accountId,
                             MinilandMessage = "Welcome",
                             State = CharacterState.Active,
-                            MinilandPoint=2000
+                            MinilandPoint = 2000
                         };
 
                         SaveResult insertResult = DAOFactory.CharacterDAO.InsertOrUpdate(ref newCharacter);
@@ -194,7 +194,7 @@ namespace OpenNos.Handler
         /// Load Characters, this is the Entrypoint for the Client, Wait for 3 Packets.
         /// </summary>
         /// <param name="packet"></param>
-        [Packet("OpenNos.EntryPoint", 3)]
+        [Packet(3, "OpenNos.EntryPoint")]
         public void LoadCharacters(string packet)
         {
             string[] loginPacketParts = packet.Split(' ');
@@ -323,13 +323,13 @@ namespace OpenNos.Handler
                 {
                     character.Initialize();
 
-                    #if !DEBUG
+#if !DEBUG
                     if (Session.Account.Authority > AuthorityType.User)
                     {
                         character.Invisible = true;
                         character.InvisibleGm = true;
                     }
-                    #endif
+#endif
 
                     character.GeneralLogs = new ThreadSafeGenericList<GeneralLogDTO>();
                     character.GeneralLogs.AddRange(DAOFactory.GeneralLogDAO.LoadByAccount(Session.Account.AccountId).Where(s => s.CharacterId == character.CharacterId).ToList());
@@ -380,6 +380,6 @@ namespace OpenNos.Handler
             }
         }
 
-#endregion
+        #endregion
     }
 }
