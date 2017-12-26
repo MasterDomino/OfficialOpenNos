@@ -1465,6 +1465,7 @@ namespace OpenNos.GameObject
             CommunicationServiceClient.Instance.MessageSentToCharacter += onMessageSentToCharacter;
             CommunicationServiceClient.Instance.FamilyRefresh += onFamilyRefresh;
             CommunicationServiceClient.Instance.RelationRefresh += onRelationRefresh;
+            CommunicationServiceClient.Instance.StaticBonusRefresh += onStaticBonusRefresh;
             CommunicationServiceClient.Instance.BazaarRefresh += onBazaarRefresh;
             CommunicationServiceClient.Instance.PenaltyLogRefresh += onPenaltyLogRefresh;
             CommunicationServiceClient.Instance.GlobalEvent += onGlobalEvent;
@@ -1473,6 +1474,17 @@ namespace OpenNos.GameObject
             ConfigurationServiceClient.Instance.ConfigurationUpdate += onConfiguratinEvent;
             MailServiceClient.Instance.MailSent += onMailSent;
             _lastGroupId = 1;
+        }
+
+        private void onStaticBonusRefresh(object sender, EventArgs e)
+        {
+            long characterId = (long)sender;
+
+            ClientSession sess = GetSessionByCharacterId(characterId);
+            if(sess != null)
+            {
+                sess.Character.StaticBonusList = DAOFactory.StaticBonusDAO.LoadByCharacterId(characterId).ToList();
+            }
         }
 
         private void onMailSent(object sender, EventArgs e)

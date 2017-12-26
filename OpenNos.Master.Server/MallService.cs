@@ -105,7 +105,35 @@ namespace OpenNos.Master.Server
             }
         }
 
-        public void SendStaticBonus(long characterId, MallStaticBonus item) => throw new NotImplementedException();
+        public void SendStaticBonus(long characterId, MallStaticBonus item)
+        {
+            if (!MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
+            {
+                return;
+            }
+            StaticBonusDTO dto = DAOFactory.StaticBonusDAO.LoadByCharacterId(characterId).FirstOrDefault(s => s.StaticBonusType == item.StaticBonus);
+
+            if (dto != null)
+            {
+                dto.DateEnd.AddSeconds(item.Seconds);
+            }
+            else
+            {
+                dto = new StaticBonusDTO()
+                {
+                    CharacterId = characterId,
+                    DateEnd = DateTime.Now.AddSeconds(item.Seconds),
+                    StaticBonusType = item.StaticBonus
+                };
+            }
+
+            DAOFactory.StaticBonusDAO.InsertOrUpdate(ref dto);
+            AccountConnection account = MSManager.Instance.ConnectedAccounts.Find(a => a.CharacterId.Equals(characterId));
+            if (account?.ConnectedWorld != null)
+            {
+                account.ConnectedWorld.CommunicationServiceClient.GetClientProxy<ICommunicationClient>().UpdateStaticBonus(characterId);
+            }
+        }
 
         public AccountDTO ValidateAccount(string userName, string passHash)
         {
