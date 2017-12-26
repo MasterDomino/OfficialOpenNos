@@ -113,7 +113,7 @@ namespace OpenNos.Core
         /// <exception cref="EndOfStreamException">
         /// Throws EndOfStreamException if can not read from stream.
         /// </exception>
-        private static byte[] readByteArray(Stream stream, short length)
+        private static byte[] ReadByteArray(Stream stream, short length)
         {
             byte[] buffer = new byte[length];
             int read = stream.Read(buffer, 0, length);
@@ -155,13 +155,13 @@ namespace OpenNos.Core
             }
 
             // Read bytes of serialized message and deserialize it
-            byte[] serializedMessageBytes = readByteArray(_receiveMemoryStream, frameLength);
+            byte[] serializedMessageBytes = ReadByteArray(_receiveMemoryStream, frameLength);
             messages.Add(new ScsRawDataMessage(serializedMessageBytes));
 
             // Read remaining bytes to an array
             if (_receiveMemoryStream.Length > frameLength)
             {
-                byte[] remainingBytes = readByteArray(_receiveMemoryStream, (short)(_receiveMemoryStream.Length - frameLength));
+                byte[] remainingBytes = ReadByteArray(_receiveMemoryStream, (short)(_receiveMemoryStream.Length - frameLength));
 
                 // Re-create the receive memory stream and write remaining bytes
                 _receiveMemoryStream = new MemoryStream();

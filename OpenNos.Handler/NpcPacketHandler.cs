@@ -88,13 +88,13 @@ namespace OpenNos.Handler
                     }
 
                     // check if the item has been removed successfully from previous owner and remove it
-                    if (buyValidate(Session, shop, buyPacket.Slot, amount))
+                    if (BuyValidate(Session, shop, buyPacket.Slot, amount))
                     {
                         Session.Character.Gold -= item.Price * amount;
                         Session.SendPacket(Session.Character.GenerateGold());
 
                         KeyValuePair<long, MapShop> shop2 = Session.CurrentMapInstance.UserShops.FirstOrDefault(s => s.Value.OwnerId.Equals(buyPacket.OwnerId));
-                        loadShopItem(buyPacket.OwnerId, shop2);
+                        LoadShopItem(buyPacket.OwnerId, shop2);
                     }
                     else
                     {
@@ -825,7 +825,7 @@ namespace OpenNos.Handler
             {
                 // User Shop
                 KeyValuePair<long, MapShop> shopList = Session.CurrentMapInstance.UserShops.FirstOrDefault(s => s.Value.OwnerId.Equals(owner));
-                loadShopItem(owner, shopList);
+                LoadShopItem(owner, shopList);
             }
             else
             {
@@ -854,7 +854,7 @@ namespace OpenNos.Handler
             }
         }
 
-        private bool buyValidate(ClientSession clientSession, KeyValuePair<long, MapShop> shop, short slot, byte amount)
+        private bool BuyValidate(ClientSession clientSession, KeyValuePair<long, MapShop> shop, short slot, byte amount)
         {
             if (!clientSession.HasCurrentMapInstance)
             {
@@ -936,7 +936,7 @@ namespace OpenNos.Handler
             return true;
         }
 
-        private void loadShopItem(long owner, KeyValuePair<long, MapShop> shop)
+        private void LoadShopItem(long owner, KeyValuePair<long, MapShop> shop)
         {
             string packetToSend = $"n_inv 1 {owner} 0 0";
 

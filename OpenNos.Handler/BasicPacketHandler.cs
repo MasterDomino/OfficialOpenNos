@@ -1221,7 +1221,10 @@ namespace OpenNos.Handler
 
                     case (sbyte)PortalType.BlueRaid:
                     case (sbyte)PortalType.DarkRaid:
-                        if ((int)Session.Character.Faction == portal.Type - 9 && Session.Character.Family?.Act4Raid != null && Session.Character.Level > 59 || Session.Character.Reputation > 60000)
+                        if (((int)Session.Character.Faction == portal.Type - 9
+                            && Session.Character.Family?.Act4Raid != null
+                            && Session.Character.Level > 59)
+                            || Session.Character.Reputation > 60000)
                         {
                             Session.Character.SetReputation(Session.Character.Level * -50);
 
@@ -1282,7 +1285,6 @@ namespace OpenNos.Handler
                         Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("CANT_MOVE"), 10));
                         return;
                     }
-
                 }
                 Session.SendPacket(Session.CurrentMapInstance.GenerateRsfn());
 

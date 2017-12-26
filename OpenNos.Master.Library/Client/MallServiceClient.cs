@@ -74,11 +74,7 @@ namespace OpenNos.Master.Library.Client
 
         #region Methods
 
-        public static void InitAndConnect(string ip, string port)
-        {
-            _instance = new MallServiceClient(ip, Convert.ToInt32(port));
-            
-        }
+        public static void InitAndConnect(string ip, string port) => _instance = new MallServiceClient(ip, Convert.ToInt32(port));
 
         public bool Authenticate(string authKey) => _client.ServiceProxy.Authenticate(authKey);
 

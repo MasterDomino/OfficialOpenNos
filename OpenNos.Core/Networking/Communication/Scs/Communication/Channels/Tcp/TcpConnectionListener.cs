@@ -66,9 +66,9 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         /// </summary>
         public override void Start()
         {
-            startSocket();
+            StartSocket();
             _running = true;
-            _thread = new Thread(doListenAsThread);
+            _thread = new Thread(ListenThread);
             _thread.Start();
         }
 
@@ -78,13 +78,13 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         public override void Stop()
         {
             _running = false;
-            stopSocket();
+            StopSocket();
         }
 
         /// <summary>
         /// Entrance point of the thread. This method is used by the thread to listen incoming requests.
         /// </summary>
-        private void doListenAsThread()
+        private void ListenThread()
         {
             TcpCommunicationChannel tcpChannel = null;
             while (_running)
@@ -101,7 +101,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
                 catch (Exception)
                 {
                     // Disconnect, wait for a while and connect again.
-                    stopSocket();
+                    StopSocket();
                     Thread.Sleep(1000);
                     if (!_running)
                     {
@@ -109,7 +109,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
                     }
                     try
                     {
-                        startSocket();
+                        StartSocket();
                     }
                     catch (Exception)
                     {
@@ -123,7 +123,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         /// <summary>
         /// Starts listening socket.
         /// </summary>
-        private void startSocket()
+        private void StartSocket()
         {
             _listenerSocket = new TcpListener(_endPoint.IpAddress ?? IPAddress.Any, _endPoint.TcpPort);
             _listenerSocket.Start();
@@ -132,7 +132,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         /// <summary>
         /// Stops listening socket.
         /// </summary>
-        private void stopSocket()
+        private void StopSocket()
         {
             try
             {

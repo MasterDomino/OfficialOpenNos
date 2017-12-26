@@ -93,7 +93,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
         public virtual void Start()
         {
             _connectionListener = CreateConnectionListener();
-            _connectionListener.CommunicationChannelConnected += connectionListener_CommunicationChannelConnected;
+            _connectionListener.CommunicationChannelConnected += ConnectionListener_CommunicationChannelConnected;
             _connectionListener.Start();
         }
 
@@ -141,7 +141,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
         /// </summary>
         /// <param name="sender">Source of event</param>
         /// <param name="e">Event arguments</param>
-        private void client_Disconnected(object sender, EventArgs e)
+        private void Client_Disconnected(object sender, EventArgs e)
         {
             IScsServerClient client = (IScsServerClient)sender;
             Clients.Remove(client.ClientId);
@@ -153,7 +153,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
         /// </summary>
         /// <param name="sender">Source of event</param>
         /// <param name="e">Event arguments</param>
-        private void connectionListener_CommunicationChannelConnected(object sender, CommunicationChannelEventArgs e)
+        private void ConnectionListener_CommunicationChannelConnected(object sender, CommunicationChannelEventArgs e)
         {
             NetworkClient client = new NetworkClient(e.Channel)
             {
@@ -161,7 +161,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
                 WireProtocol = WireProtocolFactory.CreateWireProtocol()
             };
 
-            client.Disconnected += client_Disconnected;
+            client.Disconnected += Client_Disconnected;
             Clients[client.ClientId] = client;
             OnClientConnected(client);
             e.Channel.Start();

@@ -42,7 +42,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Protocols.Bina
         /// <summary>
         /// Maximum length of a message.
         /// </summary>
-        private const int MaxMessageLength = 128 * 1024 * 1024; // 128 Megabytes.
+        private const int MAX_MESSAGE_LENGTH = 128 * 1024 * 1024; // 128 Megabytes.
 
         private bool _disposed;
 
@@ -117,9 +117,9 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Protocols.Bina
 
             // Check for message length
             int messageLength = serializedMessage.Length;
-            if (messageLength > MaxMessageLength)
+            if (messageLength > MAX_MESSAGE_LENGTH)
             {
-                throw new CommunicationException("Message is too big (" + messageLength + " bytes). Max allowed length is " + MaxMessageLength + " bytes.");
+                throw new CommunicationException("Message is too big (" + messageLength + " bytes). Max allowed length is " + MAX_MESSAGE_LENGTH + " bytes.");
             }
 
             // Create a byte array including the length of the message (4 bytes) and serialized
@@ -262,34 +262,38 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Protocols.Bina
 
             // Read length of the message
             int messageLength = Convert.ToInt32(_receiveMemoryStream.Length); // fix, always read to end TODO: implement framing
-            if (messageLength > MaxMessageLength)
+            if (messageLength > MAX_MESSAGE_LENGTH)
             {
-                throw new Exception("Message is too big (" + messageLength + " bytes). Max allowed length is " + MaxMessageLength + " bytes.");
+                throw new Exception("Message is too big (" + messageLength + " bytes). Max allowed length is " + MAX_MESSAGE_LENGTH + " bytes.");
             }
 
-            ////If message is zero-length (It must not be but good approach to check it)
-            /*if (messageLength == 0)
+            // If message is zero-length (It must not be but good approach to check it)
+            /*
+            if (messageLength == 0)
             {
-                //if no more bytes, return immediately
+                // if no more bytes, return immediately
                 if (_receiveMemoryStream.Length == 4)
                 {
                     _receiveMemoryStream = new MemoryStream(); //Clear the stream
                     return false;
                 }
 
-                //Create a new memory stream from current except first 4-bytes.
+                // Create a new memory stream from current except first 4-bytes.
                 var bytes = _receiveMemoryStream.ToArray();
                 _receiveMemoryStream = new MemoryStream();
                 _receiveMemoryStream.Write(bytes, 4, bytes.Length - 4);
                 return true;
-            }*/
+            }
+            */
 
-            ////If all bytes of the message is not received yet, return to wait more bytes
-            /*if (_receiveMemoryStream.Length < (4 + messageLength))
+            // If all bytes of the message is not received yet, return to wait more bytes
+            /*
+            if (_receiveMemoryStream.Length < (4 + messageLength))
             {
                 _receiveMemoryStream.Position = _receiveMemoryStream.Length;
                 return false;
-            }*/
+            }
+            */
 
             // Read bytes of serialized message and deserialize it
             byte[] serializedMessageBytes = ReadByteArray(_receiveMemoryStream, messageLength);

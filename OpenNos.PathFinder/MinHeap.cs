@@ -38,30 +38,27 @@ namespace OpenNos.PathFinder
             _array[0] = _array[_array.Count - 1];
             _array.RemoveAt(_array.Count - 1);
 
-            int c = 0;
-            while (c < _array.Count)
+            int len = 0;
+            while (len < _array.Count)
             {
-                int min = c;
-                if ((2 * c) + 1 < _array.Count && _array[(2 * c) + 1].CompareTo(_array[min]) == -1)
+                int min = len;
+                if ((2 * len) + 1 < _array.Count && _array[(2 * len) + 1].CompareTo(_array[min]) == -1)
                 {
-                    min = (2 * c) + 1;
+                    min = (2 * len) + 1;
                 }
-                if ((2 * c) + 2 < _array.Count && _array[(2 * c) + 2].CompareTo(_array[min]) == -1)
+                if ((2 * len) + 2 < _array.Count && _array[(2 * len) + 2].CompareTo(_array[min]) == -1)
                 {
-                    min = (2 * c) + 2;
+                    min = (2 * len) + 2;
                 }
 
-                if (min == c)
+                if (min == len)
                 {
                     break;
                 }
-                else
-                {
-                    Node tmp = _array[c];
-                    _array[c] = _array[min];
-                    _array[min] = tmp;
-                    c = min;
-                }
+                Node tmp = _array[len];
+                _array[len] = _array[min];
+                _array[min] = tmp;
+                len = min;
             }
 
             return ret;
@@ -70,15 +67,15 @@ namespace OpenNos.PathFinder
         public void Push(Node element)
         {
             _array.Add(element);
-            int c = _array.Count - 1;
-            int parent = (c - 1) >> 1;
-            while (c > 0 && _array[c].CompareTo(_array[parent]) < 0)
+            int len = _array.Count - 1;
+            int parent = (len - 1) >> 1;
+            while (len > 0 && _array[len].CompareTo(_array[parent]) < 0)
             {
-                Node tmp = _array[c];
-                _array[c] = _array[parent];
+                Node tmp = _array[len];
+                _array[len] = _array[parent];
                 _array[parent] = tmp;
-                c = parent;
-                parent = (c - 1) >> 1;
+                len = parent;
+                parent = (len - 1) >> 1;
             }
         }
 
