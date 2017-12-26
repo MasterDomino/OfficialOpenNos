@@ -135,8 +135,8 @@ namespace OpenNos.World
 
             try
             {
-                _exitHandler += exitHandler;
-                AppDomain.CurrentDomain.UnhandledException += unhandledExceptionHandler;
+                _exitHandler += ExitHandler;
+                AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionHandler;
                 NativeMethods.SetConsoleCtrlHandler(_exitHandler, true);
             }
             catch (Exception ex)
@@ -161,6 +161,8 @@ namespace OpenNos.World
                 Environment.Exit(ex.ErrorCode);
             }
 
+            throw new Exception("test");
+
             ServerManager.Instance.ServerGroup = ConfigurationManager.AppSettings["ServerGroup"];
             const int sessionLimit = 100; // Needs workaround
             int? newChannelId = CommunicationServiceClient.Instance.RegisterWorldServer(new SerializableWorldServer(ServerManager.Instance.WorldId, ConfigurationManager.AppSettings["IPAddress"], port, sessionLimit, ServerManager.Instance.ServerGroup));
@@ -181,8 +183,9 @@ namespace OpenNos.World
             }
         }
 
-        private static bool exitHandler(CtrlType sig)
+        private static bool ExitHandler(CtrlType sig)
         {
+
             string serverGroup = ConfigurationManager.AppSettings["ServerGroup"];
             int port = Convert.ToInt32(ConfigurationManager.AppSettings["WorldPort"]);
             CommunicationServiceClient.Instance.UnregisterWorldServer(ServerManager.Instance.WorldId);
@@ -193,13 +196,18 @@ namespace OpenNos.World
             return false;
         }
 
-        private static void unhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
+        private static void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
         {
             ServerManager.Instance.InShutdown = true;
             Logger.Error((Exception)e.ExceptionObject);
 
             try
             {
+                System.Media.SoundPlayer player = new System.Media.SoundPlayer
+                {
+                    SoundLocation = "exception.wav"
+                };
+                player.PlaySync();
                 if (!_ignoreTelemetry)
                 {
                     string guid = ((GuidAttribute)Assembly.GetAssembly(typeof(SCS.Communication.ScsServices.Service.ScsServiceBuilder)).GetCustomAttributes(typeof(GuidAttribute), true)[0]).Value;
