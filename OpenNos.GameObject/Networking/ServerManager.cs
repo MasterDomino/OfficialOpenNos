@@ -1455,33 +1455,33 @@ namespace OpenNos.GameObject
                 });
             });
 
-            CommunicationServiceClient.Instance.SessionKickedEvent += onSessionKicked;
-            CommunicationServiceClient.Instance.MessageSentToCharacter += onMessageSentToCharacter;
-            CommunicationServiceClient.Instance.FamilyRefresh += onFamilyRefresh;
-            CommunicationServiceClient.Instance.RelationRefresh += onRelationRefresh;
-            CommunicationServiceClient.Instance.StaticBonusRefresh += onStaticBonusRefresh;
-            CommunicationServiceClient.Instance.BazaarRefresh += onBazaarRefresh;
-            CommunicationServiceClient.Instance.PenaltyLogRefresh += onPenaltyLogRefresh;
-            CommunicationServiceClient.Instance.GlobalEvent += onGlobalEvent;
-            CommunicationServiceClient.Instance.ShutdownEvent += onShutdown;
-            CommunicationServiceClient.Instance.RestartEvent += onRestart;
-            ConfigurationServiceClient.Instance.ConfigurationUpdate += onConfiguratinEvent;
-            MailServiceClient.Instance.MailSent += onMailSent;
+            CommunicationServiceClient.Instance.SessionKickedEvent += OnSessionKicked;
+            CommunicationServiceClient.Instance.MessageSentToCharacter += OnMessageSentToCharacter;
+            CommunicationServiceClient.Instance.FamilyRefresh += OnFamilyRefresh;
+            CommunicationServiceClient.Instance.RelationRefresh += OnRelationRefresh;
+            CommunicationServiceClient.Instance.StaticBonusRefresh += OnStaticBonusRefresh;
+            CommunicationServiceClient.Instance.BazaarRefresh += OnBazaarRefresh;
+            CommunicationServiceClient.Instance.PenaltyLogRefresh += OnPenaltyLogRefresh;
+            CommunicationServiceClient.Instance.GlobalEvent += OnGlobalEvent;
+            CommunicationServiceClient.Instance.ShutdownEvent += OnShutdown;
+            CommunicationServiceClient.Instance.RestartEvent += OnRestart;
+            ConfigurationServiceClient.Instance.ConfigurationUpdate += OnConfiguratinEvent;
+            MailServiceClient.Instance.MailSent += OnMailSent;
             _lastGroupId = 1;
         }
 
-        private void onStaticBonusRefresh(object sender, EventArgs e)
+        private void OnStaticBonusRefresh(object sender, EventArgs e)
         {
             long characterId = (long)sender;
 
             ClientSession sess = GetSessionByCharacterId(characterId);
-            if(sess != null)
+            if (sess != null)
             {
                 sess.Character.StaticBonusList = DAOFactory.StaticBonusDAO.LoadByCharacterId(characterId).ToList();
             }
         }
 
-        private void onMailSent(object sender, EventArgs e)
+        private void OnMailSent(object sender, EventArgs e)
         {
             MailDTO mail = (MailDTO)sender;
 
