@@ -1841,7 +1841,7 @@ namespace OpenNos.GameObject
             {
                 _faction = (byte)Faction + 2;
             }
-            int color = (byte)HairColor;
+            int color = HairStyle == HairStyleType.Hair8 ? 0 : (byte)HairColor;
             ItemInstance fairy = null;
             if (Inventory != null)
             {

@@ -73,12 +73,9 @@ namespace OpenNos.GameObject
                     {
                         return;
                     }
-                    if (ItemValidTime > 0)
+                    if (ItemValidTime > 0 && !inv.IsBound)
                     {
-                        if (!inv.IsBound)
-                        {
-                            inv.ItemDeleteTime = DateTime.Now.AddSeconds(ItemValidTime);
-                        }
+                        inv.ItemDeleteTime = DateTime.Now.AddSeconds(ItemValidTime);
                     }
                     if (!inv.IsBound)
                     {
@@ -146,9 +143,7 @@ namespace OpenNos.GameObject
                     }
                     else if (mate != null)
                     {
-                        if ((EquipmentSlot != EquipmentType.Gloves
-                             && EquipmentSlot != EquipmentType.Boots)
-                            || LevelMinimum > mate.Level)
+                        if ((EquipmentSlot != EquipmentType.Gloves && EquipmentSlot != EquipmentType.Boots) || LevelMinimum > mate.Level)
                         {
                             session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("BAD_EQUIPMENT"), 10));
                             return;
