@@ -1107,10 +1107,36 @@ namespace OpenNos.Import.Console
                 }
             }
 
+            int baseMp = 10;
+            int baseMpup = 5;
             // basicMpLoad
+            int x = 0;
             for (int i = 0; i < 100; i++)
             {
-                basicMp[i] = basicHp[i];
+                basicMp[i] = i == 0 ? baseMp : basicMp[i - 1];
+
+                if (i == 1)
+                {
+                    continue;
+                }
+                if (i > 3)
+                {
+                    if (x != 3)
+                    {
+                        x++;
+                    }
+                    else
+                    {
+                        x = 0;
+                    }
+                }
+
+                if (x > 1)
+                {
+                    baseMpup++;
+                }
+
+                basicMp[i] += baseMpup;
             }
 
             // basicXPLoad
@@ -1194,6 +1220,20 @@ namespace OpenNos.Import.Console
                     {
                         npc.MaxHP = int.Parse(currentLine[2]) + basicHp[npc.Level];
                         npc.MaxMP = int.Parse(currentLine[3]) + basicMp[npc.Level];
+                        switch (npc.Race)
+                        {
+                            // TODO: Race Types 1, 2, 4, 5 and 7 are either missing or not 100% correct - test it.
+                            case 2:
+                            case 3:
+                                npc.MaxMP += npc.Level * 4 + 46;
+                                break;
+                            case 6:
+                                npc.MaxMP += 715;
+                                break;
+                            case 8:
+                                npc.MaxMP = 4;
+                                break;
+                        }
                     }
                     else if (currentLine.Length > 2 && currentLine[1] == "EXP")
                     {
