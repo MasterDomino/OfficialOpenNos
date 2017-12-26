@@ -86,6 +86,8 @@ namespace OpenNos.Master.Library.Client
 
         public event EventHandler RestartEvent;
 
+        public event EventHandler StaticBonusRefresh;
+
         #endregion
 
         #region Properties
@@ -189,6 +191,8 @@ namespace OpenNos.Master.Library.Client
         internal void OnUpdatePenaltyLog(int penaltyLogId) => PenaltyLogRefresh?.Invoke(penaltyLogId, null);
 
         internal void OnUpdateRelation(long relationId) => RelationRefresh?.Invoke(relationId, null);
+
+        internal void OnUpdateStaticBonus(long characterId) => StaticBonusRefresh?.Invoke(characterId, null);
 
         #endregion
     }

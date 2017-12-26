@@ -44,6 +44,8 @@ namespace OpenNos.Master.Library.Client
 
         public void UpdateRelation(long relationId) => Task.Run(() => CommunicationServiceClient.Instance.OnUpdateRelation(relationId));
 
+        public void UpdateStaticBonus(long characterId) => Task.Run(() => CommunicationServiceClient.Instance.OnUpdateStaticBonus(characterId));
+
         #endregion
     }
 }

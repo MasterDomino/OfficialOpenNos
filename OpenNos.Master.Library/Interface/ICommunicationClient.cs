@@ -42,6 +42,8 @@ namespace OpenNos.Master.Library.Interface
 
         void UpdateRelation(long relationId);
 
+        void UpdateStaticBonus(long characterId);
+
         #endregion
     }
 }
