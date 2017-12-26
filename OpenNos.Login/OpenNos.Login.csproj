@@ -401,6 +401,10 @@
   </Target>
   <Import Project="..\packages\SlowCheetah.2.5.48\build\SlowCheetah.targets" Condition="Exists('..\packages\SlowCheetah.2.5.48\build\SlowCheetah.targets')" />
   <PropertyGroup>
-    <PreBuildEvent>copy /Y "C:\OpenNos\license.lic" "$(TargetDir)license.lic"</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>copy /Y "C:\OpenNos\license.lic" "$(TargetDir)license.lic"</PostBuildEvent>
   </PropertyGroup>
 </Project>
