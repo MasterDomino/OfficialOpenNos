@@ -25,6 +25,7 @@ using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
@@ -80,6 +81,13 @@ namespace OpenNos.World
 
             bool ignoreStartupMessages = false;
             int port = Convert.ToInt32(ConfigurationManager.AppSettings["WorldPort"]);
+            int portArgIndex = Array.FindIndex(args, s => s == "--port");
+            if (portArgIndex != -1
+                && args.Length >= portArgIndex + 1
+                && int.TryParse(args[portArgIndex + 1], out port))
+            {
+                Console.WriteLine("Port override: " + port);
+            }
             foreach (string arg in args)
             {
                 switch (arg)
@@ -91,11 +99,6 @@ namespace OpenNos.World
                     case "--notelemetry":
                         _ignoreTelemetry = true;
                         break;
-                }
-                if (arg.StartsWith("--port", StringComparison.CurrentCulture))
-                {
-                    int.TryParse(arg.Substring(7), out port);
-                    Console.WriteLine(port);
                 }
             }
 
@@ -183,13 +186,11 @@ namespace OpenNos.World
 
         private static bool ExitHandler(CtrlType sig)
         {
-
             string serverGroup = ConfigurationManager.AppSettings["ServerGroup"];
             int port = Convert.ToInt32(ConfigurationManager.AppSettings["WorldPort"]);
             CommunicationServiceClient.Instance.UnregisterWorldServer(ServerManager.Instance.WorldId);
             ServerManager.Shout(string.Format(Language.Instance.GetMessageFromKey("SHUTDOWN_SEC"), 5));
             ServerManager.Instance.SaveAll();
-
             Thread.Sleep(5000);
             return false;
         }
@@ -198,7 +199,6 @@ namespace OpenNos.World
         {
             ServerManager.Instance.InShutdown = true;
             Logger.Error((Exception)e.ExceptionObject);
-
             try
             {
                 System.Media.SoundPlayer player = new System.Media.SoundPlayer
@@ -229,13 +229,13 @@ namespace OpenNos.World
             {
                 Logger.Error(ex);
             }
+
             Logger.Debug("Server crashed! Rebooting gracefully...");
             string serverGroup = ConfigurationManager.AppSettings["ServerGroup"];
             int port = Convert.ToInt32(ConfigurationManager.AppSettings["WorldPort"]);
             CommunicationServiceClient.Instance.UnregisterWorldServer(ServerManager.Instance.WorldId);
             ServerManager.Shout(string.Format(Language.Instance.GetMessageFromKey("SHUTDOWN_SEC"), 5));
             ServerManager.Instance.SaveAll();
-
             Process.Start("OpenNos.World.exe", "--nomsg");
             Environment.Exit(1);
         }
