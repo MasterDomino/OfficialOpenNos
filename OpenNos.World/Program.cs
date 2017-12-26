@@ -47,6 +47,8 @@ namespace OpenNos.World
 
         private static bool _ignoreTelemetry;
 
+        private static int _port;
+
         #endregion
 
         #region Delegates
@@ -80,13 +82,13 @@ namespace OpenNos.World
             Console.Title = $"OpenNos World Server{(_isDebug ? " Development Environment" : string.Empty)}";
 
             bool ignoreStartupMessages = false;
-            int port = Convert.ToInt32(ConfigurationManager.AppSettings["WorldPort"]);
+            _port = Convert.ToInt32(ConfigurationManager.AppSettings["WorldPort"]);
             int portArgIndex = Array.FindIndex(args, s => s == "--port");
             if (portArgIndex != -1
                 && args.Length >= portArgIndex + 1
-                && int.TryParse(args[portArgIndex + 1], out port))
+                && int.TryParse(args[portArgIndex + 1], out _port))
             {
-                Console.WriteLine("Port override: " + port);
+                Console.WriteLine("Port override: " + _port);
             }
             foreach (string arg in args)
             {
@@ -109,14 +111,15 @@ namespace OpenNos.World
             {
                 Assembly assembly = Assembly.GetExecutingAssembly();
                 FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-                string text = $"WORLD SERVER v{fileVersionInfo.ProductVersion}dev - PORT : {port} by OpenNos Team";
+                string text = $"WORLD SERVER v{fileVersionInfo.ProductVersion}dev - PORT : {_port} by OpenNos Team";
                 int offset = (Console.WindowWidth / 2) + (text.Length / 2);
                 string separator = new string('=', Console.WindowWidth);
                 Console.WriteLine(separator + string.Format("{0," + offset + "}\n", text) + separator);
             }
 
             // initialize api
-            if (CommunicationServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["MasterAuthKey"]))
+            string authKey = ConfigurationManager.AppSettings["MasterAuthKey"];
+            if (CommunicationServiceClient.Instance.Authenticate(authKey))
             {
                 Logger.Info(Language.Instance.GetMessageFromKey("API_INITIALIZED"));
             }
@@ -147,16 +150,17 @@ namespace OpenNos.World
                 Logger.Error("General Error", ex);
             }
             NetworkManager<WorldCryptography> networkManager = null;
+            string ipAddress = ConfigurationManager.AppSettings["IPAddress"];
             portloop:
             try
             {
-                networkManager = new NetworkManager<WorldCryptography>(ConfigurationManager.AppSettings["IPAddress"], port, typeof(CommandPacketHandler), typeof(LoginCryptography), true);
+                networkManager = new NetworkManager<WorldCryptography>(ipAddress, _port, typeof(CommandPacketHandler), typeof(LoginCryptography), true);
             }
             catch (SocketException ex)
             {
                 if (ex.ErrorCode == 10048)
                 {
-                    port++;
+                    _port++;
                     Logger.Info("Port already in use! Incrementing...");
                     goto portloop;
                 }
@@ -166,14 +170,12 @@ namespace OpenNos.World
 
             ServerManager.Instance.ServerGroup = ConfigurationManager.AppSettings["ServerGroup"];
             const int sessionLimit = 100; // Needs workaround
-            int? newChannelId = CommunicationServiceClient.Instance.RegisterWorldServer(new SerializableWorldServer(ServerManager.Instance.WorldId, ConfigurationManager.AppSettings["IPAddress"], port, sessionLimit, ServerManager.Instance.ServerGroup));
-
+            int? newChannelId = CommunicationServiceClient.Instance.RegisterWorldServer(new SerializableWorldServer(ServerManager.Instance.WorldId, ipAddress, _port, sessionLimit, ServerManager.Instance.ServerGroup));
             if (newChannelId.HasValue)
             {
                 ServerManager.Instance.ChannelId = newChannelId.Value;
-
-                MailServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["MasterAuthKey"], ServerManager.Instance.WorldId);
-                ConfigurationServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["MasterAuthKey"], ServerManager.Instance.WorldId);
+                MailServiceClient.Instance.Authenticate(authKey, ServerManager.Instance.WorldId);
+                ConfigurationServiceClient.Instance.Authenticate(authKey, ServerManager.Instance.WorldId);
                 ServerManager.Instance.Configuration = ConfigurationServiceClient.Instance.GetConfigurationObject();
                 ServerManager.Instance.MallAPI = new GameObject.Helpers.MallAPIHelper(ServerManager.Instance.Configuration.MallBaseURL);
             }
@@ -186,8 +188,6 @@ namespace OpenNos.World
 
         private static bool ExitHandler(CtrlType sig)
         {
-            string serverGroup = ConfigurationManager.AppSettings["ServerGroup"];
-            int port = Convert.ToInt32(ConfigurationManager.AppSettings["WorldPort"]);
             CommunicationServiceClient.Instance.UnregisterWorldServer(ServerManager.Instance.WorldId);
             ServerManager.Shout(string.Format(Language.Instance.GetMessageFromKey("SHUTDOWN_SEC"), 5));
             ServerManager.Instance.SaveAll();
@@ -231,12 +231,10 @@ namespace OpenNos.World
             }
 
             Logger.Debug("Server crashed! Rebooting gracefully...");
-            string serverGroup = ConfigurationManager.AppSettings["ServerGroup"];
-            int port = Convert.ToInt32(ConfigurationManager.AppSettings["WorldPort"]);
             CommunicationServiceClient.Instance.UnregisterWorldServer(ServerManager.Instance.WorldId);
             ServerManager.Shout(string.Format(Language.Instance.GetMessageFromKey("SHUTDOWN_SEC"), 5));
             ServerManager.Instance.SaveAll();
-            Process.Start("OpenNos.World.exe", "--nomsg");
+            Process.Start("OpenNos.World.exe", $"--nomsg --port {_port}");
             Environment.Exit(1);
         }
 
