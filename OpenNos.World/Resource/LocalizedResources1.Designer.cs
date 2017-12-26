@@ -718,6 +718,15 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You can&apos;t use this Item..
+        /// </summary>
+        internal static string CANNOT_USE {
+            get {
+                return ResourceManager.GetString("CANNOT_USE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You can&apos;t attack right now..
         /// </summary>
         internal static string CANT_ATTACK {
@@ -2887,7 +2896,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No handler found for this item in class {0}.
+        ///   Looks up a localized string similar to No handler found for this item in class {0}, ItemVNum: {1}, Effect: {2}, EffectValue: {3}.
         /// </summary>
         internal static string NO_HANDLER_ITEM {
             get {

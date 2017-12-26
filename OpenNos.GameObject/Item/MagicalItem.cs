@@ -72,7 +72,7 @@ namespace OpenNos.GameObject
                                     wearable.ShellEffects.Clear();
                                     DAOFactory.ShellEffectDAO.DeleteByEquipmentSerialId(wearable.EquipmentSerialId);
                                     wearable.ShellEffects.AddRange(inv.ShellEffects);
-                                    if(wearable.EquipmentSerialId == Guid.Empty)
+                                    if (wearable.EquipmentSerialId == Guid.Empty)
                                     {
                                         wearable.EquipmentSerialId = Guid.NewGuid();
                                     }
@@ -209,6 +209,20 @@ namespace OpenNos.GameObject
                                 session.Character.HairColor = Enum.IsDefined(typeof(HairColorType), (byte)EffectValue) ? (HairColorType)EffectValue : 0;
                             }
                         }
+                        else if (Effect == 11)
+                        {
+                            if (session.Character.Class == (byte)ClassType.Adventurer && EffectValue > 1)
+                            {
+                                session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("ADVENTURERS_CANT_USE"), 10));
+                                return;
+                            }
+                            if (session.Character.Gender != (GenderType)Sex)
+                            {
+                                session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("CANNOT_USE"), 10));
+                                return;
+                            }
+                            session.Character.HairStyle = Enum.IsDefined(typeof(HairStyleType), (byte)EffectValue) ? (HairStyleType)EffectValue : 0;
+                        }
                         else
                         {
                             if (session.Character.Class == (byte)ClassType.Adventurer && EffectValue > 1)
@@ -288,6 +302,19 @@ namespace OpenNos.GameObject
                     }
                     break;
 
+                case 31:
+                    if (!session.Character.IsVehicled && session.Character.HairStyle == HairStyleType.Hair7)
+                    {
+                        session.Character.HairStyle = HairStyleType.Hair8;
+                        session.SendPacket(session.Character.GenerateEq());
+                        session.CurrentMapInstance?.Broadcast(session, session.Character.GenerateIn());
+                        session.CurrentMapInstance?.Broadcast(session, session.Character.GenerateGidx());
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                        // idk how it works yet but seems like all characters with this hairstyle have DarkPurple hair
+                        //session.Character.HairColor = HairColorType.DarkPurple;
+                    }
+                    break;
+
                 case 300:
                     if (session.Character.Group != null && session.Character.Group.GroupType != GroupType.Group && session.Character.Group.IsLeader(session) && session.CurrentMapInstance.Portals.Any(s => s.Type == (short)PortalType.Raid))
                     {
@@ -308,7 +335,7 @@ namespace OpenNos.GameObject
                     break;
 
                 default:
-                    Logger.Warn(string.Format(Language.Instance.GetMessageFromKey("NO_HANDLER_ITEM"), GetType()));
+                    Logger.Warn(string.Format(Language.Instance.GetMessageFromKey("NO_HANDLER_ITEM"), GetType(), inv.ItemVNum, Effect, EffectValue));
                     break;
             }
         }

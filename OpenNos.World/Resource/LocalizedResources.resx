@@ -421,7 +421,7 @@
     <value>No EntryPoint found.</value>
   </data>
   <data name="NO_HANDLER_ITEM" xml:space="preserve">
-    <value>No handler found for this item in class {0}</value>
+    <value>No handler found for this item in class {0}, ItemVNum: {1}, Effect: {2}, EffectValue: {3}</value>
   </data>
   <data name="NO_ITEM" xml:space="preserve">
     <value>Item doesn't exist!</value>
@@ -1647,5 +1647,8 @@
   </data>
   <data name="WIN_FXP" xml:space="preserve">
     <value>You've earned {0} Family XP!</value>
+  </data>
+  <data name="CANNOT_USE" xml:space="preserve">
+    <value>You can't use this Item.</value>
   </data>
 </root>
