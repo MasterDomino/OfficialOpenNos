@@ -383,10 +383,7 @@ namespace OpenNos.Handler
                     Session.Character.Family.InsertFamilyLog(FamilyLogType.FamilyManaged, kickSession.Character.Name);
                     kickSession.Character.Family = null;
                     kickSession.Character.LastFamilyLeave = DateTime.Now.Ticks;
-                    Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe(observer =>
-                    {
-                        kickSession?.CurrentMapInstance?.Broadcast(Session.Character.GenerateGidx());
-                    });
+                    Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe(observer => kickSession?.CurrentMapInstance?.Broadcast(Session.Character.GenerateGidx()));
                 }
                 else
                 {
@@ -441,10 +438,7 @@ namespace OpenNos.Handler
                 Session.Character.Family.InsertFamilyLog(FamilyLogType.FamilyManaged, Session.Character.Name);
                 Session.Character.Family = null;
                 Session.Character.LastFamilyLeave = DateTime.Now.Ticks;
-                Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe(observer =>
-                {
-                    Session?.CurrentMapInstance?.Broadcast(Session.Character.GenerateGidx());
-                });
+                Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe(observer => Session?.CurrentMapInstance?.Broadcast(Session.Character.GenerateGidx()));
             }
         }
 

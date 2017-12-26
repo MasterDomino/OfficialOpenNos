@@ -79,11 +79,11 @@ namespace OpenNos.GameObject
             SessionId = 0;
 
             // register for NetworkClient events
-            _client.MessageReceived += onNetworkClientMessageReceived;
+            _client.MessageReceived += OnNetworkClientMessageReceived;
 
             // start observer for receiving packets
             _receiveQueue = new ConcurrentQueue<byte[]>();
-            _receiveQueueObservable = Observable.Interval(new TimeSpan(0, 0, 0, 0, isLagMode ? 1000 : 10)).Subscribe(x => handlePackets());
+            _receiveQueueObservable = Observable.Interval(new TimeSpan(0, 0, 0, 0, isLagMode ? 1000 : 10)).Subscribe(x => HandlePackets());
         }
 
         #endregion
@@ -152,8 +152,8 @@ namespace OpenNos.GameObject
         public void Destroy()
         {
             // unregister from WCF events
-            CommunicationServiceClient.Instance.CharacterConnectedEvent -= onOtherCharacterConnected;
-            CommunicationServiceClient.Instance.CharacterDisconnectedEvent -= onOtherCharacterDisconnected;
+            CommunicationServiceClient.Instance.CharacterConnectedEvent -= OnOtherCharacterConnected;
+            CommunicationServiceClient.Instance.CharacterDisconnectedEvent -= OnOtherCharacterDisconnected;
 
             // do everything necessary before removing client, DB save, Whatever
             if (HasSelectedCharacter)
@@ -199,7 +199,7 @@ namespace OpenNos.GameObject
                 CommunicationServiceClient.Instance.DisconnectAccount(Account.AccountId);
             }
 
-            clearReceiveQueue();
+            ClearReceiveQueue();
         }
 
         public void Disconnect() => _client.Disconnect();
@@ -219,7 +219,7 @@ namespace OpenNos.GameObject
             _client.Initialize(encryptor);
 
             // dynamically create packethandler references
-            generateHandlerReferences(packetHandler, isWorldServer);
+            GenerateHandlerReferences(packetHandler, isWorldServer);
         }
 
         public void InitializeAccount(Account account, bool crossServer = false)
@@ -239,7 +239,7 @@ namespace OpenNos.GameObject
         public void ReceivePacket(string packet, bool ignoreAuthority = false)
         {
             string header = packet.Split(' ')[0];
-            triggerHandler(header, $"{_lastPacketId} {packet}", false, ignoreAuthority);
+            TriggerHandler(header, $"{_lastPacketId} {packet}", false, ignoreAuthority);
             _lastPacketId++;
         }
 
@@ -299,15 +299,15 @@ namespace OpenNos.GameObject
             Logger.LogUserEvent("CHARACTER_LOGIN", GenerateIdentity(), string.Empty);
 
             // register CSC events
-            CommunicationServiceClient.Instance.CharacterConnectedEvent += onOtherCharacterConnected;
-            CommunicationServiceClient.Instance.CharacterDisconnectedEvent += onOtherCharacterDisconnected;
+            CommunicationServiceClient.Instance.CharacterConnectedEvent += OnOtherCharacterConnected;
+            CommunicationServiceClient.Instance.CharacterDisconnectedEvent += OnOtherCharacterDisconnected;
 
             // register for servermanager
             ServerManager.Instance.RegisterSession(this);
             Character.SetSession(this);
         }
 
-        private void clearReceiveQueue()
+        private void ClearReceiveQueue()
         {
             while (_receiveQueue.TryDequeue(out byte[] outPacket))
             {
@@ -315,7 +315,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        private void generateHandlerReferences(Type type, bool isWorldServer)
+        private void GenerateHandlerReferences(Type type, bool isWorldServer)
         {
             IEnumerable<Type> handlerTypes = !isWorldServer ? type.Assembly.GetTypes().Where(t => t.Name.Equals("LoginPacketHandler")) // shitty but it works
                                                             : type.Assembly.GetTypes().Where(p =>
@@ -356,7 +356,7 @@ namespace OpenNos.GameObject
         /// <summary>
         /// Handle the packet received by the Client.
         /// </summary>
-        private void handlePackets()
+        private void HandlePackets()
         {
             while (_receiveQueue.TryDequeue(out byte[] packetData))
             {
@@ -387,7 +387,7 @@ namespace OpenNos.GameObject
 
                         if (!_waitForPacketsAmount.HasValue)
                         {
-                            triggerHandler("OpenNos.EntryPoint", string.Empty, false);
+                            TriggerHandler("OpenNos.EntryPoint", string.Empty, false);
                         }
                     }
                     return;
@@ -433,7 +433,7 @@ namespace OpenNos.GameObject
                                 _waitForPacketsAmount = null;
                                 string queuedPackets = string.Join(" ", _waitForPacketList.ToArray());
                                 string header = queuedPackets.Split(' ', '^')[1];
-                                triggerHandler(header, queuedPackets, true);
+                                TriggerHandler(header, queuedPackets, true);
                                 _waitForPacketList.Clear();
                                 return;
                             }
@@ -447,7 +447,7 @@ namespace OpenNos.GameObject
                             }
                             if (packetsplit[1] != "0")
                             {
-                                triggerHandler(packetsplit[1].Replace("#", string.Empty), packetstring, false);
+                                TriggerHandler(packetsplit[1].Replace("#", string.Empty), packetstring, false);
                             }
                         }
                     }
@@ -462,7 +462,7 @@ namespace OpenNos.GameObject
                             packetstring = packet.Insert(packet.IndexOf(' ') + 2, " ");
                         }
 
-                        triggerHandler(packetHeader.Replace("#", string.Empty), packetstring, false);
+                        TriggerHandler(packetHeader.Replace("#", string.Empty), packetstring, false);
                     }
                 }
             }
@@ -473,7 +473,7 @@ namespace OpenNos.GameObject
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onNetworkClientMessageReceived(object sender, MessageEventArgs e)
+        private void OnNetworkClientMessageReceived(object sender, MessageEventArgs e)
         {
             ScsRawDataMessage message = e.Message as ScsRawDataMessage;
             if (message == null)
@@ -487,7 +487,7 @@ namespace OpenNos.GameObject
             _lastPacketReceive = e.ReceivedTimestamp.Ticks;
         }
 
-        private void onOtherCharacterConnected(object sender, EventArgs e)
+        private void OnOtherCharacterConnected(object sender, EventArgs e)
         {
             Tuple<long, string> loggedInCharacter = (Tuple<long, string>)sender;
 
@@ -503,7 +503,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        private void onOtherCharacterDisconnected(object sender, EventArgs e)
+        private void OnOtherCharacterDisconnected(object sender, EventArgs e)
         {
             Tuple<long, string> loggedOutCharacter = (Tuple<long, string>)sender;
             if (Character.IsFriendOfCharacter(loggedOutCharacter.Item1) && Character != null && Character.CharacterId != loggedOutCharacter.Item1)
@@ -513,7 +513,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        private void triggerHandler(string packetHeader, string packet, bool force, bool ignoreAuthority = false)
+        private void TriggerHandler(string packetHeader, string packet, bool force, bool ignoreAuthority = false)
         {
             if (ServerManager.Instance.InShutdown)
             {
