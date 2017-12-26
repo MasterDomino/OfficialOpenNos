@@ -50,7 +50,7 @@ namespace OpenNos.GameObject
                     int amount = session.Character.SnackAmount;
                     if (amount < 5)
                     {
-                        Thread workerThread = new Thread(() => regenerate(session, item));
+                        Thread workerThread = new Thread(() => Regenerate(session, item));
                         workerThread.Start();
                         session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
@@ -62,14 +62,14 @@ namespace OpenNos.GameObject
                     }
                     if (amount == 0)
                     {
-                        Thread workerThread2 = new Thread(() => sync(session));
+                        Thread workerThread2 = new Thread(() => Sync(session));
                         workerThread2.Start();
                     }
                     break;
             }
         }
 
-        private static void regenerate(ClientSession session, Item item)
+        private static void Regenerate(ClientSession session, Item item)
         {
             session.SendPacket(Helpers.StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 6000));
             session.Character.SnackAmount++;
@@ -85,7 +85,7 @@ namespace OpenNos.GameObject
             session.Character.SnackAmount--;
         }
 
-        private static void sync(ClientSession session)
+        private static void Sync(ClientSession session)
         {
             for (session.Character.MaxSnack = 0; session.Character.MaxSnack < 5; session.Character.MaxSnack++)
             {

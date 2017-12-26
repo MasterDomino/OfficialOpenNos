@@ -44,11 +44,7 @@ namespace OpenNos.GameObject
             switch (Effect)
             {
                 default:
-                    if (session.Character.Hp == session.Character.HPLoad() && session.Character.Mp == session.Character.MPLoad())
-                    {
-                        return;
-                    }
-                    if (session.Character.Hp <= 0)
+                    if ((session.Character.Hp == (int)session.Character.HPLoad() && session.Character.Mp == (int)session.Character.MPLoad()) || session.Character.Hp <= 0)
                     {
                         return;
                     }

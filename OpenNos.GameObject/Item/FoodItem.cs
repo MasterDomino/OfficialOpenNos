@@ -59,7 +59,7 @@ namespace OpenNos.GameObject
                         {
                             return;
                         }
-                        Thread workerThread = new Thread(() => regenerate(session, item));
+                        Thread workerThread = new Thread(() => Regenerate(session, item));
                         workerThread.Start();
                         session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
@@ -75,14 +75,14 @@ namespace OpenNos.GameObject
                         {
                             return;
                         }
-                        Thread workerThread2 = new Thread(() => sync(session));
+                        Thread workerThread2 = new Thread(() => Sync(session));
                         workerThread2.Start();
                     }
                     break;
             }
         }
 
-        private static void regenerate(ClientSession session, Item item)
+        private static void Regenerate(ClientSession session, Item item)
         {
             session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 6000));
             session.Character.FoodAmount++;
@@ -98,7 +98,7 @@ namespace OpenNos.GameObject
             session.Character.FoodAmount--;
         }
 
-        private static void sync(ClientSession session)
+        private static void Sync(ClientSession session)
         {
             for (session.Character.MaxFood = 0; session.Character.MaxFood < 5; session.Character.MaxFood++)
             {
