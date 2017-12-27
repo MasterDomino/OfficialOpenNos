@@ -164,7 +164,7 @@ namespace OpenNos.Handler
             {
                 if (treqPacket.StartPress == 1 || treqPacket.RecordPress == 1)
                 {
-                    enterInstance(timespace);
+                    EnterInstance(timespace);
                 }
                 else
                 {
@@ -173,7 +173,7 @@ namespace OpenNos.Handler
             }
         }
 
-        private void enterInstance(ScriptedInstance input)
+        private void EnterInstance(ScriptedInstance input)
         {
             ScriptedInstance instance = input.Copy();
             instance.LoadScript(MapInstanceType.TimeSpaceInstance);
@@ -235,7 +235,7 @@ namespace OpenNos.Handler
                         case 1:
                             if (!packet.Param.HasValue)
                             {
-                                enterInstance(portal);
+                                EnterInstance(portal);
                             }
                             else if (packet.Param.HasValue && packet.Param.Value == 1)
                             {

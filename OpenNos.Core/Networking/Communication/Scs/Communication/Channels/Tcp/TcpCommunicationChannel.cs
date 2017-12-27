@@ -39,7 +39,9 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         /// Size of the buffer that is used to receive bytes from TCP socket.
         /// </summary>
         private const int RECEIVE_BUFFER_SIZE = 4 * 1024; // 4KB
+
         private const ushort PING_REQUEST = 0x0779;
+
         private const ushort PING_RESPONSE = 0x0988;
 
         /// <summary>
@@ -55,8 +57,6 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         private readonly ConcurrentQueue<byte[]> _highPriorityBuffer;
 
         private readonly ConcurrentQueue<byte[]> _lowPriorityBuffer;
-
-        private readonly Random _random = new Random();
 
         private readonly ScsTcpEndPoint _remoteEndPoint;
 
@@ -207,8 +207,8 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
             {
                 if (WireProtocol != null)
                 {
-                    sendByPriority(_highPriorityBuffer);
-                    sendByPriority(_lowPriorityBuffer);
+                    SendByPriority(_highPriorityBuffer);
+                    SendByPriority(_lowPriorityBuffer);
                 }
             }
             catch (Exception)
@@ -253,10 +253,10 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         protected override void StartPublic()
         {
             _running = true;
-            _clientSocket.BeginReceive(_buffer, 0, _buffer.Length, 0, receiveCallback, null);
+            _clientSocket.BeginReceive(_buffer, 0, _buffer.Length, 0, ReceiveCallback, null);
         }
 
-        private static void sendCallback(IAsyncResult result)
+        private static void SendCallback(IAsyncResult result)
         {
             try
             {
@@ -282,7 +282,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         /// reveives bytes from socker.
         /// </summary>
         /// <param name="result">Asyncronous call result</param>
-        private void receiveCallback(IAsyncResult result)
+        private void ReceiveCallback(IAsyncResult result)
         {
             if (!_running)
             {
@@ -332,7 +332,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
                 // Read more bytes if still running
                 if (_running)
                 {
-                    _clientSocket.BeginReceive(_buffer, 0, _buffer.Length, 0, receiveCallback, null);
+                    _clientSocket.BeginReceive(_buffer, 0, _buffer.Length, 0, ReceiveCallback, null);
                 }
             }
             catch (Exception)
@@ -341,7 +341,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
             }
         }
 
-        private void sendByPriority(ConcurrentQueue<byte[]> buffer)
+        private void SendByPriority(ConcurrentQueue<byte[]> buffer)
         {
             IEnumerable<byte> outgoingPacket = new List<byte>();
 
@@ -361,7 +361,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
             if (outgoingPacket.Any())
             {
                 _clientSocket.BeginSend(outgoingPacket.ToArray(), 0, outgoingPacket.Count(), SocketFlags.None,
-                sendCallback, _clientSocket);
+                SendCallback, _clientSocket);
             }
         }
 

@@ -60,7 +60,7 @@ namespace OpenNos.MallServiceExample
             //}
         }
 
-        private static string sha512(string inputString)
+        private static string Sha512(string inputString)
         {
             using (SHA512 hash = SHA512.Create())
             {

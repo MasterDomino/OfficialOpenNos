@@ -1107,7 +1107,7 @@ namespace OpenNos.Import.Console
                 }
             }
 
-            int baseMp = 10;
+            const int baseMp = 10;
             int baseMpup = 5;
             // basicMpLoad
             int x = 0;
@@ -1225,11 +1225,13 @@ namespace OpenNos.Import.Console
                             // TODO: Race Types 1, 2, 4, 5 and 7 are either missing or not 100% correct - test it.
                             case 2:
                             case 3:
-                                npc.MaxMP += npc.Level * 4 + 46;
+                                npc.MaxMP += (npc.Level * 4) + 46;
                                 break;
+
                             case 6:
                                 npc.MaxMP += 715;
                                 break;
+
                             case 8:
                                 npc.MaxMP = 4;
                                 break;

@@ -267,7 +267,7 @@
     <Compile Include="Item\UpgradeItem.cs" />
     <Compile Include="Item\NoFunctionItem.cs" />
     <Compile Include="Item\WearableItem.cs" />
-    <Compile Include="CharacterMapItem.cs" />
+    <Compile Include="Map\CharacterMapItem.cs" />
     <Compile Include="Map\Map.cs" />
     <Compile Include="Group.cs" />
     <Compile Include="Map\MapCell.cs" />

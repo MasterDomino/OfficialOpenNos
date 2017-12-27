@@ -60,8 +60,6 @@ namespace OpenNos.GameObject
 
         private static readonly CryptoRandom _random = new CryptoRandom();
 
-        private static readonly int _seed = Environment.TickCount;
-
         private static readonly ConcurrentBag<Skill> _skills = new ConcurrentBag<Skill>();
 
         private static ServerManager _instance;
@@ -181,7 +179,7 @@ namespace OpenNos.GameObject
 
                 Session.SendPacket("eff_ob -1 -1 0 4269");
                 Session.SendPacket(UserInterfaceHelper.GenerateDialog($"#revival^2 #revival^1 {Language.Instance.GetMessageFromKey("ASK_REVIVE_PVP")}"));
-                reviveTask(Session);
+                ReviveTask(Session);
             }
         }
 
@@ -217,7 +215,7 @@ namespace OpenNos.GameObject
                         }
                         session.SendPacket("eff_ob -1 -1 0 4269");
                         session.SendPacket(UserInterfaceHelper.GenerateDialog($"#revival^0 #revival^1 {(session.Character.Level > 20 ? Language.Instance.GetMessageFromKey("ASK_REVIVE") : Language.Instance.GetMessageFromKey("ASK_REVIVE_FREE"))}"));
-                        reviveTask(session);
+                        ReviveTask(session);
                         break;
 
                     case MapInstanceType.TimeSpaceInstance:
@@ -230,7 +228,7 @@ namespace OpenNos.GameObject
                         session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("YOU_HAVE_LIFE"), session.CurrentMapInstance.InstanceBag.Lives - session.CurrentMapInstance.InstanceBag.DeadList.Count + 1), 0));
                         session.SendPacket(UserInterfaceHelper.GenerateDialog($"#revival^1 #revival^1 {(session.Character.Level > 10 ? Language.Instance.GetMessageFromKey("ASK_REVIVE_TS_LOW_LEVEL") : Language.Instance.GetMessageFromKey("ASK_REVIVE_TS"))}"));
                         session.CurrentMapInstance.InstanceBag.DeadList.Add(session.Character.CharacterId);
-                        reviveTask(session);
+                        ReviveTask(session);
                         break;
 
                     case MapInstanceType.RaidInstance:
@@ -279,7 +277,7 @@ namespace OpenNos.GameObject
 
                     case MapInstanceType.LodInstance:
                         session.SendPacket(UserInterfaceHelper.GenerateDialog($"#revival^0 #revival^1 {Language.Instance.GetMessageFromKey("ASK_REVIVE_LOD")}"));
-                        reviveTask(session);
+                        ReviveTask(session);
                         break;
 
                     case MapInstanceType.Act4Berios:
@@ -287,7 +285,7 @@ namespace OpenNos.GameObject
                     case MapInstanceType.Act4Hatus:
                     case MapInstanceType.Act4Morcos:
                         session.SendPacket(UserInterfaceHelper.GenerateDialog($"#revival^0 #revival^1 {Language.Instance.GetMessageFromKey("ASK_REVIVE_ACT4RAID")}"));
-                        reviveTask(session);
+                        ReviveTask(session);
                         break;
 
                     default:
@@ -945,8 +943,8 @@ namespace OpenNos.GameObject
                 StartedEvents = new List<EventType>();
 
                 // initialize families
-                loadFamilies();
-                launchEvents();
+                LoadFamilies();
+                LaunchEvents();
                 RefreshRanking();
                 CharacterRelations = DAOFactory.CharacterRelationDAO.LoadAll().ToList();
                 PenaltyLogs = DAOFactory.PenaltyLogDAO.LoadAll().ToList();
@@ -960,7 +958,7 @@ namespace OpenNos.GameObject
                     FamilyArenaInstance = GenerateMapInstance(2106, MapInstanceType.NormalInstance, new InstanceBag());
                     FamilyArenaInstance.IsPVP = true;
                 }
-                loadScriptedInstances();
+                LoadScriptedInstances();
 
                 XmlSerializer serializer = new XmlSerializer(typeof(QuestModel));
                 QuestList = new ThreadSafeSortedList<long, QuestModel>();
@@ -1281,7 +1279,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        private void act4Process()
+        private void Act4Process()
         {
             if (ChannelId != 51)
             {
@@ -1400,7 +1398,7 @@ namespace OpenNos.GameObject
         }
 
         // Server
-        private static void botProcess()
+        private static void BotProcess()
         {
             try
             {
@@ -1412,7 +1410,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        private void groupProcess()
+        private void GroupProcess()
         {
             try
             {
@@ -1433,25 +1431,21 @@ namespace OpenNos.GameObject
             }
         }
 
-        private void launchEvents()
+        private void LaunchEvents()
         {
             GroupsThreadSafe = new ThreadSafeSortedList<long, Group>();
 
-            Observable.Interval(TimeSpan.FromMinutes(5)).Subscribe(x => saveAllProcess());
+            Observable.Interval(TimeSpan.FromMinutes(5)).Subscribe(x => SaveAllProcess());
+            Observable.Interval(TimeSpan.FromMinutes(1)).Subscribe(x => Act4Process());
+            Observable.Interval(TimeSpan.FromSeconds(2)).Subscribe(x => GroupProcess());
+            Observable.Interval(TimeSpan.FromHours(3)).Subscribe(x => BotProcess());
+            Observable.Interval(TimeSpan.FromMinutes(1)).Subscribe(x => MaintenanceProcess());
 
-            Observable.Interval(TimeSpan.FromMinutes(1)).Subscribe(x => act4Process());
-
-            Observable.Interval(TimeSpan.FromSeconds(2)).Subscribe(x => groupProcess());
-
-            Observable.Interval(TimeSpan.FromHours(3)).Subscribe(x => botProcess());
-
-            Observable.Interval(TimeSpan.FromMinutes(1)).Subscribe(x => maintenanceProcess());
-
-            EventHelper.Instance.RunEvent(new EventContainer(ServerManager.GetMapInstance(ServerManager.GetBaseMapInstanceIdByMapId(98)), EventActionType.NPCSEFFECTCHANGESTATE, true));
+            EventHelper.Instance.RunEvent(new EventContainer(GetMapInstance(GetBaseMapInstanceIdByMapId(98)), EventActionType.NPCSEFFECTCHANGESTATE, true));
             Parallel.ForEach(Schedules, schedule => Observable.Timer(TimeSpan.FromSeconds(EventHelper.GetMilisecondsBeforeTime(schedule.Time).TotalSeconds), TimeSpan.FromDays(1)).Subscribe(e => EventHelper.GenerateEvent(schedule.Event)));
             EventHelper.GenerateEvent(EventType.ACT4SHIP);
 
-            Observable.Interval(TimeSpan.FromSeconds(1)).Subscribe(x => removeItemProcess());
+            Observable.Interval(TimeSpan.FromSeconds(1)).Subscribe(x => RemoveItemProcess());
             Observable.Interval(TimeSpan.FromMilliseconds(400)).Subscribe(x =>
             {
                 Parallel.ForEach(_mapinstances, map =>
@@ -1461,33 +1455,33 @@ namespace OpenNos.GameObject
                 });
             });
 
-            CommunicationServiceClient.Instance.SessionKickedEvent += onSessionKicked;
-            CommunicationServiceClient.Instance.MessageSentToCharacter += onMessageSentToCharacter;
-            CommunicationServiceClient.Instance.FamilyRefresh += onFamilyRefresh;
-            CommunicationServiceClient.Instance.RelationRefresh += onRelationRefresh;
-            CommunicationServiceClient.Instance.StaticBonusRefresh += onStaticBonusRefresh;
-            CommunicationServiceClient.Instance.BazaarRefresh += onBazaarRefresh;
-            CommunicationServiceClient.Instance.PenaltyLogRefresh += onPenaltyLogRefresh;
-            CommunicationServiceClient.Instance.GlobalEvent += onGlobalEvent;
-            CommunicationServiceClient.Instance.ShutdownEvent += onShutdown;
-            CommunicationServiceClient.Instance.RestartEvent += onRestart;
-            ConfigurationServiceClient.Instance.ConfigurationUpdate += onConfiguratinEvent;
-            MailServiceClient.Instance.MailSent += onMailSent;
+            CommunicationServiceClient.Instance.SessionKickedEvent += OnSessionKicked;
+            CommunicationServiceClient.Instance.MessageSentToCharacter += OnMessageSentToCharacter;
+            CommunicationServiceClient.Instance.FamilyRefresh += OnFamilyRefresh;
+            CommunicationServiceClient.Instance.RelationRefresh += OnRelationRefresh;
+            CommunicationServiceClient.Instance.StaticBonusRefresh += OnStaticBonusRefresh;
+            CommunicationServiceClient.Instance.BazaarRefresh += OnBazaarRefresh;
+            CommunicationServiceClient.Instance.PenaltyLogRefresh += OnPenaltyLogRefresh;
+            CommunicationServiceClient.Instance.GlobalEvent += OnGlobalEvent;
+            CommunicationServiceClient.Instance.ShutdownEvent += OnShutdown;
+            CommunicationServiceClient.Instance.RestartEvent += OnRestart;
+            ConfigurationServiceClient.Instance.ConfigurationUpdate += OnConfiguratinEvent;
+            MailServiceClient.Instance.MailSent += OnMailSent;
             _lastGroupId = 1;
         }
 
-        private void onStaticBonusRefresh(object sender, EventArgs e)
+        private void OnStaticBonusRefresh(object sender, EventArgs e)
         {
             long characterId = (long)sender;
 
             ClientSession sess = GetSessionByCharacterId(characterId);
-            if(sess != null)
+            if (sess != null)
             {
                 sess.Character.StaticBonusList = DAOFactory.StaticBonusDAO.LoadByCharacterId(characterId).ToList();
             }
         }
 
-        private void onMailSent(object sender, EventArgs e)
+        private void OnMailSent(object sender, EventArgs e)
         {
             MailDTO mail = (MailDTO)sender;
 
@@ -1508,9 +1502,9 @@ namespace OpenNos.GameObject
             }
         }
 
-        private void onConfiguratinEvent(object sender, EventArgs e) => Configuration = (ConfigurationObject)sender;
+        private void OnConfiguratinEvent(object sender, EventArgs e) => Configuration = (ConfigurationObject)sender;
 
-        private void loadFamilies()
+        private void LoadFamilies()
         {
             FamilyList = new ThreadSafeSortedList<long, Family>();
             Parallel.ForEach(DAOFactory.FamilyDAO.LoadAll(), familyDTO =>
@@ -1538,7 +1532,7 @@ namespace OpenNos.GameObject
             });
         }
 
-        private void loadScriptedInstances()
+        private void LoadScriptedInstances()
         {
             Raids = new ConcurrentBag<ScriptedInstance>();
             Parallel.ForEach(_mapinstances, map =>
@@ -1571,7 +1565,7 @@ namespace OpenNos.GameObject
             });
         }
 
-        private void maintenanceProcess()
+        private void MaintenanceProcess()
         {
             List<ClientSession> sessions = Sessions.Where(c => c.IsConnected).ToList();
             MaintenanceLogDTO maintenanceLog = DAOFactory.MaintenanceLogDAO.LoadFirst();
@@ -1593,7 +1587,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        private void onBazaarRefresh(object sender, EventArgs e)
+        private void OnBazaarRefresh(object sender, EventArgs e)
         {
             long BazaarId = (long)sender;
             BazaarItemDTO bzdto = DAOFactory.BazaarItemDAO.LoadById(BazaarId);
@@ -1633,7 +1627,7 @@ namespace OpenNos.GameObject
             InBazaarRefreshMode = false;
         }
 
-        private void onFamilyRefresh(object sender, EventArgs e)
+        private void OnFamilyRefresh(object sender, EventArgs e)
         {
             long FamilyId = (long)sender;
             FamilyDTO famdto = DAOFactory.FamilyDAO.LoadById(FamilyId);
@@ -1688,9 +1682,9 @@ namespace OpenNos.GameObject
             }
         }
 
-        private static void onGlobalEvent(object sender, EventArgs e) => EventHelper.GenerateEvent((EventType)sender);
+        private static void OnGlobalEvent(object sender, EventArgs e) => EventHelper.GenerateEvent((EventType)sender);
 
-        private void onMessageSentToCharacter(object sender, EventArgs e)
+        private void OnMessageSentToCharacter(object sender, EventArgs e)
         {
             if (sender != null)
             {
@@ -1786,7 +1780,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        private void onPenaltyLogRefresh(object sender, EventArgs e)
+        private void OnPenaltyLogRefresh(object sender, EventArgs e)
         {
             int relId = (int)sender;
             PenaltyLogDTO reldto = DAOFactory.PenaltyLogDAO.LoadById(relId);
@@ -1808,7 +1802,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        private void onRelationRefresh(object sender, EventArgs e)
+        private void OnRelationRefresh(object sender, EventArgs e)
         {
             _inRelationRefreshMode = true;
             long relId = (long)sender;
@@ -1835,7 +1829,7 @@ namespace OpenNos.GameObject
             _inRelationRefreshMode = false;
         }
 
-        private void onSessionKicked(object sender, EventArgs e)
+        private void OnSessionKicked(object sender, EventArgs e)
         {
             if (sender != null)
             {
@@ -1851,7 +1845,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        private static void onShutdown(object sender, EventArgs e)
+        private static void OnShutdown(object sender, EventArgs e)
         {
             if (Instance.TaskShutdown != null)
             {
@@ -1865,7 +1859,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        private static void onRestart(object sender, EventArgs e)
+        private static void OnRestart(object sender, EventArgs e)
         {
             if (Instance.TaskShutdown != null)
             {
@@ -1881,7 +1875,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        private void removeItemProcess()
+        private void RemoveItemProcess()
         {
             try
             {
@@ -1893,7 +1887,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        private static void reviveTask(ClientSession Session)
+        private static void ReviveTask(ClientSession Session)
         {
             Task.Factory.StartNew(async () =>
             {
@@ -1915,7 +1909,7 @@ namespace OpenNos.GameObject
         }
 
         // Server
-        private void saveAllProcess()
+        private void SaveAllProcess()
         {
             try
             {

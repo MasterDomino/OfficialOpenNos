@@ -120,14 +120,11 @@ namespace OpenNos.Handler
             switch (equipmentInfoPacket.Type)
             {
                 case 0:
-                    inventory = Session.Character.Inventory.LoadBySlotAndType(equipmentInfoPacket.Slot, InventoryType.Wear) ??
-                                Session.Character.Inventory.LoadBySlotAndType(equipmentInfoPacket.Slot, InventoryType.Wear);
+                    inventory = Session.Character.Inventory.LoadBySlotAndType(equipmentInfoPacket.Slot, InventoryType.Wear);
                     break;
 
                 case 1:
-                    inventory = Session.Character.Inventory.LoadBySlotAndType(equipmentInfoPacket.Slot, InventoryType.Equipment) ??
-                                Session.Character.Inventory.LoadBySlotAndType(equipmentInfoPacket.Slot, InventoryType.Equipment) ??
-                                Session.Character.Inventory.LoadBySlotAndType(equipmentInfoPacket.Slot, InventoryType.Equipment);
+                    inventory = Session.Character.Inventory.LoadBySlotAndType(equipmentInfoPacket.Slot, InventoryType.Equipment);
                     break;
 
                 case 2:
@@ -208,7 +205,7 @@ namespace OpenNos.Handler
             ClientSession targetSession = ServerManager.Instance.GetSessionByCharacterId(Session.Character.ExchangeInfo.TargetCharacterId);
             if (Session.Character.HasShopOpened || targetSession?.Character.HasShopOpened == true)
             {
-                closeExchange(Session, targetSession);
+                CloseExchange(Session, targetSession);
                 return;
             }
 
@@ -219,7 +216,7 @@ namespace OpenNos.Handler
                 byte.TryParse(packetsplit[j - 1], out qty[i]);
                 if ((InventoryType)type[i] == InventoryType.Bazaar)
                 {
-                    closeExchange(Session, targetSession);
+                    CloseExchange(Session, targetSession);
                     return;
                 }
                 ItemInstance item = Session.Character.Inventory.LoadBySlotAndType(slot[i], (InventoryType)type[i]);
@@ -376,7 +373,7 @@ namespace OpenNos.Handler
 
                             if (Session.IsDisposing || targetSession.IsDisposing)
                             {
-                                closeExchange(Session, targetSession);
+                                CloseExchange(Session, targetSession);
                                 return;
                             }
 
@@ -424,24 +421,24 @@ namespace OpenNos.Handler
                                                         : UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("MAX_GOLD"), 0);
                                                     Session.SendPacket(message);
                                                     targetSession.SendPacket(message);
-                                                    closeExchange(Session, targetSession);
+                                                    CloseExchange(Session, targetSession);
                                                 }
                                                 else
                                                 {
                                                     if (Session.Character.ExchangeInfo.ExchangeList.Any(ei => !(ei.Item.IsTradable || ei.IsBound)))
                                                     {
                                                         Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("ITEM_NOT_TRADABLE"), 0));
-                                                        closeExchange(Session, targetSession);
+                                                        CloseExchange(Session, targetSession);
                                                     }
                                                     else // all items can be traded
                                                     {
                                                         Session.Character.IsExchanging = targetSession.Character.IsExchanging = true;
 
                                                         // exchange all items from target to source
-                                                        exchange(targetSession, Session);
+                                                        Exchange(targetSession, Session);
 
                                                         // exchange all items from source to target
-                                                        exchange(Session, targetSession);
+                                                        Exchange(Session, targetSession);
 
                                                         Session.Character.IsExchanging = targetSession.Character.IsExchanging = false;
                                                     }
@@ -467,7 +464,7 @@ namespace OpenNos.Handler
                         if (Session.HasCurrentMapInstance && Session.Character.ExchangeInfo != null)
                         {
                             targetSession = Session.CurrentMapInstance.GetSessionByCharacterId(Session.Character.ExchangeInfo.TargetCharacterId);
-                            closeExchange(Session, targetSession);
+                            CloseExchange(Session, targetSession);
                         }
                         break;
 
@@ -823,8 +820,7 @@ namespace OpenNos.Handler
 
             if (Session.HasCurrentMapInstance && Session.CurrentMapInstance.UserShops.FirstOrDefault(mapshop => mapshop.Value.OwnerId.Equals(Session.Character.CharacterId)).Value == null && (Session.Character.ExchangeInfo == null || (Session.Character.ExchangeInfo?.ExchangeList).Count == 0))
             {
-                // its same for true or false
-                ItemInstance inventory = removePacket.InventorySlot != (byte)EquipmentType.Sp ? Session.Character.Inventory.LoadBySlotAndType(removePacket.InventorySlot, equipment) : Session.Character.Inventory.LoadBySlotAndType(removePacket.InventorySlot, equipment);
+                ItemInstance inventory = Session.Character.Inventory.LoadBySlotAndType(removePacket.InventorySlot, equipment);
                 if (inventory != null)
                 {
                     double currentRunningSeconds = (DateTime.Now - Process.GetCurrentProcess().StartTime.AddSeconds(-50)).TotalSeconds;
@@ -843,7 +839,7 @@ namespace OpenNos.Handler
                                 return;
                             }
                             Session.Character.LastSp = (DateTime.Now - Process.GetCurrentProcess().StartTime.AddSeconds(-50)).TotalSeconds;
-                            removeSP(inventory.ItemVNum);
+                            RemoveSP(inventory.ItemVNum);
                         }
                         else if (removePacket.InventorySlot == (byte)EquipmentType.Sp && !Session.Character.UseSp && timeSpanSinceLastSpUsage <= Session.Character.SpCooldown)
                         {
@@ -1468,7 +1464,7 @@ namespace OpenNos.Handler
                 if (Session.Character.UseSp)
                 {
                     Session.Character.LastSp = currentRunningSeconds;
-                    removeSP(specialistInstance.ItemVNum);
+                    RemoveSP(specialistInstance.ItemVNum);
                 }
                 else
                 {
@@ -1488,7 +1484,7 @@ namespace OpenNos.Handler
                             DateTime delay = DateTime.Now.AddSeconds(-6);
                             if (Session.Character.LastDelay > delay && Session.Character.LastDelay < delay.AddSeconds(2))
                             {
-                                changeSP();
+                                ChangeSP();
                             }
                         }
                         else
@@ -1750,7 +1746,7 @@ namespace OpenNos.Handler
         /// <summary>
         /// changesp private method
         /// </summary>
-        private void changeSP()
+        private void ChangeSP()
         {
             ItemInstance sp = Session.Character.Inventory.LoadBySlotAndType((byte)EquipmentType.Sp, InventoryType.Wear);
             ItemInstance fairy = Session.Character.Inventory.LoadBySlotAndType((byte)EquipmentType.Fairy, InventoryType.Wear);
@@ -1801,7 +1797,7 @@ namespace OpenNos.Handler
         /// </summary>
         /// <param name="session"></param>
         /// <param name="targetSession"></param>
-        private static void closeExchange(ClientSession session, ClientSession targetSession)
+        private static void CloseExchange(ClientSession session, ClientSession targetSession)
         {
             if (targetSession?.Character.ExchangeInfo != null)
             {
@@ -1821,7 +1817,7 @@ namespace OpenNos.Handler
         /// </summary>
         /// <param name="sourceSession"></param>
         /// <param name="targetSession"></param>
-        private static void exchange(ClientSession sourceSession, ClientSession targetSession)
+        private static void Exchange(ClientSession sourceSession, ClientSession targetSession)
         {
             if (sourceSession?.Character.ExchangeInfo == null)
             {
@@ -1876,7 +1872,7 @@ namespace OpenNos.Handler
         /// sp removal method
         /// </summary>
         /// <param name="vnum"></param>
-        private void removeSP(short vnum)
+        private void RemoveSP(short vnum)
         {
             if (Session?.HasSession == true && !Session.Character.IsVehicled)
             {

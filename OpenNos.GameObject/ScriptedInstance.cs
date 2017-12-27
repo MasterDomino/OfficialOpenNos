@@ -255,11 +255,11 @@ namespace OpenNos.GameObject
                     }
                 });
 
-                generateEvent(FirstMap).ForEach(e => EventHelper.Instance.RunEvent(e));
+                GenerateEvent(FirstMap).ForEach(e => EventHelper.Instance.RunEvent(e));
             }
         }
 
-        private ThreadSafeGenericList<EventContainer> generateEvent(MapInstance parentMapInstance)
+        private ThreadSafeGenericList<EventContainer> GenerateEvent(MapInstance parentMapInstance)
         {
             // Needs Optimization, look into it.
             ThreadSafeGenericList<EventContainer> evts = new ThreadSafeGenericList<EventContainer>();
@@ -276,19 +276,19 @@ namespace OpenNos.GameObject
                     }
 
                     // SummonMonster
-                    evts.AddRange(summonMonster(mapInstance, createMap.SummonMonster));
+                    evts.AddRange(SummonMonster(mapInstance, createMap.SummonMonster));
 
                     // SummonNpc
-                    evts.AddRange(summonNpc(mapInstance, createMap.SummonNpc));
+                    evts.AddRange(SummonNpc(mapInstance, createMap.SummonNpc));
 
                     // SpawnPortal
-                    evts.AddRange(spawnPortal(mapInstance, createMap.SpawnPortal));
+                    evts.AddRange(SpawnPortal(mapInstance, createMap.SpawnPortal));
 
                     // SpawnButton
-                    evts.AddRange(spawnButton(mapInstance, createMap.SpawnButton));
+                    evts.AddRange(SpawnButton(mapInstance, createMap.SpawnButton));
 
                     // OnCharacterDiscoveringMap
-                    evts.AddRange(onCharacterDiscoveringMap(mapInstance, createMap));
+                    evts.AddRange(OnCharacterDiscoveringMap(mapInstance, createMap));
 
                     // GenerateClock
                     if (createMap.GenerateClock != null)
@@ -299,7 +299,7 @@ namespace OpenNos.GameObject
                     // OnMoveOnMap
                     if (createMap.OnMoveOnMap != null)
                     {
-                        Parallel.ForEach(createMap.OnMoveOnMap, onMoveOnMap => evts.AddRange(this.onMoveOnMap(mapInstance, onMoveOnMap)));
+                        Parallel.ForEach(createMap.OnMoveOnMap, onMoveOnMap => evts.AddRange(OnMoveOnMap(mapInstance, onMoveOnMap)));
                     }
 
                     // OnLockerOpen
@@ -335,7 +335,7 @@ namespace OpenNos.GameObject
                         {
                             onLockerOpen.Add(new EventContainer(mapInstance, EventActionType.SETBUTTONLOCKERS, createMap.OnLockerOpen.SetButtonLockers.Value));
                         }
-                        onLockerOpen.AddRange(this.summonMonster(mapInstance, createMap.OnLockerOpen.SummonMonster, true));
+                        onLockerOpen.AddRange(SummonMonster(mapInstance, createMap.OnLockerOpen.SummonMonster, true));
 
                         evts.Add(new EventContainer(mapInstance, EventActionType.REGISTEREVENT, new Tuple<string, List<EventContainer>>(nameof(XMLModel.Events.OnLockerOpen), onLockerOpen)));
                     }
@@ -346,7 +346,7 @@ namespace OpenNos.GameObject
                         foreach (XMLModel.Events.OnAreaEntry onAreaEntry in createMap.OnAreaEntry)
                         {
                             List<EventContainer> onAreaEntryEvents = new List<EventContainer>();
-                            onAreaEntryEvents.AddRange(summonMonster(mapInstance, onAreaEntry.SummonMonster));
+                            onAreaEntryEvents.AddRange(SummonMonster(mapInstance, onAreaEntry.SummonMonster));
                             evts.Add(new EventContainer(mapInstance, EventActionType.SETAREAENTRY, new ZoneEvent { X = onAreaEntry.PositionX, Y = onAreaEntry.PositionY, Range = onAreaEntry.Range, Events = onAreaEntryEvents }));
                         }
                     }
@@ -368,7 +368,7 @@ namespace OpenNos.GameObject
             return evts;
         }
 
-        private List<EventContainer> onCharacterDiscoveringMap(MapInstance mapInstance, XMLModel.Objects.CreateMap createMap)
+        private List<EventContainer> OnCharacterDiscoveringMap(MapInstance mapInstance, XMLModel.Objects.CreateMap createMap)
         {
             List<EventContainer> evts = new List<EventContainer>();
 
@@ -402,18 +402,18 @@ namespace OpenNos.GameObject
                 }
 
                 // SummonMonster
-                onDiscoverEvents.AddRange(summonMonster(mapInstance, createMap.OnCharacterDiscoveringMap.SummonMonster));
+                onDiscoverEvents.AddRange(SummonMonster(mapInstance, createMap.OnCharacterDiscoveringMap.SummonMonster));
 
                 // SummonNpc
-                onDiscoverEvents.AddRange(summonNpc(mapInstance, createMap.OnCharacterDiscoveringMap.SummonNpc));
+                onDiscoverEvents.AddRange(SummonNpc(mapInstance, createMap.OnCharacterDiscoveringMap.SummonNpc));
 
                 // SpawnPortal
-                onDiscoverEvents.AddRange(spawnPortal(mapInstance, createMap.OnCharacterDiscoveringMap.SpawnPortal));
+                onDiscoverEvents.AddRange(SpawnPortal(mapInstance, createMap.OnCharacterDiscoveringMap.SpawnPortal));
 
                 // OnMoveOnMap
                 if (createMap.OnCharacterDiscoveringMap.OnMoveOnMap != null)
                 {
-                    onDiscoverEvents.AddRange(onMoveOnMap(mapInstance, createMap.OnCharacterDiscoveringMap.OnMoveOnMap));
+                    onDiscoverEvents.AddRange(OnMoveOnMap(mapInstance, createMap.OnCharacterDiscoveringMap.OnMoveOnMap));
                 }
 
                 // Set Monster Lockers
@@ -433,7 +433,7 @@ namespace OpenNos.GameObject
             return evts;
         }
 
-        private static List<EventContainer> onMapClean(MapInstance mapInstance, XMLModel.Events.OnMapClean onMapClean)
+        private static List<EventContainer> OnMapClean(MapInstance mapInstance, XMLModel.Events.OnMapClean onMapClean)
         {
             List<EventContainer> evts = new List<EventContainer>();
 
@@ -481,7 +481,7 @@ namespace OpenNos.GameObject
             return evts;
         }
 
-        private List<EventContainer> onMoveOnMap(MapInstance mapInstance, XMLModel.Events.OnMoveOnMap onMoveOnMap)
+        private List<EventContainer> OnMoveOnMap(MapInstance mapInstance, XMLModel.Events.OnMoveOnMap onMoveOnMap)
         {
             List<EventContainer> evts = new List<EventContainer>();
 
@@ -625,7 +625,7 @@ namespace OpenNos.GameObject
                     foreach (XMLModel.Objects.Wave wave in onMoveOnMap.Wave)
                     {
                         // SummonMonster
-                        waveEvent.AddRange(summonMonster(mapInstance, wave.SummonMonster));
+                        waveEvent.AddRange(SummonMonster(mapInstance, wave.SummonMonster));
 
                         // SendMessage
                         if (wave.SendMessage != null)
@@ -638,10 +638,10 @@ namespace OpenNos.GameObject
                 }
 
                 // SummonMonster
-                onMoveOnMapEvents.AddRange(summonMonster(mapInstance, onMoveOnMap.SummonMonster));
+                onMoveOnMapEvents.AddRange(SummonMonster(mapInstance, onMoveOnMap.SummonMonster));
 
                 // OnMapClean
-                onMoveOnMapEvents.AddRange(onMapClean(mapInstance, onMoveOnMap.OnMapClean));
+                onMoveOnMapEvents.AddRange(OnMapClean(mapInstance, onMoveOnMap.OnMapClean));
 
                 // Set Monster Lockers
                 if (onMoveOnMap.SetMonsterLockers != null)
@@ -660,7 +660,7 @@ namespace OpenNos.GameObject
             return evts;
         }
 
-        private List<EventContainer> spawnButton(MapInstance mapInstance, XMLModel.Events.SpawnButton[] spawnButton)
+        private List<EventContainer> SpawnButton(MapInstance mapInstance, XMLModel.Events.SpawnButton[] spawnButton)
         {
             List<EventContainer> evts = new List<EventContainer>();
 
@@ -690,7 +690,7 @@ namespace OpenNos.GameObject
                         List<EventContainer> onFirst = new List<EventContainer>();
 
                         // SummonMonster
-                        onFirst.AddRange(summonMonster(mapInstance, spawn.OnFirstEnable.SummonMonster));
+                        onFirst.AddRange(SummonMonster(mapInstance, spawn.OnFirstEnable.SummonMonster));
 
                         // Teleport
                         if (spawn.OnFirstEnable.Teleport != null)
@@ -719,7 +719,7 @@ namespace OpenNos.GameObject
                         // OnMapClean
                         if (spawn.OnFirstEnable.OnMapClean != null)
                         {
-                            onFirst.AddRange(onMapClean(mapInstance, spawn.OnFirstEnable.OnMapClean));
+                            onFirst.AddRange(OnMapClean(mapInstance, spawn.OnFirstEnable.OnMapClean));
                         }
 
                         button.FirstEnableEvents.AddRange(onFirst);
@@ -744,7 +744,7 @@ namespace OpenNos.GameObject
             return evts;
         }
 
-        private List<EventContainer> spawnPortal(MapInstance mapInstance, XMLModel.Events.SpawnPortal[] spawnPortal)
+        private List<EventContainer> SpawnPortal(MapInstance mapInstance, XMLModel.Events.SpawnPortal[] spawnPortal)
         {
             List<EventContainer> evts = new List<EventContainer>();
 
@@ -780,7 +780,7 @@ namespace OpenNos.GameObject
             return evts;
         }
 
-        private List<EventContainer> summonMonster(MapInstance mapInstance, XMLModel.Events.SummonMonster[] summonMonster, bool isChildMonster = false)
+        private List<EventContainer> SummonMonster(MapInstance mapInstance, XMLModel.Events.SummonMonster[] summonMonster, bool isChildMonster = false)
         {
             List<EventContainer> evts = new List<EventContainer>();
 
@@ -875,7 +875,7 @@ namespace OpenNos.GameObject
                         // SummonMonster Child
                         if (!isChildMonster)
                         {
-                            monster.DeathEvents.AddRange(this.summonMonster(mapInstance, summon.OnDeath?.SummonMonster, true));
+                            monster.DeathEvents.AddRange(SummonMonster(mapInstance, summon.OnDeath?.SummonMonster, true));
                         }
                     }
 
@@ -913,7 +913,7 @@ namespace OpenNos.GameObject
                         // SummonMonster Child
                         if (!isChildMonster)
                         {
-                            monster.NoticingEvents.AddRange(this.summonMonster(mapInstance, summon.OnDeath?.SummonMonster, true));
+                            monster.NoticingEvents.AddRange(SummonMonster(mapInstance, summon.OnDeath?.SummonMonster, true));
                         }
                     }
 
@@ -924,7 +924,7 @@ namespace OpenNos.GameObject
             return evts;
         }
 
-        private List<EventContainer> summonNpc(MapInstance mapInstance, XMLModel.Events.SummonNpc[] summonNpc)
+        private List<EventContainer> SummonNpc(MapInstance mapInstance, XMLModel.Events.SummonNpc[] summonNpc)
         {
             List<EventContainer> evts = new List<EventContainer>();
 

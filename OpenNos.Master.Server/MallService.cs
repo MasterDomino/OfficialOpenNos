@@ -44,14 +44,7 @@ namespace OpenNos.Master.Server
             return false;
         }
 
-        public bool IsAuthenticated()
-        {
-            if (MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId)))
-            {
-                return true;
-            }
-            return false;
-        }
+        public bool IsAuthenticated() => MSManager.Instance.AuthentificatedClients.Any(s => s.Equals(CurrentClient.ClientId));
 
         public AuthorityType GetAuthority(long accountId)
         {
@@ -93,7 +86,7 @@ namespace OpenNos.Master.Server
                 Message = string.Empty,
                 ReceiverId = characterId,
                 SenderId=characterId,
-                Title = "NOSMALL"              
+                Title = "NOSMALL"
             };
 
             DAOFactory.MailDAO.InsertOrUpdate(ref mailDTO);

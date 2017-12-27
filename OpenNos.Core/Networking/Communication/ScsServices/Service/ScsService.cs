@@ -43,7 +43,7 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Service
         /// </remarks>
         public IScsServiceClient CurrentClient
         {
-            get => getCurrentClient();
+            get => GetCurrentClient();
             set => _currentClient = value;
         }
 
@@ -51,7 +51,7 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Service
 
         #region Methods
 
-        private static IScsServiceClient getCurrentClient()
+        private static IScsServiceClient GetCurrentClient()
         {
             if (_currentClient != null)
             {

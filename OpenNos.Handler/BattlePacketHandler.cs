@@ -111,7 +111,7 @@ namespace OpenNos.Handler
                     case UserType.Monster:
                         if (Session.Character.Hp > 0)
                         {
-                            targetHit(useSkillPacket.CastId, useSkillPacket.MapMonsterId);
+                            TargetHit(useSkillPacket.CastId, useSkillPacket.MapMonsterId);
                             int[] fairyWings = Session.Character.GetBuff(BCardType.CardType.EffectSummon, 11);
                             int random = ServerManager.RandomNumber();
                             if (fairyWings[0] > random)
@@ -134,11 +134,11 @@ namespace OpenNos.Handler
                         {
                             if (useSkillPacket.MapMonsterId != Session.Character.CharacterId)
                             {
-                                targetHit(useSkillPacket.CastId, useSkillPacket.MapMonsterId, true);
+                                TargetHit(useSkillPacket.CastId, useSkillPacket.MapMonsterId, true);
                             }
                             else
                             {
-                                targetHit(useSkillPacket.CastId, useSkillPacket.MapMonsterId);
+                                TargetHit(useSkillPacket.CastId, useSkillPacket.MapMonsterId);
                             }
                             int[] fairyWings = Session.Character.GetBuff(BCardType.CardType.EffectSummon, 11);
                             int random = ServerManager.RandomNumber();
@@ -193,12 +193,12 @@ namespace OpenNos.Handler
                 }
                 if (Session.Character.CanFight && Session.Character.Hp > 0)
                 {
-                    zoneHit(useAOESkillPacket.CastId, useAOESkillPacket.MapX, useAOESkillPacket.MapY);
+                    ZoneHit(useAOESkillPacket.CastId, useAOESkillPacket.MapX, useAOESkillPacket.MapY);
                 }
             }
         }
 
-        private void pvpHit(HitRequest hitRequest, ClientSession target)
+        private void PvpHit(HitRequest hitRequest, ClientSession target)
         {
             if (target?.Character.Hp > 0 && hitRequest?.Session.Character.Hp > 0)
             {
@@ -518,7 +518,7 @@ namespace OpenNos.Handler
             }
         }
 
-        private void targetHit(int castingId, int targetId, bool isPvp = false)
+        private void TargetHit(int castingId, int targetId, bool isPvp = false)
         {
             bool _shouldCancel = true;
             if ((DateTime.Now - Session.Character.LastTransform).TotalSeconds < 3)
@@ -583,21 +583,21 @@ namespace OpenNos.Handler
                                     {
                                         if (Session.Character.Faction != character.Character.Faction && Session.CurrentMapInstance.Map.MapId != 130 && Session.CurrentMapInstance.Map.MapId != 131)
                                         {
-                                            pvpHit(new HitRequest(TargetHitType.AOETargetHit, Session, ski.Skill), character);
+                                            PvpHit(new HitRequest(TargetHitType.AOETargetHit, Session, ski.Skill), character);
                                         }
                                     }
                                     else if (Session.CurrentMapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
                                     {
                                         if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId))
                                         {
-                                            pvpHit(new HitRequest(TargetHitType.AOETargetHit, Session, ski.Skill), character);
+                                            PvpHit(new HitRequest(TargetHitType.AOETargetHit, Session, ski.Skill), character);
                                         }
                                     }
                                     else if (Session.CurrentMapInstance.IsPVP)
                                     {
                                         if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId))
                                         {
-                                            pvpHit(new HitRequest(TargetHitType.AOETargetHit, Session, ski.Skill), character);
+                                            PvpHit(new HitRequest(TargetHitType.AOETargetHit, Session, ski.Skill), character);
                                         }
                                     }
                                     else
@@ -689,7 +689,7 @@ namespace OpenNos.Handler
                                                     if (Session.Character.Faction != playerToAttack.Character.Faction && Session.CurrentMapInstance.Map.MapId != 130 && Session.CurrentMapInstance.Map.MapId != 131)
                                                     {
                                                         count++;
-                                                        pvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), playerToAttack);
+                                                        PvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), playerToAttack);
                                                     }
                                                 }
                                                 else if (Session.CurrentMapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
@@ -697,7 +697,7 @@ namespace OpenNos.Handler
                                                     if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(playerToAttack.Character.CharacterId))
                                                     {
                                                         count++;
-                                                        pvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), playerToAttack);
+                                                        PvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), playerToAttack);
                                                     }
                                                 }
                                                 else if (Session.CurrentMapInstance.IsPVP)
@@ -705,7 +705,7 @@ namespace OpenNos.Handler
                                                     if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(playerToAttack.Character.CharacterId))
                                                     {
                                                         count++;
-                                                        pvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), playerToAttack);
+                                                        PvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), playerToAttack);
                                                     }
                                                 }
                                             }
@@ -720,7 +720,7 @@ namespace OpenNos.Handler
                                                         if (Session.Character.Faction != character.Character.Faction && Session.CurrentMapInstance.Map.MapId != 130 && Session.CurrentMapInstance.Map.MapId != 131)
                                                         {
                                                             count++;
-                                                            pvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), character);
+                                                            PvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), character);
                                                         }
                                                     }
                                                     else if (Session.CurrentMapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
@@ -728,7 +728,7 @@ namespace OpenNos.Handler
                                                         if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId))
                                                         {
                                                             count++;
-                                                            pvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), character);
+                                                            PvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), character);
                                                         }
                                                     }
                                                     else if (Session.CurrentMapInstance.IsPVP)
@@ -736,7 +736,7 @@ namespace OpenNos.Handler
                                                         if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId))
                                                         {
                                                             count++;
-                                                            pvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), character);
+                                                            PvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), character);
                                                         }
                                                     }
                                                 }
@@ -766,7 +766,7 @@ namespace OpenNos.Handler
                                                         if (Session.Character.Faction != playerToAttack.Character.Faction && Session.CurrentMapInstance.Map.MapId != 130 && Session.CurrentMapInstance.Map.MapId != 131)
                                                         {
                                                             count++;
-                                                            pvpHit(new HitRequest(TargetHitType.SingleTargetHitCombo, Session, ski.Skill, skillCombo: skillCombo), playerToAttack);
+                                                            PvpHit(new HitRequest(TargetHitType.SingleTargetHitCombo, Session, ski.Skill, skillCombo: skillCombo), playerToAttack);
                                                         }
                                                     }
                                                     else if (Session.CurrentMapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
@@ -774,7 +774,7 @@ namespace OpenNos.Handler
                                                         if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(playerToAttack.Character.CharacterId))
                                                         {
                                                             count++;
-                                                            pvpHit(new HitRequest(TargetHitType.SingleTargetHitCombo, Session, ski.Skill, skillCombo: skillCombo), playerToAttack);
+                                                            PvpHit(new HitRequest(TargetHitType.SingleTargetHitCombo, Session, ski.Skill, skillCombo: skillCombo), playerToAttack);
                                                         }
                                                     }
                                                     else if (Session.CurrentMapInstance.IsPVP)
@@ -782,7 +782,7 @@ namespace OpenNos.Handler
                                                         if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(playerToAttack.Character.CharacterId))
                                                         {
                                                             count++;
-                                                            pvpHit(new HitRequest(TargetHitType.SingleTargetHitCombo, Session, ski.Skill, skillCombo: skillCombo), playerToAttack);
+                                                            PvpHit(new HitRequest(TargetHitType.SingleTargetHitCombo, Session, ski.Skill, skillCombo: skillCombo), playerToAttack);
                                                         }
                                                     }
                                                     foreach (ClientSession character in playersInAOERange)
@@ -792,7 +792,7 @@ namespace OpenNos.Handler
                                                             if (Session.Character.Faction != character.Character.Faction && Session.CurrentMapInstance.Map.MapId != 130 && Session.CurrentMapInstance.Map.MapId != 131)
                                                             {
                                                                 count++;
-                                                                pvpHit(new HitRequest(TargetHitType.SingleTargetHitCombo, Session, ski.Skill, skillCombo: skillCombo), character);
+                                                                PvpHit(new HitRequest(TargetHitType.SingleTargetHitCombo, Session, ski.Skill, skillCombo: skillCombo), character);
                                                             }
                                                         }
                                                         else if (Session.CurrentMapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
@@ -800,7 +800,7 @@ namespace OpenNos.Handler
                                                             if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId))
                                                             {
                                                                 count++;
-                                                                pvpHit(new HitRequest(TargetHitType.SingleTargetHitCombo, Session, ski.Skill, skillCombo: skillCombo), character);
+                                                                PvpHit(new HitRequest(TargetHitType.SingleTargetHitCombo, Session, ski.Skill, skillCombo: skillCombo), character);
                                                             }
                                                         }
                                                         else if (Session.CurrentMapInstance.IsPVP)
@@ -808,7 +808,7 @@ namespace OpenNos.Handler
                                                             if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId))
                                                             {
                                                                 count++;
-                                                                pvpHit(new HitRequest(TargetHitType.SingleTargetHitCombo, Session, ski.Skill, skillCombo: skillCombo), character);
+                                                                PvpHit(new HitRequest(TargetHitType.SingleTargetHitCombo, Session, ski.Skill, skillCombo: skillCombo), character);
                                                             }
                                                         }
                                                     }
@@ -828,7 +828,7 @@ namespace OpenNos.Handler
                                                         {
                                                             if (Session.CurrentMapInstance.Map.MapId != 130 && Session.CurrentMapInstance.Map.MapId != 131)
                                                             {
-                                                                pvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), playerToAttack);
+                                                                PvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), playerToAttack);
                                                             }
                                                             else
                                                             {
@@ -844,7 +844,7 @@ namespace OpenNos.Handler
                                                     {
                                                         if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(playerToAttack.Character.CharacterId))
                                                         {
-                                                            pvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), playerToAttack);
+                                                            PvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), playerToAttack);
                                                         }
                                                         else
                                                         {
@@ -855,7 +855,7 @@ namespace OpenNos.Handler
                                                     {
                                                         if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(playerToAttack.Character.CharacterId))
                                                         {
-                                                            pvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), playerToAttack);
+                                                            PvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), playerToAttack);
                                                         }
                                                         else
                                                         {
@@ -874,21 +874,21 @@ namespace OpenNos.Handler
                                                         {
                                                             if (Session.Character.Faction != character.Character.Faction && Session.CurrentMapInstance.Map.MapId != 130 && Session.CurrentMapInstance.Map.MapId != 131)
                                                             {
-                                                                pvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), character);
+                                                                PvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), character);
                                                             }
                                                         }
                                                         else if (Session.CurrentMapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
                                                         {
                                                             if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId))
                                                             {
-                                                                pvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), character);
+                                                                PvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), character);
                                                             }
                                                         }
                                                         else if (Session.CurrentMapInstance.IsPVP)
                                                         {
                                                             if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId))
                                                             {
-                                                                pvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), character);
+                                                                PvpHit(new HitRequest(TargetHitType.SingleAOETargetHit, Session, ski.Skill), character);
                                                             }
                                                         }
                                                     }
@@ -913,7 +913,7 @@ namespace OpenNos.Handler
                                                         {
                                                             if (Session.CurrentMapInstance.Map.MapId != 130 && Session.CurrentMapInstance.Map.MapId != 131)
                                                             {
-                                                                pvpHit(new HitRequest(TargetHitType.SingleTargetHitCombo, Session, ski.Skill, skillCombo: skillCombo), playerToAttack);
+                                                                PvpHit(new HitRequest(TargetHitType.SingleTargetHitCombo, Session, ski.Skill, skillCombo: skillCombo), playerToAttack);
                                                             }
                                                             else
                                                             {
@@ -929,7 +929,7 @@ namespace OpenNos.Handler
                                                     {
                                                         if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(playerToAttack.Character.CharacterId))
                                                         {
-                                                            pvpHit(new HitRequest(TargetHitType.SingleTargetHitCombo, Session, ski.Skill, skillCombo: skillCombo), playerToAttack);
+                                                            PvpHit(new HitRequest(TargetHitType.SingleTargetHitCombo, Session, ski.Skill, skillCombo: skillCombo), playerToAttack);
                                                         }
                                                         else
                                                         {
@@ -942,7 +942,7 @@ namespace OpenNos.Handler
                                                         {
                                                             if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(playerToAttack.Character.CharacterId))
                                                             {
-                                                                pvpHit(new HitRequest(TargetHitType.SingleTargetHit, Session,
+                                                                PvpHit(new HitRequest(TargetHitType.SingleTargetHit, Session,
                                                                     ski.Skill), playerToAttack);
                                                             }
                                                             else
@@ -954,7 +954,7 @@ namespace OpenNos.Handler
                                                         {
                                                             if (Session.Character.Faction != playerToAttack.Character.Faction)
                                                             {
-                                                                pvpHit(new HitRequest(TargetHitType.SingleTargetHit, Session, ski.Skill), playerToAttack);
+                                                                PvpHit(new HitRequest(TargetHitType.SingleTargetHit, Session, ski.Skill), playerToAttack);
                                                             }
                                                             else
                                                             {
@@ -975,7 +975,7 @@ namespace OpenNos.Handler
                                                         {
                                                             if (Session.CurrentMapInstance.Map.MapId != 130 && Session.CurrentMapInstance.Map.MapId != 131)
                                                             {
-                                                                pvpHit(new HitRequest(TargetHitType.SingleTargetHit, Session, ski.Skill), playerToAttack);
+                                                                PvpHit(new HitRequest(TargetHitType.SingleTargetHit, Session, ski.Skill), playerToAttack);
                                                             }
                                                             else
                                                             {
@@ -991,7 +991,7 @@ namespace OpenNos.Handler
                                                     {
                                                         if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(playerToAttack.Character.CharacterId))
                                                         {
-                                                            pvpHit(new HitRequest(TargetHitType.SingleTargetHit, Session, ski.Skill), playerToAttack);
+                                                            PvpHit(new HitRequest(TargetHitType.SingleTargetHit, Session, ski.Skill), playerToAttack);
                                                         }
                                                         else
                                                         {
@@ -1002,7 +1002,7 @@ namespace OpenNos.Handler
                                                     {
                                                         if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(playerToAttack.Character.CharacterId))
                                                         {
-                                                            pvpHit(new HitRequest(TargetHitType.SingleTargetHit, Session, ski.Skill), playerToAttack);
+                                                            PvpHit(new HitRequest(TargetHitType.SingleTargetHit, Session, ski.Skill), playerToAttack);
                                                         }
                                                         else
                                                         {
@@ -1195,7 +1195,7 @@ namespace OpenNos.Handler
             Session.Character.LastSkillUse = DateTime.Now;
         }
 
-        private void zoneHit(int castingId, short x, short y)
+        private void ZoneHit(int castingId, short x, short y)
         {
             List<CharacterSkill> skills = Session.Character.UseSp ? Session.Character.SkillsSp.GetAllItems() : Session.Character.Skills.GetAllItems();
             CharacterSkill characterSkill = skills?.Find(s => s.Skill?.CastId == castingId);
@@ -1241,21 +1241,21 @@ namespace OpenNos.Handler
                                 {
                                     if (Session.Character.Faction != character.Character.Faction && Session.CurrentMapInstance.Map.MapId != 130 && Session.CurrentMapInstance.Map.MapId != 131)
                                     {
-                                        pvpHit(new HitRequest(TargetHitType.ZoneHit, Session, characterSkill.Skill, x, y), character);
+                                        PvpHit(new HitRequest(TargetHitType.ZoneHit, Session, characterSkill.Skill, x, y), character);
                                     }
                                 }
                                 else if (Session.CurrentMapInstance.Map.MapTypes.Any(m => m.MapTypeId == (short)MapTypeEnum.PVPMap))
                                 {
                                     if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId))
                                     {
-                                        pvpHit(new HitRequest(TargetHitType.ZoneHit, Session, characterSkill.Skill, x, y), character);
+                                        PvpHit(new HitRequest(TargetHitType.ZoneHit, Session, characterSkill.Skill, x, y), character);
                                     }
                                 }
                                 else if (Session.CurrentMapInstance.IsPVP)
                                 {
                                     if (Session.Character.Group == null || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId))
                                     {
-                                        pvpHit(new HitRequest(TargetHitType.ZoneHit, Session, characterSkill.Skill, x, y), character);
+                                        PvpHit(new HitRequest(TargetHitType.ZoneHit, Session, characterSkill.Skill, x, y), character);
                                     }
                                 }
                             }
