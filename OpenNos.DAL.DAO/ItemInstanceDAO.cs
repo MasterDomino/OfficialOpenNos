@@ -71,7 +71,7 @@ namespace OpenNos.DAL.DAO
                     foreach (Guid id in guids)
                     {
                         ItemInstance entity = context.ItemInstance.FirstOrDefault(i => i.Id == id);
-                        if (entity != null)
+                        if (entity != null && entity.Type != InventoryType.FamilyWareHouse)
                         {
                             context.ItemInstance.Remove(entity);
                         }
