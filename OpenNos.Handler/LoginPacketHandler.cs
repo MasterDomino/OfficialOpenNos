@@ -112,7 +112,7 @@ namespace OpenNos.Handler
                                     if (loadedAccount.Authority == AuthorityType.User || loadedAccount.Authority == AuthorityType.BitchNiggerFaggot)
                                     {
                                         MaintenanceLogDTO maintenanceLog = DAOFactory.MaintenanceLogDAO.LoadFirst();
-                                        if (maintenanceLog != null)
+                                        if (maintenanceLog != null && maintenanceLog.DateStart < DateTime.Now)
                                         {
                                             _session.SendPacket($"fail {string.Format(Language.Instance.GetMessageFromKey("MAINTENANCE"), maintenanceLog.DateEnd, maintenanceLog.Reason)}");
                                             return;
