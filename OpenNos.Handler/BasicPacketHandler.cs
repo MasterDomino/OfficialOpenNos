@@ -1221,10 +1221,10 @@ namespace OpenNos.Handler
 
                     case (sbyte)PortalType.BlueRaid:
                     case (sbyte)PortalType.DarkRaid:
-                        if (((int)Session.Character.Faction == portal.Type - 9
+                        if ((int)Session.Character.Faction == portal.Type - 9
                             && Session.Character.Family?.Act4Raid != null
-                            && Session.Character.Level > 59)
-                            || Session.Character.Reputation > 60000)
+                            && Session.Character.Level > 59
+                            && Session.Character.Reputation > 60000)
                         {
                             Session.Character.SetReputation(Session.Character.Level * -50);
 
