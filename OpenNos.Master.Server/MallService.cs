@@ -72,29 +72,44 @@ namespace OpenNos.Master.Server
             {
                 return;
             }
-
-            MailDTO mailDTO = new MailDTO
+            ItemDTO dto = DAOFactory.ItemDAO.LoadById(item.ItemVNum);
+            if (dto != null)
             {
-                AttachmentAmount = item.Amount,
-                AttachmentRarity = item.Rare,
-                AttachmentUpgrade = item.Upgrade,
-                AttachmentVNum = item.ItemVNum,
-                Date = DateTime.Now,
-                EqPacket = string.Empty,
-                IsOpened = false,
-                IsSenderCopy = false,
-                Message = string.Empty,
-                ReceiverId = characterId,
-                SenderId=characterId,
-                Title = "NOSMALL"
-            };
+                int limit = 99;
 
-            DAOFactory.MailDAO.InsertOrUpdate(ref mailDTO);
+                if (dto.Type == InventoryType.Equipment || dto.Type == InventoryType.Miniland)
+                {
+                    limit = 1;
+                }
 
-            AccountConnection account = MSManager.Instance.ConnectedAccounts.Find(a => a.CharacterId.Equals(mailDTO.ReceiverId));
-            if (account?.ConnectedWorld != null)
-            {
-                account.ConnectedWorld.MailServiceClient.GetClientProxy<IMailClient>().MailSent(mailDTO);
+                do
+                {
+                    MailDTO mailDTO = new MailDTO
+                    {
+                        AttachmentAmount = (byte)(item.Amount > limit ? limit : item.Amount),
+                        AttachmentRarity = item.Rare,
+                        AttachmentUpgrade = item.Upgrade,
+                        AttachmentVNum = item.ItemVNum,
+                        Date = DateTime.Now,
+                        EqPacket = string.Empty,
+                        IsOpened = false,
+                        IsSenderCopy = false,
+                        Message = string.Empty,
+                        ReceiverId = characterId,
+                        SenderId = characterId,
+                        Title = "NOSMALL"
+                    };
+
+                    DAOFactory.MailDAO.InsertOrUpdate(ref mailDTO);
+
+                    AccountConnection account = MSManager.Instance.ConnectedAccounts.Find(a => a.CharacterId.Equals(mailDTO.ReceiverId));
+                    if (account?.ConnectedWorld != null)
+                    {
+                        account.ConnectedWorld.MailServiceClient.GetClientProxy<IMailClient>().MailSent(mailDTO);
+                    }
+
+                    item.Amount -= limit;
+                } while (item.Amount > 0);
             }
         }
 

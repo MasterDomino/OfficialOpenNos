@@ -5,7 +5,7 @@ namespace OpenNos.Master.Library.Data
     [Serializable]
     public class MallItem
     {
-        public byte Amount { get; set; }
+        public int Amount { get; set; }
 
         public short ItemVNum { get; set; }
 
