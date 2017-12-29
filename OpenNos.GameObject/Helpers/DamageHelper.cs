@@ -631,13 +631,13 @@ namespace OpenNos.GameObject
                     weaponDamage += (int)(weaponDamage * 2);
                     break;
 
-                default:
-                    if (attacker.AttackUpgrade > 0)
-                    {
-                        weaponDamage *= attacker.AttackUpgrade / 5;
-                    }
+                //default:
+                //    if (attacker.AttackUpgrade > 0)
+                //    {
+                //        weaponDamage *= attacker.AttackUpgrade / 5;
+                //    }
 
-                    break;
+                //    break;
             }
 
             #endregion
@@ -650,13 +650,13 @@ namespace OpenNos.GameObject
 
             switch (attacker.AttackUpgrade)
             {
-                default:
-                    if (attacker.AttackUpgrade < 0)
-                    {
-                        defender.ArmorDefense += defender.ArmorDefense / 5;
-                    }
+                //default:
+                //    if (attacker.AttackUpgrade < 0)
+                //    {
+                //        defender.ArmorDefense += defender.ArmorDefense / 5;
+                //    }
 
-                    break;
+                    //break;
 
                 case -10:
                     defender.ArmorDefense += (int)(defender.ArmorDefense * 2);

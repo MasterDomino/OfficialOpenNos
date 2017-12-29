@@ -154,11 +154,11 @@ namespace OpenNos.GameObject
 
             CellonOptions = Session.Character.CellonOptions.GetAllItems();
 
-            MeleeDefense = character.Defence;
+            MeleeDefense = character.Defence - ArmorMeleeDefense;
             MeleeDefenseDodge = character.DefenceRate;
-            RangeDefense = character.DistanceDefence;
+            RangeDefense = character.DistanceDefence - ArmorRangeDefense;
             RangeDefenseDodge = character.DistanceDefenceRate;
-            MagicalDefense = character.MagicalDefence;
+            MagicalDefense = character.MagicalDefence - ArmorMagicalDefense;
             Element = character.Element;
             ElementRate = character.ElementRate + character.ElementRateSP;
         }
