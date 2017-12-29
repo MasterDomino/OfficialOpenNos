@@ -120,9 +120,7 @@ namespace OpenNos.GameObject
 
                         if (session.Character.UseSp)
                         {
-                            ItemInstance sp = session.Character.Inventory.LoadBySlotAndType((byte)EquipmentType.Sp, equipment);
-
-                            if (sp.Item.Element != 0 && EquipmentSlot == EquipmentType.Fairy && Element != sp.Item.Element && Element != sp.Item.SecondaryElement)
+                            if (session.Character.Inventory.LoadBySlotAndType((byte)EquipmentType.Sp, equipment) is ItemInstance sp && sp.Item.Element != 0 && EquipmentSlot == EquipmentType.Fairy && Element != sp.Item.Element && Element != sp.Item.SecondaryElement)
                             {
                                 session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("BAD_FAIRY"), 0));
                                 return;
