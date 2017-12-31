@@ -12,6 +12,7 @@
  * GNU General Public License for more details.
  */
 
+using OpenNos.ChatLog.Shared;
 using OpenNos.Core;
 using OpenNos.Core.Handling;
 using OpenNos.DAL;
@@ -243,7 +244,18 @@ namespace OpenNos.Handler
                     ccmsg = $"[Support {Session.Character.Name}]:{msg}";
                 }
 
-                Logger.LogUserEvent("GUILDCHAT", Session.GenerateIdentity(), $"[FamilyChat][{Session.Character.Family.FamilyId}]Message: {msg}");
+                if (ServerManager.Instance.Configuration.UseChatLogService)
+                {
+                    ChatLogServiceClient.Instance.LogChatMessage(new ChatLogEntry()
+                    {
+                        Sender = Session.Character.Name,
+                        SenderId = Session.Character.CharacterId,
+                        Receiver = Session.Character.Family.Name,
+                        ReceiverId = Session.Character.Family.FamilyId,
+                        MessageType = ChatLogType.Family,
+                        Message = familyChatPacket.Message
+                    });
+                }
 
                 CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage
                 {

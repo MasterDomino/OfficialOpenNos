@@ -12,6 +12,7 @@
  * GNU General Public License for more details.
  */
 
+using OpenNos.ChatLog.Shared;
 using OpenNos.Core;
 using OpenNos.Core.Extensions;
 using OpenNos.DAL;
@@ -341,7 +342,6 @@ namespace OpenNos.Handler
             CharacterDTO character = DAOFactory.CharacterDAO.LoadById(btkPacket.CharacterId);
             if (character != null)
             {
-                //session is not on current server, check api if the target character is on another server
                 int? sentChannelId = CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage
                 {
                     DestinationCharacterId = character.CharacterId,
@@ -350,6 +350,20 @@ namespace OpenNos.Handler
                     Message = PacketFactory.Serialize(Session.Character.GenerateTalk(message)),
                     Type = MessageType.PrivateChat
                 });
+
+                if (ServerManager.Instance.Configuration.UseChatLogService)
+                {
+                    ChatLogServiceClient.Instance.LogChatMessage(new ChatLogEntry()
+                    {
+                        Sender = Session.Character.Name,
+                        SenderId = Session.Character.CharacterId,
+                        Receiver = character.Name,
+                        ReceiverId = character.CharacterId,
+                        MessageType = ChatLogType.BuddyTalk,
+                        Message = btkPacket.Message
+                    });
+                }
+
                 if (!sentChannelId.HasValue) //character is even offline on different world
                 {
                     Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("FRIEND_OFFLINE")));
@@ -732,6 +746,19 @@ namespace OpenNos.Handler
         {
             if (!string.IsNullOrEmpty(groupSayPacket.Message))
             {
+                if (ServerManager.Instance.Configuration.UseChatLogService)
+                {
+                    ChatLogServiceClient.Instance.LogChatMessage(new ChatLogEntry()
+                    {
+                        Sender = Session.Character.Name,
+                        SenderId = Session.Character.CharacterId,
+                        Receiver = string.Empty,
+                        ReceiverId = Session.Character.Group?.GroupId,
+                        MessageType = ChatLogType.Group,
+                        Message = groupSayPacket.Message
+                    });
+                }
+
                 ServerManager.Instance.Broadcast(Session, Session.Character.GenerateSpk(groupSayPacket.Message, 3), ReceiverType.Group);
             }
         }
@@ -1035,6 +1062,19 @@ namespace OpenNos.Handler
                         }
                         Session.Character.Inventory.RemoveItemAmount(speakerVNum);
                         ServerManager.Instance.Broadcast(Session.Character.GenerateSay(message, 13));
+
+                        if (ServerManager.Instance.Configuration.UseChatLogService)
+                        {
+                            ChatLogServiceClient.Instance.LogChatMessage(new ChatLogEntry()
+                            {
+                                Sender = Session.Character.Name,
+                                SenderId = Session.Character.CharacterId,
+                                Receiver = null,
+                                ReceiverId = null,
+                                MessageType = ChatLogType.Speaker,
+                                Message = message
+                            });
+                        }
                     }
                 }
                 else if (guriPacket.Type == 199 && guriPacket.Argument == 1)
@@ -1710,6 +1750,19 @@ namespace OpenNos.Handler
             }
             bool isMuted = Session.Character.MuteMessage();
             string message = sayPacket.Message;
+            if (ServerManager.Instance.Configuration.UseChatLogService)
+            {
+                ChatLogServiceClient.Instance.LogChatMessage(new ChatLogEntry()
+                {
+                    Sender = Session.Character.Name,
+                    SenderId = Session.Character.CharacterId,
+                    Receiver = Session.CurrentMapInstance?.Map.Name,
+                    ReceiverId = Session.CurrentMapInstance?.Map.MapId,
+                    MessageType = ChatLogType.Map,
+                    Message = message
+                });
+            }
+
             if (!isMuted)
             {
                 byte type = 0;
@@ -2201,6 +2254,7 @@ namespace OpenNos.Handler
                     {
                         return;
                     }
+
                     if (Session.Character.IsBlockedByCharacter(receiver.CharacterId))
                     {
                         Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("BLACKLIST_BLOCKED")));
@@ -2211,6 +2265,20 @@ namespace OpenNos.Handler
                     {
                         receiverSession.SendPacket(Session.Character.GenerateSay(message, 2));
                     }
+
+                    if (ServerManager.Instance.Configuration.UseChatLogService)
+                    {
+                        ChatLogServiceClient.Instance.LogChatMessage(new ChatLogEntry()
+                        {
+                            Sender = Session.Character.Name,
+                            SenderId = Session.Character.CharacterId,
+                            Receiver = receiver.Name,
+                            ReceiverId = receiver.CharacterId,
+                            MessageType = ChatLogType.Whisper,
+                            Message = message
+                        });
+                    }
+
                     sentChannelId = CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage
                     {
                         DestinationCharacterId = receiver.CharacterId,
