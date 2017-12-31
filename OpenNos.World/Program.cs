@@ -175,6 +175,7 @@ namespace OpenNos.World
             {
                 ServerManager.Instance.ChannelId = newChannelId.Value;
                 MailServiceClient.Instance.Authenticate(authKey, ServerManager.Instance.WorldId);
+                ChatLogServiceClient.Instance.Authenticate(authKey);
                 ConfigurationServiceClient.Instance.Authenticate(authKey, ServerManager.Instance.WorldId);
                 ServerManager.Instance.Configuration = ConfigurationServiceClient.Instance.GetConfigurationObject();
                 ServerManager.Instance.MallAPI = new GameObject.Helpers.MallAPIHelper(ServerManager.Instance.Configuration.MallBaseURL);
