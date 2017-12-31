@@ -102,6 +102,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChatLogService.cs" />
     <Compile Include="CommunicationService.cs" />
     <Compile Include="AuthentificationService.cs" />
     <Compile Include="MallService.cs" />
@@ -169,6 +170,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OpenNos.ChatLog.Shared\OpenNos.ChatLog.Shared.csproj">
+      <Project>{CB47DC8B-EF9A-44F9-9F28-E6CDC7CB7752}</Project>
+      <Name>OpenNos.ChatLog.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OpenNos.Core\OpenNos.Core.csproj">
       <Project>{c93a0a40-0551-4732-b594-171b87679ac1}</Project>
       <Name>OpenNos.Core</Name>

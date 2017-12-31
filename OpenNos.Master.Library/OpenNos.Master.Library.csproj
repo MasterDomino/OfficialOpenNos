@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="Client\CommunicationClient.cs" />
     <Compile Include="Client\CommunicationServiceClient.cs" />
+    <Compile Include="Client\ChatLogServiceClient.cs" />
     <Compile Include="Client\ConfigurationServiceClient.cs" />
     <Compile Include="Client\MailClient.cs" />
     <Compile Include="Client\ConfigurationClient.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Data\MallStaticBonus.cs" />
     <Compile Include="Data\MapInstance.cs" />
     <Compile Include="Interface\IAdminToolService.cs" />
+    <Compile Include="Interface\IChatLogService.cs" />
     <Compile Include="Interface\ICommunicationClient.cs" />
     <Compile Include="Interface\ICommunicationService.cs" />
     <Compile Include="Data\SCSCharacterMessage.cs" />
@@ -101,6 +103,10 @@
     <Compile Include="Data\SerializableWorldServer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OpenNos.ChatLog.Shared\OpenNos.ChatLog.Shared.csproj">
+      <Project>{CB47DC8B-EF9A-44F9-9F28-E6CDC7CB7752}</Project>
+      <Name>OpenNos.ChatLog.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OpenNos.Core\OpenNos.Core.csproj">
       <Project>{c93a0a40-0551-4732-b594-171b87679ac1}</Project>
       <Name>OpenNos.Core</Name>

@@ -12,11 +12,15 @@
  * GNU General Public License for more details.
  */
 
+using OpenNos.ChatLog.Shared;
 using OpenNos.Core;
 using OpenNos.Master.Library.Data;
 using OpenNos.SCS.Communication.ScsServices.Service;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
+using System.Reactive.Linq;
 
 namespace OpenNos.Master.Server
 {
@@ -57,8 +61,14 @@ namespace OpenNos.Master.Server
                 Act4IP = ConfigurationManager.AppSettings["Act4IP"],
                 Act4Port = int.Parse(ConfigurationManager.AppSettings["Act4Port"]),
                 MallBaseURL = ConfigurationManager.AppSettings["MallBaseURL"],
-                MallAPIKey = ConfigurationManager.AppSettings["MallAPIKey"]
+                MallAPIKey = ConfigurationManager.AppSettings["MallAPIKey"],
+                UseChatLogService = bool.Parse(ConfigurationManager.AppSettings["UseChatLogService"])
             };
+            ChatLogs = new ThreadSafeGenericList<ChatLogEntry>();
+            Observable.Interval(TimeSpan.FromMinutes(15)).Subscribe(observer =>
+            {
+                SaveChatLogs();
+            });
         }
 
         #endregion
@@ -69,6 +79,8 @@ namespace OpenNos.Master.Server
 
         public List<long> AuthentificatedClients { get; set; }
 
+        public ThreadSafeGenericList<ChatLogEntry> ChatLogs { get; set; }
+
         public ConfigurationObject ConfigurationObject { get; set; }
 
         public ThreadSafeGenericList<AccountConnection> ConnectedAccounts { get; set; }
@@ -78,5 +90,37 @@ namespace OpenNos.Master.Server
         public List<WorldServer> WorldServers { get; set; }
 
         #endregion
+
+        private void SaveChatLogs()
+        {
+            LogFileWriter writer = new LogFileWriter();
+            Logger.Info(Language.Instance.GetMessageFromKey("SAVE_CHATLOGS"));
+            List<ChatLogEntry> tmp = ChatLogs.GetAllItems();
+            ChatLogs.Clear();
+            DateTime current = new DateTime();
+
+            string path = "logs";
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            path = Path.Combine(path, current.Year.ToString());
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            path = Path.Combine(path, current.Month.ToString());
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            path = Path.Combine(path, current.Day.ToString());
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            writer.WriteLogFile(Path.Combine(path, $"{current.Hour}.{current.Minute}.onc"), tmp);
+        }
     }
 }

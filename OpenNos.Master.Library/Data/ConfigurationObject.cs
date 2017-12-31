@@ -44,5 +44,7 @@ namespace OpenNos.Master.Library.Data
         public string MallBaseURL { get; set; }
 
         public string MallAPIKey { get; set; }
+
+        public bool UseChatLogService { get; set; }
     }
 }
