@@ -13,9 +13,9 @@ namespace OpenNos.ChatLog.Shared
         {
             if (logs.Count > 0)
             {
-                using (StreamWriter sw = new StreamWriter(path))
+                using (FileStream stream = File.Create(path))
                 {
-                    using (BinaryWriter bw = new BinaryWriter(sw.BaseStream))
+                    using (BinaryWriter bw = new BinaryWriter(stream))
                     {
                         bw.Write((byte)0x4F);
                         bw.Write((byte)0x4E);

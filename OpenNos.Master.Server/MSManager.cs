@@ -65,7 +65,7 @@ namespace OpenNos.Master.Server
                 UseChatLogService = bool.Parse(ConfigurationManager.AppSettings["UseChatLogService"])
             };
             ChatLogs = new ThreadSafeGenericList<ChatLogEntry>();
-            Observable.Interval(TimeSpan.FromMinutes(15)).Subscribe(observer =>
+            Observable.Interval(TimeSpan.FromMinutes(1)).Subscribe(observer =>
             {
                 SaveChatLogs();
             });
@@ -99,7 +99,7 @@ namespace OpenNos.Master.Server
                 Logger.Info(Language.Instance.GetMessageFromKey("SAVE_CHATLOGS"));
                 List<ChatLogEntry> tmp = ChatLogs.GetAllItems();
                 ChatLogs.Clear();
-                DateTime current = new DateTime();
+                DateTime current = DateTime.Now;
 
                 string path = "logs";
                 if (!Directory.Exists(path))
