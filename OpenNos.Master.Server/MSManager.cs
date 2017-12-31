@@ -93,34 +93,41 @@ namespace OpenNos.Master.Server
 
         private void SaveChatLogs()
         {
-            LogFileWriter writer = new LogFileWriter();
-            Logger.Info(Language.Instance.GetMessageFromKey("SAVE_CHATLOGS"));
-            List<ChatLogEntry> tmp = ChatLogs.GetAllItems();
-            ChatLogs.Clear();
-            DateTime current = new DateTime();
+            try
+            {
+                LogFileWriter writer = new LogFileWriter();
+                Logger.Info(Language.Instance.GetMessageFromKey("SAVE_CHATLOGS"));
+                List<ChatLogEntry> tmp = ChatLogs.GetAllItems();
+                ChatLogs.Clear();
+                DateTime current = new DateTime();
 
-            string path = "logs";
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-            path = Path.Combine(path, current.Year.ToString());
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-            path = Path.Combine(path, current.Month.ToString());
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-            path = Path.Combine(path, current.Day.ToString());
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
+                string path = "logs";
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                path = Path.Combine(path, current.Year.ToString());
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                path = Path.Combine(path, current.Month.ToString());
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                path = Path.Combine(path, current.Day.ToString());
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
 
-            writer.WriteLogFile(Path.Combine(path, $"{current.Hour}.{current.Minute}.onc"), tmp);
+                writer.WriteLogFile(Path.Combine(path, $"{current.Hour}.{current.Minute}.onc"), tmp);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
         }
     }
 }
