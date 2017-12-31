@@ -20,7 +20,6 @@ namespace OpenNos.ChatLog.Shared
                         bw.Write((byte)0x4F);
                         bw.Write((byte)0x4E);
                         bw.Write((byte)0x43);
-                        bw.Write((byte)0x43);
                         bw.Write((byte)1);
                         bw.Write(logs.Count);
                         foreach (ChatLogEntry log in logs)
