@@ -65,7 +65,7 @@ namespace OpenNos.Master.Server
                 UseChatLogService = bool.Parse(ConfigurationManager.AppSettings["UseChatLogService"])
             };
             ChatLogs = new ThreadSafeGenericList<ChatLogEntry>();
-            Observable.Interval(TimeSpan.FromMinutes(1)).Subscribe(observer =>
+            Observable.Interval(TimeSpan.FromMinutes(15)).Subscribe(observer =>
             {
                 SaveChatLogs();
             });
