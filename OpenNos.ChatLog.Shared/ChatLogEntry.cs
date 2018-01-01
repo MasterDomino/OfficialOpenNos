@@ -22,5 +22,10 @@ namespace OpenNos.ChatLog.Shared
         public string Message { get; set; }
 
         public DateTime Timestamp { get; set; }
+
+        public override string ToString()
+        {
+            return $"[{Timestamp}]<{MessageType}> {Sender}({SenderId})->{Receiver}({ReceiverId}) > {Message}";
+        }
     }
 }
