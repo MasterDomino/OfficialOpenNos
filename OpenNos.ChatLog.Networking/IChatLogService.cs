@@ -14,6 +14,13 @@ namespace OpenNos.ChatLog.Networking
         /// <summary>
         /// Authenticates a Client to the Service
         /// </summary>
+        /// <param name="authKey">The private Authentication key</param>
+        /// <returns>true if successful, else false</returns>
+        bool Authenticate(string authKey);
+
+        /// <summary>
+        /// Authenticates a Client to the Service
+        /// </summary>
         /// <param name="user"></param>
         /// <param name="passHash"></param>
         /// <returns></returns>

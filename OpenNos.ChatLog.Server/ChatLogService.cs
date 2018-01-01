@@ -30,6 +30,22 @@ namespace OpenNos.ChatLog.Server
             return false;
         }
 
+        public bool Authenticate(string authKey)
+        {
+            if (string.IsNullOrWhiteSpace(authKey))
+            {
+                return false;
+            }
+
+            if (authKey == ConfigurationManager.AppSettings["ChatLogKey"])
+            {
+                ChatLogManager.Instance.AuthentificatedClients.Add(CurrentClient.ClientId);
+                return true;
+            }
+
+            return false;
+        }
+
         public List<ChatLogEntry> GetChatLogEntries(string sender, long? senderid, string receiver, long? receiverid, string message, DateTime? start, DateTime? end, ChatLogType? logType)
         {
             List<ChatLogEntry> tmp = ChatLogManager.Instance.AllChatLogs.GetAllItems();
