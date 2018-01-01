@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace OpenNos.ChatLog.Reader
+namespace OpenNos.ChatLog.Client
 {
     /// <summary>
     /// Interaction logic for App.xaml

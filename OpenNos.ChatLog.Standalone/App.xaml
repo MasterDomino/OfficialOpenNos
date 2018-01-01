@@ -1,7 +1,7 @@
-﻿<Application x:Class="OpenNos.ChatLog.Reader.App"
+﻿<Application x:Class="OpenNos.ChatLog.Standalone.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:OpenNos.ChatLog.Reader"
+             xmlns:local="clr-namespace:OpenNos.ChatLog.Standalone"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          
