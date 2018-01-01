@@ -64,11 +64,6 @@ namespace OpenNos.Master.Server
                 MallAPIKey = ConfigurationManager.AppSettings["MallAPIKey"],
                 UseChatLogService = bool.Parse(ConfigurationManager.AppSettings["UseChatLogService"])
             };
-            ChatLogs = new ThreadSafeGenericList<ChatLogEntry>();
-            Observable.Interval(TimeSpan.FromMinutes(15)).Subscribe(observer =>
-            {
-                SaveChatLogs();
-            });
         }
 
         #endregion
@@ -79,8 +74,6 @@ namespace OpenNos.Master.Server
 
         public List<long> AuthentificatedClients { get; set; }
 
-        public ThreadSafeGenericList<ChatLogEntry> ChatLogs { get; set; }
-
         public ConfigurationObject ConfigurationObject { get; set; }
 
         public ThreadSafeGenericList<AccountConnection> ConnectedAccounts { get; set; }
@@ -90,44 +83,5 @@ namespace OpenNos.Master.Server
         public List<WorldServer> WorldServers { get; set; }
 
         #endregion
-
-        private void SaveChatLogs()
-        {
-            try
-            {
-                LogFileWriter writer = new LogFileWriter();
-                Logger.Info(Language.Instance.GetMessageFromKey("SAVE_CHATLOGS"));
-                List<ChatLogEntry> tmp = ChatLogs.GetAllItems();
-                ChatLogs.Clear();
-                DateTime current = DateTime.Now;
-
-                string path = "chatlogs";
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-                path = Path.Combine(path, current.Year.ToString());
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-                path = Path.Combine(path, current.Month.ToString());
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-                path = Path.Combine(path, current.Day.ToString());
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-
-                writer.WriteLogFile(Path.Combine(path, $"{current.Hour}.{current.Minute}.onc"), tmp);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
-            }
-        }
     }
 }

@@ -13,6 +13,7 @@
  */
 
 using log4net;
+using OpenNos.ChatLog.Networking;
 using OpenNos.Core;
 using OpenNos.DAL;
 using OpenNos.DAL.EF.Helpers;

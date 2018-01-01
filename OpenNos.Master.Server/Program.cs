@@ -107,7 +107,6 @@ namespace OpenNos.Master.Server
                     _server.AddService<IMailService, MailService>(new MailService());
                     _server.AddService<IMallService, MallService>(new MallService());
                     _server.AddService<IAuthentificationService, AuthentificationService>(new AuthentificationService());
-                    _server.AddService<IChatLogService, ChatLogService>(new ChatLogService());
                     _server.ClientConnected += OnClientConnected;
                     _server.ClientDisconnected += OnClientDisconnected;
 

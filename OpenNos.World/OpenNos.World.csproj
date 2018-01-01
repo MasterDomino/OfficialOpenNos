@@ -303,6 +303,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OpenNos.ChatLog.Networking\OpenNos.ChatLog.Networking.csproj">
+      <Project>{3CDEC84B-42FB-49BD-90E9-5893A827359E}</Project>
+      <Name>OpenNos.ChatLog.Networking</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OpenNos.Core\OpenNos.Core.csproj">
       <Project>{c93a0a40-0551-4732-b594-171b87679ac1}</Project>
       <Name>OpenNos.Core</Name>

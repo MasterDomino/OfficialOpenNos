@@ -12,6 +12,7 @@
  * GNU General Public License for more details.
  */
 
+using OpenNos.ChatLog.Networking;
 using OpenNos.ChatLog.Shared;
 using OpenNos.Core;
 using OpenNos.Core.Handling;

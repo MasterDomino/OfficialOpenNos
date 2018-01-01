@@ -102,7 +102,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChatLogService.cs" />
     <Compile Include="CommunicationService.cs" />
     <Compile Include="AuthentificationService.cs" />
     <Compile Include="MallService.cs" />

@@ -74,7 +74,6 @@
   <ItemGroup>
     <Compile Include="Client\CommunicationClient.cs" />
     <Compile Include="Client\CommunicationServiceClient.cs" />
-    <Compile Include="Client\ChatLogServiceClient.cs" />
     <Compile Include="Client\ConfigurationServiceClient.cs" />
     <Compile Include="Client\MailClient.cs" />
     <Compile Include="Client\ConfigurationClient.cs" />
@@ -88,7 +87,6 @@
     <Compile Include="Data\MallStaticBonus.cs" />
     <Compile Include="Data\MapInstance.cs" />
     <Compile Include="Interface\IAdminToolService.cs" />
-    <Compile Include="Interface\IChatLogService.cs" />
     <Compile Include="Interface\ICommunicationClient.cs" />
     <Compile Include="Interface\ICommunicationService.cs" />
     <Compile Include="Data\SCSCharacterMessage.cs" />
