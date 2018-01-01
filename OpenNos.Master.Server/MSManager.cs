@@ -101,7 +101,7 @@ namespace OpenNos.Master.Server
                 ChatLogs.Clear();
                 DateTime current = DateTime.Now;
 
-                string path = "logs";
+                string path = "chatlogs";
                 if (!Directory.Exists(path))
                 {
                     Directory.CreateDirectory(path);
